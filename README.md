@@ -44,3 +44,12 @@ npm run build
 # serve in production mode
 npm start
 ```
+
+## License
+[MIT](http://opensource.org/licenses/MIT)
+
+[vue.js](https://vuejs.org/)
+
+based on [vue-hackernews-2.0](https://github.com/vuejs/vue-hackernews-2.0)
+
+Copyright (c) 2016 MirroMedia
