@@ -11,14 +11,14 @@ export function createListView (type) {
       return store.dispatch('FETCH_LIST_DATA', { type })
     },
     render (h) {
-      return h(ItemList, { props: { type }})
+      return h(ItemList, { props: { type } })
     },
     metaInfo () {
-        const title = type
-        return {
-            title,
-            meta: [{ vmid: 'description', name: 'description', content: title }]
-        }
+      const title = type
+      return {
+        title,
+        meta: [{ vmid: 'description', name: 'description', content: title }]
+      }
     }
   }
 }

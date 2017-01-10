@@ -71,6 +71,16 @@
       "TARGET": false,
       "VERSION": false,
       "CONFIG": false
+    },
+    "rules": {
+      "arrow-body-style": 0,
+      "space-before-function-paren": 0,
+      "no-use-before-define": 0,
+      "array-callback-return": 0,
+      "no-unused-expressions": 0,
+      "no-console": 0,
+      "no-unused-vars": 0,
+      "new-cap": 0
     }
   }
 }
