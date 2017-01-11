@@ -10,6 +10,7 @@ import ItemView from '../views/ItemView.vue'
 import UserView from '../views/UserView.vue'
 import TimelineView from '../views/TimelineView.vue'
 import Questionnaire from '../views/Questionnaire.vue'
+import Section from '../views/Section.vue'
 
 export default new Router({
   mode: 'history',
@@ -24,6 +25,7 @@ export default new Router({
     { path: '/user/:id', component: UserView },
     { path: '/timeline/:title', component: TimelineView },
     { path: '/q/:questionnaireId', component: Questionnaire },
+    { path: '/section/:title', component: Section },
     { path: '/', redirect: '/top' }
   ]
 })
