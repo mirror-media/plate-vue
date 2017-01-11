@@ -1,7 +1,10 @@
 <template>
   <div class="timeline-view">
     <ul v-for="item in tweets" :id="item.id">
-      <li v-html="item.text"/>
+      <li>
+        <a href="https://twitter.com/MirrorWatchTW/status/"><img v-if="item.heroImg" :src="item.heroImg"/></a>
+        <div v-html="item.text"/>
+      </li>
     </ul>
   </div>
 </template>
@@ -45,6 +48,7 @@ export default {
           ],
           targetBlank: true
         })
+        this.rep[k].heroImg = _.get(v, [ 'extended_entities', 'media', 0, 'media_url_https' ]);
       })
       return this.rep
     }
@@ -56,6 +60,7 @@ export default {
       meta: [{ vmid: 'description', name: 'description', content: title }]
     }
   },
+  // preFetch () {
   beforeMount () {
     fetchData('/twitter?screen_name=MirrorWatchTW&count=10').then(
       response => {
@@ -88,4 +93,6 @@ export default {
     margin 1em 0
   .links a
     text-decoration underline
+  img 
+    max-width: 300px
 </style>
