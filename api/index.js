@@ -1,9 +1,10 @@
-const { API_PROTOCOL, API_HOST, API_PORT, REDIS_HOST, REDIS_PORT, REDIS_AUTH } = require('./config')
+const { API_PROTOCOL, API_HOST, API_PORT, REDIS_HOST, REDIS_PORT, REDIS_AUTH, TWITTER_API } = require('./config')
 const express = require('express')
 const redis = require('redis')
 const redisClient = redis.createClient(REDIS_PORT, REDIS_HOST, { no_ready_check: true, password: REDIS_AUTH })
 const router = express.Router()
 const superagent = require('superagent')
+const Twitter = require('twitter')
 
 const apiHost = API_PROTOCOL+'://'+API_HOST+':'+API_PORT
 
@@ -12,9 +13,24 @@ redisClient.on('connect', function () {
 })
 
 router.all('/', function(req, res, next) {
-
   next()
  });
+
+router.use('/twitter', function(req, res, next) {
+    const query = req.query
+    let client = new Twitter(TWITTER_API)
+    if( !('screen_name' in query) || query.screen_name === '') {
+      res.send('empty screen_name')
+    }else{
+      client.get('statuses/user_timeline', query, function (err, data) {
+        if (err) {
+          res.send(err)
+        } else {
+          res.json(data)
+        }
+      })
+    }
+});
 
 router.get('*', (req, res) => {
   res.header('Cache-Control', 'public, max-age=300');
