@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { fetchItems, fetchIdsByType, fetchUser } from './api'
+import { fetchItems, fetchIdsByType, fetchQuestionnaire, fetchUser } from './api'
 
 Vue.use(Vuex)
 
@@ -10,6 +10,7 @@ const store = new Vuex.Store({
     itemsPerPage: 20,
     items: {/* [id: number]: Item */},
     users: {/* [id: string]: User */},
+    questionnaire: {},
     lists: {
       top: [/* number */],
       new: [],
@@ -56,6 +57,12 @@ const store = new Vuex.Store({
       }
     },
 
+    FETCH_QUESTIONNAIRE: ({ commit, state }, { id }) => {
+      return state.questionnaire[ id ]
+        ? Promise.resolve(state.questionnaire[ id ])
+        : fetchQuestionnaire(id).then(questionnaire => commit('SET_QUESTIONNAIRE', { questionnaire }))
+    },
+
     FETCH_USER: ({ commit, state }, { id }) => {
       return state.users[id]
         ? Promise.resolve(state.users[id])
@@ -78,6 +85,10 @@ const store = new Vuex.Store({
           Vue.set(state.items, item.id, item)
         }
       })
+    },
+
+    SET_QUESTIONNAIRE: (state, { questionnaire }) => {
+      Vue.set(state.questionnaire, questionnaire.id, questionnaire)
     },
 
     SET_USER: (state, { user }) => {

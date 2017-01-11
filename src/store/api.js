@@ -1,6 +1,24 @@
 // this is aliased in webpack config based on server/client build
 import api from 'create-api'
 
+const superagent = require('superagent')
+
+let apiHost = 'https://statics.mirrormedia.mg/questionnaire/tasduiiuah32hk2/tasduiiuah32hk2.json'
+
+function loadQuestionnaire(){
+  return new Promise(resolve => {
+    superagent
+    .get(apiHost)
+    .end((err, response) => {
+      if (!err && response) {
+        resolve(JSON.parse(response.text))
+      } else {
+        resolve('{\'error\':' + err + '}')
+      }
+    })
+  })
+}
+
 // warm the front page cache every 15 min
 // make sure to do this only once across all requests
 if (api.onServer && !api.warmCacheStarted) {
@@ -42,6 +60,10 @@ export function fetchItem (id) {
 
 export function fetchItems (ids) {
   return Promise.all(ids.map(id => fetchItem(id)))
+}
+
+export function fetchQuestionnaire (id) {
+  return loadQuestionnaire()
 }
 
 export function fetchUser (id) {
