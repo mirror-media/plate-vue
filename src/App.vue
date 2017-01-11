@@ -10,6 +10,7 @@
         <router-link to="/show">Show</router-link>
         <router-link to="/ask">Ask</router-link>
         <router-link to="/job">Jobs</router-link>
+        <router-link to="/timeline/watch">Timeline</router-link>
         <a class="github" href="https://github.com/vuejs/vue-hackernews-2.0" target="_blank">
           Built with Vue.js
         </a>
@@ -62,7 +63,7 @@ a
     &.router-link-active
       color #fff
       font-weight 400
-    &:nth-child(6)
+    &:nth-child(7)
       margin-right 0
   .github
     color #fff
