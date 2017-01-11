@@ -1,16 +1,13 @@
 <template>
   <div class="timeline-view">
-  {{ rep }}
+    <ul v-for="item in tweets" :id="item.id">
+      <li v-html="item.text"/>
+    </ul>
   </div>
 </template>
 
 <script>
 
-// function fetchUser (store) {
-//   return store.dispatch('FETCH_USER', {
-//     id: store.state.route.params.id
-//   })
-// }
 function fetchData (url) {
   const superagent = require('superagent')
 
@@ -29,6 +26,9 @@ function fetchData (url) {
   })
 }
 
+import twitter from 'twitter-text'
+import _ from 'lodash'
+
 export default {
   name: 'timeline-view',
   data () {
@@ -36,21 +36,27 @@ export default {
       rep: ''
     }
   },
-  // computed: {
-  //   user () {
-  //     return this.$store.state.users[this.$route.params.id]
-  //   }
-  // },
+  computed: {
+    tweets () {
+      _.forEach(this.rep, (v,k)=>{
+        this.rep[k].text = twitter.autoLink(v.text, {
+          urlEntities: [
+            _.get(v, ['entities', 'urls'], {})
+          ],
+          targetBlank: true
+        })
+      })
+      return this.rep
+    }
+  },
   metaInfo () {
-    const title = this.$route.params.title
+    const title = 'timeline ' + this.$route.params.title
     return {
       title,
       meta: [{ vmid: 'description', name: 'description', content: title }]
     }
   },
-  // preFetch: fetchUser,
   beforeMount () {
-    // fetchUser(this.$store)
     fetchData('/twitter?screen_name=MirrorWatchTW&count=10').then(
       response => {
         this.rep = response
