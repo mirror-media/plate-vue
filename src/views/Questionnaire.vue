@@ -1,14 +1,18 @@
 <template>
   <div class="questionnaire-view">
-    <div class="questionnaire__title">
+    <div class="questionnaire__title" v-bind:style="styleQuestionnaireTitle">
 
     </div>
     <div class="questionnaire__bar">
     </div>
     <div class="question-set">
       <div class="question">
-        <div class="question__index">Ｑ1</div>
-        <div class="question__content">有天你喝多了，醒來時你發現自己被關進了一間沒有窗戶的密室，這時候你會...</div>
+        <div class="question__index"><h3>Ｑ1</h3></div>
+        <div class="question__content">
+          <div class="content">
+            <h3>有天你喝多了，醒來時你發現自己被關進了一間沒有窗戶的密室，這時候你會...</h3>
+          </div>
+        </div>
       </div>
       <div class="options">
         <div class="option-container">
@@ -40,7 +44,7 @@
   </div>
 </template>
 <script>
-
+  import _ from 'lodash'
   const fetchQuestionnaire = (store) => {
     return store.dispatch('FETCH_QUESTIONNAIRE', {
       id: store.state.route.params.questionnaireId
@@ -49,21 +53,30 @@
   export default {
     name: 'questionnaire-view',
     preFetch: fetchQuestionnaire,
-    data () {
+    data() {
       return {
-        preFetch: fetchQuestionnaire
-      }
-    },
-    mounted: () => {
-      let state = {}
-      if (window.__INITIAL_STATE__) {
-        try {
-          state = window.__INITIAL_STATE__
-        } catch (e) {
-          state = {}
+        preFetch: fetchQuestionnaire,
+        state: {
+          gg: 'gg'
         }
       }
-      console.log('storestorestorestorestore', state);
+    },
+    computed: {
+      styleQuestionnaireTitle() {
+        return {
+          backgroundImage: 'url(' + _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'image', 'url' ]) + ')'
+        }
+      }
+    },
+    mounted() {
+      if (window.__INITIAL_STATE__) {
+        try {
+          this.state = window.__INITIAL_STATE__
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      console.log('storestorestorestorestore', _.get(this.state, [ 'questionnaire' ]));
     }
   }
 </script>
@@ -75,7 +88,6 @@
     .questionnaire__title {
       min-height: 30vh;
       background-color: black;
-      background-image: url(//statics.mirrormedia.mg/questionnaire/tasduiiuah32hk2/image/cover.jpg);
       background-repeat: no-repeat;
       background-position: center center;
       background-size: cover;
@@ -86,6 +98,28 @@
         height: 33%;
         background-color: #fafafa;
         padding: 20px;
+        display: flex;
+        align-items: center;
+        .question__index {
+          text-align: center;
+          flex: 2;
+          h3{
+            font-style: italic;
+            font-size: 20px;
+          }
+        }
+        .question__content {
+          flex: 7;
+          padding: 0 0.7em;
+          border-left: 1px solid #d6d6d6;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          .content {
+
+          }
+        }
       }
     }
     .options {
@@ -100,8 +134,19 @@
         border-bottom-style: groove;
         .option {
           display: flex;
+          align-items: center;
           .option__index {
             flex: 1;
+            background-color: #d6d6d6;
+            font-weight: bold;
+            font-family: Verdana;
+            margin-right: 1em;
+            height: 26px;
+            width: 2px;
+            line-height: 25px;
+            border-radius: 25px;
+            padding: 0;
+            text-align: center;
           }
           .option__content {
             flex: 9;
