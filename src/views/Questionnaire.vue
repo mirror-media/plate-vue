@@ -1,15 +1,15 @@
 <template>
   <div class="questionnaire-view">
-    <div class="questionnaire__title" v-bind:style="styleQuestionnaireTitle">
-
-    </div>
+    <div class="questionnaire__title" v-bind:style="styleQuestionnaireTitle"></div>
     <div class="questionnaire__bar">
     </div>
-    <div class="question-set">
-      <Question-container v-bind:index="(currQ + 1)" v-bind:content="currQuestion[ 'title' ]"/>
-      <div class="options">
-        <div v-for="(o, i) in currOptions" v-on:click="pickOption">
-          <Option-container v-bind:index="(i + 1)" v-bind:content="o.title" />
+    <div v-if="!finished">
+      <div class="question-set">
+        <Question-container v-bind:index="(currQ + 1)" v-bind:content="currQuestion"/>
+        <div class="options">
+          <div v-for="(o, i) in currOptions" v-on:click="pickOption">
+            <Option-container v-bind:index="(i + 1)" v-bind:content="o.title" />
+          </div>
         </div>
       </div>
     </div>
@@ -33,9 +33,10 @@
     },
     data() {
       return {
+        currQ: 0,
+        finished: false,
         preFetch: fetchQuestionnaire,
-        state: {},
-        currQ: 0
+        state: {}
       }
     },
     computed: {
@@ -48,12 +49,16 @@
         return _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions', this.currQ, 'options' ])
       },
       currQuestion() {
-        return _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions', this.currQ ], '')
+        return _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions', this.currQ, 'title' ], '')
+      },
+      questions() {
+        return _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions' ], [])
       }
     },
     methods: {
       pickOption(e) {
-        this.currQ++;
+        this.finished = ((this.currQ + 1) !== this.questions.length) ? false : true
+        this.currQ = ((this.currQ + 1) !== this.questions.length) ? (this.currQ + 1): 0
       }
     },
     mounted() {
