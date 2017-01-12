@@ -1,5 +1,6 @@
 <template>
   <div class="timeline-view">
+    <spinner :show="loading"></spinner>
     <ul v-for="item in tweets" :id="item.id">
       <li>
         <a href="https://twitter.com/MirrorWatchTW/status/"><img v-if="item.heroImg" :src="item.heroImg"/></a>
@@ -29,16 +30,19 @@ function fetchData (url) {
   })
 }
 
-import twitter from 'twitter-text'
+import Spinner from '../components/Spinner.vue'
 import _ from 'lodash'
+import twitter from 'twitter-text'
 
 export default {
   name: 'timeline-view',
   data () {
     return {
-      rep: ''
+      rep: '',
+      loading: true
     }
   },
+  components: { Spinner },
   computed: {
     tweets () {
       _.forEach(this.rep, (v,k)=>{
@@ -54,7 +58,7 @@ export default {
     }
   },
   metaInfo () {
-    const title = 'timeline ' + this.$route.params.title
+    const title = 'Timeline :: ' + this.$route.params.title.toUpperCase()
     return {
       title,
       meta: [{ vmid: 'description', name: 'description', content: title }]
@@ -66,6 +70,7 @@ export default {
       response => {
         this.rep = response
         console.log('Success!', response) //eslint-disable-line
+        this.loading = false
       },
       error => {
         console.error('Failed!', error) //eslint-disable-line
@@ -95,4 +100,9 @@ export default {
     text-decoration underline
   img 
     max-width: 300px
+  .spinner
+    position absolute
+    top 5px
+    right 5px
+    bottom auto
 </style>
