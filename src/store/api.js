@@ -19,7 +19,6 @@ function loadSectionList () {
       if (err) {
         reject(err)
       } else {
-        console.log('res.body', res.body)
         resolve(res.body)
       }
     })
