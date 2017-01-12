@@ -41,12 +41,17 @@ router.get('*', (req, res) => {
   redisClient.get(decodeURIComponent(req.url), function (err, data) {
     try {
       if (!err && data) {
+        // have data
+        console.log('redis')
         res.json(JSON.parse(data))
       }else{
+        // no data then http request
         superagent
         .get(apiHost + req.url)
         .end((err, response) => {
           res.send(JSON.parse(response.text))
+          console.log('save to redis', decodeURIComponent(req.url))
+          redisClient.set(decodeURIComponent(req.url), response.text, 'EX', 300)
         })
       }
     } catch(e)  {
