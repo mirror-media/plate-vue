@@ -15,36 +15,14 @@
         </div>
       </div>
       <div class="options">
-        <div class="option-container">
-          <div class="option">
-            <div class="option__index">1</div>
-            <div class="option__content">有天你喝多了，醒來時你發現自己被關進了一間沒有窗戶的密室，這時候你會...</div>
-          </div>
-        </div>
-        <div class="option-container">
-          <div class="option">
-            <div class="option__index">2</div>
-            <div class="option__content">有天你喝多了，醒來時你發現自己被關進了一間沒有窗戶的密室，這時候你會...</div>
-          </div>
-        </div>
-        <div class="option-container">
-          <div class="option">
-            <div class="option__index">3</div>
-            <div class="option__content">有天你喝多了，醒來時你發現自己被關進了一間沒有窗戶的密室，這時候你會...</div>
-          </div>
-        </div>
-        <div class="option-container">
-          <div class="option">
-            <div class="option__index">4</div>
-            <div class="option__content">有天你喝多了，醒來時你發現自己被關進了一間沒有窗戶的密室，這時候你會...</div>
-          </div>
-        </div>
+        <Option-container v-for="(o, i) in giveCurrOptions" v-bind:index="(i + 1)" v-bind:content="o.title"/>
       </div>
     </div>
   </div>
 </template>
 <script>
   import _ from 'lodash'
+  import Option from '../components/questionnaire/Option.vue'
   const fetchQuestionnaire = (store) => {
     return store.dispatch('FETCH_QUESTIONNAIRE', {
       id: store.state.route.params.questionnaireId
@@ -53,12 +31,14 @@
   export default {
     name: 'questionnaire-view',
     preFetch: fetchQuestionnaire,
+    components: {
+      'Option-container': Option
+    },
     data() {
       return {
         preFetch: fetchQuestionnaire,
-        state: {
-          gg: 'gg'
-        }
+        state: {},
+        currQ: 0
       }
     },
     computed: {
@@ -66,6 +46,9 @@
         return {
           backgroundImage: 'url(' + _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'image', 'url' ]) + ')'
         }
+      },
+      giveCurrOptions() {
+        return _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions', 0, 'options' ])
       }
     },
     mounted() {
@@ -76,7 +59,7 @@
           console.log(e);
         }
       }
-      console.log('storestorestorestorestore', _.get(this.state, [ 'questionnaire' ]));
+      console.log('storestorestorestorestore', _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions', 0, 'options' ]));
     }
   }
 </script>
@@ -125,34 +108,6 @@
     .options {
       background-color: #e4e4e4;
       padding: 0 20px;
-      .option-container {
-        display: flex;
-        align-items: center;
-        height: 70px;
-        border-bottom-width: 2px;
-        border-bottom-color: #ffffff;
-        border-bottom-style: groove;
-        .option {
-          display: flex;
-          align-items: center;
-          .option__index {
-            flex: 1;
-            background-color: #d6d6d6;
-            font-weight: bold;
-            font-family: Verdana;
-            margin-right: 1em;
-            height: 26px;
-            width: 2px;
-            line-height: 25px;
-            border-radius: 25px;
-            padding: 0;
-            text-align: center;
-          }
-          .option__content {
-            flex: 9;
-          }
-        }
-      }
     }
   }
 </style>
