@@ -15,7 +15,9 @@
         </div>
       </div>
       <div class="options">
-        <Option-container v-for="(o, i) in giveCurrOptions" v-bind:index="(i + 1)" v-bind:content="o.title"/>
+        <div v-for="(o, i) in giveCurrOptions" v-on:click="pickOption">
+          <Option-container v-bind:index="(i + 1)" v-bind:content="o.title" />
+        </div>
       </div>
     </div>
   </div>
@@ -48,7 +50,13 @@
         }
       },
       giveCurrOptions() {
-        return _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions', 0, 'options' ])
+        return _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions', this.currQ, 'options' ])
+      },
+    },
+    methods: {
+      pickOption(e) {
+        this.currQ++;
+        console.log('click option');
       }
     },
     mounted() {
