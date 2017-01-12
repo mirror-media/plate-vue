@@ -1,9 +1,30 @@
 // this is aliased in webpack config based on server/client build
 import api from 'create-api'
+import config from '../../api/config'
 
 const superagent = require('superagent')
 
 let apiHost = 'https://statics.mirrormedia.mg/questionnaire/tasduiiuah32hk2/tasduiiuah32hk2.json'
+
+function loadSectionList () {
+  return new Promise((resolve, reject) => {
+    //const query = req.query
+    const { API_PROTOCOL, API_PORT, API_HOST } = config
+    let url = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/sections`
+    superagent
+    .get(url)
+    //.timeout(constants.timeout)
+    //.query(query)
+    .end(function (err, res) {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(res.body)
+      }
+    })
+  })
+}
+
 
 function loadQuestionnaire(){
   return new Promise(resolve => {
@@ -60,6 +81,10 @@ export function fetchItem (id) {
 
 export function fetchItems (ids) {
   return Promise.all(ids.map(id => fetchItem(id)))
+}
+
+export function fetchSectionList (id) {
+  return loadSectionList()
 }
 
 export function fetchQuestionnaire (id) {
