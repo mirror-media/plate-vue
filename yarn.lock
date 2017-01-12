@@ -3794,6 +3794,10 @@ trim-newlines@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/trim-newlines/-/trim-newlines-1.0.0.tgz#5887966bb582a4503a41eb524f7d35011815a613"
 
+truncate@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/truncate/-/truncate-2.0.0.tgz#09d5bc4163f3e257cd687351241071c24f14112f"
+
 tryit@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tryit/-/tryit-1.0.3.tgz#393be730a9446fd1ead6da59a014308f36c289cb"
