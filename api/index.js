@@ -50,7 +50,7 @@ router.get('*', (req, res) => {
         })
       }
     } catch(e)  {
-      res.send('catch')
+      res.send(e)
     }
   })
 })
