@@ -5,7 +5,6 @@ import qs from 'qs'
 
 const superagent = require('superagent')
 
-
 function _buildQuery(params = {}) {
   let query = {}
   let whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related' ]
@@ -22,14 +21,8 @@ function _buildQuery(params = {}) {
   return query
 }
 
-function loadArticles(params = {}) {
-  const query = _buildQuery(params)
+function _doFetch(url) {
   return new Promise((resolve, reject) => {
-    let url = `/api/posts/`
-    // let slug = typeof params[0] === 'string' ? params[0] : null
-    // url = slug ? `${url}/${slug}` : url
-    url = `${url}?${query}`
-    console.log(url);
     superagent
     .get(url)
     .end(function(err, res) {
@@ -40,6 +33,15 @@ function loadArticles(params = {}) {
       }
     })
   })
+}
+
+function loadArticles(params = {}) {
+  const query = _buildQuery(params)
+  let url = `/api/posts/`
+  // let slug = typeof params[0] === 'string' ? params[0] : null
+  // url = slug ? `${url}/${slug}` : url
+  url = `${url}?${query}`
+  return _doFetch(url)
 }
 
 function loadSectionList () {
