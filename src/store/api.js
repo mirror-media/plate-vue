@@ -1,10 +1,46 @@
 // this is aliased in webpack config based on server/client build
 import api from 'create-api'
 import config from '../../api/config'
+import qs from 'qs'
 
 const superagent = require('superagent')
 
-let apiHost = 'https://statics.mirrormedia.mg/questionnaire/tasduiiuah32hk2/tasduiiuah32hk2.json'
+
+function _buildQuery(params = {}) {
+  let query = {}
+  let whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related' ]
+  whitelist.forEach((ele) => {
+    if (params.hasOwnProperty(ele)) {
+      if (ele === 'where' || ele === 'embedded') {
+        query[ ele ] = JSON.stringify(params[ ele ])
+      } else {
+        query[ ele ] = params[ ele ]
+      }
+    }
+  })
+  query = qs.stringify(query)
+  return query
+}
+
+function loadArticles(params = {}) {
+  const query = _buildQuery(params)
+  return new Promise((resolve, reject) => {
+    let url = `/api/posts/`
+    // let slug = typeof params[0] === 'string' ? params[0] : null
+    // url = slug ? `${url}/${slug}` : url
+    url = `${url}?${query}`
+    console.log(url);
+    superagent
+    .get(url)
+    .end(function(err, res) {
+      if(err) {
+        reject(err)
+      } else {
+        resolve(res.body)
+      }
+    })
+  })
+}
 
 function loadSectionList () {
   return new Promise((resolve, reject) => {
@@ -26,7 +62,8 @@ function loadSectionList () {
 }
 
 
-function loadQuestionnaire(){
+function loadQuestionnaire() {
+  let apiHost = 'https://statics.mirrormedia.mg/questionnaire/tasduiiuah32hk2/tasduiiuah32hk2.json'
   return new Promise(resolve => {
     superagent
     .get(apiHost)
@@ -89,6 +126,10 @@ export function fetchSectionList (id) {
 
 export function fetchQuestionnaire (id) {
   return loadQuestionnaire()
+}
+
+export function fetchArticles (params = {}) {
+  return loadArticles(params)
 }
 
 export function fetchUser (id) {
