@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { fetchItems, fetchIdsByType, fetchQuestionnaire, fetchSectionList, fetchUser } from './api'
+import { fetchArticles, fetchItems, fetchIdsByType, fetchQuestionnaire, fetchSectionList, fetchUser } from './api'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    articles: {},
     activeType: null,
     itemsPerPage: 20,
     items: {/* [id: number]: Item */},
@@ -22,6 +23,10 @@ const store = new Vuex.Store({
   },
 
   actions: {
+    FETCH_ARTICLES: ({ commit, state }, params = {}) => {
+      return fetchArticles(params).then(articles => commit('SET_ARTICLES', { articles }))
+    },
+
     // ensure data for rendering given list type
     FETCH_LIST_DATA: ({ commit, dispatch, state }, { type }) => {
       commit('SET_ACTIVE_TYPE', { type })
@@ -78,6 +83,10 @@ const store = new Vuex.Store({
   },
 
   mutations: {
+    SET_ARTICLES: (state, { articles }) => {
+      Vue.set(state, 'articles', articles)
+    },
+
     SET_ACTIVE_TYPE: (state, { type }) => {
       state.activeType = type
     },

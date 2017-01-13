@@ -19,10 +19,14 @@
   import _ from 'lodash'
   import Option from '../components/questionnaire/Option.vue'
   import Question from '../components/questionnaire/Question.vue'
+  import store from '../store'
   const fetchQuestionnaire = (store) => {
     return store.dispatch('FETCH_QUESTIONNAIRE', {
       id: store.state.route.params.questionnaireId
     })
+  }
+  const fetchArticles = (store, params = {}) => {
+    return store.dispatch('FETCH_ARTICLES', params)
   }
   export default {
     name: 'questionnaire-view',
@@ -69,7 +73,16 @@
           console.log(e);
         }
       }
-      console.log('storestorestorestorestore', _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions', 0, 'title' ]));
+      console.log('this.state: ', this.state);
+      store.replaceState(this.state)
+      // console.log('storestorestorestorestore', _.get(this.state, [ 'questionnaire', 'tasduiiuah32hk2', 'questions', 0, 'title' ]));
+      fetchArticles(store, {
+        where: {
+          '_id': '585ce6aff8cb670e00389c15'
+        }
+      });
+      console.log('store.state: ', store.state);
+      console.log('this.state: ', this.state);
     }
   }
 </script>
