@@ -1,14 +1,19 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import config from '../../api/config'
 import { fetchArticles, fetchCommonData, fetchEvent, fetchItems, fetchIdsByType, fetchQuestionnaire, fetchSectionList, fetchTopic, fetchUser } from './api'
 
 Vue.use(Vuex)
 
+const { DFPID, FB_APP_ID, FB_PAGES_ID } = config
 const store = new Vuex.Store({
   state: {
     articles: {},
     activeType: null,
     commonData: {},
+    dfpId: DFPID,
+    fbAppId: FB_APP_ID,
+    fbPagesId: FB_PAGES_ID,
     items: {/* [id: number]: Item */},
     itemsPerPage: 20,
     users: {/* [id: string]: User */},
@@ -131,7 +136,7 @@ const store = new Vuex.Store({
     // SET_EVENT: (state, { event }) => {
     //   state.event = event
     // },
-    
+
     SET_QUESTIONNAIRE: (state, { questionnaire }) => {
       Vue.set(state.questionnaire, questionnaire.id, questionnaire)
     },
