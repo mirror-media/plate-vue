@@ -6,6 +6,7 @@ Vue.use(Router)
 Vue.use(Meta)
 
 import { createListView } from '../views/CreateListView'
+import Article from '../views/Article.vue'
 import ItemView from '../views/ItemView.vue'
 import UserView from '../views/UserView.vue'
 import TimelineView from '../views/TimelineView.vue'
@@ -26,6 +27,7 @@ export default new Router({
     { path: '/timeline/:title', component: TimelineView },
     { path: '/q/:questionnaireId', component: Questionnaire },
     { path: '/section/:title', component: Section },
+    { path: '/posts/:id', component: Article },
     { path: '/', redirect: '/top' }
   ]
 })

@@ -25,7 +25,7 @@ const store = new Vuex.Store({
   },
 
   actions: {
-    FETCH_ARTICLES: ({ commit, state }, params = {}) => {
+    FETCH_ARTICLES: ({ commit, state }, { params }) => {
       return fetchArticles(params).then(articles => commit('SET_ARTICLES', { articles }))
     },
 
