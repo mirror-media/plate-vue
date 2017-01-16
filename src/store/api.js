@@ -1,4 +1,6 @@
 // this is aliased in webpack config based on server/client build
+import { camelizeKeys } from 'humps'
+import _ from 'lodash'
 import api from 'create-api'
 import config from '../../api/config'
 import qs from 'qs'
@@ -29,7 +31,7 @@ function _doFetch(url) {
       if(err) {
         reject(err)
       } else {
-        resolve(res.body)
+        resolve(camelizeKeys(res.body))
       }
     })
   })
@@ -44,25 +46,10 @@ function loadArticles(params = {}) {
   return _doFetch(url)
 }
 
-function loadSectionList () {
-  return new Promise((resolve, reject) => {
-    //const query = req.query
-    const { API_PROTOCOL, API_PORT, API_HOST } = config
-    let url = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/sections`
-    superagent
-    .get(url)
-    //.timeout(constants.timeout)
-    //.query(query)
-    .end(function (err, res) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(res.body)
-      }
-    })
-  })
+function loadEvent () {
+  let url = `http://localhost:8080/api/event`
+  return _doFetch(url)
 }
-
 
 function loadQuestionnaire() {
   let apiHost = 'https://statics.mirrormedia.mg/questionnaire/tasduiiuah32hk2/tasduiiuah32hk2.json'
@@ -77,6 +64,16 @@ function loadQuestionnaire() {
       }
     })
   })
+}
+
+function loadSectionList () {
+  let url = `http://localhost:8080/api/combo?endpoint=sections`
+  return _doFetch(url)
+}
+
+function loadTopic () {
+  let url = `http://localhost:8080/api/topics`
+  return _doFetch(url)
 }
 
 // warm the front page cache every 15 min
@@ -122,12 +119,31 @@ export function fetchItems (ids) {
   return Promise.all(ids.map(id => fetchItem(id)))
 }
 
-export function fetchSectionList (id) {
-  return loadSectionList()
+export function fetchEvent () {
+  return loadEvent()
+}
+
+export function fetchCommonData () {
+  return Promise.all([ fetchEvent(), fetchSectionList(), fetchTopic() ])
+          .then( (data) => {
+            let commonData = {}
+            commonData.event = data[0]
+            commonData.sectionList = data[1]
+            commonData.topic = data[2]
+            return commonData
+          } )
 }
 
 export function fetchQuestionnaire (id) {
   return loadQuestionnaire()
+}
+
+export function fetchSectionList () {
+  return loadSectionList()
+}
+
+export function fetchTopic () {
+  return loadTopic()
 }
 
 export function fetchArticles (params = {}) {

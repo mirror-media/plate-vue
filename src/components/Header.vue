@@ -1,25 +1,40 @@
 <template>
-  <div id="app">
-    <transition name="fade" mode="out-in">
-      <router-view class="view"></router-view>
-    </transition>
+  <div class="header">
+    <div class="inner">
+      <router-link to="/" exact>
+        <img class="logo" src="~public/favicon-48x48.png" alt="logo">
+      </router-link>
+      <router-link to="/top" v-for="item in headerItem" v-html="item"></router-link>
+    </div>
   </div>
 </template>
 
-<style lang="stylus">
-body
-  font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  font-size 15px
-  background-color lighten(#eceef1, 30%)
-  margin 0
-  padding-top 55px
-  color #34495e
-  overflow-y scroll
+<script>
 
-a
-  color #34495e
-  text-decoration none
+import _ from 'lodash'
 
+export default {
+  name: 'app-header',
+  props: {
+    commonData: {},
+  },
+  computed: {
+    headerItem() {
+      let headerItem = []
+      _.forEach(this.commonData.sectionList.endpoints.sections.items, (s) => {
+        headerItem.push(s.title)
+      })
+      _.forEach(this.commonData.topic.items, (t) => {
+        //console.log('tt', t)
+        t.isFeatured ? headerItem.push(t.name) : ''
+      })
+      return headerItem
+    }
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
 .header
   background-color #e5e5e5
   position fixed
@@ -56,17 +71,6 @@ a
   display inline-block
   vertical-align middle
 
-.view
-  max-width 800px
-  margin 0 auto
-  position relative
-
-.fade-enter-active, .fade-leave-active
-  transition all .2s ease
-
-.fade-enter, .fade-leave-active
-  opacity 0
-
 @media (max-width 860px)
   .header .inner
     padding 15px 30px
@@ -80,5 +84,5 @@ a
     a
       margin-right 1em
     .github
-      display none
+      display none  
 </style>
