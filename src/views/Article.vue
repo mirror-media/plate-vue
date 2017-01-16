@@ -1,6 +1,12 @@
 <template>
   <div>
+    <div><h2>{{ title }}</h2></div>
+    <div>credit: {{ credit }}</div>
     <div v-html="content">
+    </div>
+    <div>相關新聞：</div>
+    <div v-for="(o, i) in relateds">
+      - <a href="">{{ o.title }}</a>
     </div>
   </div>
 </template>
@@ -29,9 +35,34 @@
     },
     computed: {
       content() {
-        const { brief, tags, title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        return brief[ 'html' ]
-      }
+        const { brief, content : { apiData = [] }, tags, title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        const paragraph = apiData.map((o) => {
+          return (o.type === 'unstyled') ? o.content.toString() : null
+        })
+        return '<p>' + paragraph.join('<p/><p>')
+      },
+      credit() {
+        const { cameraMan, designers, engineers, photographers, writers } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        const credit = [ cameraMan, designers, engineers, photographers, writers ].map((o) => {
+          const names = (o.length > 0) ? o.map((i) => (i.name)) : 0
+          return (names.length > 0) ? names.join('、') : null
+        })
+        let creditStr = ''
+        for(let i in credit) {
+          if(credit[ i ]) {
+            creditStr += ' ' + credit[ i ]
+          }
+        }
+        return creditStr
+      },
+      relateds() {
+        const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        return relateds
+      },
+      title() {
+        const { title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        return title
+      },
     },
     mounted() {
     },
