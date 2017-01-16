@@ -27,14 +27,14 @@
     },
     computed: {
       content() {
-        const { brief, tags, title } = _.get(this.$store, [ 'state', 'articles', '_items', 0 ])
+        const { brief, tags, title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return brief[ 'html' ]
       }
     },
     mounted() {
     },
     metaInfo() {
-      const { brief, tags, title } = _.get(this.$store, [ 'state', 'articles', '_items', 0 ])
+      const { brief , tags, title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
       // console.log(brief.html);
       // console.log(entities.decodeHTML(brief.html));
       return {

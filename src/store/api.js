@@ -42,7 +42,8 @@ function _doFetch(url) {
 
 function loadArticles(params = {}) {
   const query = _buildQuery(params)
-  let url = `http://localhost:8080/api/posts`
+  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts`
   // let slug = typeof params[0] === 'string' ? params[0] : null
   // url = slug ? `${url}/${slug}` : url
   url = `${url}?${query}`
@@ -56,7 +57,8 @@ function loadEvent () {
 }
 
 function loadQuestionnaire() {
-  let apiHost = 'https://statics.mirrormedia.mg/questionnaire/tasduiiuah32hk2/tasduiiuah32hk2.json'
+  const { QUESTIONNAIRE_HOST } = config
+  let apiHost = `${QUESTIONNAIRE_PROTOCOL}://${QUESTIONNAIRE_HOST}/questionnaire/tasduiiuah32hk2/tasduiiuah32hk2.json`
   return new Promise(resolve => {
     superagent
     .get(apiHost)
