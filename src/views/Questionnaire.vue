@@ -83,6 +83,12 @@
       });
       console.log('store.state: ', store.state);
       console.log('this.state: ', this.state);
+    },
+    metaInfo: {
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'description', content: '桌遊小測驗' }
+      ]
     }
   }
 </script>

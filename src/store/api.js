@@ -27,8 +27,11 @@ function _doFetch(url) {
   return new Promise((resolve, reject) => {
     superagent
     .get(url)
+    // .query('')
     .end(function(err, res) {
       if(err) {
+        console.log(url);
+        console.log(err);
         reject(err)
       } else {
         resolve(camelizeKeys(res.body))
@@ -39,7 +42,7 @@ function _doFetch(url) {
 
 function loadArticles(params = {}) {
   const query = _buildQuery(params)
-  let url = `/api/posts/`
+  let url = `http://localhost:8080/api/posts`
   // let slug = typeof params[0] === 'string' ? params[0] : null
   // url = slug ? `${url}/${slug}` : url
   url = `${url}?${query}`
