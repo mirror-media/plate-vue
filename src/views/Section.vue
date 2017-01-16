@@ -1,5 +1,6 @@
 <template>
   <div class="section-view">
+    <app-Header :commonData= 'commonData' />
     <div class="section-story" v-for="item in articles" :id="item.id">
       <div class="story-content">
         <a :href="'https://www.mirrormedia.mg/story/'+ item.slug"><h2 v-html="item.title"/></a>
@@ -15,48 +16,31 @@
 
 <script>
 
-function fetchData (url) {
-  const superagent = require('superagent')
-
-  let apiHost = '/api'
-
-  return new Promise(resolve => {
-    superagent
-    .get(apiHost + url)
-    .end((err, response) => {
-      if (!err && response) {
-        resolve(JSON.parse(response.text))
-      } else {
-        resolve('{\'error\':' + err + '}')
-      }
-    })
-  })
-}
-
 import _ from 'lodash'
+import Header from '../components/Header.vue'
 import truncate from 'truncate'
 
-const fetchSectionList = (store) => {
-  return store.dispatch('FETCH_SECTIONLIST', {
-    id: store.state.route.params.title
-  })
+const fetchCommonData = (store) => {
+  return store.dispatch('FETCH_COMMONDATA', { })
 }
 
 export default {
   name: 'section-view',
-  preFetch (store) {
-    return store.dispatch('FETCH_SECTIONLIST', {
-      id: store.state.route.params.title 
-    })
+  preFetch: fetchCommonData,
+  components: {
+    'app-Header': Header,
   },
   data () {
     return {
-      rep: ''
+      state: {}
     }
   },
   computed: {
     articles () {
       return this.rep
+    },
+    commonData() {
+      return this.$store.state.commonData
     }
   },
   metaInfo () {
@@ -66,26 +50,15 @@ export default {
     }
   },
   beforeMount () {
-    fetchData('/combo?endpoint=sections&endpoint=sectionfeatured')
-    .then(res => { 
-      return _.get(_.find(res._endpoints.sections._items, { 'name': this.$route.params.title }), '_id' )
-    }, err => { console.error('Failed!', error) })
-    .then(sectionID => fetchData('/meta?where={"sections":"'+ sectionID + '"}&max_results=10&page=1&sort=-publishedDate&related=full')
-      .then(
-        response => {
-          this.rep = response._items
-          console.log('Success!', response._items)
-        },
-        error => {
-          console.error('Failed!', error)
-        }
-      ) 
-    )
+    
+  },
+  mounted() {
+    
   }
 }
   
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
 .section-view
   box-sizing border-box
   max-width: 960px

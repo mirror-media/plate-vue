@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { fetchArticles, fetchItems, fetchIdsByType, fetchQuestionnaire, fetchSectionList, fetchUser } from './api'
+import { fetchArticles, fetchCommonData, fetchEvent, fetchItems, fetchIdsByType, fetchQuestionnaire, fetchSectionList, fetchTopic, fetchUser } from './api'
 
 Vue.use(Vuex)
 
@@ -8,11 +8,13 @@ const store = new Vuex.Store({
   state: {
     articles: {},
     activeType: null,
-    itemsPerPage: 20,
+    commonData: {},
     items: {/* [id: number]: Item */},
     users: {/* [id: string]: User */},
-    sectionList: {},
+    event: {},
     questionnaire: {},
+    sectionList: {},
+    topic: {},
     lists: {
       top: [/* number */],
       new: [],
@@ -63,17 +65,35 @@ const store = new Vuex.Store({
       }
     },
 
-    FETCH_SECTIONLIST: ({ commit, state }, { id }) => {
-      return state.sectionList[ id ]
-        ? Promise.resolve(state.sectionList[ id ])
-        : fetchSectionList(id).then(sectionList => commit('SET_SECTIONLIST', { sectionList }))
+    FETCH_COMMONDATA: ({ commit, state }, { }) => {
+      return state.commonData.event
+        ? Promise.resolve(state.commonData)
+        : fetchCommonData().then(commonData => commit('SET_COMMONDATA', { commonData }))
     },
+
+    // FETCH_EVENT: ({ commit, state }, { }) => {
+    //   return state.event.items
+    //     ? Promise.resolve(state.event)
+    //     : fetchEvent().then(event => commit('SET_EVENT', { event }))
+    // },
 
     FETCH_QUESTIONNAIRE: ({ commit, state }, { id }) => {
       return state.questionnaire[ id ]
         ? Promise.resolve(state.questionnaire[ id ])
         : fetchQuestionnaire(id).then(questionnaire => commit('SET_QUESTIONNAIRE', { questionnaire }))
     },
+
+    // FETCH_SECTIONLIST: ({ commit, state }, { }) => {
+    //   return state.sectionList.items
+    //     ? Promise.resolve(state.sectionList)
+    //     : fetchSectionList().then(sectionList => commit('SET_SECTIONLIST', { sectionList }))
+    // },
+
+    // FETCH_TOPIC: ({ commit, state }, { }) => {
+    //   return state.topic.items
+    //     ? Promise.resolve(state.topic)
+    //     : fetchTopic().then(topic => commit('SET_TOPIC', { topic }))
+    // },
 
     FETCH_USER: ({ commit, state }, { id }) => {
       return state.users[id]
@@ -103,13 +123,25 @@ const store = new Vuex.Store({
       })
     },
 
-    SET_SECTIONLIST: (state, { sectionList }) => {
-      Vue.set(state.sectionList)
+    SET_COMMONDATA: (state, { commonData }) => {
+      state.commonData = commonData
     },
 
+    // SET_EVENT: (state, { event }) => {
+    //   state.event = event
+    // },
+    
     SET_QUESTIONNAIRE: (state, { questionnaire }) => {
       Vue.set(state.questionnaire, questionnaire.id, questionnaire)
     },
+
+    // SET_SECTIONLIST: (state, { sectionList }) => {
+    //   state.sectionList = sectionList.endpoints.sections
+    // },
+
+    // SET_TOPIC: (state, { topic }) => {
+    //   state.topic = topic
+    // },
 
     SET_USER: (state, { user }) => {
       Vue.set(state.users, user.id, user)

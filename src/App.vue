@@ -1,19 +1,5 @@
 <template>
   <div id="app">
-    <div class="header">
-      <div class="inner">
-        <router-link to="/" exact>
-          <img class="logo" src="~public/favicon-48x48.png" alt="logo">
-        </router-link>
-        <router-link to="/top">Top</router-link>
-        <router-link to="/new">New</router-link>
-        <router-link to="/show">Show</router-link>
-        <router-link to="/ask">Ask</router-link>
-        <router-link to="/job">Jobs</router-link>
-        <router-link to="/timeline/watch">Timeline</router-link>
-        <router-link to="/section/watch">Section</router-link>
-      </div>
-    </div>
     <transition name="fade" mode="out-in">
       <router-view class="view"></router-view>
     </transition>
