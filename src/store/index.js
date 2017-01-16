@@ -9,7 +9,6 @@ const store = new Vuex.Store({
     articles: {},
     activeType: null,
     commonData: {},
-    itemsPerPage: 20,
     items: {/* [id: number]: Item */},
     users: {/* [id: string]: User */},
     event: {},

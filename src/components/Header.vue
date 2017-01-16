@@ -4,7 +4,7 @@
       <router-link to="/" exact>
         <img class="logo" src="~public/favicon-48x48.png" alt="logo">
       </router-link>
-      <router-link to="/top" v-for="item in headerItem" v-html="item"></router-link>
+      <router-link to="/top" v-for="item in headerItem" v-html="item.title"></router-link>
     </div>
   </div>
 </template>
@@ -22,11 +22,12 @@ export default {
     headerItem() {
       let headerItem = []
       _.forEach(this.commonData.sectionList.endpoints.sections.items, (s) => {
-        headerItem.push(s.title)
+        headerItem.push(s)
       })
       _.forEach(this.commonData.topic.items, (t) => {
         //console.log('tt', t)
-        t.isFeatured ? headerItem.push(t.name) : ''
+        t.title = t.name
+        t.isFeatured ? headerItem.push(t) : ''
       })
       return headerItem
     }
@@ -44,7 +45,7 @@ export default {
   left 0
   right 0
   .inner
-    max-width 800px
+    max-width 1000px
     box-sizing border-box
     margin 0px auto
     padding 15px 5px
@@ -56,7 +57,7 @@ export default {
     vertical-align middle
     font-weight 300
     letter-spacing .075em
-    margin-right 1.8em
+    margin-right 1.2em
     &:hover
       color #000
     &.router-link-active

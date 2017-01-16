@@ -47,7 +47,8 @@ function loadArticles(params = {}) {
 }
 
 function loadEvent () {
-  let url = `http://localhost:8080/api/event`
+  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/event`
   return _doFetch(url)
 }
 
@@ -67,12 +68,14 @@ function loadQuestionnaire() {
 }
 
 function loadSectionList () {
-  let url = `http://localhost:8080/api/combo?endpoint=sections`
+  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=sections`
   return _doFetch(url)
 }
 
 function loadTopic () {
-  let url = `http://localhost:8080/api/topics`
+  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/topics`
   return _doFetch(url)
 }
 
