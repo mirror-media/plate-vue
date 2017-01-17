@@ -14,7 +14,6 @@
       - <a href="">{{ o.title }}</a>
     </div>
     <div id="mm_pc_ent_ap_970x90_FT" adunit="mm_pc_ent_ap_970x90_FT" dimensions="970x90"></div>
-    <script src="https://www.googletagservices.com/tag/js/gpt.js" v-on:load="loadDfp"></script>
   </div>
 </template>
 <script>
@@ -96,21 +95,21 @@
       loadDfp(e) {
         window.googletag = window.googletag || {};
         window.googletag.cmd = window.googletag.cmd || [];
-        googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_E1', [300, 250], 'mm_pc_ent_ap_300x250_E1').addService(googletag.pubads());
-        googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_E2', [300, 250], 'mm_pc_ent_ap_300x250_E2').addService(googletag.pubads());
-        googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_R1', [300, 250], 'mm_pc_ent_ap_300x250_R1').addService(googletag.pubads());
-        googletag.defineSlot('/40175602/mm_pc_ent_ap_300x600_R2', [[300, 250], [300, 600]], 'mm_pc_ent_ap_300x600_R2').addService(googletag.pubads());
-        googletag.defineSlot('/40175602/mm_pc_ent_ap_970x250_HD', [[970, 90], [970, 250]], 'mm_pc_ent_ap_970x250_HD').addService(googletag.pubads());
-        googletag.defineSlot('/40175602/mm_pc_ent_ap_970x90_FT', [970, 90], 'mm_pc_ent_ap_970x90_FT').addService(googletag.pubads());
-        googletag.pubads().enableSingleRequest();
-        googletag.pubads().collapseEmptyDivs();
-        googletag.enableServices();
-        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_300x250_E1'); });
-        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_300x250_E2'); });
-        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_300x250_R1'); });
-        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_300x600_R2'); });
-        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_970x250_HD'); });
-        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_970x90_FT'); });
+        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_E1', [300, 250], 'mm_pc_ent_ap_300x250_E1').addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_E2', [300, 250], 'mm_pc_ent_ap_300x250_E2').addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_R1', [300, 250], 'mm_pc_ent_ap_300x250_R1').addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_300x600_R2', [[300, 250], [300, 600]], 'mm_pc_ent_ap_300x600_R2').addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_970x250_HD', [[970, 90], [970, 250]], 'mm_pc_ent_ap_970x250_HD').addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_970x90_FT', [970, 90], 'mm_pc_ent_ap_970x90_FT').addService(window.googletag.pubads());
+        window.googletag.pubads().enableSingleRequest();
+        window.googletag.pubads().collapseEmptyDivs();
+        window.googletag.enableServices();
+        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_300x250_E1'); });
+        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_300x250_E2'); });
+        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_300x250_R1'); });
+        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_300x600_R2'); });
+        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_970x250_HD'); });
+        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_970x90_FT'); });
       },
       initDfp(googletag) {
         googletag.pubads().enableSingleRequest();
@@ -119,6 +118,17 @@
     },
     mounted() {
       const { dfpId } = _.get(this.$store, [ 'state' ])
+      const dfpScript = document.createElement('script')
+      dfpScript.type = "text\/javascript";
+      dfpScript.onerror = function(){
+        console.log('err');
+      };
+      window.onload = (e) => {
+        this.loadDfp(e)
+      }
+      document.querySelector('head').appendChild(dfpScript)
+      dfpScript.src = 'https://www.googletagservices.com/tag/js/gpt.js'
+
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
