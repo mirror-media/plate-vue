@@ -1,13 +1,20 @@
 <template>
   <div>
+    <div id="mm_pc_ent_ap_970x250_HD" adunit="mm_pc_ent_ap_970x250_HD" dimensions="970x250"></div>
     <div><h2>{{ title }}</h2></div>
+    <div id="mm_pc_ent_ap_300x250_E1" adunit="mm_pc_ent_ap_300x250_E1" dimensions="300x250"></div>
+    <div id="mm_pc_ent_ap_300x250_E2" adunit="mm_pc_ent_ap_300x250_E2" dimensions="300x250"></div>
     <div>credit: {{ credit }}</div>
     <div v-html="content">
     </div>
+    <div id="mm_pc_ent_ap_300x250_R1" adunit="mm_pc_ent_ap_300x250_R1" dimensions="300x250"></div>
+    <div id="mm_pc_ent_ap_300x250_R2" adunit="mm_pc_ent_ap_300x250_R2" dimensions="300x250"></div>
     <div>相關新聞：</div>
     <div v-for="(o, i) in relateds">
       - <a href="">{{ o.title }}</a>
     </div>
+    <div id="mm_pc_ent_ap_970x90_FT" adunit="mm_pc_ent_ap_970x90_FT" dimensions="970x90"></div>
+    <script src="https://www.googletagservices.com/tag/js/gpt.js" v-on:load="loadDfp"></script>
   </div>
 </template>
 <script>
@@ -26,20 +33,39 @@
     })
   }
   export default {
-    name: 'questionnaire-view',
+    name: 'article-view',
     preFetch: fetchArticles,
+    compenents: {
+      // 'vue-dfp': VueDfp(require('vue'), { dfpID: '421342134' })
+      // 'qoption': Option
+    },
     data() {
       return {
-        state: {}
+        state: {},
+        dfpConst: {
+          adUnitPath: '/421342134/test_pc_np_ap_970x250_HD',
+          adSize: [ [ 970, 250 ] ],
+          adElementId: 'test_pc_np_ap_970x250_HD'
+        }
       }
     },
     computed: {
       content() {
         const { brief, content : { apiData = [] }, tags, title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         const paragraph = apiData.map((o) => {
-          return (o.type === 'unstyled') ? o.content.toString() : null
+          switch(o.type) {
+            case 'unstyled':
+              return '<p>' + o.content.toString() + '</p>'
+            case 'slideshow':
+              return o.content.map((i) => {
+                return '<img src=\"' + i.url + '\"/><br>'
+              }).join('')
+            default:
+              return
+          }
+
         })
-        return '<p>' + paragraph.join('<p/><p>')
+        return paragraph.join('<br>')
       },
       credit() {
         const { cameraMan, designers, engineers, photographers, writers } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
@@ -64,7 +90,35 @@
         return title
       },
     },
+    beforeMount() {
+    },
+    methods: {
+      loadDfp(e) {
+        window.googletag = window.googletag || {};
+        window.googletag.cmd = window.googletag.cmd || [];
+        googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_E1', [300, 250], 'mm_pc_ent_ap_300x250_E1').addService(googletag.pubads());
+        googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_E2', [300, 250], 'mm_pc_ent_ap_300x250_E2').addService(googletag.pubads());
+        googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_R1', [300, 250], 'mm_pc_ent_ap_300x250_R1').addService(googletag.pubads());
+        googletag.defineSlot('/40175602/mm_pc_ent_ap_300x600_R2', [[300, 250], [300, 600]], 'mm_pc_ent_ap_300x600_R2').addService(googletag.pubads());
+        googletag.defineSlot('/40175602/mm_pc_ent_ap_970x250_HD', [[970, 90], [970, 250]], 'mm_pc_ent_ap_970x250_HD').addService(googletag.pubads());
+        googletag.defineSlot('/40175602/mm_pc_ent_ap_970x90_FT', [970, 90], 'mm_pc_ent_ap_970x90_FT').addService(googletag.pubads());
+        googletag.pubads().enableSingleRequest();
+        googletag.pubads().collapseEmptyDivs();
+        googletag.enableServices();
+        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_300x250_E1'); });
+        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_300x250_E2'); });
+        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_300x250_R1'); });
+        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_300x600_R2'); });
+        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_970x250_HD'); });
+        googletag.cmd.push(function() { googletag.display('mm_pc_ent_ap_970x90_FT'); });
+      },
+      initDfp(googletag) {
+        googletag.pubads().enableSingleRequest();
+        googletag.enableServices();
+      }
+    },
     mounted() {
+      const { dfpId } = _.get(this.$store, [ 'state' ])
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
