@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div id="fb-root"></div>
     <div id="mm_pc_ent_ap_970x250_HD" adunit="test_pc_np_ap_970x250_HD" dimensions="970x250"></div>
     <div><h2>{{ title }}</h2></div>
     <div id="test_pc_np_ap_300x250_E1" adunit="test_pc_np_ap_300x250_E1" dimensions="300x250"></div>
@@ -14,6 +15,9 @@
       - <a href="">{{ o.title }}</a>
     </div>
     <div id="test_pc_np_ap_970x90_FT" adunit="test_pc_np_ap_970x90_FT" dimensions="970x90"></div>
+    <div style="margin: 1.5em 0;">
+      <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -50,6 +54,10 @@
       }
     },
     computed: {
+      articleUrl() {
+        const { name } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        return `https://www.mirrormedia.mg/story/${name}`
+      },
       content() {
         const { brief, content : { apiData = [] }, tags, title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         const paragraph = apiData.map((o) => {
@@ -118,7 +126,7 @@
       }
     },
     mounted() {
-      const { dfpId } = _.get(this.$store, [ 'state' ])
+      const { dfpId, fbAppId } = _.get(this.$store, [ 'state' ])
       const dfpScript = document.createElement('script')
       dfpScript.type = "text\/javascript";
       dfpScript.onerror = function(){
@@ -130,6 +138,9 @@
       document.querySelector('head').appendChild(dfpScript)
       dfpScript.src = 'https://www.googletagservices.com/tag/js/gpt.js'
 
+      const fbSdkScript = document.createElement('script')
+      fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
+      document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
