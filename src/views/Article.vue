@@ -1,22 +1,23 @@
 <template>
   <div>
-    <div id="mm_pc_ent_ap_970x250_HD" adunit="mm_pc_ent_ap_970x250_HD" dimensions="970x250"></div>
+    <div id="mm_pc_ent_ap_970x250_HD" adunit="test_pc_np_ap_970x250_HD" dimensions="970x250"></div>
     <div><h2>{{ title }}</h2></div>
-    <div id="mm_pc_ent_ap_300x250_E1" adunit="mm_pc_ent_ap_300x250_E1" dimensions="300x250"></div>
-    <div id="mm_pc_ent_ap_300x250_E2" adunit="mm_pc_ent_ap_300x250_E2" dimensions="300x250"></div>
+    <div id="test_pc_np_ap_300x250_E1" adunit="test_pc_np_ap_300x250_E1" dimensions="300x250"></div>
+    <div id="test_pc_np_ap_300x250_E2" adunit="test_pc_np_ap_300x250_E2" dimensions="300x250"></div>
     <div>credit: {{ credit }}</div>
     <div v-html="content">
     </div>
-    <div id="mm_pc_ent_ap_300x250_R1" adunit="mm_pc_ent_ap_300x250_R1" dimensions="300x250"></div>
-    <div id="mm_pc_ent_ap_300x250_R2" adunit="mm_pc_ent_ap_300x250_R2" dimensions="300x250"></div>
+    <div id="test_pc_np_ap_300x250_R1" adunit="test_pc_np_ap_300x250_R1" dimensions="300x250"></div>
+    <div id="test_pc_np_ap_300x250_R2" adunit="test_pc_np_ap_300x250_R2" dimensions="300x250"></div>
     <div>相關新聞：</div>
     <div v-for="(o, i) in relateds">
       - <a href="">{{ o.title }}</a>
     </div>
-    <div id="mm_pc_ent_ap_970x90_FT" adunit="mm_pc_ent_ap_970x90_FT" dimensions="970x90"></div>
+    <div id="test_pc_np_ap_970x90_FT" adunit="test_pc_np_ap_970x90_FT" dimensions="970x90"></div>
   </div>
 </template>
 <script>
+  import { DFP_UNIT_ID } from '../constants'
   import _ from 'lodash'
   import sanitizeHtml from 'sanitize-html'
   import store from '../store'
@@ -95,21 +96,21 @@
       loadDfp(e) {
         window.googletag = window.googletag || {};
         window.googletag.cmd = window.googletag.cmd || [];
-        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_E1', [300, 250], 'mm_pc_ent_ap_300x250_E1').addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_E2', [300, 250], 'mm_pc_ent_ap_300x250_E2').addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_300x250_R1', [300, 250], 'mm_pc_ent_ap_300x250_R1').addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_300x600_R2', [[300, 250], [300, 600]], 'mm_pc_ent_ap_300x600_R2').addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_970x250_HD', [[970, 90], [970, 250]], 'mm_pc_ent_ap_970x250_HD').addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/mm_pc_ent_ap_970x90_FT', [970, 90], 'mm_pc_ent_ap_970x90_FT').addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCE1' ][ 'aduid' ], [300, 250], '' + DFP_UNIT_ID[ 'PCE1' ][ 'aduid' ]).addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCE2' ][ 'aduid' ], [300, 250], '' + DFP_UNIT_ID[ 'PCE2' ][ 'aduid' ]).addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCR1' ][ 'aduid' ], [300, 250], '' + DFP_UNIT_ID[ 'PCR1' ][ 'aduid' ]).addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCR2' ][ 'aduid' ], [[300, 250], [300, 600]], '' + DFP_UNIT_ID[ 'PCR2' ][ 'aduid' ]).addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCHD' ][ 'aduid' ], [[970, 90], [970, 250]], '' + DFP_UNIT_ID[ 'PCHD' ][ 'aduid' ]).addService(window.googletag.pubads());
+        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCFT' ][ 'aduid' ], [970, 90], '' + DFP_UNIT_ID[ 'PCFT' ][ 'aduid' ]).addService(window.googletag.pubads());
         window.googletag.pubads().enableSingleRequest();
         window.googletag.pubads().collapseEmptyDivs();
         window.googletag.enableServices();
-        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_300x250_E1'); });
-        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_300x250_E2'); });
-        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_300x250_R1'); });
-        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_300x600_R2'); });
-        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_970x250_HD'); });
-        window.googletag.cmd.push(function() { window.googletag.display('mm_pc_ent_ap_970x90_FT'); });
+        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCE1' ][ 'aduid' ]); });
+        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCE2' ][ 'aduid' ]); });
+        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCR1' ][ 'aduid' ]); });
+        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCR2' ][ 'aduid' ]); });
+        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCHD' ][ 'aduid' ]); });
+        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCFT' ][ 'aduid' ]); });
       },
       initDfp(googletag) {
         googletag.pubads().enableSingleRequest();
