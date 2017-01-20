@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div id="fb-root"></div>
     <div id="mm_pc_ent_ap_970x250_HD" adunit="test_pc_np_ap_970x250_HD" dimensions="970x250"></div>
     <div><h2>{{ title }}</h2></div>
     <div id="test_pc_np_ap_300x250_E1" adunit="test_pc_np_ap_300x250_E1" dimensions="300x250"></div>
@@ -9,11 +10,23 @@
     </div>
     <div id="test_pc_np_ap_300x250_R1" adunit="test_pc_np_ap_300x250_R1" dimensions="300x250"></div>
     <div id="test_pc_np_ap_300x250_R2" adunit="test_pc_np_ap_300x250_R2" dimensions="300x250"></div>
-    <div>相關新聞：</div>
+    <div>相關文章：</div>
     <div v-for="(o, i) in relateds">
-      - <a href="">{{ o.title }}</a>
+      <div><a href="">{{ o.title }}</a></div>
+      <div><a href=""><img :src="getValue(o, [ 'heroImage', 'image', 'url' ])" style="width: 100%;"/></a></div>
     </div>
     <div id="test_pc_np_ap_970x90_FT" adunit="test_pc_np_ap_970x90_FT" dimensions="970x90"></div>
+    <br>
+    <div>熱門文章：</div>
+    <div>
+      <div v-for="(o, i) in popularlist">
+        <div><a href="">{{ o.title }}</a></div>
+        <div><a href=""><img :src="getValue(o, [ 'heroImage', 'image', 'url' ])" style="width: 100%;"/></a></div>
+      </div>
+    </div>
+    <div style="margin: 1.5em 0;">
+      <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
+    </div>
   </div>
 </template>
 <script>
@@ -30,8 +43,14 @@
           '_id': store.state.route.params.id
         }
       }
+    }).then(() => {
+      return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
     })
   }
+  const fetchPop = (store) => {
+    return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
+  }
+
   export default {
     name: 'article-view',
     preFetch: fetchArticles,
@@ -50,6 +69,10 @@
       }
     },
     computed: {
+      articleUrl() {
+        const { name } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        return `https://www.mirrormedia.mg/story/${name}`
+      },
       content() {
         const { brief, content : { apiData = [] }, tags, title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         const paragraph = apiData.map((o) => {
@@ -81,6 +104,10 @@
         }
         return creditStr
       },
+      popularlist() {
+        const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ])
+        return report
+      },
       relateds() {
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return relateds
@@ -93,6 +120,12 @@
     beforeMount() {
     },
     methods: {
+      getPopList() {
+        console.log('got pop...');
+      },
+      getValue(o = {}, p = []) {
+        return _.get(o, p, '');
+      },
       loadDfp(e) {
         window.googletag = window.googletag || {};
         window.googletag.cmd = window.googletag.cmd || [];
@@ -118,18 +151,18 @@
       }
     },
     mounted() {
-      const { dfpId } = _.get(this.$store, [ 'state' ])
+      const { dfpId, fbAppId } = _.get(this.$store, [ 'state' ])
       const dfpScript = document.createElement('script')
       dfpScript.type = "text\/javascript";
       dfpScript.onerror = function(){
         console.log('err');
       };
-      window.onload = (e) => {
-        this.loadDfp(e)
-      }
       document.querySelector('head').appendChild(dfpScript)
       dfpScript.src = 'https://www.googletagservices.com/tag/js/gpt.js'
 
+      window.onload = (e) => {
+        this.loadDfp(e)
+      }
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])

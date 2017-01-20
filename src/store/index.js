@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchCommonData, fetchEvent, fetchItems, fetchIdsByType, fetchQuestionnaire, fetchSectionList, fetchTopic, fetchUser } from './api'
+import { fetchArticles, fetchArticlesPopList, fetchCommonData, fetchEvent, fetchItems, fetchIdsByType, fetchQuestionnaire, fetchSectionList, fetchTopic, fetchUser } from './api'
 
 Vue.use(Vuex)
 
@@ -9,6 +9,7 @@ const { DFPID, FB_APP_ID, FB_PAGES_ID } = config
 const store = new Vuex.Store({
   state: {
     articles: {},
+    articlesPopList: {},
     activeType: null,
     commonData: {},
     dfpId: DFPID,
@@ -34,7 +35,9 @@ const store = new Vuex.Store({
     FETCH_ARTICLES: ({ commit, state }, { params }) => {
       return fetchArticles(params).then(articles => commit('SET_ARTICLES', { articles }))
     },
-
+    FETCH_ARTICLES_POP_LIST: ({ commit, state }, { params = {} }) => {
+      return fetchArticlesPopList(params).then(articlesPopList => commit('SET_ARTICLES_POP_LIST', { articlesPopList }))
+    },
     // ensure data for rendering given list type
     FETCH_LIST_DATA: ({ commit, dispatch, state }, { type }) => {
       commit('SET_ACTIVE_TYPE', { type })
@@ -111,6 +114,10 @@ const store = new Vuex.Store({
   mutations: {
     SET_ARTICLES: (state, { articles }) => {
       Vue.set(state, 'articles', articles)
+    },
+
+    SET_ARTICLES_POP_LIST: (state, { articlesPopList }) => {
+      Vue.set(state, 'articlesPopList', articlesPopList)
     },
 
     SET_ACTIVE_TYPE: (state, { type }) => {
