@@ -49,6 +49,11 @@ function loadArticles(params = {}) {
   url = `${url}?${query}`
   return _doFetch(url)
 }
+function loadArticlesPopList(params = {}) {
+  const { SERVER_PROTOCOL, SERVER_HOST } = config
+  let url = `${SERVER_PROTOCOL}://${SERVER_HOST}/story/json/popularlist.json`
+  return _doFetch(url)
+}
 
 function loadEvent () {
   const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
@@ -156,6 +161,10 @@ export function fetchTopic () {
 
 export function fetchArticles (params = {}) {
   return loadArticles(params)
+}
+
+export function fetchArticlesPopList (params = {}) {
+  return loadArticlesPopList(params)
 }
 
 export function fetchUser (id) {

@@ -10,11 +10,20 @@
     </div>
     <div id="test_pc_np_ap_300x250_R1" adunit="test_pc_np_ap_300x250_R1" dimensions="300x250"></div>
     <div id="test_pc_np_ap_300x250_R2" adunit="test_pc_np_ap_300x250_R2" dimensions="300x250"></div>
-    <div>相關新聞：</div>
+    <div>相關文章：</div>
     <div v-for="(o, i) in relateds">
-      - <a href="">{{ o.title }}</a>
+      <div><a href="">{{ o.title }}</a></div>
+      <div><a href=""><img :src="getValue(o, [ 'heroImage', 'image', 'url' ])" style="width: 100%;"/></a></div>
     </div>
     <div id="test_pc_np_ap_970x90_FT" adunit="test_pc_np_ap_970x90_FT" dimensions="970x90"></div>
+    <br>
+    <div>熱門文章：</div>
+    <div>
+      <div v-for="(o, i) in popularlist">
+        <div><a href="">{{ o.title }}</a></div>
+        <div><a href=""><img :src="getValue(o, [ 'heroImage', 'image', 'url' ])" style="width: 100%;"/></a></div>
+      </div>
+    </div>
     <div style="margin: 1.5em 0;">
       <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
     </div>
@@ -34,8 +43,14 @@
           '_id': store.state.route.params.id
         }
       }
+    }).then(() => {
+      return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
     })
   }
+  const fetchPop = (store) => {
+    return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
+  }
+
   export default {
     name: 'article-view',
     preFetch: fetchArticles,
@@ -89,6 +104,10 @@
         }
         return creditStr
       },
+      popularlist() {
+        const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ])
+        return report
+      },
       relateds() {
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return relateds
@@ -101,6 +120,12 @@
     beforeMount() {
     },
     methods: {
+      getPopList() {
+        console.log('got pop...');
+      },
+      getValue(o = {}, p = []) {
+        return _.get(o, p, '');
+      },
       loadDfp(e) {
         window.googletag = window.googletag || {};
         window.googletag.cmd = window.googletag.cmd || [];
@@ -132,15 +157,12 @@
       dfpScript.onerror = function(){
         console.log('err');
       };
-      window.onload = (e) => {
-        this.loadDfp(e)
-      }
       document.querySelector('head').appendChild(dfpScript)
       dfpScript.src = 'https://www.googletagservices.com/tag/js/gpt.js'
 
-      const fbSdkScript = document.createElement('script')
-      fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
-      document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
+      window.onload = (e) => {
+        this.loadDfp(e)
+      }
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
