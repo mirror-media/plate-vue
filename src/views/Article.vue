@@ -1,22 +1,32 @@
 <template>
-  <div>
+  <vue-dfp-provider>
+  <template scope="props" slot="dfpPos">
     <div id="fb-root"></div>
-    <div id="mm_pc_ent_ap_970x250_HD" adunit="test_pc_np_ap_970x250_HD" dimensions="970x250"></div>
+    <vue-dfp :is="props.vueDfp" id="PCHD" dimensions="970x90,970x250"></vue-dfp>
     <div><h2>{{ title }}</h2></div>
-    <div id="test_pc_np_ap_300x250_E1" adunit="test_pc_np_ap_300x250_E1" dimensions="300x250"></div>
-    <div id="test_pc_np_ap_300x250_E2" adunit="test_pc_np_ap_300x250_E2" dimensions="300x250"></div>
+    <div v-if="heroImage">
+      <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
+            :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
+                      getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
+                      getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
+      <div class="heroimg-caption"></div>
+    </div>
+    <vue-dfp :is="props.vueDfp" id="PCE1" dimensions="300x250"></vue-dfp>
+    <vue-dfp :is="props.vueDfp" id="PCE2" dimensions="300x250"></vue-dfp>
     <div>credit: {{ credit }}</div>
     <div v-html="content">
     </div>
-    <div id="test_pc_np_ap_300x250_R1" adunit="test_pc_np_ap_300x250_R1" dimensions="300x250"></div>
-    <div id="test_pc_np_ap_300x250_R2" adunit="test_pc_np_ap_300x250_R2" dimensions="300x250"></div>
+    <vue-dfp :is="props.vueDfp" id="PCR1" dimensions="300x250"></vue-dfp>
+    <vue-dfp :is="props.vueDfp" id="PCR2" dimensions="300x250,300x600"></vue-dfp>
+    <vue-dfp :is="props.vueDfp" id="PCAR" dimensions="640x360"></vue-dfp>
     <div>相關文章：</div>
     <div v-for="(o, i) in relateds">
       <div><a href="">{{ o.title }}</a></div>
       <div><a href=""><img :src="getValue(o, [ 'heroImage', 'image', 'url' ])" style="width: 100%;"/></a></div>
     </div>
-    <div id="test_pc_np_ap_970x90_FT" adunit="test_pc_np_ap_970x90_FT" dimensions="970x90"></div>
     <br>
+
+    <vue-dfp :is="props.vueDfp" id="PCFT" dimensions="970x90"></vue-dfp>
     <div>熱門文章：</div>
     <div>
       <div v-for="(o, i) in popularlist">
@@ -27,14 +37,17 @@
     <div style="margin: 1.5em 0;">
       <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
     </div>
-  </div>
+  </template>
+  </vue-dfp-provider>
 </template>
 <script>
-  import { DFP_UNIT_ID } from '../constants'
+  import { DFP_UNITS } from '../constants'
   import _ from 'lodash'
   import sanitizeHtml from 'sanitize-html'
   import store from '../store'
   import truncate from 'truncate'
+  import VueDfpProvider from '../tools/plate-vue-dfp/PlateDfpProvider.vue'
+
 
   const fetchArticles = (store) => {
     return store.dispatch('FETCH_ARTICLES', {
@@ -54,9 +67,8 @@
   export default {
     name: 'article-view',
     preFetch: fetchArticles,
-    compenents: {
-      // 'vue-dfp': VueDfp(require('vue'), { dfpID: '421342134' })
-      // 'qoption': Option
+    components: {
+      'vue-dfp-provider': VueDfpProvider
     },
     data() {
       return {
@@ -79,6 +91,10 @@
           switch(o.type) {
             case 'unstyled':
               return '<p>' + o.content.toString() + '</p>'
+            case 'image':
+              return `<img src=${_.get(o.content, [ 0, 'url' ], '')}
+                        srcset=\"${_.get(o.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(o.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(o.content, [ 0, 'desktop', 'url' ], '')} 2000w\"
+                      />`
             case 'slideshow':
               return o.content.map((i) => {
                 return '<img src=\"' + i.url + '\"/><br>'
@@ -104,6 +120,11 @@
         }
         return creditStr
       },
+      heroImage() {
+        const { heroImage } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        return heroImage
+      },
+      heroVideo() {},
       popularlist() {
         const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ])
         return report
@@ -126,43 +147,8 @@
       getValue(o = {}, p = []) {
         return _.get(o, p, '');
       },
-      loadDfp(e) {
-        window.googletag = window.googletag || {};
-        window.googletag.cmd = window.googletag.cmd || [];
-        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCE1' ][ 'aduid' ], [300, 250], '' + DFP_UNIT_ID[ 'PCE1' ][ 'aduid' ]).addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCE2' ][ 'aduid' ], [300, 250], '' + DFP_UNIT_ID[ 'PCE2' ][ 'aduid' ]).addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCR1' ][ 'aduid' ], [300, 250], '' + DFP_UNIT_ID[ 'PCR1' ][ 'aduid' ]).addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCR2' ][ 'aduid' ], [[300, 250], [300, 600]], '' + DFP_UNIT_ID[ 'PCR2' ][ 'aduid' ]).addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCHD' ][ 'aduid' ], [[970, 90], [970, 250]], '' + DFP_UNIT_ID[ 'PCHD' ][ 'aduid' ]).addService(window.googletag.pubads());
-        window.googletag.defineSlot('/40175602/' + DFP_UNIT_ID[ 'PCFT' ][ 'aduid' ], [970, 90], '' + DFP_UNIT_ID[ 'PCFT' ][ 'aduid' ]).addService(window.googletag.pubads());
-        window.googletag.pubads().enableSingleRequest();
-        window.googletag.pubads().collapseEmptyDivs();
-        window.googletag.enableServices();
-        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCE1' ][ 'aduid' ]); });
-        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCE2' ][ 'aduid' ]); });
-        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCR1' ][ 'aduid' ]); });
-        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCR2' ][ 'aduid' ]); });
-        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCHD' ][ 'aduid' ]); });
-        window.googletag.cmd.push(function() { window.googletag.display(DFP_UNIT_ID[ 'PCFT' ][ 'aduid' ]); });
-      },
-      initDfp(googletag) {
-        googletag.pubads().enableSingleRequest();
-        googletag.enableServices();
-      }
     },
     mounted() {
-      const { dfpId, fbAppId } = _.get(this.$store, [ 'state' ])
-      const dfpScript = document.createElement('script')
-      dfpScript.type = "text\/javascript";
-      dfpScript.onerror = function(){
-        console.log('err');
-      };
-      document.querySelector('head').appendChild(dfpScript)
-      dfpScript.src = 'https://www.googletagservices.com/tag/js/gpt.js'
-
-      window.onload = (e) => {
-        this.loadDfp(e)
-      }
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
