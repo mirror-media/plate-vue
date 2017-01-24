@@ -46,7 +46,7 @@
   import sanitizeHtml from 'sanitize-html'
   import store from '../store'
   import truncate from 'truncate'
-  import VueDfpProvider from '../tools/plate-vue-dfp/PlateDfpProvider.vue'
+  import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
 
 
   const fetchArticles = (store) => {
