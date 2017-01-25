@@ -148,7 +148,7 @@
         const { heroImage, heroVideo, ogImage } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         const heroImgUrl= _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const poster = (ogImgUrl) ? ogImgUrl : ((heroImgUrl) ? heroImgUrl : 'https://storage.googleapis.com/mirrormedia-files/asset/review.png')
+        const poster = (ogImgUrl) ? ogImgUrl : ((heroImgUrl) ? heroImgUrl : '/asset/review.png')
         return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
       },
       popularlist() {
