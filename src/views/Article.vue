@@ -53,7 +53,7 @@
     return store.dispatch('FETCH_ARTICLES', {
       params: {
         where: {
-          '_id': store.state.route.params.id
+          'slug': store.state.route.params.slug
         }
       }
     }).then(() => {

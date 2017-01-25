@@ -27,7 +27,7 @@ export default new Router({
     { path: '/timeline/:title', component: TimelineView },
     { path: '/q/:questionnaireId', component: Questionnaire },
     { path: '/section/:title', component: Section },
-    { path: '/posts/:id', component: Article },
+    { path: '/post/:slug', component: Article },
     { path: '/', redirect: '/top' }
   ]
 })
