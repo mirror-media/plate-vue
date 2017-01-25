@@ -4,7 +4,14 @@
     <div id="fb-root"></div>
     <vue-dfp :is="props.vueDfp" id="PCHD" dimensions="970x90,970x250"></vue-dfp>
     <div><h2>{{ title }}</h2></div>
-    <div v-if="heroImage">
+    <div v-if="heroVideo">
+      <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
+              :poster="heroVideo.poster">
+        Your browser does not support the video tag.
+      </video>
+      <div class="playpause"></div>
+    </div>
+    <div v-else="heroImage">
       <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
             :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
                       getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
@@ -14,8 +21,8 @@
     <vue-dfp :is="props.vueDfp" id="PCE1" dimensions="300x250"></vue-dfp>
     <vue-dfp :is="props.vueDfp" id="PCE2" dimensions="300x250"></vue-dfp>
     <div>credit: {{ credit }}</div>
-    <div v-html="content">
-    </div>
+    <div v-html="content"></div>
+    <div>標籤 tags：{{ tags }}</div>
     <vue-dfp :is="props.vueDfp" id="PCR1" dimensions="300x250"></vue-dfp>
     <vue-dfp :is="props.vueDfp" id="PCR2" dimensions="300x250,300x600"></vue-dfp>
     <vue-dfp :is="props.vueDfp" id="PCAR" dimensions="640x360"></vue-dfp>
@@ -89,16 +96,29 @@
         const { brief, content : { apiData = [] }, tags, title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         const paragraph = apiData.map((o) => {
           switch(o.type) {
-            case 'unstyled':
-              return '<p>' + o.content.toString() + '</p>'
+            case 'embeddedcode':
+              return _.get(o.content, [ 0, 'embeddedCode' ], '')
             case 'image':
-              return `<img src=${_.get(o.content, [ 0, 'url' ], '')}
-                        srcset=\"${_.get(o.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(o.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(o.content, [ 0, 'desktop', 'url' ], '')} 2000w\"
-                      />`
+              return `<img src=${_.get(o.content, [ 0, 'url' ], '')} srcset=\"${_.get(o.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(o.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(o.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div>${_.get(o.content, [ 0, 'description' ], '')}</div>`
+            case 'infobox':
+              return `<div><h4>${_.get(o.content, [ 0, 'title' ], '')}</h4>${_.get(o.content, [ 0, 'body' ], '')}</div>`
             case 'slideshow':
               return o.content.map((i) => {
-                return '<img src=\"' + i.url + '\"/><br>'
+                return `<img src=${_.get(i, [ 'url' ], '')} srcset=\"${_.get(i, [ 'mobile', 'url' ], '')} 800w, ${_.get(i, [ 'tablet', 'url' ], '')} 1200w, ${_.get(i, [ 'desktop', 'url' ], '')} 2000w\"/>`
               }).join('')
+            case 'unordered-list-item':
+              const _liStr = o.content.map((i) => {
+                if(typeof(i) !== 'object') {
+                  return `<li>${i}</li>`
+                } else {
+                  return i.map((j) => (`<li>${j}</li>`)).join('')
+                }
+              }).join('')
+              return `<ul>${_liStr}</ul>`
+            case 'unstyled':
+              return `<p>${o.content.toString()}</p>`
+            case 'youtube':
+              return `<div><iframe width=\"560\" alt=\"\" height=\"315\" src=\"https://www.youtube.com/embed/${_.get(o.content, [ 0, 'youtubeId' ], '')}\" frameborder=\"0\" allowfullscreen> </iframe></div>`
             default:
               return
           }
@@ -124,7 +144,13 @@
         const { heroImage } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return heroImage
       },
-      heroVideo() {},
+      heroVideo() {
+        const { heroVideo, ogImage, heroImage } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
+        const heroImgUrl= _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
+        const poster = (ogImgUrl) ? ogImgUrl : ((heroImgUrl) ? heroImgUrl : 'https://storage.googleapis.com/mirrormedia-files/asset/review.png')
+        return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
+      },
       popularlist() {
         const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ])
         return report
@@ -132,6 +158,10 @@
       relateds() {
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return relateds
+      },
+      tags() {
+        const { tags } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        return tags.map((o) => (o.name)).join('、')
       },
       title() {
         const { title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
