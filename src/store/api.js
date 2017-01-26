@@ -55,6 +55,12 @@ function loadArticlesPopList(params = {}) {
   return _doFetch(url)
 }
 
+function loadEditorChoice () {
+  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=sectionfeatured`
+  return _doFetch(url)
+}
+
 function loadEvent () {
   const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
   let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/event`
@@ -132,10 +138,6 @@ export function fetchItems (ids) {
   return Promise.all(ids.map(id => fetchItem(id)))
 }
 
-export function fetchEvent () {
-  return loadEvent()
-}
-
 export function fetchCommonData () {
   return Promise.all([ fetchEvent(), fetchSectionList(), fetchTopic() ])
           .then( (data) => {
@@ -145,6 +147,14 @@ export function fetchCommonData () {
             commonData.topic = data[2]
             return commonData
           } )
+}
+
+export function fetchEditorChoice () {
+  return loadEditorChoice()
+}
+
+export function fetchEvent () {
+  return loadEvent()
 }
 
 export function fetchQuestionnaire (id) {

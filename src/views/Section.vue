@@ -1,22 +1,14 @@
 <template>
   <div class="section-view">
     <app-Header :commonData= 'commonData' />
-    <div class="section-story" v-for="item in articles" :id="item.id">
-      <div class="story-content">
-        <a :href="'https://www.mirrormedia.mg/story/'+ item.slug"><h2 v-html="item.title"/></a>
-        <div class="story-content__brief" v-html="item.brief.html"></div>
-      </div>
-      <a :href="'https://www.mirrormedia.mg/story/'+ item.slug">
-        <div class="story-img" :style="'background-image:url(' + item.heroImage.image.resizedTargets.desktop.url +')'">
-        </div>
-      </a>
-    </div>
+    <editor-choice :editorChoice= 'editorChoice' />
   </div>
 </template>
 
 <script>
 
 import _ from 'lodash'
+import EditorChoice from '../components/EditorChoice.vue'
 import Header from '../components/Header.vue'
 import truncate from 'truncate'
 
@@ -24,23 +16,32 @@ const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { })
 }
 
+const fetchEditorChoice = (store) => {
+  return store.dispatch('FETCH_EDITORCHOICE', { })
+}
+
+const fetchData = (store) => {
+  return fetchCommonData(store).then(() => {
+    return fetchEditorChoice(store)
+  })
+}
+
 export default {
   name: 'section-view',
-  preFetch: fetchCommonData,
+  preFetch: fetchData,
   components: {
     'app-Header': Header,
+    'editor-choice': EditorChoice,
   },
   data () {
     return {
-      state: {}
+      editorChoice: this.$store.state.editorChoice,
+      commonData: this.$store.state.commonData
     }
   },
   computed: {
     articles () {
       return this.rep
-    },
-    commonData() {
-      return this.$store.state.commonData
     }
   },
   metaInfo () {
@@ -61,8 +62,6 @@ export default {
 <style lang="stylus" scoped>
 .section-view
   box-sizing border-box
-  max-width: 960px
-  padding 2em 3em
   h2 
     margin: 0;
     font-family: Noto Sans TC,sans-serif
