@@ -35,3 +35,14 @@ export const DFP_OPTIONS = {
   afterEachAdLoaded: undefined,
   afterAllAdsLoaded: undefined
 }
+
+export const SOCIAL_LINK = {
+  SUBSCRIBE: 'https://goo.gl/forms/g2ny8HzAXTAfwH6I2',
+  LINE: 'https://line.me/R/ti/p/%40cuk1273e',
+  WEIBO: 'http://www.weibo.com/u/6030041924?is_all=1',
+  FACEBOOK: 'https://www.facebook.com/mirrormediamg/',
+  WECHAT: '#',
+  INSTAGRAM: 'https://www.instagram.com/mirror_media/',
+  FEED: '/story/rss.xml',
+  EMAIL: 'mailto:mirror885@mirrormedia.mg'
+}

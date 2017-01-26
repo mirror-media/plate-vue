@@ -7,12 +7,18 @@
 </template>
 
 <style lang="stylus">
+
+html
+  box-sizing border-box
+
+*, *:before, *:after
+  box-sizing inherit;
+
 body
   font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   font-size 15px
-  background-color lighten(#eceef1, 30%)
+  background-color #f5f5f5
   margin 0
-  padding-top 55px
   color #34495e
   overflow-y scroll
 
@@ -20,44 +26,7 @@ a
   color #34495e
   text-decoration none
 
-.header
-  background-color #e5e5e5
-  position fixed
-  z-index 999
-  height 55px
-  top 0
-  left 0
-  right 0
-  .inner
-    max-width 800px
-    box-sizing border-box
-    margin 0px auto
-    padding 15px 5px
-  a
-    color rgba(0, 0, 0, .5)
-    line-height 24px
-    transition color .15s ease
-    display inline-block
-    vertical-align middle
-    font-weight 300
-    letter-spacing .075em
-    margin-right 1.8em
-    &:hover
-      color #000
-    &.router-link-active
-      color #000
-      font-weight 400
-    &:nth-child(8)
-      margin-right 0
-
-.logo
-  width 24px
-  margin-right 10px
-  display inline-block
-  vertical-align middle
-
 .view
-  max-width 800px
   margin 0 auto
   position relative
 
@@ -67,18 +36,12 @@ a
 .fade-enter, .fade-leave-active
   opacity 0
 
-@media (max-width 860px)
-  .header .inner
-    padding 15px 30px
+@media (max-width 1199px)
+  .mobile-hide
+    display none !important
 
-@media (max-width 600px)
-  body
-    font-size 14px
-  .header
-    .inner
-      padding 15px
-    a
-      margin-right 1em
-    .github
-      display none
+@media (min-width 1200px)
+  .mobile-only
+    display none !important
+
 </style>
