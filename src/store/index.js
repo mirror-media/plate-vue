@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchItems, fetchIdsByType, fetchQuestionnaire, fetchSectionList, fetchTopic, fetchUser } from './api'
+import { fetchArticles, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchItems, fetchIdsByType, fetchLatestArticle, fetchQuestionnaire, fetchSectionList, fetchTopic, fetchUser } from './api'
 
 Vue.use(Vuex)
 
@@ -13,11 +13,12 @@ const store = new Vuex.Store({
     activeType: null,
     commonData: {},
     dfpId: DFPID,
+    editorChoice: {},
     fbAppId: FB_APP_ID,
     fbPagesId: FB_PAGES_ID,
-    editorChoice: {},
     items: {/* [id: number]: Item */},
     itemsPerPage: 20,
+    latestArticle: {},
     users: {/* [id: string]: User */},
     questionnaire: {},
     lists: {
@@ -72,16 +73,22 @@ const store = new Vuex.Store({
       }
     },
 
+    FETCH_COMMONDATA: ({ commit, state }, { }) => {
+      return state.commonData.event
+        ? Promise.resolve(state.commonData)
+        : fetchCommonData().then(commonData => commit('SET_COMMONDATA', { commonData }))
+    },
+
     FETCH_EDITORCHOICE: ({ commit, state }, { }) => {
       return state.editorChoice.items
         ? Promise.resolve(state.editorChoice)
         : fetchEditorChoice().then(editorChoice => commit('SET_EDITORCHOICE', { editorChoice }))
     },
 
-    FETCH_COMMONDATA: ({ commit, state }, { }) => {
-      return state.commonData.event
-        ? Promise.resolve(state.commonData)
-        : fetchCommonData().then(commonData => commit('SET_COMMONDATA', { commonData }))
+    FETCH_LATESTARTICLE: ({ commit, state }, { }) => {
+      return state.latestArticle.items
+        ? Promise.resolve(state.latestArticle)
+        : fetchLatestArticle().then(latestArticle => commit('SET_LATESTARTICLE', { latestArticle }))
     },
 
     FETCH_QUESTIONNAIRE: ({ commit, state }, { id }) => {
@@ -122,12 +129,16 @@ const store = new Vuex.Store({
       })
     },
 
-    SET_EDITORCHOICE: (state, { editorChoice }) => {
-      state.editorChoice = editorChoice.endpoints.sectionfeatured
-    },
-
     SET_COMMONDATA: (state, { commonData }) => {
       state.commonData = commonData
+    },
+
+    SET_EDITORCHOICE: (state, { editorChoice }) => {
+      state.editorChoice = editorChoice.endpoints.choices
+    },
+
+    SET_LATESTARTICLE: (state, { latestArticle }) => {
+      state.latestArticle = latestArticle.endpoints.posts
     },
 
     SET_QUESTIONNAIRE: (state, { questionnaire }) => {

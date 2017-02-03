@@ -1,25 +1,31 @@
 <template>
   <header class="header">
-    <div class="header-logoSearch">
+    <section class="header-logoSearch">
       <a href="" class="mobile-only"><img src="~public/icon/hamburger@2x.png" class="header-icon"></a>
       <a href="/"><img src="~public/logo.svg" class="header-logoSearch--logo"></a>
-      <div class="header-socialMedia">
-        <span class="mobile-hide">訂閱：</span>
-        <a :href="socialLink.LINE" class="mobile-hide"><img src="~public/icon/line@2x.png" class="header-icon line"></a>
-        <a :href="socialLink.WEIBO" class="mobile-hide"><img src="~public/icon/weibo@2x.png" class="header-icon weibo"></a>
-        <a :href="socialLink.FACEBOOK" class="mobile-hide"><img src="~public/icon/facebook@2x.png" class="header-icon facebook"></a>
-        <a :href="socialLink.INSTAGRAM" class="mobile-hide"><img src="~public/icon/instagram@2x.png" class="header-icon instagram"></a>
-        <a :href="socialLink.SUBSCRIBE" class="mobile-hide"><img src="~public/icon/book@2x.png" class="header-icon book"></a>
-        <div class="line-vertical"></div>
-        <a ><img src="~public/icon/search@2x.png" class="header-icon"></a>
+      <div class="header-logoSearch__search">
+        <input type="text" placeholder="">
+        <button>
+          <img class="header-logoSearch__search--icon" src="~public/icon/search.svg" />
+        </button>
       </div>
-    </div>
-    <nav class="mobile-hide">
+    </section>
+    <nav class="header-menu--section">
       <div class="header-menu">
-        <a :href="item.href" v-for="item in headerItem.section" v-html="item.title"></a>
-        <a :href="item.href" v-for="item in headerItem.category" v-html="item.title"></a>
-        <a :href="item.href" v-for="item in headerItem.topic" v-html="item.title"></a>    
+        <div v-for="item in headerItem.section" class="dropdown" :class="item.name">
+          <a :href="item.href"><span v-text="item.title"></span></a>
+          <div class="dropdown-content">
+            <a v-for="c in item.categories" v-text="c.title" :href="c.href"></a>
+          </div>
+        </div>
+        <a :href="item.href" v-for="item in headerItem.category" v-text="item.title"></a>
       </div>
+    </nav>
+    <nav class="header-menu--topic">
+      <div class="header-menu">
+        <a :href="item.href" v-for="item in headerItem.topic" v-text="item.title"></a>
+      </div>
+      <a href="">更多 ▾</a>
     </nav>
   </header>
 </template>
@@ -40,9 +46,6 @@ export default {
       _.forEach(this.commonData.sectionList.endpoints.sections.items, (s) => {
         s.href = '/section/' + s.name
         s.isFeatured ? headerItem.section.push(s) : ''
-      })
-      _.forEach(this.commonData.sectionList.endpoints.sections.items, (s) => {
-        s.href = '/section/' + s.name
         _.forEach(s.categories, (c) => {
           c.href = '/category/' + c.name
           c.isFeatured ? headerItem.category.push(c) : ''
@@ -62,11 +65,19 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+
+$color-main = #064f77
+$color-news = #30bac8
+$color-entertainment = #bf3284
+$color-foodtravel = #eac151
+$color-watch = #c1d16e
+
 .header
   position relative
   top 0
   left 0
   right 0
+  background-color #f5f5f5
 
   a
     display inline-block
@@ -76,22 +87,41 @@ export default {
     display flex
     justify-content space-between
     width 100%
-    height 110px
+    height 90px
     padding 24px 18px
+
+    &__search
+      position relative
+      top 13.5px
+      width 250px
+      height 35px
+
+      input
+        float left
+        width 200px
+        height 35px
+        padding 0 10px
+        text-align right
+        border 1px solid rgb(238, 238, 238)
+        border-radius: 2px
+        border-right none
+
+      button
+        padding 0
+        margin 0
+        background-color #fff
+        border 1px solid rgb(238, 238, 238)
+        border-radius: 2px
+        border-left none
+
+
+      &--icon
+        float left
+        width 49px
+        height 33px
 
     &--logo
       width 128px
-
-  &-socialMedia
-    span
-      margin-right 15px
-      font-size 15px
-      letter-spacing .7px
-      vertical-align middle
-      color rgba(0,0,0,.3)
-    a
-      height 62px
-      margin-right 15px
 
   &-icon
     width 24px
@@ -115,6 +145,32 @@ export default {
     flex-wrap wrap
     justify-content center
 
+    span
+      color #fff
+      line-height: 43px
+
+    &--section
+      background-color $color-main
+
+      a
+        color #fff
+
+    &--topic
+      position relative
+      margin-bottom 40px
+      background-color #fff
+      box-shadow:0 0 5px 0 #cccccc
+
+      .header-menu
+        > a
+          border-bottom 3px solid #000
+
+
+      > a
+        position absolute
+        top 0
+        right 0
+
 .logo
   width 24px
   margin-right 10px
@@ -130,24 +186,62 @@ export default {
   vertical-align middle
   border 1px solid #979797
 
+.dropdown
+  width 90px
+  text-align: center
+
+  > a
+    padding 0
+
+  &-content
+    display none
+    position: absolute
+    z-index: 1
+    width 110px
+    color #fff
+    background-color: #333
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2)
+    
+
+.dropdown:hover .dropdown-content
+  display: block
+
+.news-people
+  border-top 3px solid $color-news
+  a:hover
+    color $color-news
+
+
+.entertainment
+  border-top 3px solid $color-entertainment
+  a:hover
+    color $color-entertainment
+
+.foodtravel
+  border-top 3px solid $color-foodtravel
+  a:hover
+    color $color-foodtravel
+
+.watch
+  border-top 3px solid $color-watch
+  a:hover
+    color $color-watch
+
+
 @media (min-width 1200px)
   .header
     &-logoSearch
       width 1024px
       margin 0 auto
-      padding 24px 0
+      padding 14px 0
 
   nav
-    margin-bottom 25px
-    border 1px solid #000
-    border-left none
-    border-right none
-    div
+    > div
       width 1024px
       margin 0 auto
     a
-      min-width 80px
-      padding 17px 15px
+      min-width 90px
+      padding 14.5px 15px
       text-align center 
       color rgba(0,0,0,.5)
 

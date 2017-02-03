@@ -57,13 +57,19 @@ function loadArticlesPopList(params = {}) {
 
 function loadEditorChoice () {
   const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=sectionfeatured`
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=choices`
   return _doFetch(url)
 }
 
 function loadEvent () {
   const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
   let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/event`
+  return _doFetch(url)
+}
+
+function loadLatestArticle () {
+  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=posts`
   return _doFetch(url)
 }
 
@@ -155,6 +161,10 @@ export function fetchEditorChoice () {
 
 export function fetchEvent () {
   return loadEvent()
+}
+
+export function fetchLatestArticle () {
+  return loadLatestArticle()
 }
 
 export function fetchQuestionnaire (id) {
