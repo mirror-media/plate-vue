@@ -64,6 +64,7 @@
         </aside>
         <div class="article_footer">
           <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp>
+          <footer-container></footer-container>
         </div>
       </div>
     </template>
@@ -72,6 +73,7 @@
 <script>
   import _ from 'lodash'
   import { CATEGORY_MAP, DFP_UNITS } from '../constants'
+  import Footer from '../components/Footer.vue'
   import LatestList from '../components/article/LatestList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
@@ -98,6 +100,7 @@
     name: 'article-view',
     preFetch: fetchArticles,
     components: {
+      'footer-container': Footer,
       'latest-list': LatestList,
       'related-list': RelatedList,
       'vue-dfp-provider': VueDfpProvider
