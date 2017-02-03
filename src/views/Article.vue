@@ -445,6 +445,9 @@
       padding-top: 10px;
       width: 310px;
     }
+    .article_footer {
+      text-align: center;
+    }
     .split-line {
       overflow: hidden;
       &::after {

@@ -35,7 +35,7 @@
   padding: 20px 20px;
   border: 1px solid #c1c1c1;
   box-shadow: 0 0 5px #c1c1c1;
-  width: 260px;
+  width: 300px;
   margin: 20px auto 0;
   .title {
     font-size: 18px;
