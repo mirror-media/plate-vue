@@ -17,31 +17,56 @@
 
       makeRelatedFixed() {
         window.onscroll = (e) => {
+          const tHtml = document.documentElement;
           const currTop = currentYPosition()
-          const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
+          const currBottom = currentYPosition() + tHtml.clientHeight
+          const footerTop = elmYPosition('.article_footer > div:first-child')
+          // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
+          const asideHeight = document.querySelector('.article_aside').clientHeight
+          const mainHeight = document.querySelector('.article_main').clientHeight
           const relatedDom = document.querySelector('.related-list-container')
           const relatedTop = elmYPosition('.related-list-container')
-          if(window.relatedTop && currTop > window.relatedTop) {
+          const relatedBottom = elmYPosition('.related-list-container') + relatedDom.clientHeight
+
+          if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
             relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
-            if(mainBottom < (currTop + relatedDom.clientHeight + 30)) {
-              relatedDom.setAttribute('style', 'position: fixed; top: ' + (mainBottom - (currTop + relatedDom.clientHeight + 30)) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+            if(footerTop < (currTop + relatedDom.clientHeight + 30)) {
+              relatedDom.setAttribute('style', 'position: fixed; top: ' + (footerTop - (currTop + relatedDom.clientHeight + 30)) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+            }
+          } else if(window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
+            relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+            if(footerTop < (currBottom + 20)) {
+              relatedDom.setAttribute('style', 'position: fixed; bottom: ' + ((currBottom + 20) - footerTop) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             }
           } else {
             relatedDom.removeAttribute('style')
             window.relatedTop = elmYPosition('.related-list-container')
+            window.relatedBottom = elmYPosition('.related-list-container') + relatedDom.clientHeight
             window.relatedWidth = relatedDom.offsetWidth
             window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
           }
         }
         window.onresize = (e) => {
+          const tHtml = document.documentElement;
           const currTop = currentYPosition()
-          const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
+          const currBottom = currentYPosition() + tHtml.clientHeight
+          const footerTop = elmYPosition('.article_footer > div:first-child')
+          // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
+          const asideHeight = document.querySelector('.article_aside').clientHeight
+          const mainHeight = document.querySelector('.article_main').clientHeight
           const relatedDom = document.querySelector('.related-list-container')
           const relatedTop = elmYPosition('.related-list-container')
-          if(window.relatedTop && currTop > window.relatedTop) {
+          if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
             relatedDom.removeAttribute('style')
             window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
             relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+          } else if(window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
+            relatedDom.removeAttribute('style')
+            window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
+            relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+            if(footerTop < (currBottom + 20)) {
+              relatedDom.setAttribute('style', 'position: fixed; bottom: ' + ((currBottom + 20) - footerTop) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+            }
           }
         }
       },
