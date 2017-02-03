@@ -1,6 +1,7 @@
 <template>
   <vue-dfp-provider>
     <template scope="props" slot="dfpPos">
+      <app-header :commonData= 'commonData'/>
       <div class="article">
         <div id="fb-root"></div>
         <vue-dfp :is="props.vueDfp" pos="PCHD"></vue-dfp>
@@ -64,7 +65,7 @@
         </aside>
         <div class="article_footer">
           <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp>
-          <footer-container></footer-container>
+          <app-footer></app-footer>
         </div>
       </div>
     </template>
@@ -74,6 +75,7 @@
   import _ from 'lodash'
   import { CATEGORY_MAP, DFP_UNITS } from '../constants'
   import Footer from '../components/Footer.vue'
+  import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
@@ -88,19 +90,43 @@
           'slug': store.state.route.params.slug
         }
       }
-    }).then(() => {
-      return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
     })
   }
   const fetchPop = (store) => {
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
+  const fetchCommonData = (store) => {
+    return store.dispatch('FETCH_COMMONDATA', { })
+  }
+
+  const fetchEditorChoice = (store) => {
+    return store.dispatch('FETCH_EDITORCHOICE', { })
+  }
+
+  const fetchLatestArticle = (store) => {
+    return store.dispatch('FETCH_LATESTARTICLE', { })
+  }
+
+
+  const fetchData = (store) => {
+    return fetchCommonData(store).then(() => {
+      return fetchEditorChoice(store).then(() => {
+        return fetchLatestArticle(store).then(() => {
+          return fetchArticles(store).then(() => {
+            return fetchPop(store)
+          })
+        })
+      })
+    })
+  }
+
   export default {
     name: 'article-view',
-    preFetch: fetchArticles,
+    preFetch: fetchData,
     components: {
-      'footer-container': Footer,
+      'app-footer': Footer,
+      'app-header': Header,
       'latest-list': LatestList,
       'related-list': RelatedList,
       'vue-dfp-provider': VueDfpProvider
@@ -112,7 +138,11 @@
           adUnitPath: '/421342134/test_pc_np_ap_970x250_HD',
           adSize: [ [ 970, 250 ] ],
           adElementId: 'test_pc_np_ap_970x250_HD'
-        }
+        },
+        commonData: this.$store.state.commonData,
+        editorChoice: this.$store.state.editorChoice,
+        latestArticle: this.$store.state.latestArticle
+
       }
     },
     computed: {
@@ -444,6 +474,9 @@
       float: right;
       padding-top: 10px;
       width: 310px;
+    }
+    .article_footer {
+      text-align: center;
     }
     .split-line {
       overflow: hidden;

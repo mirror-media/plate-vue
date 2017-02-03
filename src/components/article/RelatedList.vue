@@ -18,15 +18,30 @@
       makeRelatedFixed() {
         window.onscroll = (e) => {
           const currTop = currentYPosition()
+          const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
           const relatedDom = document.querySelector('.related-list-container')
           const relatedTop = elmYPosition('.related-list-container')
           if(window.relatedTop && currTop > window.relatedTop) {
-            relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft  + 'px;')
+            relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+            if(mainBottom < (currTop + relatedDom.clientHeight + 30)) {
+              relatedDom.setAttribute('style', 'position: fixed; top: ' + (mainBottom - (currTop + relatedDom.clientHeight + 30)) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+            }
           } else {
             relatedDom.removeAttribute('style')
             window.relatedTop = elmYPosition('.related-list-container')
             window.relatedWidth = relatedDom.offsetWidth
             window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
+          }
+        }
+        window.onresize = (e) => {
+          const currTop = currentYPosition()
+          const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
+          const relatedDom = document.querySelector('.related-list-container')
+          const relatedTop = elmYPosition('.related-list-container')
+          if(window.relatedTop && currTop > window.relatedTop) {
+            relatedDom.removeAttribute('style')
+            window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
+            relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
           }
         }
       },
