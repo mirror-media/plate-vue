@@ -282,6 +282,8 @@
 <style lang="stylus">
   .article {
     font-family: "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif;
+    max-width: 992px;
+    margin: 0 auto;
     .article_title {
       width: 100%;
       h2 {
