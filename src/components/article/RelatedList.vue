@@ -17,8 +17,8 @@
 
       makeRelatedFixed() {
         window.onscroll = (e) => {
-          const relatedDom = document.querySelector('.related-list-container')
           const currTop = currentYPosition()
+          const relatedDom = document.querySelector('.related-list-container')
           const relatedTop = elmYPosition('.related-list-container')
           if(window.relatedTop && currTop > window.relatedTop) {
             relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft  + 'px;')

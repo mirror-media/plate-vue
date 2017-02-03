@@ -79,12 +79,6 @@
   import store from '../store'
   import truncate from 'truncate'
 
-//https://www.mirrormedia.mg/story/img/icon/sprite@3x.png
-/*
-width: 45px;
-    height: 45px;
-    background-position: -733px -741px;
-*/
   const fetchArticles = (store) => {
     return store.dispatch('FETCH_ARTICLES', {
       params: {
