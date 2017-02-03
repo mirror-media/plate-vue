@@ -7,11 +7,13 @@ Vue.use(Meta)
 
 import { createListView } from '../views/CreateListView'
 import Article from '../views/Article.vue'
-import ItemView from '../views/ItemView.vue'
-import UserView from '../views/UserView.vue'
-import TimelineView from '../views/TimelineView.vue'
+import Home from '../views/Home.vue'
 import Questionnaire from '../views/Questionnaire.vue'
 import Section from '../views/Section.vue'
+import TimelineView from '../views/TimelineView.vue'
+
+import ItemView from '../views/ItemView.vue'
+import UserView from '../views/UserView.vue'
 
 export default new Router({
   mode: 'history',
@@ -28,6 +30,6 @@ export default new Router({
     { path: '/q/:questionnaireId', component: Questionnaire },
     { path: '/section/:title', component: Section },
     { path: '/post/:slug', component: Article },
-    { path: '/', redirect: '/top' }
+    { path: '/', component: Home }
   ]
 })

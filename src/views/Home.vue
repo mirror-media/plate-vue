@@ -1,15 +1,21 @@
 <template>
   <div class="section-view">
     <app-Header :commonData= 'commonData' />
-    <editor-choice :editorChoice= 'editorChoice' />
+    <editor-choice :editorChoice= 'editorChoice'/>
+    <section class="container">
+      <latest-article :latestArticle= 'latestArticle'/>
+      <latest-project />
+    </section>
   </div>
 </template>
 
 <script>
 
 import _ from 'lodash'
-import EditorChoice from '../components/EditorChoice.vue'
 import Header from '../components/Header.vue'
+import EditorChoice from '../components/EditorChoice.vue'
+import LatestArticle from '../components/LatestArticle.vue'
+import LatestProject from '../components/LatestProject.vue'
 import truncate from 'truncate'
 
 const fetchCommonData = (store) => {
@@ -20,23 +26,33 @@ const fetchEditorChoice = (store) => {
   return store.dispatch('FETCH_EDITORCHOICE', { })
 }
 
+const fetchLatestArticle = (store) => {
+  return store.dispatch('FETCH_LATESTARTICLE', { })
+}
+
+
 const fetchData = (store) => {
   return fetchCommonData(store).then(() => {
-    // return fetchEditorChoice(store)
+    return fetchEditorChoice(store).then(() => {
+      return fetchLatestArticle(store)
+    })
   })
 }
 
 export default {
-  name: 'section-view',
+  name: 'home-view',
   preFetch: fetchData,
   components: {
     'app-Header': Header,
     'editor-choice': EditorChoice,
+    'latest-article': LatestArticle,
+    'latest-project': LatestProject,
   },
   data () {
     return {
+      commonData: this.$store.state.commonData,
       editorChoice: this.$store.state.editorChoice,
-      commonData: this.$store.state.commonData
+      latestArticle: this.$store.state.latestArticle
     }
   },
   computed: {
@@ -45,7 +61,7 @@ export default {
     }
   },
   metaInfo () {
-    const title = 'section ' + this.$route.params.title
+    const title = '鏡傳媒 Mirror Media '
     return {
       title
     }
@@ -71,30 +87,6 @@ export default {
     letter-spacing: .5px
     color: rgba(0,0,0,.8)
     list-style-type none
-.section-story
-  position: relative
-  margin-bottom: 25px
-.story-content
-  box-sizing border-box
-  width: 480px
-  height: 280px
-  padding: 15px
-  background-color #fff
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,.1)
-  overflow: hidden
-.story-content__brief
-  font-size: 15px
-  line-height: 1.4
-  letter-spacing: .9px
-  text-align: justify
-  text-overflow: ellipsis
-.story-img
-  box-sizing border-box
-  position: absolute
-  top: 0
-  right: 0
-  width: 380px
-  height: 280px
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,.1)
-  background-size: cover
+  
+
 </style>
