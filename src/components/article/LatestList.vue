@@ -10,7 +10,7 @@
           <a :href="`/post/${o.slug}`" target="_blank">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
         </div>
         <div class="content_title">
-          <a :href="`/post/${o.slug}`" target="_blank">{{ getTruncatedVal(o.title, 22) }}</a>
+          <a :href="`/post/${o.slug}`" target="_blank">{{ getTruncatedVal(o.title, 20) }}</a>
         </div>
       </div>
     </div>

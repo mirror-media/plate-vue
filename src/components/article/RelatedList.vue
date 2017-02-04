@@ -2,7 +2,7 @@
   <div class="related-list-container" v-if="ifshow">
     <div class="title"><h4>相關文章</h4></div>
     <div class="item" v-for="(o, i) in relateds">
-      <div class="title"><a :href="`/post/${getValue(o, [ 'name'], '')}`" target="_blank">{{ o.title }}</a></div>
+      <div class="title"><a :href="`/post/${getValue(o, [ 'slug'], '')}`" target="_blank">{{ o.title }}</a></div>
     </div>
   </div>
 </template>
