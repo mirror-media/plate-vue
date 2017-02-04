@@ -2,70 +2,72 @@
   <vue-dfp-provider>
     <template scope="props" slot="dfpPos">
       <app-header :commonData= 'commonData'/>
-      <div class="article">
-        <div id="fb-root"></div>
-        <vue-dfp :is="props.vueDfp" pos="PCHD"></vue-dfp>
-        <div class="split-line"></div>
-        <div class="article_basic-info">
-          <div class="category">
-            <span class="categorySquare" :style="category[ 'style' ]"></span>{{ category[ 'categoryTitle' ] }}
-          </div>
-          <div class="date">{{ date }}</div>
-        </div>
-        <div class="article_title"><h2>{{ title }}</h2></div>
-        <div class="article_credit" v-html="credit"></div>
-        <div class="article_heromedia" v-if="heroVideo" >
-          <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
-                  :poster="heroVideo.poster">
-            Your browser does not support the video tag.
-          </video>
-          <div class="playpause"></div>
-        </div>
-        <div class="article_heromedia" v-else="heroImage">
-          <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
-                :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-                          getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-                          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
-          <div class="heroimg-caption"></div>
-        </div>
-        <main class="article_main">
-          <div class="brief" v-html="getContent('brief')"></div>
+      <div class="article-container">
+        <div class="article">
+          <div id="fb-root"></div>
+          <vue-dfp :is="props.vueDfp" pos="PCHD"></vue-dfp>
           <div class="split-line"></div>
-          <div class="content" v-html="getContent('content')"></div>
-          <div class="article_main_tags">
-            <i class="tags_icon"></i>
-            <div class="tags">
-              {{ tags }}
+          <div class="article_basic-info">
+            <div class="category">
+              <span class="categorySquare" :style="category[ 'style' ]"></span>{{ category[ 'categoryTitle' ] }}
             </div>
+            <div class="date">{{ date }}</div>
           </div>
-          <vue-dfp :is="props.vueDfp" pos="PCAR"></vue-dfp>
-          <div class="split-line"></div>
-          <div style="display: flex; justify-content: space-around;">
-            <vue-dfp :is="props.vueDfp" pos="PCE1"></vue-dfp>
-            <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp>
+          <div class="article_title"><h2>{{ title }}</h2></div>
+          <div class="article_credit" v-html="credit"></div>
+          <div class="article_heromedia" v-if="heroVideo" >
+            <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
+                    :poster="heroVideo.poster">
+              Your browser does not support the video tag.
+            </video>
+            <div class="playpause"></div>
           </div>
-          <div class="article_main_pop">
-            <div class="pop_title"><h3>熱門文章：</h3></div>
-            <div class="pop_list">
-              <div class="pop_item" v-for="(o, i) in popularlist">
-                <div><a href=""><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
-                <div class="pop_item_title"><a href="">{{ o.title }}</a></div>
+          <div class="article_heromedia" v-else="heroImage">
+            <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
+                  :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
+                            getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
+                            getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
+            <div class="heroimg-caption"></div>
+          </div>
+          <main class="article_main">
+            <div class="brief" v-html="getContent('brief')"></div>
+            <div class="split-line"></div>
+            <div class="content" v-html="getContent('content')"></div>
+            <div class="article_main_tags">
+              <i class="tags_icon"></i>
+              <div class="tags">
+                {{ tags }}
               </div>
             </div>
+            <vue-dfp :is="props.vueDfp" pos="PCAR"></vue-dfp>
+            <div class="split-line"></div>
+            <div style="display: flex; justify-content: space-around;">
+              <vue-dfp :is="props.vueDfp" pos="PCE1"></vue-dfp>
+              <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp>
+            </div>
+            <div class="article_main_pop">
+              <div class="pop_title"><h3>熱門文章：</h3></div>
+              <div class="pop_list">
+                <div class="pop_item" v-for="(o, i) in popularlist">
+                  <div><a href=""><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
+                  <div class="pop_item_title"><a href="">{{ getTruncatedVal(o.title, 28) }}</a></div>
+                </div>
+              </div>
+            </div>
+            <div style="margin: 1.5em 0;">
+              <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
+            </div>
+          </main>
+          <aside class="article_aside">
+            <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp>
+            <latest-list :latest="popularlist"></latest-list>
+            <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp>
+            <related-list :relateds="relateds"></related-list>
+          </aside>
+          <div class="article_footer">
+            <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp>
+            <app-footer></app-footer>
           </div>
-          <div style="margin: 1.5em 0;">
-            <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
-          </div>
-        </main>
-        <aside class="article_aside">
-          <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp>
-          <latest-list :latest="popularlist"></latest-list>
-          <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp>
-          <related-list :relateds="relateds"></related-list>
-        </aside>
-        <div class="article_footer">
-          <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp>
-          <app-footer></app-footer>
         </div>
       </div>
     </template>
@@ -74,6 +76,7 @@
 <script>
   import _ from 'lodash'
   import { CATEGORY_MAP, DFP_UNITS } from '../constants'
+  import { getTruncatedVal } from '../utils/comm'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
@@ -114,7 +117,7 @@
       return fetchEditorChoice(store).then(() => {
         return fetchLatestArticle(store).then(() => {
           return fetchArticles(store).then(() => {
-            return fetchPop(store)
+              return fetchPop(store)
           })
         })
       })
@@ -259,6 +262,7 @@
       getPopList() {
         console.log('got pop...');
       },
+      getTruncatedVal,
       getValue(o = {}, p = [], d = '') {
         return _.get(o, p, d);
       },
@@ -272,7 +276,7 @@
       document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
     },
     metaInfo() {
-      const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+      const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
       const categorieId = _.get(categories, [ 0, 'id' ], '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
@@ -310,184 +314,190 @@
 
 </script>
 <style lang="stylus">
-  .article {
-    font-family: "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif;
-    max-width: 992px;
-    margin: 0 auto;
-    .article_title {
-      width: 100%;
-      h2 {
-        font-size: 40px;
-        font-weight: 400;
-        margin: 15px 0;
-      }
-    }
-    .article_basic-info {
-      display: flex;
-      margin-top: 20px;
-      justify-content: space-between;
-      .category {
-        font-size: 18px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        .categorySquare {
-          display: inline-block;
-          width: 16px;
-          height: 16px;
-          margin-right: 6px;
-          box-shadow: 0 0 2px #c1c1c1;
+  .article-container {
+    width: 100%;
+    background-color: #414141;
+    .article {
+      font-family: "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif;
+      max-width: 1160px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px 50px 0;
+      .article_title {
+        width: 100%;
+        h2 {
+          font-size: 40px;
+          font-weight: 400;
+          margin: 15px 0;
         }
       }
-      .date {
-        font-style: italic;
-        font-size: 17px;
-        color: #a1a1a1;
-        font-weight: normal;
+      .article_basic-info {
+        display: flex;
+        margin-top: 20px;
+        justify-content: space-between;
+        .category {
+          font-size: 18px;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          .categorySquare {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            box-shadow: 0 0 2px #c1c1c1;
+          }
+        }
+        .date {
+          font-style: italic;
+          font-size: 17px;
+          color: #a1a1a1;
+          font-weight: normal;
+        }
       }
-    }
-    .article_credit {
-      a:hover, a:link, a:visited {
-		    color: #9db6d6;
-			}
-    }
-    .article_heromedia {
-      margin-top: 30px;
-      .heroimg {
-        width: 100%;
+      .article_credit {
+        a:hover, a:link, a:visited {
+  		    color: #9db6d6;
+  			}
       }
-    }
-    .article_main {
-      width: 650px;
-      display: inline-block;
-      max-width: 650px;
-      overflow: hidden;
-      .innerImg {
-        margin-bottom: 35px;
-        img {
+      .article_heromedia {
+        margin-top: 30px;
+        .heroimg {
           width: 100%;
         }
-        .caption {
-          font-family: "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif;
-          font-size: 15px;
-          line-height: 1.7;
-          letter-spacing: 0.3px;
-          color: rgba(0, 0, 0, 0.498039);
-          padding-top: 10px;
-          padding-bottom: 10px;
-        }
-        &.right {
-          float: right;
-          width: 300px;
-          margin-left: 20px;
-        }
-        &.left {
-          float: left;
-          width: 300px;
-          margin-right: 20px;
-        }
       }
-      .article_main_pop {
-        margin-top: 50px;
-        font-size: 18px;
-        .pop_list {
-          margin-top: 10px;
-          display: flex;
-          align-content: flex-start;
-          flex-wrap: wrap;
-          justify-content: space-between;
-          .pop_item {
-            width: 31%;
-            vertical-align: top;
-            margin-bottom: 30px;
-            .pop_item_img {
-              width: 100%;
-              height: 150px;
-              background-repeat: no-repeat;
-              background-size: cover;
-              background-position: center center;
-            }
-            .pop_item_title {
-              background-color: #fff;
-              border: 1px solid #e0e0e0;
-              line-height: 18px;
-              padding: 10px 15px;
-              font-size: 13px;
-              height: 50px;
-              display: flex;
-              align-items: center;
-              a:hover, a:link, a:visited {
-                color: #8c8c8c;
-                font-weight: normal;
-        			}
-            }
-          }
-        }
-      }
-      .article_main_tags {
-        .tags_icon {
-          background-image: url(https://www.mirrormedia.mg/story/img/icon/sprite@3x.png);
-          background-position: -733px -741px;
-          background-repeat: no-repeat;
-          background-size: 866px 862px;
-          display: inline-block;
-          vertical-align: middle;
-          zoom: .65;
-
-          width: 45px;
-          height: 45px;
-        }
-        .tags {
-          display: inline-block;
-          color: #afb0b2;
-          font-size: 18px;
-        }
-      }
-      .brief {
-        margin-top: 30px;
-        p {
-          strong {
-            color: #000;
-          }
-        }
-      }
-      .content {
-        h2 {
-          color: #000;
-          margin-top: 40px;
-        }
-        p {
-          color: #171717;
-          font-size: 18px;
-          line-height: 36px;
-          margin: 0 0 1.5em;
-        }
-        .youtube {
-          align-items: center;
-          display: flex;
-          justify-content: center;
-          margin: 25px 0;
-        }
-      }
-    }
-    .article_aside {
-      float: right;
-      padding-top: 10px;
-      width: 310px;
-    }
-    .article_footer {
-      text-align: center;
-    }
-    .split-line {
-      overflow: hidden;
-      &::after {
-        content: "";
+      .article_main {
+        width: 695px;
         display: inline-block;
-        height: 0.5em;
-        vertical-align: bottom;
-        width: 100%;
-        margin: 30px -100% 0 0;
-        border-top: 1px solid #c5c5c5;
+        max-width: 695px;
+        overflow: hidden;
+        .innerImg {
+          margin-bottom: 35px;
+          img {
+            width: 100%;
+          }
+          .caption {
+            font-family: "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif;
+            font-size: 15px;
+            line-height: 1.7;
+            letter-spacing: 0.3px;
+            color: rgba(0, 0, 0, 0.498039);
+            padding-top: 10px;
+            padding-bottom: 10px;
+          }
+          &.right {
+            float: right;
+            width: 300px;
+            margin-left: 20px;
+          }
+          &.left {
+            float: left;
+            width: 300px;
+            margin-right: 20px;
+          }
+        }
+        .article_main_pop {
+          margin-top: 50px;
+          font-size: 18px;
+          .pop_list {
+            margin-top: 10px;
+            display: flex;
+            align-content: flex-start;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            .pop_item {
+              width: 31%;
+              vertical-align: top;
+              margin-bottom: 30px;
+              .pop_item_img {
+                width: 100%;
+                height: 150px;
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center center;
+              }
+              .pop_item_title {
+                background-color: #fff;
+                border: 1px solid #e0e0e0;
+                line-height: 18px;
+                padding: 10px 15px;
+                font-size: 13px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                a:hover, a:link, a:visited {
+                  color: #8c8c8c;
+                  font-weight: normal;
+          			}
+              }
+            }
+          }
+        }
+        .article_main_tags {
+          .tags_icon {
+            background-image: url(https://www.mirrormedia.mg/story/img/icon/sprite@3x.png);
+            background-position: -733px -741px;
+            background-repeat: no-repeat;
+            background-size: 866px 862px;
+            display: inline-block;
+            vertical-align: middle;
+            zoom: .65;
+
+            width: 45px;
+            height: 45px;
+          }
+          .tags {
+            display: inline-block;
+            color: #afb0b2;
+            font-size: 18px;
+          }
+        }
+        .brief {
+          margin-top: 30px;
+          p {
+            strong {
+              color: #000;
+            }
+          }
+        }
+        .content {
+          h2 {
+            color: #000;
+            margin-top: 40px;
+          }
+          p {
+            color: #171717;
+            font-size: 18px;
+            line-height: 36px;
+            margin: 0 0 1.5em;
+          }
+          .youtube {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+          }
+        }
+      }
+      .article_aside {
+        float: right;
+        padding-top: 10px;
+        width: 310px;
+      }
+      .article_footer {
+        text-align: center;
+      }
+      .split-line {
+        overflow: hidden;
+        &::after {
+          content: "";
+          display: inline-block;
+          height: 0.5em;
+          vertical-align: bottom;
+          width: 100%;
+          margin: 30px -100% 0 0;
+          border-top: 1px solid #c5c5c5;
+        }
       }
     }
   }

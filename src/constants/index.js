@@ -7,12 +7,12 @@ export const CATEGORY_MAP = {
 }
 
 export const DFP_UNITS = {
-  'PCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center' ] },
+  'PCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
   'PCR1': { 'aduid':'test_mobile_np_ap_300x250_AT1', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'center' ] },
   'PCR2': { 'aduid':'test_pc_np_ap_300x600_R2', 'dimensions':'300x250,300x600', 'cont-class':[ 'ad-container', 'center' ] },
   'PCAR': { 'aduid':'test_pc_np_ap_640x390_IR', 'dimensions':'640x390', 'cont-class':[ 'ad-container' ] },
-  'PCE1': { 'aduid':'test_pc_np_ap_300x250_E1', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'magin-top-30px' ] },
-  'PCE2': { 'aduid':'mm_pc_hp_300x250_1st', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'magin-top-30px' ] },
+  'PCE1': { 'aduid':'test_pc_np_ap_300x250_E1', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'margin-top-30px' ] },
+  'PCE2': { 'aduid':'mm_pc_hp_300x250_1st', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'margin-top-30px' ] },
   'PCFT': { 'aduid':'test_pc_np_ap_970x90_FT', 'dimensions':'970x90,970x90', 'cont-class':[ 'ad-container' ] },
   'MBHD': { 'aduid':'test_mobile_np_ap_300x250_HD', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
   'MBAR1': { 'aduid':'test_mobile_np_ap_300x250_AT1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },

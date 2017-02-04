@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import truncate from 'truncate'
 
 export function getValue(o = {}, p = [], d = '') {
  return _.get(o, p, d);
@@ -24,4 +25,8 @@ export function elmYPosition(eID) {
         y += node.offsetTop;
     }
     return y;
+}
+
+export function getTruncatedVal(oVal, count) {
+  return truncate(oVal, count)
 }

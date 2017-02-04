@@ -3,7 +3,6 @@
     <div class="title"><h4>相關文章</h4></div>
     <div class="item" v-for="(o, i) in relateds">
       <div class="title"><a :href="`/post/${getValue(o, [ 'name'], '')}`">{{ o.title }}</a></div>
-      <div class="brief"><a :href="`/post/${getValue(o, [ 'name'], '')}`">{{ getBrief(getValue(o, [ 'brief', 'apiData', 0, 'content', 0], '')) }}</a></div>
     </div>
   </div>
 </template>
@@ -16,24 +15,33 @@
     methods: {
 
       makeRelatedFixed() {
+        const articleDom = document.querySelector('.article_main')
+        const asideTop = elmYPosition('.article_aside')
+        const asideDom = document.querySelector('.article_aside')
+        const tHtml = document.documentElement;
+        const relatedDom = document.querySelector('.related-list-container')
+        
         window.onscroll = (e) => {
-          const tHtml = document.documentElement;
           const currTop = currentYPosition()
           const currBottom = currentYPosition() + tHtml.clientHeight
-          const footerTop = elmYPosition('.article_footer > div:first-child')
           // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
-          const asideHeight = document.querySelector('.article_aside').clientHeight
-          const mainHeight = document.querySelector('.article_main').clientHeight
-          const relatedDom = document.querySelector('.related-list-container')
-          const relatedTop = elmYPosition('.related-list-container')
-          const relatedBottom = elmYPosition('.related-list-container') + relatedDom.clientHeight
+          const asideHeight = asideDom.clientHeight
+          const asideBottom = asideTop + asideHeight
+          const mainHeight = articleDom.clientHeight
+
+          if( window.relatedTop < asideBottom && relatedDom.getAttribute('style')) {
+            relatedDom.removeAttribute('style')
+            window.relatedTop = elmYPosition('.related-list-container')
+          }
 
           if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
+            const footerTop = elmYPosition('.article_footer > div:first-child')
             relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             if(footerTop < (currTop + relatedDom.clientHeight + 30)) {
               relatedDom.setAttribute('style', 'position: fixed; top: ' + (footerTop - (currTop + relatedDom.clientHeight + 30)) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             }
           } else if(window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
+            const footerTop = elmYPosition('.article_footer > div:first-child')
             relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             if(footerTop < (currBottom + 20)) {
               relatedDom.setAttribute('style', 'position: fixed; bottom: ' + ((currBottom + 20) - footerTop) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
@@ -47,33 +55,38 @@
           }
         }
         window.onresize = (e) => {
-          const tHtml = document.documentElement;
-          const currTop = currentYPosition()
-          const currBottom = currentYPosition() + tHtml.clientHeight
-          const footerTop = elmYPosition('.article_footer > div:first-child')
-          // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
-          const asideHeight = document.querySelector('.article_aside').clientHeight
-          const mainHeight = document.querySelector('.article_main').clientHeight
-          const relatedDom = document.querySelector('.related-list-container')
-          const relatedTop = elmYPosition('.related-list-container')
-          if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
-            relatedDom.removeAttribute('style')
-            window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
-            relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
-          } else if(window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
-            relatedDom.removeAttribute('style')
-            window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
-            relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
-            if(footerTop < (currBottom + 20)) {
-              relatedDom.setAttribute('style', 'position: fixed; bottom: ' + ((currBottom + 20) - footerTop) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
-            }
-          }
+          this.updateRelatedListStyle()
         }
       },
       getBrief(rawBrief) {
         return truncate(sanitizeHtml(rawBrief, { allowedTags: [ 'em' ] }), 70)
       },
-      getValue
+      getValue,
+      updateRelatedListStyle() {
+        const tHtml = document.documentElement;
+        const currTop = currentYPosition()
+        const currBottom = currentYPosition() + tHtml.clientHeight
+        // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
+        const mainHeight = document.querySelector('.article_main').clientHeight
+        const relatedDom = document.querySelector('.related-list-container')
+        const relatedTop = elmYPosition('.related-list-container')
+        if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
+          relatedDom.removeAttribute('style')
+          window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
+          relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+        } else if(window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
+          const footerTop = elmYPosition('.article_footer > div:first-child')
+          relatedDom.removeAttribute('style')
+          window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
+          relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+          if(footerTop < (currBottom + 20)) {
+            relatedDom.setAttribute('style', 'position: fixed; bottom: ' + ((currBottom + 20) - footerTop) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+          }
+        } else {
+          relatedDom.removeAttribute('style')
+        }
+
+      },
     },
     mounted() {
       this.makeRelatedFixed()

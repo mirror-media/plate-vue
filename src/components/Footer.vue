@@ -26,10 +26,10 @@
     display: flex;
     border-top: 2px solid #000;
     padding-top: 15px;
+    padding-bottom: 50px;
     justify-content: space-between;
     margin-top: 20px;
-    margin-bottom: 40px;
-
+    
     .left {
       display: flex;
       flex: 2;

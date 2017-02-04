@@ -157,7 +157,7 @@ $color-watch = #c1d16e
 
     &--topic
       position relative
-      margin-bottom 40px
+      /*margin-bottom 40px*/
       background-color #fff
       box-shadow:0 0 5px 0 #cccccc
 
@@ -201,7 +201,7 @@ $color-watch = #c1d16e
     color #fff
     background-color: #333
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2)
-    
+
 
 .dropdown:hover .dropdown-content
   display: block
@@ -242,7 +242,7 @@ $color-watch = #c1d16e
     a
       min-width 90px
       padding 14.5px 15px
-      text-align center 
+      text-align center
       color rgba(0,0,0,.5)
 
 </style>
