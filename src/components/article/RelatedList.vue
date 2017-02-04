@@ -1,5 +1,5 @@
 <template>
-  <div class="related-list-container">
+  <div class="related-list-container" v-if="ifshow">
     <div class="title"><h4>相關文章</h4></div>
     <div class="item" v-for="(o, i) in relateds">
       <div class="title"><a :href="`/post/${getValue(o, [ 'name'], '')}`" target="_blank">{{ o.title }}</a></div>
@@ -22,6 +22,7 @@
         const relatedDom = document.querySelector('.related-list-container')
 
         window.onscroll = (e) => {
+          if(!relatedDom) { return }
           const currTop = currentYPosition()
           const currBottom = currentYPosition() + tHtml.clientHeight
           // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
@@ -69,6 +70,7 @@
         // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
         const mainHeight = document.querySelector('.article_main').clientHeight
         const relatedDom = document.querySelector('.related-list-container')
+        if(!relatedDom) { return }
         const relatedTop = elmYPosition('.related-list-container')
         if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
           relatedDom.removeAttribute('style')
@@ -93,6 +95,9 @@
     },
     name: 'related-list',
     props: {
+      ifshow: {
+        default: false
+      },
       relateds: {
         default: []
       }

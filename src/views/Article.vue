@@ -49,8 +49,8 @@
               <div class="pop_title"><h3>熱門文章：</h3></div>
               <div class="pop_list">
                 <div class="pop_item" v-for="(o, i) in popularlist">
-                  <div><a href=""><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
-                  <div class="pop_item_title"><a href="">{{ getTruncatedVal(o.title, 28) }}</a></div>
+                  <div><a :href="`/post/${getPureSLug(o.slug)}`" target="_blank"><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
+                  <div class="pop_item_title"><a :href="`/post/${getPureSLug(o.slug)}`" target="_blank">{{ getTruncatedVal(o.title, 28) }}</a></div>
                 </div>
               </div>
             </div>
@@ -62,7 +62,7 @@
             <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp>
             <latest-list :latest="latestList"></latest-list>
             <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp>
-            <related-list :relateds="relateds"></related-list>
+            <related-list :relateds="relateds" :ifshow="showRelated"></related-list>
           </aside>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp>
@@ -204,6 +204,10 @@
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return relateds
       },
+      showRelated() {
+        const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], [])
+        return (relateds.length > 0)
+      },
       tags() {
         const { tags } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return tags.map((o) => (o.name)).join('、')
@@ -264,6 +268,11 @@
       },
       getPopList() {
         console.log('got pop...');
+      },
+      getPureSLug(rawSlug) {
+        /**this is for popularlist only**/
+        const rawSlugArr = rawSlug.split('/')
+        return rawSlugArr[ 2 ]
       },
       getTruncatedVal,
       getValue(o = {}, p = [], d = '') {
