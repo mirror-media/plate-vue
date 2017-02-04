@@ -210,7 +210,7 @@
       },
       tags() {
         const { tags } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        return tags.map((o) => (o.name)).join('、')
+        return tags.map((o) => (_.get(o, [ 'name' ], ''))).join('、')
       },
       title() {
         const { title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
@@ -293,7 +293,7 @@
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const pureBrief = truncate(sanitizeHtml(_.get(brief, [ 'html' ], ''), { allowedTags: [ 'em' ] }), 200)
-      const pureTags = tags.map((t) => (t.name))
+      const pureTags = tags.map((t) => (_.get(t, [ 'name' ], '')))
       const sectionId = _.get(sections, [ 0, 'id' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
 
@@ -497,7 +497,7 @@
               position: absolute;
               top: 0;
               left: 0;
-            } 
+            }
           }
         }
       }
