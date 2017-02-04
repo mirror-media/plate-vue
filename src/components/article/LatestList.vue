@@ -2,23 +2,25 @@
   <div class="latest-list-container">
     <div class="title"><h4>最新文章</h4></div>
     <div class="item" v-for="(o, i) in latest" v-if="i < 6">
-      <div class="thumbnail" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'tiny', 'url'], '/asset/logo.png') + ')' }"></div>
+      <div class="thumbnail" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'tiny', 'url' ], '/asset/logo.png') + ')' }"></div>
       <div class="content">
         <div class="content_category">
-          {{ getValue(o, [ 'categories', 0, 'title'], '國際') }}
+          {{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}
         </div>
         <div class="content_title">
-          <a href="">{{ o.title }}</a>
+          <a :href="`/post/${o.slug}`" target="_blank">{{ getTruncatedVal(o.title, 22) }}</a>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
+  import { getTruncatedVal } from '../../utils/comm'
   import { getValue } from '../../utils/comm'
 
   export default {
     methods: {
+      getTruncatedVal,
       getValue
     },
     name: 'latest-list',

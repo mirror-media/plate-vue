@@ -60,7 +60,7 @@
           </main>
           <aside class="article_aside">
             <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp>
-            <latest-list :latest="popularlist"></latest-list>
+            <latest-list :latest="latestList"></latest-list>
             <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp>
             <related-list :relateds="relateds"></related-list>
           </aside>
@@ -192,6 +192,9 @@
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const poster = (ogImgUrl) ? ogImgUrl : ((heroImgUrl) ? heroImgUrl : '/asset/review.png')
         return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
+      },
+      latestList() {
+          return _.get(this.latestArticle, [ 'items' ], [])
       },
       popularlist() {
         const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ])
