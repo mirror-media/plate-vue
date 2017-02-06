@@ -25,8 +25,11 @@
   .ad-container {
     display: inline-block;
     margin-top: 20px;
-    &.magin-top-30px {
+    &.margin-top-30px {
       margin-top: 30px;
+    }
+    &.margin-top-0 {
+      margin-top: 0;
     }
     &.center {
       display: flex;

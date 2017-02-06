@@ -7,18 +7,24 @@
       <div><span><a href="http://hyperurl.co/mmfooter">下載ＡＰＰ</span></a></div>
     </div>
     <div class="share">
-      <a className="item" href={SOCIAL_LINK.LINE} ><img src="https://www.mirrormedia.mg/asset/icon/line@2x.png" className="footer-icon line" /></a>
-      <a className="item" href={SOCIAL_LINK.WEIBO} ><img src="https://www.mirrormedia.mg/asset/icon/weibo@2x.png" className="footer-icon weibo" /></a>
-      <a className="item" href={SOCIAL_LINK.FACEBOOK} ><img src="https://www.mirrormedia.mg/asset/icon/facebook@2x.png" className="footer-icon facebook" /></a>
-      <a className="item" href={SOCIAL_LINK.INSTAGRAM} ><img src="https://www.mirrormedia.mg/asset/icon/instagram@2x.png" className="footer-icon instagram" /></a>
-      <a className="item" href={SOCIAL_LINK.FEED} ><img src="https://www.mirrormedia.mg/asset/icon/feed@2x.png" className="footer-icon feed" /></a>
-      <a className="item" href={SOCIAL_LINK.EMAIL} ><img src="https://www.mirrormedia.mg/asset/icon/mail@2x.png" className="footer-icon mail" /></a>
+      <a className="item" :href="SOCIAL_LINK.LINE" ><img src="https://www.mirrormedia.mg/asset/icon/line@2x.png" className="footer-icon line" /></a>
+      <a className="item" :href="SOCIAL_LINK.WEIBO" ><img src="https://www.mirrormedia.mg/asset/icon/weibo@2x.png" className="footer-icon weibo" /></a>
+      <a className="item" :href="SOCIAL_LINK.FACEBOOK" ><img src="https://www.mirrormedia.mg/asset/icon/facebook@2x.png" className="footer-icon facebook" /></a>
+      <a className="item" :href="SOCIAL_LINK.INSTAGRAM" ><img src="https://www.mirrormedia.mg/asset/icon/instagram@2x.png" className="footer-icon instagram" /></a>
+      <a className="item" :href="SOCIAL_LINK.FEED" ><img src="https://www.mirrormedia.mg/asset/icon/feed@2x.png" className="footer-icon feed" /></a>
+      <a className="item" :href="SOCIAL_LINK.EMAIL" ><img src="https://www.mirrormedia.mg/asset/icon/mail@2x.png" className="footer-icon mail" /></a>
     </div>
   </footer>
 </template>
 <script>
+  import { SOCIAL_LINK } from '../constants'
   export default {
-    name: 'footer'
+    name: 'footer',
+    data() {
+      return {
+        SOCIAL_LINK: SOCIAL_LINK
+      }
+    }
   }
 </script>
 <style lang="stylus" scoped>
@@ -26,9 +32,9 @@
     display: flex;
     border-top: 2px solid #000;
     padding-top: 15px;
+    padding-bottom: 50px;
     justify-content: space-between;
     margin-top: 20px;
-    margin-bottom: 40px;
 
     .left {
       display: flex;

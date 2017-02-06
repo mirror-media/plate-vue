@@ -1,11 +1,24 @@
 <template>
-  <div id="app">
+  <div id="app" v-show="showPage">
     <transition name="fade" mode="out-in">
       <router-view class="view"></router-view>
     </transition>
   </div>
 </template>
-
+<script>
+  export default {
+    data() {
+      return {
+        showPage: false
+      }
+    },
+    mounted() {
+      window.onload = (e) => {
+        this.showPage = true
+      }
+    }
+  }
+</script>
 <style lang="stylus">
 html
   box-sizing border-box
@@ -87,7 +100,7 @@ button:focus {
   .container
     flex-direction: row
     width 1024px
-  
+
 @media (min-width 1800px)
   .container
     width 1200px
