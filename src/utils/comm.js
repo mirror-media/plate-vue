@@ -31,8 +31,8 @@ export function getTruncatedVal(oVal, count) {
   return truncate(oVal, count)
 }
 
-export function getHref(relAritlcle) {
-  const { style = '', slug } = relAritlcle
+export function getHref(relAritlcle = {}) {
+  const { style = '', slug } = _.get(relAritlcle, [], '')
   switch(style) {
     case "projects":
       return `/projects/${slug}`

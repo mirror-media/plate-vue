@@ -1,8 +1,8 @@
 <template>
   <div class="related-list-container" v-if="ifshow">
     <div class="title"><h4>相關文章</h4></div>
-    <div class="item" v-for="(o, i) in relateds">
-      <div class="title"><a :href="getHref(o)" target="_blank">{{ o.title }}</a></div>
+    <div class="item" v-for="(o, i) in relateds" v-if="o">
+      <div class="title"><a :href="getHref(o)" target="_blank">{{ getValue(o, [ 'title' ], '') }}</a></div>
     </div>
   </div>
 </template>
@@ -69,6 +69,10 @@
         const currTop = currentYPosition()
         const currBottom = currentYPosition() + tHtml.clientHeight
         // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
+        const asideHeight = document.querySelector('.article_aside').clientHeight
+        const asideTop = elmYPosition('.article_aside')
+        const asideBottom = asideTop + asideHeight
+
         const mainHeight = document.querySelector('.article_main').clientHeight
         const relatedDom = document.querySelector('.related-list-container')
         if(!relatedDom) { return }

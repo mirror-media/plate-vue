@@ -77,6 +77,7 @@
   import _ from 'lodash'
   import { CATEGORY_MAP, DFP_UNITS } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
+  // import { swiper, swiperSlide } from 'vue-awesome-swiper'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
@@ -85,6 +86,8 @@
   import sanitizeHtml from 'sanitize-html'
   import store from '../store'
   import truncate from 'truncate'
+
+
 
   const fetchArticles = (store) => {
     return store.dispatch('FETCH_ARTICLES', {
@@ -114,13 +117,13 @@
 
   const fetchData = (store) => {
     return fetchCommonData(store).then(() => {
-      return fetchEditorChoice(store).then(() => {
-        return fetchLatestArticle(store).then(() => {
+      // return fetchEditorChoice(store).then(() => {
+      //   return fetchLatestArticle(store).then(() => {
           return fetchArticles(store).then(() => {
               return fetchPop(store)
           })
-        })
-      })
+      //   })
+      // })
     })
   }
 
@@ -136,16 +139,34 @@
     },
     data() {
       return {
-        state: {},
+        commonData: this.$store.state.commonData,
         dfpConst: {
           adUnitPath: '/421342134/test_pc_np_ap_970x250_HD',
           adSize: [ [ 970, 250 ] ],
           adElementId: 'test_pc_np_ap_970x250_HD'
         },
-        commonData: this.$store.state.commonData,
         editorChoice: this.$store.state.editorChoice,
-        latestArticle: this.$store.state.latestArticle
-
+        latestArticle: this.$store.state.latestArticle,
+        state: {},
+        // swiperOption: {
+        //   notNextTick: true,
+        //   autoplay: 3000,
+        //   direction : 'vertical',
+        //   grabCursor : true,
+        //   setWrapperSize :true,
+        //   autoHeight: true,
+        //   pagination : '.swiper-pagination',
+        //   paginationClickable :true,
+        //   prevButton:'.swiper-button-prev',
+        //   nextButton:'.swiper-button-next',
+        //   scrollbar:'.swiper-scrollbar',
+        //   mousewheelControl : true,
+        //   observeParents:true,
+        //   debugger: true,
+        //   onTransitionStart(swiper){
+        //     console.log(swiper)
+        //   },
+        // }
       }
     },
     computed: {
@@ -208,6 +229,9 @@
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], [])
         return (relateds.length > 0)
       },
+      // swiper() {
+      //   return this.$refs.mySwiperA.swiper
+      // },
       tags() {
         const { tags } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return tags.map((o) => (_.get(o, [ 'name' ], ''))).join('、')
