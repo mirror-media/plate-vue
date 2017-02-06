@@ -49,8 +49,8 @@
               <div class="pop_title"><h3>熱門文章：</h3></div>
               <div class="pop_list">
                 <div class="pop_item" v-for="(o, i) in popularlist">
-                  <div><a :href="`/post/${getPureSLug(o.slug)}`" target="_blank"><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
-                  <div class="pop_item_title"><a :href="`/post/${getPureSLug(o.slug)}`" target="_blank">{{ getTruncatedVal(o.title, 28) }}</a></div>
+                  <div><a :href="reviseSlug(o.slug)" target="_blank"><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
+                  <div class="pop_item_title"><a :href="reviseSlug(o.slug)" target="_blank">{{ getTruncatedVal(o.title, 28) }}</a></div>
                 </div>
               </div>
             </div>
@@ -269,15 +269,15 @@
       getPopList() {
         console.log('got pop...');
       },
-      getPureSLug(rawSlug) {
-        /**this is for popularlist only**/
-        const rawSlugArr = rawSlug.split('/')
-        return rawSlugArr[ 2 ]
-      },
       getTruncatedVal,
       getValue(o = {}, p = [], d = '') {
         return _.get(o, p, d);
       },
+      reviseSlug(rawSlug) {
+        /**this is for popularlist only**/
+        const newSlug = rawSlug.replace('story', 'post')
+        return newSlug
+      }
     },
     mounted() {
       const { fbAppId } = _.get(this.$store, [ 'state' ])

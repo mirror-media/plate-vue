@@ -2,12 +2,12 @@
   <div class="related-list-container" v-if="ifshow">
     <div class="title"><h4>相關文章</h4></div>
     <div class="item" v-for="(o, i) in relateds">
-      <div class="title"><a :href="`/post/${getValue(o, [ 'slug'], '')}`" target="_blank">{{ o.title }}</a></div>
+      <div class="title"><a :href="getHref(o)" target="_blank">{{ o.title }}</a></div>
     </div>
   </div>
 </template>
 <script>
-  import { currentYPosition, elmYPosition, getValue } from '../../utils/comm'
+  import { currentYPosition, elmYPosition, getHref, getValue } from '../../utils/comm'
   import sanitizeHtml from 'sanitize-html'
   import truncate from 'truncate'
 
@@ -62,6 +62,7 @@
       getBrief(rawBrief) {
         return truncate(sanitizeHtml(rawBrief, { allowedTags: [ 'em' ] }), 70)
       },
+      getHref,
       getValue,
       updateRelatedListStyle() {
         const tHtml = document.documentElement;

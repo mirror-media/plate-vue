@@ -30,3 +30,14 @@ export function elmYPosition(eID) {
 export function getTruncatedVal(oVal, count) {
   return truncate(oVal, count)
 }
+
+export function getHref(relAritlcle) {
+  const { style = '', slug } = relAritlcle
+  switch(style) {
+    case "projects":
+      return `/projects/${slug}`
+    case "article":
+    default:
+      return `/post/${slug}`
+  }
+}
