@@ -1,6 +1,7 @@
 <template>
   <div class="section-view">
     <app-Header :commonData= 'commonData' />
+    <div class="dfp-test">DFP 970 X 250</div>
     <editor-choice :editorChoice= 'editorChoice'/>
     <section class="container">
       <latest-article :latestArticle= 'latestArticle'/>
@@ -87,6 +88,11 @@ export default {
     letter-spacing: .5px
     color: rgba(0,0,0,.8)
     list-style-type none
-  
+
+.dfp-test
+  width 970px
+  height 250px
+  margin 0 auto 20px
+  background-color #a8dadc
 
 </style>

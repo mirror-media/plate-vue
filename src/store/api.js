@@ -55,6 +55,12 @@ function loadArticlesPopList(params = {}) {
   return _doFetch(url)
 }
 
+function loadCommonData () {
+  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=sections&endpoint=topics`
+  return _doFetch(url)
+}
+
 function loadEditorChoice () {
   const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
   let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=choices`
@@ -69,7 +75,7 @@ function loadEvent () {
 
 function loadLatestArticle () {
   const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=posts`
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts?sort=-publishedDate&clean=content&max_results=15`
   return _doFetch(url)
 }
 
@@ -136,21 +142,13 @@ export function fetchIdsByType (type) {
     : fetch(`${type}stories`)
 }
 
-export function fetchItem (id) {
-  return fetch(`item/${id}`)
-}
-
-export function fetchItems (ids) {
-  return Promise.all(ids.map(id => fetchItem(id)))
-}
 
 export function fetchCommonData () {
-  return Promise.all([ fetchEvent(), fetchSectionList(), fetchTopic() ])
+  return Promise.all([ loadCommonData() ])
           .then( (data) => {
             let commonData = {}
-            commonData.event = data[0]
-            commonData.sectionList = data[1]
-            commonData.topic = data[2]
+            commonData.sectionList = _.get(data[0], ['endpoints', 'sections'])
+            commonData.topic = _.get(data[0], ['endpoints', 'topics'])
             return commonData
           } )
 }
@@ -185,24 +183,4 @@ export function fetchArticles (params = {}) {
 
 export function fetchArticlesPopList (params = {}) {
   return loadArticlesPopList(params)
-}
-
-export function fetchUser (id) {
-  return fetch(`user/${id}`)
-}
-
-export function watchList (type, cb) {
-  let first = true
-  const ref = api.child(`${type}stories`)
-  const handler = snapshot => {
-    if (first) {
-      first = false
-    } else {
-      cb(snapshot.val())
-    }
-  }
-  ref.on('value', handler)
-  return () => {
-    ref.off('value', handler)
-  }
 }

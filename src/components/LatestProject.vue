@@ -1,6 +1,6 @@
 <template>
   <section class="grid grid-1-fifth">
-    <article-center />
+    Projects
   </section>
 </template>
 <script>
@@ -35,6 +35,8 @@ export default {
 
 </script>
 <style lang="stylus" scoped>
-
+.grid.grid-1-fifth
+  text-align center
+  background-color #a8dadc
 
 </style>

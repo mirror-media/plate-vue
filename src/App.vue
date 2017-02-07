@@ -37,7 +37,7 @@ body
 a
   color #34495e
   text-decoration none
-  cursor point
+  cursor pointer
 
 input:focus,
 select:focus,

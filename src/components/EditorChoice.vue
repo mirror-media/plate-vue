@@ -1,10 +1,8 @@
 <template>
   <section class="editorChoice container">
     <div class="grid grid-4-fifth">
-      <div :id="'slide-' + index" class="editorChoice-image" v-for="(item, index) in editorChoice.items">
-          <img 
-            :src="item.heroImage.image.resizedTargets.desktop.url" 
-            :srcset="getSrcSet(item.heroImage.image)">
+      <div :id="'slide-' + index" class="editorChoice-image" v-for="(item, index) in editorChoice.items"
+        :style="{ backgroundImage: 'url(' + item.heroImage.image.resizedTargets.mobile.url + ')' }">
       </div>
     </div>
     <div class="editorChoice-list grid grid-1-fifth">
