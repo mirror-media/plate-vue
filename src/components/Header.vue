@@ -22,10 +22,12 @@
       </div>
     </nav>
     <nav class="header-menu--topic">
-      <div class="header-menu">
-        <a :href="item.href" v-for="item in headerItem.topic" v-text="item.title"></a>
+      <div>
+        <div class="header-menu">
+          <a :href="item.href" v-for="item in headerItem.topic" v-text="item.title"></a>
+        </div>
+        <a href="">更多</a>
       </div>
-      <a href="">更多 ▾</a>
     </nav>
   </header>
 </template>
@@ -43,7 +45,7 @@ export default {
       headerItem.section = []
       headerItem.category = []
       headerItem.topic = []
-      _.forEach(this.commonData.sectionList.endpoints.sections.items, (s) => {
+      _.forEach(this.commonData.sectionList.items, (s) => {
         s.href = '/section/' + s.name
         s.isFeatured ? headerItem.section.push(s) : ''
         _.forEach(s.categories, (c) => {
@@ -156,20 +158,15 @@ $color-watch = #c1d16e
         color #fff
 
     &--topic
+      display flex
+      justify-content space-between
       position relative
-      /*margin-bottom 40px*/
       background-color #fff
       box-shadow:0 0 5px 0 #cccccc
 
       .header-menu
         > a
           border-bottom 3px solid #000
-
-
-      > a
-        position absolute
-        top 0
-        right 0
 
 .logo
   width 24px
@@ -235,10 +232,20 @@ $color-watch = #c1d16e
       margin 0 auto
       padding 14px 0
 
+    &-menu
+      &--section
+        header-menu
+          width 1024px
+          margin 0 auto
+
+      &--topic
+        margin-bottom 20px
+        > div
+          display flex
+          justify-content space-between
+          width 1024px
+          margin 0 auto
   nav
-    > div
-      width 1024px
-      margin 0 auto
     a
       min-width 90px
       padding 14.5px 15px
