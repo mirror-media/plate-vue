@@ -17,9 +17,9 @@
 <script>
 
 import _ from 'lodash'
+import EditorChoice from '../components/EditorChoice.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
-import EditorChoice from '../components/EditorChoice.vue'
 import LatestArticle from '../components/LatestArticle.vue'
 import LatestProject from '../components/LatestProject.vue'
 import More from '../components/More.vue'
@@ -82,7 +82,6 @@ export default {
   },
   methods: {
     loadMore () {
-      console.log('cc')
       this.page += 1
       this.$store.dispatch('FETCH_LATESTARTICLE', {
         params: {

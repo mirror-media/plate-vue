@@ -45,7 +45,6 @@ const store = new Vuex.Store({
       return state.latestArticle.items && params.page < 2
         ? Promise.resolve(state.latestArticle)
         : fetchLatestArticle(params).then(latestArticle => {
-            //console.log('latestArticle', latestArticle)
             latestArticle['items'] = _.concat(orig, _.get(latestArticle, ['items']))
             commit('SET_LATESTARTICLE', { latestArticle })
           })
