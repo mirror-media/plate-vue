@@ -73,9 +73,13 @@ function loadEvent () {
   return _doFetch(url)
 }
 
-function loadLatestArticle () {
+function loadLatestArticle (params = {}) {
   const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts?sort=-publishedDate&clean=content&max_results=15`
+  let query = _buildQuery(params)
+  // let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts?sort=-publishedDate&clean=content&max_results=15`
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts`
+  url = `${url}?${query}`
+  console.log('url', url)
   return _doFetch(url)
 }
 
@@ -161,8 +165,8 @@ export function fetchEvent () {
   return loadEvent()
 }
 
-export function fetchLatestArticle () {
-  return loadLatestArticle()
+export function fetchLatestArticle (params = {}) {
+  return loadLatestArticle(params)
 }
 
 export function fetchQuestionnaire (id) {

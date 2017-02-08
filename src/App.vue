@@ -98,7 +98,6 @@ button:focus {
     display none !important
 
   .container
-    flex-direction: row
     width 1024px
 
 @media (min-width 1800px)
