@@ -53,7 +53,7 @@ export default {
           c.isFeatured ? headerItem.category.push(c) : ''
         })
       })
-      _.forEach(this.commonData.topic.items, (t) => {
+      _.forEach(_.take(this.commonData.topic.items, 7), (t) => {
         t.href = t.links.self.href
         t.title = t.name
         t.isFeatured ? headerItem.topic.push(t) : ''

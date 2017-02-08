@@ -1,6 +1,6 @@
 <template>
   <section class="latestArticle grid grid-4-fifth">
-    <template v-for="item in test">
+    <template v-for="item in article">
       <article-right :article='item'/>
       <article-center :article='item'/>
       <article-left :article='item'/>
@@ -29,12 +29,12 @@ export default {
     }
   },
   props: {
-    latestArticle: this.latestArticle
+    latestArticle: this.latestArticle,
   },
   computed: {
-    test() {
+    article() {
       return _.chunk(this.latestArticle.items, 15)
-    }
+    },
   },
   methods: {
     
@@ -53,12 +53,19 @@ $color-news = #30bac8
 $color-entertainment = #bf3284
 $color-foodtravel = #eac151
 $color-watch = #c1d16e
+$color-projects = #000
+$color-other = #bcbcbc
+
+.latestArticle
+  display: flex
+  flex-direction: column
+  > section:not(:last-child)
+    margin-bottom 20px
 
 .list-container
   display flex
   justify-content space-between
   width 100%
-  margin-bottom 20px
   > div
     float left
     background-position 50% 50%
@@ -127,6 +134,12 @@ $color-watch = #c1d16e
 
   &.watch
     border-left 3px solid $color-watch
+
+  &.projects
+    border-left 3px solid $color-projects
+
+  &.other
+    border-left 3px solid $color-other
 
 .list-container
   a:hover

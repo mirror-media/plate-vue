@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
@@ -39,10 +40,15 @@ const store = new Vuex.Store({
         : fetchEditorChoice().then(editorChoice => commit('SET_EDITORCHOICE', { editorChoice }))
     },
 
-    FETCH_LATESTARTICLE: ({ commit, state }, { }) => {
-      return state.latestArticle.items
+    FETCH_LATESTARTICLE: ({ commit, state }, { params }) => {
+      let orig = _.values(state.latestArticle['items'])
+      return state.latestArticle.items && params.page < 2
         ? Promise.resolve(state.latestArticle)
-        : fetchLatestArticle().then(latestArticle => commit('SET_LATESTARTICLE', { latestArticle }))
+        : fetchLatestArticle(params).then(latestArticle => {
+            //console.log('latestArticle', latestArticle)
+            latestArticle['items'] = _.concat(orig, _.get(latestArticle, ['items']))
+            commit('SET_LATESTARTICLE', { latestArticle })
+          })
     },
 
     FETCH_QUESTIONNAIRE: ({ commit, state }, { id }) => {
@@ -68,15 +74,15 @@ const store = new Vuex.Store({
     },
 
     SET_COMMONDATA: (state, { commonData }) => {
-      state.commonData = commonData
+      Vue.set(state, 'commonData', commonData)
     },
 
     SET_EDITORCHOICE: (state, { editorChoice }) => {
-      state.editorChoice = editorChoice.endpoints.choices
+      Vue.set(state, 'editorChoice', editorChoice.endpoints.choices)
     },
 
     SET_LATESTARTICLE: (state, { latestArticle }) => {
-      state.latestArticle = latestArticle
+      Vue.set(state, 'latestArticle', latestArticle)
     },
 
     SET_QUESTIONNAIRE: (state, { questionnaire }) => {
