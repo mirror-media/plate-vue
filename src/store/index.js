@@ -28,10 +28,10 @@ const store = new Vuex.Store({
       return fetchArticlesPopList(params).then(articlesPopList => commit('SET_ARTICLES_POP_LIST', { articlesPopList }))
     },
     
-    FETCH_COMMONDATA: ({ commit, state }, { }) => {
+    FETCH_COMMONDATA: ({ commit, state }, { endpoints = [] }) => {
       return state.commonData.event
         ? Promise.resolve(state.commonData)
-        : fetchCommonData().then(commonData => commit('SET_COMMONDATA', { commonData }))
+        : fetchCommonData(endpoints).then(commonData => commit('SET_COMMONDATA', { commonData }))
     },
 
     FETCH_EDITORCHOICE: ({ commit, state }, { }) => {
@@ -74,6 +74,8 @@ const store = new Vuex.Store({
 
     SET_COMMONDATA: (state, { commonData }) => {
       Vue.set(state, 'commonData', commonData)
+      _.get(commonData, ['postsVue']) ? Vue.set(state, 'latestArticle', _.get(commonData, ['postsVue'])) : ''
+      _.get(commonData, ['choices']) ? Vue.set(state, 'editorChoice', _.get(commonData, ['choices'])) : ''
     },
 
     SET_EDITORCHOICE: (state, { editorChoice }) => {
