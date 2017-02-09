@@ -32,20 +32,22 @@
   </header>
 </template>
 <script>
+
 import { SOCIAL_LINK } from '../constants/index'
 import _ from 'lodash'
+
 export default {
   name: 'app-header',
   props: {
     commonData: {},
   },
   computed: {
-    headerItem() {
+    headerItem () {
       let headerItem = {}
       headerItem.section = []
       headerItem.category = []
       headerItem.topic = []
-      _.forEach(this.commonData.sectionList.items, (s) => {
+      _.forEach(this.commonData.sections.items, (s) => {
         s.href = '/section/' + s.name
         s.isFeatured ? headerItem.section.push(s) : ''
         _.forEach(s.categories, (c) => {
@@ -53,18 +55,19 @@ export default {
           c.isFeatured ? headerItem.category.push(c) : ''
         })
       })
-      _.forEach(_.take(this.commonData.topic.items, 7), (t) => {
+      _.forEach(this.commonData.topics.items, (t) => {
         t.href = t.links.self.href
         t.title = t.name
-        t.isFeatured ? headerItem.topic.push(t) : ''
+        t.isFeatured && headerItem.topic.length < 7 ? headerItem.topic.push(t) : ''
       })
       return headerItem
     },
-    socialLink() {
+    socialLink () {
       return SOCIAL_LINK
     }
   }
 }
+
 </script>
 <style lang="stylus" scoped>
 

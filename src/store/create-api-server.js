@@ -1,6 +1,5 @@
 import Firebase from 'firebase'
 import LRU from 'lru-cache'
-import { fetchItems } from './api'
 
 let api
 const config = {

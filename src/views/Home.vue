@@ -29,11 +29,7 @@ const MAXRESULT = 15
 const PAGE = 1
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { })
-}
-
-const fetchEditorChoice = (store) => {
-  return store.dispatch('FETCH_EDITORCHOICE', { })
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'choices' ] } )
 }
 
 const fetchLatestArticle = (store, page) => {
@@ -46,17 +42,9 @@ const fetchLatestArticle = (store, page) => {
   })
 }
 
-const fetchData = (store) => {
-  return fetchCommonData(store).then(() => {
-    return fetchEditorChoice(store).then(() => {
-      return fetchLatestArticle(store, PAGE)
-    })
-  })
-}
-
 export default {
   name: 'home-view',
-  preFetch: fetchData,
+  preFetch: fetchCommonData,
   components: {
     'app-footer': Footer,
     'app-Header': Header,
@@ -83,13 +71,7 @@ export default {
   methods: {
     loadMore () {
       this.page += 1
-      this.$store.dispatch('FETCH_LATESTARTICLE', {
-        params: {
-          'max_results': MAXRESULT,
-          'page': this.page,
-          'sort':'-publishedDate'
-        }
-      })
+      fetchLatestArticle(this.$store, this.page)
     }
   },
   metaInfo () {
