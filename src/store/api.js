@@ -55,9 +55,12 @@ function loadArticlesPopList(params = {}) {
   return _doFetch(url)
 }
 
-function loadCommonData () {
+function loadCommonData (endpoints = []) {
+  let mapped = _.map(endpoints, (n) => { return 'endpoint=' + n })
+  let combo_params = mapped.join('&')
   const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=sections&endpoint=topics`
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=sections&endpoint=topics&endpoint=projects&`
+  url = url + combo_params
   return _doFetch(url)
 }
 
@@ -119,7 +122,6 @@ if (api.onServer && !api.warmCacheStarted) {
 }
 
 function warmCache () {
-  fetchItems((api.cachedIds.top || []).slice(0, 30))
   setTimeout(warmCache, 1000 * 60 * 15)
 }
 
@@ -147,12 +149,13 @@ export function fetchIdsByType (type) {
 }
 
 
-export function fetchCommonData () {
-  return Promise.all([ loadCommonData() ])
+export function fetchCommonData (endpoints = []) {
+  return Promise.all([ loadCommonData(endpoints) ])
           .then( (data) => {
             let commonData = {}
-            commonData.sectionList = _.get(data[0], ['endpoints', 'sections'])
-            commonData.topic = _.get(data[0], ['endpoints', 'topics'])
+            _.map( Object.keys( _.get(data[0], ['endpoints']) ), (e) => {
+              commonData[e] = _.get(data[0], ['endpoints', e ])
+            })
             return commonData
           } )
 }
