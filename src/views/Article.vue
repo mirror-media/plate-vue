@@ -21,13 +21,14 @@
               Your browser does not support the video tag.
             </video>
             <div class="playpause"></div>
+            <div class="heroimg-caption" v-text="heroCaption"></div>
           </div>
           <div class="article_heromedia" v-else="heroImage">
             <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
                   :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
                             getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
                             getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
-            <div class="heroimg-caption"></div>
+            <div class="heroimg-caption" v-text="heroCaption"></div>
           </div>
           <main class="article_main">
             <div class="brief" v-html="getContent('brief')"></div>
@@ -49,14 +50,17 @@
               <div class="pop_title"><h3>熱門文章：</h3></div>
               <div class="pop_list">
                 <div class="pop_item" v-for="(o, i) in popularlist">
-                  <div><a :href="reviseSlug(o.slug)" target="_blank"><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
-                  <div class="pop_item_title"><a :href="reviseSlug(o.slug)" target="_blank">{{ getTruncatedVal(o.title, 28) }}</a></div>
+                  <div><a :href="reviseSlug(o.slug)" ><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
+                  <div class="pop_item_title"><a :href="reviseSlug(o.slug)" >{{ getTruncatedVal(o.title, 28) }}</a></div>
                 </div>
               </div>
             </div>
             <div style="margin: 1.5em 0;">
               <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
             </div>
+              <!-- <slider :pages="pages" :sliderinit="sliderinit" v-show="showSlides"> -->
+                <!-- slot  -->
+              <!-- </slider> -->
           </main>
           <aside class="article_aside">
             <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp>
@@ -84,6 +88,7 @@
   import RelatedList from '../components/article/RelatedList.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
+  // import slider from 'vue-slider'
   import store from '../store'
   import truncate from 'truncate'
 
@@ -117,15 +122,17 @@
 
   const fetchData = (store) => {
     return fetchCommonData(store).then(() => {
-      // return fetchEditorChoice(store).then(() => {
-      //   return fetchLatestArticle(store).then(() => {
+      return fetchEditorChoice(store).then(() => {
+        return fetchLatestArticle(store).then(() => {
           return fetchArticles(store).then(() => {
               return fetchPop(store)
           })
-      //   })
-      // })
+        })
+      })
     })
   }
+
+  // const slideC = (process.env.BROWSER)? slider : null
 
   export default {
     name: 'article-view',
@@ -135,7 +142,8 @@
       'app-header': Header,
       'latest-list': LatestList,
       'related-list': RelatedList,
-      'vue-dfp-provider': VueDfpProvider
+      'vue-dfp-provider': VueDfpProvider,
+      // slider
     },
     data() {
       return {
@@ -148,25 +156,26 @@
         editorChoice: this.$store.state.editorChoice,
         latestArticle: this.$store.state.latestArticle,
         state: {},
-        // swiperOption: {
-        //   notNextTick: true,
-        //   autoplay: 3000,
-        //   direction : 'vertical',
-        //   grabCursor : true,
-        //   setWrapperSize :true,
-        //   autoHeight: true,
-        //   pagination : '.swiper-pagination',
-        //   paginationClickable :true,
-        //   prevButton:'.swiper-button-prev',
-        //   nextButton:'.swiper-button-next',
-        //   scrollbar:'.swiper-scrollbar',
-        //   mousewheelControl : true,
-        //   observeParents:true,
-        //   debugger: true,
-        //   onTransitionStart(swiper){
-        //     console.log(swiper)
-        //   },
-        // }
+        pages:[
+          {
+            title: '',
+            style:{
+             background:'url(https://www.mirrormedia.mg/assets/images/20161004150408-ca738362e4bac35397aed564f47fd308-tablet.jpg)'
+            }
+          },
+          {
+           title: '',
+           style:{
+            background:'url(https://storage.googleapis.com/mirrormedia-files/assets/images/20161004150331-21776ff51173ea2320f015cbc50a270f-desktop.png)'
+            }
+          },
+          {
+            title: 'slide3',
+            style:{
+              background:'#4bbfc3',
+            },
+          }
+        ],
       }
     },
     computed: {
@@ -183,7 +192,7 @@
       category() {
         const categoryId =  _.get(this.$store, [ 'state', 'articles', 'items', 0, 'categories', 0, 'id' ])
         const categoryTitle =  _.get(this.$store, [ 'state', 'articles', 'items', 0, 'categories', 0, 'title' ])
-        const style = { backgroundColor: _.get(CATEGORY_MAP, ['categoryId', 'bgcolor'], 'none;') }
+        const style = { borderLeft: _.get(CATEGORY_MAP, ['categoryId', 'borderLeft'], '7px solid #414141;') }
         return { categoryId, categoryTitle, style }
       },
       credit() {
@@ -202,6 +211,10 @@
         const dd = normalizedDt.getDate();
 
         return [ normalizedDt.getFullYear(), (mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd ].join('.')
+      },
+      heroCaption() {
+        const { heroCaption } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        return heroCaption
       },
       heroImage() {
         const { heroImage } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
@@ -229,6 +242,10 @@
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], [])
         return (relateds.length > 0)
       },
+      // showSlides() {
+      //   console.log('false');
+      //   return false
+      // },
       // swiper() {
       //   return this.$refs.mySwiperA.swiper
       // },
@@ -310,6 +327,11 @@
       fbSdkScript.async = true
       fbSdkScript.type = 'text/javascript'
       document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
+
+      // window.onload = (e) => {
+      //   this.showSlides = true
+      // }
+
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
@@ -372,16 +394,14 @@
         margin-top: 20px;
         justify-content: space-between;
         .category {
-          font-size: 18px;
+          font-size: 21px;
           display: flex;
           justify-content: flex-start;
           align-items: center;
           .categorySquare {
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            margin-right: 6px;
-            box-shadow: 0 0 2px #c1c1c1;
+            height: 24px;
+            margin-right: 10px;
           }
         }
         .date {
@@ -393,13 +413,16 @@
       }
       .article_credit {
         a:hover, a:link, a:visited {
-  		    color: #9db6d6;
+  		    color: #88b6f1;
   			}
       }
       .article_heromedia {
         margin-top: 30px;
         .heroimg {
           width: 100%;
+        }
+        .heroimg-caption {
+          margin-top: 5px;
         }
       }
       .article_main {
@@ -490,6 +513,9 @@
         }
         .brief {
           margin-top: 30px;
+          line-height: 36px;
+          font-size: 18px;
+          color: rgba(65, 65, 65, 0.61);
           p {
             strong {
               color: #000;

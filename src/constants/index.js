@@ -1,9 +1,9 @@
 'use strict'
 
 export const CATEGORY_MAP = {
-  '57e1e153ee85930e00cad4eb': { 'bgcolor': '#5cbaf1' },
-  '57e1e1a3ee85930e00cad4ef': { 'bgcolor': 'orange' },
-  '57e1e16dee85930e00cad4ec': { 'bgcolor': 'purple' }
+  '57e1e153ee85930e00cad4eb': { 'bgcolor': '#5cbaf1', 'borderLeft' : '7px solid #5cbaf1' },
+  '57e1e1a3ee85930e00cad4ef': { 'bgcolor': 'orange', 'borderLeft' : '7px solid orange' },
+  '57e1e16dee85930e00cad4ec': { 'bgcolor': 'purple', 'borderLeft' : '7px solid purple' }
 }
 
 export const DFP_UNITS = {

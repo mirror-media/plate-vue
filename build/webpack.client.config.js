@@ -13,6 +13,7 @@ const config = Object.assign({}, base, {
   },
   plugins: (base.plugins || []).concat([
     // strip comments in Vue code
+    // new ExtractTextPlugin('styles.[hash].css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'process.env.VUE_ENV': '"client"'
@@ -34,12 +35,12 @@ if (process.env.NODE_ENV === 'production') {
   // vueConfig is already included in the config via LoaderOptionsPlugin
   // here we overwrite the loader config for <style lang="stylus">
   // so they are extracted.
-  vueConfig.loaders = {
+  vueConfig.loaders = [{
     stylus: ExtractTextPlugin.extract({
       loader: 'css-loader!stylus-loader',
       fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader
     })
-  }
+  }]
 
   config.plugins.push(
     new ExtractTextPlugin('styles.[hash].css'),
