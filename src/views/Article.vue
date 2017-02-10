@@ -3,10 +3,25 @@
     <template scope="props" slot="dfpPos">
       <app-header :commonData= 'commonData'/>
       <div class="article-container">
+        <div id="fb-root"></div>
+        <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full"></vue-dfp>
+        <div class="split-line"></div>
+        <div class="article-heromedia" v-if="heroVideo" >
+          <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
+          :poster="heroVideo.poster">
+            Your browser does not support the video tag.
+          </video>
+          <div class="playpause"></div>
+          <div class="heroimg-caption" v-text="heroCaption"></div>
+        </div>
+        <div class="article-heromedia" v-else="heroImage">
+          <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
+          :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
+          getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
+          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
+          <div class="heroimg-caption" v-text="heroCaption"></div>
+        </div>
         <div class="article">
-          <div id="fb-root"></div>
-          <vue-dfp :is="props.vueDfp" pos="PCHD"></vue-dfp>
-          <div class="split-line"></div>
           <div class="article_basic-info">
             <div class="category">
               <span class="categorySquare" :style="category[ 'style' ]"></span>{{ category[ 'categoryTitle' ] }}
@@ -15,21 +30,6 @@
           </div>
           <div class="article_title"><h2>{{ title }}</h2></div>
           <div class="article_credit" v-html="credit"></div>
-          <div class="article_heromedia" v-if="heroVideo" >
-            <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
-                    :poster="heroVideo.poster">
-              Your browser does not support the video tag.
-            </video>
-            <div class="playpause"></div>
-            <div class="heroimg-caption" v-text="heroCaption"></div>
-          </div>
-          <div class="article_heromedia" v-else="heroImage">
-            <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
-                  :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-                            getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-                            getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
-            <div class="heroimg-caption" v-text="heroCaption"></div>
-          </div>
           <main class="article_main">
             <div class="brief" v-html="getContent('brief')"></div>
             <div class="split-line"></div>
@@ -381,6 +381,20 @@
   .article-container {
     width: 100%;
     background-color: #414141;
+    .article-heromedia {
+      margin: 0 auto;
+      padding-top: 30px;
+      background-color: #fff;
+      max-width: 1160px;
+
+      .heroimg {
+        width: 100%;
+      }
+      .heroimg-caption {
+        margin-top: 5px;
+        padding: 0 50px;
+      }
+    }
     .article {
       font-family: "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif;
       max-width: 1160px;
@@ -421,15 +435,6 @@
         a:hover, a:link, a:visited {
   		    color: #88b6f1;
   			}
-      }
-      .article_heromedia {
-        margin-top: 30px;
-        .heroimg {
-          width: 100%;
-        }
-        .heroimg-caption {
-          margin-top: 5px;
-        }
       }
       .article_main {
         width: 695px;
@@ -577,6 +582,12 @@
           border-top: 1px solid #c5c5c5;
         }
       }
+    }
+    .ad-container.full {
+      max-width: 1160px;
+      background-color: #fff;
+      margin: 0 auto;
+      padding-top: 30px;
     }
   }
 </style>

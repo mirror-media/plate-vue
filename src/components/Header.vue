@@ -242,7 +242,6 @@ $color-watch = #c1d16e
           margin 0 auto
 
       &--topic
-        margin-bottom 20px
         > div
           display flex
           justify-content space-between
