@@ -10,7 +10,7 @@
           <a :href="getHref(o)" target="_blank">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
         </div>
         <div class="content_title">
-          <a :href="getHref(o)" target="_blank">{{ getTruncatedVal(o.title, 27) }}</a>
+          <a :href="getHref(o)" target="_blank">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</a>
         </div>
       </div>
     </div>

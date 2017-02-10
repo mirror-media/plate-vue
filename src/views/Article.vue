@@ -115,17 +115,23 @@
     return store.dispatch('FETCH_EDITORCHOICE', { })
   }
 
-  const fetchLatestArticle = (store) => {
-    return store.dispatch('FETCH_LATESTARTICLE', { })
+  const fetchLatestArticle = (store, params) => {
+    return store.dispatch('FETCH_LATESTARTICLE', { params: params })
   }
 
 
   const fetchData = (store) => {
     return fetchCommonData(store).then(() => {
       return fetchEditorChoice(store).then(() => {
-        return fetchLatestArticle(store).then(() => {
-          return fetchArticles(store).then(() => {
-              return fetchPop(store)
+        return fetchArticles(store).then(() => {
+          const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+          return fetchLatestArticle(store, {
+            sort: '-publishedDate',
+            where: {
+              'sections': _.get(sections, [ 0, 'id' ])
+            }
+          }).then(() => {
+                return fetchPop(store)
           })
         })
       })
