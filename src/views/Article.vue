@@ -4,7 +4,7 @@
       <app-header :commonData= 'commonData'/>
       <div class="article-container">
         <div id="fb-root"></div>
-        <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full"></vue-dfp>
+        <!-- <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full"></vue-dfp> -->
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
@@ -40,11 +40,11 @@
                 {{ tags }}
               </div>
             </div>
-            <vue-dfp :is="props.vueDfp" pos="PCAR"></vue-dfp>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCAR"></vue-dfp> -->
             <div class="split-line"></div>
             <div style="display: flex; justify-content: space-around;">
-              <vue-dfp :is="props.vueDfp" pos="PCE1"></vue-dfp>
-              <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp>
+              <!-- <vue-dfp :is="props.vueDfp" pos="PCE1"></vue-dfp>
+              <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp> -->
             </div>
             <div class="article_main_pop">
               <div class="pop_title"><h3>熱門文章：</h3></div>
@@ -63,14 +63,16 @@
               <!-- </slider> -->
           </main>
           <aside class="article_aside">
-            <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp> -->
             <latest-list :latest="latestList"></latest-list>
-            <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp> -->
             <related-list :relateds="relateds" :ifshow="showRelated"></related-list>
           </aside>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp>
-            <app-footer></app-footer>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp> -->
+            <div style="width: 100%; height: 100%;">
+              <app-footer></app-footer>
+            </div>
           </div>
         </div>
       </div>
@@ -79,7 +81,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { CATEGORY_MAP, DFP_UNITS } from '../constants'
+  import {  SECTION_MAP, DFP_UNITS } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
   // import { swiper, swiperSlide } from 'vue-awesome-swiper'
   import Footer from '../components/Footer.vue'
@@ -198,7 +200,8 @@
       category() {
         const categoryId =  _.get(this.$store, [ 'state', 'articles', 'items', 0, 'categories', 0, 'id' ])
         const categoryTitle =  _.get(this.$store, [ 'state', 'articles', 'items', 0, 'categories', 0, 'title' ])
-        const style = { borderLeft: _.get(CATEGORY_MAP, ['categoryId', 'borderLeft'], '7px solid #414141;') }
+        const sectionId = _.get(this.$store, [ 'state', 'articles', 'items', 0, 'sections', 0, 'id' ])
+        const style = { borderLeft: _.get( SECTION_MAP, [sectionId, 'borderLeft'], '7px solid #414141;') }
         return { categoryId, categoryTitle, style }
       },
       credit() {

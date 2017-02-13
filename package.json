@@ -25,6 +25,7 @@
     "humps": "^2.0.0",
     "jsdom": "^9.10.0",
     "jsdom-global": "^2.1.1",
+    "kc-scroll": "^0.2.2",
     "less": "^2.7.2",
     "lodash": "^4.17.4",
     "lru-cache": "^4.0.2",
