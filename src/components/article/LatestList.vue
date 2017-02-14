@@ -2,7 +2,7 @@
   <div class="latest-list-container">
     <div class="title"><h4>最新文章</h4></div>
     <div class="list">
-      <div class="item" v-for="(o, i) in latest" v-if="i < 6">
+      <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
         <div class="thumbnail" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'tiny', 'url' ], '/asset/review.png') + ')' }">
           <a :href="getHref(o)" target="_blank" :style="{ width: '100%', height: '100%', display: 'block' }"></a>
         </div>
@@ -20,8 +20,17 @@
 </template>
 <script>
   import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
+  import _ from 'lodash'
 
   export default {
+    computed: {
+      pureLatest() {
+        _.remove(this.latest, (i) => {
+          return _.get(i, [ 'slug' ], '') === this.currArticleSlug
+        })
+        return this.latest
+      }
+    },
     methods: {
       getHref,
       getTruncatedVal,
@@ -31,6 +40,9 @@
     props: {
       latest: {
         default: []
+      },
+      currArticleSlug: {
+        default: ''
       }
     }
   }
@@ -38,8 +50,6 @@
 <style lang="stylus" scoped>
 .latest-list-container {
   margin-top: 20px;
-  /*border: 1px solid #c1c1c1;*/
-  /*box-shadow: 0 0 5px #c1c1c1;*/
   width: 300px;
   margin: 20px auto 0;
   .title {

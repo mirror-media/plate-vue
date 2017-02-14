@@ -10,11 +10,10 @@ export function getTruncatedVal(oVal, count) {
 }
 
 export function getHref(relAritlcle = {}) {
-  const { style = '', slug } = _.get(relAritlcle, [], '')
+  const { style = '', slug } = relAritlcle
   switch(style) {
     case "projects":
       return `/projects/${slug}`
-    case "article":
     default:
       return `/post/${slug}`
   }

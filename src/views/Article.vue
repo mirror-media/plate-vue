@@ -58,7 +58,7 @@
           </main>
           <aside class="article_aside">
             <!-- <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp> -->
-            <latest-list :latest="latestList"></latest-list>
+            <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
             <!-- <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp> -->
             <related-list :relateds="relateds" :ifshow="showRelated"></related-list>
           </aside>
@@ -209,6 +209,9 @@
         const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.map((o) => (`<a href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
         return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
       },
+      currArticleSlug() {
+        return _.get(this.$store, [ 'state', 'articles', 'items', 0, 'slug' ], '')
+      },
       date() {
         const { publishedDate } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         const normalizedDt = new Date(publishedDate)
@@ -256,8 +259,7 @@
       // },
       tags() {
         const { tags } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        return tags.map((o) => (_.get(o, [ 'name' ], ''))).join('、')
-      },
+        return tags.map((o) => (_.get(o, [ 'name' ], ''))).join('、')      },
       title() {
         const { title } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return title
