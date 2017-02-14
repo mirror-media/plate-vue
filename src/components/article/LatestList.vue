@@ -4,14 +4,14 @@
     <div class="list">
       <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
         <div class="thumbnail" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'tiny', 'url' ], '/asset/review.png') + ')' }">
-          <a :href="getHref(o)" target="_blank" :style="{ width: '100%', height: '100%', display: 'block' }"></a>
+          <a :href="getHref(o)" :style="{ width: '100%', height: '100%', display: 'block' }"></a>
         </div>
         <div class="content">
           <div class="content_category">
-            <a :href="getHref(o)" target="_blank">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
+            <a :href="getHref(o)">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
           </div>
           <div class="content_title">
-            <a :href="getHref(o)" target="_blank">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</a>
+            <a :href="getHref(o)">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</a>
           </div>
         </div>
       </div>
