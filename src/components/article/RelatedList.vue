@@ -1,17 +1,33 @@
 <template>
-  <div class="related-list-container" v-if="ifshow">
-    <div class="title"><h4>相關文章</h4></div>
-    <div class="item" v-for="(o, i) in relateds">
-      <div class="title"><a :href="getHref(o)" target="_blank">{{ o.title }}</a></div>
+    <div class="related-list-container" v-if="ifshow">
+      <div class="list" :style="containerStyle">
+        <div class="title"><h4 :style="titleStyle">相關文章</h4></div>
+        <div class="item" v-for="(o, i) in relateds" v-if="o">
+          <div class="title"><a :href="getHref(o)" v-text="getValue(o, [ 'title' ], '')"></a></div>
+        </div>
+      </div>
     </div>
-  </div>
 </template>
 <script>
-  import { currentYPosition, elmYPosition, getHref, getValue } from '../../utils/comm'
+  import { SECTION_MAP } from '../../constants'
+  import { getHref, getValue } from '../../utils/comm'
+  import { currentYPosition, elmYPosition } from 'kc-scroll'
+  import _ from 'lodash'
   import sanitizeHtml from 'sanitize-html'
   import truncate from 'truncate'
 
   export default {
+    computed: {
+      containerStyle() {
+        return { border: _.get( SECTION_MAP, [ this.sectionId, 'border' ], '2px solid #414141;') }
+      },
+      titleStyle() {
+        return { color: _.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
+      },
+      sectionId() {
+        return _.get(this.$store, [ 'state', 'articles', 'items', 0, 'sections', 0, 'id' ])
+      }
+    },
     methods: {
 
       makeRelatedFixed() {
@@ -20,6 +36,9 @@
         const asideDom = document.querySelector('.article_aside')
         const tHtml = document.documentElement;
         const relatedDom = document.querySelector('.related-list-container')
+
+        document.styleSheets[0].addRule('.related-list-container .list > .title[data-v-a60ea6e8]::before', `content: ""; border-color: transparent transparent transparent ${_.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')}`);
+        document.styleSheets[0].insertRule(`.related-list-container .list > .title[data-v-a60ea6e8]::before { content: ""; border-color: transparent transparent transparent ${_.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`, 0);
 
         window.onscroll = (e) => {
           if(!relatedDom) { return }
@@ -69,6 +88,10 @@
         const currTop = currentYPosition()
         const currBottom = currentYPosition() + tHtml.clientHeight
         // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
+        const asideHeight = document.querySelector('.article_aside').clientHeight
+        const asideTop = elmYPosition('.article_aside')
+        const asideBottom = asideTop + asideHeight
+
         const mainHeight = document.querySelector('.article_main').clientHeight
         const relatedDom = document.querySelector('.related-list-container')
         if(!relatedDom) { return }
@@ -107,43 +130,55 @@
 </script>
 <style lang="stylus" scoped>
   .related-list-container {
-    margin-top: 20px;
-    padding: 20px 0;
-    border: 1px solid #c1c1c1;
-    box-shadow: 0 0 5px #c1c1c1;
     width: 300px;
-    margin: 20px auto 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    div {
-      width: 230px;
-    }
-    .title {
-      font-size: 19px;
-      h4 {
-        margin: 0;
+    margin: 0 auto;
+    .list{
+      margin-top: 20px;
+      padding: 20px 0;
+      margin: 20px auto 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      div {
+        width: 230px;
       }
-    }
-    .item {
-      margin: 20px 0;
-      padding-bottom: 20px;
-      border-bottom: 1px solid #c1c1c1;
-      .title {
-        font-size: 18px;
-        line-height: 25px;
+      & > .title {
+        font-size: 19px;
+        h4 {
+          margin: -20px 0 0;
+        }
+        &::before {
+          content: '';
+          width: 0;
+          height: 0;
+          border-style: solid;
+          border-width: 10px 0 10px 20px;
+          position: relative;
+          top: 0;
+          left: -35px;
+          display: block;
+        }
       }
-      .brief {
-        line-height: 20px;
-        padding-top: 10px;
-        a:hover, a:link, a:visited {
-  		    color: #6f6f6f;
-  			}
-      }
-      &:last-child{
-        border-bottom: none;
-        padding-bottom: 0;
+      .item {
+        margin: 20px 0;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #c1c1c1;
+        .title {
+          font-size: 18px;
+          line-height: 25px;
+        }
+        .brief {
+          line-height: 20px;
+          padding-top: 10px;
+          a:hover, a:link, a:visited {
+            color: #6f6f6f;
+          }
+        }
+        &:last-child{
+          border-bottom: none;
+          padding-bottom: 0;
+        }
       }
     }
   }

@@ -1,9 +1,10 @@
 'use strict'
 
-export const CATEGORY_MAP = {
-  '57e1e153ee85930e00cad4eb': { 'bgcolor': '#5cbaf1' },
-  '57e1e1a3ee85930e00cad4ef': { 'bgcolor': 'orange' },
-  '57e1e16dee85930e00cad4ec': { 'bgcolor': 'purple' }
+export const  SECTION_MAP = {
+  '57e1e0e5ee85930e00cad4e9': { 'bgcolor': '#30bac8', 'borderLeft' : '7px solid #5cbaf1', 'border' : '2px solid #30bac8'  },
+  '57e1e11cee85930e00cad4ea': { 'bgcolor': '#bf3284', 'borderLeft' : '7px solid #5cbaf1', 'border' : '2px solid #bf3284'  },
+  '57dfe399ee85930e00cad4d6': { 'bgcolor': '#eac151', 'borderLeft' : '7px solid #5cbaf1', 'border' : '2px solid #eac151'  },
+  '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e', 'borderLeft' : '7px solid #5cbaf1', 'border' : '2px solid #c1d16e'  }
 }
 
 export const DFP_UNITS = {

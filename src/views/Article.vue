@@ -3,10 +3,25 @@
     <template scope="props" slot="dfpPos">
       <app-header :commonData= 'commonData'/>
       <div class="article-container">
+        <div id="fb-root"></div>
+        <!-- <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full"></vue-dfp> -->
+        <div class="split-line"></div>
+        <div class="article-heromedia" v-if="heroVideo" >
+          <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
+          :poster="heroVideo.poster">
+            Your browser does not support the video tag.
+          </video>
+          <div class="playpause"></div>
+          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
+        </div>
+        <div class="article-heromedia" v-else="heroImage">
+          <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
+          :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
+          getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
+          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
+          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
+        </div>
         <div class="article">
-          <div id="fb-root"></div>
-          <vue-dfp :is="props.vueDfp" pos="PCHD"></vue-dfp>
-          <div class="split-line"></div>
           <div class="article_basic-info">
             <div class="category">
               <span class="categorySquare" :style="category[ 'style' ]"></span>{{ category[ 'categoryTitle' ] }}
@@ -15,20 +30,6 @@
           </div>
           <div class="article_title"><h2>{{ title }}</h2></div>
           <div class="article_credit" v-html="credit"></div>
-          <div class="article_heromedia" v-if="heroVideo" >
-            <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
-                    :poster="heroVideo.poster">
-              Your browser does not support the video tag.
-            </video>
-            <div class="playpause"></div>
-          </div>
-          <div class="article_heromedia" v-else="heroImage">
-            <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
-                  :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-                            getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-                            getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
-            <div class="heroimg-caption"></div>
-          </div>
           <main class="article_main">
             <div class="brief" v-html="getContent('brief')"></div>
             <div class="split-line"></div>
@@ -39,34 +40,33 @@
                 {{ tags }}
               </div>
             </div>
-            <vue-dfp :is="props.vueDfp" pos="PCAR"></vue-dfp>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCAR"></vue-dfp> -->
             <div class="split-line"></div>
             <div style="display: flex; justify-content: space-around;">
-              <vue-dfp :is="props.vueDfp" pos="PCE1"></vue-dfp>
-              <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp>
+              <!-- <vue-dfp :is="props.vueDfp" pos="PCE1"></vue-dfp>
+              <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp> -->
             </div>
             <div class="article_main_pop">
-              <div class="pop_title"><h3>熱門文章：</h3></div>
-              <div class="pop_list">
-                <div class="pop_item" v-for="(o, i) in popularlist">
-                  <div><a :href="reviseSlug(o.slug)" target="_blank"><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
-                  <div class="pop_item_title"><a :href="reviseSlug(o.slug)" target="_blank">{{ getTruncatedVal(o.title, 28) }}</a></div>
-                </div>
-              </div>
+              <pop-list :pop="popularlist"></pop-list>
             </div>
             <div style="margin: 1.5em 0;">
               <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
             </div>
+              <!-- <slider :pages="pages" :sliderinit="sliderinit" v-show="showSlides"> -->
+                <!-- slot  -->
+              <!-- </slider> -->
           </main>
           <aside class="article_aside">
-            <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp> -->
             <latest-list :latest="latestList"></latest-list>
-            <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp> -->
             <related-list :relateds="relateds" :ifshow="showRelated"></related-list>
           </aside>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp>
-            <app-footer></app-footer>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp> -->
+            <div style="width: 100%; height: 100%;">
+              <app-footer></app-footer>
+            </div>
           </div>
         </div>
       </div>
@@ -75,16 +75,21 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { CATEGORY_MAP, DFP_UNITS } from '../constants'
+  import {  SECTION_MAP, DFP_UNITS } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
+  // import { swiper, swiperSlide } from 'vue-awesome-swiper'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
+  import PopList from '../components/article/PopList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
+  // import slider from 'vue-slider'
   import store from '../store'
   import truncate from 'truncate'
+
+
 
   const fetchArticles = (store) => {
     return store.dispatch('FETCH_ARTICLES', {
@@ -107,22 +112,30 @@
     return store.dispatch('FETCH_EDITORCHOICE', { })
   }
 
-  const fetchLatestArticle = (store) => {
-    return store.dispatch('FETCH_LATESTARTICLE', { })
+  const fetchLatestArticle = (store, params) => {
+    return store.dispatch('FETCH_LATESTARTICLE', { params: params })
   }
 
 
   const fetchData = (store) => {
     return fetchCommonData(store).then(() => {
       return fetchEditorChoice(store).then(() => {
-        return fetchLatestArticle(store).then(() => {
-          return fetchArticles(store).then(() => {
-              return fetchPop(store)
+        return fetchArticles(store).then(() => {
+          const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+          return fetchLatestArticle(store, {
+            sort: '-publishedDate',
+            where: {
+              'sections': _.get(sections, [ 0, 'id' ])
+            }
+          }).then(() => {
+                return fetchPop(store)
           })
         })
       })
     })
   }
+
+  // const slideC = (process.env.BROWSER)? slider : null
 
   export default {
     name: 'article-view',
@@ -131,21 +144,42 @@
       'app-footer': Footer,
       'app-header': Header,
       'latest-list': LatestList,
+      'pop-list': PopList,
       'related-list': RelatedList,
-      'vue-dfp-provider': VueDfpProvider
+      'vue-dfp-provider': VueDfpProvider,
+      // slider
     },
     data() {
       return {
-        state: {},
+        commonData: this.$store.state.commonData,
         dfpConst: {
           adUnitPath: '/421342134/test_pc_np_ap_970x250_HD',
           adSize: [ [ 970, 250 ] ],
           adElementId: 'test_pc_np_ap_970x250_HD'
         },
-        commonData: this.$store.state.commonData,
         editorChoice: this.$store.state.editorChoice,
-        latestArticle: this.$store.state.latestArticle
-
+        latestArticle: this.$store.state.latestArticle,
+        state: {},
+        pages:[
+          {
+            title: '',
+            style:{
+             background:'url(https://www.mirrormedia.mg/assets/images/20161004150408-ca738362e4bac35397aed564f47fd308-tablet.jpg)'
+            }
+          },
+          {
+           title: '',
+           style:{
+            background:'url(https://storage.googleapis.com/mirrormedia-files/assets/images/20161004150331-21776ff51173ea2320f015cbc50a270f-desktop.png)'
+            }
+          },
+          {
+            title: 'slide3',
+            style:{
+              background:'#4bbfc3',
+            },
+          }
+        ],
       }
     },
     computed: {
@@ -162,7 +196,8 @@
       category() {
         const categoryId =  _.get(this.$store, [ 'state', 'articles', 'items', 0, 'categories', 0, 'id' ])
         const categoryTitle =  _.get(this.$store, [ 'state', 'articles', 'items', 0, 'categories', 0, 'title' ])
-        const style = { backgroundColor: _.get(CATEGORY_MAP, ['categoryId', 'bgcolor'], 'none;') }
+        const sectionId = _.get(this.$store, [ 'state', 'articles', 'items', 0, 'sections', 0, 'id' ])
+        const style = { borderLeft: _.get( SECTION_MAP, [sectionId, 'borderLeft'], '7px solid #414141;') }
         return { categoryId, categoryTitle, style }
       },
       credit() {
@@ -181,6 +216,10 @@
         const dd = normalizedDt.getDate();
 
         return [ normalizedDt.getFullYear(), (mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd ].join('.')
+      },
+      heroCaption() {
+        const { heroCaption } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        return heroCaption
       },
       heroImage() {
         const { heroImage } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
@@ -208,6 +247,13 @@
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], [])
         return (relateds.length > 0)
       },
+      // showSlides() {
+      //   console.log('false');
+      //   return false
+      // },
+      // swiper() {
+      //   return this.$refs.mySwiperA.swiper
+      // },
       tags() {
         const { tags } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
         return tags.map((o) => (_.get(o, [ 'name' ], ''))).join('、')
@@ -236,6 +282,8 @@
       getParagraphs(data) {
         return data.map((o) => {
           switch(o.type) {
+            case 'blockquote':
+              return `<blockquote class="quote"><i class="quoteIcon"></i><div class="quote-content">${_.get(o.content, [ 0 ], '')}</div></blockquote>`
             case 'embeddedcode':
               return `<div class=\"embedded\">${_.get(o.content, [ 0, 'embeddedCode' ], '')}</div>`
             case 'header-two':
@@ -243,11 +291,26 @@
             case 'image':
               return `<div class=\"innerImg ${_.get(o.content, [ 0, 'alignment' ], '')}\"><img src=${_.get(o.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(o.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(o.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(o.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(o.content, [ 0, 'description' ], '')}</div></div>`
             case 'infobox':
-              return `<div><h4>${_.get(o.content, [ 0, 'title' ], '')}</h4>${_.get(o.content, [ 0, 'body' ], '')}</div>`
+              return `<div class="info-box-container ${_.get(o.content, [ 0, 'alignment' ], '')}">
+                        <span class="info-box-icon"></span>
+                        <div class="info-box">
+                          <div class="info-box-title">${_.get(o.content, [ 0, 'title' ], '')}</div>
+                          <div class="info-box-body">${_.get(o.content, [ 0, 'body' ], '')}</div>
+                        </div>
+                      </div>`
             // case 'slideshow':
             //   return o.content.map((i) => {
             //     return `<img src=${_.get(i, [ 'url' ], '')} srcset=\"${_.get(i, [ 'mobile', 'url' ], '')} 800w, ${_.get(i, [ 'tablet', 'url' ], '')} 1200w, ${_.get(i, [ 'desktop', 'url' ], '')} 2000w\"/>`
             //   }).join('')
+            case "quoteby":
+              const quoteBody = _.get(o.content, [ 0, 'quote' ], '')
+              const quoteBy = _.get(o.content, [ 0, 'quoteBy' ], '')
+              return `<blockquote class="blockquote">
+                        <div class="content">
+                          <span class="triangle"></span><div class="quote-body">${_.get(o.content, [ 0, 'quote' ], '').replace(/\n/g, '<br>')}</div>
+                          ${(quoteBy.length > 0) ? `<div class="quote-by">${quoteBy}</div>` : ``}
+                        </div>
+                      </blockquote>`
             case 'unordered-list-item':
               const _liStr = o.content.map((i) => {
                 if(typeof(i) !== 'object') {
@@ -273,11 +336,6 @@
       getValue(o = {}, p = [], d = '') {
         return _.get(o, p, d);
       },
-      reviseSlug(rawSlug) {
-        /**this is for popularlist only**/
-        const newSlug = rawSlug.replace('story', 'post')
-        return newSlug
-      }
     },
     mounted() {
       const { fbAppId } = _.get(this.$store, [ 'state' ])
@@ -286,6 +344,11 @@
       fbSdkScript.async = true
       fbSdkScript.type = 'text/javascript'
       document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
+
+      // window.onload = (e) => {
+      //   this.showSlides = true
+      // }
+
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
@@ -329,6 +392,20 @@
   .article-container {
     width: 100%;
     background-color: #414141;
+    .article-heromedia {
+      margin: 0 auto;
+      padding-top: 30px;
+      background-color: #fff;
+      max-width: 1160px;
+
+      .heroimg {
+        width: 100%;
+      }
+      .heroimg-caption {
+        margin-top: 5px;
+        padding: 0 50px;
+      }
+    }
     .article {
       font-family: "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif;
       max-width: 1160px;
@@ -348,16 +425,14 @@
         margin-top: 20px;
         justify-content: space-between;
         .category {
-          font-size: 18px;
+          font-size: 21px;
           display: flex;
           justify-content: flex-start;
           align-items: center;
           .categorySquare {
             display: inline-block;
-            width: 16px;
-            height: 16px;
-            margin-right: 6px;
-            box-shadow: 0 0 2px #c1c1c1;
+            height: 24px;
+            margin-right: 10px;
           }
         }
         .date {
@@ -369,14 +444,8 @@
       }
       .article_credit {
         a:hover, a:link, a:visited {
-  		    color: #9db6d6;
+  		    color: #74afd2;
   			}
-      }
-      .article_heromedia {
-        margin-top: 30px;
-        .heroimg {
-          width: 100%;
-        }
       }
       .article_main {
         width: 695px;
@@ -401,51 +470,25 @@
             float: right;
             width: 300px;
             margin-left: 20px;
+            border-bottom: 2px solid #255577;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
           }
           &.left {
             float: left;
             width: 300px;
             margin-right: 20px;
+            border-bottom: 2px solid #255577;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
           }
         }
         .article_main_pop {
+          clear: both;
           margin-top: 50px;
-          font-size: 18px;
-          .pop_list {
-            margin-top: 10px;
-            display: flex;
-            align-content: flex-start;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            .pop_item {
-              width: 31%;
-              vertical-align: top;
-              margin-bottom: 30px;
-              .pop_item_img {
-                width: 100%;
-                height: 150px;
-                background-repeat: no-repeat;
-                background-size: cover;
-                background-position: center center;
-              }
-              .pop_item_title {
-                background-color: #fff;
-                border: 1px solid #e0e0e0;
-                line-height: 18px;
-                padding: 10px 15px;
-                font-size: 13px;
-                height: 50px;
-                display: flex;
-                align-items: center;
-                a:hover, a:link, a:visited {
-                  color: #8c8c8c;
-                  font-weight: normal;
-          			}
-              }
-            }
-          }
         }
         .article_main_tags {
+          clear: both;
           .tags_icon {
             background-image: url(https://www.mirrormedia.mg/story/img/icon/sprite@3x.png);
             background-position: -733px -741px;
@@ -466,13 +509,16 @@
         }
         .brief {
           margin-top: 30px;
+          line-height: 36px;
+          font-size: 18px;
+          color: rgba(65, 65, 65, 0.61);
           p {
             strong {
               color: #000;
             }
           }
         }
-        .content {
+        & > .content {
           h2 {
             color: #000;
             margin-top: 40px;
@@ -500,6 +546,166 @@
             }
           }
         }
+        a, a:hover, a:link, a:visited {
+          color: #3195b3;
+          text-decoration: none;
+          cursor: pointer;
+          border-bottom: 1px solid #3195b3;
+          padding-bottom: 5px;
+        }
+        code {
+          background-color: #85faff;
+          font-size: 18px;
+          padding: 4px 0;
+        }
+        blockquote.blockquote {
+          clear: both;
+          padding: 10px 35px;
+          margin-top: 50px;
+          .content {
+            border-top: 3px solid #255577;
+            padding-top: 20px;
+            padding-left: 30px;
+            border-left: 3px solid #255577;
+            font-size: 24px;
+            color: #3a759e;
+            .triangle::before{
+              content: '';
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 50px 0 0 70px;
+              position: relative;
+              top: -70px;
+              left: 30px;
+              display: block;
+              border-color: transparent transparent transparent #255577;
+            }
+            .triangle::after{
+              content: '';
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 50px 0 0 70px;
+              position: relative;
+              top: -114px;
+              left: 33px;
+              display: block;
+              border-color: transparent transparent transparent #ffffff;
+            }
+            .quote-body {
+              margin-top: -95px;
+              line-height: 44px;
+            }
+            .quote-by {
+              text-align: right;
+              font-size: 18px;
+              margin-top: 18px;
+              &::before {
+                content: '';
+                display: inline-block;
+                height: 100%;
+                vertical-align: super;
+                width: 36px;
+                margin-right: 5px;
+                border-top: 1px solid #3a759e;
+              }
+            }
+          }
+        }
+        blockquote.quote {
+          clear: both;
+          display: flex;
+          margin: 30px 0;
+          i {
+            background-image: url(https://mirrormedia.mg/assets/images/quote.png);
+            width: 45px;
+            height: 45px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: block;
+            margin-right: 20px;
+          }
+          .quote-content {
+            font-size: 24px;
+            color: #3a759e;
+          }
+        }
+        .info-box-container {
+          clear: both;
+          width: 100%;
+          .info-box-icon {
+            &::before {
+              content: '';
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 12px 18px;
+              position: relative;
+              left: 0;
+              top: 60px;
+              display: block;
+              border-color: #255577;
+            }
+            &::after {
+              content: '';
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 10px 0px 0px 18px;
+              position: relative;
+              left: 0;
+              top: 60px;
+              display: block;
+              border-color: #7b7b7b transparent transparent transparent;
+            }
+          }
+          .info-box {
+            border: 1px solid #eaeaea;
+            padding: 30px 50px;
+            box-shadow: 0 0 14px rgba(146, 146, 146, 0.52);
+            width: 95%;
+            margin: 0 auto;
+            .info-box-title {
+              color: #3a6888;
+              font-size: 25px;
+              margin-bottom: 15px;
+            }
+            .info-box-body {
+              p, li {
+                color: rgba(0, 0, 0, 0.64);
+                font-size: 16px;
+              }
+            }
+          }
+        }
+        h2 {
+          font-size: 32px;
+        }
+        h3 {
+          font-size: 26px;
+        }
+        ul {
+          font-family: "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif;
+          font-size: 16px;
+          line-height: 2.2;
+          letter-spacing: 0.3px;
+          color: rgba(0, 0, 0, 0.701961);
+          padding-left: 26px;
+          text-indent: -26px;
+          margin-left: 16px;
+          list-style: none;
+          li {
+            &::before {
+              content: "• ";
+              color: #2d5b7b;
+              font-size: 30px;
+              line-height: 1;
+              top: 6px;
+              position: relative;
+            }
+          }
+        }
       }
       .article_aside {
         float: right;
@@ -521,6 +727,12 @@
           border-top: 1px solid #c5c5c5;
         }
       }
+    }
+    .ad-container.full {
+      max-width: 1160px;
+      background-color: #fff;
+      margin: 0 auto;
+      padding-top: 30px;
     }
   }
 </style>

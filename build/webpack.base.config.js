@@ -1,5 +1,7 @@
 const path = require('path')
 const vueConfig = require('./vue-loader.config')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+
 
 module.exports = {
   devtool: '#source-map',
@@ -51,6 +53,9 @@ module.exports = {
       }
     ]
   },
+  externals: [
+    'canvas'
+  ],
   performance: {
     hints: process.env.NODE_ENV === 'production' ? 'warning' : false
   }

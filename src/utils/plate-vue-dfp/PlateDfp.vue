@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" :id="adunit" :adunit="adunit" :pos="pos"></div>
+  <div :class="`${className} ${extClass}`" :id="adunit" :adunit="adunit" :pos="pos"></div>
 </template>
 <script>
   import { DFP_UNITS } from '../../constants'
@@ -9,7 +9,7 @@
         return DFP_UNITS[ this.pos ][ 'aduid' ]
       },
       className() {
-        return DFP_UNITS[ this.pos ][ 'cont-class' ]
+        return DFP_UNITS[ this.pos ][ 'cont-class' ].join(' ')
       },
     },
     name: 'ad-container',
@@ -17,7 +17,12 @@
       // console.log('this.adunit', this.pos);
     },
     props: {
-      pos: ''
+      pos: {
+        default: ''
+      },
+      'extClass': {
+        default: ''
+      }
     }
   }
 </script>

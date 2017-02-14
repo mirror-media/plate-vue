@@ -1,16 +1,18 @@
 <template>
   <div class="latest-list-container">
     <div class="title"><h4>最新文章</h4></div>
-    <div class="item" v-for="(o, i) in latest" v-if="i < 6">
-      <div class="thumbnail" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'tiny', 'url' ], '/asset/logo.png') + ')' }">
-        <a :href="getHref(o)" target="_blank" :style="{ width: '100%', height: '100%', display: 'block' }"></a>
-      </div>
-      <div class="content">
-        <div class="content_category">
-          <a :href="getHref(o)" target="_blank">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
+    <div class="list">
+      <div class="item" v-for="(o, i) in latest" v-if="i < 6">
+        <div class="thumbnail" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'tiny', 'url' ], '/asset/review.png') + ')' }">
+          <a :href="getHref(o)" target="_blank" :style="{ width: '100%', height: '100%', display: 'block' }"></a>
         </div>
-        <div class="content_title">
-          <a :href="getHref(o)" target="_blank">{{ getTruncatedVal(o.title, 20) }}</a>
+        <div class="content">
+          <div class="content_category">
+            <a :href="getHref(o)" target="_blank">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
+          </div>
+          <div class="content_title">
+            <a :href="getHref(o)" target="_blank">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</a>
+          </div>
         </div>
       </div>
     </div>
@@ -36,47 +38,58 @@
 <style lang="stylus" scoped>
 .latest-list-container {
   margin-top: 20px;
-  padding: 20px 20px;
-  border: 1px solid #c1c1c1;
-  box-shadow: 0 0 5px #c1c1c1;
+  /*border: 1px solid #c1c1c1;*/
+  /*box-shadow: 0 0 5px #c1c1c1;*/
   width: 300px;
   margin: 20px auto 0;
   .title {
-    font-size: 18px;
+    font-size: 20px;
+    color: #fff;
+    background: #0a6182;
+    border: 1px solid #0a6182;
+    padding: 5px 20px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
     h4 {
-      margin: 0 0 25px;
+      margin: 0;
     }
   }
-  .item {
-    margin: 20px 0;
-    padding-bottom: 10px;
-    display: flex;
-    .thumbnail {
-      width: 70px;
-      height: 70px;
-      min-width: 70px;
-      min-height: 70px;
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center center;
-    }
-    .content {
-      padding: 0 0 0 12px;
-      .content_category {
-        border-bottom: 1px solid #d4d4d4;
-        padding-bottom: 5px;
-        font-weight: bold;
+  .list {
+    width: 100%;
+    border: 1px solid #dedede;
+    .item {
+      margin: 25px 0;
+      display: flex;
+      padding: 0 20px;
+      .thumbnail {
+        width: 100px;
+        height: 100px;
+        min-width: 100px;
+        min-height: 100px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
       }
-      .content_title {
-        padding-top: 5px;
-        line-height: 20px;
-        a:hover, a:link, a:visited {
-  		    color: #6f6f6f;
-  			}
+      .content {
+        padding: 0 0 0 12px;
+        .content_category {
+          border-bottom: 1px solid #d4d4d4;
+          padding-bottom: 5px;
+          font-weight: bold;
+        }
+        .content_title {
+          padding-top: 5px;
+          line-height: 20px;
+          a:hover, a:link, a:visited {
+            color: #6f6f6f;
+          }
+        }
       }
-    }
-    &:last-child{
-      padding-bottom: 0;
+      &:last-child{
+        padding-bottom: 0;
+      }
     }
   }
 }
