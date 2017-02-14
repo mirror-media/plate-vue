@@ -47,13 +47,7 @@
               <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp> -->
             </div>
             <div class="article_main_pop">
-              <div class="pop_title"><h3>熱門文章：</h3></div>
-              <div class="pop_list">
-                <div class="pop_item" v-for="(o, i) in popularlist">
-                  <div><a :href="reviseSlug(o.slug)" ><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
-                  <div class="pop_item_title"><a :href="reviseSlug(o.slug)" >{{ getTruncatedVal(o.title, 28) }}</a></div>
-                </div>
-              </div>
+              <pop-list :pop="popularlist"></pop-list>
             </div>
             <div style="margin: 1.5em 0;">
               <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
@@ -87,6 +81,7 @@
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
+  import PopList from '../components/article/PopList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
@@ -149,6 +144,7 @@
       'app-footer': Footer,
       'app-header': Header,
       'latest-list': LatestList,
+      'pop-list': PopList,
       'related-list': RelatedList,
       'vue-dfp-provider': VueDfpProvider,
       // slider
@@ -340,11 +336,6 @@
       getValue(o = {}, p = [], d = '') {
         return _.get(o, p, d);
       },
-      reviseSlug(rawSlug) {
-        /**this is for popularlist only**/
-        const newSlug = rawSlug.replace('story', 'post')
-        return newSlug
-      }
     },
     mounted() {
       const { fbAppId } = _.get(this.$store, [ 'state' ])
@@ -495,40 +486,6 @@
         .article_main_pop {
           clear: both;
           margin-top: 50px;
-          font-size: 18px;
-          .pop_list {
-            margin-top: 10px;
-            display: flex;
-            align-content: flex-start;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            .pop_item {
-              width: 31%;
-              vertical-align: top;
-              margin-bottom: 30px;
-              .pop_item_img {
-                width: 100%;
-                height: 150px;
-                background-repeat: no-repeat;
-                background-size: cover;
-                background-position: center center;
-              }
-              .pop_item_title {
-                background-color: #fff;
-                border: 1px solid #e0e0e0;
-                line-height: 18px;
-                padding: 10px 15px;
-                font-size: 13px;
-                height: 50px;
-                display: flex;
-                align-items: center;
-                a:hover, a:link, a:visited {
-                  color: #8c8c8c;
-                  font-weight: normal;
-          			}
-              }
-            }
-          }
         }
         .article_main_tags {
           clear: both;
