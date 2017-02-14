@@ -12,14 +12,14 @@
             Your browser does not support the video tag.
           </video>
           <div class="playpause"></div>
-          <div class="heroimg-caption" v-text="heroCaption"></div>
+          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article-heromedia" v-else="heroImage">
           <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
           :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
-          <div class="heroimg-caption" v-text="heroCaption"></div>
+          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article">
           <div class="article_basic-info">
@@ -286,6 +286,8 @@
       getParagraphs(data) {
         return data.map((o) => {
           switch(o.type) {
+            case 'blockquote':
+              return `<blockquote class="quote"><i class="quoteIcon"></i><div class="quote-content">${_.get(o.content, [ 0 ], '')}</div></blockquote>`
             case 'embeddedcode':
               return `<div class=\"embedded\">${_.get(o.content, [ 0, 'embeddedCode' ], '')}</div>`
             case 'header-two':
@@ -293,11 +295,26 @@
             case 'image':
               return `<div class=\"innerImg ${_.get(o.content, [ 0, 'alignment' ], '')}\"><img src=${_.get(o.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(o.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(o.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(o.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(o.content, [ 0, 'description' ], '')}</div></div>`
             case 'infobox':
-              return `<div><h4>${_.get(o.content, [ 0, 'title' ], '')}</h4>${_.get(o.content, [ 0, 'body' ], '')}</div>`
+              return `<div class="info-box-container ${_.get(o.content, [ 0, 'alignment' ], '')}">
+                        <span class="info-box-icon"></span>
+                        <div class="info-box">
+                          <div class="info-box-title">${_.get(o.content, [ 0, 'title' ], '')}</div>
+                          <div class="info-box-body">${_.get(o.content, [ 0, 'body' ], '')}</div>
+                        </div>
+                      </div>`
             // case 'slideshow':
             //   return o.content.map((i) => {
             //     return `<img src=${_.get(i, [ 'url' ], '')} srcset=\"${_.get(i, [ 'mobile', 'url' ], '')} 800w, ${_.get(i, [ 'tablet', 'url' ], '')} 1200w, ${_.get(i, [ 'desktop', 'url' ], '')} 2000w\"/>`
             //   }).join('')
+            case "quoteby":
+              const quoteBody = _.get(o.content, [ 0, 'quote' ], '')
+              const quoteBy = _.get(o.content, [ 0, 'quoteBy' ], '')
+              return `<blockquote class="blockquote">
+                        <div class="content">
+                          <span class="triangle"></span><div class="quote-body">${_.get(o.content, [ 0, 'quote' ], '').replace(/\n/g, '<br>')}</div>
+                          ${(quoteBy.length > 0) ? `<div class="quote-by">${quoteBy}</div>` : ``}
+                        </div>
+                      </blockquote>`
             case 'unordered-list-item':
               const _liStr = o.content.map((i) => {
                 if(typeof(i) !== 'object') {
@@ -436,7 +453,7 @@
       }
       .article_credit {
         a:hover, a:link, a:visited {
-  		    color: #88b6f1;
+  		    color: #74afd2;
   			}
       }
       .article_main {
@@ -462,14 +479,21 @@
             float: right;
             width: 300px;
             margin-left: 20px;
+            border-bottom: 2px solid #255577;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
           }
           &.left {
             float: left;
             width: 300px;
             margin-right: 20px;
+            border-bottom: 2px solid #255577;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
           }
         }
         .article_main_pop {
+          clear: both;
           margin-top: 50px;
           font-size: 18px;
           .pop_list {
@@ -507,6 +531,7 @@
           }
         }
         .article_main_tags {
+          clear: both;
           .tags_icon {
             background-image: url(https://www.mirrormedia.mg/story/img/icon/sprite@3x.png);
             background-position: -733px -741px;
@@ -536,7 +561,7 @@
             }
           }
         }
-        .content {
+        & > .content {
           h2 {
             color: #000;
             margin-top: 40px;
@@ -561,6 +586,166 @@
               position: absolute;
               top: 0;
               left: 0;
+            }
+          }
+        }
+        a, a:hover, a:link, a:visited {
+          color: #3195b3;
+          text-decoration: none;
+          cursor: pointer;
+          border-bottom: 1px solid #3195b3;
+          padding-bottom: 5px;
+        }
+        code {
+          background-color: #85faff;
+          font-size: 18px;
+          padding: 4px 0;
+        }
+        blockquote.blockquote {
+          clear: both;
+          padding: 10px 35px;
+          margin-top: 50px;
+          .content {
+            border-top: 3px solid #255577;
+            padding-top: 20px;
+            padding-left: 30px;
+            border-left: 3px solid #255577;
+            font-size: 24px;
+            color: #3a759e;
+            .triangle::before{
+              content: '';
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 50px 0 0 70px;
+              position: relative;
+              top: -70px;
+              left: 30px;
+              display: block;
+              border-color: transparent transparent transparent #255577;
+            }
+            .triangle::after{
+              content: '';
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 50px 0 0 70px;
+              position: relative;
+              top: -114px;
+              left: 33px;
+              display: block;
+              border-color: transparent transparent transparent #ffffff;
+            }
+            .quote-body {
+              margin-top: -95px;
+              line-height: 44px;
+            }
+            .quote-by {
+              text-align: right;
+              font-size: 18px;
+              margin-top: 18px;
+              &::before {
+                content: '';
+                display: inline-block;
+                height: 100%;
+                vertical-align: super;
+                width: 36px;
+                margin-right: 5px;
+                border-top: 1px solid #3a759e;
+              }
+            }
+          }
+        }
+        blockquote.quote {
+          clear: both;
+          display: flex;
+          margin: 30px 0;
+          i {
+            background-image: url(https://mirrormedia.mg/assets/images/quote.png);
+            width: 45px;
+            height: 45px;
+            background-repeat: no-repeat;
+            background-size: contain;
+            display: block;
+            margin-right: 20px;
+          }
+          .quote-content {
+            font-size: 24px;
+            color: #3a759e;
+          }
+        }
+        .info-box-container {
+          clear: both;
+          width: 100%;
+          .info-box-icon {
+            &::before {
+              content: '';
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 12px 18px;
+              position: relative;
+              left: 0;
+              top: 60px;
+              display: block;
+              border-color: #255577;
+            }
+            &::after {
+              content: '';
+              width: 0;
+              height: 0;
+              border-style: solid;
+              border-width: 10px 0px 0px 18px;
+              position: relative;
+              left: 0;
+              top: 60px;
+              display: block;
+              border-color: #7b7b7b transparent transparent transparent;
+            }
+          }
+          .info-box {
+            border: 1px solid #eaeaea;
+            padding: 30px 50px;
+            box-shadow: 0 0 14px rgba(146, 146, 146, 0.52);
+            width: 95%;
+            margin: 0 auto;
+            .info-box-title {
+              color: #3a6888;
+              font-size: 25px;
+              margin-bottom: 15px;
+            }
+            .info-box-body {
+              p, li {
+                color: rgba(0, 0, 0, 0.64);
+                font-size: 16px;
+              }
+            }
+          }
+        }
+        h2 {
+          font-size: 32px;
+        }
+        h3 {
+          font-size: 26px;
+        }
+        ul {
+          font-family: "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif;
+          font-size: 16px;
+          line-height: 2.2;
+          letter-spacing: 0.3px;
+          color: rgba(0, 0, 0, 0.701961);
+          padding-left: 26px;
+          text-indent: -26px;
+          margin-left: 16px;
+          list-style: none;
+          li {
+            &::before {
+              content: "• ";
+              color: #2d5b7b;
+              font-size: 30px;
+              line-height: 1;
+              top: 6px;
+              position: relative;
             }
           }
         }
