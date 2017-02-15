@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchQuestionnaire, fetchSectionList, fetchTopic } from './api'
+import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchQuestionnaire, fetchSectionList, fetchTopic } from './api'
 
 Vue.use(Vuex)
 
@@ -10,6 +10,7 @@ const { DFPID, FB_APP_ID, FB_PAGES_ID } = config
 const store = new Vuex.Store({
   state: {
     articles: {},
+    articlesByUUID: {},
     articlesPopList: {},
     commonData: {},
     dfpId: DFPID,
@@ -23,6 +24,13 @@ const store = new Vuex.Store({
   actions: {
     FETCH_ARTICLES: ({ commit, state }, { params }) => {
       return fetchArticles(params).then(articles => commit('SET_ARTICLES', { articles }))
+    },
+    FETCH_ARTICLES_BY_UUID: ({ commit, state }, { uuid, type, params }) => {
+      let orig = _.values(state.articlesByUUID['items'])
+      return fetchArticlesByUuid(uuid, type, params).then(articles => {
+        articles['items'] = _.concat(orig, _.get(articles, ['items']))
+        commit('SET_ARTICLES_BY_UUID', { articles })
+      })
     },
     FETCH_ARTICLES_POP_LIST: ({ commit, state }, { params = {} }) => {
       return fetchArticlesPopList(params).then(articlesPopList => commit('SET_ARTICLES_POP_LIST', { articlesPopList }))
@@ -66,6 +74,10 @@ const store = new Vuex.Store({
   mutations: {
     SET_ARTICLES: (state, { articles }) => {
       Vue.set(state, 'articles', articles)
+    },
+
+    SET_ARTICLES_BY_UUID: (state, { articles }) => {
+      Vue.set(state, 'articlesByUUID', articles)
     },
 
     SET_ARTICLES_POP_LIST: (state, { articlesPopList }) => {

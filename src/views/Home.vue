@@ -1,12 +1,14 @@
 <template>
   <div class="section-view">
     <app-Header :commonData= 'commonData' />
-    <div class="dfp-test">DFP 970 X 250</div>
+    <div id="dfp-test" class="dfp-test">DFP 970 X 250</div>
     <editor-choice :editorChoice= 'editorChoice'/>
     <section class="container list">
       <latest-article :latestArticle= 'latestArticle'/>
-      <latest-project />
-      <more v-if="hasMore" :page= 'page' v-on:loadMore="loadMore"/>
+      <latest-project :project= 'commonData.projects.items' />
+    </section>
+    <section class="container">
+      <more v-if="hasMore" v-on:loadMore="loadMore" />
     </section>
     <section class="container">
       <app-footer></app-footer>
@@ -57,7 +59,7 @@ export default {
     return {
       commonData: this.$store.state.commonData,
       editorChoice: this.$store.state.editorChoice,
-      page: PAGE
+      page: PAGE,
     }
   },
   computed: {
@@ -66,6 +68,14 @@ export default {
     },
     latestArticle () {
       return this.$store.state.latestArticle
+    },
+    needLoadMore () {
+      let height = document.getElementById("header").offsetHeight +
+                document.getElementById("dfp-test").offsetHeight +
+                document.getElementById("editorChoice").offsetHeight +
+                document.getElementById("latestArticle").offsetHeight
+      let test = document.getElementById("latestArticle").offsetTop + document.getElementById("latestArticle").offsetHeight
+      return test
     }
   },
   methods: {
@@ -75,7 +85,7 @@ export default {
     }
   },
   metaInfo () {
-    const title = '鏡傳媒 Mirror Media '
+    const title = '鏡傳媒 Mirror Media'
     return {
       title
     }
@@ -106,11 +116,5 @@ export default {
   &.container
     flex-direction: row
     flex-wrap: wrap
-
-.dfp-test
-  width 970px
-  height 250px
-  margin 0 auto 20px
-  background-color #a8dadc
-
+    
 </style>

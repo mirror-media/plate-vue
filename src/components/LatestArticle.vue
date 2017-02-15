@@ -1,5 +1,5 @@
 <template>
-  <section class="latestArticle grid grid-4-fifth">
+  <section id="latestArticle" class="latestArticle grid grid-4-fifth">
     <template v-for="item in article">
       <article-right :article='item'/>
       <article-center :article='item'/>
@@ -78,8 +78,8 @@ $color-other = #bcbcbc
   &-wide
     position relative
     display block
-    width calc(50% - 10px)
-    padding-top calc(50% - 10px)
+    width calc(50% - 15px)
+    padding-top calc(50% - 15px)
 
     &__img
       position absolute
@@ -105,7 +105,7 @@ $color-other = #bcbcbc
     display flex
     flex-direction column
     justify-content space-between
-    width calc(25% - 10px)
+    width calc(25% - 15px)
 
     > div
       height calc(50% - 10px)
