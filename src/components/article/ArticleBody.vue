@@ -1,5 +1,5 @@
 <template>
-  <div class="article_body">
+  <div class="article_body" v-if="articleData">
     <div class="article_basic-info">
       <div class="category">
         <span class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
@@ -16,14 +16,13 @@
         <i class="tags_icon"></i>
         <div class="tags" v-text="tags"></div>
       </div>
-      <!-- <vue-dfp :is="props.vueDfp" pos="PCAR"></vue-dfp> -->
       <div class="split-line"></div>
       <div style="display: flex; justify-content: space-around;">
         <!-- <vue-dfp :is="props.vueDfp" pos="PCE1"></vue-dfp>
         <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp> -->
       </div>
       <div class="article_main_pop">
-        <slot name="poplist"></slot>
+        <pop-list :pop="poplistData"></pop-list>
       </div>
       <div style="margin: 1.5em 0;">
         <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
@@ -39,9 +38,17 @@
 import _ from 'lodash'
 import { SECTION_MAP, DFP_UNITS } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
+import PopList from './PopList.vue'
 
 export default {
+  components: {
+    'pop-list': PopList
+  },
+
   computed: {
+    componentPop() {
+      return PopList
+    },
     articleUrl() {
       const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
       return `https://www.mirrormedia.mg/story/${slug}`
@@ -62,6 +69,7 @@ export default {
       const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
       return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
+      return ''
     },
     date() {
       const { publishedDate = '' } = this.articleData
@@ -70,6 +78,14 @@ export default {
       const dd = normalizedDt.getDate();
 
       return [ normalizedDt.getFullYear(), (mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd ].join('.')
+    },
+    popularlist() {
+      const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ], {})
+      return report
+    },
+    purePoplistData() {
+      console.log('call');
+      return this.popularlist
     },
     title() {
       const { title } = this.articleData
@@ -87,6 +103,7 @@ export default {
     getValue,
     getContent(targ) {
       const { brief : { apiData: briefApiData = [] }, content : { apiData: ContentApiData = [] }, tags, title } = this.articleData
+      // console.log('this.data.popularlist:', this.data.popularlist);
       let paragraphs = []
       switch(targ) {
         case 'brief':
@@ -148,14 +165,20 @@ export default {
         }
       })
     },
-
+    test(o) {
+      console.log(o);
+      return o
+    },
   },
-  name: 'pop-list',
+  name: 'article-body',
   props: {
     articleData: {
       default: () => { return {} }
     },
-  }
+    poplistData: {
+      default: () => { return {} }
+    },
+  },
 }
 </script>
 <style lang="stylus">

@@ -17,15 +17,14 @@
       getTruncatedVal,
       getValue,
       reviseSlug(rawSlug) {
-        /**this is for popularlist only**/
         const newSlug = rawSlug.replace('story', 'post')
         return newSlug
-      }
+      },
     },
     name: 'pop-list',
     props: {
       pop: {
-        default: []
+        default: () => {return []}
       }
     }
   }

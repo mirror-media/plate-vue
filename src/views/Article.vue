@@ -21,9 +21,8 @@
           getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
-        <div class="article">
-          <article-body :articleData="articleData">
-            <pop-list :pop="popularlist" slot="poplist"/>
+        <div class="article" v-if="articleData">
+          <article-body :articleData="articleData" :poplistData="popularlist">
             <aside class="article_aside" slot="aside">
               <!-- <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp> -->
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
@@ -51,7 +50,7 @@
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
-  import PopList from '../components/article/PopList.vue'
+  // import PopList from '../components/article/PopList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
@@ -98,7 +97,7 @@
               'sections': _.get(sections, [ 0, 'id' ])
             }
           }).then(() => {
-                return fetchPop(store)
+            return fetchPop(store)
           })
         })
       })
@@ -115,7 +114,7 @@
       'app-footer': Footer,
       'app-header': Header,
       'latest-list': LatestList,
-      'pop-list': PopList,
+      // 'pop-list': PopList,
       'related-list': RelatedList,
       'vue-dfp-provider': VueDfpProvider,
       // slider
@@ -163,13 +162,6 @@
         return ''
 
       },
-      // category() {
-      //   const categoryId =  _.get(this.$store, [ 'state', 'articles', 'items', 0, 'categories', 0, 'id' ])
-      //   const categoryTitle =  _.get(this.$store, [ 'state', 'articles', 'items', 0, 'categories', 0, 'title' ])
-      //   const sectionId = _.get(this.$store, [ 'state', 'articles', 'items', 0, 'sections', 0, 'id' ])
-      //   const style = { borderLeft: _.get( SECTION_MAP, [sectionId, 'borderLeft'], '7px solid #414141;') }
-      //   return { categoryId, categoryTitle, style }
-      // },
       currArticleSlug() {
         return _.get(this.$store, [ 'state', 'articles', 'items', 0, 'slug' ], '')
       },
