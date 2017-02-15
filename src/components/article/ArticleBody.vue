@@ -1,5 +1,5 @@
 <template>
-  <div class="article_body" v-if="articleData">
+  <div class="article_body" v-if="articleData" :class="styleForCurrArticle">
     <div class="article_basic-info">
       <div class="category">
         <span class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
@@ -24,7 +24,7 @@
       <div class="article_main_pop">
         <pop-list :pop="poplistData"></pop-list>
       </div>
-      <div style="margin: 1.5em 0;">
+      <div class="article_fb_comment" style="margin: 1.5em 0;">
         <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
       </div>
         <!-- <slider :pages="pages" :sliderinit="sliderinit" v-show="showSlides"> -->
@@ -46,14 +46,15 @@ export default {
   },
 
   computed: {
-    componentPop() {
-      return PopList
-    },
     articleUrl() {
       const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
       return `https://www.mirrormedia.mg/story/${slug}`
     },
+    articleStyle() {
+      return _.get(this.articleData, [ 'style' ], '')
+      // return 'photography'
 
+    },
     category() {
       const categoryId =  _.get(this.articleData, [ 'categories', 0, 'id' ])
       const categoryTitle =  _.get(this.articleData, [ 'categories', 0, 'title' ])
@@ -86,6 +87,18 @@ export default {
     purePoplistData() {
       console.log('call');
       return this.popularlist
+    },
+    styleForCurrArticle() {
+      switch(this.articleStyle) {
+        case 'photography':
+          return {
+            'single-col': true
+          }
+        default:
+          return {
+
+          }
+      }
     },
     title() {
       const { title } = this.articleData
@@ -127,7 +140,7 @@ export default {
           case 'image':
             return `<div class=\"innerImg ${_.get(o.content, [ 0, 'alignment' ], '')}\"><img src=${_.get(o.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(o.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(o.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(o.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(o.content, [ 0, 'description' ], '')}</div></div>`
           case 'infobox':
-            return `<div class="info-box-container ${_.get(o.content, [ 0, 'alignment' ], '')}">
+            return `<div class="info-box-container ${_.get(o, [ 'alignment' ], '')}">
                       <span class="info-box-icon"></span>
                       <div class="info-box">
                         <div class="info-box-title">${_.get(o.content, [ 0, 'title' ], '')}</div>
@@ -157,17 +170,13 @@ export default {
             }).join('')
             return `<ul>${_liStr}</ul>`
           case 'unstyled':
-            return `<p>${o.content.toString()}</p>`
+            return (o.content.toString().length > 0) ? `<p>${o.content.toString()}</p>` : ''
           case 'youtube':
-            return `<div class=\"youtube\"><iframe width=\"560\" alt=\"\" height=\"315\" src=\"https://www.youtube.com/embed/${_.get(o.content, [ 0, 'youtubeId' ], '')}\" frameborder=\"0\" allowfullscreen> </iframe></div>`
+            return `<div class=\"youtube\"><div class=\"youtube-container\"><iframe width=\"560\" alt=\"\" height=\"315\" src=\"https://www.youtube.com/embed/${_.get(o.content, [ 0, 'youtubeId' ], '')}\" frameborder=\"0\" allowfullscreen> </iframe></div></div>`
           default:
             return
         }
       })
-    },
-    test(o) {
-      console.log(o);
-      return o
     },
   },
   name: 'article-body',
@@ -226,7 +235,6 @@ export default {
       max-width: 695px;
       overflow: hidden;
       .innerImg {
-        margin-bottom: 35px;
         img {
           width: 100%;
         }
@@ -255,13 +263,17 @@ export default {
           margin-bottom: 30px;
           padding-bottom: 10px;
         }
+        &.center {
+          margin-top: 20px;
+          width: 100%;
+        }
       }
       .article_main_pop {
         clear: both;
-        margin-top: 50px;
       }
       .article_main_tags {
         clear: both;
+        margin-top: 3em;
         .tags_icon {
           background-image: url(https://www.mirrormedia.mg/story/img/icon/sprite@3x.png);
           background-position: -733px -741px;
@@ -300,23 +312,28 @@ export default {
           color: #171717;
           font-size: 18px;
           line-height: 36px;
-          margin: 0 0 1.5em;
+          margin: 1.5em 0;
         }
         .youtube {
-          align-items: center;
-          display: flex;
-          justify-content: center;
-          margin: 25px 0;
-          padding-bottom: 56.25%;
-          padding-top: 25px;
-          position: relative;
-          iframe {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
+          .youtube-container {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+            margin: 25px 0;
+            padding-bottom: 56.25%;
+            padding-top: 25px;
+            position: relative;
+            iframe {
+              width: 100%;
+              height: 100%;
+              position: absolute;
+              top: 0;
+              left: 0;
+            }
           }
+        }
+        .embedded {
+          text-align: center;
         }
       }
       a, a:hover, a:link, a:visited {
@@ -334,7 +351,7 @@ export default {
       blockquote.blockquote {
         clear: both;
         padding: 10px 35px;
-        margin-top: 50px;
+        margin: 70px 0;
         .content {
           border-top: 3px solid #255577;
           padding-top: 20px;
@@ -389,7 +406,7 @@ export default {
       blockquote.quote {
         clear: both;
         display: flex;
-        margin: 30px 0;
+        margin: 3em 0;
         i {
           background-image: url(https://mirrormedia.mg/assets/images/quote.png);
           width: 45px;
@@ -398,15 +415,18 @@ export default {
           background-size: contain;
           display: block;
           margin-right: 20px;
+          max-width: 45px;
+          flex: 3;
         }
         .quote-content {
           font-size: 24px;
           color: #3a759e;
+          flex: 10;
         }
       }
       .info-box-container {
-        clear: both;
         width: 100%;
+        margin-bottom: 3em;
         .info-box-icon {
           &::before {
             content: '';
@@ -416,7 +436,7 @@ export default {
             border-width: 12px 18px;
             position: relative;
             left: 0;
-            top: 60px;
+            top: 30px;
             display: block;
             border-color: #255577;
           }
@@ -428,7 +448,7 @@ export default {
             border-width: 10px 0px 0px 18px;
             position: relative;
             left: 0;
-            top: 60px;
+            top: 30px;
             display: block;
             border-color: #7b7b7b transparent transparent transparent;
           }
@@ -437,8 +457,10 @@ export default {
           border: 1px solid #eaeaea;
           padding: 30px 50px;
           box-shadow: 0 0 14px rgba(146, 146, 146, 0.52);
-          width: 95%;
-          margin: 0 auto;
+          width: 90%;
+          margin-top: -35px;
+          /*margin: 0 auto;*/
+          margin-left: 18px;
           .info-box-title {
             color: #3a6888;
             font-size: 25px;
@@ -449,6 +471,21 @@ export default {
               color: rgba(0, 0, 0, 0.64);
               font-size: 16px;
             }
+          }
+        }
+        &.right {
+          float: right;
+          width: 300px;
+        }
+        &.left {
+          float: left;
+          width: 300px;
+        }
+        &.center {
+          clear: both;
+          margin: 3em 0;
+          .info-box {
+            width: 95%;
           }
         }
       }
@@ -476,6 +513,85 @@ export default {
             line-height: 1;
             top: 6px;
             position: relative;
+          }
+        }
+      }
+    }
+    &.single-col {
+      margin-top: 50px;
+      .article_basic-info, .article_title, .article_credit {
+        width: 660px;
+        margin: 0 auto;
+      }
+      .article_main {
+        width: 950px;
+        margin: 0 auto;
+        max-width: 950px;
+        display: block;
+        p, h2, .split-line, .embedded, .article_main_pop, .article_fb_comment, ul, .youtube {
+          padding: 0 145px;
+        }
+        blockquote {
+          padding: 0 145px;
+
+          /*&.quote {
+            display: block;
+            max-width: 400px;
+            flex-direction: column;
+            justify-content: center;
+            i {
+              width: 35px;
+              height: 35px;
+            }
+            &:nth-child(odd){
+              float: left;
+              margin-right: 50px;
+              margin-left: 0;
+              align-items: flex-start;
+            }
+            &:nth-child(even){
+              float: right;
+              margin-right: 0;
+              margin-left: 50px;
+              text-align: right;
+              align-items: flex-end;
+              i {
+                -moz-transform: scaleX(-1) rotateX(180deg);
+                -o-transform: scaleX(-1) rotateX(180deg);
+                -webkit-transform: scaleX(-1) rotateX(180deg);
+                transform: scaleX(-1) rotateX(180deg);
+                filter: FlipH;
+                -ms-filter: "FlipH";
+                position: relative;
+                 right: -100%;
+                 margin-left: -35px;
+              }
+            }
+          }*/
+        }
+        .innerImg {
+          padding: 0 145px 1.5em;
+          &.left {
+            margin-right: 50px;
+            padding: 0;
+          }
+          &.right {
+            margin-left: 50px;
+            padding: 0;
+          }
+
+        }
+        .article_main_tags {
+          padding: 0 145px;
+        }
+        .info-box-container {
+          &.center {
+            padding: 0 145px;
+          }
+          .info-box {
+            p, ul {
+              padding: 0;
+            }
           }
         }
       }
