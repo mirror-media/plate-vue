@@ -6,3 +6,6 @@ debug.log
 .idea
 api/config.js
 /tmp
+src/utils/jquery.dfp.min.js
+src/utils/swiper/
+src/utils/vue-dfp.js
