@@ -13,8 +13,6 @@
     <section class="footer container">
       <app-footer />
     </app-footer>
-    <style v-html="customCSS"></style>
-    <script v-html="customJS"></script>
   </div>
 </template>
 
@@ -36,7 +34,7 @@ const fetchCommonData = (store) => {
 }
 
 const fetchArticlesByUuid = (store, uuid, type, params) => {
-  return store.dispatch('FETCH_ARTICLES_BY_UUID', { 
+  return store.dispatch('FETCH_ARTICLES_BY_UUID', {
     'uuid': uuid,
     'type': type,
     'params': params
@@ -88,7 +86,7 @@ export default {
       this.page += 1
       switch (this.sectionStyle) {
         case 'full':
-          fetchArticlesByUuid(this.$store, this.sectionID, SECTION, { 
+          fetchArticlesByUuid(this.$store, this.sectionID, SECTION, {
             page: this.page,
             max_results: MAXRESULT,
             related: 'full'
@@ -96,7 +94,7 @@ export default {
             this.articles = this.$store.state.articlesByUUID
           })
         default:
-          fetchArticlesByUuid(this.$store, this.sectionID, SECTION, { 
+          fetchArticlesByUuid(this.$store, this.sectionID, SECTION, {
             page: this.page,
             max_results: MAXRESULT
           }).then(() => {
@@ -114,7 +112,7 @@ export default {
   beforeMount () {
     switch (this.sectionStyle) {
       case 'full':
-        fetchArticlesByUuid(this.$store, this.sectionID, SECTION, { 
+        fetchArticlesByUuid(this.$store, this.sectionID, SECTION, {
           page: PAGE,
           max_results: MAXRESULT,
           related: 'full'
@@ -122,7 +120,7 @@ export default {
           this.articles = this.$store.state.articlesByUUID
         })
       default:
-        fetchArticlesByUuid(this.$store, this.sectionID, SECTION, { 
+        fetchArticlesByUuid(this.$store, this.sectionID, SECTION, {
           page: PAGE,
           max_results: MAXRESULT
         }).then(() => {
@@ -131,10 +129,13 @@ export default {
     }
   },
   mounted() {
-    
+    const custCss = document.createElement('style')
+    const custScript = document.createElement('script')
+    document.querySelector('body').appendChild(custCss.appendChild(document.createTextNode(this.customCSS)))
+    document.querySelector('body').appendChild(custScript.appendChild(document.createTextNode(this.customJS)))
   }
 }
-  
+
 </script>
 <style lang="stylus" scoped>
 

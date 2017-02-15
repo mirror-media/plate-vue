@@ -23,7 +23,7 @@
         </div>
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist">
-            <aside class="article_aside" slot="aside">
+            <aside class="article_aside" slot="aside" v-if="(articleStyle !== 'photography')">
               <!-- <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp> -->
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
               <!-- <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp> -->
@@ -50,7 +50,6 @@
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
-  // import PopList from '../components/article/PopList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
@@ -114,7 +113,6 @@
       'app-footer': Footer,
       'app-header': Header,
       'latest-list': LatestList,
-      // 'pop-list': PopList,
       'related-list': RelatedList,
       'vue-dfp-provider': VueDfpProvider,
       // slider
@@ -156,40 +154,38 @@
       articleData() {
         return _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
       },
-      brief() {
-        const { brief : { apiData = [] } } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        const briefParagraphs = this.getParagraphs(apiData)
-        return ''
-
+      articleStyle() {
+        return _.get(this.articleData, [ 'style' ], '')
+        // return 'photography'
       },
       currArticleSlug() {
-        return _.get(this.$store, [ 'state', 'articles', 'items', 0, 'slug' ], '')
+        return _.get(this.articleData, [ 'slug' ], '')
       },
       heroCaption() {
-        const { heroCaption } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        return heroCaption
+        return _.get(this.articleData, [ 'heroCaption' ], '')
       },
       heroImage() {
-        const { heroImage } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        return heroImage
+        return _.get(this.articleData, [ 'heroImage' ])
       },
       heroVideo() {
-        const { heroImage, heroVideo, ogImage } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        const { heroImage, heroVideo, ogImage } = this.articleData
         const heroImgUrl= _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const poster = (ogImgUrl) ? ogImgUrl : ((heroImgUrl) ? heroImgUrl : '/asset/review.png')
         return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
       },
       latestList() {
-          return _.get(this.latestArticle, [ 'items' ], [])
+        return _.get(this.latestArticle, [ 'items' ], [])
+      },
+      photography() {
+        const { style } = this.articleData;
       },
       popularlist() {
         const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
         return report
       },
       relateds() {
-        const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        return relateds
+        return _.get(this.articleData, [ 'relateds' ])
       },
       showRelated() {
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], [])
@@ -203,8 +199,7 @@
       //   return this.$refs.mySwiperA.swiper
       // },
     },
-    beforeMount() {
-    },
+    beforeMount() {},
     methods: {
       getTruncatedVal,
       getValue(o = {}, p = [], d = '') {
@@ -303,7 +298,7 @@
           height: 0.5em;
           vertical-align: bottom;
           width: 100%;
-          margin: 30px -100% 0 0;
+          margin: 30px -100% 30px 0;
           border-top: 1px solid #c5c5c5;
         }
       }
