@@ -20,7 +20,8 @@ export const DFP_UNITS = {
   'MBAR2': { 'aduid':'test_mobile_np_ap_300x250_AT2', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
   'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
   'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-  'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] }
+  'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
+  'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container' ] }
 }
 
 export const DFP_ID = '40175602'
@@ -53,3 +54,11 @@ export const SOCIAL_LINK = {
   FEED: 'https://www.mirrormedia.mg/story/rss.xml',
   EMAIL: 'mailto:mirror885@mirrormedia.mg'
 }
+
+export const CATEGORY = 'CATEGORY'
+
+export const SECTION = 'SECTION'
+
+export const TAG = 'TAG'
+
+export const TOPIC = 'TOPIC'

@@ -1,6 +1,6 @@
 <template>
- <div class="more-container">
-   <a @click="loadMore()"><span>更多文章</span></a>
+ <div class="more">
+   <button @click="loadMore()"><span>更多文章</span></button>
  </div>
 </template>
 
@@ -8,6 +8,8 @@
 
 export default {
   name: 'more',
+  props: {
+  },
   methods: {
     loadMore () {
       this.$emit('loadMore')
@@ -18,16 +20,32 @@ export default {
 </script>
 <style lang="stylus" scoped>
 
-.more-container
-  width 100%
+.more
   height 30px
   margin-top 20px
   border 1px solid #bcbcbc
-  > a
+    
+  > button
     display: flex
     justify-content: center
     align-items: center
     width 100%
     height 100%
+    border none
+    background none
+
+.more-container
+  width 100%
+  height 30px
+  margin-top 20px
+  border 1px solid #bcbcbc
+  > button
+    display: flex
+    justify-content: center
+    align-items: center
+    width 100%
+    height 100%
+    border none
+    background none
 
 </style>

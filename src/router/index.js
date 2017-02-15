@@ -9,6 +9,7 @@ import Article from '../views/Article.vue'
 import Home from '../views/Home.vue'
 import Questionnaire from '../views/Questionnaire.vue'
 import Section from '../views/Section.vue'
+import Category from '../views/Category.vue'
 import TimelineView from '../views/TimelineView.vue'
 
 
@@ -19,6 +20,7 @@ export default new Router({
     { path: '/timeline/:title', component: TimelineView },
     { path: '/q/:questionnaireId', component: Questionnaire },
     { path: '/section/:title', component: Section },
+    { path: '/category/:title', component: Category },
     { path: '/post/:slug', component: Article },
     { path: '/', component: Home }
   ]

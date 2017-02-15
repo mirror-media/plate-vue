@@ -1,10 +1,10 @@
 <template>
-  <div class="section-view">
+  <div class="category-view">
     <app-header :commonData= 'commonData' />
     <div id="dfp-test" class="dfp-test">DFP 970 X 250</div>
-    <div class="section-title container" :class="this.$route.params.title">
-      <span class="section-title__text" v-text="section"></span>
-      <div class="section-title__colorBlock" :class="this.$route.params.title"></div>
+    <div class="category-title container" :class="this.section">
+      <span class="category-title__text" v-text="category"></span>
+      <div class="category-title__colorBlock" :class="this.section"></div>
     </div>
     <article-list :articles='articles' />
     <section class="container">
@@ -13,14 +13,12 @@
     <section class="footer container">
       <app-footer />
     </app-footer>
-    <style v-html="customCSS"></style>
-    <script v-html="customJS"></script>
   </div>
 </template>
 
 <script>
 
-import { SECTION } from '../constants/index'
+import { CATEGORY } from '../constants/index'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import Footer from '../components/Footer.vue'
@@ -43,13 +41,9 @@ const fetchArticlesByUuid = (store, uuid, type, params) => {
   })
 }
 
-const fetchData = (store) => {
-  return fetchCommonData(store)
-}
-
 export default {
-  name: 'section-view',
-  preFetch: fetchData,
+  name: 'category-view',
+  preFetch: fetchCommonData,
   components: {
     'app-footer': Footer,
     'app-header': Header,
@@ -64,74 +58,49 @@ export default {
     }
   },
   computed: {
-    section () {
-      return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['title'] )
+    category () {
+      return _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['title'] )
     },
-    sectionID () {
-      return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['id'] )
+    categoryID () {
+      return _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['id'] )
     },
     hasMore () {
       return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
     },
-    sectionStyle () {
-      return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['style'] )
-    },
-    customCSS () {
-      return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['css'], null )
-    },
-    customJS () {
-      return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['javascript'], null )
+    section() {
+      return _.get( _.find( _.get(this.commonData, ['sections', 'items']), (s) => { 
+        return _.find(s.categories, { 'id': this.categoryID })
+      }), ['name'])
+
     }
   },
   methods: {
     loadMore () {
       this.page += 1
-      switch (this.sectionStyle) {
-        case 'full':
-          fetchArticlesByUuid(this.$store, this.sectionID, SECTION, { 
-            page: this.page,
-            max_results: MAXRESULT,
-            related: 'full'
-          }).then(() => {
-            this.articles = this.$store.state.articlesByUUID
-          })
-        default:
-          fetchArticlesByUuid(this.$store, this.sectionID, SECTION, { 
-            page: this.page,
-            max_results: MAXRESULT
-          }).then(() => {
-            this.articles = this.$store.state.articlesByUUID
-          })
-      }
+      fetchArticlesByUuid(this.$store, this.categoryID, CATEGORY, { 
+        page: this.page,
+        max_results: MAXRESULT
+      }).then(() => {
+        this.articles = this.$store.state.articlesByUUID
+      })
     }
   },
   metaInfo () {
-    const title = this.section + ' - 鏡傳媒 Mirror Media'
+    const title = this.category + ' - 鏡傳媒 Mirror Media'
     return {
       title
     }
   },
   beforeMount () {
-    switch (this.sectionStyle) {
-      case 'full':
-        fetchArticlesByUuid(this.$store, this.sectionID, SECTION, { 
-          page: PAGE,
-          max_results: MAXRESULT,
-          related: 'full'
-        }).then(() => {
-          this.articles = this.$store.state.articlesByUUID
-        })
-      default:
-        fetchArticlesByUuid(this.$store, this.sectionID, SECTION, { 
-          page: PAGE,
-          max_results: MAXRESULT
-        }).then(() => {
-          this.articles = this.$store.state.articlesByUUID
-        })
-    }
+    fetchArticlesByUuid(this.$store, this.categoryID, CATEGORY, { 
+      page: PAGE,
+      max_results: MAXRESULT
+    }).then(() => {
+      this.articles = this.$store.state.articlesByUUID
+    })
   },
   mounted() {
-    
+
   }
 }
   
@@ -145,7 +114,7 @@ $color-watch = #c1d16e
 $color-projects = #000
 $color-other = #bcbcbc
 
-.section
+.category
   &-view
     background-color #f2f2f2
 
@@ -203,5 +172,5 @@ $color-other = #bcbcbc
 
 .other
   color $color-other
-
+  
 </style>

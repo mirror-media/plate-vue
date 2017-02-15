@@ -1,5 +1,5 @@
 <template>
-  <header class="header">
+  <header id="header" class="header">
     <section class="header-logoSearch">
       <a href="" class="mobile-only"><img src="~public/icon/hamburger@2x.png" class="header-icon"></a>
       <a href="/"><img src="~public/logo.svg" class="header-logoSearch--logo"></a>
@@ -18,7 +18,7 @@
             <a v-for="c in item.categories" v-text="c.title" :href="c.href"></a>
           </div>
         </div>
-        <a :href="item.href" v-for="item in headerItem.category" v-text="item.title"></a>
+        <a :href="item.href" v-for="item in headerItem.category" v-text="item.title" :class="item.section"></a>
       </div>
     </nav>
     <nav class="header-menu--topic">
@@ -52,6 +52,7 @@ export default {
         s.isFeatured ? headerItem.section.push(s) : ''
         _.forEach(s.categories, (c) => {
           c.href = '/category/' + c.name
+          c.section = s.name
           c.isFeatured ? headerItem.category.push(c) : ''
         })
       })
@@ -76,6 +77,8 @@ $color-news = #30bac8
 $color-entertainment = #bf3284
 $color-foodtravel = #eac151
 $color-watch = #c1d16e
+$color-projects = #000
+$color-other = #bcbcbc
 
 .header
   position relative
@@ -154,6 +157,17 @@ $color-watch = #c1d16e
       color #fff
       line-height: 43px
 
+    > a:hover
+      &.news-people
+        background-color $color-news
+      &.entertainment
+        background-color $color-entertainment
+      &.foodtravel
+        background-color $color-foodtravel
+      &.watch
+        background-color $color-watch
+
+
     &--section
       background-color $color-main
 
@@ -170,6 +184,9 @@ $color-watch = #c1d16e
       .header-menu
         > a
           border-bottom 3px solid #000
+        > a:hover
+          background-color #000
+          color #fff
 
 .logo
   width 24px
@@ -206,26 +223,39 @@ $color-watch = #c1d16e
 .dropdown:hover .dropdown-content
   display: block
 
-.news-people
+.dropdown.news-people
   border-top 3px solid $color-news
-  a:hover
-    color $color-news
+  > .dropdown-content
+    a:hover
+      color $color-news
+
+  &:hover
+    background-color $color-news
 
 
-.entertainment
+.dropdown.entertainment
   border-top 3px solid $color-entertainment
-  a:hover
-    color $color-entertainment
+  > .dropdown-content
+    a:hover
+      color $color-entertainment
+  &:hover
+    background-color $color-entertainment
 
-.foodtravel
+.dropdown.foodtravel
   border-top 3px solid $color-foodtravel
-  a:hover
-    color $color-foodtravel
+  > .dropdown-content
+    a:hover
+      color $color-foodtravel
+  &:hover
+    background-color $color-foodtravel
 
-.watch
+.dropdown.watch
   border-top 3px solid $color-watch
-  a:hover
-    color $color-watch
+  > .dropdown-content
+    a:hover
+      color $color-watch
+  &:hover
+    background-color $color-watch
 
 
 @media (min-width 1200px)

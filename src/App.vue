@@ -39,6 +39,12 @@ a
   text-decoration none
   cursor pointer
 
+button
+  cursor pointer
+
+button:disabled
+  cursor not-allowed
+
 input:focus,
 select:focus,
 textarea:focus,
@@ -80,6 +86,12 @@ button:focus {
 
 .fade-enter, .fade-leave-active
   opacity 0
+
+.dfp-test
+  width 970px
+  height 250px
+  margin 20px auto 20px
+  background-color #a8dadc
 
 @media (min-width 600px)
   .container

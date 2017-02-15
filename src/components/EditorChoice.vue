@@ -1,5 +1,5 @@
 <template>
-  <section class="editorChoice container">
+  <section id="editorChoice" class="editorChoice container">
     <div class="grid grid-4-fifth">
       <a :href="getHref(item)" v-for="(item, index) in editorChoice.items">
         <div :id="'slide-' + index" class="editorChoice-image" 

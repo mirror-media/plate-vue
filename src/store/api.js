@@ -1,4 +1,6 @@
 // this is aliased in webpack config based on server/client build
+import { CATEGORY, SECTION, TAG, TOPIC } from '../constants/index'
+import { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } from '../../api/config'
 import { camelizeKeys } from 'humps'
 import _ from 'lodash'
 import api from 'create-api'
@@ -40,6 +42,21 @@ function _doFetch(url) {
   })
 }
 
+function _setupWhereInParam(key, value, params={}) {
+  params = params || {}
+  value = Array.isArray(value) ? value : [ value ]
+  let where = {}
+  if (value.length > 0) {
+    _.merge(where, params.where, {
+      [key]: {
+        '$in': value
+      }
+    })
+  }
+  params.where = where
+  return params
+}
+
 function loadArticles(params = {}) {
   const query = _buildQuery(params)
   const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
@@ -52,6 +69,30 @@ function loadArticles(params = {}) {
 function loadArticlesPopList(params = {}) {
   const { SERVER_PROTOCOL, SERVER_HOST } = config
   let url = `${SERVER_PROTOCOL}://${SERVER_HOST}/story/json/popularlist.json`
+  return _doFetch(url)
+}
+
+function loadArticlesByUuid(uuid = '', type = '', params = {}, isOnlyMeta = true) {
+  switch (type) {
+    case SECTION:
+      params = _setupWhereInParam('sections', [ uuid ], params)
+      break
+    case CATEGORY:
+      params = _setupWhereInParam('categories', [ uuid ], params)
+      break
+    case TAG:
+      params = _setupWhereInParam('tags', [ uuid ], params)
+      break
+    case TOPIC:
+      params = _setupWhereInParam('topics', [ uuid ], params)
+      break
+    default:
+      return Promise.resolve()
+  }
+  params.sort = params.sort || '-publishedDate'
+  let query = _buildQuery(params)
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/meta`
+  url = `${url}?${query}`
   return _doFetch(url)
 }
 
@@ -155,6 +196,13 @@ export function fetchCommonData (endpoints = []) {
             let commonData = {}
             _.map( Object.keys( _.get(data[0], ['endpoints']) ), (e) => {
               commonData[e] = _.get(data[0], ['endpoints', e ])
+              if (e == 'sections' ) {
+                _.forEach( _.get(data[0], ['endpoints', e, 'items' ]), (s) => {
+                  _.forEach(s.categories, (c) => {
+                    _.set(commonData, ['categories', c.name], c)
+                  })
+                })
+              }
             })
             return commonData
           } )
@@ -186,6 +234,10 @@ export function fetchTopic () {
 
 export function fetchArticles (params = {}) {
   return loadArticles(params)
+}
+
+export function fetchArticlesByUuid (uuid = '', type = '', params = {}, isOnlyMeta= true) {
+  return loadArticlesByUuid(uuid, type, params, isOnlyMeta)
 }
 
 export function fetchArticlesPopList (params = {}) {
