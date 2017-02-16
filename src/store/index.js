@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchQuestionnaire, fetchSectionList, fetchTopic } from './api'
+import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTopic } from './api'
 
 Vue.use(Vuex)
 
@@ -19,6 +19,7 @@ const store = new Vuex.Store({
     fbPagesId: FB_PAGES_ID,
     latestArticle: {},
     questionnaire: {},
+    searchResult: {},
   },
 
   actions: {
@@ -64,6 +65,10 @@ const store = new Vuex.Store({
         : fetchQuestionnaire(id).then(questionnaire => commit('SET_QUESTIONNAIRE', { questionnaire }))
     },
 
+    FETCH_SEARCH: ({ commit, state }, { params }) => {
+      
+    },
+
     FETCH_USER: ({ commit, state }, { id }) => {
       return state.users[id]
         ? Promise.resolve(state.users[id])
@@ -96,6 +101,10 @@ const store = new Vuex.Store({
 
     SET_LATESTARTICLE: (state, { latestArticle }) => {
       Vue.set(state, 'latestArticle', latestArticle)
+    },
+
+    SET_SEARCH: (state, { searchResult }) => {
+      Vue.set(state, 'searchResult', searchResult)
     },
 
     SET_QUESTIONNAIRE: (state, { questionnaire }) => {

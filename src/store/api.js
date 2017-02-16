@@ -118,12 +118,9 @@ function loadEvent () {
 }
 
 function loadLatestArticle (params = {}) {
-  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
   let query = _buildQuery(params)
-  // let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts?sort=-publishedDate&clean=content&max_results=15`
   let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts`
   url = `${url}?${query}`
-  console.log('url', url)
   return _doFetch(url)
 }
 
@@ -141,6 +138,10 @@ function loadQuestionnaire() {
       }
     })
   })
+}
+
+function loadSearch (params = {}) {
+  //let url = `https://www.mirrormedia.mg/api/search`
 }
 
 function loadSectionList () {
@@ -222,6 +223,10 @@ export function fetchLatestArticle (params = {}) {
 
 export function fetchQuestionnaire (id) {
   return loadQuestionnaire()
+}
+
+export function fetchSearch (params = {}) {
+  return loadSearch(params)
 }
 
 export function fetchSectionList () {

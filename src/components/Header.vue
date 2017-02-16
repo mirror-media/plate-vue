@@ -4,8 +4,8 @@
       <a href="" class="mobile-only"><img src="~public/icon/hamburger@2x.png" class="header-icon"></a>
       <a href="/"><img src="~public/logo.svg" class="header-logoSearch--logo"></a>
       <div class="header-logoSearch__search">
-        <input type="text" placeholder="">
-        <button>
+        <input type="text" v-model="searchVal" placeholder="">
+        <button v-on:click="search(searchVal)">
           <img class="header-logoSearch__search--icon" src="~public/icon/search.svg" />
         </button>
       </div>
@@ -41,6 +41,16 @@ export default {
   props: {
     commonData: {},
   },
+  data () {
+    return {
+      searchVal: '',
+    }
+  },
+  methods: {
+    search (searchVal = '') {
+      this.$router.push('/search/'+ this.searchVal)
+    }
+  },
   computed: {
     headerItem () {
       let headerItem = {}
@@ -57,7 +67,7 @@ export default {
         })
       })
       _.forEach(this.commonData.topics.items, (t) => {
-        t.href = t.links.self.href
+        t.href = '/topic/' + t.id
         t.title = t.name
         t.isFeatured && headerItem.topic.length < 7 ? headerItem.topic.push(t) : ''
       })
