@@ -7,6 +7,7 @@
       <latest-article :latestArticle= 'latestArticle'/>
       <latest-project :project= 'commonData.projects.items' />
     </section>
+    <loading :show="loading" />
     <section class="container">
       <more v-if="hasMore" v-on:loadMore="loadMore" />
     </section>
@@ -18,12 +19,14 @@
 
 <script>
 
+import { currentYPosition, elmYPosition } from 'kc-scroll'
 import _ from 'lodash'
 import EditorChoice from '../components/EditorChoice.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticle from '../components/LatestArticle.vue'
 import LatestProject from '../components/LatestProject.vue'
+import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import truncate from 'truncate'
 
@@ -53,13 +56,17 @@ export default {
     'editor-choice': EditorChoice,
     'latest-article': LatestArticle,
     'latest-project': LatestProject,
+    'loading': Loading,
     'more': More
   },
   data () {
     return {
       commonData: this.$store.state.commonData,
       editorChoice: this.$store.state.editorChoice,
+      hasScrollLoadMore: false,
+      loading: false,
       page: PAGE,
+      
     }
   },
   computed: {
@@ -69,19 +76,25 @@ export default {
     latestArticle () {
       return this.$store.state.latestArticle
     },
-    needLoadMore () {
-      let height = document.getElementById("header").offsetHeight +
-                document.getElementById("dfp-test").offsetHeight +
-                document.getElementById("editorChoice").offsetHeight +
-                document.getElementById("latestArticle").offsetHeight
-      let test = document.getElementById("latestArticle").offsetTop + document.getElementById("latestArticle").offsetHeight
-      return test
-    }
   },
   methods: {
     loadMore () {
       this.page += 1
-      fetchLatestArticle(this.$store, this.page)
+      this.loading = true
+      fetchLatestArticle(this.$store, this.page).then(() => {
+        this.loading = false
+      })
+    },
+    handleScroll () {
+      window.onscroll = (e) => {
+        let firstPageArticleHeight = document.getElementById('latestArticle').offsetHeight
+        let firstPageArticleBottom = elmYPosition('#latestArticle') + ( firstPageArticleHeight )
+        let currentBottom = currentYPosition() + window.innerHeight
+        if ( ( currentBottom > firstPageArticleBottom ) && !this.hasScrollLoadMore) {
+          this.hasScrollLoadMore = true
+          this.loadMore()
+        }
+      } 
     }
   },
   metaInfo () {
@@ -94,7 +107,7 @@ export default {
     
   },
   mounted() {
-    
+    this.handleScroll()
   }
 }
   
@@ -104,17 +117,18 @@ export default {
   box-sizing border-box
   h2 
     margin: 0;
-    font-family: Noto Sans TC,sans-serif
-    font-size: 18px
-    font-weight: 700
-    line-height: 1.5
-    letter-spacing: .5px
-    color: rgba(0,0,0,.8)
+    font-family Noto Sans TC,sans-serif
+    font-size 18px
+    font-weight 700
+    line-height 1.5
+    letter-spacing .5px
+    color rgba(0,0,0,.8)
     list-style-type none
 
 .list
   &.container
-    flex-direction: row
-    flex-wrap: wrap
+    flex-direction row
+    flex-wrap wrap
+    align-items flex-start
     
 </style>

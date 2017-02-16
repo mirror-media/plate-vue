@@ -1,19 +1,19 @@
 <template>
   <section class="latestProject grid-1-fifth">
     <template v-for="item in highlightProject">
-      <div>
-        <img class="latestProject__img" :src="item.heroImage.image.resizedTargets.mobile.url">
+      <a :href="getHref(item)">
+        <img class="latestProject__img" :src="getImage(item, 'mobile')">
         <div class="latestProject__title" >
-          <h2 v-text="getTitle(item, 22)"></h2>
+          <h2 v-text="getTruncatedVal(item.title, 22)"></h2>
           <p v-text="getBrief(item, 34)"></p>
         </div>
-      </div>
+      </a>
     </template>
   </section>
 </template>
 <script>
 
-import { getBrief, getSection, getTitle, getHref, getTruncatedVal } from '../utils/comm'
+import { getBrief, getImage, getSection, getHref, getTruncatedVal } from '../utils/comm'
 import _ from 'lodash'
 import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
@@ -37,8 +37,8 @@ export default {
   },
   methods: {
     getBrief,
+    getImage,
     getSection,
-    getTitle,
     getHref,
     getTruncatedVal,
   },
@@ -76,9 +76,10 @@ $color-other = #bcbcbc
     line-height 1rem
     color rgba(0, 0, 0, .9)
 
-  
+  > a
+    display block
 
-  > div:not(:first-child)
+  > a:not(:first-child)
     margin 10px 0
 
   &__img

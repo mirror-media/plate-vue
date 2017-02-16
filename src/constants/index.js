@@ -57,6 +57,8 @@ export const SOCIAL_LINK = {
 
 export const CATEGORY = 'CATEGORY'
 
+export const SEARCH = 'SEARCH'
+
 export const SECTION = 'SECTION'
 
 export const TAG = 'TAG'
