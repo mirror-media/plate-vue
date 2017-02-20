@@ -65,8 +65,14 @@ const store = new Vuex.Store({
         : fetchQuestionnaire(id).then(questionnaire => commit('SET_QUESTIONNAIRE', { questionnaire }))
     },
 
-    FETCH_SEARCH: ({ commit, state }, { params }) => {
-      
+    FETCH_SEARCH: ({ commit, state }, { keyword, params }) => {
+      let orig = _.values(state.searchResult['items'])
+      return state.searchResult.items && params.page < 2
+        ? Promise.resolve(state.searchResult)
+        : fetchSearch(keyword, params).then(searchResult => {
+          searchResult['items'] = _.concat(orig, _.get(searchResult, ['hits']))
+          commit('SET_SEARCH', { searchResult })
+        })
     },
 
     FETCH_USER: ({ commit, state }, { id }) => {

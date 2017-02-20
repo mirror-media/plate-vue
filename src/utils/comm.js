@@ -20,15 +20,15 @@ export function getHref(relAritlcle = {}) {
 export function getImage(article, size) {
   switch(size) {
     case 'desktop':
-      return article.heroImage.image.resizedTargets.desktop.url
+      return _.get(article, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'])
     case 'mobile':
-      return article.heroImage.image.resizedTargets.mobile.url
+      return  _.get(article, ['heroImage', 'image', 'resizedTargets', 'mobile', 'url'])
     case 'tablet':
-      return article.heroImage.image.resizedTargets.tablet.url
+      return _.get(article, ['heroImage', 'image', 'resizedTargets', 'tablet', 'url'])
     case 'tiny':
-      return article.heroImage.image.resizedTargets.tiny.url
+      return _.get(article, ['heroImage', 'image', 'resizedTargets', 'tiny', 'url'])
     default:
-      return article.heroImage.image.resizedTargets.desktop.url
+      return _.get(article, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'])
   }
 }
 

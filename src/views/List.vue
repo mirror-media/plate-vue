@@ -7,7 +7,7 @@
       <span class="list-title__text" v-text="title"></span>
       <div class="list-title__colorBlock" :class="section"></div>
     </div>
-    <article-list :articles='articles' />
+    <article-list :articles='articles.items' />
     <section class="container">
       <more v-if="hasMore" v-on:loadMore="loadMore" />
     </more>
@@ -44,7 +44,7 @@ const fetchArticlesByUuid = (store, uuid, type, params) => {
 }
 
 const fetchSearch = (store, keyword, params) => {
-  return store.dispatch('FETCH_ARTICLES_BY_UUID', { 
+  return store.dispatch('FETCH_SEARCH', { 
     'keyword': keyword,
     'params': params
   })
@@ -73,7 +73,13 @@ export default {
   },
   computed: {
     hasMore () {
-      return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
+      switch(this.type) {
+        case SEARCH:
+          return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'nbHits' ], 0)
+          break
+        default:
+          return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
+      }
     },
     section () {
       switch(this.type) {
@@ -134,7 +140,12 @@ export default {
             this.articles = this.$store.state.articlesByUUID
           })
         case SEARCH:
-          break
+          fetchSearch(this.$store, this.$route.params.keyword, { 
+            page: this.page,
+            max_results: MAXRESULT
+          }).then(() => {
+            this.articles = this.$store.state.searchResult
+          })
         case SECTION:
           switch (this.sectionStyle) {
             case 'full':
@@ -184,7 +195,7 @@ export default {
           page: PAGE,
           max_results: MAXRESULT
         }).then(() => {
-          //this.articles = this.$store.state.articlesByUUID
+          this.articles = this.$store.state.searchResult
         })
         break
       case SECTION:
