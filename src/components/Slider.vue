@@ -1,0 +1,127 @@
+<template>
+  <swiper :options="swiperOption" :ref="slideId">
+    <slot :slide="slideComp"></slot>
+    <slot name="custNav" :thisSwiperId="slideId"></slot>
+    <div class="swiper-pagination" :id="swiperPagiantionId" slot="pagination"></div>
+    <div class="swiper-button swiper-button-prev" :class="navBtnClass" slot="button-prev"></div>
+    <div class="swiper-button swiper-button-next" :class="navBtnClass" slot="button-next"></div>
+  </swiper>
+</template>
+<script>
+  import Swiper from 'vue-awesome-swiper/swiper.vue'
+  import SwiperSlide from 'vue-awesome-swiper/slide.vue'
+  export default {
+    components: {
+      Swiper,
+      SwiperSlide
+    },
+    computed: {
+      navBtnClass() {
+        // return `${this.slideId}-navbtn`
+        return {
+          enabled: (this.option[ 'setNavBtn' ]) ? true: false
+        }
+      },
+      swiperPagiantionId() {
+        return `${this.slideId}-pagination`
+      },
+      swiper() {
+        return this.$refs[ this.slideId ].swiper
+      },
+      slideComp() {
+        return SwiperSlide
+      },
+      swiperOption() {
+        const defaultOpt = {
+          notNextTick: true,
+          direction: 'horizontal',
+          grabCursor: true,
+          setWrapperSize: true,
+          loop: true,
+
+          // effect: 'coverflow',
+          // coverflow: {
+          //   stretch: 100,
+          //   modifier: 3,
+          // },
+          // pagination: `#${this.swiperPagiantionId}`,
+          // paginationClickable: true,
+          // paginationHide: false,
+          uniqueNavElements :true,
+          // mousewheelControl: true,
+          // preloadImages: true,
+          // updateOnImagesReady : true,
+          lazyLoading : true,
+          lazyLoadingInPrevNext : true,
+          lazyLoadingOnTransitionStart : true,
+          // zoom : true,
+
+          prevButton:'.swiper-button-prev',
+          nextButton:'.swiper-button-next',
+          observer:true,
+          observeParents:true,
+          // virtualTranslate : true,
+        }
+        if(this.option[ 'paginationable' ]) {
+          this.option[ 'pagination' ] = `#${this.swiperPagiantionId}`
+        }
+        return Object.assign(defaultOpt, this.option);
+      },
+    },
+    data() {
+      return {}
+    },
+    methods: {
+      slideTo() {
+        return this.swiper.slideNext()
+      },
+    },
+    mounted() {
+      // this.swiper.update()
+      // this.swiper.slideTo(2, 1000, false)
+      window[ 'refs' ] = {}
+      window[ 'refs' ][ this.slideId ] = this.swiper
+    },
+    name: 'app-slider',
+    props: {
+      slideId: {
+        default: () => {
+          const id = `id-${Date.now()}`
+          return id
+        }
+      },
+      option: { default: () => { return {} } }
+    }
+  }
+</script>
+<style lang="stylus">
+  .swiper-container {
+    .swiper-pagination {
+      position: relative;
+      top: 20px;
+      &.swiper-pagination-bullets {
+        bottom: 0;
+      }
+      .swiper-pagination-bullet {
+        bottom: 0;
+        box-shadow: 0 0 7px rgba(65, 65, 65, 0.61);
+        border: 2px solid #000000;
+        background-color: #fff;
+        width: 15px;
+        height: 15px;
+        &.swiper-pagination-bullet-active {
+          background: #b3b3b3;
+          border: none;
+        }
+      }
+    }
+    .swiper-button {
+      display: none;
+      &.enabled {
+        display: block;
+      }
+    }
+    .swiper-button-prev{background-image:url(https://mirrormedia.mg/assets/images/arrow1-2017.png);}
+    .swiper-button-next{background-image:url(https://mirrormedia.mg/assets/images/arrow2-2017.png);}
+  }
+</style>

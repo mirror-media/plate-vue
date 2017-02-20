@@ -45,7 +45,6 @@
   import _ from 'lodash'
   import {  SECTION_MAP, DFP_UNITS } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
-  // import { swiper, swiperSlide } from 'vue-awesome-swiper'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
@@ -53,11 +52,8 @@
   import RelatedList from '../components/article/RelatedList.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
-  // import slider from 'vue-slider'
   import store from '../store'
   import truncate from 'truncate'
-
-
 
   const fetchArticles = (store) => {
     return store.dispatch('FETCH_ARTICLES', {
@@ -103,7 +99,6 @@
     })
   }
 
-  // const slideC = (process.env.BROWSER)? slider : null
 
   export default {
     name: 'article-view',
@@ -115,7 +110,6 @@
       'latest-list': LatestList,
       'related-list': RelatedList,
       'vue-dfp-provider': VueDfpProvider,
-      // slider
     },
     data() {
       return {
@@ -156,7 +150,6 @@
       },
       articleStyle() {
         return _.get(this.articleData, [ 'style' ], '')
-        // return 'photography'
       },
       currArticleSlug() {
         return _.get(this.articleData, [ 'slug' ], '')
@@ -191,13 +184,6 @@
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], [])
         return (relateds.length > 0)
       },
-      // showSlides() {
-      //   console.log('false');
-      //   return false
-      // },
-      // swiper() {
-      //   return this.$refs.mySwiperA.swiper
-      // },
     },
     beforeMount() {},
     methods: {
@@ -213,11 +199,6 @@
       fbSdkScript.async = true
       fbSdkScript.type = 'text/javascript'
       document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
-
-      // window.onload = (e) => {
-      //   this.showSlides = true
-      // }
-
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
