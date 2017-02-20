@@ -140,8 +140,11 @@ function loadQuestionnaire() {
   })
 }
 
-function loadSearch (params = {}) {
-  //let url = `https://www.mirrormedia.mg/api/search`
+function loadSearch (keyword = '', params = {}) {
+  let query = params.query
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/search`
+  url = `${url}?query=${keyword}&hitsPerPage=${params.max_results}&page=${params.page - 1}`
+  return _doFetch(url)
 }
 
 function loadSectionList () {
@@ -225,8 +228,8 @@ export function fetchQuestionnaire (id) {
   return loadQuestionnaire()
 }
 
-export function fetchSearch (params = {}) {
-  return loadSearch(params)
+export function fetchSearch (keyword = '', params = {}) {
+  return loadSearch(keyword, params)
 }
 
 export function fetchSectionList () {
