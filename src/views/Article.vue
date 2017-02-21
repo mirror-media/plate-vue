@@ -22,7 +22,7 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist">
+          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist">
             <aside class="article_aside" slot="aside" v-if="(articleStyle !== 'photography')">
               <!-- <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp> -->
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
@@ -68,32 +68,26 @@
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
-  const fetchCommonData = (store) => {
-    return store.dispatch('FETCH_COMMONDATA', { })
-  }
-
-  const fetchEditorChoice = (store) => {
-    return store.dispatch('FETCH_EDITORCHOICE', { })
-  }
-
   const fetchLatestArticle = (store, params) => {
     return store.dispatch('FETCH_LATESTARTICLE', { params: params })
+  }
+
+  const fetchCommonData = (store) => {
+    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'choices' ] } )
   }
 
 
   const fetchData = (store) => {
     return fetchCommonData(store).then(() => {
-      return fetchEditorChoice(store).then(() => {
-        return fetchArticles(store).then(() => {
-          const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-          return fetchLatestArticle(store, {
-            sort: '-publishedDate',
-            where: {
-              'sections': _.get(sections, [ 0, 'id' ])
-            }
-          }).then(() => {
-            return fetchPop(store)
-          })
+      return fetchArticles(store).then(() => {
+        const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+        return fetchLatestArticle(store, {
+          sort: '-publishedDate',
+          where: {
+            'sections': _.get(sections, [ 0, 'id' ])
+          }
+        }).then(() => {
+          return fetchPop(store)
         })
       })
     })
@@ -176,6 +170,10 @@
       popularlist() {
         const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
         return report
+      },
+      projectlist() {
+        const { items = [] } = _.get(this.commonData, [ 'projects' ])
+        return items
       },
       relateds() {
         return _.get(this.articleData, [ 'relateds' ])

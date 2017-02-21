@@ -1,0 +1,117 @@
+<template>
+  <div class="project-container" v-if="(projects.length > 0)">
+    <div class="proj_title"><h3>聚焦鏡</h3></div>
+    <div class="proj_list">
+      <app-slider :option="sliderOption">
+        <template scope="props">
+          <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10">
+            <div class="proj_item">
+              <div>
+                <a :href="`https://mirrormedia.mg/projects/${o.slug}`" >
+                  <div class="proj_item_img"
+                      :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
+                  </div>
+                </a>
+              </div>
+              <div class="proj_item_title" :style="borderLeftStyle(getValue(o, [ 'sections', 0, 'id' ]))">
+                <a :href="`https://mirrormedia.mg/projects/${o.slug}`" >
+                  {{ getTruncatedVal(o.title, 22) }}
+                </a>
+              </div>
+            </div>
+          </swiper-slide>
+        </template>
+      </app-slider>
+    </div>
+  </div>
+</template>
+<script>
+  import { SECTION_MAP } from '../../constants'
+  import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
+  import Slider from '../Slider.vue'
+  import _ from 'lodash'
+
+
+  export default {
+    components: {
+      'app-slider': Slider
+    },
+    computed: {
+      sliderOption() {
+        return {
+          paginationable: true,
+          paginationClickable: true,
+          paginationHide: false,
+          setNavBtn: true,
+          slidesPerView: 3,
+          spaceBetween: 30
+        }
+      }
+    },
+    methods: {
+      borderLeftStyle(sect) {
+        return {
+          borderLeft: SECTION_MAP[ sect ][ "borderLeft" ]
+        }
+      },
+      getHref,
+      getTruncatedVal,
+      getValue,
+    },
+    name: 'project-list',
+    props: {
+      projects: {
+        default: () => { return [] }
+      }
+    },
+  }
+</script>
+<style lang="stylus">
+.project-container {
+  font-size: 18px;
+  .proj_list {
+    margin-top: 10px;
+    display: flex;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    height: 220px
+    .proj_item {
+      /*width: 31%;*/
+      vertical-align: top;
+      margin-bottom: 30px;
+      .proj_item_img {
+        width: 100%;
+        height: 150px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center center;
+      }
+      .proj_item_title {
+        background-color: #fff;
+        /*border: 1px solid #e0e0e0;*/
+        border-left: 7px solid #414141;
+        border-top-width: 0;
+        line-height: 18px;
+        font-size: 13px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 60px;
+        a {
+          width: 95%;
+          max-height: 100%;
+          margin: 10px 20px;
+          &:hover, &:link, &:visited {
+            color: #8c8c8c;
+            font-weight: normal;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+  .swiper-button-prev{background-image:url(https://mirrormedia.mg/assets/images/left-2017.png)!important;}
+  .swiper-button-next{background-image:url(https://mirrormedia.mg/assets/images/right-2017.png)!important;}
+}
+</style>

@@ -39,7 +39,8 @@ export default {
   computed: {
     sliderOption() {
       return {
-        setNavBtn: false
+        setNavBtn: false,
+        grabCursor: false
       }
     },
   },

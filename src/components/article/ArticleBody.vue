@@ -34,7 +34,10 @@
         <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp> -->
       </div>
       <div class="article_main_pop">
-        <pop-list :pop="poplistData"></pop-list>
+        <pop-list :pop="poplistData" />
+      </div>
+      <div>
+        <proj-list :projects="projlistData" />
       </div>
       <div class="article_fb_comment" style="margin: 1.5em 0;">
         <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
@@ -48,11 +51,13 @@ import _ from 'lodash'
 import { SECTION_MAP, DFP_UNITS } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
 import PopList from './PopList.vue'
+import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
 
 export default {
   components: {
     'pop-list': PopList,
+    'proj-list': ProjectList,
     'app-slider': Slider
   },
   computed: {
@@ -253,14 +258,18 @@ export default {
       }
     }
   },
+  mounted() {},
   name: 'article-body',
   props: {
     articleData: {
       default: () => { return {} }
     },
     poplistData: {
-      default: () => { return {} }
+      default: () => { return [] }
     },
+    projlistData: {
+      default: () => { return [] }
+    }
   },
 }
 </script>
