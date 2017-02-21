@@ -131,8 +131,10 @@ export default {
   mounted() {
     const custCss = document.createElement('style')
     const custScript = document.createElement('script')
-    document.querySelector('body').appendChild(custCss.appendChild(document.createTextNode(this.customCSS)))
-    document.querySelector('body').appendChild(custScript.appendChild(document.createTextNode(this.customJS)))
+    custCss.appendChild(document.createTextNode(this.customCSS))
+    custScript.appendChild(document.createTextNode(this.customJS))
+    document.querySelector('body').appendChild(custCss)
+    document.querySelector('body').appendChild(custScript)
   }
 }
 

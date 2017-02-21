@@ -37,8 +37,11 @@
         const tHtml = document.documentElement;
         const relatedDom = document.querySelector('.related-list-container')
 
-        document.styleSheets[0].addRule('.related-list-container .list > .title[data-v-a60ea6e8]::before', `content: ""; border-color: transparent transparent transparent ${_.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')}`);
-        document.styleSheets[0].insertRule(`.related-list-container .list > .title[data-v-a60ea6e8]::before { content: ""; border-color: transparent transparent transparent ${_.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`, 0);
+        const customCSS = `.related-list-container .list > .title::before { content: ""; border-color: transparent transparent transparent ${_.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+        const custCss = document.createElement('style')
+        custCss.appendChild(document.createTextNode(customCSS))
+        document.querySelector('body').appendChild(custCss)
+
 
         window.onscroll = (e) => {
           if(!relatedDom) { return }
