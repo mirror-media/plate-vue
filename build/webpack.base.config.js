@@ -2,7 +2,6 @@ const path = require('path')
 const vueConfig = require('./vue-loader.config')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
-
 module.exports = {
   devtool: '#source-map',
   entry: {
@@ -31,6 +30,10 @@ module.exports = {
     noParse: /es6-promise\.js$/, // avoid webpack shimming process
     rules: [
       {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: vueConfig
@@ -50,7 +53,7 @@ module.exports = {
           limit: 10000,
           name: '[name].[ext]?[hash]'
         }
-      }
+      },
     ]
   },
   externals: [
@@ -58,5 +61,8 @@ module.exports = {
   ],
   performance: {
     hints: process.env.NODE_ENV === 'production' ? 'warning' : false
-  }
+  },
+  plugins: [
+    // new ExtractTextPlugin('styles.[hash].css'),
+  ]
 }

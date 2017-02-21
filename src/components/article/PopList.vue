@@ -1,10 +1,18 @@
 <template>
   <div class="poplist-container" v-if="(pop.length > 0)">
-    <div class="pop_title"><h3>熱門文章：</h3></div>
+    <div class="pop_title"><h3>熱門文章</h3></div>
     <div class="pop_list">
-      <div class="pop_item" v-for="(o, i) in pop">
-        <div><a :href="reviseSlug(o.slug)" ><div class="pop_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div></a></div>
-        <div class="pop_item_title"><a :href="reviseSlug(o.slug)" >{{ getTruncatedVal(o.title, 22) }}</a></div>
+      <div class="pop_item" v-for="(o, i) in pop" v-if="i < 9">
+        <div>
+          <a :href="reviseSlug(o.slug)" >
+            <div class="pop_item_img"
+                  :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
+            </div>
+          </a>
+        </div>
+        <div class="pop_item_title">
+          <a :href="reviseSlug(o.slug)" v-text="getTruncatedVal(o.title, 22)"></a>
+        </div>
       </div>
     </div>
   </div>
@@ -51,7 +59,7 @@
         }
         .pop_item_title {
           background-color: #fff;
-          border: 1px solid #e0e0e0;
+          /*border: 1px solid #e0e0e0;*/
           border-left: 7px solid #414141;
           border-top-width: 0;
           line-height: 18px;

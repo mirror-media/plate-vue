@@ -22,7 +22,7 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist">
+          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist">
             <aside class="article_aside" slot="aside" v-if="(articleStyle !== 'photography')">
               <!-- <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp> -->
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
@@ -45,7 +45,6 @@
   import _ from 'lodash'
   import {  SECTION_MAP, DFP_UNITS } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
-  // import { swiper, swiperSlide } from 'vue-awesome-swiper'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
@@ -53,11 +52,8 @@
   import RelatedList from '../components/article/RelatedList.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
-  // import slider from 'vue-slider'
   import store from '../store'
   import truncate from 'truncate'
-
-
 
   const fetchArticles = (store) => {
     return store.dispatch('FETCH_ARTICLES', {
@@ -72,38 +68,31 @@
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
-  const fetchCommonData = (store) => {
-    return store.dispatch('FETCH_COMMONDATA', { })
-  }
-
-  const fetchEditorChoice = (store) => {
-    return store.dispatch('FETCH_EDITORCHOICE', { })
-  }
-
   const fetchLatestArticle = (store, params) => {
     return store.dispatch('FETCH_LATESTARTICLE', { params: params })
+  }
+
+  const fetchCommonData = (store) => {
+    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'choices' ] } )
   }
 
 
   const fetchData = (store) => {
     return fetchCommonData(store).then(() => {
-      return fetchEditorChoice(store).then(() => {
-        return fetchArticles(store).then(() => {
-          const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-          return fetchLatestArticle(store, {
-            sort: '-publishedDate',
-            where: {
-              'sections': _.get(sections, [ 0, 'id' ])
-            }
-          }).then(() => {
-            return fetchPop(store)
-          })
+      return fetchArticles(store).then(() => {
+        const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+        return fetchLatestArticle(store, {
+          sort: '-publishedDate',
+          where: {
+            'sections': _.get(sections, [ 0, 'id' ])
+          }
+        }).then(() => {
+          return fetchPop(store)
         })
       })
     })
   }
 
-  // const slideC = (process.env.BROWSER)? slider : null
 
   export default {
     name: 'article-view',
@@ -115,7 +104,6 @@
       'latest-list': LatestList,
       'related-list': RelatedList,
       'vue-dfp-provider': VueDfpProvider,
-      // slider
     },
     data() {
       return {
@@ -156,7 +144,6 @@
       },
       articleStyle() {
         return _.get(this.articleData, [ 'style' ], '')
-        // return 'photography'
       },
       currArticleSlug() {
         return _.get(this.articleData, [ 'slug' ], '')
@@ -184,6 +171,10 @@
         const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
         return report
       },
+      projectlist() {
+        const { items = [] } = _.get(this.commonData, [ 'projects' ])
+        return items
+      },
       relateds() {
         return _.get(this.articleData, [ 'relateds' ])
       },
@@ -191,13 +182,6 @@
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], [])
         return (relateds.length > 0)
       },
-      // showSlides() {
-      //   console.log('false');
-      //   return false
-      // },
-      // swiper() {
-      //   return this.$refs.mySwiperA.swiper
-      // },
     },
     beforeMount() {},
     methods: {
@@ -213,11 +197,6 @@
       fbSdkScript.async = true
       fbSdkScript.type = 'text/javascript'
       document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
-
-      // window.onload = (e) => {
-      //   this.showSlides = true
-      // }
-
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})

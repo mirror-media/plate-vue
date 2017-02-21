@@ -1,12 +1,12 @@
 <template>
-    <div class="related-list-container" v-if="ifshow">
-      <div class="list" :style="containerStyle">
-        <div class="title"><h4 :style="titleStyle">相關文章</h4></div>
-        <div class="item" v-for="(o, i) in relateds" v-if="o">
-          <div class="title"><a :href="getHref(o)" v-text="getValue(o, [ 'title' ], '')"></a></div>
-        </div>
+  <div class="related-list-container" v-if="ifshow">
+    <div class="list" :style="containerStyle">
+      <div class="title"><h4 :style="titleStyle">相關文章</h4></div>
+      <div class="item" v-for="(o, i) in relateds" v-if="o">
+        <div class="title"><a :href="getHref(o)" v-text="getValue(o, [ 'title' ], '')"></a></div>
       </div>
     </div>
+  </div>
 </template>
 <script>
   import { SECTION_MAP } from '../../constants'

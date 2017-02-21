@@ -11,7 +11,19 @@
     <main class="article_main">
       <div class="brief" v-html="getContent('brief')"></div>
       <div class="split-line"></div>
-      <div class="content" v-html="getContent('content')"></div>
+      <div class="content">
+        <div v-for="p in contArr">
+          <div v-if="p.type !== 'slideshow'" v-html="paragraphComposer(p)"></div>
+          <div v-else is="app-slider" class="per-slide" :option="sliderOption">
+            <template scope="props">
+              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])">
+                <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
+                <div class="swiper-lazy-preloader"></div>
+              </swiper-slide>
+            </template>
+          </div>
+        </div>
+      </div>
       <div class="article_main_tags">
         <i class="tags_icon"></i>
         <div class="tags" v-text="tags"></div>
@@ -22,14 +34,14 @@
         <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp> -->
       </div>
       <div class="article_main_pop">
-        <pop-list :pop="poplistData"></pop-list>
+        <pop-list :pop="poplistData" />
+      </div>
+      <div>
+        <proj-list :projects="projlistData" />
       </div>
       <div class="article_fb_comment" style="margin: 1.5em 0;">
         <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
       </div>
-        <!-- <slider :pages="pages" :sliderinit="sliderinit" v-show="showSlides"> -->
-          <!-- slot  -->
-        <!-- </slider> -->
     </main>
     <slot name="aside"></slot>
   </div>
@@ -39,12 +51,15 @@ import _ from 'lodash'
 import { SECTION_MAP, DFP_UNITS } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
 import PopList from './PopList.vue'
+import ProjectList from './ProjectList.vue'
+import Slider from '../Slider.vue'
 
 export default {
   components: {
-    'pop-list': PopList
+    'pop-list': PopList,
+    'proj-list': ProjectList,
+    'app-slider': Slider
   },
-
   computed: {
     articleUrl() {
       const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
@@ -61,6 +76,9 @@ export default {
       const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
       const style = { borderLeft: _.get( SECTION_MAP, [sectionId, 'borderLeft'], '7px solid #414141;') }
       return { categoryId, categoryTitle, style }
+    },
+    contArr() {
+      return _.get(this.articleData, [ 'content', 'apiData' ], [])
     },
     credit() {
       const { cameraMan, designers, engineers, photographers, writers } = this.articleData
@@ -100,6 +118,14 @@ export default {
           }
       }
     },
+    sliderOption() {
+      return {
+        paginationable: true,
+        paginationClickable: true,
+        paginationHide: false,
+        setNavBtn: true
+      }
+    },
     title() {
       const { title } = this.articleData
       return title
@@ -108,7 +134,6 @@ export default {
       const { tags } = this.articleData
       return tags.map((o) => (_.get(o, [ 'name' ], ''))).join('、')
     },
-
   },
   methods: {
     getHref,
@@ -147,10 +172,12 @@ export default {
                         <div class="info-box-body">${_.get(o.content, [ 0, 'body' ], '')}</div>
                       </div>
                     </div>`
-          // case 'slideshow':
-          //   return o.content.map((i) => {
-          //     return `<img src=${_.get(i, [ 'url' ], '')} srcset=\"${_.get(i, [ 'mobile', 'url' ], '')} 800w, ${_.get(i, [ 'tablet', 'url' ], '')} 1200w, ${_.get(i, [ 'desktop', 'url' ], '')} 2000w\"/>`
-          //   }).join('')
+          case 'slideshow':
+            // return ``
+            return `<app-slider is="app-slider"></app-slider>`
+            // return o.content.map((i) => {
+            //   return `<img src=${_.get(i, [ 'url' ], '')} srcset=\"${_.get(i, [ 'mobile', 'url' ], '')} 800w, ${_.get(i, [ 'tablet', 'url' ], '')} 1200w, ${_.get(i, [ 'desktop', 'url' ], '')} 2000w\"/>`
+            // }).join('')
           case "quoteby":
             const quoteBody = _.get(o.content, [ 0, 'quote' ], '')
             const quoteBy = _.get(o.content, [ 0, 'quoteBy' ], '')
@@ -178,15 +205,71 @@ export default {
         }
       })
     },
+    paragraphComposer(item) {
+      switch(item.type) {
+        case 'blockquote':
+          return `<blockquote class="quote"><i class="quoteIcon"></i><div class="quote-content">${_.get(item.content, [ 0 ], '')}</div></blockquote>`
+        case 'embeddedcode':
+          return `<div class=\"embedded\">${_.get(item.content, [ 0, 'embeddedCode' ], '')}</div>`
+        case 'header-two':
+          return `<h2>${item.content.toString()}</h2>`
+        case 'image':
+          return `<div class=\"innerImg ${_.get(item.content, [ 0, 'alignment' ], '')}\"><img src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div></div>`
+        case 'infobox':
+          return `<div class="info-box-container ${_.get(item, [ 'alignment' ], '')}">
+                    <span class="info-box-icon"></span>
+                    <div class="info-box">
+                      <div class="info-box-title">${_.get(item.content, [ 0, 'title' ], '')}</div>
+                      <div class="info-box-body">${_.get(item.content, [ 0, 'body' ], '')}</div>
+                    </div>
+                  </div>`
+        case 'slideshow':
+          return `<div class=\"slideshowImg\">
+                    <img data-src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\"
+                         data-srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
+                                       ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
+                                       ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"
+                         class=\"swiper-lazy\"/>
+                  </div>`
+        case "quoteby":
+          const quoteBody = _.get(item.content, [ 0, 'quote' ], '')
+          const quoteBy = _.get(item.content, [ 0, 'quoteBy' ], '')
+          return `<blockquote class="blockquote">
+                    <div class="content">
+                      <span class="triangle"></span><div class="quote-body">${_.get(item.content, [ 0, 'quote' ], '').replace(/\n/g, '<br>')}</div>
+                      ${(quoteBy.length > 0) ? `<div class="quote-by">${quoteBy}</div>` : ``}
+                    </div>
+                  </blockquote>`
+        case 'unordered-list-item':
+          const _liStr = item.content.map((i) => {
+            if(typeof(i) !== 'object') {
+              return `<li>${i}</li>`
+            } else {
+              return i.map((j) => (`<li>${j}</li>`)).join('')
+            }
+          }).join('')
+          return `<ul>${_liStr}</ul>`
+        case 'unstyled':
+          return (item.content.toString().length > 0) ? `<p>${item.content.toString()}</p>` : ''
+        case 'youtube':
+          return `<div class=\"youtube\"><div class=\"youtube-container\"><iframe width=\"560\" alt=\"\" height=\"315\" src=\"https://www.youtube.com/embed/${_.get(item.content, [ 0, 'youtubeId' ], '')}\" frameborder=\"0\" allowfullscreen> </iframe></div></div>`
+        default:
+          return
+      }
+    }
   },
+  mounted() {},
   name: 'article-body',
   props: {
     articleData: {
       default: () => { return {} }
     },
     poplistData: {
-      default: () => { return {} }
+      default: () => { return [] }
     },
+    projlistData: {
+      default: () => { return [] }
+    }
   },
 }
 </script>
@@ -299,7 +382,11 @@ export default {
         color: rgba(65, 65, 65, 0.61);
         p {
           strong {
-            color: #000;
+            color: rgba(65, 65, 65, 0.61);
+            font-weight: normal;
+          }
+          i, cite, em, var, address, dfn {
+            font-style: normal;
           }
         }
       }
@@ -591,6 +678,25 @@ export default {
           .info-box {
             p, ul {
               padding: 0;
+            }
+          }
+        }
+      }
+    }
+    .per-slide {
+      height: 500px;
+      width: 100%;
+      .swiper-wrapper {
+        height: 450px;
+        .swiper-slide {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .slideshowImg {
+            img {
+              width: 100%;
+              object-fit: contain;
+              max-height: 450px;
             }
           }
         }
