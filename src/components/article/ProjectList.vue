@@ -13,7 +13,7 @@
                   </div>
                 </a>
               </div>
-              <div class="proj_item_title" :style="borderLeftStyle(getValue(o, [ 'sections', 0, 'id' ]))">
+              <div class="proj_item_title">
                 <a :href="`https://mirrormedia.mg/projects/${o.slug}`" >
                   {{ getTruncatedVal(o.title, 22) }}
                 </a>
