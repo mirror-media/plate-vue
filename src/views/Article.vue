@@ -4,7 +4,7 @@
       <app-header :commonData= 'commonData'/>
       <div class="article-container">
         <div id="fb-root"></div>
-        <!-- <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full"></vue-dfp> -->
+         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full"></vue-dfp> 
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls

@@ -14,7 +14,8 @@
     <div class="editorChoice-list grid grid-1-fifth">
       <div v-for="(item, index) in editorChoice.items"
             :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
-            :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''">
+            :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
+            @click="jumpToSlideForParent">
         <span v-text="item.title" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
       </div>
     </div>
@@ -53,8 +54,9 @@ export default {
     editorChoice: this.editorChoice
   },
   methods: {
-    jumpToSlide(e) {
-      const targ = e.target
+    jumpToSlide(e, pTarget) {
+      if(!e && !pTarget) { return }
+      const targ = pTarget || e.target
       const targOld = targ.parentNode.getAttribute('class')
       const targSect = targ.getAttribute('section')
       const i = Number(targ.getAttribute('index'))
@@ -66,6 +68,9 @@ export default {
       }
       targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ "borderLeft" ]};`)
       targ.parentNode.setAttribute('class', `${targOld} active`)
+    },
+    jumpToSlideForParent(e) {
+      this.jumpToSlide(null, e.target.children[0])
     },
     getHref,
     getSrcSet(img) {
