@@ -18,9 +18,11 @@ import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../uti
 export default {
   name: 'articleList',
   components: {
-    },
+  },
   props: {
-    articles: {}
+    articles: {
+      default: () => { return {} }
+    }
   },
   methods: {
     getBrief,
@@ -29,6 +31,9 @@ export default {
     getSection,
     getTruncatedVal,
   },
+  mounted() {
+    console.log(this.articles)
+  }
 }
   
 </script>

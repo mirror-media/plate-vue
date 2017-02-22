@@ -93,6 +93,8 @@ export default {
           return this.$route.params.title
         case TOPIC:
           return 'other'
+        default:
+          return 'other'
       }
     },
     sectionStyle () {
@@ -107,6 +109,8 @@ export default {
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['title'] )
           break
+        case TAG: 
+          return this.$route.params.tagName
         case TOPIC:
           return _.get( _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.$route.params.topicId } ), ['name'] )
       }
@@ -122,6 +126,8 @@ export default {
           break
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['id'] )
+        case TAG:
+          return this.$route.params.tagId
         case TOPIC:
           return this.$route.params.topicId
       }
@@ -132,13 +138,6 @@ export default {
       this.page += 1
 
       switch(this.type) {
-        case CATEGORY:
-          fetchArticlesByUuid(this.$store, this.uuid, CATEGORY, { 
-            page: this.page,
-            max_results: MAXRESULT
-          }).then(() => {
-            this.articles = this.$store.state.articlesByUUID
-          })
         case SEARCH:
           fetchSearch(this.$store, this.$route.params.keyword, { 
             page: this.page,
@@ -164,8 +163,8 @@ export default {
                 this.articles = this.$store.state.articlesByUUID
               })
           }
-        case TOPIC:
-          fetchArticlesByUuid(this.$store, this.uuid, TOPIC, { 
+        default:
+          fetchArticlesByUuid(this.$store, this.uuid, this.type, { 
             page: this.page,
             max_results: MAXRESULT
           }).then(() => {
@@ -175,21 +174,14 @@ export default {
     }
   },
   metaInfo () {
-    const title = this.title + ' - 鏡傳媒 Mirror Media'
+    const title = "鏡傳媒 Mirror Media"
+    title = (this.title) ? this.title + ' - ' : title
     return {
       title
     }
   },
   beforeMount () {
     switch(this.type) {
-      case CATEGORY:
-        fetchArticlesByUuid(this.$store, this.uuid, CATEGORY, { 
-          page: PAGE,
-          max_results: MAXRESULT
-        }).then(() => {
-          this.articles = this.$store.state.articlesByUUID
-        })
-        break
       case SEARCH:
         fetchSearch(this.$store, this.$route.params.keyword, { 
           page: PAGE,
@@ -217,14 +209,13 @@ export default {
             })
         }
         break
-      case TOPIC:
-        fetchArticlesByUuid(this.$store, this.uuid, TOPIC, { 
+      default:
+        fetchArticlesByUuid(this.$store, this.uuid, this.type, { 
           page: PAGE,
           max_results: MAXRESULT
         }).then(() => {
           this.articles = this.$store.state.articlesByUUID
         })
-        break
     }
   },
   mounted() {

@@ -60,8 +60,10 @@ export default {
       const i = Number(targ.getAttribute('index'))
       window.refs[ 'editorChoiceSlider' ].slideTo((i + 1), 1000, false)
       const lastTarg = document.querySelector(`.${targOld}.active`)
-      lastTarg.setAttribute('class', `${targOld}`)
-      lastTarg.removeAttribute('style')
+      if(lastTarg) {
+        lastTarg.setAttribute('class', `${targOld}`)
+        lastTarg.removeAttribute('style')
+      }
       targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ "borderLeft" ]};`)
       targ.parentNode.setAttribute('class', `${targOld} active`)
     },
