@@ -1,6 +1,6 @@
 <template>
   <div class="leading">
-    Leading Image
+    　
   </div>
 </template>
 
@@ -21,6 +21,9 @@ export default {
 .leading
   width 100%
   height 700px
-  background-color rgba(69, 123, 157, .5)
+  background-color rgba(135, 156, 169, 0.15)
   margin-bottom 20px
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
 </style>

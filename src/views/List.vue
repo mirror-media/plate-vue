@@ -91,6 +91,26 @@ export default {
     }
   },
   computed: {
+    customCSS () { 
+      switch(this.type) {
+        case SECTION:
+          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['css'], null ) 
+        case TOPIC:
+          return _.get( _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.uuid } ), ['style'], null ) 
+        default:
+          return null
+      }
+    }, 
+    customJS () { 
+      switch(this.type) {
+        case SECTION:
+          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['javascript'], null ) 
+        case TOPIC:
+          return _.get( _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.uuid } ), ['javascript'], null ) 
+        default:
+          return null
+      }
+    },
     hasMore () {
       switch(this.type) {
         case SEARCH:
@@ -157,6 +177,18 @@ export default {
     },
   },
   methods: {
+    insertCustomizedMarkup () {
+      if(this.customCSS) {
+        const custCss = document.createElement('style') 
+        custCss.appendChild(document.createTextNode(this.customCSS)) 
+        document.querySelector('body').appendChild(custCss) 
+      }
+      if(this.customJS) {
+        const custScript = document.createElement('script') 
+        custScript.appendChild(document.createTextNode(this.customJS)) 
+        document.querySelector('body').appendChild(custScript) 
+      }
+    },
     loadMore () {
       this.page += 1
 
@@ -260,7 +292,9 @@ export default {
     }
   },
   mounted() {
-    
+    if(this.type === SECTION || this.type === TOPIC) {
+      this.insertCustomizedMarkup()
+    }
   }
 }
   
