@@ -24,7 +24,11 @@ const store = new Vuex.Store({
 
   actions: {
     FETCH_ARTICLES: ({ commit, state }, { params }) => {
-      return fetchArticles(params).then(articles => commit('SET_ARTICLES', { articles }))
+      let orig = _.values(state.articles['items'])     
+      return fetchArticles(params).then(articles => {
+        articles['items'] = _.concat(orig, _.get(articles, ['items']))
+        commit('SET_ARTICLES', { articles })
+      })
     },
     FETCH_ARTICLES_BY_UUID: ({ commit, state }, { uuid, type, params }) => {
       let orig = _.values(state.articlesByUUID['items'])

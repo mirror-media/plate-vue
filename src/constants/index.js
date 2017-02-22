@@ -55,6 +55,8 @@ export const SOCIAL_LINK = {
   EMAIL: 'mailto:mirror885@mirrormedia.mg'
 }
 
+export const AUTHOR = 'AUTHOR'
+
 export const CATEGORY = 'CATEGORY'
 
 export const SEARCH = 'SEARCH'

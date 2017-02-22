@@ -31,9 +31,6 @@ export default {
     getSection,
     getTruncatedVal,
   },
-  mounted() {
-    console.log(this.articles)
-  }
 }
   
 </script>
