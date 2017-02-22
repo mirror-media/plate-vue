@@ -37,19 +37,21 @@
             </div>
           </div>
         </div>
+        <share-tools />
       </div>
     </template>
   </vue-dfp-provider>
 </template>
 <script>
   import _ from 'lodash'
-  import {  SECTION_MAP, DFP_UNITS } from '../constants'
+  import { DFP_UNITS, SECTION_MAP } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
+  import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
   import store from '../store'
@@ -103,6 +105,7 @@
       'app-header': Header,
       'latest-list': LatestList,
       'related-list': RelatedList,
+      'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
     },
     data() {

@@ -60,7 +60,7 @@
         .pop_item_title {
           background-color: #fff;
           /*border: 1px solid #e0e0e0;*/
-          border-left: 7px solid #414141;
+          border-left: 7px solid rgba(140, 140, 140, 0.18);
           border-top-width: 0;
           line-height: 18px;
           font-size: 13px;
