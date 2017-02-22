@@ -19,7 +19,7 @@
 
 <script>
 
-import { CATEGORY, SEARCH, SECTION, TAG, TOPIC } from '../constants/index'
+import { AUTHOR, CATEGORY, SEARCH, SECTION, TAG, TOPIC } from '../constants/index'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import Footer from '../components/Footer.vue'
@@ -40,6 +40,25 @@ const fetchArticlesByUuid = (store, uuid, type, params) => {
     'uuid': uuid,
     'type': type,
     'params': params
+  })
+}
+
+const fetchArticlesByAuthor = (store, uuid, params) => {
+  return store.dispatch('FETCH_ARTICLES', {
+    params: Object.assign({
+      page: PAGE,
+      max_results: MAXRESULT,
+      where: {
+        '$or' : [
+          { writers: uuid },
+          { photographers: uuid },
+          { camera_man: uuid },
+          { designers: uuid },
+          { engineers: uuid }
+        ]
+      },
+      sort: '-publishedDate'
+    }, params)
   })
 }
 
@@ -93,6 +112,8 @@ export default {
           return this.$route.params.title
         case TOPIC:
           return 'other'
+        default:
+          return 'other'
       }
     },
     sectionStyle () {
@@ -100,6 +121,8 @@ export default {
     },
     title () {
       switch(this.type) {
+        case AUTHOR:
+          return this.$route.params.authorName
         case CATEGORY:
           return _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['title'] )
         case SEARCH:
@@ -107,6 +130,8 @@ export default {
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['title'] )
           break
+        case TAG: 
+          return this.$route.params.tagName
         case TOPIC:
           return _.get( _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.$route.params.topicId } ), ['name'] )
       }
@@ -116,12 +141,16 @@ export default {
     },
     uuid () {
       switch(this.type) {
+        case AUTHOR:
+          return this.$route.params.authorId
         case CATEGORY:
           return _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['id'] )
         case SEARCH:
           break
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['id'] )
+        case TAG:
+          return this.$route.params.tagId
         case TOPIC:
           return this.$route.params.topicId
       }
@@ -132,13 +161,13 @@ export default {
       this.page += 1
 
       switch(this.type) {
-        case CATEGORY:
-          fetchArticlesByUuid(this.$store, this.uuid, CATEGORY, { 
-            page: this.page,
-            max_results: MAXRESULT
+        case AUTHOR:
+          fetchArticlesByAuthor(this.$store, this.uuid, { 
+            page: this.page
           }).then(() => {
-            this.articles = this.$store.state.articlesByUUID
+            this.articles = this.$store.state.articles          
           })
+          break
         case SEARCH:
           fetchSearch(this.$store, this.$route.params.keyword, { 
             page: this.page,
@@ -146,6 +175,7 @@ export default {
           }).then(() => {
             this.articles = this.$store.state.searchResult
           })
+          break
         case SECTION:
           switch (this.sectionStyle) {
             case 'full':
@@ -156,6 +186,7 @@ export default {
               }).then(() => {
                 this.articles = this.$store.state.articlesByUUID
               })
+              break
             default:
               fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
                 page: this.page,
@@ -164,8 +195,9 @@ export default {
                 this.articles = this.$store.state.articlesByUUID
               })
           }
-        case TOPIC:
-          fetchArticlesByUuid(this.$store, this.uuid, TOPIC, { 
+          break
+        default:
+          fetchArticlesByUuid(this.$store, this.uuid, this.type, { 
             page: this.page,
             max_results: MAXRESULT
           }).then(() => {
@@ -175,19 +207,19 @@ export default {
     }
   },
   metaInfo () {
-    const title = this.title + ' - 鏡傳媒 Mirror Media'
+    let title = "鏡傳媒 Mirror Media"
+    title = (this.title) ? this.title + ' - ' + title : title
     return {
       title
     }
   },
   beforeMount () {
     switch(this.type) {
-      case CATEGORY:
-        fetchArticlesByUuid(this.$store, this.uuid, CATEGORY, { 
-          page: PAGE,
-          max_results: MAXRESULT
-        }).then(() => {
-          this.articles = this.$store.state.articlesByUUID
+      case AUTHOR:
+        fetchArticlesByAuthor(this.$store, this.uuid, { 
+            page: this.page
+          }).then(() => {
+          this.articles = this.$store.state.articles          
         })
         break
       case SEARCH:
@@ -208,6 +240,7 @@ export default {
             }).then(() => {
               this.articles = this.$store.state.articlesByUUID
             })
+            break
           default:
             fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
               page: PAGE,
@@ -217,14 +250,13 @@ export default {
             })
         }
         break
-      case TOPIC:
-        fetchArticlesByUuid(this.$store, this.uuid, TOPIC, { 
+      default:
+        fetchArticlesByUuid(this.$store, this.uuid, this.type, { 
           page: PAGE,
           max_results: MAXRESULT
         }).then(() => {
           this.articles = this.$store.state.articlesByUUID
         })
-        break
     }
   },
   mounted() {

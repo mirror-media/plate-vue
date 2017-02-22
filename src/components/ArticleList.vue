@@ -18,9 +18,11 @@ import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../uti
 export default {
   name: 'articleList',
   components: {
-    },
+  },
   props: {
-    articles: {}
+    articles: {
+      default: () => { return {} }
+    }
   },
   methods: {
     getBrief,

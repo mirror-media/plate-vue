@@ -9,7 +9,19 @@
     <div class="article_title"><h2 v-text="title"></h2></div>
     <div class="article_credit" v-html="credit"></div>
     <main class="article_main">
-      <div class="brief" v-html="getContent('brief')"></div>
+      <div class="brief">
+        <div v-for="p in briefArr">
+          <div v-if="p.type !== 'slideshow'" v-html="paragraphComposer(p)"></div>
+          <div v-else is="app-slider" class="per-slide" :option="sliderOption">
+            <template scope="props">
+              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])">
+                <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
+                <div class="swiper-lazy-preloader"></div>
+              </swiper-slide>
+            </template>
+          </div>
+        </div>        
+      </div>
       <div class="split-line"></div>
       <div class="content">
         <div v-for="p in contArr">
@@ -24,9 +36,9 @@
           </div>
         </div>
       </div>
-      <div class="article_main_tags">
+      <div class="article_main_tags" v-if="tags.length > 0">
         <i class="tags_icon"></i>
-        <div class="tags" v-text="tags"></div>
+        <div class="tags" v-html="tags"></div>
       </div>
       <div class="split-line"></div>
       <div style="display: flex; justify-content: space-around;">
@@ -70,6 +82,9 @@ export default {
       // return 'photography'
 
     },
+    briefArr() {
+      return _.get(this.articleData, [ 'brief', 'apiData' ], [])
+    },
     category() {
       const categoryId =  _.get(this.articleData, [ 'categories', 0, 'id' ])
       const categoryTitle =  _.get(this.articleData, [ 'categories', 0, 'title' ])
@@ -82,11 +97,11 @@ export default {
     },
     credit() {
       const { cameraMan, designers, engineers, photographers, writers } = this.articleData
-      const creditWriterStr = (writers.length > 0) ? '文｜' + writers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditWriterStr = (writers.length > 0) ? '文｜' + writers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
       return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
       return ''
     },
@@ -132,79 +147,15 @@ export default {
     },
     tags() {
       const { tags } = this.articleData
-      return tags.map((o) => (_.get(o, [ 'name' ], ''))).join('、')
+      return tags.map((o) => {
+        return `<a href=\"/tag/${_.get(o, [ 'id' ], '')}/${_.get(o, [ 'name' ], '')}\">${_.get(o, [ 'name' ], '')}</a>`
+      }).join('、')
     },
   },
   methods: {
     getHref,
     getTruncatedVal,
     getValue,
-    getContent(targ) {
-      const { brief : { apiData: briefApiData = [] }, content : { apiData: ContentApiData = [] }, tags, title } = this.articleData
-      // console.log('this.data.popularlist:', this.data.popularlist);
-      let paragraphs = []
-      switch(targ) {
-        case 'brief':
-          paragraphs = this.getParagraphs(briefApiData)
-          break;
-        case 'content':
-          paragraphs = this.getParagraphs(ContentApiData)
-          break;
-      }
-      return paragraphs.join('')
-    },
-    getParagraphs(data) {
-      return data.map((o) => {
-        switch(o.type) {
-          case 'blockquote':
-            return `<blockquote class="quote"><i class="quoteIcon"></i><div class="quote-content">${_.get(o.content, [ 0 ], '')}</div></blockquote>`
-          case 'embeddedcode':
-            return `<div class=\"embedded\">${_.get(o.content, [ 0, 'embeddedCode' ], '')}</div>`
-          case 'header-two':
-            return `<h2>${o.content.toString()}</h2>`
-          case 'image':
-            return `<div class=\"innerImg ${_.get(o.content, [ 0, 'alignment' ], '')}\"><img src=${_.get(o.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(o.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(o.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(o.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(o.content, [ 0, 'description' ], '')}</div></div>`
-          case 'infobox':
-            return `<div class="info-box-container ${_.get(o, [ 'alignment' ], '')}">
-                      <span class="info-box-icon"></span>
-                      <div class="info-box">
-                        <div class="info-box-title">${_.get(o.content, [ 0, 'title' ], '')}</div>
-                        <div class="info-box-body">${_.get(o.content, [ 0, 'body' ], '')}</div>
-                      </div>
-                    </div>`
-          case 'slideshow':
-            // return ``
-            return `<app-slider is="app-slider"></app-slider>`
-            // return o.content.map((i) => {
-            //   return `<img src=${_.get(i, [ 'url' ], '')} srcset=\"${_.get(i, [ 'mobile', 'url' ], '')} 800w, ${_.get(i, [ 'tablet', 'url' ], '')} 1200w, ${_.get(i, [ 'desktop', 'url' ], '')} 2000w\"/>`
-            // }).join('')
-          case "quoteby":
-            const quoteBody = _.get(o.content, [ 0, 'quote' ], '')
-            const quoteBy = _.get(o.content, [ 0, 'quoteBy' ], '')
-            return `<blockquote class="blockquote">
-                      <div class="content">
-                        <span class="triangle"></span><div class="quote-body">${_.get(o.content, [ 0, 'quote' ], '').replace(/\n/g, '<br>')}</div>
-                        ${(quoteBy.length > 0) ? `<div class="quote-by">${quoteBy}</div>` : ``}
-                      </div>
-                    </blockquote>`
-          case 'unordered-list-item':
-            const _liStr = o.content.map((i) => {
-              if(typeof(i) !== 'object') {
-                return `<li>${i}</li>`
-              } else {
-                return i.map((j) => (`<li>${j}</li>`)).join('')
-              }
-            }).join('')
-            return `<ul>${_liStr}</ul>`
-          case 'unstyled':
-            return (o.content.toString().length > 0) ? `<p>${o.content.toString()}</p>` : ''
-          case 'youtube':
-            return `<div class=\"youtube\"><div class=\"youtube-container\"><iframe width=\"560\" alt=\"\" height=\"315\" src=\"https://www.youtube.com/embed/${_.get(o.content, [ 0, 'youtubeId' ], '')}\" frameborder=\"0\" allowfullscreen> </iframe></div></div>`
-          default:
-            return
-        }
-      })
-    },
     paragraphComposer(item) {
       switch(item.type) {
         case 'blockquote':
@@ -371,8 +322,14 @@ export default {
         }
         .tags {
           display: inline-block;
-          color: #afb0b2;
+          color: rgba(2, 2, 2, 0.5);
           font-size: 18px;
+          a, a:hover, a:link, a:visited {
+            color: rgba(2, 2, 2, 0.5);
+            text-decoration: none;
+            cursor: pointer;
+            border-bottom: none;
+          }
         }
       }
       .brief {
