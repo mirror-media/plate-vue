@@ -43,7 +43,7 @@
         document.querySelector('body').appendChild(custCss)
 
 
-        window.onscroll = (e) => {
+        window.addEventListener('scroll', (e) => {
           if(!relatedDom) { return }
           const currTop = currentYPosition()
           const currBottom = currentYPosition() + tHtml.clientHeight
@@ -76,10 +76,10 @@
             window.relatedWidth = relatedDom.offsetWidth
             window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
           }
-        }
-        window.onresize = (e) => {
+        })
+        window.addEventListener('resize', (e) => {
           this.updateRelatedListStyle()
-        }
+        })
       },
       getBrief(rawBrief) {
         return truncate(sanitizeHtml(rawBrief, { allowedTags: [ 'em' ] }), 70)

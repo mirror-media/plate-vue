@@ -12,23 +12,21 @@
         const header = document.querySelector('.header')
         const article = document.querySelector('.article')
         const shareBox = document.querySelector('.share-toolbox')
-        window.onscroll = () => {
+        window.addEventListener('scroll', () => {
           if(window.shareBoxLeft && window.shareBoxTop) {
             
           } else {
             window.shareBoxTop = header.offsetTop + header.offsetHeight
             window.shareBoxLeft = article.offsetLeft - shareBox.offsetWidth
-            console.log([ window.shareBoxLeft, article.offsetLeft, shareBox.offsetWidth ])
             shareBox.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)
           }
-        }
-        window.onresize = () => {
+        })
+        window.addEventListener( 'resize',  () => {
           shareBox.removeAttribute('styel')
           window.shareBoxTop = header.offsetTop + header.offsetHeight
           window.shareBoxLeft = article.offsetLeft - shareBox.offsetWidth
-          console.log([ window.shareBoxLeft, article.offsetLeft, shareBox.offsetWidth ])
           shareBox.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)
-        }
+        })
       },
       shareLine() {
         let _thisTitle = document.querySelector('meta[property="og:title"]').getAttribute('content');

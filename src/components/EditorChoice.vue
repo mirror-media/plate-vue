@@ -12,12 +12,12 @@
       </template>
     </app-slider>
     <div class="editorChoice-list grid grid-1-fifth">
-      <div v-for="(item, index) in editorChoice.items"
+      <a v-for="(item, index) in editorChoice.items" :href="getHref(item)"  target="_blank"
             :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
             :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
             @click="jumpToSlideForParent">
         <span v-text="item.title" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
-      </div>
+      </a>
     </div>
   </section>
 </template>
@@ -41,7 +41,12 @@ export default {
     sliderOption() {
       return {
         setNavBtn: false,
-        grabCursor: false
+        grabCursor: false,
+        autoplay : 5000,
+        autoplayDisableOnInteraction: false,
+        onSlideChangeStart: (swiper) => {
+          this.updateNavStatus(swiper.activeIndex)
+        }
       }
     },
   },
@@ -71,6 +76,19 @@ export default {
     },
     jumpToSlideForParent(e) {
       this.jumpToSlide(null, e.target.children[0])
+    },
+    updateNavStatus(ind) {
+      const index = (ind !== 6 ) ? (ind % 6) : 1
+      const targ = document.querySelector(`.editorChoice-list__item span[index="${(index - 1)}"]`)
+      const targOld = targ.parentNode.getAttribute('class')
+      const targSect = targ.getAttribute('section')
+      const lastTarg = document.querySelector(`.${targOld}.active`)
+      if(lastTarg) {
+        lastTarg.setAttribute('class', `${targOld}`)
+        lastTarg.removeAttribute('style')        
+      }
+      targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ "borderLeft" ]};`)
+      targ.parentNode.setAttribute('class', `${targOld} active`)
     },
     getHref,
     getSrcSet(img) {
