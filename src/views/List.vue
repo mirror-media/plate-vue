@@ -1,31 +1,39 @@
 <template>
-  <div class="list-view">
-    <app-header :commonData= 'commonData' />
-    <leading v-if="type == 'TOPIC'"/>
-    <div v-if="type !== 'TOPIC'" id="dfp-test" class="dfp-test">DFP 970 X 250</div>
-    <div class="list-title container" :class="section">
-      <span class="list-title__text" v-text="title"></span>
-      <div class="list-title__colorBlock" :class="section"></div>
-    </div>
-    <article-list :articles='articles.items' />
-    <section class="container">
-      <more v-if="hasMore" v-on:loadMore="loadMore" />
-    </more>
-    <section class="footer container">
-      <app-footer/>
-    </app-footer>
-  </div>
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
+    <template scope="props" slot="dfpPos">
+      <div class="list-view">
+        <app-header :commonData= 'commonData' />
+        <leading v-if="type == 'TOPIC'"/>
+        <!--<div v-if="type !== 'TOPIC'" id="dfp-test" class="dfp-test"></div>-->
+        <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" /> 
+        <div class="list-title container" :class="section">
+          <span class="list-title__text" v-text="title"></span>
+          <div class="list-title__colorBlock" :class="section"></div>
+        </div>
+        <article-list :articles='articles.items' />
+        <section class="container">
+          <more v-if="hasMore" v-on:loadMore="loadMore" />
+        </section>
+        <section class="footer container">
+          <vue-dfp :is="props.vueDfp" pos="SPCFT" :dfpUnits="props.dfpUnits" :section="props.section" />
+          <app-footer />
+        </section>
+      </div>
+    </template>
+  </vue-dfp-provider>
 </template>
 
 <script>
 
 import { AUTHOR, CATEGORY, SEARCH, SECTION, TAG, TOPIC } from '../constants/index'
+import { DFP_ID, DFP_UNITS } from '../constants'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import Leading from '../components/Leading.vue'
 import More from '../components/More.vue'
+import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
 import truncate from 'truncate'
 
 const MAXRESULT = 12
@@ -82,11 +90,14 @@ export default {
     'article-list': ArticleList,
     'leading': Leading,
     'more': More,
+    VueDfpProvider
   },
   data () {
     return {
       articles: {},
       commonData: this.$store.state.commonData,
+      dfpid: DFP_ID,
+      dfpUnits: DFP_UNITS,
       page: PAGE,
     }
   },
@@ -135,6 +146,18 @@ export default {
         default:
           return 'other'
       }
+    },
+    sectionId() {
+      switch(this.type) {
+        case CATEGORY:
+          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), (s) => { 
+            return _.find(s.categories, { 'id': this.uuid })
+          }), ['id'], 'home')
+        case SECTION:
+          return this.uuid
+        default:
+          return 'home'
+      }      
     },
     sectionStyle () {
       return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['style'] )
@@ -317,6 +340,7 @@ $color-other = #bcbcbc
       position: relative
       align-items: center
       flex-direction row
+      margin-top 40px
 
     &__text
       font-size 3rem
