@@ -223,7 +223,7 @@ $color-other = #bcbcbc
   &-content
     display none
     position: absolute
-    z-index: 1
+    z-index: 10
     width 110px
     color #fff
     background-color: #333
