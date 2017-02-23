@@ -1,10 +1,10 @@
 <template>
-  <vue-dfp-provider>
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
       <app-header :commonData= 'commonData'/>
       <div class="article-container">
         <div id="fb-root"></div>
-         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full"></vue-dfp> 
+         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
@@ -24,16 +24,16 @@
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist">
             <aside class="article_aside" slot="aside" v-if="(articleStyle !== 'photography')">
-              <!-- <vue-dfp :is="props.vueDfp" pos="PCR1"></vue-dfp> -->
+               <vue-dfp :is="props.vueDfp" pos="PCR1" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
-              <!-- <vue-dfp :is="props.vueDfp" pos="PCR2"></vue-dfp> -->
+               <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
               <related-list :relateds="relateds" :ifshow="showRelated"></related-list>
             </aside>
           </article-body>
           <div class="article_footer">
-            <!-- <vue-dfp :is="props.vueDfp" pos="PCFT" dimensions="970x90"></vue-dfp> -->
+            <vue-dfp :is="props.vueDfp" pos="PCFT" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
             <div style="width: 100%; height: 100%;">
-              <app-footer></app-footer>
+              <app-footer />
             </div>
           </div>
         </div>
@@ -44,7 +44,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_UNITS, SECTION_MAP } from '../constants'
+  import { DFP_ID, DFP_UNITS, SECTION_MAP } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import Footer from '../components/Footer.vue'
@@ -110,41 +110,17 @@
     },
     data() {
       return {
+        articleData: _.get(this.$store, [ 'state', 'articles', 'items', 0 ]),
         commonData: this.$store.state.commonData,
-        dfpConst: {
-          adUnitPath: '/421342134/test_pc_np_ap_970x250_HD',
-          adSize: [ [ 970, 250 ] ],
-          adElementId: 'test_pc_np_ap_970x250_HD'
-        },
+        dfpid: DFP_ID,
+        dfpUnits: DFP_UNITS,
         editorChoice: this.$store.state.editorChoice,
         latestArticle: this.$store.state.latestArticle,
+        // sectionId: _.get(this.articleData, [ 'sections', 0, 'id' ], ''),
         state: {},
-        pages:[
-          {
-            title: '',
-            style:{
-             background:'url(https://www.mirrormedia.mg/assets/images/20161004150408-ca738362e4bac35397aed564f47fd308-tablet.jpg)'
-            }
-          },
-          {
-           title: '',
-           style:{
-            background:'url(https://storage.googleapis.com/mirrormedia-files/assets/images/20161004150331-21776ff51173ea2320f015cbc50a270f-desktop.png)'
-            }
-          },
-          {
-            title: 'slide3',
-            style:{
-              background:'#4bbfc3',
-            },
-          }
-        ],
       }
     },
     computed: {
-      articleData() {
-        return _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-      },
       articleStyle() {
         return _.get(this.articleData, [ 'style' ], '')
       },
@@ -180,6 +156,9 @@
       },
       relateds() {
         return _.get(this.articleData, [ 'relateds' ])
+      },
+      sectionId() {
+        return _.get(this.articleData, [ 'sections', 0, 'id' ], '')
       },
       showRelated() {
         const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], [])

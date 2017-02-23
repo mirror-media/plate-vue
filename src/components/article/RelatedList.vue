@@ -58,14 +58,17 @@
           }
 
           if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
-            const footerTop = elmYPosition('.article_footer > div:first-child')
+            // const footerTop = elmYPosition('.article_footer > div:first-child')
+            const footerTop = elmYPosition('.article_footer')            
             relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             if(footerTop < (currTop + relatedDom.clientHeight + 50)) {
               relatedDom.setAttribute('style', 'position: fixed; top: ' + (footerTop - (currTop + relatedDom.clientHeight + 50)) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             }
           } else if(window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
-            const footerTop = elmYPosition('.article_footer > div:first-child')
+            // const footerTop = elmYPosition('.article_footer > div:first-child')
+            const footerTop = elmYPosition('.article_footer')
             relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
+            console.log([footerTop, currBottom + 50])
             if(footerTop < (currBottom + 50)) {
               relatedDom.setAttribute('style', 'position: fixed; bottom: ' + ((currBottom + 50) - footerTop) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             }
@@ -104,7 +107,8 @@
           window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
           relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
         } else if(window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
-          const footerTop = elmYPosition('.article_footer > div:first-child')
+          const footerTop = elmYPosition('.article_footer')
+          // const footerTop = elmYPosition('.article_footer > div:first-child')
           relatedDom.removeAttribute('style')
           window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
           relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')

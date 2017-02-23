@@ -1,25 +1,33 @@
 <template>
-  <div class="section-view">
-    <app-Header :commonData= 'commonData' />
-    <div id="dfp-test" class="dfp-test">DFP 970 X 250</div>
-    <editor-choice :editorChoice= 'editorChoice'/>
-    <section class="container list">
-      <latest-article :latestArticle= 'latestArticle'/>
-      <latest-project :project= 'commonData.projects.items' />
-    </section>
-    <loading :show="loading" />
-    <section class="container">
-      <more v-if="hasMore" v-on:loadMore="loadMore" />
-    </section>
-    <section class="container">
-      <app-footer></app-footer>
-    </section>
-  </div>
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home">
+    <template scope="props" slot="dfpPos">
+      <div class="section-view">
+        <app-Header :commonData= 'commonData' />
+        <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
+        <!--<div id="dfp-test" class="dfp-test">-->
+        </div>
+        <editor-choice :editorChoice= 'editorChoice'/>
+        <section class="container list">
+          <latest-article :latestArticle= 'latestArticle'/>
+          <latest-project :project= 'commonData.projects.items' />
+        </section>
+        <loading :show="loading" />
+        <section class="container">
+          <more v-if="hasMore" v-on:loadMore="loadMore" />
+        </section>
+        <section class="container">
+          <vue-dfp :is="props.vueDfp" pos="SPCFT" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
+          <app-footer />
+        </section>
+      </div>
+    </template>
+  </vue-dfp-provider>
 </template>
 
 <script>
 
 import { currentYPosition, elmYPosition } from 'kc-scroll'
+import { DFP_ID, DFP_UNITS } from '../constants'
 import _ from 'lodash'
 import EditorChoice from '../components/EditorChoice.vue'
 import Footer from '../components/Footer.vue'
@@ -28,6 +36,7 @@ import LatestArticle from '../components/LatestArticle.vue'
 import LatestProject from '../components/LatestProject.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
+import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
 import truncate from 'truncate'
 
 const MAXRESULT = 15
@@ -57,11 +66,14 @@ export default {
     'latest-article': LatestArticle,
     'latest-project': LatestProject,
     'loading': Loading,
-    'more': More
+    'more': More,
+    VueDfpProvider
   },
   data () {
     return {
       commonData: this.$store.state.commonData,
+      dfpid: DFP_ID,
+      dfpUnits: DFP_UNITS,
       editorChoice: this.$store.state.editorChoice,
       hasScrollLoadMore: false,
       loading: false,
@@ -113,6 +125,8 @@ export default {
   
 </script>
 <style lang="stylus" scoped>
+.editorChoice
+  margin-top 40px
 .section-view
   box-sizing border-box
   h2 

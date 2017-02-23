@@ -1,6 +1,6 @@
 <template>
   <div class="share-toolbox">
-    <div class="item mm-icon"></div>
+    <div class="item mm-icon" @click="goHome"></div>
     <div class="item line" @click="shareLine"></div>
     <div class="item facebook" @click="shareFacebook"></div>
   </div>
@@ -19,10 +19,8 @@
           const currTop = currentYPosition()
           const headerLogoBtm = elmYPosition('.header-logoSearch') + headerLogo.clientHeight
           if(currTop > headerLogoBtm) {
-            // sbLoo.setAttribute('style', 'display: block; height: 30px;')
             sbLoo.setAttribute('class', 'item mm-icon active')
           } else {
-            // sbLoo.removeAttribute('style')
             sbLoo.setAttribute('class', 'item mm-icon')            
           }
           if(window.shareBoxLeft && window.shareBoxTop) {
@@ -39,6 +37,9 @@
           window.shareBoxLeft = article.offsetLeft - shareBox.offsetWidth
           shareBox.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)
         })
+      },
+      goHome() {
+        window.location.href = '/'
       },
       shareLine() {
         let _thisTitle = document.querySelector('meta[property="og:title"]').getAttribute('content');

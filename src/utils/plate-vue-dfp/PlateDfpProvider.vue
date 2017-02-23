@@ -1,12 +1,10 @@
 <template>
   <div>
-    <slot name="dfpPos" :vueDfp="dfpPos"></slot>
+    <slot name="dfpPos" :vueDfp="dfpPos" :dfpUnits="dfpUnits" :section="section"></slot>
   </div>
 </template>
 <script>
-  import { DFP_ID, DFP_UNITS } from '../../constants'
   import VueDfp from './PlateDfp.vue'
-
   export default {
     components: {
       'vue-dfp': VueDfp
@@ -23,14 +21,14 @@
         installed: false
       }
     },
-    name: 'dfp-provider',
+    name: 'vue-dfp-provider',
     methods: {
       defineDfp() {
         document.querySelectorAll('.ad-container').forEach((slot) => {
-          // if (slot.style.display === 'block') {
-            googletag.defineSlot(`/${DFP_ID}/${DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ slot.getAttribute('pos') ][ 'aduid' ]}`, this.getDimensions(DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ slot.getAttribute('pos') ][ 'dimensions' ]), DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ slot.getAttribute('pos') ][ 'aduid' ]).addService(googletag.pubads());
-            googletag.display(DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ slot.getAttribute('pos') ][ 'aduid' ]);
-          // }
+            googletag.defineSlot(`/${this.dfpid}/${this.dfpUnits[ this.section ][ slot.getAttribute('pos') ][ 'aduid' ]}`
+                                  , this.getDimensions(this.dfpUnits[ this.section ][ slot.getAttribute('pos') ][ 'dimensions' ])
+                                  , this.dfpUnits[ this.section ][ slot.getAttribute('pos') ][ 'aduid' ]).addService(googletag.pubads());
+            googletag.display(this.dfpUnits[ this.section ][ slot.getAttribute('pos') ][ 'aduid' ]);
         })
       },
       loadDfp() {
@@ -197,14 +195,23 @@
     mounted() {
       this.loadDfp()
       window.addEventListener('load', (e) => {
-        // this.loadDfp().then(() => {
-          this.initDfp()
-          this.defineDfp()
-        // })
+        this.initDfp()
+        this.defineDfp()
       })
       document.addEventListener('DOMContentLoaded', () => {
       })
 
+    },
+    props: {
+      dfpid: {
+        default: () => { return '' }
+      },
+      dfpUnits: {
+        default: () => { return {} }
+      },
+      section: {
+        default: () => { return '' }
+      },
     }
   }
 </script>
