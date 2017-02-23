@@ -1,4 +1,9 @@
-dist
+
+/*
+!/dist
+/dist/*
+!/dist/asset
+
 node_modules
 npm-debug.log*
 debug.log
