@@ -8,20 +8,22 @@ export const  SECTION_MAP = {
 }
 
 export const DFP_UNITS = {
-  'PCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
-  'PCR1': { 'aduid':'test_mobile_np_ap_300x250_AT1', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'center' ] },
-  'PCR2': { 'aduid':'test_pc_np_ap_300x600_R2', 'dimensions':'300x250,300x600', 'cont-class':[ 'ad-container', 'center' ] },
-  'PCAR': { 'aduid':'test_pc_np_ap_640x390_IR', 'dimensions':'640x390', 'cont-class':[ 'ad-container' ] },
-  'PCE1': { 'aduid':'test_pc_np_ap_300x250_E1', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'margin-top-30px' ] },
-  'PCE2': { 'aduid':'mm_pc_hp_300x250_1st', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'margin-top-30px' ] },
-  'PCFT': { 'aduid':'test_pc_np_ap_970x90_FT', 'dimensions':'970x90,970x90', 'cont-class':[ 'ad-container' ] },
-  'MBHD': { 'aduid':'test_mobile_np_ap_300x250_HD', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-  'MBAR1': { 'aduid':'test_mobile_np_ap_300x250_AT1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-  'MBAR2': { 'aduid':'test_mobile_np_ap_300x250_AT2', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-  'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-  'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-  'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-  'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container' ] }
+  '57e1e0e5ee85930e00cad4e9': {
+    'PCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
+    'PCR1': { 'aduid':'test_mobile_np_ap_300x250_AT1', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'center' ] },
+    'PCR2': { 'aduid':'test_pc_np_ap_300x600_R2', 'dimensions':'300x250,300x600', 'cont-class':[ 'ad-container', 'center' ] },
+    'PCAR': { 'aduid':'test_pc_np_ap_640x390_IR', 'dimensions':'640x390', 'cont-class':[ 'ad-container' ] },
+    'PCE1': { 'aduid':'test_pc_np_ap_300x250_E1', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'margin-top-30px' ] },
+    'PCE2': { 'aduid':'mm_pc_hp_300x250_1st', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'margin-top-30px' ] },
+    'PCFT': { 'aduid':'test_pc_np_ap_970x90_FT', 'dimensions':'970x90,970x90', 'cont-class':[ 'ad-container' ] },
+    'MBHD': { 'aduid':'test_mobile_np_ap_300x250_HD', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
+    'MBAR1': { 'aduid':'test_mobile_np_ap_300x250_AT1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
+    'MBAR2': { 'aduid':'test_mobile_np_ap_300x250_AT2', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
+    'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
+    'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
+    'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container' ] }
+  }
 }
 
 export const DFP_ID = '40175602'

@@ -28,8 +28,8 @@
       defineDfp() {
         document.querySelectorAll('.ad-container').forEach((slot) => {
           // if (slot.style.display === 'block') {
-            googletag.defineSlot(`/${DFP_ID}/${DFP_UNITS[ slot.getAttribute('pos') ][ 'aduid' ]}`, this.getDimensions(DFP_UNITS[ slot.getAttribute('pos') ][ 'dimensions' ]), DFP_UNITS[ slot.getAttribute('pos') ][ 'aduid' ]).addService(googletag.pubads());
-            googletag.display(DFP_UNITS[ slot.getAttribute('pos') ][ 'aduid' ]);
+            googletag.defineSlot(`/${DFP_ID}/${DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ slot.getAttribute('pos') ][ 'aduid' ]}`, this.getDimensions(DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ slot.getAttribute('pos') ][ 'dimensions' ]), DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ slot.getAttribute('pos') ][ 'aduid' ]).addService(googletag.pubads());
+            googletag.display(DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ slot.getAttribute('pos') ][ 'aduid' ]);
           // }
         })
       },

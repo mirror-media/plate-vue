@@ -1,18 +1,30 @@
 <template>
   <div class="share-toolbox">
+    <div class="item mm-icon"></div>
     <div class="item line" @click="shareLine"></div>
     <div class="item facebook" @click="shareFacebook"></div>
   </div>
 </template>
 <script>
-  import { elmYPosition } from 'kc-scroll'
+  import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
   export default {
     methods: {
       fixToolBox() {
-        const header = document.querySelector('.header')
         const article = document.querySelector('.article')
+        const header = document.querySelector('.header')
+        const headerLogo = document.querySelector('.header-logoSearch')
         const shareBox = document.querySelector('.share-toolbox')
+        const sbLoo = document.querySelector('.share-toolbox .mm-icon')
         window.addEventListener('scroll', () => {
+          const currTop = currentYPosition()
+          const headerLogoBtm = elmYPosition('.header-logoSearch') + headerLogo.clientHeight
+          if(currTop > headerLogoBtm) {
+            // sbLoo.setAttribute('style', 'display: block; height: 30px;')
+            sbLoo.setAttribute('class', 'item mm-icon active')
+          } else {
+            // sbLoo.removeAttribute('style')
+            sbLoo.setAttribute('class', 'item mm-icon')            
+          }
           if(window.shareBoxLeft && window.shareBoxTop) {
             
           } else {
@@ -56,19 +68,38 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.4);
       cursor: pointer;
       &.line {
-        background-image: url(https://mirrormedia.mg//asset/icon/line_white.png);
+        background-image: url(https://mirrormedia.mg/asset/icon/line_white.png);
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 85%;
       }
       &.facebook {
-        background-image: url(https://mirrormedia.mg//asset/icon/facebook_white.png);
+        background-image: url(https://mirrormedia.mg/asset/icon/facebook_white.png);
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 35%;        
       }
+      &.mm-icon {
+        background-image: url(/dist/asset/icon/mirrorlogo-2017.jpg);
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;   
+        -webkit-transition: height 0.25s, opacity 0.25s; /* For Safari 3.1 to 6.0 */
+        transition: height 0.25s, opacity 0.25s;
+        height: 0;
+        opacity: 0;
+        border-bottom: none;
+        &.active {
+          height: 30px;
+          opacity: 1;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+        } 
+      }
       &:last-child {
         border-bottom: none;
+      }
+      &:hover {
+        background-color: #064f77;
       }
     }
   }

@@ -6,10 +6,10 @@
   export default {
     computed: {
       adunit() {
-        return DFP_UNITS[ this.pos ][ 'aduid' ]
+        return DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ this.pos ][ 'aduid' ]
       },
       className() {
-        return DFP_UNITS[ this.pos ][ 'cont-class' ].join(' ')
+        return DFP_UNITS[ '57e1e0e5ee85930e00cad4e9' ][ this.pos ][ 'cont-class' ].join(' ')
       },
     },
     name: 'ad-container',
