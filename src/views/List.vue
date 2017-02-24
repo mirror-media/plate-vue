@@ -67,6 +67,13 @@ const fetchTopicByUuid = (store, uuid) => {
   })
 }
 
+const fetchTopicImagesByUuid = (store, uuid, type, params) => {
+  return store.dispatch('FETCH_IMAGES', { 
+    'uuid': uuid,
+    'type': type,
+    'params': params
+  })
+}
 const fetchArticlesByAuthor = (store, uuid, params) => {
   return store.dispatch('FETCH_ARTICLES', {
     params: Object.assign({
@@ -99,7 +106,11 @@ const fetchData = (store) => {
     if(_type === TOPIC) {
       const _uuid = store.state.route.params.topicId
       const _topic = _.find( _.get(store.state.commonData, ['topics', 'items']), { 'id': _uuid } )
-      return (!_topic) ? fetchTopicByUuid(store, _uuid) : null
+      return (!_topic) ? fetchTopicByUuid(store, _uuid).then(() => {
+        return fetchTopicImagesByUuid(store, _uuid, _type, {
+          max_results: 25
+        })
+      }) : null
     } else {
       return
     }
@@ -208,7 +219,9 @@ export default {
     },
     topic() {
       if(this.type === TOPIC) {
-        return (this.$store.state.topic.items) ? this.$store.state.topic.items[ 0 ] : _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.uuid } )
+        return (this.$store.state.topic.items) ? 
+          Object.assign(this.$store.state.topic.items[ 0 ], { images: this.$store.state.images })
+          : _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.uuid } )
       } else {
         return this.$store.state.topic
       }
@@ -377,10 +390,11 @@ $color-other = #bcbcbc
       background-repeat: no-repeat;
       background-position: center center;
       background-size: cover;
-      display: flex;
+      /*display: flex;
       flex-direction: column;
       justify-content: space-between;
-      align-items: center;
+      align-items: center;*/
+      padding 50px
       
       &-title
         height: 200px;

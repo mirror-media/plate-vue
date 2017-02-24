@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTopic } from './api'
+import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTopic } from './api'
 
 Vue.use(Vuex)
 
@@ -56,9 +56,9 @@ const store = new Vuex.Store({
     },
 
     FETCH_IMAGES: ({ commit, state }, { uuid, type, params }) => {
-      // return fetchImages(uuid, type, params).then(images => {
-      //   commit('SET_IMAGES', { images })
-      // })
+      return fetchImages(uuid, type, params).then(images => {
+        commit('SET_IMAGES', { images })
+      })
     },
 
     FETCH_LATESTARTICLE: ({ commit, state }, { params }) => {
@@ -125,6 +125,10 @@ const store = new Vuex.Store({
 
     SET_LATESTARTICLE: (state, { latestArticle }) => {
       Vue.set(state, 'latestArticle', latestArticle)
+    },
+
+    SET_IMAGES: (state, { images }) => {
+      Vue.set(state, 'images', images)
     },
 
     SET_QUESTIONNAIRE: (state, { questionnaire }) => {

@@ -11,7 +11,8 @@ export const DFP_UNITS = {
   'home': {
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
     'SPCFT': { 'aduid':'test_pc_np_ap_970x90_FT', 'dimensions':'970x90,970x90', 'cont-class':[ 'ad-container' ] },
-    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ '' ] }
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ '' ] },
+    'PCR1': { 'aduid':'mm_mobile_wat_300x250_L1', 'dimensions':'300x250', 'cont-class':[ 'ad-container', 'center' ] },
   },
   '57e1e0e5ee85930e00cad4e9': { //news-people
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
