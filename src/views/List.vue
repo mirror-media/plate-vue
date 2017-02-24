@@ -3,7 +3,10 @@
     <template scope="props" slot="dfpPos">
       <div class="list-view">
         <app-header :commonData= 'commonData' />
-        <leading v-if="type == 'TOPIC'"/>
+        <div class="topic" v-if="type == 'TOPIC'">
+          <div class="topic-title"><h1></h1></div>
+          <leading />
+        </div>
         <!--<div v-if="type !== 'TOPIC'" id="dfp-test" class="dfp-test"></div>-->
         <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" /> 
         <div class="list-title container" :class="section">
@@ -33,7 +36,7 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import Leading from '../components/Leading.vue'
 import More from '../components/More.vue'
-import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
+import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
 
 const MAXRESULT = 12
@@ -334,7 +337,27 @@ $color-other = #bcbcbc
 .list
   &-view
     background-color #f2f2f2
-
+    .topic
+      width 100%
+      height 700px
+      background-color rgba(135, 156, 169, 0.15)
+      margin-bottom 20px
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      
+      &-title
+        height: 200px;
+        width: 400px;
+        display: flex;
+        justify-content: center;
+        align-items: center;  
+        color: #fff;
+      
   &-title
     &.container
       position: relative

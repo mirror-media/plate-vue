@@ -52,7 +52,7 @@
   import LatestList from '../components/article/LatestList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
-  import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
+  import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
   import store from '../store'
   import truncate from 'truncate'

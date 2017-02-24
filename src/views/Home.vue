@@ -36,7 +36,7 @@ import LatestArticle from '../components/LatestArticle.vue'
 import LatestProject from '../components/LatestProject.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
-import VueDfpProvider from '../utils/plate-vue-dfp/PlateDfpProvider.vue'
+import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
 
 const MAXRESULT = 15
