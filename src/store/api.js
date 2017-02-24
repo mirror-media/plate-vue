@@ -59,7 +59,6 @@ function _setupWhereInParam(key, value, params={}) {
 
 function loadArticles(params = {}) {
   const query = _buildQuery(params)
-  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
   let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts`
   // let slug = typeof params[0] === 'string' ? params[0] : null
   // url = slug ? `${url}/${slug}` : url
@@ -153,9 +152,10 @@ function loadSectionList () {
   return _doFetch(url)
 }
 
-function loadTopic () {
-  const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+function loadTopic ( params = {}) {
+  const query = _buildQuery(params)
   let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/topics`
+  url = `${url}?${query}`
   return _doFetch(url)
 }
 
@@ -236,8 +236,8 @@ export function fetchSectionList () {
   return loadSectionList()
 }
 
-export function fetchTopic () {
-  return loadTopic()
+export function fetchTopic (params = {}) {
+  return loadTopic(params)
 }
 
 export function fetchArticles (params = {}) {

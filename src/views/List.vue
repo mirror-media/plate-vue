@@ -5,7 +5,7 @@
         <app-header :commonData= 'commonData' />
         <div class="topic" v-if="type == 'TOPIC'">
           <div class="topic-title"><h1></h1></div>
-          <leading />
+          <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
         </div>
         <!--<div v-if="type !== 'TOPIC'" id="dfp-test" class="dfp-test"></div>-->
         <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" /> 
@@ -13,7 +13,9 @@
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="section"></div>
         </div>
-        <article-list :articles='articles.items' />
+        <article-list :articles='articles.items'>
+          <vue-dfp :is="props.vueDfp" pos="TEST" :dfpUnits="props.dfpUnits" :section="props.section"/>
+        </article-list>
         <section class="container">
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
@@ -30,6 +32,7 @@
 
 import { AUTHOR, CATEGORY, SEARCH, SECTION, TAG, TOPIC } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
+import { getValue } from '../utils/comm'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import Footer from '../components/Footer.vue'
@@ -51,6 +54,16 @@ const fetchArticlesByUuid = (store, uuid, type, params) => {
     'uuid': uuid,
     'type': type,
     'params': params
+  })
+}
+
+const fetchTopicByUuid = (store, uuid) => {
+  return store.dispatch('FETCH_TOPIC_BY_UUID', { 
+    'params': {
+      where: {
+        _id: uuid
+      }
+    }
   })
 }
 
@@ -81,7 +94,16 @@ const fetchSearch = (store, keyword, params) => {
 }
 
 const fetchData = (store) => {
-  return fetchCommonData(store)
+  return fetchCommonData(store).then(() => {
+    const _type = _.toUpper( _.split( store.state.route.path, '/' )[1] )
+    if(_type === TOPIC) {
+      const _uuid = store.state.route.params.topicId
+      const _topic = _.find( _.get(store.state.commonData, ['topics', 'items']), { 'id': _uuid } )
+      return (!_topic) ? fetchTopicByUuid(store, _uuid) : null
+    } else {
+      return
+    }
+  })
 }
 
 export default {
@@ -110,7 +132,8 @@ export default {
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['css'], null ) 
         case TOPIC:
-          return _.get( _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.uuid } ), ['style'], null ) 
+          const _style = _.get(this.topic , ['style'], null )
+          return _style
         default:
           return null
       }
@@ -120,7 +143,8 @@ export default {
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['javascript'], null ) 
         case TOPIC:
-          return _.get( _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.uuid } ), ['javascript'], null ) 
+          const _javascript = _.get(this.topic , ['javascript'], null )
+          return _javascript
         default:
           return null
       }
@@ -180,6 +204,13 @@ export default {
           return this.$route.params.tagName
         case TOPIC:
           return _.get( _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.$route.params.topicId } ), ['name'] )
+      }
+    },
+    topic() {
+      if(this.type === TOPIC) {
+        return (this.$store.state.topic.items) ? this.$store.state.topic.items[ 0 ] : _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.uuid } )
+      } else {
+        return this.$store.state.topic
       }
     },
     type () {
@@ -262,7 +293,8 @@ export default {
             this.articles = this.$store.state.articlesByUUID
           })
       }
-    }
+    },
+    getValue
   },
   metaInfo () {
     let title = "鏡傳媒 Mirror Media"

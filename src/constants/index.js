@@ -11,6 +11,7 @@ export const DFP_UNITS = {
   'home': {
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
     'SPCFT': { 'aduid':'test_pc_np_ap_970x90_FT', 'dimensions':'970x90,970x90', 'cont-class':[ 'ad-container' ] },
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ '' ] }
   },
   '57e1e0e5ee85930e00cad4e9': { //news-people
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
@@ -29,7 +30,7 @@ export const DFP_UNITS = {
     'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container' ] }
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ 'articleList-block' ] }
   },
   '57e1e11cee85930e00cad4ea': { //entertainment
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
@@ -48,7 +49,7 @@ export const DFP_UNITS = {
     'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container' ] }
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ 'articleList-block' ] }
   },
   '57dfe399ee85930e00cad4d6': { //food-travle
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
@@ -67,7 +68,7 @@ export const DFP_UNITS = {
     'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container' ] }
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ 'articleList-block' ] }
   },
   '57dfe3cfee85930e00cad4d8': { //hot-video
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
@@ -86,7 +87,7 @@ export const DFP_UNITS = {
     'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container' ] }
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ 'articleList-block' ] }
   },
   '57dfe3b0ee85930e00cad4d7': { //watch
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
@@ -105,7 +106,7 @@ export const DFP_UNITS = {
     'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container' ] }
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ 'articleList-block' ] }
   },
 }
 
