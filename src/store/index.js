@@ -17,9 +17,11 @@ const store = new Vuex.Store({
     editorChoice: {},
     fbAppId: FB_APP_ID,
     fbPagesId: FB_PAGES_ID,
+    images: {},
     latestArticle: {},
-    questionnaire: {},
     searchResult: {},
+    topic: {},
+    questionnaire: {},
   },
 
   actions: {
@@ -53,6 +55,12 @@ const store = new Vuex.Store({
         : fetchEditorChoice().then(editorChoice => commit('SET_EDITORCHOICE', { editorChoice }))
     },
 
+    FETCH_IMAGES: ({ commit, state }, { uuid, type, params }) => {
+      // return fetchImages(uuid, type, params).then(images => {
+      //   commit('SET_IMAGES', { images })
+      // })
+    },
+
     FETCH_LATESTARTICLE: ({ commit, state }, { params }) => {
       let orig = _.values(state.latestArticle['items'])
       return state.latestArticle.items && params.page < 2
@@ -77,6 +85,12 @@ const store = new Vuex.Store({
           searchResult['items'] = _.concat(orig, _.get(searchResult, ['hits']))
           commit('SET_SEARCH', { searchResult })
         })
+    },
+
+    FETCH_TOPIC_BY_UUID: ({ commit, state }, { params }) => {
+      return fetchTopic(params).then(topic => {
+        commit('SET_TOPIC_BY_UUID', { topic })
+      })
     },
 
     FETCH_USER: ({ commit, state }, { id }) => {
@@ -113,12 +127,16 @@ const store = new Vuex.Store({
       Vue.set(state, 'latestArticle', latestArticle)
     },
 
+    SET_QUESTIONNAIRE: (state, { questionnaire }) => {
+      Vue.set(state.questionnaire, questionnaire.id, questionnaire)
+    },
+
     SET_SEARCH: (state, { searchResult }) => {
       Vue.set(state, 'searchResult', searchResult)
     },
 
-    SET_QUESTIONNAIRE: (state, { questionnaire }) => {
-      Vue.set(state.questionnaire, questionnaire.id, questionnaire)
+    SET_TOPIC_BY_UUID: (state, { topic }) => {
+      Vue.set(state, 'topic', topic)
     },
 
     SET_USER: (state, { user }) => {

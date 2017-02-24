@@ -1,5 +1,6 @@
 <template>
   <section class="articleList container">
+    <slot></slot>
     <a :href="getHref(item)" v-for="item in articles" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
