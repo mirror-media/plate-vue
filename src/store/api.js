@@ -116,6 +116,30 @@ function loadEvent () {
   return _doFetch(url)
 }
 
+function loadImages (uuid = '', type = '', params = {}) {
+  switch (type) {
+    case SECTION:
+      params = _setupWhereInParam('sections', [ uuid ], params)
+      break
+    case CATEGORY:
+      params = _setupWhereInParam('categories', [ uuid ], params)
+      break
+    case TAG:
+      params = _setupWhereInParam('tags', [ uuid ], params)
+      break
+    case TOPIC:
+      params = _setupWhereInParam('topics', [ uuid ], params)
+      break
+    default:
+      return Promise.resolve()
+  }
+
+  const query = _buildQuery(params)
+  let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/images`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadLatestArticle (params = {}) {
   let query = _buildQuery(params)
   let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts`
@@ -244,10 +268,14 @@ export function fetchArticles (params = {}) {
   return loadArticles(params)
 }
 
-export function fetchArticlesByUuid (uuid = '', type = '', params = {}, isOnlyMeta= true) {
+export function fetchArticlesByUuid (uuid = '', type = '', params = {}, isOnlyMeta = true) {
   return loadArticlesByUuid(uuid, type, params, isOnlyMeta)
 }
 
 export function fetchArticlesPopList (params = {}) {
   return loadArticlesPopList(params)
+}
+
+export function fetchImages (uuid = '', type = '', params = {}) {
+  return loadImages(uuid, type, params)
 }
