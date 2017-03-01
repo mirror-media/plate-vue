@@ -81,7 +81,7 @@
         background-size: 35%;        
       }
       &.mm-icon {
-        background-image: url(/dist/asset/icon/mirrorlogo-2017.jpg);
+        background-image: url(/public/icon/mirrorlogo-2017.jpg);
         background-repeat: no-repeat;
         background-position: center center;
         background-size: cover;   

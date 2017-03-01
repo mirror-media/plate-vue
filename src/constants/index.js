@@ -31,7 +31,7 @@ export const DFP_UNITS = {
     'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-    'TEST': { 'aduid' : 'test_pc_hp_200350_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container', 'articleList-block', 'margin-top-0' ] }
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ 'ad-container', 'articleList-block', 'margin-top-0' ] }
   },
   '57e1e11cee85930e00cad4ea': { //entertainment
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
@@ -50,7 +50,7 @@ export const DFP_UNITS = {
     'MBE1': { 'aduid':'test_mobile_np_ap_300x250_E1', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBFT': { 'aduid':'test_mobile_np_ap_320x100_FT', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
     'MBCVR': { 'aduid' : 'test_mobile_hp_320x480_FS', 'dimensions':'', 'cont-class':[ 'ad-container' ] },
-    'TEST': { 'aduid' : 'test_pc_hp_200350_NA1', 'dimensions':'200x350', 'cont-class':[ 'ad-container', 'articleList-block', 'margin-top-0' ] }
+    'TEST': { 'aduid' : 'test_pc_list_NA1', 'dimensions':'fluid', 'cont-class':[ 'ad-container', 'articleList-block', 'margin-top-0' ] }
   },
   '57dfe399ee85930e00cad4d6': { //food-travle
     'SPCHD': { 'aduid':'test_pc_np_ap_970x250_HD', 'dimensions':'970x250', 'cont-class':[ 'ad-container', 'center', 'margin-top-0' ] },
