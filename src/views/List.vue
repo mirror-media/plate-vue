@@ -103,6 +103,57 @@ const fetchSearch = (store, keyword, params) => {
 const fetchData = (store) => {
   return fetchCommonData(store).then(() => {
     const _type = _.toUpper( _.split( store.state.route.path, '/' )[1] )
+    const _sectionStyle = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': store.state.route.params.title } ), ['style'] )
+    let uuid
+
+    switch(_type) {
+      case AUTHOR:
+        uuid = store.state.route.params.authorId
+        return fetchArticlesByAuthor(store, uuid, { 
+          page: PAGE
+        })
+        break
+      case SEARCH:
+        return fetchSearch(store, store.state.route.params.keyword, { 
+          page: PAGE,
+          max_results: MAXRESULT
+        })
+        break
+      case SECTION:
+        uuid = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': store.state.route.params.title } ), ['id'] )
+        switch(_sectionStyle) {
+          case 'full':
+            return fetchArticlesByUuid(store, uuid, SECTION, { 
+              page: PAGE,
+              max_results: MAXRESULT,
+              related: 'full'
+            })
+            break
+          default:
+            return fetchArticlesByUuid(store, uuid, SECTION, { 
+              page: PAGE,
+              max_results: MAXRESULT
+            })
+        }
+        break
+      default:
+        switch(_type) {
+          case CATEGORY:
+            uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': store.state.route.params.title } ), ['id'] )
+            break
+          case TAG:
+            uuid = store.state.route.params.tagId
+            break
+          case TOPIC:
+            uuid = store.state.route.params.topicId
+            break
+        }
+        return fetchArticlesByUuid(store, uuid, _type, { 
+          page: PAGE,
+          max_results: MAXRESULT
+        })
+    }
+
     if(_type === TOPIC) {
       const _uuid = store.state.route.params.topicId
       const _topic = _.find( _.get(store.state.commonData, ['topics', 'items']), { 'id': _uuid } )
@@ -130,7 +181,6 @@ export default {
   },
   data () {
     return {
-      articles: {},
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
@@ -138,6 +188,18 @@ export default {
     }
   },
   computed: {
+    articles () {
+      switch(this.type) {
+        case AUTHOR:
+          return this.$store.state.articles
+          break
+        case SEARCH:
+          return this.$store.state.searchResult
+          break
+        default:
+          return this.$store.state.articlesByUUID
+      }
+    },
     customCSS () { 
       switch(this.type) {
         case SECTION:
@@ -314,52 +376,6 @@ export default {
     title = (this.title) ? this.title + ' - ' + title : title
     return {
       title
-    }
-  },
-  beforeMount () {
-    switch(this.type) {
-      case AUTHOR:
-        fetchArticlesByAuthor(this.$store, this.uuid, { 
-            page: this.page
-          }).then(() => {
-          this.articles = this.$store.state.articles          
-        })
-        break
-      case SEARCH:
-        fetchSearch(this.$store, this.$route.params.keyword, { 
-          page: PAGE,
-          max_results: MAXRESULT
-        }).then(() => {
-          this.articles = this.$store.state.searchResult
-        })
-        break
-      case SECTION:
-        switch (this.sectionStyle) {
-          case 'full':
-            fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
-              page: PAGE,
-              max_results: MAXRESULT,
-              related: 'full'
-            }).then(() => {
-              this.articles = this.$store.state.articlesByUUID
-            })
-            break
-          default:
-            fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
-              page: PAGE,
-              max_results: MAXRESULT
-            }).then(() => {
-              this.articles = this.$store.state.articlesByUUID
-            })
-        }
-        break
-      default:
-        fetchArticlesByUuid(this.$store, this.uuid, this.type, { 
-          page: PAGE,
-          max_results: MAXRESULT
-        }).then(() => {
-          this.articles = this.$store.state.articlesByUUID
-        })
     }
   },
   mounted() {
