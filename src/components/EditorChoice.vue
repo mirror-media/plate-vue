@@ -100,9 +100,24 @@ export default {
       return {
         borderLeft: SECTION_MAP[ sect ][ "borderLeft" ]
       }
+    },
+    setHoverEvent() {
+      const _targ = document.querySelectorAll('.editorChoice-list__item')
+      const _targII = document.querySelectorAll('.editorChoice-list__item > span')
+      _.map(_targ, (o) => {
+        o.addEventListener('mouseover', (e) => {
+          this.jumpToSlide(null, e.target.children[0])
+        })
+      })
+      _.map(_targII, (o) => {
+        o.addEventListener('mouseover', (e) => {
+          this.jumpToSlide(e)
+        })
+      })
     }
   },
   mounted() {
+    this.setHoverEvent()
   },
   name: 'editorChoice'
 }
@@ -114,7 +129,7 @@ export default {
   &.container
     flex-direction: row
     height 500px
-    margin-bottom 20px
+    margin-bottom 40px
 
   .grid
     position relative

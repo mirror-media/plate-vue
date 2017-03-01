@@ -1,10 +1,10 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
-      <app-header :commonData= 'commonData'/>
-      <div class="article-container">
+      <app-header :commonData= 'commonData' v-if="(articleStyle !== 'photography')"/>
+      <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <div id="fb-root"></div>
-         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
+        <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
@@ -23,7 +23,7 @@
         </div>
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist">
-            <aside class="article_aside" slot="aside" v-if="(articleStyle !== 'photography')">
+            <aside class="article_aside" slot="aside">
                <vue-dfp :is="props.vueDfp" pos="PCR1" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
                <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
@@ -39,6 +39,9 @@
         </div>
         <share-tools />
       </div>
+      <div v-else>
+        <article-body-photography :articleData="articleData" />
+      </div>
     </template>
   </vue-dfp-provider>
 </template>
@@ -47,6 +50,7 @@
   import { DFP_ID, DFP_UNITS, SECTION_MAP } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
+  import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
@@ -101,6 +105,7 @@
     preFetch: fetchData,
     components: {
       'article-body': ArticleBody,
+      'article-body-photography': ArticleBodyPhotography,
       'app-footer': Footer,
       'app-header': Header,
       'latest-list': LatestList,

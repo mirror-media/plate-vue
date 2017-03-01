@@ -60,7 +60,7 @@ $color-other = #bcbcbc
   display: flex
   flex-direction: column
   > section:not(:last-child)
-    margin-bottom 20px
+    margin-bottom 40px
 
 .list-container
   display flex
@@ -111,6 +111,7 @@ $color-other = #bcbcbc
       height calc(50% - 10px)
 
     &__title
+      min-height 40px
       h2
         padding .2em 0 .2em .5em
         margin 0
