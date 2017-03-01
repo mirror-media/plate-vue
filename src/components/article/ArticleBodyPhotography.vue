@@ -1,5 +1,13 @@
 <template>
   <div class="article_body">
+    <div class="sharebox">
+      <div class="mm-icon"></div>
+      <div class="shareIcon">
+        <div class="share"></div>
+        <div class="facebook">F</div>
+        <div class="line">LINE</div>
+      </div>
+    </div>
     <section class="pic-section">
       <img :src="getValue(heroImg, [ 'image', 'url' ])"
             :srcset="`${getValue(heroImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
@@ -139,4 +147,30 @@
         object-fit cover
         max-height 100%
     
+    .sharebox
+      position fixed
+      top 0
+      left 0
+      padding 20px
+      & > div
+        display inline-block
+        &.mm-icon
+          width 48px
+          height 48px
+          background-image url(/public/favicon-48x48.png)
+          background-size contain
+          background-position center center
+          background-repeat no-repeat
+
+        & > div
+          display inline-block
+          position relative
+          &.share
+            width 48px
+            height 48px
+            background-image url(/public/icon/share-white.png)
+            background-size contain
+            background-position center center
+            background-repeat no-repeat
+
 </style>
