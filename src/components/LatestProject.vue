@@ -80,7 +80,7 @@ $color-other = #bcbcbc
     display block
 
   > a:not(:first-child)
-    margin 40px 0
+    margin 35px 0
 
   &__img
     display: table
