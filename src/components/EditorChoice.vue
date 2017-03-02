@@ -129,7 +129,7 @@ export default {
   &.container
     flex-direction: row
     height 500px
-    margin-bottom 40px
+    margin-bottom 35px
 
   .grid
     position relative

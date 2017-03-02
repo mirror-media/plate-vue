@@ -1,8 +1,5 @@
 
-/*
-!/dist
-/dist/*
-!/dist/asset
+dist
 
 node_modules
 npm-debug.log*

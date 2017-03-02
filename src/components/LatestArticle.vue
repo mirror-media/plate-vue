@@ -60,7 +60,7 @@ $color-other = #bcbcbc
   display: flex
   flex-direction: column
   > section:not(:last-child)
-    margin-bottom 40px
+    margin-bottom 15px
 
 .list-container
   display flex
@@ -73,6 +73,7 @@ $color-other = #bcbcbc
     background-size cover
   a
     display block
+    margin-bottom 20px
   
 .list
   &-wide
@@ -112,10 +113,13 @@ $color-other = #bcbcbc
 
     &__title
       min-height 40px
+      padding-top 5px
       h2
         padding .2em 0 .2em .5em
         margin 0
+        font-weight normal
         font-size .9rem
+        line-height 1rem
 
     &__img
       padding-top 75%
