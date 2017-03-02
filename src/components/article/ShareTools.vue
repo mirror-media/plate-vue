@@ -69,13 +69,13 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.4);
       cursor: pointer;
       &.line {
-        background-image: url(https://mirrormedia.mg/asset/icon/line_white.png);
+        background-image: url(/public/icon/line_white.png);
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 85%;
       }
       &.facebook {
-        background-image: url(https://mirrormedia.mg/asset/icon/facebook_white.png);
+        background-image: url(/public/icon/facebook_white.png);
         background-repeat: no-repeat;
         background-position: center center;
         background-size: 35%;        

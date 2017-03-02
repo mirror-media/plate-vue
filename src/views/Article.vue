@@ -64,6 +64,7 @@
   const fetchArticles = (store) => {
     return store.dispatch('FETCH_ARTICLES', {
       params: {
+        related: 'full',
         where: {
           'slug': store.state.route.params.slug
         }
