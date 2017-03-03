@@ -198,7 +198,7 @@ export default {
               return i.map((j) => (`<li>${j}</li>`)).join('')
             }
           }).join('')
-          return `<ul class="${_.get(item.content, [ 0, 'alignment' ], '')}">${_liStr}</ul>`
+          return `<ul class="${_.get(item, [ 'alignment' ], '')}">${_liStr}</ul>`
         case 'unstyled':
           return (item.content.toString().length > 0) ? `<p>${item.content.toString()}</p>` : ''
         case 'youtube':
@@ -268,6 +268,7 @@ export default {
       max-width: 695px;
       overflow: hidden;
       .innerImg {
+        clear both
         img {
           width: 100%;
         }
@@ -544,7 +545,7 @@ export default {
         line-height: 2.2;
         letter-spacing: 0.3px;
         color: rgba(0, 0, 0, 0.701961);
-        padding-left: 26px;
+        padding-left: 45px;
         text-indent: -26px;
         margin-left: 16px;
         list-style: none;
@@ -557,6 +558,8 @@ export default {
             top: 6px;
             position: relative;
           }
+        }
+        &.center {
         }
       }
     }
