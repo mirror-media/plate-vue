@@ -6,7 +6,7 @@
         <h3>{{ content }}</h3>
       </div>
     </div>
-  <div>
+  </div>
 </template>
 <script>
   export default {
