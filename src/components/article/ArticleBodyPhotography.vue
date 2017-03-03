@@ -180,7 +180,7 @@
           }
 
           if(this.sectIndex >= (this.sectCount + 1) && _currTop >= _targEle) {
-            document.querySelector('.go-next-page').setAttribute('style', 'display: none;')
+            
             this.enableScroll()
           } else if(Math.abs(_derection) <= 3 && this.sectIndex >= (this.sectCount + 1) && _currTop < _targEle) {
             this.scrollingFlag = false
@@ -189,14 +189,22 @@
           //   this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
 
           } else {
-            document.querySelector('.go-next-page').removeAttribute('style')
+            
             this.disableScroll()
           }
           window.wheelDelta = _derection
 
         })
         window.addEventListener('scroll', () => {
-          this.updateProgressbar((this.sectIndex * 100)/this.sectCount)
+          this.updateProgressbar(((this.sectIndex - 1) * 100)/this.sectCount)
+          if(((this.sectIndex - 1) * 100)/this.sectCount >= 100) {
+            document.querySelector('.go-next-page').setAttribute('style', 'display: none;')
+            document.querySelector('.btn-toggle-description').setAttribute('style', 'display: none;')
+          } else {
+            document.querySelector('.go-next-page').removeAttribute('style')
+            document.querySelector('.btn-toggle-description').removeAttribute('style')
+          }
+
         })
         // window.addEventListener('beforeunload', () => {
         //   this.smoothScroll(`.article_body`)
