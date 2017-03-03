@@ -72,18 +72,6 @@ export default {
     Spinner
   },
   computed: {
-    tweets () {
-      // _.forEach(this.rep, (v,k)=>{
-      //   this.rep[k].text = twitter.autoLink(v.text, {
-      //     urlEntities: [
-      //       _.get(v, ['entities', 'urls'], {})
-      //     ],
-      //     targetBlank: true
-      //   })
-      //   this.rep[k].heroImg = _.get(v, [ 'extended_entities', 'media', 0, 'media_url_https' ]);
-      // })
-      // return this.rep
-    },
     lastItemId() {
       return _.get(_.last(this.rep), 'id', 0)
     }
