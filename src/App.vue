@@ -41,7 +41,14 @@ a
   &.white
     &, &:hover, &:link, &:visited
       color #fff
+  &.blue
+    &, &:hover, &:link, &:visited
+      color #0b4fa2
 
+section.tweet 
+  .content
+    a, a:hover, a:link, a:visited
+        color #0b4fa2
 
 button
   cursor pointer
