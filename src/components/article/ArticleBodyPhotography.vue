@@ -401,23 +401,26 @@
         background-color rgba(218, 218, 218, 0.8)
         text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
     .latest
-      padding 5% 10%
+      padding 5% 0
       background-color rgba(51, 51, 51, 0.83)
       overflow auto
       height auto
       .credit
         color #fff
-        width 100%
+        width 900px
         display flex
         height 100px
         vertical-align top
-        margin-right 20px
+        margin 40px auto
         align-items center
         position relative
         text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
         justify-content flex-start
         a, a:hover, a:link, a:visited
           color #fff
+      .related-container
+        width 900px
+        margin 40px auto
     .progress 
       width 100%
       height 10px
