@@ -198,7 +198,7 @@ export default {
               return i.map((j) => (`<li>${j}</li>`)).join('')
             }
           }).join('')
-          return `<ul>${_liStr}</ul>`
+          return `<ul class="${_.get(item.content, [ 0, 'alignment' ], '')}">${_liStr}</ul>`
         case 'unstyled':
           return (item.content.toString().length > 0) ? `<p>${item.content.toString()}</p>` : ''
         case 'youtube':
