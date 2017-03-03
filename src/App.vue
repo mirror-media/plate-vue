@@ -13,9 +13,9 @@
       }
     },
     mounted() {
-      window.onload = (e) => {
+      window.addEventListener('load', (e) => {
         this.showPage = true
-      }
+      })
     }
   }
 </script>
@@ -38,6 +38,10 @@ a
   color #34495e
   text-decoration none
   cursor pointer
+  &.white
+    &, &:hover, &:link, &:visited
+      color #fff
+
 
 button
   cursor pointer
