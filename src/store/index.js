@@ -12,24 +12,29 @@ const store = new Vuex.Store({
     articles: {},
     articlesByUUID: {},
     articlesPopList: {},
+    authors: [],
     commonData: {},
     dfpId: DFPID,
     editorChoice: {},
     fbAppId: FB_APP_ID,
     fbPagesId: FB_PAGES_ID,
-    images: {},
     latestArticle: {},
+    images: {},
     searchResult: {},
+    tags: [],
     topic: {},
     questionnaire: {},
   },
 
   actions: {
     FETCH_ARTICLES: ({ commit, state }, { params }) => {
-      let orig = _.values(state.articles['items'])     
+      let orig = _.values(state.articles['items'])
       return fetchArticles(params).then(articles => {
         articles['items'] = _.concat(orig, _.get(articles, ['items']))
+
         commit('SET_ARTICLES', { articles })
+        commit('SET_AUTHORS', { articles })
+        commit('SET_TAGS', { articles })
       })
     },
     FETCH_ARTICLES_BY_UUID: ({ commit, state }, { uuid, type, params }) => {
@@ -37,6 +42,8 @@ const store = new Vuex.Store({
       return fetchArticlesByUuid(uuid, type, params).then(articles => {
         articles['items'] = _.concat(orig, _.get(articles, ['items']))
         commit('SET_ARTICLES_BY_UUID', { articles })
+        commit('SET_AUTHORS', { articles })
+        commit('SET_TAGS', { articles })
       })
     },
     FETCH_ARTICLES_POP_LIST: ({ commit, state }, { params = {} }) => {
@@ -68,6 +75,8 @@ const store = new Vuex.Store({
         : fetchLatestArticle(params).then(latestArticle => {
             latestArticle['items'] = _.concat(orig, _.get(latestArticle, ['items']))
             commit('SET_LATESTARTICLE', { latestArticle })
+            commit('SET_AUTHORS', { latestArticle })
+            commit('SET_TAGS', { articles })
           })
     },
 
@@ -111,6 +120,35 @@ const store = new Vuex.Store({
 
     SET_ARTICLES_POP_LIST: (state, { articlesPopList }) => {
       Vue.set(state, 'articlesPopList', articlesPopList)
+    },
+
+    SET_AUTHORS: (state, { articles }) => {
+      let authors = []
+      let origAuthors= _.values(state.authors)
+      _.map(_.get(articles, ['items']), (article) => {
+        const { cameraMan, designers, engineers, photographers, writers } = article
+        _.map(_.concat(cameraMan, designers, engineers, photographers, writers), (o) => {
+          if(o) {
+            authors.push(o)
+          }
+        })
+      })
+      authors = _.concat(origAuthors, authors)
+      Vue.set(state, 'authors', _.uniqBy(authors, 'id'))
+    },
+    SET_TAGS: (state, { articles }) => {
+      let _tags = []
+      let origTags= _.values(state.tags)
+      _.map(_.get(articles, ['items']), (article) => {
+        const { tags } = article
+        _.map(tags, (o) => {
+          if(o) {
+            _tags.push(o)
+          }
+        })
+      })
+      _tags = _.concat(origTags, _tags)
+      Vue.set(state, 'tags', _.uniqBy(_tags, 'id'))
     },
 
     SET_COMMONDATA: (state, { commonData }) => {
