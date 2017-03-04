@@ -1,9 +1,9 @@
 <template>
   <section id="latestArticle" class="latestArticle grid grid-4-fifth">
     <template v-for="item in article">
-      <article-right :article='item'/>
-      <article-center :article='item'/>
-      <article-left :article='item'/>
+      <article-right :article='item' v-if="item.length >= 5"/>
+      <article-center :article='item' v-if="item.length >= 10"/>
+      <article-left :article='item' v-if="item.length >= 15"/>
     </template>
   </section>
 </template>
@@ -29,7 +29,7 @@ export default {
     }
   },
   props: {
-    latestArticle: this.latestArticle,
+    latestArticle: {},
   },
   computed: {
     article() {
