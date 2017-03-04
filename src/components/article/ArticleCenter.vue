@@ -48,7 +48,7 @@ export default {
     }
   },
   props: {
-    article: this.article
+    article: {}
   },
   computed: {
     
