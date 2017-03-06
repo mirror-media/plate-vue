@@ -39,7 +39,7 @@ import More from '../components/More.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
 
-const MAXRESULT = 15
+const MAXRESULT = 20
 const PAGE = 1
 
 const fetchCommonData = (store) => {
@@ -74,19 +74,28 @@ export default {
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
-      editorChoice: this.$store.state.editorChoice,
       hasScrollLoadMore: false,
       loading: false,
       page: PAGE,
-      
     }
   },
   computed: {
     hasMore () {
-      return _.get(this.latestArticle, [ 'items', 'length' ], 0) < _.get(this.latestArticle, [ 'meta', 'total' ], 0)
+      return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
+    },
+    editorChoice () {
+      if (this.$store.state.editorChoice.items.length > 4) {
+        return _.get(this.$store.state.editorChoice, ['items'])
+      } else {
+        let orig = _.values(this.$store.state.editorChoice['items'])
+        let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'title')
+        return _.concat(orig, _.take(xorBy, (5 - this.$store.state.editorChoice.items.length)))
+      }
     },
     latestArticle () {
-      return this.$store.state.latestArticle
+      let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'title')
+      let latestArticle = _.slice(xorBy, (5 - this.$store.state.editorChoice.items.length))
+      return latestArticle
     },
   },
   methods: {
