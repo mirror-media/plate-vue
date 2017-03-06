@@ -27,10 +27,13 @@
       </div>
 
       <div class="listFull-view" v-if="sectionStyle == 'full'">
-        <header-full :commonData= 'commonData' />
+        <header-full/>
         <article-leading :articles='articles.items' />
         <editorChoice-full :sectionfeatured= 'sectionfeatured'/>
         <latestArticle-full :articles='articles.items' />
+        <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
+        <loading :show="loading" />
+        <footer-full :commonData= 'commonData' :section='section'/>
       </div>
 
     </template>
@@ -49,11 +52,14 @@ import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
 import EditorChoiceFull from '../components/EditorChoiceFull.vue'
 import Footer from '../components/Footer.vue'
+import FooterFull from '../components/FooterFull.vue'
 import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import LatestArticleFull from '../components/LatestArticleFull.vue'
 import Leading from '../components/Leading.vue'
+import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
+import MoreFull from '../components/MoreFull.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
 
@@ -192,10 +198,13 @@ export default {
     'article-leading': ArticleLeading,
     'article-list': ArticleList,
     'editorChoice-full': EditorChoiceFull,
+    'footer-full': FooterFull,
     'header-full': HeaderFull,
     'latestArticle-full': LatestArticleFull,
     'leading': Leading,
+    'loading': Loading,
     'more': More,
+    'more-full': MoreFull,
     VueDfpProvider
   },
   data () {
@@ -203,6 +212,7 @@ export default {
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
+      loading: false,
       page: PAGE,
     }
   },
@@ -345,13 +355,14 @@ export default {
     },
     loadMore () {
       this.page += 1
-
+      this.loading = true
       switch(this.type) {
         case AUTHOR:
           fetchArticlesByAuthor(this.$store, this.uuid, { 
             page: this.page
           }).then(() => {
-            this.articles = this.$store.state.articles          
+            this.articles = this.$store.state.articles
+            this.loading = false          
           })
           break
         case SEARCH:
@@ -360,6 +371,7 @@ export default {
             max_results: MAXRESULT
           }).then(() => {
             this.articles = this.$store.state.searchResult
+            this.loading = false
           })
           break
         case SECTION:
@@ -371,6 +383,7 @@ export default {
                 related: 'full'
               }).then(() => {
                 this.articles = this.$store.state.articlesByUUID
+                this.loading = false
               })
               break
             default:
@@ -379,6 +392,7 @@ export default {
                 max_results: MAXRESULT
               }).then(() => {
                 this.articles = this.$store.state.articlesByUUID
+                this.loading = false
               })
           }
           break
@@ -388,6 +402,7 @@ export default {
             max_results: MAXRESULT
           }).then(() => {
             this.articles = this.$store.state.articlesByUUID
+            this.loading = false
           })
       }
     },
