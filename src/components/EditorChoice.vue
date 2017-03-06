@@ -2,7 +2,7 @@
   <section id="editorChoice" class="editorChoice container">
     <app-slider class="editorChoice-slides grid grid-4-fifth" slideId="editorChoiceSlider" :option="sliderOption">
       <template scope="props">
-        <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice.items">
+        <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice">
           <a :href="getHref(item)" target="_blank">
             <div :id="'slide-' + index" class="editorChoice-image"
             :style="{ backgroundImage: 'url(' + item.heroImage.image.resizedTargets.desktop.url + ')' }">
@@ -12,7 +12,7 @@
       </template>
     </app-slider>
     <div class="editorChoice-list grid grid-1-fifth">
-      <a v-for="(item, index) in editorChoice.items" :href="getHref(item)"  target="_blank"
+      <a v-for="(item, index) in editorChoice" :href="getHref(item)"  target="_blank"
             :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
             :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
             @click="jumpToSlideForParent">

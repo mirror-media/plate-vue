@@ -1,9 +1,9 @@
 <template>
   <section id="latestArticle" class="latestArticle grid grid-4-fifth">
     <template v-for="item in article">
-      <article-right :article='item' v-if="item.length >= 5"/>
-      <article-center :article='item' v-if="item.length >= 10"/>
-      <article-left :article='item' v-if="item.length >= 15"/>
+      <article-right :article='item' />
+      <article-center :article='item' />
+      <article-left :article='item' />
     </template>
   </section>
 </template>
@@ -33,7 +33,8 @@ export default {
   },
   computed: {
     article() {
-      return _.chunk(this.latestArticle.items, 15)
+      let showArticles = _.take(this.latestArticle, 15 * Math.floor(this.latestArticle.length / 15))
+      return _.chunk(showArticles, 15)
     },
   },
   methods: {
