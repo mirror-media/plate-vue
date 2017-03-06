@@ -1,11 +1,11 @@
 <template>
   <section id="latestArticle" class="latestArticle grid grid-4-fifth">
     <template v-for="(item, index) in article">
-      <article-right :article='item' v-if="item.length >= 5" :index="index">
+      <article-right :article='item' >
         <vue-dfp :is="vueDfp" pos="HPC1" :dfpUnits="dfpUnits" :section="section" slot="DFPAD1" v-if="index === 0"></vue-dfp>
-      </article-right>
-      <article-center :article='item' v-if="item.length >= 10" />
-      <article-left :article='item' v-if="item.length >= 15" />
+      </article-right> 
+      <article-center :article='item' /> 
+      <article-left :article='item' /> 
     </template>
   </section>
 </template>
