@@ -1,4 +1,4 @@
-<template v-else>
+<template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
 
