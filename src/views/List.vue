@@ -1,7 +1,8 @@
-<template>
+<template v-else>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
-      <div class="list-view">
+
+      <div class="list-view" v-if="sectionStyle == 'feature'">
         <app-header :commonData= 'commonData' />
         <div class="topic" v-if="type == 'TOPIC'">
           <div class="topic-title"><h1></h1></div>
@@ -24,9 +25,19 @@
           <app-footer />
         </section>
       </div>
+
+      <div class="listFull-view" v-if="sectionStyle == 'full'">
+        <header-full :commonData= 'commonData' />
+        <article-leading :articles='articles.items' />
+        <editorChoice-full :sectionfeatured= 'sectionfeatured'/>
+        <latestArticle-full :articles='articles.items' />
+      </div>
+
     </template>
   </vue-dfp-provider>
 </template>
+
+
 
 <script>
 
@@ -34,9 +45,13 @@ import { AUTHOR, CATEGORY, SEARCH, SECTION, TAG, TOPIC } from '../constants/inde
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { getValue } from '../utils/comm'
 import _ from 'lodash'
+import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
+import EditorChoiceFull from '../components/EditorChoiceFull.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
+import HeaderFull from '../components/HeaderFull.vue'
+import LatestArticleFull from '../components/LatestArticleFull.vue'
 import Leading from '../components/Leading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
@@ -46,7 +61,7 @@ const MAXRESULT = 12
 const PAGE = 1
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { })
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
 }
 
 const fetchArticlesByUuid = (store, uuid, type, params) => {
@@ -174,7 +189,11 @@ export default {
   components: {
     'app-footer': Footer,
     'app-header': Header,
+    'article-leading': ArticleLeading,
     'article-list': ArticleList,
+    'editorChoice-full': EditorChoiceFull,
+    'header-full': HeaderFull,
+    'latestArticle-full': LatestArticleFull,
     'leading': Leading,
     'more': More,
     VueDfpProvider
@@ -247,7 +266,10 @@ export default {
           return 'other'
       }
     },
-    sectionId() {
+    sectionfeatured () {
+      return _.get( _.pick( _.get(this.$store.state.commonData, ['sectionfeatured', 'items']), this.section ), [ this.section] )
+    },
+    sectionId () {
       switch(this.type) {
         case CATEGORY:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), (s) => { 
@@ -260,7 +282,7 @@ export default {
       }      
     },
     sectionStyle () {
-      return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['style'] )
+      return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['style'], 'feature' )
     },
     title () {
       switch(this.type) {
@@ -452,6 +474,9 @@ $color-other = #bcbcbc
       &.other
         background linear-gradient(to right, $color-other 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
 
+.listFull
+  &-view
+    background-color #f5f5f5
 
 .footer
   &.container

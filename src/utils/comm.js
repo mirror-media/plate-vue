@@ -2,6 +2,29 @@ import _ from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 
+export function getAuthor(article, option = '') {
+  let writers = (_.get(article, [ 'writers', 'length' ], 0) > 0) ? 
+    '文｜' + _.map(article.writers, (n)=> { return '<a href="' + getAuthorHref(n) + '">' + _.get(n, [ 'name' ], null) + '</a>' } ).join('、') : ''
+  let photographers = (_.get(article, [ 'photographers', 'length' ], 0) > 0) ? 
+    '<br>攝影｜' + _.map(article.photographers, (n)=>{ return _.get(n, [ 'name' ], null) }).join('、') : ''
+  let designers = (_.get(article, [ 'designers', 'length' ], 0) > 0) ? 
+    '<br>設計｜' + _.map(article.designers, (n)=>{ return _.get(n, [ 'name' ], null) }).join('、') : ''
+  let engineers = (_.get(article, [ 'engineers', 'length' ], 0) > 0) ? 
+    '<br>工程｜' + _.map(article.engineers, (n)=>{ return _.get(n, [ 'name' ], null) }).join('、') : ''
+  let external = '<br>' + _.get(article, 'extendByline', '')
+  switch (option) {
+    case 'writers':
+      return writers
+      break
+    default:
+      return (writers + photographers + designers + engineers + external)
+  } 
+}
+
+export function getAuthorHref(author = {}) {
+  return '/author/' + author.id
+}
+
 export function getBrief(article, count = 30) {
   let brief = sanitizeHtml( _.get(article, [ 'brief','html' ], ''), { allowedTags: [ ] })
   return truncate(brief, count)
