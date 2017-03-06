@@ -1,0 +1,123 @@
+<template>
+  <section class="editorChoice-full">
+    <h2>編輯精選 Editor's Picks</h2>
+    <div class="editorChoice-full-post-container">
+      <template v-for="article in highlightArticle">
+        <div class="editorChoice-full-post">
+          <a :href="getHref(article)" class="editorChoice-full-post__img">
+            <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
+          </a>
+          <div class="editorChoice-full-post__content">
+            <a :href="getHref(article)"><h2 v-text="article.title"></h2></a>
+            <a :href="getHref(article)"><p v-html="getBrief(article, 100)"></p></a>
+          </div>
+          <div class="editorChoice-full-post__meta">
+            <span class="editorChoice-full-post__meta--author" v-show="getAuthor(article, 'writers')" v-html="getAuthor(article, 'writers')"></span>
+            <span class="editorChoice-full-post__meta--date" v-text="moment(article.publishedDate).format('Y.MM.DD')"></span>
+          </div>
+        </div>
+      </template>
+    </div>
+  </section>
+</template>
+<script>
+
+import { getAuthor, getBrief, getHref, getImage, getTruncatedVal } from '../utils/comm'
+import _ from 'lodash'
+import moment from 'moment'
+
+export default {
+  name: 'editorChoice-full',
+  props: {
+    sectionfeatured: []
+  },
+  
+  methods: {
+    getAuthor,
+    getBrief,
+    getHref,
+    getImage,
+    getTruncatedVal,
+    moment,
+  },
+  computed: {
+    highlightArticle () {
+      return _.take(this.sectionfeatured, 3)
+    }
+  }
+}
+
+</script>
+<style lang="stylus" scoped>
+
+.editorChoice-full
+  padding 50px 40px 60px
+  background-color #ddd
+
+  a
+    display block
+  > h2
+    position relative
+    left 15px
+    margin 0
+    font-weight 300
+    color #000
+  > h2:before
+    content ""
+    position absolute
+    top 2px
+    left -15px
+    display inline-block
+    width 5px
+    height 23px
+    background-color #000
+  &-post-container
+    display flex
+    justify-content space-between
+    margin-top 30px
+  &-post
+    width calc((100% - 40px)/3)
+    &__img
+      > figure
+        width 100%
+        padding-top 66.66%
+        margin 0
+        background-position 50% 50%
+        background-repeat no-repeat
+        background-size cover
+    &__content
+      h2, p 
+        color #000
+        text-align justify
+      h2
+        height 78px
+        margin 20px 0 16px
+        font-size 23px
+        
+      p
+        height 100px
+        margin 0 0 30px
+        font-size 15px
+        line-height 25px
+    &__meta
+      display flex
+        
+      &--author
+        margin-right 10px
+        font-size 12px
+        color #000
+      &--date
+        font-size 12px
+        color #999
+      
+
+
+@media (min-width: 1200px)
+  .editorChoice-full
+    > h2
+      font-size 25px
+    &-post
+      &__meta
+        justify-content  flex-start
+
+</style>
