@@ -46,7 +46,7 @@
         <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp> -->
       </div>
       <div class="article_main_pop">
-        <pop-list :pop="poplistData" />
+        <slot name="poplist"></slot>
       </div>
       <div>
         <proj-list :projects="projlistData" />
@@ -62,13 +62,13 @@
 import _ from 'lodash'
 import { SECTION_MAP, DFP_UNITS } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
-import PopList from './PopList.vue'
+// import PopList from './PopList.vue'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
 
 export default {
   components: {
-    'pop-list': PopList,
+    // 'pop-list': PopList,
     'proj-list': ProjectList,
     'app-slider': Slider
   },
@@ -116,10 +116,10 @@ export default {
       const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ], {})
       return report
     },
-    purePoplistData() {
-      console.log('call');
-      return this.popularlist
-    },
+    // purePoplistData() {
+    //   console.log('call');
+    //   return this.popularlist
+    // },
     styleForCurrArticle() {
       switch(this.articleStyle) {
         case 'photography':
@@ -214,9 +214,9 @@ export default {
     articleData: {
       default: () => { return {} }
     },
-    poplistData: {
-      default: () => { return [] }
-    },
+    // poplistData: {
+    //   default: () => { return [] }
+    // },
     projlistData: {
       default: () => { return [] }
     }

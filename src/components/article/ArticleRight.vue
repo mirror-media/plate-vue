@@ -7,11 +7,18 @@
           :style="{ backgroundImage: 'url(' + article[0].heroImage.image.resizedTargets.mobile.url + ')' }"></div>
         <div class="list-narrow__title" :class="getSection(article[0])"><h2 v-text="getTitle(article[0].title)"></h2></div>
       </div></a>
-      <a :href="getHref(article[1])"><div>
-        <div class="list-narrow__img"
-          :style="{ backgroundImage: 'url(' + article[1].heroImage.image.resizedTargets.mobile.url + ')' }"></div>
-        <div class="list-narrow__title" :class="getSection(article[1])"><h2 v-text="getTitle(article[1].title)"></h2></div>
-      </div></a>
+      <template v-if="index === 0">
+        <slot name="DFPAD1"></slot>      
+      </template>
+      <template v-else-if="index > 0">
+        <a :href="getHref(article[1])">
+          <div>
+            <div class="list-narrow__img"
+              :style="{ backgroundImage: 'url(' + article[1].heroImage.image.resizedTargets.mobile.url + ')' }"></div>
+            <div class="list-narrow__title" :class="getSection(article[1])"><h2 v-text="getTitle(article[1].title)"></h2></div>
+          </div>
+        </a>       
+      </template>      
     </div>
 
     <div class="list-narrow">
@@ -48,7 +55,8 @@ export default {
     }
   },
   props: {
-    article: {}
+    article: {},
+    index: 0
   },
   computed: {
     

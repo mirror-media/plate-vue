@@ -29,6 +29,9 @@
                <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
               <related-list :relateds="relateds" :ifshow="showRelated"></related-list>
             </aside>
+            <pop-list :pop="popularlist" slot="poplist">
+              <vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>
+            </pop-list>
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
@@ -54,6 +57,7 @@
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
+  import PopList from '../components/article/PopList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
@@ -110,6 +114,7 @@
       'app-footer': Footer,
       'app-header': Header,
       'latest-list': LatestList,
+      'pop-list': PopList,
       'related-list': RelatedList,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,

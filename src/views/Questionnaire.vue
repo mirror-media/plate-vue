@@ -93,23 +93,23 @@
   }
 </script>
 <style lang="stylus" scoped>
-  .questionnaire-view {
-    max-width: 960px;
-    margin: 0 auto;
-    height: 100vh;
-    .questionnaire__title {
-      min-height: 30vh;
-      background-color: black;
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: cover;
-    }
-    .question-set {
-      height: 60vh;
-    }
-    .options {
-      background-color: #e4e4e4;
-      padding: 0 20px;
-    }
-  }
+  .questionnaire-view 
+    max-width 960px
+    margin 0 auto
+    height 100vh
+    .questionnaire__title 
+      min-height 30vh
+      background-color black
+      background-repeat no-repeat
+      background-position center center
+      background-size cover
+    
+    .question-set 
+      height 60vh
+    
+    .options 
+      background-color #e4e4e4
+      padding 0 20px
+    
+  
 </style>

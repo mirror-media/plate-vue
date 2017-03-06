@@ -1,9 +1,11 @@
 <template>
   <section id="latestArticle" class="latestArticle grid grid-4-fifth">
-    <template v-for="item in article">
-      <article-right :article='item' />
-      <article-center :article='item' />
-      <article-left :article='item' />
+    <template v-for="(item, index) in article">
+      <article-right :article='item' v-if="item.length >= 5" :index="index">
+        <vue-dfp :is="vueDfp" pos="HPC1" :dfpUnits="dfpUnits" :section="section" slot="DFPAD1" v-if="index === 0"></vue-dfp>
+      </article-right>
+      <article-center :article='item' v-if="item.length >= 10" />
+      <article-left :article='item' v-if="item.length >= 15" />
     </template>
   </section>
 </template>
@@ -30,6 +32,9 @@ export default {
   },
   props: {
     latestArticle: {},
+    dfpUnits: {},
+    section: {},
+    vueDfp: {}
   },
   computed: {
     article() {

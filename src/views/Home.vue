@@ -4,11 +4,10 @@
       <div class="section-view">
         <app-Header :commonData= 'commonData' />
         <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
-        <!--<div id="dfp-test" class="dfp-test">-->
         </div>
         <editor-choice :editorChoice= 'editorChoice'/>
         <section class="container list">
-          <latest-article :latestArticle= 'latestArticle'/>
+          <latest-article :latestArticle= 'latestArticle' :vueDfp="props.vueDfp" :dfpUnits="props.dfpUnits" :section="props.section" />
           <latest-project :project= 'commonData.projects.items' />
         </section>
         <loading :show="loading" />
