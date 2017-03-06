@@ -1,9 +1,11 @@
 <template>
   <section id="latestArticle" class="latestArticle grid grid-4-fifth">
-    <template v-for="item in article">
-      <article-right :article='item' />
-      <article-center :article='item' />
-      <article-left :article='item' />
+    <template v-for="(item, index) in article">
+      <article-right :article='item' :index="index">
+        <vue-dfp :is="vueDfp" pos="HPC1" :dfpUnits="dfpUnits" :section="section" slot="DFPAD1" v-if="index === 0"></vue-dfp>
+      </article-right> 
+      <article-center :article='item' /> 
+      <article-left :article='item' /> 
     </template>
   </section>
 </template>
@@ -30,6 +32,9 @@ export default {
   },
   props: {
     latestArticle: {},
+    dfpUnits: {},
+    section: {},
+    vueDfp: {}
   },
   computed: {
     article() {
@@ -108,9 +113,6 @@ $color-other = #bcbcbc
     flex-direction column
     justify-content space-between
     width calc(25% - 15px)
-
-    > div
-      height calc(50% - 10px)
 
     &__title
       min-height 40px
