@@ -51,15 +51,15 @@ export default {
 <style lang="stylus" scoped>
 
 .editorChoice-full
-  padding 50px 40px 60px
+  padding 25px 32px
   background-color #ddd
-
   a
     display block
   > h2
     position relative
     left 15px
     margin 0
+    font-size 22px
     font-weight 300
     color #000
   > h2:before
@@ -69,15 +69,21 @@ export default {
     left -15px
     display inline-block
     width 5px
-    height 23px
+    height 20px
     background-color #000
   &-post-container
     display flex
+    flex-direction column
     justify-content space-between
-    margin-top 30px
+    margin-top 18px
+    > div:first-child
+      margin 0
   &-post
-    width calc((100% - 40px)/3)
+    margin-top 35px
     &__img
+      position relative
+      left -32px
+      width calc(100% + 64px)
       > figure
         width 100%
         padding-top 66.66%
@@ -90,17 +96,16 @@ export default {
         color #000
         text-align justify
       h2
-        height 78px
         margin 20px 0 16px
         font-size 23px
         
       p
-        height 100px
         margin 0 0 30px
         font-size 15px
         line-height 25px
     &__meta
       display flex
+      justify-content space-between
         
       &--author
         margin-right 10px
@@ -114,9 +119,25 @@ export default {
 
 @media (min-width: 1200px)
   .editorChoice-full
+    padding 50px 40px 60px
     > h2
       font-size 25px
+    > h2:before
+      height 23px
+    &-post-container
+      flex-direction row
+      margin-top 30px
     &-post
+      width calc((100% - 40px)/3)
+      margin-top 0
+      &__img
+        width 100%
+        left auto
+      &__content
+        h2
+          height 78px
+        p
+          height 100px
       &__meta
         justify-content  flex-start
 

@@ -57,29 +57,29 @@ export default {
 
 .latestArticle-full
   display flex
+  flex-direction column
   justify-content space-between
   align-items flex-start
-  padding 40px 40px 70px
+  padding 35px 32px
 
   a
     display block
 
   &-posts
-    > div:first-child
-      padding-top 0
+    > div
+      padding 0
+      margin 0 0 30px 
     > div:last-child
-      border none
-      padding-bottom 0
-
+      margin 0
   
   &-post-container
     flex-grow 1
-    margin-right 50px
     
     > h2
       position relative
       left 15px
-      margin 0 0 35px
+      margin 0 0 20px
+      font-size 22px
       font-weight 300
       color #000
     > h2:before
@@ -89,28 +89,30 @@ export default {
       left -15px
       display inline-block
       width 5px
-      height 23px
+      height 20px
       background-color #000
 
   &-post
     display flex
+    flex-direction column
     padding 25px 0
-    border-bottom 1px solid #ccc
+    
     &__img
-      width 380px
-      height 280px
+      position relative
+      left -32px
+      width calc(100% + 64px)
       figure
-        width 380px
-        height 280px
+        width 100%
+        padding-top 66.66%
         margin 0
         background-position 50% 50%
         background-repeat no-repeat
         background-size cover
     &__content
       flex-grow 1
-      margin-left 25px
+      margin-left 0
       h2 
-        margin 0
+        margin 13px 0 0
         font-size 26px
         line-height 35px
         color #222
@@ -121,7 +123,7 @@ export default {
         color #444
         text-align justify
     &__meta
-      margin 25px 0
+      margin 10px 0
       &--author
         font-size 13px
         color #222
@@ -137,6 +139,44 @@ export default {
       height 250px
       background-color #ffe066
 
+@media (min-width: 1200px)
+  .latestArticle-full
+    flex-direction row
+    padding 40px 40px 70px
+    &-posts
+      > div
+        margin 0
+        padding 25px 0
+      > div:first-child
+        padding-top 0
+      > div:last-child
+        border none
+        padding-bottom 0
+    &-post-container
+      margin-right 50px
+      > h2
+        margin 0 0 35px
+        font-size 25px
+      > h2:before
+        height 23px
+    &-post
+      flex-direction row
+      border-bottom 1px solid #ccc
+      &__img
+        width 380px
+        height 280px
+        left auto
+        figure
+          width 380px
+          height 280px
+          margin 0
+          padding 0
+      &__content
+        margin-left 25px
+        h2
+          margin 0
+      &__meta
+        margin 25px 0
 
 
 </style>

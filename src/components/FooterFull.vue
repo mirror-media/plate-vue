@@ -12,13 +12,13 @@
     <div class="footerFull__vertDivider"></div>
     <div class="footerFull__link">
       <div class="footerFull__link--subscribe">
-        <a href="">訂閱鏡週刊</a> - <a href="">廣告合作</a>
+        <a :href="socialLink.SUBSCRIBE">訂閱鏡週刊</a> - <a :href="socialLink.AD">廣告合作</a>
       </div>
       <div class="footerFull__link--horizDivider"></div>
       <div class="footerFull__link--socialMedia">
-        <a href=""><img class="facebook" src="~public/icon/facebook_white.png"></a>
-        <a href=""><img class="line" src="~public/icon/line_white.png"></a>
-        <a href=""><img class="weibo" src="~public/icon/weibo_white.png"></a>
+        <a :href="socialLink.FACEBOOK"><img class="facebook" src="~public/icon/facebook_white.png"></a>
+        <a :href="socialLink.LINE"><img class="line" src="~public/icon/line_white.png"></a>
+        <a :href="socialLink.WEIBO"><img class="weibo" src="~public/icon/weibo_white.png"></a>
       </div>
     </div>
   </footer>
@@ -76,8 +76,10 @@ export default {
 
 .footerFull
   display flex
+  flex-direction column
   justify-content space-between
-  padding 25px 95px
+  align-items stretch
+  padding 40px 32px
   background-color #000
 
   a
@@ -87,15 +89,20 @@ export default {
     display flex
     justify-content center
     align-items center
+    margin-bottom 40px
 
   &__menu
     display flex
     flex-wrap wrap
-    width 445px
+    width 100%
+    margin-bottom 35px
     > a
-      font-size 15px
+      width 33%
+      margin 15px 0
+      font-size 18px
       font-weight 300
       color #fff
+      text-align center
 
   &__vertDivider
     display none
@@ -107,19 +114,25 @@ export default {
     justify-content center
     align-items center
     flex-direction column
-    width 180px
     &--subscribe
-      margin-bottom 25px
+      margin-bottom 35px
       a
         display inline-block
         color #9fa1a0
         font-size 15px
     &--horizDivider
       display block
+      width 100%
+      height 1px
+      margin-bottom 25px
+      background-color #6e6e6e
     &--socialMedia
       display flex
-      justify-content space-between
+      justify-content space-around
       width 100%
+
+      > a
+        height 22px
 
       .facebook, .line, .weibo
         height 22px
@@ -127,14 +140,27 @@ export default {
 
 @media (min-width 1200px)
   .footerFull
+    flex-direction row
+    align-items stretch
+    padding 25px 95px
+    &__logo
+      margin-bottom 0
     &__menu
+      width 445px
+      margin-bottom 0
       > a
         width 25%
-        margin 15px 0
+        font-size 15px
+        text-align left
     &__vertDivider
       display block
     &__link
+      width 180px
+      &--subscribe
+        margin-bottom 25px
       &--horizDivider
         display none
+      &--socialMedia
+        justify-content space-between
 
 </style>

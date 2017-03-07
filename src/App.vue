@@ -63,6 +63,9 @@ button:focus {
     outline: none
 }
 
+.desktop-only
+  display none !important
+
 .container
   width 320px
   display: flex;
@@ -119,6 +122,9 @@ button:focus {
 @media (min-width 1200px)
   .mobile-only
     display none !important
+
+  .desktop-only
+    display block !important
 
   .container
     width 1024px
