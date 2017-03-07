@@ -28,11 +28,16 @@ export default {
     justify-content: center
     align-items: center
     width 100%
-    height 48px
-    font-size 20px
+    height 42px
+    font-size 18px
     color #fff
     letter-spacing 10px
     border none
     background-color #333
 
+@media (min-width: 1200px)
+  .moreFull
+    > button
+      height 48px
+      font-size 20px
 </style>

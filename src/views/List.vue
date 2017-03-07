@@ -27,13 +27,13 @@
       </div>
 
       <div class="listFull-view" v-if="sectionStyle == 'full'">
-        <header-full/>
+        <header-full :commonData='commonData' :section='section' />
         <article-leading :articles='articles.items' />
-        <editorChoice-full :sectionfeatured= 'sectionfeatured'/>
+        <editorChoice-full :sectionfeatured='sectionfeatured' />
         <latestArticle-full :articles='articles.items' />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
-        <footer-full :commonData= 'commonData' :section='section'/>
+        <footer-full :commonData='commonData' :section='section' />
       </div>
 
     </template>
