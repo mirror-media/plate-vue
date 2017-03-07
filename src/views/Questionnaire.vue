@@ -187,12 +187,12 @@
         border-color transparent transparent #064f77 transparent
 
       &::after
-        content''
-        background linear-gradient(180deg,rgba(0,0,0,0),rgba(0,0,0,0.1),rgba(0,0,0,0.3),rgba(0,0,0,0.3),rgba(0,0,0,0.7),rgba(0,0,0,1))
+        content ''
+        background linear-gradient(170deg, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0.1), rgba(0,0,0,1), rgba(0,0,0,1), rgba(0,0,0,1))
         width 400%
-        height 150px
+        height 70vh
         position absolute
-        top -70px
+        top -65vh
         left 0
         z-index -1
     
