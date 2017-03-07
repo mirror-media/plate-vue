@@ -1,7 +1,7 @@
 <template>
   <div class="question">
     <div class="question__index">
-      <h3 v-for="n in total" :style="{ zIndex: tabZindex(index, n, total), left: (20 * (n - 1)) + '%' }">Ｑ{{ n }}</h3>
+      <h3 v-for="n in total" :style="{ zIndex: tabZindex(index, n, total), left: tabLeft(index, n, total), marginLeft: tabMarginLeft(index, n, total) }">Ｑ{{ n }}</h3>
     </div>
     <div class="question__content">
       <div class="content">
@@ -22,11 +22,17 @@
         }
         return zIndex
       },
+      tabLeft(index, number, total) {
+        return (20 * (number - 1)) + '%'
+      },
+      tabMarginLeft(index, number, total) {
+        return (index < 5)? '-5%' : `${- 5 - ((index - 4) * 20)}%`
+      }
     },
     props: {
       index: {},
       total: {
-        default: () => { return 4 }
+        default: () => { return 1 }
       },
       content: {}
     }
