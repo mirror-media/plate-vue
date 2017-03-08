@@ -2,7 +2,7 @@
   <header>
     <nav class="headerFull" :style="{opacity: opacity}" v-show="defaultNav">
       <div class="headerFull__menu">
-        <a href=""><img src="~public/icon/hamburger_white.png"></a>
+        <a @click="openSideBar()"><img src="~public/icon/hamburger_white.png"></a>
       </div>
       <div class="headerFull__logo">
         <a :href=" '/section/' + section "><img :src="getSectionLogoUrl()"></a>
@@ -20,14 +20,14 @@
         <a :href="socialLink.WEIBO">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/weibo_white.png">
         </a>
-        <a href="">
+        <a @click="openSearchBar()">
           <img class="headerFull__link--icon" src="~public/icon/search_white.png">
         </a>
       </div>
     </nav>
     <nav class="headerFull headerFull--black" :style="{opacity: 1-opacity}" v-show="blackNav">
       <div class="headerFull__menu">
-        <a href=""><img src="~public/icon/hamburger_white.png"></a>
+        <a @click="openSideBar()"><img src="~public/icon/hamburger_white.png"></a>
       </div>
       <div class="headerFull__logo">
         <a :href=" '/section/' + section "><img :src="getSectionLogoUrl()"></a>
@@ -45,7 +45,7 @@
         <a :href="socialLink.WEIBO">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/weibo_white.png">
         </a>
-        <a href="">
+        <a @click="openSearchBar()">
           <img class="headerFull__link--icon" src="~public/icon/search_white.png">
         </a>
       </div>
@@ -60,17 +60,13 @@ import _ from 'lodash'
 
 export default {
   name: 'header-full',
-  props: {
-    commonData: {},
-    headerDFPHeight: 0,
-    section: '',
-  },
+  props: ['commonData', 'section'],
   data () {
     return {
-      searchVal: '',
-      opacity: 1,
-      defaultNav: true,
       blackNav: false,
+      defaultNav: true,
+      opacity: 1,
+      searchVal: '',
     }
   },
   methods: {
@@ -79,6 +75,12 @@ export default {
     },
     getSectionLogoUrl () {
       return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+    },
+    openSearchBar () {
+      this.$emit('openSearchBar')
+    },
+    openSideBar () {
+      this.$emit('openSideBar')
     },
     search (searchVal = '') {
       this.$router.push('/search/'+ this.searchVal)
@@ -114,7 +116,7 @@ export default {
   position fixed
   top 0
   left 0
-  z-index 999
+  z-index 500
   width 100%
   height 85px
   padding 20px 30px 0 25px
