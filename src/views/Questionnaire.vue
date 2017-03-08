@@ -133,16 +133,6 @@
         return this.$store.state.answers
       },
       getQuestionnaireResult() {
-        //算答對提數
-        // const scoreArr = _.map(this.answerSlip, (item, idx) => {
-        //   const { score } = _.find(_.get(this.questions, [ idx, 'options' ]), { id: item.optId })
-        //   return score
-        // })
-        // const { '0': countWrong = 0 } = _.countBy(scoreArr)
-        // return {
-        //   correct: (questions.length - countWrong),
-        //   wrong: countWrong
-        // }
         const answerSlip = this.getAnswerSlip()
         const score = _.chain(this.questions)
                         .map((itm, idx) => {
