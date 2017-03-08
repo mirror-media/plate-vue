@@ -1,6 +1,8 @@
 <template>
   <div class="question">
-    <!--div class="question__index"><h3>Ｑ{{ index }}</h3></div-->
+    <div class="question__index">
+      <h3 v-for="n in total" :style="{ zIndex: tabZindex(index, n, total), left: tabLeft(index, n, total), marginLeft: tabMarginLeft(index, n, total) }">Ｑ{{ n }}</h3>
+    </div>
     <div class="question__content">
       <div class="content">
         <h3>{{ content }}</h3>
@@ -11,8 +13,27 @@
 <script>
   export default {
     name: 'question-container',
+    methods: {
+      tabZindex(index, number, total) {
+        let zIndex = total
+        if(index != number) {
+          const distance = Math.abs(index - number)
+          zIndex = total - distance
+        }
+        return zIndex
+      },
+      tabLeft(index, number, total) {
+        return (20 * (number - 1)) + '%'
+      },
+      tabMarginLeft(index, number, total) {
+        return (index < 5)? '-5%' : `${- 5 - ((index - 4) * 20)}%`
+      }
+    },
     props: {
       index: {},
+      total: {
+        default: () => { return 1 }
+      },
       content: {}
     }
   }
@@ -20,23 +41,39 @@
 <style lang="stylus">
   .question 
     height 33%
-    padding 20px
-    display flex
-    align-items center
 
     .question__index 
       text-align center
-      flex 2
+      height 40px
+      background-color #064f77
+      position relative
+
       h3
-        font-style italic
-        font-size 20px
+        cursor pointer
+        margin 0
+        background-color #fff
+        display block
+        width 35%
+        height 100%
+        display flex
+        justify-content center
+        align-items center
+        font-size 1.5rem
+        color #064f77
+        border-top-left-radius 10px
+        border-top-right-radius 10px
+        margin-left -5%
+        position absolute
+        box-shadow 0 0 10px rgba(65, 65, 65, 0.76)
 
     .question__content 
-      flex 7
-      padding 0 0.7em
+      padding 0 2rem
       height 100%
       display flex
       flex-direction column
       justify-content center
+      position relative
+      z-index 100
+      background-color #fff
 
 </style>

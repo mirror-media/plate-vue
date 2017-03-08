@@ -12,7 +12,7 @@ export const DFP_UNITS = {
         'SPCHD': { 'aduid': 'test_pc_np_ap_970x250_HD', 'dimensions': '970x250', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': [''] },
         'SPCFT': { 'aduid': 'test_pc_np_ap_970x90_FT', 'dimensions': '970x90,970x90', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'HPC1': { 'aduid': 'test_pc_hp_fluid_NA1', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
-        'TEST': { 'aduid': 'test_pc_list_NA1', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-bottom-0'], 'cont-style': [''] },
+        'TEST': { 'aduid': 'test_pc_list_NA1', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
         'PCR1': { 'aduid': 'mm_mobile_wat_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
     },
     '57e1e0e5ee85930e00cad4e9': { //news-people
