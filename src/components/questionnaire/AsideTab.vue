@@ -8,7 +8,7 @@
     computed: {},
     methods: {
       tabMarginTop(index, number, total) {
-        return (index < 5)? '-5%' : `${- 5 - ((index - 4) * 150)}%`
+        return (index < 7)? '-5%' : `${- 5 - ((index - 6) * 150)}%`
       },
       tabName(n) {
         return `Ｑ${(n)}`
@@ -49,7 +49,7 @@
 
     h3
       background-color #fff
-      width 80%
+      width 65%
       height 18%
       border-top-left-radius 10px
       border-bottom-left-radius 10px
@@ -64,6 +64,7 @@
       align-items center
       font-weight normal
       color #007cbf
+      transition: margin-top 0.25s, z-index 0.1s;
 
 
 </style>

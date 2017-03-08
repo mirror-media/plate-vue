@@ -5,7 +5,7 @@
         <img :src="getValue(questionnaireData, ['image', 'url'], '/public/notImage.png')" />
       </div>
       <div class="questionnaire__title">
-        <div v-text="getValue(questionnaireData, ['title'], '')"></div>
+        <div v-text="questionnaireTitle"></div>
       </div>
       <div class="questionnaire__btn-start">
         <div @click="start">開始測驗</div>
@@ -81,6 +81,7 @@
         finished: false,
         lockPickFlag: false,
         preFetch: fetchQuestionnaire,
+        questionnaireId: this.$store.state.route.params.questionnaireId,
         selectedOpt: '',
         startFlag: false,
         showCorrectAnsFlag: this.$store.state.showCorrectAns,
@@ -108,7 +109,13 @@
         return _.get(this.questionnaireData, [ 'type' ], 'mind')
       },
       questionnaireData() {
-        return _.get(this.$store.state, [ 'questionnaire', this.$store.state.route.params.questionnaireId ])
+        return _.get(this.$store.state, [ 'questionnaire', this.questionnaireId ])
+      },
+      questionnaireTitle() {
+        return _.get(this.questionnaireData, [ 'title' ], '鏡傳媒小測驗')
+      },
+      questionnaireDesc() {
+        return _.get(this.questionnaireData, [ 'subtitle' ], '來玩玩看鏡傳媒小測驗吧')
       },
       questions() {
         return _.get(this.questionnaireData, [ 'questions' ], [])
@@ -171,11 +178,25 @@
       }
     },
     mounted() {},
-    metaInfo: {
-      meta: [
-        { charset: 'utf-8' },
-        { name: 'description', content: '小測驗' }
-      ]
+    metaInfo() {
+
+      return {
+        title: this.questionnaireTitle,
+        meta: [
+          { name: 'keywords', content: '鏡週刊,鏡傳媒,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
+          { name: 'description', content: this.questionnaireDesc },
+          { name: 'twitter:card', content: 'summary_large_image' },
+          { name: 'twitter:title', content: this.questionnaireTitle },
+          { name: 'twitter:description', content: this.questionnaireDesc },
+          // { name: 'twitter:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
+          { property: 'og:site_name', content: '鏡傳媒 Mirror Media' },
+          { property: 'og:locale', content: 'zh_TW' },
+          { property: 'og:title', content: this.questionnaireTitle },
+          { property: 'og:description', content: this.questionnaireDesc },
+          { property: 'og:url', content: `/q/${this.questionnaireId}` },
+          // { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
+        ]
+      }
     },
     name: 'questionnaire-view',
     preFetch: fetchQuestionnaire,    
@@ -340,8 +361,8 @@
 
   @media (min-width 1200px)
     .questionnaire-view 
-      width 95vw
-      left 5vw
+      width 93vw
+      left 7vw
       margin 0
 
       .questionnaire__cover
@@ -443,7 +464,7 @@
         position relative
 
       aside
-        width 5vw
+        width 7vw
         background-color #064f77
         position fixed
         top 0
