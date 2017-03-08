@@ -27,12 +27,14 @@
       </div>
 
       <div class="listFull-view" v-if="sectionStyle == 'full'">
+        <div id="dfp-HD" class="listFull-dfp dfp-HD">AD HD</div>
         <header-full :commonData='commonData' :section='section' />
         <article-leading :articles='articles.items' />
         <editorChoice-full :sectionfeatured='sectionfeatured' />
         <latestArticle-full :articles='articles.items' />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
+        <div class="listFull-dfp dfp-FT">AD FT</div>
         <footer-full :commonData='commonData' :section='section' />
       </div>
 
@@ -492,6 +494,22 @@ $color-other = #bcbcbc
 .listFull
   &-view
     background-color #f5f5f5
+  &-dfp
+    width 300px
+    margin 0 auto 35px
+    background-color #ffe066
+    &.dfp-FT
+      height 250px
+    &.dfp-HD
+      display none
+      height 250px
+
+@media (min-width: 1200px)
+  .listFull
+    &-dfp
+      width 970px
+      &.dfp-FT
+        height 90px
 
 .footer
   &.container
