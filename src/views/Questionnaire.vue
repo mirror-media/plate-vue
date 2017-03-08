@@ -198,6 +198,7 @@
         align-items center
         color #fff   
         cursor pointer
+        z-index 10
         & > div
           height 100%
           width 100%
@@ -216,6 +217,7 @@
         align-items center
         color #fff   
         cursor pointer
+        z-index 10
         & > div
           flex 1
           height 100%
@@ -227,35 +229,32 @@
             border-right 1px solid #d2d2d2
     
     .questionnaire__title 
-      min-height 30vh
-      background-color #064f77
-      position fixed
+      position relative
       left 0
-      bottom 28px
+      top 70vh
       width 100%
       color #fff
       display flex
       flex-direction column
       justify-content center
       align-items flex-start
-      padding 20px 30px 40px
       font-size 20px
+      margin-top -60px
       
 
       & > div
-        position absolute
+        position relative
         left 0
         width 100%
-        padding 20px 30px
+        padding 20px 30px 60px
         display flex
         justify-content center
         align-items flex-start
         bottom 0
-        height 30vh
-        overflow hidden
-        z-index 1
+        z-index 2
         background-color #064f77
         flex-direction column
+        min-height 25vh
         
         div
           h3
@@ -268,20 +267,20 @@
         border-style solid
         border-width 0 0 60px 100vw
         position relative
-        top -105px
-        left -30px
+        left 0
         display block
         border-color transparent transparent #064f77 transparent
+        z-index 2
 
       &::after
         content ''
-        background linear-gradient(170deg, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0),rgba(0,0,0,0),rgba(0,0,0,0.1), rgba(0,0,0,1), rgba(0,0,0,1), rgba(0,0,0,1))
+        background linear-gradient(170deg, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0.1), #000, #000, #000)
         width 400%
-        height 70vh
+        height 100vh
         position absolute
-        top -65vh
         left 0
-        z-index -1
+        z-index 1
+        bottom 0
     
     
     

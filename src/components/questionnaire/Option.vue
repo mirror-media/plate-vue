@@ -18,11 +18,11 @@
     },
     data() {
       return {
-        status: false,
         correctFlag: false,
-        wrongFlag: false,
         // showAnsFlag: this.showCorrectAnsFlag,
+        status: false,
         thisQuestId: this.questId
+        wrongFlag: false,
       }
     },
     name: 'option-container',
@@ -30,16 +30,16 @@
       optPick() {
         if(!this.status || (this.status && this.gameType === 'mind')) {
           if(this.optId !== this.designatedOptId) {
+            this.correctFlag = false
             this.status = true 
             this.wrongFlag = true
-            this.correctFlag = false
             this.$store.state.showDesc = true
             this.$store.state.showCorrectAns = true
             if(this.gameType !== 'mind') {}
           } else {
             this.status = true 
-            this.wrongFlag = false
             this.correctFlag = true
+            this.wrongFlag = false
             this.$store.state.showDesc = true
             this.$store.state.showCorrectAns = true
           }
@@ -69,8 +69,8 @@
     updated() {
       if(this.thisQuestId !== this.questId) {
         this.correctFlag =  false
-        this.wrongFlag = false
         this.status = false
+        this.wrongFlag = false
         // this.showAnsFlag = false
         this.thisQuestId = this.questId
       }
