@@ -21,7 +21,7 @@
         correctFlag: false,
         // showAnsFlag: this.showCorrectAnsFlag,
         status: false,
-        thisQuestId: this.questId
+        thisQuestId: this.questId,
         wrongFlag: false,
       }
     },
