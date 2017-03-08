@@ -19,7 +19,6 @@
     data() {
       return {
         correctFlag: false,
-        // showAnsFlag: this.showCorrectAnsFlag,
         status: false,
         showDesc: false, 
         showCorrectAns: false,
@@ -34,16 +33,16 @@
           if(this.gameType !== 'mind') {
             if(this.optId !== this.designatedOptId) {
               this.status = true 
-                this.showCorrectAns = true
-                this.correctFlag = false
-                this.wrongFlag = true
-                this.showDesc = true
-            } else {
-              this.status = true 
-              this.correctFlag = true
-              this.wrongFlag = false
-              this.showDesc = true
+              this.correctFlag = false
               this.showCorrectAns = true
+              this.showDesc = true
+              this.wrongFlag = true
+            } else {
+              this.correctFlag = true
+              this.showCorrectAns = true
+              this.showDesc = true
+              this.status = true 
+              this.wrongFlag = false
             }
           } else {
             this.correctFlag = true
@@ -70,9 +69,6 @@
       questId: {
         default: () => { return '' }
       },
-      // resetOptionStatus: {
-      //   default: () => { return '' }
-      // },
       showCorrectAnsFlag: {
         default: () => { return false }
       },
@@ -89,10 +85,6 @@
         if(this.optId !== this.designatedOptId && this.gameType === 'mind') {
           this.correctFlag =  false
         }
-        // if(this.resetOptionStatus) {
-          // this.correctFlag =  false
-          // this.status = false
-        // }
       }
     }
   }

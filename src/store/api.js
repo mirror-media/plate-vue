@@ -148,8 +148,8 @@ function loadLatestArticle(params = {}) {
     return _doFetch(url)
 }
 
-function loadQuestionnaire() {
-    let apiHost = `${QUESTIONNAIRE_PROTOCOL}://${QUESTIONNAIRE_HOST}/questionnaire/tasduiiuah32hk2/tasduiiuah32hk2.json`
+function loadQuestionnaire(id) {
+    let apiHost = `${QUESTIONNAIRE_PROTOCOL}://${QUESTIONNAIRE_HOST}/questionnaire/${id}/${id}.json`
     return new Promise(resolve => {
         superagent
             .get(apiHost)
@@ -249,7 +249,7 @@ export function fetchLatestArticle(params = {}) {
 }
 
 export function fetchQuestionnaire(id) {
-    return loadQuestionnaire()
+    return loadQuestionnaire(id)
 }
 
 export function fetchSearch(keyword = '', params = {}) {

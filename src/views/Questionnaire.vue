@@ -108,7 +108,7 @@
         return _.get(this.questionnaireData, [ 'type' ], 'mind')
       },
       questionnaireData() {
-        return _.get(this.$store.state, [ 'questionnaire', 'tasduiiuah32hk2' ])
+        return _.get(this.$store.state, [ 'questionnaire', this.$store.state.route.params.questionnaireId ])
       },
       questions() {
         return _.get(this.questionnaireData, [ 'questions' ], [])
