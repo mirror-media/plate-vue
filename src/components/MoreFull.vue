@@ -22,7 +22,7 @@ export default {
 
 .moreFull
   padding 0 40px
-  margin-bottom 70px
+  margin-bottom 35px
   > button
     display: flex
     justify-content: center
@@ -37,6 +37,7 @@ export default {
 
 @media (min-width: 1200px)
   .moreFull
+    margin-bottom 70px
     > button
       height 48px
       font-size 20px

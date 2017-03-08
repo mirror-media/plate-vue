@@ -15,9 +15,7 @@
           <a :href="getHref(article)"><h2 v-text="article.title"></h2></a>
           <a :href="getHref(article)"><p v-text="getBrief(article, 200) + ' <More>' "></p></a>
         </div>
-        <div class="article-leading-post__dfp">
-          
-        </div>
+        <div class="article-leading-post__dfp dfp-l1 dfp-l2">AD L1 L2</div>
       </div>
       <div class="article-leading-related" v-if="hasRelated(article)">
         <div>
@@ -123,10 +121,11 @@ export default {
     display flex
     flex-direction column
     justify-content space-between
-    padding 20px 32px 30px
+    padding 20px 0 30px
 
     &__meta
       margin-bottom 25px
+      padding 0 32px
       &--author
         font-size 13px
       &--date
@@ -134,6 +133,7 @@ export default {
         color #999
   
     &__content
+      padding 0 32px
       h2, p
         margin 0
         text-align justify
@@ -153,7 +153,7 @@ export default {
       width 300px
       height 250px
       margin 0 auto
-      background-color #247ba0
+      background-color #ffe066
 
   &-related
     padding 0 32px 35px
@@ -242,6 +242,7 @@ export default {
       padding 40px 40px 50px
       &__meta
         width 170px
+        padding 0
         > span
           display block
           font-size 12px
@@ -249,7 +250,7 @@ export default {
 
       &__content
         width 600px
-
+        padding 0
         h2
           margin-bottom 20px
           font-size 36px

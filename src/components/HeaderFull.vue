@@ -62,7 +62,8 @@ export default {
   name: 'header-full',
   props: {
     commonData: {},
-    section: ''
+    headerDFPHeight: 0,
+    section: '',
   },
   data () {
     return {
@@ -73,6 +74,9 @@ export default {
     }
   },
   methods: {
+    getHeaderDFPHeight () {
+      this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
+    },
     getSectionLogoUrl () {
       return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
     },
@@ -81,9 +85,6 @@ export default {
     },
     handleScroll () {
       window.onscroll = (e) => {
-        // if (currentYPosition() > 60) {
-        //   this.opacity = 0
-        // }
         this.opacity = 1 - currentYPosition() / 300
         this.opacity < 0 ? this.defaultNav = false : this.defaultNav = true
         this.opacity < 1 ? this.blackNav = true : this.blackNav = false
@@ -100,8 +101,7 @@ export default {
   },
   mounted() {
     this.handleScroll()
-  }
-
+  },
 }
 
 </script>

@@ -1,5 +1,6 @@
 <template>
   <section class="latestArticle-full">
+    <div class="latestArticle-full-dfp dfp-l3">AD L3</div>
     <div class="latestArticle-full-post-container">
       <h2>最新新聞 Latest Stories</h2>
       <div class="latestArticle-full-posts">
@@ -21,8 +22,8 @@
       </div>
       
     </div>
-    <div class="latestArticle-full-dfp desktop-only">
-      <div></div>
+    <div class="latestArticle-full-dfp dfp-R desktop-only">
+      <div>AD R3 R4</div>
     </div>
   </section>
 </template>
@@ -60,7 +61,7 @@ export default {
   flex-direction column
   justify-content space-between
   align-items flex-start
-  padding 35px 32px
+  padding 35px 0
 
   a
     display block
@@ -74,7 +75,7 @@ export default {
   
   &-post-container
     flex-grow 1
-    
+    padding 0 32px
     > h2
       position relative
       left 15px
@@ -134,10 +135,14 @@ export default {
   &-dfp
     width 300px
     min-width 300px
-
+    margin 0 auto
+    background-color #ffe066
     > div
+      height 250px      
+
+    &.dfp-l3
       height 250px
-      background-color #ffe066
+      margin-bottom 35px
 
 @media (min-width: 1200px)
   .latestArticle-full
@@ -154,6 +159,7 @@ export default {
         padding-bottom 0
     &-post-container
       margin-right 50px
+      padding 0
       > h2
         margin 0 0 35px
         font-size 25px
@@ -177,6 +183,9 @@ export default {
           margin 0
       &__meta
         margin 25px 0
+    &-dfp
+      &.dfp-l3
+        display none
 
 
 </style>
