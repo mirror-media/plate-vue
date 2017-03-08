@@ -60,10 +60,10 @@
       gameType: {
         default: () => { return 'quiz' }
       },
+      index: {},
       lockPickFlag: {
         default: () => { return false }
       },
-      index: {},
       optId: {
         default: () => { return '' }
       },

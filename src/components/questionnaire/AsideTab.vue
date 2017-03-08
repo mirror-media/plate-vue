@@ -5,7 +5,6 @@
 </template>
 <script>
   export default {
-    name: 'aside-tab',
     computed: {},
     methods: {
       tabMarginTop(index, number, total) {
@@ -26,6 +25,7 @@
         return zIndex
       },
     },
+    name: 'aside-tab',
     props: {
       index: {
         default: () => { return 0 }

@@ -68,8 +68,6 @@
   }
 
   export default {
-    name: 'questionnaire-view',
-    preFetch: fetchQuestionnaire,
     components: {
       'aside-tab': AsideTab,
       'option-container': Option,
@@ -179,6 +177,8 @@
         { name: 'description', content: '小測驗' }
       ]
     },
+    name: 'questionnaire-view',
+    preFetch: fetchQuestionnaire,    
     updated() {
     },
     watch: {
