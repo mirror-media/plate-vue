@@ -11,7 +11,7 @@
     computed: {
       optClass() {
         return {
-          correct: (this.status && this.correctFlag) || (this.showCorrectAnsFlag && this.optId === this.designatedOptId),
+          correct: (this.status && this.correctFlag) || (this.showCorrectAnsFlag && this.optId === this.designatedOptId) || (this.gameType === 'mind'  && this.correctFlag),
           wrong: this.status && this.wrongFlag
         }
       },
@@ -21,6 +21,8 @@
         correctFlag: false,
         // showAnsFlag: this.showCorrectAnsFlag,
         status: false,
+        showDesc: false, 
+        showCorrectAns: false,
         thisQuestId: this.questId,
         wrongFlag: false,
       }
@@ -28,22 +30,25 @@
     name: 'option-container',
     methods: {
       optPick() {
-        if(!this.status || (this.status && this.gameType === 'mind')) {
-          if(this.optId !== this.designatedOptId) {
-            this.correctFlag = false
-            this.status = true 
-            this.wrongFlag = true
-            this.$store.state.showDesc = true
-            this.$store.state.showCorrectAns = true
-            if(this.gameType !== 'mind') {}
+        if(!this.lockPickFlag && (!this.status || (this.status && this.gameType === 'mind'))) {
+          if(this.gameType !== 'mind') {
+            if(this.optId !== this.designatedOptId) {
+              this.status = true 
+                this.showCorrectAns = true
+                this.correctFlag = false
+                this.wrongFlag = true
+                this.showDesc = true
+            } else {
+              this.status = true 
+              this.correctFlag = true
+              this.wrongFlag = false
+              this.showDesc = true
+              this.showCorrectAns = true
+            }
           } else {
-            this.status = true 
             this.correctFlag = true
-            this.wrongFlag = false
-            this.$store.state.showDesc = true
-            this.$store.state.showCorrectAns = true
           }
-          this.$store.state.answers.push({ questId: this.questId, optId: this.optId })
+          this.$emit('optPick', { showDesc: this.showDesc, showCorrectAns: this.showCorrectAns, answer: { questId: this.questId, optId: this.optId } })
         }
       }
     },
@@ -55,6 +60,9 @@
       gameType: {
         default: () => { return 'quiz' }
       },
+      lockPickFlag: {
+        default: () => { return false }
+      },
       index: {},
       optId: {
         default: () => { return '' }
@@ -62,17 +70,29 @@
       questId: {
         default: () => { return '' }
       },
+      // resetOptionStatus: {
+      //   default: () => { return '' }
+      // },
       showCorrectAnsFlag: {
         default: () => { return false }
-      }
+      },
     },
     updated() {
       if(this.thisQuestId !== this.questId) {
         this.correctFlag =  false
         this.status = false
-        this.wrongFlag = false
-        // this.showAnsFlag = false
+        this.showDesc = false
+        this.showCorrectAns = false
         this.thisQuestId = this.questId
+        this.wrongFlag = false
+      } else {
+        if(this.optId !== this.designatedOptId && this.gameType === 'mind') {
+          this.correctFlag =  false
+        }
+        // if(this.resetOptionStatus) {
+          // this.correctFlag =  false
+          // this.status = false
+        // }
       }
     }
   }
@@ -144,4 +164,7 @@
               left 2px
               top -5px
   
+  @media (min-width 768px)
+    .option-container
+      font-size 1.4rem
 </style>

@@ -14,6 +14,12 @@
   export default {
     name: 'question-container',
     methods: {
+      tabLeft(index, number, total) {
+        return (20 * (number - 1)) + '%'
+      },
+      tabMarginLeft(index, number, total) {
+        return (index < 5)? '-5%' : `${- 5 - ((index - 4) * 20)}%`
+      },
       tabZindex(index, number, total) {
         let zIndex = total
         if(index != number) {
@@ -22,12 +28,6 @@
         }
         return zIndex
       },
-      tabLeft(index, number, total) {
-        return (20 * (number - 1)) + '%'
-      },
-      tabMarginLeft(index, number, total) {
-        return (index < 5)? '-5%' : `${- 5 - ((index - 4) * 20)}%`
-      }
     },
     props: {
       index: {},
@@ -75,5 +75,18 @@
       position relative
       z-index 100
       background-color #fff
+  
+  @media (min-width 768px)
+    .question
+      .question__content
+        padding 2rem 5rem
+        font-size 1.3rem
 
+  @media (min-width 1200px)
+    .question
+      .question__index
+        display none
+      
+      .question__content
+        padding 50px 0 25px
 </style>

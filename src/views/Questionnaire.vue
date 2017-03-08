@@ -1,11 +1,11 @@
 <template>
   <div class="questionnaire-view">
     <template v-if="!startFlag">
-      <div class="questionnaire__title">
-        <div v-text="getValue(questionnaireData, ['title'], '')"></div>
-      </div>
       <div class="questionnaire__cover">
         <img :src="getValue(questionnaireData, ['image', 'url'], '/public/notImage.png')" />
+      </div>
+      <div class="questionnaire__title">
+        <div v-text="getValue(questionnaireData, ['title'], '')"></div>
       </div>
       <div class="questionnaire__btn-start">
         <div @click="start">開始測驗</div>
@@ -16,11 +16,11 @@
       <div class="questionnaire__question">
         <question-container :index="(currQuestIndex + 1)" :content="currQuestion" :total="questions.length" />
       </div>
-      <div class="questionnaire__options" @click="updateState">
+      <div class="questionnaire__options" >
         <template v-for="(o, i) in currOptions">
-          <option-container :index="(i + 1)" :content="o.title" :designatedOptId="getValue(questions, [ currQuestIndex, 'designated_option' ], 'a2')" 
-                            :optId="getValue(o, [ 'id' ], '')" :gameType="`quiz`" :questId="getValue(questions, [ currQuestIndex, 'id' ], '')" 
-                            :showCorrectAnsFlag="showCorrectAnsFlag" />
+          <option-container :index="(i + 1)" :content="o.title" :designatedOptId="designatedOption" 
+                            :optId="getValue(o, [ 'id' ], '')" :gameType="gameType" :questId="getValue(questions, [ currQuestIndex, 'id' ], '')" 
+                            :showCorrectAnsFlag="showCorrectAnsFlag" @optPick="updateState" :lockPickFlag="lockPickFlag" />
         </template>      
       </div>
       <div class="questionnaire__description" :class="descShow">
@@ -31,28 +31,33 @@
       </div>
     </template>
     <template v-else>
+      <div class="questionnaire__cover">
+        <img :src="getValue(getQuestionnaireResult(), ['image', 'url'], '/public/notImage.png')" />
+      </div>
       <div class="questionnaire__title">
         <div>
           <div><h3>結果</h3></div>
           <div v-text="getValue(getQuestionnaireResult(), ['title'], '')"></div>
         </div>
       </div>
-      <div class="questionnaire__cover">
-        <img :src="getValue(getQuestionnaireResult(), ['image', 'url'], '/public/notImage.png')" />
-      </div>
       <div class="questionnaire__btn-bar">
         <div class="play-again" @click="playAgain">再玩一次</div><div class="share">分享結果</div>
       </div>
     </template>
+    <aside class="desktop-only">
+      <aside-tab :index="(currQuestIndex + 1)" :total="questions.length" :title="getValue(questionnaireData, ['title'], '')" />
+    </aside>
   </div>
 </template>
 <script>
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
   import { getValue } from '../utils/comm'
   import _ from 'lodash'
+  import AsideTab from '../components/questionnaire/AsideTab.vue'
   import Option from '../components/questionnaire/Option.vue'
   import Question from '../components/questionnaire/Question.vue'
   import store from '../store'
+
   const fetchQuestionnaire = (store) => {
     return store.dispatch('FETCH_QUESTIONNAIRE', {
       id: store.state.route.params.questionnaireId
@@ -61,29 +66,31 @@
   const fetchArticles = (store, params = {}) => {
     return store.dispatch('FETCH_ARTICLES', params)
   }
+
   export default {
     name: 'questionnaire-view',
     preFetch: fetchQuestionnaire,
     components: {
+      'aside-tab': AsideTab,
       'option-container': Option,
       'question-container': Question
     },
     data() {
       return {
+        answerSlip: {},
         currQuestIndex: 0,
-        finished: false,
-        preFetch: fetchQuestionnaire,
-        startFlag: false,
         descShowFlag: this.$store.state.showDesc,
-        showCorrectAnsFlag: this.$store.state.showCorrectAns
+        finished: false,
+        lockPickFlag: false,
+        preFetch: fetchQuestionnaire,
+        selectedOpt: '',
+        startFlag: false,
+        showCorrectAnsFlag: this.$store.state.showCorrectAns,
       }
     },
     computed: {
       btnNextText() {
         return ((this.currQuestIndex + 1) !== this.questions.length) ? '下一題' : '看結果'
-      },
-      questionnaireData() {
-        return _.get(this.$store.state, [ 'questionnaire', 'tasduiiuah32hk2' ])
       },
       currOptions() {
         return _.get(this.questionnaireData, [ 'questions', this.currQuestIndex, 'options' ])
@@ -96,6 +103,15 @@
           show: this.descShowFlag
         }
       },
+      designatedOption() {
+        return (this.gameType !== 'mind') ? _.get(this.questions, [ this.currQuestIndex, 'designated_option' ], '') : this.selectedOpt
+      },
+      gameType() {
+        return _.get(this.questionnaireData, [ 'type' ], 'mind')
+      },
+      questionnaireData() {
+        return _.get(this.$store.state, [ 'questionnaire', 'tasduiiuah32hk2' ])
+      },
       questions() {
         return _.get(this.questionnaireData, [ 'questions' ], [])
       },
@@ -106,17 +122,25 @@
     methods: {
       getValue,
       smoothScroll,
-      updateState() {
-        this.descShowFlag = this.$store.state.showDesc
-        this.showCorrectAnsFlag = this.$store.state.showCorrectAns
+      updateState({ showDesc, showCorrectAns, answer }) {
+        this.descShowFlag = showDesc
+        if(this.gameType !== 'mind') {
+          this.lockPickFlag = true
+        } else {
+          this.selectedOpt = answer.optId
+        }
+        this.showCorrectAnsFlag = showCorrectAns
+        this.answerSlip[ answer.questId ] = answer
       },
       goNextQuestion(e) {
-        if(!this.descShowFlag || !this.showCorrectAnsFlag) { return }
-        this.finished = ((this.currQuestIndex + 1) !== this.questions.length) ? false : true
-        this.smoothScroll(null, 1)
+        if(((!this.descShowFlag || !this.showCorrectAnsFlag) && this.gameType !== 'mind') 
+            || (this.gameType === 'mind' && !this.answerSlip[ this.questions[ this.currQuestIndex ][ 'id' ] ])) { return }
+        this.currQuestIndex = (this.currQuestIndex !== this.questions.length) ? (this.currQuestIndex + 1) : 0
         this.descShowFlag = false
+        this.finished = (this.currQuestIndex !== this.questions.length) ? false : true
+        this.lockPickFlag = false
+        this.smoothScroll(null, 1)
         this.showCorrectAnsFlag = false
-        this.currQuestIndex = ((this.currQuestIndex + 1) !== this.questions.length) ? (this.currQuestIndex + 1) : 0
       },
       playAgain() {
         this.currQuestIndex = 0
@@ -124,20 +148,18 @@
         this.finished = false
         this.showCorrectAnsFlag = false
         this.startFlag = false
-        this.$store.state.answers = []
-        this.$store.state.showCorrectAns = false
-        this.$store.state.showDesc = false
+        this.answerSlip = {}
         this.smoothScroll(null, 1)
       },
       getAnswerSlip() {
-        return this.$store.state.answers
+        return this.answerSlip
       },
       getQuestionnaireResult() {
         const answerSlip = this.getAnswerSlip()
         const score = _.chain(this.questions)
                         .map((itm, idx) => {
-                          let { options } = itm
-                          let s = _.find(options, { id: answerSlip[ idx ][ 'optId' ] })[ 'score' ]
+                          let { id, options } = itm
+                          let s = _.find(options, { id: answerSlip[ id ][ 'optId' ] })[ 'score' ]
                           return s
                         }).reduce((t, n) => (t + n)).value()
         const rs = _.chain(this.results)
@@ -150,13 +172,11 @@
         this.startFlag = true
       }
     },
-    mounted() {
-      this.$store.state.answers = []
-    },
+    mounted() {},
     metaInfo: {
       meta: [
         { charset: 'utf-8' },
-        { name: 'description', content: '桌遊小測驗' }
+        { name: 'description', content: '小測驗' }
       ]
     },
     updated() {
@@ -168,7 +188,6 @@
 </script>
 <style lang="stylus" scoped>
   .questionnaire-view 
-    max-width 960px
     margin 0 auto
     height 100vh
 
@@ -178,7 +197,7 @@
       z-index -1
       left 0
       width 100%
-      height 70vh
+      height 75vh
       img
         object-fit cover
         width 100%
@@ -231,7 +250,7 @@
     .questionnaire__title 
       position relative
       left 0
-      top 70vh
+      top 75vh
       width 100%
       color #fff
       display flex
@@ -255,6 +274,7 @@
         background-color #064f77
         flex-direction column
         min-height 25vh
+        top -1px
         
         div
           h3
@@ -275,7 +295,9 @@
       &::after
         content ''
         background linear-gradient(170deg, rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0), rgba(0,0,0,0.1), #000, #000, #000)
-        width 400%
+        background-size 400% 100%
+        background-repeat no-repeat
+        width 100%
         height 100vh
         position absolute
         left 0
@@ -289,6 +311,7 @@
       flex-direction column
       justify-content center
       align-items center
+      margin-top 20px
 
       & > div
         width 80%
@@ -308,5 +331,140 @@
 
       &.show
         display block
+
+  @media (min-width 768px)
+    .questionnaire-view
+      .questionnaire__description
+        font-size 1.4rem
+        line-height 2rem
+
+  @media (min-width 1200px)
+    .questionnaire-view 
+      width 95vw
+      left 5vw
+      margin 0
+
+      .questionnaire__cover
+        position relative
+        padding 40px
+        height 50vh
+        text-align center
+        z-index 1
+
+        img 
+          width 80%
+
+      .questionnaire__title
+        top auto
+        padding 0 40px
+        margin-top 0
+
+        & > div
+          background-color transparent
+          color #000
+          width 80%
+          margin 0 auto
+          padding 0
+          align-items flex-start
+          justify-content flex-start
+          min-height auto
+
+        &::before
+          border-style none
+
+        &::after
+          width 0
+          height 0
+
+      .questionnaire__btn
+
+        &-start
+          position relative
+          padding 0 40px
+          background-color transparent
+          color #007cbf
+          cursor none
+          margin-top 40px
+
+          & > div
+            width 80%
+            justify-content flex-start
+            font-size 1.2rem
+            text-decoration underline
+            cursor pointer
+
+        &-next
+          position relative
+          padding 0 40px
+          background-color transparent
+          color #007cbf
+          cursor none
+          margin-top 40px
+          
+          & > div
+            width 80%
+            justify-content flex-end
+            font-size 1.2rem
+            text-decoration underline
+            cursor pointer
+
+        &-bar
+          position relative
+          padding 0 40px
+          background-color transparent
+          color #007cbf
+          cursor none
+          margin-top 40px
+          display block
+          margin 40px auto 60px
+          width 80%
+
+          & > div
+            width 15%
+            justify-content flex-start
+            font-size 1.2rem
+            text-decoration underline
+            cursor pointer
+            display inline-block
+
+            &:not(:last-child)
+              border none
+
+      .questionnaire__question
+        width 80%
+        margin 0 auto
+
+      .questionnaire__description
+        margin-top 40px
+        padding 25px
+
+      .questionnaire__options
+        z-index 1
+        position relative
+
+      aside
+        width 5vw
+        background-color #064f77
+        position fixed
+        top 0
+        left 0
+        height 100vh
+
+        &::before
+          content ''
+          width 100%
+          height 100%
+          position absolute
+          right -100%
+          box-shadow 0 0 10px rgba(65, 65, 65, 0.76)
+          z-index 99
+      
+      &::before
+        content ''
+        position absolute
+        width 100%
+        height 100%
+        background-color #fff
+        z-index 1
 
 </style>
