@@ -94,12 +94,14 @@ const store = new Vuex.Store({
 
         FETCH_SEARCH: ({ commit, state }, { keyword, params }) => {
             let orig = _.values(state.searchResult['items'])
-            return state.searchResult.items && (params.page < 2) ?
-                Promise.resolve(state.searchResult) :
-                fetchSearch(keyword, params).then(searchResult => {
-                    searchResult['items'] = _.concat(orig, _.get(searchResult, ['hits']))
-                    commit('SET_SEARCH', { searchResult })
-                })
+            return state.searchResult.items && (params.page > 1) ?
+                    fetchSearch(keyword, params).then(searchResult => {
+                        searchResult['items'] = _.concat(orig, _.get(searchResult, ['hits']))
+                        commit('SET_SEARCH', { searchResult })
+                    }) : fetchSearch(keyword, params).then(searchResult => {
+                        searchResult['items'] = _.get(searchResult, ['hits'])
+                        commit('SET_SEARCH', { searchResult })
+                    })
         },
 
         FETCH_TOPIC_BY_UUID: ({ commit, state }, { params }) => {
