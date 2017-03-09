@@ -5,14 +5,14 @@
       <slot name="dfpad"></slot>
       <div class="pop_item" v-for="(o, i) in pop" v-if="i < 8">
         <div>
-          <a :href="o.slug" >
+          <router-link :to="o.slug" >
             <div class="pop_item_img"
                   :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
             </div>
-          </a>
+          </router-link>
         </div>
         <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <a :href="o.slug" v-text="getTruncatedVal(o.title, 22)"></a>
+          <router-link :to="o.slug" v-text="getTruncatedVal(o.title, 22)"></router-link>
         </div>
       </div>
     </div>
