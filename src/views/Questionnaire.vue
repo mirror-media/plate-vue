@@ -209,9 +209,9 @@
     metaInfo() {
       const _specificResult = _.find(this.results, { id: this.resultId })
 
-      const _description = _.get(_specificResult, [ 'comment' ], this.questionnaireDesc)
+      const _description = _.get(_specificResult, [ 'title' ], this.questionnaireDesc)
       const _image = _.get(_specificResult, [ 'image', 'url' ], this.questionnaireImg)
-      const _title = _.get(_specificResult, [ 'title' ], this.questionnaireTitle)
+      const _title = this.questionnaireTitle
 
       return {
         title: this.questionnaireTitle + ' - 鏡傳媒 Mirror Media',
