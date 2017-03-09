@@ -159,3 +159,5 @@ export const SECTION = 'SECTION'
 export const TAG = 'TAG'
 
 export const TOPIC = 'TOPIC'
+
+export const MIRROR_MEDIA = 'https://mirrormedia.mg'

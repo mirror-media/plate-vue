@@ -21,7 +21,7 @@
         return (index < 5)? '-5%' : `${- 5 - ((index - 4) * 20)}%`
       },
       tabZindex(index, number, total) {
-        let zIndex = total
+        let zIndex = 998
         if(index != number) {
           const distance = Math.abs(index - number)
           zIndex = total - distance
@@ -65,6 +65,17 @@
         margin-left -5%
         position absolute
         box-shadow 0 0 10px rgba(65, 65, 65, 0.76)
+        transition: margin-left 0.25s, z-index 0.1s;
+
+      &::before
+        content ''
+        width 100%
+        height 100%
+        position absolute
+        bottom -100%
+        box-shadow 0 0 10px rgba(65, 65, 65, 0.76)
+        z-index 99
+        left 0
 
     .question__content 
       padding 0 2rem
@@ -73,7 +84,7 @@
       flex-direction column
       justify-content center
       position relative
-      z-index 100
+      z-index 999
       background-color #fff
   
   @media (min-width 768px)
