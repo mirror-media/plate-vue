@@ -17,7 +17,7 @@ export default new Router({
     routes: [
         { path: '/author/:authorId/:authorName?', component: List },
         { path: '/category/:title', component: List },
-        { path: '/post/:slug', component: Article },
+        { path: '/story/:slug', component: Article },
         { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
         { path: '/search/:keyword', component: List },
         { path: '/section/:title', component: List },
