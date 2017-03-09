@@ -18,8 +18,8 @@ export default new Router({
   routes: [
     { path: '/author/:authorId/:authorName?', component: List },
     { path: '/category/:title', component: List },
-    { path: '/post/:slug', component: Article },
-    { path: '/q/:questionnaireId', component: Questionnaire },
+    { path: '/story/:slug', component: Article },
+    { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
     { path: '/search/:keyword', component: Search },
     { path: '/section/:title', component: List },
     { path: '/timeline/:title', component: TimelineView },
