@@ -5,14 +5,14 @@
       <slot name="dfpad"></slot>
       <div class="pop_item" v-for="(o, i) in pop" v-if="i < 8">
         <div>
-          <a :href="reviseSlug(o.slug)" >
+          <a :href="o.slug" >
             <div class="pop_item_img"
                   :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
             </div>
           </a>
         </div>
         <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <a :href="reviseSlug(o.slug)" v-text="getTruncatedVal(o.title, 22)"></a>
+          <a :href="o.slug" v-text="getTruncatedVal(o.title, 22)"></a>
         </div>
       </div>
     </div>
@@ -32,11 +32,7 @@
         const sectionId = _.get(sect, [ 'id' ])
         const style = { borderLeft: _.get( SECTION_MAP, [sectionId, 'borderLeft'], '7px solid rgba(140, 140, 140, 0.18);') }
         return style
-      },
-      reviseSlug(rawSlug) {
-        const newSlug = rawSlug.replace('story', 'post')
-        return newSlug
-      },
+      }
     },
     name: 'pop-list',
     props: {

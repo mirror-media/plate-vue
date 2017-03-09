@@ -41,6 +41,9 @@
     <section class="pic-section latest">
       <div class="credit" v-html="credit"></div>
       <related-list-thumbnail :relatedList="relatedList"/>
+      <div class="article_fb_comment">
+        <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
+      </div>
     </section>
     <div class="go-next-page" @click="goNextPage"></div>
     <div class="btn-toggle-description" @click="toggleDesc">！</div>
@@ -56,11 +59,14 @@
   import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
 
   export default {
-    name: 'ariticle-body-photo',
     components: {
       'related-list-thumbnail': RelatedListWithThumbnail
     },
     computed: {
+      articleUrl() {
+        const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
+        return `https://www.mirrormedia.mg/story/${slug}`
+      },
       brief() {
         const { brief } = this.articleData
         return brief
@@ -95,9 +101,9 @@
         const _sectArr = document.querySelectorAll('section.pic-section')
         let _sectInfo = []
         _.map(_sectArr, (elem, index) => {
-          const _selector = `section.pic-section:nth-child(${(index + 1)})`
           const _eleTop = this.elmYPosition(`section.pic-section:nth-child(${(index + 1)})`)
           const _eleBtm = _eleTop + _htmlHeight
+          const _selector = `section.pic-section:nth-child(${(index + 1)})`
           _sectInfo.push({ _selector, _eleTop, _eleBtm })
         })
         return _sectInfo
@@ -112,16 +118,38 @@
     },
     data() {
       return {
+        descSwitch: false,
         scrollingFlag: false,
         sectIndex: 2,
-        descSwitch: false
       }
     },
     methods: {
-      getValue,
       currentYPosition,
+      disableScroll() {
+        if (window.addEventListener) // older FF
+          window.addEventListener('DOMMouseScroll', this.preventDefault, false)
+        window.onwheel = this.preventDefault // modern standard
+        window.onmousewheel = document.onmousewheel = this.preventDefault // older browsers, IE
+        window.ontouchmove  = this.preventDefault // mobile
+        document.onkeydown  = this.preventDefaultForScrollKeys
+      },
       elmYPosition,
-      smoothScroll,
+      enableScroll() {
+          if (window.removeEventListener)
+            window.removeEventListener('DOMMouseScroll', this.preventDefault, false)
+          window.onmousewheel = document.onmousewheel = null; 
+          window.onwheel = null; 
+          window.ontouchmove = null;  
+          document.onkeydown = null;  
+      },
+      getValue,
+      goNextPage() {
+        this.sectIndex = (this.sectIndex < this.sectCount + 1) ? this.sectIndex + 1 : this.sectIndex
+        this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
+      },
+      goHome() {
+        window.location.href = '/'
+      },      
       keys() {
         return {37: 1, 38: 1, 39: 1, 40: 1}
       },
@@ -138,27 +166,12 @@
           return false
         }
       },
-      disableScroll() {
-        if (window.addEventListener) // older FF
-          window.addEventListener('DOMMouseScroll', this.preventDefault, false)
-        window.onwheel = this.preventDefault // modern standard
-        window.onmousewheel = document.onmousewheel = this.preventDefault // older browsers, IE
-        window.ontouchmove  = this.preventDefault // mobile
-        document.onkeydown  = this.preventDefaultForScrollKeys
-      },
-      enableScroll() {
-          if (window.removeEventListener)
-            window.removeEventListener('DOMMouseScroll', this.preventDefault, false)
-          window.onmousewheel = document.onmousewheel = null; 
-          window.onwheel = null; 
-          window.ontouchmove = null;  
-          document.onkeydown = null;  
-      },
+      smoothScroll,
       scrollOnePage() {
         window.addEventListener('wheel', (e) => {
+          const _derection = e.wheelDelta
           const _htmlHeight = document.documentElement.clientHeight
           const _lastDelta = window.wheelDelta
-          const _derection = e.wheelDelta
           let _currTop = 0
           let _targEle = 0
           if(_derection < 0) {
@@ -180,14 +193,9 @@
           }
 
           if(this.sectIndex >= (this.sectCount + 1) && _currTop >= _targEle) {
-            
             this.enableScroll()
           } else if(Math.abs(_derection) <= 3 && this.sectIndex >= (this.sectCount + 1) && _currTop < _targEle) {
             this.scrollingFlag = false
-          // } else if(this.sectIndex >= (this.sectCount + 1) && _currTop < _targEle) {
-          //   this.sectIndex = (this.sectIndex > 2) ? this.sectIndex - 1 : this.sectIndex
-          //   this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
-
           } else {
             
             this.disableScroll()
@@ -206,16 +214,6 @@
           }
 
         })
-        // window.addEventListener('beforeunload', () => {
-        //   this.smoothScroll(`.article_body`)
-        // })
-      },
-      goNextPage() {
-        this.sectIndex = (this.sectIndex < this.sectCount + 1) ? this.sectIndex + 1 : this.sectIndex
-        this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
-      },
-      updateIndex() {
-        
       },
       shareLine() {
         let _thisTitle = document.querySelector('meta[property="og:title"]').getAttribute('content');
@@ -223,13 +221,6 @@
       },
       shareFacebook() {
         window.open(`https://www.facebook.com/share.php?u=https://mirrormedia.mg/${this.$route.path}`);
-      },
-      goHome() {
-        window.location.href = '/'
-      },
-      updateProgressbar(percentage){
-        const _progressBar = document.querySelector('.progress-bar')
-        _progressBar.setAttribute('style', `left: ${percentage}%;`)
       },
       toggleDesc() {
         const _briefArr = document.querySelectorAll('.brief')
@@ -243,13 +234,21 @@
             o.children[ 0 ].removeAttribute('class')
           })
         }
-      }
+      },
+      updateIndex() {
+        
+      },
+      updateProgressbar(percentage){
+        const _progressBar = document.querySelector('.progress-bar')
+        _progressBar.setAttribute('style', `left: ${percentage}%;`)
+      },
     },
     mounted() {
       this.disableScroll()
       this.scrollOnePage()
       this.updateIndex()
     },
+    name: 'ariticle-body-photo',
     props: {
       articleData: {
         default: () => { return {} }
@@ -426,9 +425,16 @@
         justify-content flex-start
         a, a:hover, a:link, a:visited
           color #fff
+      
       .related-container
         width 900px
         margin 40px auto
+      
+      .article_fb_comment
+        margin 40px auto
+        width 900px
+        background-color rgb(255, 255, 255)
+
     .progress 
       width 100%
       height 10px
