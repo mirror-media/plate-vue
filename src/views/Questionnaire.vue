@@ -7,6 +7,9 @@
       <div class="questionnaire__title">
         <div v-text="questionnaireTitle"></div>
       </div>
+      <div class="questionnaire__title">
+        <div v-text="getValue(questionnaireData, ['title'], '')"></div>
+      </div>
       <div class="questionnaire__btn-start">
         <div @click="start">開始測驗</div>
       </div>
