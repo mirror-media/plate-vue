@@ -2,7 +2,7 @@
   <div class="questionnaire-view">
     <template v-if="!startFlag">
       <div class="questionnaire__cover">
-        <img :src="getValue(questionnaireData, ['image', 'url'], '/public/notImage.png')" />
+        <img :src="questionnaireImg" />
       </div>
       <div class="questionnaire__title">
         <div v-text="questionnaireTitle"></div>
@@ -32,21 +32,24 @@
     </template>
     <template v-else>
       <div class="questionnaire__cover">
-        <img :src="getValue(getQuestionnaireResult(), ['image', 'url'], '/public/notImage.png')" />
+        <img :src="getValue(currResult, ['image', 'url'], '/public/notImage.png')" />
       </div>
       <div class="questionnaire__title">
         <div>
           <div><h3>結果</h3></div>
-          <div v-text="getValue(getQuestionnaireResult(), ['title'], '')"></div>
+          <div v-text="getValue(currResult, ['title'], '')"></div>
         </div>
       </div>
       <div class="questionnaire__btn-bar">
-        <div class="play-again" @click="playAgain">再玩一次</div><div class="share">分享結果</div>
+        <div class="play-again" @click="playAgain">再玩一次</div><div class="share" @click="openShareTools">分享結果</div>
       </div>
     </template>
     <aside class="desktop-only">
       <aside-tab :index="(currQuestIndex + 1)" :total="questions.length" :title="getValue(questionnaireData, ['title'], '')" />
     </aside>
+    <div class="share-toolbox" :class="shareToolboxClass">
+      <share-toolbox @closeShareTools="closeShareTools" :questionnaireId="questionnaireId" :result="currResult" />
+    </div>
   </div>
 </template>
 <script>
@@ -56,6 +59,7 @@
   import AsideTab from '../components/questionnaire/AsideTab.vue'
   import Option from '../components/questionnaire/Option.vue'
   import Question from '../components/questionnaire/Question.vue'
+  import ShareToolbox from '../components/questionnaire/ShareToolbox.vue'
   import store from '../store'
 
   const fetchQuestionnaire = (store) => {
@@ -71,18 +75,22 @@
     components: {
       'aside-tab': AsideTab,
       'option-container': Option,
-      'question-container': Question
+      'question-container': Question,
+      'share-toolbox': ShareToolbox
     },
     data() {
       return {
         answerSlip: {},
         currQuestIndex: 0,
+        currResult: {},
         descShowFlag: this.$store.state.showDesc,
         finished: false,
         lockPickFlag: false,
         preFetch: fetchQuestionnaire,
         questionnaireId: this.$store.state.route.params.questionnaireId,
+        resultId: this.$store.state.route.params.resultId,
         selectedOpt: '',
+        shareToolboxFlag: false,
         startFlag: false,
         showCorrectAnsFlag: this.$store.state.showCorrectAns,
       }
@@ -111,11 +119,14 @@
       questionnaireData() {
         return _.get(this.$store.state, [ 'questionnaire', this.questionnaireId ])
       },
-      questionnaireTitle() {
-        return _.get(this.questionnaireData, [ 'title' ], '鏡傳媒小測驗')
-      },
       questionnaireDesc() {
         return _.get(this.questionnaireData, [ 'subtitle' ], '來玩玩看鏡傳媒小測驗吧')
+      },
+      questionnaireImg() {
+        return _.get(this.questionnaireData, [ 'image', 'url' ], '/public/notImage.png')
+      },      
+      questionnaireTitle() {
+        return _.get(this.questionnaireData, [ 'title' ], '鏡傳媒小測驗')
       },
       questions() {
         return _.get(this.questionnaireData, [ 'questions' ], [])
@@ -123,8 +134,16 @@
       results() {
         return _.get(this.questionnaireData, [ 'results' ], [])
       },
+      shareToolboxClass() {
+        return {
+          show: this.shareToolboxFlag
+        }
+      }
     },
     methods: {
+      closeShareTools() {
+        this.shareToolboxFlag = false
+      },
       getValue,
       smoothScroll,
       updateState({ showDesc, showCorrectAns, answer }) {
@@ -140,12 +159,18 @@
       goNextQuestion(e) {
         if(((!this.descShowFlag || !this.showCorrectAnsFlag) && this.gameType !== 'mind') 
             || (this.gameType === 'mind' && !this.answerSlip[ this.questions[ this.currQuestIndex ][ 'id' ] ])) { return }
+
         this.currQuestIndex = (this.currQuestIndex !== this.questions.length) ? (this.currQuestIndex + 1) : 0
         this.descShowFlag = false
         this.finished = (this.currQuestIndex !== this.questions.length) ? false : true
         this.lockPickFlag = false
         this.smoothScroll(null, 1)
         this.showCorrectAnsFlag = false
+
+        this.currResult = (this.finished) ? this.getQuestionnaireResult() : {}
+      },
+      openShareTools() {
+        this.shareToolboxFlag = true
       },
       playAgain() {
         this.currQuestIndex = 0
@@ -179,22 +204,26 @@
     },
     mounted() {},
     metaInfo() {
+      const _specificResult = _.find(this.results, { id: this.resultId })
+
+      const _description = _.get(_specificResult, [ 'comment' ], this.questionnaireDesc)
+      const _image = _.get(_specificResult, [ 'image', 'url' ], this.questionnaireImg)
+      const _title = _.get(_specificResult, [ 'title' ], this.questionnaireTitle)
 
       return {
-        title: this.questionnaireTitle,
+        title: this.questionnaireTitle + ' - 鏡傳媒 Mirror Media',
         meta: [
+          { name: 'description', content: _description },
           { name: 'keywords', content: '鏡週刊,鏡傳媒,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
-          { name: 'description', content: this.questionnaireDesc },
           { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: this.questionnaireTitle },
-          { name: 'twitter:description', content: this.questionnaireDesc },
-          // { name: 'twitter:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
-          { property: 'og:site_name', content: '鏡傳媒 Mirror Media' },
+          { name: 'twitter:title', content: _title },
+          { name: 'twitter:description', content: _description },
+          { name: 'twitter:image', content: _image },
+          { property: 'og:description', content: _description },
+          { property: 'og:image', content: _image },
           { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:title', content: this.questionnaireTitle },
-          { property: 'og:description', content: this.questionnaireDesc },
-          { property: 'og:url', content: `/q/${this.questionnaireId}` },
-          // { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
+          { property: 'og:site_name', content: '鏡傳媒 Mirror Media' },
+          { property: 'og:title', content: _title },
         ]
       }
     },
@@ -350,6 +379,11 @@
       line-height 1.5rem
       display none
 
+      &.show
+        display block  
+
+    .share-toolbox
+      display none
       &.show
         display block
 
