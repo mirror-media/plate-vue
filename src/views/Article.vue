@@ -1,9 +1,9 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
+      <div id="fb-root"></div>
       <app-header :commonData= 'commonData' v-if="(articleStyle !== 'photography')"/>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
-        <div id="fb-root"></div>
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
@@ -221,7 +221,7 @@
           { property: 'og:type', content: 'article' },
           { property: 'og:title', content: (ogTitle.length > 0) ? ogTitle : title },
           { property: 'og:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
-          { property: 'og:url', content: '/posts/' + id },
+          { property: 'og:url', content: '/story/' + id },
           { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
         ]
       }
