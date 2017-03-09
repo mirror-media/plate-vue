@@ -1,10 +1,10 @@
 'use strict'
 
 export const SECTION_MAP = {
-    '57e1e0e5ee85930e00cad4e9': { 'bgcolor': '#30bac8', 'borderLeft': '7px solid #30bac8', 'border': '2px solid #30bac8' },
-    '57e1e11cee85930e00cad4ea': { 'bgcolor': '#bf3284', 'borderLeft': '7px solid #bf3284', 'border': '2px solid #bf3284' },
-    '57dfe399ee85930e00cad4d6': { 'bgcolor': '#eac151', 'borderLeft': '7px solid #eac151', 'border': '2px solid #eac151' },
-    '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e', 'borderLeft': '7px solid #c1d16e', 'border': '2px solid #c1d16e' }
+    '57e1e0e5ee85930e00cad4e9': { 'bgcolor': '#30bac8', 'borderLeft': '7px solid #30bac8', 'border': '2px solid #30bac8', 'ifShowPoplist': true },
+    '57e1e11cee85930e00cad4ea': { 'bgcolor': '#bf3284', 'borderLeft': '7px solid #bf3284', 'border': '2px solid #bf3284', 'ifShowPoplist': true },
+    '57dfe399ee85930e00cad4d6': { 'bgcolor': '#eac151', 'borderLeft': '7px solid #eac151', 'border': '2px solid #eac151', 'ifShowPoplist': true },
+    '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e', 'borderLeft': '7px solid #c1d16e', 'border': '2px solid #c1d16e', 'ifShowPoplist': false }
 }
 
 export const DFP_UNITS = {

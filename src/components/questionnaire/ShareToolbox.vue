@@ -4,11 +4,12 @@
     <div class="buttons">
       <i class="icon facebook" @click="shareFacebook"></i>
       <i class="icon line" @click="shareFacebook"></i>
+      <i class="icon g-plus" @click="shareGooglePlus"></i>
     </div>
   </div>
 </template>
 <script>
-  import { MIRROR_MEDIA } from '../../constants'
+  import { shareGooglePlus, shareLine, shareFacebook } from '../../utils/comm'
   import _ from 'lodash'
 
   export default {
@@ -27,14 +28,31 @@
       closeShareTools() {
         this.$emit('closeShareTools')
       },
-      shareFacebook() {
-        window.open(`https://www.facebook.com/share.php?u=${MIRROR_MEDIA}/q/${this.questionnaireId}/${this.resultId}`);
-        this.$emit('closeShareTools')
+      shareGooglePlus() {
+        shareGooglePlus({ 
+          route: `q/${this.questionnaireId}/${this.resultId}`,
+          shared: () => {
+            this.$emit('closeShareTools')
+          } 
+        })
       },
       shareLine() {
-        window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(this.resultTitle)}%0D%0A${encodeURIComponent(MIRROR_MEDIA + '/q/' + this.resultId)}`);
-        this.$emit('closeShareTools')
+        shareLine({ 
+          route: `q/${this.questionnaireId}/${this.resultId}`,
+          title: document.querySelector('meta[property="og:title"]').getAttribute('content'),
+          shared: () => {
+            this.$emit('closeShareTools')
+          }
+        })
       },
+      shareFacebook() {
+        shareFacebook({ 
+          route: `q/${this.questionnaireId}/${this.resultId}`,
+          shared: () => {
+            this.$emit('closeShareTools')
+          } 
+        })
+      }
     },
     name: 'share-toolbox',
     props: {
@@ -94,5 +112,13 @@
 
           &:hover
             background-color #099200
+
+        &.g-plus
+          background-image url(/public/icon/google-plus.png)
+          background-color #c00
+          background-size 80%
+
+          &:hover
+            background-color #8a0000
 
 </style>

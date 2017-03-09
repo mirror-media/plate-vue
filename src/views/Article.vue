@@ -24,12 +24,12 @@
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist">
             <aside class="article_aside" slot="aside">
-               <vue-dfp :is="props.vueDfp" pos="PCR1" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
+              <vue-dfp :is="props.vueDfp" pos="PCR1" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
                <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
               <related-list :relateds="relateds" :ifshow="showRelated"></related-list>
             </aside>
-            <pop-list :pop="popularlist" slot="poplist">
+            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
               <vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>
             </pop-list>
           </article-body>
@@ -65,12 +65,12 @@
   import store from '../store'
   import truncate from 'truncate'
 
-  const fetchArticles = (store) => {
+  const fetchArticles = (store, slug) => {
     return store.dispatch('FETCH_ARTICLES', {
       params: {
         related: 'full',
         where: {
-          'slug': store.state.route.params.slug
+          'slug': slug
         }
       }
     })
@@ -90,7 +90,7 @@
 
   const fetchData = (store) => {
     return fetchCommonData(store).then(() => {
-      return fetchArticles(store).then(() => {
+      return fetchArticles(store, store.state.route.params.slug).then(() => {
         const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
         return fetchLatestArticle(store, {
           sort: '-publishedDate',
@@ -121,22 +121,28 @@
     },
     data() {
       return {
-        articleData: _.get(this.$store, [ 'state', 'articles', 'items', 0 ]),
+        // articleData: _.find(_.get(this.$store, [ 'state', 'articles', 'items'], { slug: this.currArticleSlug })),
         commonData: this.$store.state.commonData,
+        // currArticleSlug: this.$store.state.route.params.slug,
         dfpid: DFP_ID,
         dfpUnits: DFP_UNITS,
         editorChoice: this.$store.state.editorChoice,
         latestArticle: this.$store.state.latestArticle,
-        // sectionId: _.get(this.articleData, [ 'sections', 0, 'id' ], ''),
         state: {},
       }
     },
     computed: {
+      articleData() {
+        return _.find(_.get(this.$store, [ 'state', 'articles', 'items']), { 'slug' : this.currArticleSlug })
+      },
       articleStyle() {
         return _.get(this.articleData, [ 'style' ], '')
       },
+      // currArticleSlug() {
+      //   return _.get(this.articleData, [ 'slug' ], '')
+      // },
       currArticleSlug() {
-        return _.get(this.articleData, [ 'slug' ], '')
+        return this.$store.state.route.params.slug
       },
       heroCaption() {
         return _.get(this.articleData, [ 'heroCaption' ], '')
@@ -150,6 +156,9 @@
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const poster = (ogImgUrl) ? ogImgUrl : ((heroImgUrl) ? heroImgUrl : '/asset/review.png')
         return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
+      },
+      ifShowPoplist() {
+        return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
       },
       latestList() {
         return _.get(this.latestArticle, [ 'items' ], [])
@@ -177,6 +186,20 @@
       },
     },
     beforeMount() {},
+    beforeRouteUpdate(to, from, next) {
+      fetchArticles(this.$store, to.params.slug).then(() => {
+        const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+        return fetchLatestArticle(store, {
+          sort: '-publishedDate',
+          where: {
+            'sections': _.get(sections, [ 0, 'id' ])
+          }
+        })
+      }).then(() => {
+
+        next()
+      })
+    },
     methods: {
       getTruncatedVal,
       getValue(o = {}, p = [], d = '') {

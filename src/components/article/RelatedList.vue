@@ -3,7 +3,7 @@
     <div class="list" :style="containerStyle">
       <div class="title"><h4 :style="titleStyle">相關文章</h4></div>
       <div class="item" v-for="(o, i) in relateds" v-if="o">
-        <div class="title"><a :href="getHref(o)" v-text="getValue(o, [ 'title' ], '')"></a></div>
+        <div class="title"><router-link :to="getHref(o)" v-text="getValue(o, [ 'title' ], '')"></router-link></div>
       </div>
     </div>
   </div>
@@ -136,57 +136,57 @@
   }
 </script>
 <style lang="stylus" scoped>
-  .related-list-container {
-    width: 300px;
-    margin: 0 auto;
-    .list{
-      margin-top: 20px;
-      padding: 20px 0;
-      margin: 20px auto 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      div {
-        width: 230px;
-      }
-      & > .title {
-        font-size: 19px;
-        h4 {
-          margin: -20px 0 0;
-        }
-        &::before {
-          content: '';
-          width: 0;
-          height: 0;
-          border-style: solid;
-          border-width: 10px 0 10px 20px;
-          position: relative;
-          top: 0;
-          left: -35px;
-          display: block;
-        }
-      }
-      .item {
-        margin: 20px 0;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #c1c1c1;
-        .title {
-          font-size: 18px;
-          line-height: 25px;
-        }
-        .brief {
-          line-height: 20px;
-          padding-top: 10px;
-          a:hover, a:link, a:visited {
-            color: #6f6f6f;
-          }
-        }
-        &:last-child{
-          border-bottom: none;
-          padding-bottom: 0;
-        }
-      }
-    }
-  }
+  .related-list-container 
+    width 300px
+    margin 0 auto
+    .list
+      margin-top 20px
+      padding 20px 0
+      margin 20px auto 0
+      display flex
+      flex-direction column
+      align-items center
+      justify-content center
+      div 
+        width 230px
+      
+      & > .title 
+        font-size 19px
+        h4 
+          margin -20px 0 0
+        
+        &::before 
+          content ''
+          width 0
+          height 0
+          border-style solid
+          border-width 10px 0 10px 20px
+          position relative
+          top 0
+          left -35px
+          display block
+        
+      
+      .item 
+        margin 20px 0
+        padding-bottom 20px
+        border-bottom 1px solid #c1c1c1
+        .title 
+          font-size 18px
+          line-height 25px
+        
+        .brief 
+          line-height 20px
+          padding-top 10px
+          a:hover, a:link, a:visited 
+            color #6f6f6f
+          
+        
+        &:last-child
+          border-bottom none
+          padding-bottom 0
+        
+      
+    
+  
 </style>

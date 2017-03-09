@@ -1,3 +1,4 @@
+import { MIRROR_MEDIA } from '../constants'
 import _ from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
@@ -66,14 +67,29 @@ export function getSection(article) {
     }
 }
 
+export function shareGooglePlus({ route, shared }) {
+    window.open(`https://plus.google.com/share?url=${MIRROR_MEDIA}/${route}`);
+    shared && shared()
+}
+
+export function shareLine({ title, route, shared }) {
+    window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(title)}%0D%0A${encodeURIComponent(MIRROR_MEDIA + '/' + route)}`)
+    shared && shared()
+}
+
+export function shareFacebook({ route, shared }) {
+    window.open(`https://www.facebook.com/share.php?u=${MIRROR_MEDIA}/${route}`)
+    shared && shared()
+}
+
 export function getTitle(article, count = 30) {
     return truncate(_.get(article, ['title']), count)
 }
 
-export function getValue(o = {}, p = [], d = '') {
-    return _.get(o, p, d);
-}
-
 export function getTruncatedVal(oVal, count) {
     return truncate(oVal, count)
+}
+
+export function getValue(o = {}, p = [], d = '') {
+    return _.get(o, p, d)
 }

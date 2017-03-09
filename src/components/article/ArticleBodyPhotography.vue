@@ -6,6 +6,7 @@
         <div class="icon share"></div>
         <div class="icon facebook" @click="shareFacebook"></div>
         <div class="icon line" @click="shareLine"></div>
+        <div class="icon g-plus" @click="shareGooglePlus"></div>
       </div>
     </div>
     <section class="pic-section">
@@ -55,6 +56,7 @@
 <script>
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
   import { getValue } from '../../utils/comm'
+  import { shareGooglePlus, shareLine, shareFacebook } from '../../utils/comm'
   import _ from 'lodash'
   import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
 
@@ -215,13 +217,18 @@
 
         })
       },
+      shareGooglePlus() {
+        shareGooglePlus({ route: this.$route.path })
+      },
       shareLine() {
-        let _thisTitle = document.querySelector('meta[property="og:title"]').getAttribute('content');
-        window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(_thisTitle)}%0D%0A${encodeURIComponent('https://mirrormedia.mg/' + this.$route.path)}`);
+        shareLine({ 
+          route: this.$route.path,
+          title: document.querySelector('meta[property="og:title"]').getAttribute('content')
+        })
       },
       shareFacebook() {
-        window.open(`https://www.facebook.com/share.php?u=https://mirrormedia.mg/${this.$route.path}`);
-      },
+        shareFacebook({ route: this.$route.path })
+      }, 
       toggleDesc() {
         const _briefArr = document.querySelectorAll('.brief')
         this.descSwitch = (this.descSwitch) ? false : true
@@ -306,10 +313,12 @@
               -webkit-transition all .1s ease-out
               transition all .1s ease-out
               cursor pointer
+
               &.share
                 margin-left 0
                 background-image url(/public/icon/share-white.png)
                 background-size 50%
+              
               &.facebook
                 background-image url(/public/icon/facebook_white.png)
                 background-size 35%
@@ -323,8 +332,16 @@
                 -webkit-transition-delay 75ms
                 transition-delay 40ms
 
+              &.g-plus
+                background-image url(/public/icon/google-plus.png)
+                background-size 70%
+                background-color #c00   
+                -webkit-transition-delay 75ms
+                transition-delay 40ms
+
               &:active, &:focus, &:hover
                 box-shadow inset 0 0 4px rgba(0,0,0,.7), 0 4px 8px rgba(0,0,0,.7)
+                
               &:not(:first-child)
                 width 48px
                 height 48px
@@ -434,6 +451,7 @@
         margin 40px auto
         width 900px
         background-color rgb(255, 255, 255)
+        padding 1.5rem
 
     .progress 
       width 100%
