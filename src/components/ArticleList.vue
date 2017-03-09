@@ -20,11 +20,8 @@ export default {
   name: 'articleList',
   components: {
   },
-  props: {
-    articles: {
-      default: () => { return {} }
-    }
-  },
+  props: ['articles'],
+  
   methods: {
     getBrief,
     getHref,

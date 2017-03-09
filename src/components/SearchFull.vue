@@ -1,7 +1,7 @@
 <template>
  <div class="searchFull">
     <div class="searchFull-container">
-      <input type="text" placeholder="Search">
+      <input type="text" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)">
       <a @click="closeSearchBar()">
         <img src="~public/icon/close.png">
       </a>
@@ -15,10 +15,14 @@
 export default {
   name: 'searchFull',
   props: {
+    searchVal: '',
   },
   methods: {
     closeSearchBar () {
       this.$emit('closeSearchBar')
+    },
+    search (searchVal = '') {
+      this.$router.push('/search/'+ this.searchVal)
     },
   },
 }

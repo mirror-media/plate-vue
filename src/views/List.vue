@@ -120,13 +120,6 @@ const fetchArticlesByAuthor = (store, uuid, params) => {
   })
 }
 
-const fetchSearch = (store, keyword, params) => {
-  return store.dispatch('FETCH_SEARCH', { 
-    'keyword': keyword,
-    'params': params
-  })
-}
-
 const fetchData = (store) => {
   return fetchCommonData(store).then(() => {
     const _type = _.toUpper( _.split( store.state.route.path, '/' )[1] )
@@ -138,12 +131,6 @@ const fetchData = (store) => {
         uuid = store.state.route.params.authorId
         return fetchArticlesByAuthor(store, uuid, { 
           page: PAGE
-        })
-        break
-      case SEARCH:
-        return fetchSearch(store, store.state.route.params.keyword, { 
-          page: PAGE,
-          max_results: MAXRESULT
         })
         break
       case SECTION:
@@ -232,9 +219,6 @@ export default {
         case AUTHOR:
           return this.$store.state.articles
           break
-        case SEARCH:
-          return this.$store.state.searchResult
-          break
         default:
           return this.$store.state.articlesByUUID
       }
@@ -263,9 +247,6 @@ export default {
     },
     hasMore () {
       switch(this.type) {
-        case SEARCH:
-          return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'nbHits' ], 0)
-          break
         default:
           return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
       }
@@ -276,8 +257,6 @@ export default {
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), (s) => { 
             return _.find(s.categories, { 'id': this.uuid })
           }), ['name'])
-        case SEARCH:
-          return 'other'
         case SECTION:
           return this.$route.params.title
         case TOPIC:
@@ -310,8 +289,6 @@ export default {
           return this.$route.params.authorName
         case CATEGORY:
           return _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['title'] )
-        case SEARCH:
-          return this.$route.params.keyword
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['title'] )
           break
@@ -339,8 +316,6 @@ export default {
           return this.$route.params.authorId
         case CATEGORY:
           return _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['id'] )
-        case SEARCH:
-          break
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['id'] )
         case TAG:
@@ -380,15 +355,6 @@ export default {
           }).then(() => {
             this.articles = this.$store.state.articles
             this.loading = false          
-          })
-          break
-        case SEARCH:
-          fetchSearch(this.$store, this.$route.params.keyword, { 
-            page: this.page,
-            max_results: MAXRESULT
-          }).then(() => {
-            this.articles = this.$store.state.searchResult
-            this.loading = false
           })
           break
         case SECTION:
@@ -441,7 +407,7 @@ export default {
     if(this.type === SECTION || this.type === TOPIC) {
       this.insertCustomizedMarkup()
     }
-  }
+  },
 }
   
 </script>
