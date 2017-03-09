@@ -4,8 +4,8 @@
       <a href="" class="mobile-only"><img src="~public/icon/hamburger@2x.png" class="header-icon"></a>
       <a href="/"><img src="~public/logo.svg" class="header-logoSearch--logo"></a>
       <div class="header-logoSearch__search">
-        <input type="text" v-model="searchVal" placeholder="">
-        <button v-on:click="search(searchVal)">
+        <input type="text" v-model="searchVal" @keyup.enter="search(searchVal)" placeholder="">
+        <button @click="search(searchVal)">
           <img class="header-logoSearch__search--icon" src="~public/icon/search.svg" />
         </button>
       </div>
@@ -49,7 +49,7 @@ export default {
   methods: {
     search (searchVal = '') {
       this.$router.push('/search/'+ this.searchVal)
-    }
+    },
   },
   computed: {
     headerItem () {
@@ -76,7 +76,7 @@ export default {
     socialLink () {
       return SOCIAL_LINK
     }
-  }
+  },
 }
 
 </script>
