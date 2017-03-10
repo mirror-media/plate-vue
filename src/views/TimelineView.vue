@@ -167,7 +167,7 @@ export default {
     bottom auto
 
   div.titleBox 
-    background url('https://storage.googleapis.com/mirrormedia-files/assets/images/20170109161704-a137077c82006e45acd534a14644f2a0.png') 50% 50% no-repeat
+    background url('https://mirrormedia.mg/assets/images/20170109161704-a137077c82006e45acd534a14644f2a0.png') 50% 50% no-repeat
     background-size contain
     width 390px
     max-width 80%
