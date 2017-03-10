@@ -1,5 +1,5 @@
 <template>
-  <div class="related-list-container" v-if="ifshow">
+  <div class="related-list-container">
     <div class="list" :style="containerStyle">
       <div class="title"><h4 :style="titleStyle">相關文章</h4></div>
       <div class="item" v-for="(o, i) in relateds" v-if="o">
@@ -68,7 +68,6 @@
             // const footerTop = elmYPosition('.article_footer > div:first-child')
             const footerTop = elmYPosition('.article_footer')
             relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
-            console.log([footerTop, currBottom + 50])
             if(footerTop < (currBottom + 50)) {
               relatedDom.setAttribute('style', 'position: fixed; bottom: ' + ((currBottom + 50) - footerTop) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             }
@@ -126,9 +125,6 @@
     },
     name: 'related-list',
     props: {
-      ifshow: {
-        default: false
-      },
       relateds: {
         default: []
       }
