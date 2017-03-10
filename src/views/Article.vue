@@ -23,7 +23,7 @@
         </div>
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist">
-            <aside class="article_aside" slot="aside">
+            <aside class="article_aside desktop-only" v-if="ifRenderAside" slot="aside">
               <vue-dfp :is="props.vueDfp" pos="PCR1" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
@@ -121,9 +121,7 @@
     },
     data() {
       return {
-        // articleData: _.find(_.get(this.$store, [ 'state', 'articles', 'items'], { slug: this.currArticleSlug })),
         commonData: this.$store.state.commonData,
-        // currArticleSlug: this.$store.state.route.params.slug,
         dfpid: DFP_ID,
         dfpUnits: DFP_UNITS,
         editorChoice: this.$store.state.editorChoice,
@@ -138,9 +136,6 @@
       articleStyle() {
         return _.get(this.articleData, [ 'style' ], '')
       },
-      // currArticleSlug() {
-      //   return _.get(this.articleData, [ 'slug' ], '')
-      // },
       currArticleSlug() {
         return this.$store.state.route.params.slug
       },
@@ -156,6 +151,15 @@
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const poster = (ogImgUrl) ? ogImgUrl : ((heroImgUrl) ? heroImgUrl : '/asset/review.png')
         return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
+      },
+      ifRenderAside() {
+        const browser = typeof window !== 'undefined'
+        if(browser) {
+          const viewport = document.querySelector('body').offsetWidth
+          return (viewport < 1200) ? false : true
+        } else {
+          return false
+        }
       },
       ifShowPoplist() {
         return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
@@ -249,56 +253,55 @@
 
 </script>
 <style lang="stylus">
-  .article-container {
-    width: 100%;
-    background-color: #414141;
-    .article-heromedia {
-      margin: 0 auto;
-      padding-top: 30px;
-      background-color: #fff;
-      max-width: 1160px;
+  .article-container
+    width 100%
+    background-color #414141
 
-      .heroimg {
-        width: 100%;
-      }
-      .heroimg-caption {
-        margin-top: 5px;
-        padding: 0 50px;
-      }
-    }
-    .article {
-      font-family: "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif;
-      max-width: 1160px;
-      margin: 0 auto;
-      background-color: #fff;
-      padding: 30px 50px 0;
+    .article-heromedia
+      margin 0 auto
+      padding-top 30px
+      background-color #fff
+      max-width 1160px
 
-      .article_aside {
-        float: right;
-        padding-top: 10px;
-        width: 310px;
-      }
-      .article_footer {
-        text-align: center;
-      }
-      .split-line {
-        overflow: hidden;
-        &::after {
-          content: "";
-          display: inline-block;
-          height: 0.5em;
-          vertical-align: bottom;
-          width: 100%;
-          margin: 30px -100% 30px 0;
-          border-top: 1px solid #c5c5c5;
-        }
-      }
-    }
-    .ad-container.full {
-      max-width: 1160px;
-      background-color: #fff;
-      margin: 0 auto;
-      padding-top: 30px;
-    }
-  }
+      .heroimg
+        width 100%
+      
+      .heroimg-caption
+        margin-top 5px
+        padding 0 50px
+      
+    
+    .article
+      font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
+      max-width 1160px
+      margin 0 auto
+      background-color #fff
+      padding 30px 50px 0
+
+      .article_aside
+        float right
+        padding-top 10px
+        width 310px
+      
+      .article_footer
+        text-align center
+      
+      .split-line
+        overflow hidden
+
+        &::after
+          content ""
+          display inline-block
+          height 0.5em
+          vertical-align bottom
+          width 100%
+          margin 30px -100% 30px 0
+          border-top 1px solid #c5c5c5
+        
+    .ad-container.full
+      max-width 1160px
+      background-color #fff
+      margin 0 auto
+      padding-top 30px
+    
 </style>

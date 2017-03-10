@@ -120,7 +120,9 @@ export default {
     loadMore() {
       fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10&max_id=${this.lastItemId}`).then(
         response => {
-          this.rep = this.rep.concat(response)
+          if(response.length > 0 && !response[0][ 'code' ]) {
+            this.rep = this.rep.concat(response)
+          }
           this.loading = false
         },
         error => {
@@ -140,7 +142,9 @@ export default {
   beforeMount () {
     fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10`).then(
       response => {
-        this.rep = response
+        if(response.length > 0 && !response[0][ 'code' ]) {
+          this.rep = response
+        }
         this.loading = false
       },
       error => {

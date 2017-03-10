@@ -213,442 +213,398 @@ export default {
 }
 </script>
 <style lang="stylus">
-  .article_body {
-    width: 100%;
-    .article_basic-info {
-      display: flex;
-      margin-top: 20px;
-      justify-content: space-between;
-      .category {
-        font-size: 21px;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        .categorySquare {
-          display: inline-block;
-          height: 24px;
-          padding-left: 10px;
-        }
-      }
-      .date {
-        font-style: italic;
-        font-size: 17px;
-        color: #a1a1a1;
-        font-weight: normal;
-      }
+  .article_body 
+    width 100%
 
-    }
-    .article_title {
-      width: 100%;
-      h2 {
-        font-size: 40px;
-        font-weight: 400;
-        margin: 15px 0;
-      }
-    }
-    .article_credit {
-      a.blue:hover, a.blue:link, a.blue:visited {
-        color: #74afd2;
-      }
-    }
-    .article_main {
-      width: 695px;
-      display: inline-block;
-      max-width: 695px;
-      overflow: hidden;
-      .innerImg {
+    .article_basic-info 
+      display flex
+      margin-top 20px
+      justify-content space-between
+
+      .category 
+        font-size 21px
+        display flex
+        justify-content flex-start
+        align-items center
+
+        .categorySquare 
+          display inline-block
+          height 24px
+          padding-left 10px
+        
+      .date 
+        font-style italic
+        font-size 17px
+        color #a1a1a1
+        font-weight normal
+      
+
+    
+    .article_title 
+      width 100%
+
+      h2 
+        font-size 40px
+        font-weight 400
+        margin 15px 0
+      
+    
+    .article_credit 
+      a.blue:hover, a.blue:link, a.blue:visited 
+        color #74afd2
+    
+    .article_main 
+      width 695px
+      display inline-block
+      max-width 695px
+      overflow hidden
+
+      .innerImg 
         clear both
-        img {
-          width: 100%;
-        }
-        .caption {
-          font-family: "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif;
-          font-size: 15px;
-          line-height: 1.7;
-          letter-spacing: 0.3px;
-          color: rgba(0, 0, 0, 0.498039);
-          padding-top: 10px;
-          padding-bottom: 10px;
-        }
-        &.right {
-          float: right;
-          width: 300px;
-          margin-left: 20px;
-          border-bottom: 2px solid #255577;
-          margin-bottom: 30px;
-          padding-bottom: 10px;
-        }
-        &.left {
-          float: left;
-          width: 300px;
-          margin-right: 20px;
-          border-bottom: 2px solid #255577;
-          margin-bottom: 30px;
-          padding-bottom: 10px;
-        }
-        &.center {
-          margin-top: 20px;
-          width: 100%;
-        }
-      }
-      .article_main_pop {
-        clear: both;
-      }
-      .article_main_tags {
-        clear: both;
-        margin-top: 3em;
-        .tags_icon {
-          background-image: url(https://www.mirrormedia.mg/story/img/icon/sprite@3x.png);
-          background-position: -733px -741px;
-          background-repeat: no-repeat;
-          background-size: 866px 862px;
-          display: inline-block;
-          vertical-align: middle;
-          zoom: .65;
 
-          width: 45px;
-          height: 45px;
-        }
-        .tags {
-          display: inline-block;
-          color: rgba(2, 2, 2, 0.5);
-          font-size: 18px;
-          a, a:hover, a:link, a:visited {
-            color: rgba(2, 2, 2, 0.5);
-            text-decoration: none;
-            cursor: pointer;
-            border-bottom: none;
-          }
-        }
-      }
-      .brief {
-        margin-top: 30px;
-        line-height: 36px;
-        font-size: 18px;
-        color: rgba(65, 65, 65, 0.61);
-        p {
-          strong {
-            color: rgba(65, 65, 65, 0.61);
-            font-weight: normal;
-          }
-          i, cite, em, var, address, dfn {
-            font-style: normal;
-          }
-        }
-      }
-      & > .content {
-        h2 {
-          color: #000;
-          margin-top: 40px;
-        }
-        p {
-          color: #171717;
-          font-size: 18px;
-          line-height: 36px;
-          margin: 1.5em 0;
-        }
-        .youtube {
-          .youtube-container {
-            align-items: center;
-            display: flex;
-            justify-content: center;
-            margin: 25px 0;
-            padding-bottom: 56.25%;
-            padding-top: 25px;
-            position: relative;
-            iframe {
-              width: 100%;
-              height: 100%;
-              position: absolute;
-              top: 0;
-              left: 0;
-            }
-          }
-        }
-        .embedded {
-          text-align: center;
-        }
-      }
-      a, a:hover, a:link, a:visited {
-        color: #3195b3;
-        text-decoration: none;
-        cursor: pointer;
-        border-bottom: 1px solid #3195b3;
-        padding-bottom: 5px;
-      }
-      code {
-        background-color: #85faff;
-        font-size: 18px;
-        padding: 4px 0;
-      }
-      blockquote.blockquote {
-        clear: both;
-        padding: 10px 35px;
-        margin: 70px 0;
-        .content {
-          border-top: 3px solid #255577;
-          padding-top: 20px;
-          padding-left: 30px;
-          border-left: 3px solid #255577;
-          font-size: 24px;
-          color: #3a759e;
-          .triangle::before{
-            content: '';
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 50px 0 0 70px;
-            position: relative;
-            top: -70px;
-            left: 30px;
-            display: block;
-            border-color: transparent transparent transparent #255577;
-          }
-          .triangle::after{
-            content: '';
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 50px 0 0 70px;
-            position: relative;
-            top: -114px;
-            left: 33px;
-            display: block;
-            border-color: transparent transparent transparent #ffffff;
-          }
-          .quote-body {
-            margin-top: -95px;
-            line-height: 44px;
-          }
-          .quote-by {
-            text-align: right;
-            font-size: 18px;
-            margin-top: 18px;
-            &::before {
-              content: '';
-              display: inline-block;
-              height: 100%;
-              vertical-align: super;
-              width: 36px;
-              margin-right: 5px;
-              border-top: 1px solid #3a759e;
-            }
-          }
-        }
-      }
-      blockquote.quote {
-        clear: both;
-        display: flex;
-        margin: 3em 0;
-        i {
-          background-image: url(https://mirrormedia.mg/assets/images/quote.png);
-          width: 45px;
-          height: 45px;
-          background-repeat: no-repeat;
-          background-size: contain;
-          display: block;
-          margin-right: 20px;
-          max-width: 45px;
-          flex: 3;
-        }
-        .quote-content {
-          font-size: 24px;
-          color: #3a759e;
-          flex: 10;
-        }
-      }
-      .info-box-container {
-        width: 100%;
-        margin-bottom: 3em;
-        .info-box-icon {
-          &::before {
-            content: '';
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 12px 18px;
-            position: relative;
-            left: 0;
-            top: 30px;
-            display: block;
-            border-color: #255577;
-          }
-          &::after {
-            content: '';
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 10px 0px 0px 18px;
-            position: relative;
-            left: 0;
-            top: 30px;
-            display: block;
-            border-color: #7b7b7b transparent transparent transparent;
-          }
-        }
-        .info-box {
-          border: 1px solid #eaeaea;
-          padding: 30px 50px;
-          box-shadow: 0 0 14px rgba(146, 146, 146, 0.52);
-          width: 90%;
-          margin-top: -35px;
-          /*margin: 0 auto;*/
-          margin-left: 18px;
-          .info-box-title {
-            color: #3a6888;
-            font-size: 25px;
-            margin-bottom: 15px;
-          }
-          .info-box-body {
-            p, li {
-              color: rgba(0, 0, 0, 0.64);
-              font-size: 16px;
-            }
-          }
-        }
-        &.right {
-          float: right;
-          width: 300px;
-        }
-        &.left {
-          float: left;
-          width: 300px;
-        }
-        &.center {
-          clear: both;
-          margin: 3em 0;
-          .info-box {
-            width: 95%;
-          }
-        }
-      }
-      h2 {
-        font-size: 32px;
-      }
-      h3 {
-        font-size: 26px;
-      }
-      ul {
-        font-family: "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif;
-        font-size: 16px;
-        line-height: 2.2;
-        letter-spacing: 0.3px;
-        color: rgba(0, 0, 0, 0.701961);
-        padding-left: 45px;
-        text-indent: -26px;
-        margin-left: 16px;
-        list-style: none;
-        li {
-          &::before {
-            content: "• ";
-            color: #2d5b7b;
-            font-size: 30px;
-            line-height: 1;
-            top: 6px;
-            position: relative;
-          }
-        }
-        &.center {
-        }
-      }
-    }
-    &.single-col {
-      margin-top: 50px;
-      .article_basic-info, .article_title, .article_credit {
-        width: 660px;
-        margin: 0 auto;
-      }
-      .article_main {
-        width: 950px;
-        margin: 0 auto;
-        max-width: 950px;
-        display: block;
-        p, h2, .split-line, .embedded, .article_main_pop, .article_fb_comment, ul, .youtube {
-          padding: 0 145px;
-        }
-        blockquote {
-          padding: 0 145px;
+        img 
+          width 100%
+        
+        .caption 
+          font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
+          font-size 15px
+          line-height 1.7
+          letter-spacing 0.3px
+          color rgba(0, 0, 0, 0.498039)
+          padding-top 10px
+          padding-bottom 10px
+        
+        &.right 
+          float right
+          width 300px
+          margin-left 20px
+          border-bottom 2px solid #255577
+          margin-bottom 30px
+          padding-bottom 10px
+        
+        &.left 
+          float left
+          width 300px
+          margin-right 20px
+          border-bottom 2px solid #255577
+          margin-bottom 30px
+          padding-bottom 10px
+        
+        &.center 
+          margin-top 20px
+          width 100%
+        
+      
+      .article_main_pop 
+        clear both
+      
+      .article_main_tags 
+        clear both
+        margin-top 3em
 
-          /*&.quote {
-            display: block;
-            max-width: 400px;
-            flex-direction: column;
-            justify-content: center;
-            i {
-              width: 35px;
-              height: 35px;
-            }
-            &:nth-child(odd){
-              float: left;
-              margin-right: 50px;
-              margin-left: 0;
-              align-items: flex-start;
-            }
-            &:nth-child(even){
-              float: right;
-              margin-right: 0;
-              margin-left: 50px;
-              text-align: right;
-              align-items: flex-end;
-              i {
-                -moz-transform: scaleX(-1) rotateX(180deg);
-                -o-transform: scaleX(-1) rotateX(180deg);
-                -webkit-transform: scaleX(-1) rotateX(180deg);
-                transform: scaleX(-1) rotateX(180deg);
-                filter: FlipH;
-                -ms-filter: "FlipH";
-                position: relative;
-                 right: -100%;
-                 margin-left: -35px;
-              }
-            }
-          }*/
-        }
-        .innerImg {
-          padding: 0 145px 1.5em;
-          &.left {
-            margin-right: 50px;
-            padding: 0;
-          }
-          &.right {
-            margin-left: 50px;
-            padding: 0;
-          }
+        .tags_icon 
+          background-image url(https://www.mirrormedia.mg/story/img/icon/sprite@3x.png)
+          background-position -733px -741px
+          background-repeat no-repeat
+          background-size 866px 862px
+          display inline-block
+          vertical-align middle
+          zoom .65
 
-        }
-        .article_main_tags {
-          padding: 0 145px;
-        }
-        .info-box-container {
-          &.center {
-            padding: 0 145px;
-          }
-          .info-box {
-            p, ul {
-              padding: 0;
-            }
-          }
-        }
-      }
-    }
-    .per-slide {
-      height: 500px;
-      width: 100%;
-      .swiper-wrapper {
-        height: 450px;
-        .swiper-slide {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          .slideshowImg {
-            img {
-              width: 100%;
-              object-fit: contain;
-              max-height: 450px;
-            }
-          }
-        }
-      }
-    }
-  }
+          width 45px
+          height 45px
+        
+        .tags 
+          display inline-block
+          color rgba(2, 2, 2, 0.5)
+          font-size 18px
+
+          a, a:hover, a:link, a:visited 
+            color rgba(2, 2, 2, 0.5)
+            text-decoration none
+            cursor pointer
+            border-bottom none
+                
+      .brief 
+        margin-top 30px
+        line-height 36px
+        font-size 18px
+        color rgba(65, 65, 65, 0.61)
+
+        p 
+          strong 
+            color rgba(65, 65, 65, 0.61)
+            font-weight normal
+          
+          i, cite, em, var, address, dfn 
+            font-style normal        
+      
+      & > .content 
+        h2 
+          color #000
+          margin-top 40px
+        
+        p 
+          color #171717
+          font-size 18px
+          line-height 36px
+          margin 1.5em 0
+        
+        .youtube 
+          .youtube-container 
+            align-items center
+            display flex
+            justify-content center
+            margin 25px 0
+            padding-bottom 56.25%
+            padding-top 25px
+            position relative
+
+            iframe 
+              width 100%
+              height 100%
+              position absolute
+              top 0
+              left 0
+                    
+        .embedded 
+          text-align center
+        
+      a, a:hover, a:link, a:visited 
+        color #3195b3
+        text-decoration none
+        cursor pointer
+        border-bottom 1px solid #3195b3
+        padding-bottom 5px
+      
+      code 
+        background-color #85faff
+        font-size 18px
+        padding 4px 0
+      
+      blockquote.blockquote 
+        clear both
+        padding 10px 35px
+        margin 70px 0
+
+        .content 
+          border-top 3px solid #255577
+          padding-top 20px
+          padding-left 30px
+          border-left 3px solid #255577
+          font-size 24px
+          color #3a759e
+
+          .triangle::before
+            content ''
+            width 0
+            height 0
+            border-style solid
+            border-width 50px 0 0 70px
+            position relative
+            top -70px
+            left 30px
+            display block
+            border-color transparent transparent transparent #255577
+          
+          .triangle::after
+            content ''
+            width 0
+            height 0
+            border-style solid
+            border-width 50px 0 0 70px
+            position relative
+            top -114px
+            left 33px
+            display block
+            border-color transparent transparent transparent #ffffff
+          
+          .quote-body 
+            margin-top -95px
+            line-height 44px
+          
+          .quote-by 
+            text-align right
+            font-size 18px
+            margin-top 18px
+
+            &::before 
+              content ''
+              display inline-block
+              height 100%
+              vertical-align super
+              width 36px
+              margin-right 5px
+              border-top 1px solid #3a759e
+                  
+      blockquote.quote 
+        clear both
+        display flex
+        margin 3em 0
+
+        i 
+          background-image url(https://mirrormedia.mg/assets/images/quote.png)
+          width 45px
+          height 45px
+          background-repeat no-repeat
+          background-size contain
+          display block
+          margin-right 20px
+          max-width 45px
+          flex 3
+        
+        .quote-content 
+          font-size 24px
+          color #3a759e
+          flex 10
+        
+      
+      .info-box-container 
+        width 100%
+        margin-bottom 3em
+
+        .info-box-icon 
+          &::before 
+            content ''
+            width 0
+            height 0
+            border-style solid
+            border-width 12px 18px
+            position relative
+            left 0
+            top 30px
+            display block
+            border-color #255577
+          
+          &::after 
+            content ''
+            width 0
+            height 0
+            border-style solid
+            border-width 10px 0px 0px 18px
+            position relative
+            left 0
+            top 30px
+            display block
+            border-color #7b7b7b transparent transparent transparent
+          
+        
+        .info-box 
+          border 1px solid #eaeaea
+          padding 30px 50px
+          box-shadow 0 0 14px rgba(146, 146, 146, 0.52)
+          width 90%
+          margin-top -35px
+          margin-left 18px
+
+          .info-box-title 
+            color #3a6888
+            font-size 25px
+            margin-bottom 15px
+          
+          .info-box-body 
+            p, li 
+              color rgba(0, 0, 0, 0.64)
+              font-size 16px
+        
+        &.right 
+          float right
+          width 300px
+        
+        &.left 
+          float left
+          width 300px
+        
+        &.center 
+          clear both
+          margin 3em 0
+
+          .info-box 
+            width 95%
+          
+      h2 
+        font-size 32px
+      
+      h3 
+        font-size 26px
+      
+      ul 
+        font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
+        font-size 16px
+        line-height 2.2
+        letter-spacing 0.3px
+        color rgba(0, 0, 0, 0.701961)
+        padding-left 45px
+        text-indent -26px
+        margin-left 16px
+        list-style none
+
+        li 
+          &::before 
+            content "• "
+            color #2d5b7b
+            font-size 30px
+            line-height 1
+            top 6px
+            position relative
+          
+    &.single-col 
+      margin-top 50px
+
+      .article_basic-info, .article_title, .article_credit 
+        width 660px
+        margin 0 auto
+      
+      .article_main 
+        width 950px
+        margin 0 auto
+        max-width 950px
+        display block
+
+        p, h2, .split-line, .embedded, .article_main_pop, .article_fb_comment, ul, .youtube 
+
+        
+        blockquote
+        
+        .innerImg 
+          padding 0 145px 1.5em
+          
+          &.left 
+            margin-right 50px
+            padding 0
+          
+          &.right 
+            margin-left 50px
+            padding 0
+                  
+        .article_main_tags 
+          padding 0 145px
+        
+        .info-box-container 
+          &.center 
+            padding 0 145px
+          
+          .info-box 
+            p, ul 
+              padding 0
+                
+    .per-slide 
+      height 500px
+      width 100%
+
+      .swiper-wrapper 
+        height 450px
+
+        .swiper-slide 
+          display flex
+          align-items center
+          justify-content center
+
+          .slideshowImg 
+            img 
+              width 100%
+              object-fit contain
+              max-height 450px
+
+  
 </style>
