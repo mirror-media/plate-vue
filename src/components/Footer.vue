@@ -28,32 +28,36 @@
   }
 </script>
 <style lang="stylus" scoped>
-  footer {
-    display: flex;
-    border-top: 2px solid #000;
-    padding-top: 15px;
-    padding-bottom: 50px;
-    justify-content: space-between;
-    margin-top: 20px;
+  footer 
+    display flex
+    border-top 2px solid #000
+    padding-top 15px
+    padding-bottom 50px
+    justify-content space-between
+    margin-top 20px
 
-    .left {
-      display: flex;
-      flex: 2;
-      align-items: center;
-      div {
-        width: 15%;
-        text-align: center;
-        font-weight: bold;
-      }
-    }
-    .share {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      flex: 1;
-      img {
-        height: 20px;
-      }
-    }
-  }
+    .left 
+      display flex
+      flex 2
+      align-items center
+      div 
+        width 15%
+        text-align center
+        font-weight bold
+      
+    
+    .share 
+      display flex
+      justify-content space-around
+      align-items center
+      flex 1
+      img 
+        height 20px
+      
+  @media (max-width 1199px)
+    footer
+      .left
+        div
+          width 20%
+  
 </style>

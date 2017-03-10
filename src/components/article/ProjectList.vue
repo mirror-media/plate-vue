@@ -67,51 +67,53 @@
   }
 </script>
 <style lang="stylus">
-.project-container {
-  font-size: 18px;
-  .proj_list {
-    margin-top: 10px;
-    display: flex;
-    align-content: flex-start;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    height: 220px
-    .proj_item {
-      /*width: 31%;*/
-      vertical-align: top;
-      margin-bottom: 30px;
-      .proj_item_img {
-        width: 100%;
-        height: 150px;
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center center;
-      }
-      .proj_item_title {
-        background-color: #fff;
-        /*border: 1px solid #e0e0e0;*/
-        border-left: 7px solid #414141;
-        border-top-width: 0;
-        line-height: 18px;
-        font-size: 13px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 60px;
-        a {
-          width: 95%;
-          max-height: 100%;
-          margin: 10px 20px;
-          &:hover, &:link, &:visited {
-            color: #8c8c8c;
-            font-weight: normal;
-            border: none;
-          }
-        }
-      }
-    }
-  }
-  .swiper-button-prev{background-image:url(https://mirrormedia.mg/assets/images/left-2017.png)!important;}
-  .swiper-button-next{background-image:url(https://mirrormedia.mg/assets/images/right-2017.png)!important;}
-}
+.project-container 
+  font-size 18px
+
+  .proj_list 
+    margin-top 10px
+    display flex
+    align-content flex-start
+    flex-wrap wrap
+    justify-content space-between
+    height 220p
+
+    .proj_item 
+      vertical-align top
+      margin-bottom 30px
+
+      .proj_item_img 
+        width 100%
+        height 150px
+        background-repeat no-repeat
+        background-size cover
+        background-position center center
+      
+      .proj_item_title 
+        background-color #fff
+        border-left 7px solid #414141
+        border-top-width 0
+        line-height 18px
+        font-size 13px
+        display flex
+        justify-content center
+        align-items center
+        min-height 60px
+
+        a 
+          width 95%
+          max-height 100%
+          margin 10px 20px
+
+          &:hover, &:link, &:visited 
+            color #8c8c8c
+            font-weight normal
+            border none
+          
+  .swiper-button-prev 
+    background-image url(/public/icon/left-2017.png)!important
+
+  .swiper-button-next 
+    background-image url(/public/icon/right-2017.png)!important
+
 </style>

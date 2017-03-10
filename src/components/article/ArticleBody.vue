@@ -606,5 +606,23 @@ export default {
               object-fit contain
               max-height 450px
 
-  
+  @media (max-width 899px) and (min-width 768px)
+    .article_body
+      .article_basic-info, .article_title, .article_credit, .article_main
+        width 645px
+        max-width 645px
+        margin 0 auto
+      
+  @media (max-width 1199px) and (min-width 900px)
+    .article_body
+      .article_basic-info, .article_title, .article_credit, .article_main
+        width 695px
+        max-width 695px
+        margin 0 auto
+
+  @media (max-width 1199px)
+    .article_body
+      .article_main
+        display block
+
 </style>

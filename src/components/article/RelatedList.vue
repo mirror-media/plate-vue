@@ -35,7 +35,7 @@
         const asideTop = elmYPosition('.article_aside')
         const asideDom = document.querySelector('.article_aside')
         const tHtml = document.documentElement;
-        const relatedDom = document.querySelector('.related-list-container')
+        
 
         const customCSS = `.related-list-container .list > .title::before { content: ""; border-color: transparent transparent transparent ${_.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
         const custCss = document.createElement('style')
@@ -44,7 +44,8 @@
 
 
         window.addEventListener('scroll', (e) => {
-          if(!relatedDom) { return }
+          const relatedDom = document.querySelector('.related-list-container')
+          if(!relatedDom || !asideDom.offsetLeft) { return }
           const currTop = currentYPosition()
           const currBottom = currentYPosition() + tHtml.clientHeight
           // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
@@ -93,13 +94,15 @@
         const currTop = currentYPosition()
         const currBottom = currentYPosition() + tHtml.clientHeight
         // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
-        const asideHeight = document.querySelector('.article_aside').clientHeight
+        const aside = document.querySelector('.article_aside')
+        if(!aside) { return }
+        const asideHeight = aside.clientHeight
         const asideTop = elmYPosition('.article_aside')
         const asideBottom = asideTop + asideHeight
 
         const mainHeight = document.querySelector('.article_main').clientHeight
         const relatedDom = document.querySelector('.related-list-container')
-        if(!relatedDom) { return }
+        if(!relatedDom || !aside.offsetLeft) { return }
         const relatedTop = elmYPosition('.related-list-container')
         if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
           relatedDom.removeAttribute('style')

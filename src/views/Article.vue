@@ -23,11 +23,11 @@
         </div>
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist">
-            <aside class="article_aside desktop-only" v-if="ifRenderAside" slot="aside">
+            <aside class="article_aside desktop-only" slot="aside">
               <vue-dfp :is="props.vueDfp" pos="PCR1" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
-              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" />
+              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
-              <related-list :relateds="relateds" v-if="relateds.length > 0" />
+              <related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderAside" />
             </aside>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
               <vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>
@@ -127,6 +127,7 @@
         editorChoice: this.$store.state.editorChoice,
         latestArticle: this.$store.state.latestArticle,
         state: {},
+        viewport: 1199,
       }
     },
     computed: {
@@ -153,13 +154,7 @@
         return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
       },
       ifRenderAside() {
-        const browser = typeof window !== 'undefined'
-        if(browser) {
-          const viewport = document.querySelector('body').offsetWidth
-          return (viewport < 1200) ? false : true
-        } else {
-          return false
-        }
+        return (this.viewport < 1200) ? false : true
       },
       ifShowPoplist() {
         return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
@@ -205,6 +200,12 @@
       getValue(o = {}, p = [], d = '') {
         return _.get(o, p, d);
       },
+      updateViewport() {
+        const browser = typeof window !== 'undefined'
+        if(browser) {
+          this.viewport = document.querySelector('body').offsetWidth
+        }
+      },
     },
     mounted() {
       const { fbAppId } = _.get(this.$store, [ 'state' ])
@@ -213,6 +214,11 @@
       fbSdkScript.async = true
       fbSdkScript.type = 'text/javascript'
       document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
+      this.updateViewport()
+
+      window.addEventListener('resize', () => {
+        this.updateViewport()
+      })
     },
     metaInfo() {
       const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = this.articleData
@@ -303,5 +309,14 @@
       background-color #fff
       margin 0 auto
       padding-top 30px
+
+  @media (min-width 768px)
+    .article-container
+      .article-heromedia
+        .heroimg-caption
+          text-align center
+      
+      .article
+        padding 100px 50px 0
     
 </style>
