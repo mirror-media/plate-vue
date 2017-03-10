@@ -69,6 +69,7 @@
     position fixed
     width 30px
     opacity 0
+    box-shadow 0 0 10px rgba(0, 0, 0, 0.5)
 
     .item
       width 100%
@@ -118,6 +119,8 @@
       &:hover
         background-color #064f77
       
-    
+  @media (max-width 1199px)
+    .share-toolbox
+      margin-left 30px
   
 </style>
