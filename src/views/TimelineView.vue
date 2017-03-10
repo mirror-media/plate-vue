@@ -1,5 +1,7 @@
 <template>
   <div class="timeline-view">
+    <header-full :commonData='commonData' :section='sectionName' 
+                      v-on:openSearchBar="openSearchBar" v-on:openSideBar="openSideBar"/>
     <spinner :show="loading"></spinner>
     <section :style="{ position: 'relative' }">
       <div class="titleBox"/>
@@ -27,25 +29,40 @@
         </div>
       </section>
     </div>
-    <div class="container">
-      <more :gg="lastItemId" v-on:loadMore="loadMore" />
+    <div class="container" :style="{ marginBottom: '20px' }">
+      <more v-on:loadMore="loadMore" />
     </div>
+    <footer-full :commonData='commonData' :section='sectionName' />
+    <search-full v-show='openSearch' v-on:closeSearchBar="closeSearchBar" />
+    <sidebar-full :section='sectionName' :sections='commonData.sections' 
+                      :openSide='openSide' v-on:closeSideBar="closeSideBar" />
   </div>
 </template>
 
 <script>
 import { getValue } from '../utils/comm'
 import _ from 'lodash'
+import FooterFull from '../components/FooterFull.vue'
+import HeaderFull from '../components/HeaderFull.vue'
 import More from '../components/More.vue'
+import SearchFull from '../components/SearchFull.vue'
+import SidebarFull from '../components/SidebarFull.vue'
 import Spinner from '../components/Spinner.vue'
 import dateformat from 'dateformat'
 import twitter from 'twitter-text'
 
-function fetchData (url) {
+
+const fetchCommonData = (store) => {
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
+}
+
+const fetchData = (store) => {
+  return fetchCommonData(store)
+}
+
+function fetchTwitter (url) {
   const superagent = require('superagent')
-
   let apiHost = '/api'
-
   return new Promise(resolve => {
     superagent
     .get(apiHost + url)
@@ -63,18 +80,26 @@ export default {
   name: 'timeline-view',
   data () {
     return {
+      commonData: this.$store.state.commonData,
+      loading: true,
+      openSearch: false,
+      openSide: false,
       rep: '',
-      loading: true
+      sectionName: this.$store.state.route.params.title
     }
   },
   components: { 
+    'footer-full': FooterFull,
+    'header-full': HeaderFull,
     'more': More,
+    'search-full': SearchFull,
+    'sidebar-full': SidebarFull,
     Spinner
   },
   computed: {
     lastItemId() {
       return _.get(_.last(this.rep), 'id', 0)
-    }
+    },
   },
   metaInfo () {
     const title = 'Timeline :: ' + this.$route.params.title.toUpperCase()
@@ -84,11 +109,16 @@ export default {
     }
   },
   methods: {
+    closeSearchBar () {
+      this.openSearch = false
+    },
+    closeSideBar () {
+      this.openSide = false
+    },
     dateformat,
     getValue,
-    twitterAutoLink: twitter.autoLink,
     loadMore() {
-      fetchData(`/twitter?screen_name=MirrorWatchTW&count=10&max_id=${this.lastItemId}`).then(
+      fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10&max_id=${this.lastItemId}`).then(
         response => {
           this.rep = this.rep.concat(response)
           this.loading = false
@@ -97,11 +127,18 @@ export default {
           console.error('Failed!', error) //eslint-disable-line
         }
       )
-    }
+    },
+    openSearchBar () {
+      this.openSearch = true
+    },
+    openSideBar () {
+      this.openSide = true
+    },
+    twitterAutoLink: twitter.autoLink,
   },
-  // preFetch () {
+  preFetch: fetchData,
   beforeMount () {
-    fetchData(`/twitter?screen_name=MirrorWatchTW&count=10`).then(
+    fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10`).then(
       response => {
         this.rep = response
         this.loading = false
