@@ -2,7 +2,7 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
 
-      <div class="list-view" v-if="sectionStyle == 'feature'">
+      <div class="list-view" v-if="pageStyle == 'feature'">
         <app-header :commonData= 'commonData' />
         <div class="topic" v-if="type == 'TOPIC'">
           <div class="topic-title"><h1></h1></div>
@@ -26,13 +26,25 @@
         </section>
       </div>
 
-      <div class="listFull-view" v-if="sectionStyle == 'full'">
+      <div class="listFull-view" v-if="pageStyle == 'full'">
         <div id="dfp-HD" class="listFull-dfp dfp-HD">AD HD</div>
         <header-full :commonData='commonData' :section='section' 
                       v-on:openSearchBar="openSearchBar" v-on:openSideBar="openSideBar"/>
-        <article-leading :articles='articles.items' />
-        <editorChoice-full :sectionfeatured='sectionfeatured' />
-        <latestArticle-full :articles='articles.items' />
+        <article-leading :articles='articles.items' v-if="type == 'SECTION'"/>
+        <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type == 'SECTION'"/>
+        <latestArticle-full :articles='articles.items' v-if="type == 'SECTION'" />
+        <section v-if="(type == 'TAG' && pageStyle == 'full')" class="tag-gallery" 
+                  :style="{ backgroundImage: 'url(' + getImage(tag, 'desktop') + ')' }">
+          <div class="tag-gallery-headline">
+            <h1 class="tag-gallery-headline__enName"></h1>
+            <h3 class="tag-gallery-headline__zhName"></h3>
+            <div class="tag-gallery-intro">
+              <span class="tag-gallery-intro__title"></span>
+              <img src="~public/icon/tag-arrow.png"/>
+            </div>
+          </div>
+        </section>
+        <article-list-full :articles='articles.items' v-if="type == 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
         <div class="listFull-dfp dfp-FT">AD FT</div>
@@ -50,10 +62,11 @@
 
 import { AUTHOR, CATEGORY, SEARCH, SECTION, TAG, TOPIC } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
-import { getValue } from '../utils/comm'
+import { getImage, getValue } from '../utils/comm'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
+import ArticleListFull from '../components/ArticleListFull.vue'
 import EditorChoiceFull from '../components/EditorChoiceFull.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
@@ -81,6 +94,12 @@ const fetchArticlesByUuid = (store, uuid, type, params) => {
     'uuid': uuid,
     'type': type,
     'params': params
+  })
+}
+
+const fetchTag = (store, id) => {
+  return store.dispatch('FETCH_TAG', { 
+    'id': id
   })
 }
 
@@ -150,13 +169,19 @@ const fetchData = (store) => {
             })
         }
         break
+      case TAG:
+        uuid = store.state.route.params.tagId
+        return fetchTag(store, uuid).then(() => {
+          return fetchArticlesByUuid(store, uuid, TAG, { 
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+        })
+        break
       default:
         switch(_type) {
           case CATEGORY:
             uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': store.state.route.params.title } ), ['id'] )
-            break
-          case TAG:
-            uuid = store.state.route.params.tagId
             break
           case TOPIC:
             uuid = store.state.route.params.topicId
@@ -190,6 +215,7 @@ export default {
     'app-header': Header,
     'article-leading': ArticleLeading,
     'article-list': ArticleList,
+    'article-list-full': ArticleListFull,
     'editorChoice-full': EditorChoiceFull,
     'footer-full': FooterFull,
     'header-full': HeaderFull,
@@ -227,6 +253,8 @@ export default {
       switch(this.type) {
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['css'], null ) 
+        case TAG:
+          return _.get( this.tag, ['css'] )
         case TOPIC:
           const _style = _.get(this.topic , ['style'], null )
           return _style
@@ -241,6 +269,7 @@ export default {
         case TOPIC:
           const _javascript = _.get(this.topic , ['javascript'], null )
           return _javascript
+
         default:
           return null
       }
@@ -259,6 +288,8 @@ export default {
           }), ['name'])
         case SECTION:
           return this.$route.params.title
+        case TAG:
+          return _.get(this.tag, 'sections[0].name' )
         case TOPIC:
           return 'other'
         default:
@@ -280,8 +311,17 @@ export default {
           return 'home'
       }      
     },
-    sectionStyle () {
-      return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['style'], 'feature' )
+    pageStyle () {
+      switch(this.type) {
+        case TAG:
+          return _.get(this.$store.state, [ 'tag', 'style' ], 'feature' )
+          break
+        default:
+          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['style'], 'feature' )
+      }
+    },
+    tag () {
+      return _.get(this.$store.state, [ 'tag' ] )
     },
     title () {
       switch(this.type) {
@@ -332,6 +372,7 @@ export default {
     closeSideBar () {
       this.openSide = false
     },
+    getImage,
     getValue,
     insertCustomizedMarkup () {
       if(this.customCSS) {
@@ -358,7 +399,7 @@ export default {
           })
           break
         case SECTION:
-          switch (this.sectionStyle) {
+          switch (this.pageStyle) {
             case 'full':
               fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
                 page: this.page,
@@ -404,7 +445,7 @@ export default {
     }
   },
   mounted() {
-    if(this.type === SECTION || this.type === TOPIC) {
+    if(this.type === SECTION || this.type === TOPIC || this.type === TAG) {
       this.insertCustomizedMarkup()
     }
   },
@@ -489,6 +530,43 @@ $color-other = #bcbcbc
     &.dfp-HD
       display none
       height 250px
+
+.tag-gallery 
+  display flex
+  justify-content center
+  align-items center
+  width 100%
+  height calc(100vh - 200px)
+  background-position center center
+  background-repeat no-repeat
+  background-size cover
+  &-headline
+    text-align center
+    color #fff
+    > h1
+      margin 0
+      font-size 42px
+      font-weight 700
+    > h3
+      margin 7px 0 26px
+      font-size 19px
+      font-weight 300
+    &__enName, &__zhName
+      visibility hidden
+    &__enName:after, &__zhName:after
+      visibility visible
+  &-intro
+    &__title
+      visibility hidden
+    &__title:after
+      visibility visible
+    > span
+      margin-right 8px
+      font-size 16px
+      font-weight 300
+    > img
+      vertical-align middle
+      height 8px
 
 @media (min-width: 1200px)
   .listFull

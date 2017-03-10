@@ -176,6 +176,11 @@ function loadSectionList() {
     return _doFetch(url)
 }
 
+function loadTag (slug= '') {
+    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/tags/${slug}`
+    return _doFetch(url)
+}
+
 function loadTopic(params = {}) {
     const query = _buildQuery(params)
     let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/topics`
@@ -258,6 +263,10 @@ export function fetchSearch(keyword = '', params = {}) {
 
 export function fetchSectionList() {
     return loadSectionList()
+}
+
+export function fetchTag(slug= '') {
+    return loadTag(slug)
 }
 
 export function fetchTopic(params = {}) {
