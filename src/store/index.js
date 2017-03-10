@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTopic } from './api'
+import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTag, fetchTopic } from './api'
 
 Vue.use(Vuex)
 
@@ -21,6 +21,7 @@ const store = new Vuex.Store({
         latestArticle: {},
         images: {},
         searchResult: {},
+        tag: {},
         tags: [],
         topic: {},
         questionnaire: {},
@@ -58,8 +59,6 @@ const store = new Vuex.Store({
                     _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
                     _latestArticles ? commit('SET_TAGS', _latestArticles) : null
                 })
-
-
         },
 
         FETCH_EDITORCHOICE: ({ commit, state }, {}) => {
@@ -104,6 +103,13 @@ const store = new Vuex.Store({
                     })
         },
 
+        FETCH_TAG: ({ commit, state }, { id }) => {
+            return state.tag['id'] && (params.page > 1) ?
+                    '' : fetchTag(id).then(tag => {
+                        commit('SET_TAG', { tag })
+                    })
+        },
+
         FETCH_TOPIC_BY_UUID: ({ commit, state }, { params }) => {
             return fetchTopic(params).then(topic => {
                 commit('SET_TOPIC_BY_UUID', { topic })
@@ -144,6 +150,38 @@ const store = new Vuex.Store({
             authors = _.concat(origAuthors, authors)
             Vue.set(state, 'authors', _.uniqBy(authors, 'id'))
         },
+        
+
+        SET_COMMONDATA: (state, { commonData }) => {
+            Vue.set(state, 'commonData', commonData)
+            _.get(commonData, ['postsVue']) ? Vue.set(state, 'latestArticle', _.get(commonData, ['postsVue'])) : ''
+            _.get(commonData, ['choices']) ? Vue.set(state, 'editorChoice', _.get(commonData, ['choices'])) : ''
+        },
+
+        SET_EDITORCHOICE: (state, { editorChoice }) => {
+            Vue.set(state, 'editorChoice', editorChoice.endpoints.choices)
+        },
+
+        SET_IMAGES: (state, { images }) => {
+            Vue.set(state, 'images', images)
+        },
+
+        SET_LATESTARTICLE: (state, { latestArticle }) => {
+            Vue.set(state, 'latestArticle', latestArticle)
+        },
+
+        SET_QUESTIONNAIRE: (state, { questionnaire }) => {
+            Vue.set(state.questionnaire, questionnaire.id, questionnaire)
+        },
+
+        SET_SEARCH: (state, { searchResult }) => {
+            Vue.set(state, 'searchResult', searchResult)
+        },
+
+        SET_TAG: (state, { tag }) => {
+           Vue.set(state, 'tag', tag)
+        },
+
         SET_TAGS: (state, articles) => {
             let _tags = []
             let origTags = _.values(state.tags)
@@ -157,32 +195,6 @@ const store = new Vuex.Store({
             })
             _tags = _.concat(origTags, _tags)
             Vue.set(state, 'tags', _.uniqBy(_tags, 'id'))
-        },
-
-        SET_COMMONDATA: (state, { commonData }) => {
-            Vue.set(state, 'commonData', commonData)
-            _.get(commonData, ['postsVue']) ? Vue.set(state, 'latestArticle', _.get(commonData, ['postsVue'])) : ''
-            _.get(commonData, ['choices']) ? Vue.set(state, 'editorChoice', _.get(commonData, ['choices'])) : ''
-        },
-
-        SET_EDITORCHOICE: (state, { editorChoice }) => {
-            Vue.set(state, 'editorChoice', editorChoice.endpoints.choices)
-        },
-
-        SET_LATESTARTICLE: (state, { latestArticle }) => {
-            Vue.set(state, 'latestArticle', latestArticle)
-        },
-
-        SET_IMAGES: (state, { images }) => {
-            Vue.set(state, 'images', images)
-        },
-
-        SET_QUESTIONNAIRE: (state, { questionnaire }) => {
-            Vue.set(state.questionnaire, questionnaire.id, questionnaire)
-        },
-
-        SET_SEARCH: (state, { searchResult }) => {
-            Vue.set(state, 'searchResult', searchResult)
         },
 
         SET_TOPIC_BY_UUID: (state, { topic }) => {
