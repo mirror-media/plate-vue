@@ -18,16 +18,16 @@
           <img v-if="heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])"
           :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"/>
+          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist">
             <aside class="article_aside" slot="aside">
               <vue-dfp :is="props.vueDfp" pos="PCR1" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
-              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
-               <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
-              <related-list :relateds="relateds" :ifshow="showRelated"></related-list>
+              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" />
+              <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
+              <related-list :relateds="relateds" v-if="relateds.length > 0" />
             </aside>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
               <vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>
@@ -180,10 +180,6 @@
       sectionId() {
         return _.get(this.articleData, [ 'sections', 0, 'id' ], '')
       },
-      showRelated() {
-        const { relateds } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], [])
-        return (relateds.length > 0)
-      },
     },
     beforeMount() {},
     beforeRouteUpdate(to, from, next) {
@@ -215,7 +211,7 @@
       document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
     },
     metaInfo() {
-      const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
+      const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = this.articleData
       const categorieId = _.get(categories, [ 0, 'id' ], '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')

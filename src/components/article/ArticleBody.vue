@@ -26,7 +26,7 @@
       <div class="content">
         <div v-for="p in contArr">
           <div v-if="p.type !== 'slideshow'" v-html="paragraphComposer(p)"></div>
-          <div v-else is="app-slider" class="per-slide" :option="sliderOption">
+          <div v-else is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])">
                 <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
