@@ -1,10 +1,9 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home">
     <template scope="props" slot="dfpPos">
-      <div class="section-view">
+      <div class="home-view">
         <app-Header :commonData= 'commonData' />
         <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
-        </div>
         <editor-choice :editorChoice= 'editorChoice'/>
         <section class="container list">
           <latest-article :latestArticle= 'latestArticle' :vueDfp="props.vueDfp" :dfpUnits="props.dfpUnits" :section="props.section" />
@@ -135,7 +134,7 @@ export default {
 <style lang="stylus" scoped>
 .editorChoice
   margin-top 40px
-.section-view
+.home-view
   box-sizing border-box
   h2 
     margin: 0;
