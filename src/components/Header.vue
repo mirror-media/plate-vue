@@ -1,19 +1,22 @@
 <template>
   <header id="header" class="header">
     <section class="header-logoSearch">
-      <a href="" class="mobile-only"><img src="~public/icon/hamburger@2x.png" class="header-icon"></a>
+      <a @click="openSideBar()" class="mobile-only"><img src="~public/icon/hamburger@2x.png" class="header-icon"></a>
       <a href="/"><img src="~public/logo.svg" class="header-logoSearch--logo"></a>
-      <div class="header-logoSearch__search">
+      <div class="header-logoSearch__search desktop-only">
         <input type="text" v-model="searchVal" @keyup.enter="search(searchVal)" placeholder="">
         <button @click="search(searchVal)">
           <img class="header-logoSearch__search--icon" src="~public/icon/search.svg" />
         </button>
       </div>
+      <a @click="openSearchBar()" class="header-logoSearch__search mobile-only">
+        <img src="~public/icon/search.svg">
+      </a>
     </section>
     <nav class="header-menu--section">
       <div class="header-menu">
         <div v-for="item in headerItem.section" class="dropdown" :class="item.name">
-          <a :href="item.href"><span v-text="item.title"></span></a>
+          <a :href="item.href" v-text="item.title"></a>
           <div class="dropdown-content">
             <a v-for="c in item.categories" v-text="c.title" :href="c.href"></a>
           </div>
@@ -29,11 +32,35 @@
         <a href="">更多</a>
       </div>
     </nav>
+    <nav class="header-sidebar mobile-only" :class="{ open: openSide }">
+      <div class="header-sidebar__close">
+        <a @click="closeSideBar()"><img src="~public/icon/close_white.png"></a>
+      </div>
+      <div class="header-sidebar__menu">
+        <a :href="item.href" v-for="item in headerItem.topic" v-text="item.title"></a>
+        <a :href="item.href" v-for="item in headerItem.section" v-text="item.title"></a>
+        <a :href="item.href" v-for="item in headerItem.category" v-text="item.title"></a>
+        <a :href="socialLink.SUBSCRIBE" target="_bank" class="header-sidebar__menu--subscribe">訂閱鏡週刊</a>
+        <a :href="socialLink.DOWNLOADAPP" target="_bank" class="header-sidebar__menu--download">下載APP</a>
+      </div>
+    </nav>
+    <section class="header-searchbar mobile-only" :class="{ open: openSearch }">
+      <input type="text" v-model="searchVal" @keyup.enter="search(searchVal)" placeholder="搜尋">
+      <a @click="closeSearchBar()"><img src="~public/icon/close.png"></a>
+    </section>
+    <section class="header-scrolled mobile-only" v-show="isScrolled">
+      <a @click="openSideBar()"><img src="~public/icon/hamburger@2x.png"></a>
+      <div>
+        <a href="/"><img src="~public/icon/logo@2x.png"></a>
+        <a @click="openSearchBar()"><img src="~public/icon/search.svg"></a>
+      </div>
+    </section>
   </header>
 </template>
 <script>
 
 import { SOCIAL_LINK } from '../constants/index'
+import { currentYPosition } from 'kc-scroll'
 import _ from 'lodash'
 
 export default {
@@ -43,10 +70,30 @@ export default {
   },
   data () {
     return {
+      isScrolled: false,
       searchVal: '',
+      openSearch: false,
+      openSide: false,
     }
   },
   methods: {
+    closeSearchBar () {
+      this.openSearch = false
+    },
+    closeSideBar () {
+      this.openSide = false
+    },
+    handleScroll () {
+      window.addEventListener('scroll', () => {
+        currentYPosition() > 69 ? this.isScrolled = true : this.isScrolled = false
+      })
+    },
+    openSearchBar () {
+      this.openSearch = true
+    },
+    openSideBar () {
+      this.openSide = true
+    },
     search (searchVal = '') {
       this.$router.push('/search/'+ this.searchVal)
     },
@@ -77,6 +124,9 @@ export default {
       return SOCIAL_LINK
     }
   },
+  mounted() {
+    this.handleScroll()
+  }
 }
 
 </script>
@@ -91,207 +141,249 @@ $color-projects = #000
 $color-other = #bcbcbc
 
 .header
-  position relative
-  top 0
-  left 0
-  right 0
   background-color #f5f5f5
-
   a
-    display inline-block
+    display block
+    font-size 0
     vertical-align middle
-
   &-logoSearch
     display flex
+    align-items: center
     justify-content space-between
-    width 100%
-    height 90px
-    padding 24px 18px
-
-    &__search
-      position relative
-      top 13.5px
-      width 250px
-      height 35px
-
-      input
-        float left
-        width 200px
-        height 35px
-        padding 0 10px
-        text-align right
-        border 1px solid rgb(238, 238, 238)
-        border-radius: 2px
-        border-right none
-
-      button
-        padding 0
-        margin 0
-        background-color #fff
-        border 1px solid rgb(238, 238, 238)
-        border-radius: 2px
-        border-left none
-
-
-      &--icon
-        float left
-        width 49px
-        height 33px
-
+    padding 20px
     &--logo
       width 128px
-
   &-icon
-    width 24px
-    padding 19px 0
-
-    &.line
-      width 45px
-      padding 21px 0
-    &.weibo
-      width 23px
-      padding 21px 0
-    &.facebook, &.instagram
-      width 20px
-      padding 21px 0
-    &.book
-      width 18px
-      padding 17.5px 0
-
+    width 32px
   &-menu
-    display flex
-    flex-wrap wrap
-    justify-content center
-
-    span
-      color #fff
-      line-height: 43px
-
-    > a:hover
-      &.news-people
-        background-color $color-news
-      &.entertainment
-        background-color $color-entertainment
-      &.foodtravel
-        background-color $color-foodtravel
-      &.watch
-        background-color $color-watch
-
-
     &--section
-      background-color $color-main
-
-      a
-        color #fff
-
-    &--topic
+      display none
+  &-sidebar
+    display flex
+    flex-direction column
+    position fixed
+    top 0
+    left 0
+    z-index 510
+    width 100%
+    height 100vh
+    padding 20px
+    background-color #064f77
+    overflow-y auto
+    transform translate3d(-100%,0,0)
+    transition .5s ease
+    &.open
+      transform translate3d(0,0,0)
+      transition .5s ease
+    &__close
+      margin-bottom 20px
+      > a
+        float right
+      img
+        width 24px
+        height 24px
+    &__menu
       display flex
-      justify-content space-between
-      position relative
-      background-color #fff
-      box-shadow:0 0 5px 0 #cccccc
+      flex-direction column
+      align-items center
+      > a
+        margin-bottom 20px
+        color #fff
+        font-size 1rem
+        font-weight 300
+      &--subscribe, &--download
+        width 100%
+        padding 5px
+        text-align center
+        border 1px solid #fff
+      &--subscribe
+        margin-top 20px
+  &-searchbar
+    display flex
+    justify-content space-between
+    align-items center
+    position fixed
+    top 0
+    left 0
+    z-index 510
+    width 100%
+    height 69px
+    padding 20px
+    background-color hsla(0,0%,100%,.9)
+    box-shadow 0 3px 2px 0 rgba(0,0,0,.1), 0 2px 0 0 #fff
+    transform translate3d(0,-75px,0)
+    transition .5s ease
+    &.open
+      transform translate3d(0,0,0)
+      transition .5s ease
+    > input
+      width 100%
+      margin-right 15px
+      font-size 1.5rem
+      background-color transparent
+      border none
+    > a
+      width 22px
+  &-scrolled
+    display flex
+    justify-content space-between
+    align-items center
+    position fixed
+    top 0
+    left 0
+    z-index 500
+    width 100%
+    padding 5px 20px
+    background-color #fff
+    box-shadow 0 3px 2px 0 rgba(0,0,0,.1), 0 2px 0 0 #fff
+    img
+      height 32px
+    > div
+      display flex
+      > a
+        margin-left 10px
 
-      .header-menu
-        > a
-          border-bottom 3px solid #000
-        > a:hover
-          background-color #000
-          color #fff
-
-.logo
-  width 24px
-  margin-right 10px
-  display inline-block
-  vertical-align middle
-
-.line-vertical
-  display inline-block
-  width 2px
-  height 14px
-  margin-left 20px
-  margin-right 30px
-  vertical-align middle
-  border 1px solid #979797
-
-.dropdown
-  width 90px
-  text-align: center
-
-  > a
-    padding 0
-
-  &-content
-    display none
-    position: absolute
-    z-index: 10
-    width 110px
-    color #fff
-    background-color: #333
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2)
-
-
-.dropdown:hover .dropdown-content
-  display: block
-
-.dropdown.news-people
-  border-top 3px solid $color-news
-  > .dropdown-content
-    a:hover
-      color $color-news
-
-  &:hover
-    background-color $color-news
-
-
-.dropdown.entertainment
-  border-top 3px solid $color-entertainment
-  > .dropdown-content
-    a:hover
-      color $color-entertainment
-  &:hover
-    background-color $color-entertainment
-
-.dropdown.foodtravel
-  border-top 3px solid $color-foodtravel
-  > .dropdown-content
-    a:hover
-      color $color-foodtravel
-  &:hover
-    background-color $color-foodtravel
-
-.dropdown.watch
-  border-top 3px solid $color-watch
-  > .dropdown-content
-    a:hover
-      color $color-watch
-  &:hover
-    background-color $color-watch
-
-
-@media (min-width 1200px)
+@media (min-width: 1200px)
   .header
     &-logoSearch
       width 1024px
+      padding 20px 0
       margin 0 auto
-      padding 14px 0
-
+      &__search
+        &.desktop-only
+          display flex !important
+          align-items center
+          width 250px
+          height 35px
+          input
+            float left
+            width 200px
+            height 35px
+            padding 0 10px
+            text-align right
+            border 1px solid rgb(238, 238, 238)
+            border-radius: 2px
+            border-right none
+          button
+            padding 0
+            margin 0
+            background-color #fff
+            border 1px solid rgb(238, 238, 238)
+            border-radius: 2px
+            border-left none
+        &--icon
+          float left
+          width 49px
+          height 33px
     &-menu
-      &--section
-        header-menu
+      display flex
+      flex-wrap wrap
+      justify-content center
+      width 1024px
+      margin 0 auto
+      > a
+        min-width 90px
+        text-align center
+        color #fff
+        line-height: 46px
+        font-size 1rem
+      > a:hover
+        &.news-people
+          background-color $color-news
+        &.entertainment
+          background-color $color-entertainment
+        &.foodtravel
+          background-color $color-foodtravel
+        &.watch
+          background-color $color-watch
+      header-menu
           width 1024px
           margin 0 auto
-
+      &--section
+        display flex
+        background-color $color-main
+        a
+          color #fff
       &--topic
+        display flex
+        justify-content space-between
+        position relative
+        background-color #fff
+        box-shadow:0 0 5px 0 #cccccc
+        a
+          min-width 90px
+          font-size 1rem
+          text-align center
+          color rgba(0,0,0,.5)
+          line-height 46px
         > div
           display flex
           justify-content space-between
           width 1024px
           margin 0 auto
-  nav
-    a
-      min-width 90px
-      padding 14.5px 15px
-      text-align center
-      color rgba(0,0,0,.5)
+        .header-menu
+          width auto
+          margin 0
+          > a
+            color rgba(0,0,0,.5)
+            border-bottom 3px solid #000
+          > a:hover
+            background-color #000
+            color #fff
+
+  .dropdown
+    width 90px
+    text-align: center
+    > a
+      padding 0
+      font-size 1rem
+      line-height 43px
+    &-content
+      display none
+      position: absolute
+      z-index: 10
+      width 110px
+      color #fff
+      background-color: #333
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2)
+      a
+        font-size 1rem
+        padding 14.5px 15px
+
+  .dropdown:hover .dropdown-content
+    display: block
+  .dropdown.news-people
+    border-top 3px solid $color-news
+    > .dropdown-content
+      a:hover
+        color $color-news
+
+    &:hover
+      background-color $color-news
+
+
+  .dropdown.entertainment
+    border-top 3px solid $color-entertainment
+    > .dropdown-content
+      a:hover
+        color $color-entertainment
+    &:hover
+      background-color $color-entertainment
+
+  .dropdown.foodtravel
+    border-top 3px solid $color-foodtravel
+    > .dropdown-content
+      a:hover
+        color $color-foodtravel
+    &:hover
+      background-color $color-foodtravel
+
+  .dropdown.watch
+    border-top 3px solid $color-watch
+    > .dropdown-content
+      a:hover
+        color $color-watch
+    &:hover
+      background-color $color-watch
 
 </style>

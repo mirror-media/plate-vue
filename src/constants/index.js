@@ -138,6 +138,7 @@ export const DFP_OPTIONS = {
 
 export const SOCIAL_LINK = {
     AD: 'https://www.mirrormedia.mg/story/ad1018001/index.html?utm_source=mm&utm_medium=footer&utm_campaign=salesteam',
+    DOWNLOADAPP: 'http://hyperurl.co/mmfooter',
     EMAIL: 'mailto:mirror885@mirrormedia.mg',
     FACEBOOK: 'https://www.facebook.com/mirrormediamg/',
     FEED: 'https://www.mirrormedia.mg/story/rss.xml',
