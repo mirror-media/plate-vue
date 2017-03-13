@@ -22,16 +22,17 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist">
-            <aside class="article_aside desktop-only" slot="aside">
+          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
+            <aside class="article_aside desktop-only" slot="aside" v-if="ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
               <related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderAside" />
             </aside>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
-              <vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>
+              <!--<vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>-->
             </pop-list>
+            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) " slot="relatedlistBottom" />            
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
@@ -59,6 +60,7 @@
   import LatestList from '../components/article/LatestList.vue'
   import PopList from '../components/article/PopList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
+  import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
@@ -86,7 +88,6 @@
   const fetchCommonData = (store) => {
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'choices' ] } )
   }
-
 
   const fetchData = (store) => {
     return fetchCommonData(store).then(() => {
@@ -116,6 +117,7 @@
       'latest-list': LatestList,
       'pop-list': PopList,
       'related-list': RelatedList,
+      'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
     },
@@ -127,7 +129,7 @@
         editorChoice: this.$store.state.editorChoice,
         latestArticle: this.$store.state.latestArticle,
         state: {},
-        viewport: 1199,
+        viewport: undefined,
       }
     },
     computed: {
@@ -158,6 +160,9 @@
       },
       ifShowPoplist() {
         return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
+      },
+      ifSingleCol() {
+        return false
       },
       latestList() {
         return _.get(this.latestArticle, [ 'items' ], [])
@@ -310,7 +315,22 @@
       margin 0 auto
       padding-top 30px
 
-  @media (min-width 768px)
+  @media (min-width 0px) and (max-width 499px)
+    .article-container
+      .article-heromedia
+        .heroimg-caption
+          padding 0 25px
+          line-height 1.3rem
+      
+      .article
+        padding 30px 25px 0
+
+  @media (min-width 0px) and (max-width 767px)  
+    .article-container
+      .article-heromedia, .article
+         max-width 100%
+
+  @media (min-width 768px) and (max-width 1199px)
     .article-container
       .article-heromedia
         .heroimg-caption
@@ -318,5 +338,6 @@
       
       .article
         padding 100px 50px 0
-    
+
+
 </style>

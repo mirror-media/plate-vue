@@ -2,7 +2,7 @@
   <div class="project-container" v-if="(projects.length > 0)">
     <div class="proj_title"><h3>聚焦鏡</h3></div>
     <div class="proj_list">
-      <app-slider :option="sliderOption">
+      <app-slider :option="sliderOption" v-if="ifShowProjects" :slideId="sliderId">
         <template scope="props">
           <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10">
             <div class="proj_item">
@@ -31,21 +31,30 @@
   import Slider from '../Slider.vue'
   import _ from 'lodash'
 
-
   export default {
     components: {
       'app-slider': Slider
     },
     computed: {
+      ifShowProjects() {
+        const browser = typeof window !== 'undefined'
+        return (browser && this.viewport) ? true : false
+      },
+      slidesPerView() {
+        return (this.viewport < 768) ? 1 : 3
+      },
       sliderOption() {
         return {
           paginationable: true,
           paginationClickable: true,
           paginationHide: false,
           setNavBtn: true,
-          slidesPerView: 3,
-          spaceBetween: 30
+          slidesPerView: this.slidesPerView,
+          spaceBetween: 30,
         }
+      },
+      sliderId() {
+        return `proj`
       }
     },
     methods: {
@@ -62,6 +71,9 @@
     props: {
       projects: {
         default: () => { return [] }
+      },
+      viewport: {
+        default: () => { return undefined }
       }
     },
   }
@@ -76,11 +88,23 @@
     align-content flex-start
     flex-wrap wrap
     justify-content space-between
-    height 220p
 
     .proj_item 
       vertical-align top
       margin-bottom 30px
+
+      > div:not([class="proj_item_title"])
+        position relative
+        height 0
+        padding-top 66.67%
+        
+        > a
+          .proj_item_img
+            height 100%
+            width 100%
+            position absolute
+            top 0
+            left 0
 
       .proj_item_img 
         width 100%
@@ -93,12 +117,13 @@
         background-color #fff
         border-left 7px solid #414141
         border-top-width 0
-        line-height 18px
-        font-size 13px
+        line-height 1.5rem
+        font-size 1.2rem
         display flex
         justify-content center
         align-items center
         min-height 60px
+
 
         a 
           width 95%
@@ -116,4 +141,9 @@
   .swiper-button-next 
     background-image url(/public/icon/right-2017.png)!important
 
+@media (min-width 0px) and (max-width 499px)
+  .project-container 
+    .proj_list
+      .proj_item
+        margin-bottom 0
 </style>

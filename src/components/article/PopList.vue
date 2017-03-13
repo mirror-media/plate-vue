@@ -67,8 +67,6 @@
         
         .pop_item_title 
           background-color #fff
-          // border 1px solid #e0e0e0
-          // border-left 7px solid rgba(140, 140, 140, 0.18)
           border-top-width 0
           line-height 18px
           font-size 13px
@@ -85,8 +83,34 @@
               color #8c8c8c
               font-weight normal
               border none
-            
+
+  @media (min-width 0px) and (max-width 499px)
+    .poplist-container 
+      .pop_list 
+        .pop_item
+          width 100%
           
+          > div:not([class="pop_item_title"])
+            height 0
+            position relative          
+            padding-top 66.67%
+
+            > a
+              .pop_item_img
+                position absolute
+                top 0
+                left 0
+                height 100%
+          
+          .pop_item_title
+            font-size 1.2rem
+            line-height 1.5rem          
+
+  @media (min-width 500px) and (max-width 767px)
+    .poplist-container 
+      .pop_list 
+        .pop_item
+          width 45%
         
       
     
