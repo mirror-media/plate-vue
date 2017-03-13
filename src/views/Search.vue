@@ -132,4 +132,9 @@ export default {
       margin-left: 10px
       background linear-gradient(to right, #bcbcbc 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
 
+@media (min-width: 600px)
+  .search
+    &-title
+      &.container
+        padding-left 10px
 </style>

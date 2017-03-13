@@ -568,6 +568,12 @@ $color-other = #bcbcbc
       vertical-align middle
       height 8px
 
+@media (min-width: 600px)
+  .list
+    &-title
+      &.container
+        padding-left 10px
+
 @media (min-width: 1200px)
   .listFull
     &-dfp

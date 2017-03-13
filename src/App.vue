@@ -109,7 +109,7 @@ button:focus {
 
 @media (min-width 600px)
   .container
-    width 768px
+    width 500px
 
 @media (min-width 900px)
   .container
