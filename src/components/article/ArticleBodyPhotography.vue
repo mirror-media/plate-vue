@@ -14,26 +14,26 @@
         <span><h2 v-text="title"></h2></span>
       </div>
       <div class="brief">
-        <div class="hidden">
+        <div :class="captionStyle">
           <div v-text="heroCaption"></div>
           <span v-text="getValue(brief, [ 'apiData', 0, 'content', 0 ], '')"></span>
         </div>
       </div>
       <div class="img">
-        <img :src="getValue(heroImg, [ 'image', 'url' ])"
+        <img :src="getValue(heroImg, [ 'image', 'url' ])" :class="landscapeClass"
               :srcset="`${getValue(heroImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
                         ${getValue(heroImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
                         ${getValue(heroImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
       </div>
     </section>
-    <section class="pic-section" v-for="(o, i) in contentArr" v-if="getValue(o, [ 'type' ], '') === 'image'">
+    <section class="pic-section" v-for="(o, i) in imgArr">
       <div class="brief">
-        <div class="hidden">
+        <div :class="captionStyle">
           <span v-text="getValue(o, [ 'content', 0, 'description' ], '')"></span>
         </div>
       </div>
       <div class="img">
-        <img :src="getValue(o, [ 'content', 0, 'url' ])"
+        <img :src="getValue(o, [ 'content', 0, 'url' ])" :class="landscapeClass"
               :srcset="`${getValue(o, [ 'content', 0, 'mobile', 'url' ])} 800w,
                         ${getValue(o, [ 'content', 0, 'tablet', 'url' ])} 1200w,
                         ${getValue(o, [ 'content', 0, 'desktop', 'url' ])} 2000w`" />      
@@ -46,10 +46,15 @@
         <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
       </div>
     </section>
-    <div class="go-next-page" @click="goNextPage"></div>
-    <div class="btn-toggle-description" @click="toggleDesc">！</div>
-    <div class="progress-wrap progress" data-progress-percent="25">
+    <div class="go-next-page" @click="goNextPage" :class="goNextPageClass"></div>
+    <div class="btn-toggle-description" :class="switchStatus" @click="toggleDesc"></div>
+    <div class="progress-wrap progress mobile-only" data-progress-percent="25">
       <div class="progress-bar progress"></div>
+    </div>
+    <div class="progress-sidebar desktop-only" v-if="ifRenderProgressSidebar">
+      <div class="stick-container">
+        <div class="stick" v-for="(o, i) in imgArr" :style="stickBottom(i)" :class="{ 'passed' : stickflag[i] }" :index="i" @click="goPage"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -73,6 +78,12 @@
         const { brief } = this.articleData
         return brief
       },
+      captionStyle() {
+        return {
+          show: (this.descSwitch || (this.viewport < 768 && !this.ifLandscape)) ? true : false,
+          hide: (!this.descSwitch) ? true : false
+        }
+      },
       contentArr() {
         const { apiData } = _.get(this.articleData, [ 'content' ], [])
         return apiData
@@ -86,6 +97,11 @@
         const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.map((o) => (`<a class=\"white\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
         return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
       },
+      goNextPageClass() {
+        return {
+          center: (this.viewport < 768 && !this.ifLandscape) ? true : false
+        }
+      },
       heroCaption() {
         const { heroCaption } = this.articleData
         return heroCaption        
@@ -93,6 +109,17 @@
       heroImg() {
         const { heroImage } = this.articleData
         return heroImage
+      },
+      landscapeClass() {
+        return {
+          landscape: this.ifLandscape
+        }
+      },
+      ifRenderProgressSidebar() {
+        return (this.viewport > 1200) ? true : false
+      },
+      imgArr() {
+        return _.filter(this.contentArr, { type: 'image' })
       },
       relatedList() {
         const { relateds } = this.articleData
@@ -113,6 +140,13 @@
       sectCount() {
         return document.querySelectorAll('section.pic-section').length
       },
+      switchStatus() {
+        return {
+          on: (this.descSwitch) ? true : false,
+          off: (!this.descSwitch) ? true : false,
+          hide: (!this.ifLandscape) ? true : false
+        }        
+      },
       title() {
         const { title } = this.articleData
         return title
@@ -121,8 +155,10 @@
     data() {
       return {
         descSwitch: false,
+        ifLandscape: false,
         scrollingFlag: false,
         sectIndex: 2,
+        stickflag: [],
       }
     },
     methods: {
@@ -151,7 +187,22 @@
       },
       goHome() {
         window.location.href = '/'
-      },      
+      },
+      goPage(e) {
+        const targIndex = Number(e.target.getAttribute('index')) + 2
+        if(this.sectIndex < targIndex) {
+          for(let i = this.sectIndex - 1; i < targIndex; i++){
+            this.sideProgressHandler('pass', i)
+          }
+        } else {
+          for(let i = targIndex - 1; i < this.sectIndex; i++){
+            this.sideProgressHandler('back', i)
+          }
+        }
+        this.sectIndex = targIndex
+        this.smoothScroll(`section.pic-section:nth-child(${(targIndex)})`)
+        this.scrollingFlag = false
+      },    
       keys() {
         return {37: 1, 38: 1, 39: 1, 40: 1}
       },
@@ -178,11 +229,22 @@
           let _targEle = 0
           if(_derection < 0) {
             if(!this.scrollingFlag && Math.abs(_derection) > 3) {
-              this.sectIndex = (this.sectIndex < this.sectCount + 1) ? this.sectIndex + 1 : this.sectIndex
+              if(this.sectIndex < this.sectCount + 1) {
+                this.sectIndex = this.sectIndex + 1
+                this.sideProgressHandler('pass', (this.sectIndex - 2))
+                this.stickflagF = true
+              } else {
+                this.sectIndex = this.sectIndex
+              }
             }
           } else {
             if(!this.scrollingFlag && Math.abs(_derection) > 3) {
-              this.sectIndex = (this.sectIndex > 2) ? this.sectIndex - 1 : this.sectIndex
+              if(this.sectIndex > 2) {
+                this.sectIndex = this.sectIndex - 1
+                this.sideProgressHandler('back', (this.sectIndex))
+              } else {
+                this.sectIndex = this.sectIndex
+              }
             }
           }
           _currTop = this.currentYPosition()
@@ -203,7 +265,6 @@
             this.disableScroll()
           }
           window.wheelDelta = _derection
-
         })
         window.addEventListener('scroll', () => {
           this.updateProgressbar(((this.sectIndex - 1) * 100)/this.sectCount)
@@ -228,19 +289,27 @@
       },
       shareFacebook() {
         shareFacebook({ route: this.$route.path })
-      }, 
-      toggleDesc() {
-        const _briefArr = document.querySelectorAll('.brief')
-        this.descSwitch = (this.descSwitch) ? false : true
-        if(!this.descSwitch) {
-          _.map(_briefArr, (o) => {
-            o.children[ 0 ].setAttribute('class', 'hidden')
-          })
-        } else {
-          _.map(_briefArr, (o) => {
-            o.children[ 0 ].removeAttribute('class')
-          })
+      },
+      sideProgressHandler(action, index) {
+        const _targElement = document.querySelector(`.stick:nth-child(${index})`)
+        const _targContainer = document.querySelector('.stick-container')
+        if(!_targElement) { return }
+        switch(action) {
+          case 'pass':
+            _targElement.setAttribute('style', `bottom: ${(_targContainer.offsetHeight - (index * 7))}px;`)
+            break
+          case 'back':
+            _targElement.setAttribute('style', `bottom: ${((this.imgArr.length - index) * 7)}px;`)
+            break
         }
+      },
+      stickBottom(index) {
+        return {
+          bottom: `${((this.imgArr.length - index) * 7)}px`
+        }
+      },
+      toggleDesc() {
+        this.descSwitch = (this.descSwitch) ? false : true
       },
       updateIndex() {
         
@@ -249,15 +318,27 @@
         const _progressBar = document.querySelector('.progress-bar')
         _progressBar.setAttribute('style', `left: ${percentage}%;`)
       },
+      updateIfLandscape() {
+        const browser = typeof window !== 'undefined'
+        this.ifLandscape =  (browser && window.innerHeight < window.innerWidth) ? true : false
+      }
     },
     mounted() {
       this.disableScroll()
       this.scrollOnePage()
       this.updateIndex()
+      this.updateIfLandscape()
+
+      window.addEventListener('resize', () => {
+        this.updateIfLandscape()
+      })
     },
     name: 'ariticle-body-photo',
     props: {
       articleData: {
+        default: () => { return {} }
+      },
+      viewport: {
         default: () => { return {} }
       }
     }
@@ -265,12 +346,12 @@
 </script>
 <style lang="stylus" scoped>
   .article_body
-    /*width 100%*/
     .pic-section
       width 100vw
       height 100vh
       overflow hidden
       position relative
+
       .img
         img
           object-fit cover
@@ -287,8 +368,10 @@
       left 0
       padding 20px
       z-index 99
+
       & > div
         display inline-block
+
         &.mm-icon
           width 48px
           height 48px
@@ -297,11 +380,14 @@
           background-position center center
           background-repeat no-repeat
           cursor pointer
+
         &.share-icon
           margin-left 10px
+
           div
             display inline-block
             position relative
+
             &.icon
               width 48px
               height 48px
@@ -373,6 +459,7 @@
           font-weight 300
           text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
           font-family 'Noto Sans TC','STHeitiTC-Light','Microsoft JhengHei',sans-serif
+
     .brief
       & > div
         position absolute
@@ -385,10 +472,12 @@
         flex-direction column
         background-image linear-gradient(180deg,transparent,rgba(0,0,0,0.7))
         bottom 0   
+
         div
           margin-bottom 20px
           color #d1d1d1
           text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
+
         span
           width 70%
           color #fff
@@ -401,29 +490,34 @@
           line-height 20px
           text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
           font-size 16px
-        &.hidden
+
+        &.hide
           display none
+
+        &.show
+          display flex
       
     .go-next-page
       position fixed
-      width 40px
-      height 40px
+      width 35px
+      height 35px
       bottom 20px
       background-color rgba(218, 218, 218, 0.37)
       background-image url(/public/icon/continue.png)
       background-repeat no-repeat
       background-size contain
       background-position center center
-      left 50%
-      margin-left -20px
-      border-radius 40px
+      border-radius 10px
       z-index 20
       cursor pointer
       -webkit-transition all .1s
       transition all .1s
+      right 10px
+
       &:hover
-        background-color rgba(218, 218, 218, 0.8)
+        background-color rgba(240, 240, 240, 0.8)
         text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
+
     .latest
       padding 5% 0
       background-color rgba(51, 51, 51, 0.83)
@@ -469,29 +563,106 @@
         left 0
         position absolute
         top 0
-        -webkit-transition left 1s
         transition left 1s
-    .btn-toggle-description
+    
+    .progress-sidebar
       position fixed
-      bottom 0
-      left 0
-      bottom 20px
-      left 20px
-      width 30px
-      height 30px
-      color #fff
-      background-color rgba(218, 218, 218, 0.37)
-      font-size 20px
-      border-radius 5px
-      display flex
-      justify-content center
-      align-items center
-      z-index 102
-      cursor pointer
-      -webkit-transition all .1s
-      transition all .1s
-      &:hover
-        background-color rgba(218, 218, 218, 0.8)
-        text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
+      right 10px
+      bottom 60px
+      height 80vh
+      width 35px
+      z-index 99
 
+      .stick-container
+        position relative
+        height 100%
+
+        .stick
+          border-top 3px solid rgba(255, 255, 255, 0.5)
+          width 100%
+          transform rotate(25deg)
+          margin 10px auto
+          position absolute
+          transition bottom 0.5s
+          cursor pointer
+
+          &:hover
+            border-top 3px solid rgba(255, 255, 255, 1)
+
+
+
+    .btn-toggle-description
+      align-items center
+      background-position center center
+      background-repeat no-repeat
+      background-size contain
+      border-radius 5px
+      bottom 20px
+      color #fff
+      cursor pointer
+      display flex
+      font-size 20px
+      left 20px
+      justify-content center
+      height 40px
+      position fixed
+      transition all .1s
+      z-index 102
+      width 40px
+
+      &.on
+        background-image url(/public/icon/caption-on.png)
+        
+      &.off
+        background-image url(/public/icon/caption-off.png)
+      
+      &.hide
+        display none
+
+      &:hover
+        background-image url(/public/icon/caption-on.png)
+
+  @media (min-width 768px)
+    .mobile-only
+      display none !important
+
+  @media (max-width 767px) and (min-width 0px)
+    .article_body
+      .pic-section
+        .title
+          span
+            text-align center
+        
+        &.latest
+          .credit
+            padding 0 20px
+            width 100%
+          
+          .related-container
+            width 100%
+            margin 0
+
+          .article_fb_comment
+            width 100%
+            margin 40px auto 0
+            margin-bottom 0!important
+
+
+        &:not(:nth-child(2))
+          .img
+            img:not([class="landscape"])
+              object-fit contain
+              object-position 0 20%
+              background-color #696969
+        
+        .brief
+          & > div
+            height 40vh
+
+      .go-next-page
+        &.center
+          left 50%
+          margin-left -20px 
+          height 40px
+          width 40px
 </style>
