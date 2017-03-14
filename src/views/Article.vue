@@ -32,7 +32,7 @@
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
               <!--<vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>-->
             </pop-list>
-            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) " slot="relatedlistBottom" />            
+            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'photography')" slot="relatedlistBottom" />            
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
@@ -162,7 +162,7 @@
         return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
       },
       ifSingleCol() {
-        return false
+        return (this.articleStyle === 'single-col' || !this.ifRenderAside) ? false : true
       },
       latestList() {
         return _.get(this.latestArticle, [ 'items' ], [])
@@ -293,9 +293,11 @@
         float right
         padding-top 10px
         width 310px
+        margin-top -40px
       
       .article_footer
         text-align center
+        clear both
       
       .split-line
         overflow hidden
@@ -314,6 +316,9 @@
       background-color #fff
       margin 0 auto
       padding-top 30px
+
+    a, a:hover, a:link, a:visited
+      display inline
 
   @media (min-width 0px) and (max-width 499px)
     .article-container

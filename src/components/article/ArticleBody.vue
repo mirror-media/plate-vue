@@ -116,9 +116,6 @@ export default {
       return report
     },
     styleForCurrArticle() {
-      return {
-            'single-col': (this.viewport > 1199) ? true : false
-      }
       switch(this.articleStyle) {
         case 'single-col':
           return {
@@ -261,6 +258,10 @@ export default {
       
     
     .article_credit 
+      width 695px
+      display inline-block
+      max-width 695px
+
       a.blue:hover, a.blue:link, a.blue:visited 
         color #74afd2
     
@@ -693,7 +694,7 @@ export default {
 
   @media (min-width 0px) and (max-width 767px)
     .article_body
-      .article_main
+      .article_main, .article_credit
         width 100%
         max-width 100%
 
@@ -729,7 +730,7 @@ export default {
 
   @media (max-width 1199px)
     .article_body
-      .article_main
+      .article_main, .article_credit
         display block
 
 </style>
