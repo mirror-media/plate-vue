@@ -74,8 +74,22 @@
               color #8c8c8c
               font-weight normal
               border none
-            
-          
+
+  @media (max-width 767px) and (min-width 0px)            
+    .related-container
+      width 100%
+      margin 0
+      
+      .related_list
+        flex-direction column
+        width 100%
+
+        .related_item
+          width 280px
+          margin 30px auto
+
+          .related_item_title
+            font-size 1rem
         
       
     
