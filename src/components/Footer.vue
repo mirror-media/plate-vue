@@ -116,6 +116,7 @@
       .share-mobile
         display flex
         width 100%
+        height 100%
 
         &_btn
           height 100%

@@ -2,12 +2,14 @@
 import { CATEGORY, SECTION, TAG, TOPIC } from '../constants/index'
 import { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } from '../../api/config'
 import { camelizeKeys } from 'humps'
+import { getHost } from '../utils/comm'
 import _ from 'lodash'
 import api from 'create-api'
 import config from '../../api/config'
 import qs from 'qs'
 
 const superagent = require('superagent')
+const _host = getHost()
 
 function _buildQuery(params = {}) {
     let query = {}
@@ -59,7 +61,7 @@ function _setupWhereInParam(key, value, params = {}) {
 
 function loadArticles(params = {}) {
     const query = _buildQuery(params)
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts`
+    let url = `${_host}/api/posts`
         // let slug = typeof params[0] === 'string' ? params[0] : null
         // url = slug ? `${url}/${slug}` : url
     url = `${url}?${query}`
@@ -91,7 +93,7 @@ function loadArticlesByUuid(uuid = '', type = '', params = {}, isOnlyMeta = true
     }
     params.sort = params.sort || '-publishedDate'
     let query = _buildQuery(params)
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/meta`
+    let url = `${_host}/api/meta`
     url = `${url}?${query}`
     return _doFetch(url)
 }
@@ -100,20 +102,20 @@ function loadCommonData(endpoints = []) {
     let mapped = _.map(endpoints, (n) => { return 'endpoint=' + n })
     let combo_params = mapped.join('&')
     const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=sections&endpoint=topics&endpoint=projects&`
+    let url = `${_host}/api/combo?endpoint=sections&endpoint=topics&endpoint=projects&`
     url = url + combo_params
     return _doFetch(url)
 }
 
 function loadEditorChoice() {
     const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=choices`
+    let url = `${_host}/api/combo?endpoint=choices`
     return _doFetch(url)
 }
 
 function loadEvent() {
     const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/event`
+    let url = `${_host}/api/event`
     return _doFetch(url)
 }
 
@@ -136,14 +138,14 @@ function loadImages(uuid = '', type = '', params = {}) {
     }
 
     const query = _buildQuery(params)
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/images`
+    let url = `${_host}/api/images`
     url = `${url}?${query}`
     return _doFetch(url)
 }
 
 function loadLatestArticle(params = {}) {
     let query = _buildQuery(params)
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/posts`
+    let url = `${_host}/api/posts`
     url = `${url}?${query}`
     return _doFetch(url)
 }
@@ -165,25 +167,25 @@ function loadQuestionnaire(id) {
 
 function loadSearch(keyword = '', params = {}) {
     let query = params.query
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/search`
+    let url = `${_host}/api/search`
     url = `${url}?query=${encodeURIComponent(keyword)}&hitsPerPage=${params.max_results}&page=${params.page - 1}`
     return _doFetch(url)
 }
 
 function loadSectionList() {
     const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/combo?endpoint=sections`
+    let url = `${_host}/api/combo?endpoint=sections`
     return _doFetch(url)
 }
 
-function loadTag (slug= '') {
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/tags/${slug}`
+function loadTag(slug = '') {
+    let url = `${_host}/api/tags/${slug}`
     return _doFetch(url)
 }
 
 function loadTopic(params = {}) {
     const query = _buildQuery(params)
-    let url = `${LOCAL_PROTOCOL}://${LOCAL_HOST}:${LOCAL_PORT}/api/topics`
+    let url = `${_host}/api/topics`
     url = `${url}?${query}`
     return _doFetch(url)
 }
@@ -265,7 +267,7 @@ export function fetchSectionList() {
     return loadSectionList()
 }
 
-export function fetchTag(slug= '') {
+export function fetchTag(slug = '') {
     return loadTag(slug)
 }
 
