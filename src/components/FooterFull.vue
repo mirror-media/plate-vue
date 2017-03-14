@@ -1,24 +1,24 @@
 <template>
   <footer class="footerFull">
     <div class="footerFull__logo">
-      <a :href="'/section/' + this.section" :style="{ height: getSectionLogoHeight() + 'px' }">
+      <router-link :to="'/section/' + this.section" :style="{ height: getSectionLogoHeight() + 'px' }">
         <img :src="getSectionLogoUrl()" :style="{ width: getSectionLogoWidth() + 'px', height: getSectionLogoHeight() + 'px' }">
-      </a>
+      </router-link>
     </div>
     <div class="footerFull__menu">
-      <a :href="item.href" v-for="item in menuItem.section" v-text="item.title"></a>
-      <a :href="item.href" v-for="item in menuItem.category" v-text="item.title"></a>
+      <router-link :to="item.href" v-for="item in menuItem.section" v-text="item.title"></router-link>
+      <router-link :to="item.href" v-for="item in menuItem.category" v-text="item.title"></router-link>
     </div>
     <div class="footerFull__vertDivider"></div>
     <div class="footerFull__link">
       <div class="footerFull__link--subscribe">
-        <a :href="socialLink.SUBSCRIBE">訂閱鏡週刊</a> - <a :href="socialLink.AD">廣告合作</a>
+        <a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a> - <a :href="socialLink.AD">廣告合作</a>
       </div>
       <div class="footerFull__link--horizDivider"></div>
       <div class="footerFull__link--socialMedia">
-        <a :href="socialLink.FACEBOOK"><img class="facebook" src="~public/icon/facebook_white.png"></a>
-        <a :href="socialLink.LINE"><img class="line" src="~public/icon/line_white.png"></a>
-        <a :href="socialLink.WEIBO"><img class="weibo" src="~public/icon/weibo_white.png"></a>
+        <a :href="socialLink.FACEBOOK" target="_blank"><img class="facebook" src="~public/icon/facebook_white.png"></a>
+        <a :href="socialLink.LINE" target="_blank"><img class="line" src="~public/icon/line_white.png"></a>
+        <a :href="socialLink.WEIBO" target="_blank"><img class="weibo" src="~public/icon/weibo_white.png"></a>
       </div>
     </div>
   </footer>

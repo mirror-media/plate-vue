@@ -28,8 +28,7 @@
 
       <div class="listFull-view" v-if="pageStyle == 'full'">
         <div id="dfp-HD" class="listFull-dfp dfp-HD">AD HD</div>
-        <header-full :commonData='commonData' :section='section' 
-                      v-on:openSearchBar="openSearchBar" v-on:openSideBar="openSideBar"/>
+        <header-full :commonData='commonData' :section='section' :sections='commonData.sections' />
         <article-leading :articles='articles.items' v-if="type == 'SECTION'"/>
         <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type == 'SECTION'"/>
         <latestArticle-full :articles='articles.items' v-if="type == 'SECTION'" />
@@ -49,9 +48,6 @@
         <loading :show="loading" />
         <div class="listFull-dfp dfp-FT">AD FT</div>
         <footer-full :commonData='commonData' :section='section' />
-        <search-full v-show='openSearch' v-on:closeSearchBar="closeSearchBar" />
-        <sidebar-full :section='section' :sections='commonData.sections' 
-                      :openSide='openSide' v-on:closeSideBar="closeSideBar" />
       </div>
 
     </template>
@@ -77,8 +73,6 @@ import Leading from '../components/Leading.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
-import SearchFull from '../components/SearchFull.vue'
-import SidebarFull from '../components/SidebarFull.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
 
@@ -279,8 +273,6 @@ export default {
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
-    'search-full': SearchFull,
-    'sidebar-full': SidebarFull,
     VueDfpProvider
   },
   preFetch: fetchData,
@@ -294,7 +286,9 @@ export default {
     next(vm => {
       let sectionStyle = _.get( _.find( _.get(vm.$store.state.commonData, ['sections', 'items']), 
         { 'name': _.get(to, ['params', 'title']) } ), ['style'] )
-      fetchListData(vm.$store, type, sectionStyle)
+      fetchCommonData(vm.$store).then(() => {
+        fetchListData(vm.$store, type, sectionStyle)
+      })
     })
   },
   beforeRouteUpdate (to, from, next) {
@@ -313,8 +307,6 @@ export default {
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
       loading: false,
-      openSearch: false,
-      openSide: false,
       page: PAGE,
     }
   },
@@ -445,12 +437,6 @@ export default {
     },
   },
   methods: {
-    closeSearchBar () {
-      this.openSearch = false
-    },
-    closeSideBar () {
-      this.openSide = false
-    },
     getImage,
     getValue,
     insertCustomizedMarkup () {
@@ -509,12 +495,6 @@ export default {
           })
       }
     },
-    openSearchBar () {
-      this.openSearch = true
-    },
-    openSideBar () {
-      this.openSide = true
-    }
   },
   metaInfo () {
     let title = "鏡傳媒 Mirror Media"

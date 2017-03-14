@@ -35,7 +35,7 @@ body
   overflow-y scroll
 
 a
-  display block
+  display inline
   color #34495e
   text-decoration none
   cursor pointer
