@@ -64,6 +64,8 @@ $color-other = #bcbcbc
   display: flex
   flex-direction: column
   width 100%
+  a
+    display block
   > section
     .list-narrow, .list-wide
       &__title

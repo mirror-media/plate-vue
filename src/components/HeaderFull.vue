@@ -5,19 +5,19 @@
         <a @click="openSideBar()"><img src="~public/icon/hamburger_white.png"></a>
       </div>
       <div class="headerFull__logo">
-        <a :href=" '/section/' + section "><img :src="getSectionLogoUrl()"></a>
+        <router-link :to=" '/section/' + section "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
-        <a href="/">
+        <router-link to="/">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/logo_black@3x.png">
-        </a>
-        <a :href="socialLink.FACEBOOK">
+        </router-link>
+        <a :href="socialLink.FACEBOOK" target="_blank">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/facebook_white.png">
         </a>
-        <a :href="socialLink.LINE">
+        <a :href="socialLink.LINE" target="_blank">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/line_white.png">
         </a>
-        <a :href="socialLink.WEIBO">
+        <a :href="socialLink.WEIBO" target="_blank">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/weibo_white.png">
         </a>
         <a @click="openSearchBar()">
@@ -30,19 +30,19 @@
         <a @click="openSideBar()"><img src="~public/icon/hamburger_white.png"></a>
       </div>
       <div class="headerFull__logo">
-        <a :href=" '/section/' + section "><img :src="getSectionLogoUrl()"></a>
+        <router-link :to=" '/section/' + section "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
-        <a href="/">
+        <router-link to="/">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/logo_black@3x.png">
-        </a>
-        <a :href="socialLink.FACEBOOK">
+        </router-link>
+        <a :href="socialLink.FACEBOOK" target="_blank">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/facebook_white.png">
         </a>
-        <a :href="socialLink.LINE">
+        <a :href="socialLink.LINE" target="_blank">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/line_white.png">
         </a>
-        <a :href="socialLink.WEIBO">
+        <a :href="socialLink.WEIBO" target="_blank">
           <img class="headerFull__link--icon desktop-only" src="~public/icon/weibo_white.png">
         </a>
         <a @click="openSearchBar()">
@@ -50,6 +50,31 @@
         </a>
       </div>
     </nav>
+    <div class="sidebarFull">
+      <div class="sidebarFull-container" :class="{ open: openSide }">
+        <div class="sidebarFull__close">
+          <a class="sidebarFull__close--icon" @click="closeSideBar()">
+            <img src="~public/icon/close.png">
+          </a>
+          <a class="sidebarFull__close--text" @click="closeSideBar()">CLOSE THE MENU</a>
+        </div>
+        <nav class="sidebarFull__menu">
+          <router-link :to="'/section/' + section" class="sidebarFull__menu--main">主頁</router-link>
+          <div class="sidebarFull__menu--horizDivider"></div>
+          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title"></router-link>
+        </nav>
+      </div>
+      <div class="sidebarFull-curtain" @click="closeSideBar()" v-show="openSide"></div>
+    </div>
+    <div class="searchFull" v-show="openSearch">
+      <div class="searchFull-container">
+        <input type="text" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)">
+        <a @click="closeSearchBar()">
+          <img src="~public/icon/close.png">
+        </a>
+      </div>
+      <div class="searchFull-curtain" @click="closeSearchBar()"></div>
+    </div>
   </header>
 </template>
 <script>
@@ -60,16 +85,24 @@ import _ from 'lodash'
 
 export default {
   name: 'header-full',
-  props: ['commonData', 'section'],
+  props: ['commonData', 'section', 'sections'],
   data () {
     return {
       blackNav: false,
       defaultNav: true,
       opacity: 1,
+      openSearch: false,
+      openSide: false,
       searchVal: '',
     }
   },
   methods: {
+    closeSearchBar () {
+      this.openSearch = false
+    },
+    closeSideBar () {
+      this.openSide = false
+    },
     getHeaderDFPHeight () {
       this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
     },
@@ -77,10 +110,10 @@ export default {
       return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
     },
     openSearchBar () {
-      this.$emit('openSearchBar')
+      this.openSearch = true
     },
     openSideBar () {
-      this.$emit('openSideBar')
+      this.openSide = true
     },
     search (searchVal = '') {
       this.$router.push('/search/'+ this.searchVal)
@@ -94,6 +127,9 @@ export default {
     }
   },
   computed: {
+    menuItem () {
+      return _.get( _.find( _.get(this.sections, ['items']), { name: this.section } ), ['categories'])
+    },
     sectionLogo () {
       return _.get( _.find( _.get(this.commonData, [ 'sections', 'items' ]), { name: this.section }), [ 'image' ], null)
     },
@@ -153,10 +189,108 @@ export default {
         left 50%
         transform translate(-50%, -50%)
 
+.sidebarFull
+  &-container
+    position fixed
+    top 0
+    z-index 530
+    width 100%
+    height 100%
+    padding 20px 25px 0
+    background-color #333
+    transform translate3d(-100%,0,0)
+    transition .5s ease
+    &.open
+      transform translate3d(0,0,0)
+      transition .5s ease
+  &-curtain
+    position fixed
+    top 0
+    left 0
+    z-index 520
+    width 100%
+    height 100%
+    background-color rgba(0, 0, 0, .5)
+  &__close
+    display flex
+    align-items center
+    margin-bottom 46px
+    a
+      color #fff
+    &--iconf
+      font-size 0
+    &--text
+      margin-left 10px
+      font-size 13px
+  &__menu
+    display flex
+    flex-direction column
+    align-items center
+    &--main
+      font-size 15px
+      color #7e7e7e
+      margin-bottom 20px
+    &--horizDivider
+      width 100%
+      height 1px
+      margin-bottom 28px
+      background-color #fff
+    &--item
+      font-size 18px
+      color #fff
+      margin-bottom 48px
+
+.searchFull
+  &-container
+    position fixed
+    top 0
+    left 0
+    z-index 520
+    display flex
+    justify-content space-between
+    align-items center
+    width 100%
+    height 55px
+    padding 0 22px 0 30px
+    background-color #dcdcdc
+    > input
+      flex-grow 1
+      height 22px
+      padding 0
+      font-size 20px
+      color #8c8c8c
+      background-color transparent
+      border none
+      box-shadow none
+    > a
+      font-size 0
+      
+  &-curtain
+    position fixed
+    top 0
+    left 0
+    z-index 510
+    width 100%
+    height 100%
+    background-color rgba(0, 0, 0, .5)
+
 @media (min-width: 1200px)
   .headerFull
     height 150px
     &--black
       height 60px
 
+  .sidebarFull
+    &-container
+      width 365px
+
+  .searchFull
+    &-container
+      top 60px
+      justify-content flex-end
+      height 52px
+      > input
+        text-align right
+      > a
+        margin-left 50px
 </style>
