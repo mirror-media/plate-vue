@@ -1,17 +1,17 @@
 <template>
   <section id="editorChoice" class="editorChoice container">
-    <app-slider class="editorChoice-slides grid grid-4-fifth" slideId="editorChoiceSlider" :option="sliderOption">
+    <app-slider class="editorChoice-slides grid grid-4-fifth desktop-only" slideId="editorChoiceSlider" :option="sliderOption">
       <template scope="props">
         <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice">
           <a :href="getHref(item)" target="_blank">
             <div :id="'slide-' + index" class="editorChoice-image"
-            :style="{ backgroundImage: 'url(' + item.heroImage.image.resizedTargets.desktop.url + ')' }">
+            :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }">
             </div>
           </a>
         </swiper-slide>
       </template>
     </app-slider>
-    <div class="editorChoice-list grid grid-1-fifth">
+    <div class="editorChoice-list grid grid-1-fifth desktop-only">
       <a v-for="(item, index) in editorChoice" :href="getHref(item)"  target="_blank"
             :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
             :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
@@ -19,12 +19,22 @@
         <span v-text="item.title" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
       </a>
     </div>
+    <div class="editorChoice-list mobile-only">
+      <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice-list-post">
+        <a :href="getHref(item)" target="_blank" class="editorChoice-list-post__img">
+          <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure>
+        </a>
+        <div class="editorChoice-list-post__title" :class="getSection(item)">
+          <a :href="getHref(item)" target="_blank"><h2 v-text="getTitle(item, 24)"></h2></a>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 <script>
 
 import { SECTION_MAP } from '../constants'
-import { getHref, getTruncatedVal, getValue } from '../utils/comm'
+import { getHref, getImage, getSection, getTitle, getTruncatedVal, getValue } from '../utils/comm'
 import Slider from './Slider.vue'
 import _ from 'lodash'
 import moment from 'moment'
@@ -94,6 +104,9 @@ export default {
     getSrcSet(img) {
       return `${img.resizedTargets.mobile.url} 600w, ${img.resizedTargets.tablet.url} 900w, ${img.resizedTargets.desktop.url} 1200w`
     },
+    getImage,
+    getSection,
+    getTitle,
     getTruncatedVal,
     getValue,
     styleFor1stitem(sect) {
@@ -125,10 +138,18 @@ export default {
 </script>
 <style lang="stylus" scoped>
 
+$color-news = #30bac8
+$color-entertainment = #bf3284
+$color-foodtravel = #eac151
+$color-watch = #c1d16e
+$color-projects = #000
+$color-other = #bcbcbc
+
 .editorChoice
   &.container
     flex-direction: row
-    height 500px
+    width 100%
+    height auto
     margin-bottom 35px
 
   .grid
@@ -151,7 +172,6 @@ export default {
 
   &-list
     height 100%
-    background-color #f6f6f6
     a:last-child
       div
         border-bottom none
@@ -167,7 +187,68 @@ export default {
       &:last-child
         border-bottom none
       &.active
-        background-color: #fff;
+        background-color #fff
+    &.mobile-only
+      display flex
+      flex-direction column
+      width 100%
+      padding 0 1em
+      > div:not(:last-child)
+        margin-bottom 20px
+      .editorChoice-list-post
+        &__img
+          > figure
+            width 100%
+            padding-top 66.66%
+            margin 0
+            background-position 50% 50%
+            background-repeat no-repeat
+            background-size cover
+        &__title
+          padding .5em 1em
+          h2
+            margin 0
+          &.news-people
+            border-left 8px solid $color-news
 
+          &.entertainment
+            border-left 8px solid $color-entertainment
+
+          &.foodtravel
+            border-left 8px solid $color-foodtravel
+
+          &.watch
+            border-left 8px solid $color-watch
+
+          &.projects
+            border-left 8px solid $color-projects
+
+          &.other
+            border-left 8px solid $color-other
+
+@media (min-width: 600px)
+  .editorChoice-list
+    &.mobile-only
+      flex-direction row
+      flex-wrap wrap
+      justify-content space-between
+      padding 0 2em
+      > div:first-child
+        width 100%
+      > div:not(:first-child)
+        width calc( (100% - 30px)/2 )
+      .editorChoice-list-post
+        &__title
+          height 65px
+
+@media (min-width: 1200px)
+  .editorChoice
+    &.container
+      flex-direction: row
+      width 1024px
+      height 500px
+      margin-bottom 35px
+    &-list
+      background-color #f6f6f6
 
 </style>
