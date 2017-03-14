@@ -1,13 +1,13 @@
 <template>
   <section class="articleList container">
-    <a :href="getHref(item)" v-for="item in articles" class="articleList-block">
+    <router-link :to="getHref(item)" v-for="item in articles" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
       <div class="articleList__content" :class="getSection(item)">
         <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
         <p v-text="getBrief(item, 45)"></p>
       </div>
-    </a>
+    </router-link>
   </section>
 </template>
 
@@ -95,6 +95,7 @@ $color-other = #bcbcbc
   .articleList
     &.container
       flex-direction row
+      justify-content flex-start
     &-block
       width calc( (100% - 40px) / 2 )
       margin 0 10px 40px

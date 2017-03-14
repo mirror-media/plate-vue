@@ -16,18 +16,18 @@
     <nav class="header-menu--section">
       <div class="header-menu">
         <div v-for="item in headerItem.section" class="dropdown" :class="item.name">
-          <a :href="item.href" v-text="item.title"></a>
+          <router-link :to="item.href" v-text="item.title"/>
           <div class="dropdown-content">
-            <a v-for="c in item.categories" v-text="c.title" :href="c.href"></a>
+            <router-link :to="c.href" v-for="c in item.categories" v-text="c.title"/>
           </div>
         </div>
-        <a :href="item.href" v-for="item in headerItem.category" v-text="item.title" :class="item.section"></a>
+        <router-link :to="item.href" v-for="item in headerItem.category" v-text="item.title" :class="item.section"></router-link>
       </div>
     </nav>
     <nav class="header-menu--topic">
       <div>
         <div class="header-menu">
-          <a :href="item.href" v-for="item in headerItem.topic" v-text="item.title"></a>
+          <router-link :to="item.href" v-for="item in headerItem.topic" v-text="item.title"/>
         </div>
         <a href="">更多</a>
       </div>

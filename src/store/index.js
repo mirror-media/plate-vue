@@ -39,12 +39,17 @@ const store = new Vuex.Store({
         },
         FETCH_ARTICLES_BY_UUID: ({ commit, state }, { uuid, type, params }) => {
             let orig = _.values(state.articlesByUUID['items'])
-            return fetchArticlesByUuid(uuid, type, params).then(articles => {
-                articles['items'] = _.concat(orig, _.get(articles, ['items']))
-                commit('SET_ARTICLES_BY_UUID', { articles })
-                commit('SET_AUTHORS', articles)
-                commit('SET_TAGS', articles)
-            })
+            return state.articlesByUUID.items && (params.page > 1) ?
+                fetchArticlesByUuid(uuid, type, params).then(articles => {
+                    articles['items'] = _.concat(orig, _.get(articles, ['items']))
+                    commit('SET_ARTICLES_BY_UUID', { articles })
+                    commit('SET_AUTHORS', articles)
+                    commit('SET_TAGS', articles)
+                }) : fetchArticlesByUuid(uuid, type, params).then(articles => {
+                    commit('SET_ARTICLES_BY_UUID', { articles })
+                    commit('SET_AUTHORS', articles)
+                    commit('SET_TAGS', articles)
+                })
         },
         FETCH_ARTICLES_POP_LIST: ({ commit, state }, { params = {} }) => {
             return fetchArticlesPopList(params).then(articlesPopList => commit('SET_ARTICLES_POP_LIST', { articlesPopList }))
@@ -104,7 +109,7 @@ const store = new Vuex.Store({
         },
 
         FETCH_TAG: ({ commit, state }, { id }) => {
-            return state.tag['id'] && (params.page > 1) ?
+            return state.tag['id'] ?
                     '' : fetchTag(id).then(tag => {
                         commit('SET_TAG', { tag })
                     })
