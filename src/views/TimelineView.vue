@@ -1,7 +1,6 @@
 <template>
   <div class="timeline-view">
-    <header-full :commonData='commonData' :section='sectionName' 
-                      v-on:openSearchBar="openSearchBar" v-on:openSideBar="openSideBar"/>
+    <header-full :commonData='commonData' :section='sectionName' :sections='commonData.sections' />
     <spinner :show="loading"></spinner>
     <section :style="{ position: 'relative' }">
       <div class="titleBox"/>
@@ -33,9 +32,6 @@
       <more v-on:loadMore="loadMore" />
     </div>
     <footer-full :commonData='commonData' :section='sectionName' />
-    <search-full v-show='openSearch' v-on:closeSearchBar="closeSearchBar" />
-    <sidebar-full :section='sectionName' :sections='commonData.sections' 
-                      :openSide='openSide' v-on:closeSideBar="closeSideBar" />
   </div>
 </template>
 
@@ -45,8 +41,6 @@ import _ from 'lodash'
 import FooterFull from '../components/FooterFull.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import More from '../components/More.vue'
-import SearchFull from '../components/SearchFull.vue'
-import SidebarFull from '../components/SidebarFull.vue'
 import Spinner from '../components/Spinner.vue'
 import dateformat from 'dateformat'
 import twitter from 'twitter-text'
@@ -92,8 +86,6 @@ export default {
     'footer-full': FooterFull,
     'header-full': HeaderFull,
     'more': More,
-    'search-full': SearchFull,
-    'sidebar-full': SidebarFull,
     Spinner
   },
   computed: {
