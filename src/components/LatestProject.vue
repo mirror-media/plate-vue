@@ -60,6 +60,7 @@ $color-projects = #000
 $color-other = #bcbcbc
 
 .latestProject
+  display none
   padding-left 15px
 
   h2
@@ -108,4 +109,7 @@ $color-other = #bcbcbc
   .other
     border-left 3px solid $color-other
 
+@media (min-width: 1200px)
+  .latestProject
+    display block
 </style>

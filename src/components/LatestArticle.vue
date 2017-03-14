@@ -1,9 +1,7 @@
 <template>
-  <section id="latestArticle" class="latestArticle grid grid-4-fifth">
+  <section id="latestArticle" class="latestArticle">
     <template v-for="(item, index) in article">
-      <article-right :article='item' :index="index">
-        <vue-dfp :is="vueDfp" pos="HPC1" :dfpUnits="dfpUnits" :section="section" slot="DFPAD1" v-if="index === 0"></vue-dfp>
-      </article-right> 
+      <article-right :article='item' :index="index" />
       <article-center :article='item' /> 
       <article-left :article='item' /> 
     </template>
@@ -65,94 +63,312 @@ $color-other = #bcbcbc
 .latestArticle
   display: flex
   flex-direction: column
-  > section:not(:last-child)
-    margin-bottom 15px
-
-.list-container
-  display flex
-  justify-content space-between
   width 100%
-  > div
-    float left
-    background-position 50% 50%
-    background-repeat no-repeat
-    background-size cover
-  a
-    display block
-    margin-bottom 20px
-  
-.list
-  &-wide
-    position relative
-    display block
-    width calc(50% - 15px)
-    padding-top calc(50% - 15px)
+  > section
+    .list-narrow, .list-wide
+      &__title
+        p
+          display none
+        h2
+          padding .5em
+          margin 0
+      
+      &__brief
+        display none
 
-    &__img
-      position absolute
-      top: 0
-      left: 0
-      bottom: 0
-      right: 0
-      background-position 50% 50%
-      background-repeat no-repeat
-      background-size cover
+  > section:first-child
+    margin-bottom 50px
+    .list-narrow, .list-wide
+      &__img
+        width 100%
+        padding-top 56.25%
+        background-position 50% 50%
+        background-repeat no-repeat
+        background-size cover
+    .list-narrow
+      > a
+        margin-bottom 10px
+      &__title
+        width 90%
+        margin 0 auto
+      
+    .list-wide
+      &__title
+        width 100%
+        padding 0 5%
+        background-color #fff
+     
+  > section:not(:first-child)
+    padding 0 5%
+    .list-narrow, .list-wide
+      &__img
+        width 80px
+        height 80px
+        background-position 50% 50%
+        background-repeat no-repeat
+        background-size cover
+      &__title
+        h2
+          width 100%
+          height 100%
+          margin 0
+          padding 0
+          padding-left .5em
+    .list-narrow
+      > a
+        margin-bottom 15px
+        > div
+          display flex
+          justify-content space-between
+      
+      &__title
+        flex-grow 1
+        width calc( 100% - 90px )
+        max-width calc( 100% - 90px )
+        
+    .list-wide
+      position relative
+      margin-bottom 15px
+      
+      &__title
+        position absolute
+        top 0
+        left 90px
+        width calc(100% - 90px)
+        height 80px
+        
+@media (min-width: 600px)  
+  .latestArticle
+    > section
+      .list-narrow, .list-wide
+        &__title
+          p
+            display block
+            margin 0
+            text-align justify
+            font-size 1.2rem
+            line-height 1.5rem
+          h2
+            width 100%
+            height auto
+            padding 0
+            font-size 1.6rem
+            line-height 2rem
+            border-left none
+          &.news-people
+            border-left 8px solid $color-news
 
+          &.entertainment
+            border-left 8px solid $color-entertainment
 
-    &__title
-      position absolute
-      left 0
-      bottom 0
-      width 70%
-      padding 1em .5em 1em .5em
-      font-size 1.5rem
-      background-color rgba(255,255,255,.8)
+          &.foodtravel
+            border-left 8px solid $color-foodtravel
 
-  &-narrow
+          &.watch
+            border-left 8px solid $color-watch
+
+          &.projects
+            border-left 8px solid $color-projects
+
+          &.other
+            border-left 8px solid $color-other
+
+      .list-narrow
+        > a
+          > div
+            display flex
+            justify-content space-between
+        
+    > section:first-child
+      margin-bottom 20px
+      .list-narrow, .list-wide
+        &__img
+          width calc( 100% / 3)
+          padding-top calc( 100% / 3)
+
+      .list-narrow
+        > a
+          margin-bottom 20px
+        &__title
+          display flex
+          flex-direction column
+          justify-content space-between
+          width calc( (100% - 30px) / 3 * 2)
+          margin 0
+          padding-left 1em
+          
+      .list-wide
+        position relative
+        &__title
+          position absolute
+          top 50%
+          left calc( 100% / 3)
+          transform translateY(-50%)
+          width calc( (100% - 30px) / 3 * 2)
+          height 100%
+          padding 0
+          padding-left 1em
+          margin-left 20px
+          p
+            position absolute
+            left 0
+            bottom 0
+            padding-left 1em
+
+    > section:not(:first-child)
+      padding 0
+      .list-narrow, .list-wide
+        &__img
+          width calc( 100% / 3)
+          padding-top calc( 100% / 3)
+        &__title
+          h2
+            width 100%
+            height auto
+            padding 0
+            border-left none
+      .list-narrow
+        > a
+          margin-bottom 20px
+        &__title
+          display flex
+          flex-direction column
+          justify-content space-between
+          flex-grow 0
+          width calc( (100% - 30px) / 3 * 2)
+          margin 0
+          padding-left 1em
+          
+      .list-wide
+        margin-bottom 20px
+        &__title
+          position absolute
+          top 50%
+          left calc( 100% / 3)
+          transform translateY(-50%)
+          width calc( (100% - 30px) / 3 * 2)
+          height 100%
+          padding 0
+          padding-left 1em
+          margin-left 20px
+          p
+            position absolute
+            left 0
+            bottom 0
+            padding-left 1em
+
+@media (min-width: 1200px)
+  .latestArticle
+    width 80%
+    > section
+      .list-narrow, .list-wide
+        &__title
+          margin 0 !important
+          p
+            display none !important
+          &.news-people
+            border-left 3px solid $color-news
+          &.entertainment
+            border-left 3px solid $color-entertainment
+          &.foodtravel
+            border-left 3px solid $color-foodtravel
+          &.watch
+            border-left 3px solid $color-watch
+          &.projects
+            border-left 3px solid $color-projects
+          &.other
+            border-left 3px solid $color-other
+
+  .list-container
     display flex
-    flex-direction column
     justify-content space-between
-    width calc(25% - 15px)
-
-    &__title
-      min-height 40px
-      padding-top 5px
-      h2
-        padding .2em 0 .2em .5em
-        margin 0
-        font-weight normal
-        font-size .9rem
-        line-height 1rem
-
-    &__img
-      padding-top 75%
+    width 100%
+    > div
+      float left
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
+    a
+      display block
+      margin-bottom 20px
+  .list
+    &-wide
+      position relative
+      display block
+      width calc(50% - 15px)
+      padding-top calc(50% - 15px)
+      &__img
+        position absolute
+        top: 0
+        left: 0
+        bottom: 0
+        right: 0
+        width 100% !important
+        height 100% !important
+        padding-top 0 !important
+        background-position 50% 50%
+        background-repeat no-repeat
+        background-size cover
+      &__title
+        position absolute
+        top auto !important
+        left 0 !important
+        bottom 0
+        width 70% !important
+        height auto !important
+        padding 1em .5em 1em .5em !important
+        font-size 1.5rem
+        background-color rgba(255,255,255,.8) !important
+        transform translateY(0) !important
+        > h2
+          padding 0 !important
+          border-left none !important
+        
+    &-narrow
+      display flex
+      flex-direction column
+      justify-content space-between
+      width calc(25% - 15px)
+      > a
+        > div
+          display block !important
+      &__img
+        width 100% !important
+        padding-top 75% !important
+        background-position 50% 50%
+        background-repeat no-repeat
+        background-size cover
+      &__title
+        width 100% !important
+        max-width 100% !important
+        min-height 40px
+        padding 0 !important
+        h2
+          height auto !important
+          padding .2em 0 .2em .5em !important
+          margin 0
+          font-weight normal
+          font-size .9rem
+          line-height 1rem
+          border-left none !important
+          
+.list-narrow__title, .list-wide__title
+  > h2
+    &.news-people
+      border-left 3px solid $color-news
 
-.list-wide__title, .list-narrow__title
-  &.news-people
-    border-left 3px solid $color-news
+    &.entertainment
+      border-left 3px solid $color-entertainment
 
-  &.entertainment
-    border-left 3px solid $color-entertainment
+    &.foodtravel
+      border-left 3px solid $color-foodtravel
 
-  &.foodtravel
-    border-left 3px solid $color-foodtravel
+    &.watch
+      border-left 3px solid $color-watch
 
-  &.watch
-    border-left 3px solid $color-watch
+    &.projects
+      border-left 3px solid $color-projects
 
-  &.projects
-    border-left 3px solid $color-projects
-
-  &.other
-    border-left 3px solid $color-other
-
-.list-container
-  a:hover
-    .list-wide__img
-      transform: scaleZ(-1)
-
-
+    &.other
+      border-left 3px solid $color-other
 </style>

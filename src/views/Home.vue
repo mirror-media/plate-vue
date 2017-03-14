@@ -151,5 +151,16 @@ export default {
     flex-direction row
     flex-wrap wrap
     align-items flex-start
+    width 100%
+
+@media (min-width: 600px)
+  .list
+    &.container
+      width 500px
+
+@media (min-width: 1200px)
+  .list
+    &.container
+      width 1024px
     
 </style>
