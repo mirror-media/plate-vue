@@ -71,8 +71,10 @@ export default {
     fetchSearch(this.$store, to.params.keyword, {
       page: PAGE,
       max_results: MAXRESULT
+    }).then(()=>{
+      next()
     })
-    next()
+    
   },
   data () {
     return {

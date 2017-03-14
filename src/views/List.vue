@@ -9,19 +9,19 @@
           <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
         </div>
         <!--<div v-if="type !== 'TOPIC'" id="dfp-test" class="dfp-test"></div>-->
-        <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" /> 
+        <!-- <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" />  -->
         <div class="list-title container" :class="section">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="section"></div>
         </div>
         <article-list :articles='articles.items'>
-          <vue-dfp :is="props.vueDfp" pos="TEST" :dfpUnits="props.dfpUnits" :section="props.section"/>
+          <!-- <vue-dfp :is="props.vueDfp" pos="TEST" :dfpUnits="props.dfpUnits" :section="props.section"/> -->
         </article-list>
         <section class="container">
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
         <section class="footer container">
-          <vue-dfp :is="props.vueDfp" pos="SPCFT" :dfpUnits="props.dfpUnits" :section="props.section" />
+          <!-- <vue-dfp :is="props.vueDfp" pos="SPCFT" :dfpUnits="props.dfpUnits" :section="props.section" /> -->
           <app-footer />
         </section>
       </div>
@@ -89,6 +89,108 @@ const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
 }
 
+const fetchListData = (store, type, sectionStyle) => {
+  let uuid
+  switch(type) {
+    case AUTHOR:
+      uuid = store.state.route.params.authorId
+      return fetchArticlesByAuthor(store, uuid, { 
+        page: PAGE
+      })
+      break
+    case SECTION:
+      uuid = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': store.state.route.params.title } ), ['id'] )
+      switch(sectionStyle) {
+        case 'full':
+          return fetchArticlesByUuid(store, uuid, SECTION, { 
+            page: PAGE,
+            max_results: MAXRESULT,
+            related: 'full'
+          })
+          break
+        default:
+          return fetchArticlesByUuid(store, uuid, SECTION, { 
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+      }
+      break
+    case TAG:
+      uuid = store.state.route.params.tagId
+      return fetchTag(store, uuid).then(() => {
+        return fetchArticlesByUuid(store, uuid, TAG, { 
+          page: PAGE,
+          max_results: MAXRESULT
+        })
+      })
+      break
+    case CATEGORY:
+      uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': store.state.route.params.title } ), ['id'] )
+      return fetchArticlesByUuid(store, uuid, CATEGORY, { 
+        page: PAGE,
+        max_results: MAXRESULT
+      })
+      break
+    case TOPIC:
+      uuid = store.state.route.params.topicId
+      return fetchArticlesByUuid(store, uuid, TOPIC, { 
+        page: PAGE,
+        max_results: MAXRESULT
+      })
+  }
+}
+
+const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
+  let uuid
+  switch(type) {
+    case AUTHOR:
+      uuid = to.params.authorId
+      return fetchArticlesByAuthor(store, uuid, { 
+        page: PAGE
+      })
+      break
+    case SECTION:
+      uuid = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': to.params.title } ), ['id'] )
+      console.log('sectionStyle', sectionStyle)
+      switch(sectionStyle) {
+        case 'full':
+          return fetchArticlesByUuid(store, uuid, SECTION, { 
+            page: PAGE,
+            max_results: MAXRESULT,
+            related: 'full'
+          })
+          break
+        default:
+          return fetchArticlesByUuid(store, uuid, SECTION, { 
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+      }
+      break
+    case TAG:
+      uuid = to.params.tagId
+      return fetchArticlesByUuid(store, uuid, TAG, { 
+        page: PAGE,
+        max_results: MAXRESULT
+      })
+      break
+    case CATEGORY:
+      uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': to.params.title } ), ['id'] )
+      return fetchArticlesByUuid(store, uuid, CATEGORY, { 
+        page: PAGE,
+        max_results: MAXRESULT
+      })
+      break
+    case TOPIC:
+      uuid = to.params.topicId
+      return fetchArticlesByUuid(store, uuid, TOPIC, { 
+        page: PAGE,
+        max_results: MAXRESULT
+      })
+      break
+  }
+}
+
 const fetchArticlesByUuid = (store, uuid, type, params) => {
   return store.dispatch('FETCH_ARTICLES_BY_UUID', { 
     'uuid': uuid,
@@ -143,55 +245,9 @@ const fetchData = (store) => {
   return fetchCommonData(store).then(() => {
     const _type = _.toUpper( _.split( store.state.route.path, '/' )[1] )
     const _sectionStyle = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': store.state.route.params.title } ), ['style'] )
-    let uuid
-
-    switch(_type) {
-      case AUTHOR:
-        uuid = store.state.route.params.authorId
-        return fetchArticlesByAuthor(store, uuid, { 
-          page: PAGE
-        })
-        break
-      case SECTION:
-        uuid = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': store.state.route.params.title } ), ['id'] )
-        switch(_sectionStyle) {
-          case 'full':
-            return fetchArticlesByUuid(store, uuid, SECTION, { 
-              page: PAGE,
-              max_results: MAXRESULT,
-              related: 'full'
-            })
-            break
-          default:
-            return fetchArticlesByUuid(store, uuid, SECTION, { 
-              page: PAGE,
-              max_results: MAXRESULT
-            })
-        }
-        break
-      case TAG:
-        uuid = store.state.route.params.tagId
-        return fetchTag(store, uuid).then(() => {
-          return fetchArticlesByUuid(store, uuid, TAG, { 
-            page: PAGE,
-            max_results: MAXRESULT
-          })
-        })
-        break
-      default:
-        switch(_type) {
-          case CATEGORY:
-            uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': store.state.route.params.title } ), ['id'] )
-            break
-          case TOPIC:
-            uuid = store.state.route.params.topicId
-            break
-        }
-        return fetchArticlesByUuid(store, uuid, _type, { 
-          page: PAGE,
-          max_results: MAXRESULT
-        })
-    }
+    
+    return fetchListData(store, _type, _sectionStyle)
+    
 
     if(_type === TOPIC) {
       const _uuid = store.state.route.params.topicId
@@ -209,7 +265,6 @@ const fetchData = (store) => {
 
 export default {
   name: 'list-view',
-  preFetch: fetchData,
   components: {
     'app-footer': Footer,
     'app-header': Header,
@@ -227,6 +282,30 @@ export default {
     'search-full': SearchFull,
     'sidebar-full': SidebarFull,
     VueDfpProvider
+  },
+  preFetch: fetchData,
+  mounted() {
+    if(this.type === SECTION || this.type === TOPIC || this.type === TAG) {
+      this.insertCustomizedMarkup()
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    let type = _.toUpper( _.split( to.path, '/' )[1] )
+    next(vm => {
+      let sectionStyle = _.get( _.find( _.get(vm.$store.state.commonData, ['sections', 'items']), 
+        { 'name': _.get(to, ['params', 'title']) } ), ['style'] )
+      fetchListData(vm.$store, type, sectionStyle)
+    })
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.page = PAGE
+    let type = _.toUpper( _.split( to.path, '/' )[1] )
+    let sectionStyle = _.get( _.find( _.get(this.$store.state.commonData, ['sections', 'items']), { 'name': to.params.title } ), ['style'] )
+    console.log('to', to)
+    fetchListDataBeforeRouteUpdate(this.$store, type, sectionStyle, to).then(() => {
+      next()
+    })
+    
   },
   data () {
     return {
@@ -444,11 +523,7 @@ export default {
       title
     }
   },
-  mounted() {
-    if(this.type === SECTION || this.type === TOPIC || this.type === TAG) {
-      this.insertCustomizedMarkup()
-    }
-  },
+  
 }
   
 </script>
