@@ -65,6 +65,9 @@
         if(this.option[ 'paginationable' ]) {
           this.option[ 'pagination' ] = `#${this.swiperPagiantionId}`
         }
+        if(this.$refs[ this.slideId ]) {
+          this.swiper.update()
+        }
         return Object.assign(defaultOpt, this.option);
       },
     },
@@ -91,7 +94,7 @@
         }
       },
       option: { default: () => { return {} } }
-    }
+    },
   }
 </script>
 <style lang="stylus">

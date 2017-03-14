@@ -45,11 +45,14 @@
         <!-- <vue-dfp :is="props.vueDfp" pos="PCE1"></vue-dfp>
         <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp> -->
       </div>
+      <div class="article_main_related_bottom">
+        <slot name="relatedlistBottom"></slot>
+      </div>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
       </div>
-      <div>
-        <proj-list :projects="projlistData" />
+      <div class="article_main_proj">
+        <proj-list :projects="projlistData" :viewport="viewport" />
       </div>
       <div class="article_fb_comment" style="margin: 1.5em 0;">
         <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
@@ -113,14 +116,17 @@ export default {
       return report
     },
     styleForCurrArticle() {
+      return {
+            'single-col': (this.viewport > 1199) ? true : false
+      }
       switch(this.articleStyle) {
-        case 'photography':
+        case 'single-col':
           return {
-            'single-col': true
+            'single-col': (this.viewport > 1199) ? true : false
           }
         default:
           return {
-
+            'single-col': false
           }
       }
     },
@@ -208,6 +214,9 @@ export default {
     },
     projlistData: {
       default: () => { return [] }
+    },
+    viewport: {
+      default: () => { return undefined }
     }
   },
 }
@@ -228,9 +237,11 @@ export default {
         align-items center
 
         .categorySquare 
-          display inline-block
+          display inline-flex
           height 24px
           padding-left 10px
+          justify-content center
+          align-items center
         
       .date 
         font-style italic
@@ -351,6 +362,7 @@ export default {
           margin 1.5em 0
         
         .youtube 
+          clear both
           .youtube-container 
             align-items center
             display flex
@@ -561,11 +573,15 @@ export default {
         max-width 950px
         display block
 
-        p, h2, .split-line, .embedded, .article_main_pop, .article_fb_comment, ul, .youtube 
+        p, h2, .split-line, .embedded, .article_main_pop, .article_main_proj, .article_main_related_bottom, .article_fb_comment, ul, .youtube 
+          padding 0 145px
 
+        .article_main_pop
+          margin-top 40px
         
         blockquote
-        
+          padding 0 145px
+
         .innerImg 
           padding 0 145px 1.5em
           
@@ -605,6 +621,97 @@ export default {
               width 100%
               object-fit contain
               max-height 450px
+
+  @media (min-width 0px) and (max-width 499px)
+    .article_body
+      .article_basic-info
+        .category
+          font-size 1.3rem
+          
+          .categorySquare
+            height 1.3rem
+        
+        .date
+          font-size 1rem
+      
+      .article_title
+        h2
+          font-size 1.7rem
+
+      .article_main
+        .article_main_tags
+          .tags
+            line-height 1.6rem
+            font-size 1rem
+        
+        .info-box-container        
+          &, &.center, &.right, &.left
+            float none
+            margin 3em 0
+            width 100%
+
+            .info-box
+              width 90%
+              padding 30px 24px
+          
+              .info-box-body
+                ul
+                  text-indent -42px
+                  line-height 2rem
+                  letter-spacing 0.05rem
+                  padding-left 0
+                  margin-left 1rem
+
+                  li
+                    overflow-wrap break-word
+
+                    &::before
+                      font-size 3rem
+                      top 1rem
+                      left 10px
+              
+              .info-box-title
+                font-size 1.4rem
+          
+        ul
+          text-indent -40px
+          padding-left 15px
+          margin-left 10px
+
+          li
+            &::before
+              font-size 3rem
+              top 15px
+              left 10px
+
+      .per-slide 
+        height 300px
+
+        .swiper-wrapper 
+          height 250px
+
+
+  @media (min-width 0px) and (max-width 767px)
+    .article_body
+      .article_main
+        width 100%
+        max-width 100%
+
+        & > .content
+          .innerImg
+            &.right, &.left
+              float none
+              width 100%
+              margin 0
+              border-bottom none
+              padding-bottom 0
+        
+        blockquote.blockquote
+          padding 0
+
+    .article_fb_comment
+      margin-bottom 60px!important
+
 
   @media (max-width 899px) and (min-width 768px)
     .article_body

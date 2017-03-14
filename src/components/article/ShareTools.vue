@@ -1,5 +1,5 @@
 <template>
-  <div class="share-toolbox">
+  <div class="share-toolbox mobile-hide">
     <div class="item mm-icon" @click="goHome"></div>
     <div class="item line" @click="shareLine"></div>
     <div class="item facebook" @click="shareFacebook"></div>
@@ -119,6 +119,10 @@
       &:hover
         background-color #064f77
       
+  @media (min-width 0px) and (max-width 767px)
+    .share-toolbox
+      display none
+
   @media (max-width 1199px)
     .share-toolbox
       margin-left 30px

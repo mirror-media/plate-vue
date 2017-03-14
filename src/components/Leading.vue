@@ -88,14 +88,15 @@ export default {
     width 50%
     height 0
     margin 0 auto
+
     .leading-container
-      width 100%
       position relative
       padding-bottom 56.25%
       padding-top 25px
+      width 100%
       height 100%
+
       .leading-slideshow
-        height 100%
         position absolute
         top 0
         left 0
@@ -110,24 +111,27 @@ export default {
                 width 100%
                 object-fit contain
                 max-height 100%
+
       .img
-        height 100%
         position absolute
         top 0
         left 0
         width 100%
         height 100% 
+
         img
           width 100%
           object-fit contain
           max-height 100%
+
       .video
         height 100%
         position absolute
         top 0
         left 0
         width 100%
-        height 100%       
+        height 100%   
+
         video
           width 100%
           object-fit contain

@@ -138,6 +138,7 @@
   .related-list-container 
     width 300px
     margin 0 auto
+
     .list
       margin-top 20px
       padding 20px 0
@@ -146,11 +147,13 @@
       flex-direction column
       align-items center
       justify-content center
-      div 
+
+      & > div 
         width 230px
       
       & > .title 
         font-size 19px
+
         h4 
           margin -20px 0 0
         
@@ -170,6 +173,7 @@
         margin 20px 0
         padding-bottom 20px
         border-bottom 1px solid #c1c1c1
+
         .title 
           font-size 18px
           line-height 25px
@@ -177,6 +181,7 @@
         .brief 
           line-height 20px
           padding-top 10px
+          
           a:hover, a:link, a:visited 
             color #6f6f6f
           
