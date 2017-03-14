@@ -40,7 +40,6 @@ const fetchSearch = (store, keyword, params) => {
 }
 
 const fetchData = (store) => {
-  console.log('has prefatch')
   return fetchCommonData(store).then(() => {
     return fetchSearch(store, store.state.route.params.keyword, { 
       page: PAGE,

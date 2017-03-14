@@ -2,7 +2,7 @@
   <header id="header" class="header">
     <section class="header-logoSearch">
       <a @click="openSideBar()" class="mobile-only"><img src="~public/icon/hamburger@2x.png" class="header-icon"></a>
-      <a href="/"><img src="~public/logo.svg" class="header-logoSearch--logo"></a>
+      <router-link :to="'/'"><img src="~public/logo.svg" class="header-logoSearch--logo"></router-link>
       <div class="header-logoSearch__search desktop-only">
         <input type="text" v-model="searchVal" @keyup.enter="search(searchVal)" placeholder="">
         <button @click="search(searchVal)">

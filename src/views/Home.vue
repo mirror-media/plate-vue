@@ -1,25 +1,19 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home">
-    <template scope="props" slot="dfpPos">
-      <div class="home-view">
-        <app-Header :commonData= 'commonData' />
-        <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
-        <editor-choice :editorChoice= 'editorChoice'/>
-        <section class="container list">
-          <latest-article :latestArticle= 'latestArticle' :vueDfp="props.vueDfp" :dfpUnits="props.dfpUnits" :section="props.section" />
-          <latest-project :project= 'commonData.projects.items' />
-        </section>
-        <loading :show="loading" />
-        <section class="container">
-          <more v-if="hasMore" v-on:loadMore="loadMore" />
-        </section>
-        <section class="container">
-          <vue-dfp :is="props.vueDfp" pos="SPCFT" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
-          <app-footer />
-        </section>
-      </div>
-    </template>
-  </vue-dfp-provider>
+  <div class="home-view">
+    <app-Header :commonData= 'commonData' />
+    <editor-choice :editorChoice= 'editorChoice'/>
+    <section class="container list">
+      <latest-article :latestArticle= 'latestArticle' />
+      <latest-project :project= 'commonData.projects.items' />
+    </section>
+    <loading :show="loading" />
+    <section class="container">
+      <more v-if="hasMore" v-on:loadMore="loadMore" />
+    </section>
+    <section class="container">
+      <app-footer />
+    </section>
+  </div>
 </template>
 
 <script>
@@ -56,7 +50,6 @@ const fetchLatestArticle = (store, page) => {
 
 export default {
   name: 'home-view',
-  preFetch: fetchCommonData,
   components: {
     'app-footer': Footer,
     'app-Header': Header,
@@ -65,7 +58,12 @@ export default {
     'latest-project': LatestProject,
     'loading': Loading,
     'more': More,
-    VueDfpProvider
+  },
+  preFetch: fetchCommonData,
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      fetchCommonData(vm.$store)
+    })
   },
   data () {
     return {
@@ -82,17 +80,17 @@ export default {
       return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
     },
     editorChoice () {
-      if (this.$store.state.editorChoice.items.length > 4) {
+      if ( _.get(this.$store.state.editorChoice, ['items', 'length']) > 4) {
         return _.get(this.$store.state.editorChoice, ['items'])
       } else {
         let orig = _.values(this.$store.state.editorChoice['items'])
         let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'title')
-        return _.concat(orig, _.take(xorBy, (5 - this.$store.state.editorChoice.items.length)))
+        return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
       }
     },
     latestArticle () {
       let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'title')
-      let latestArticle = _.slice(xorBy, (5 - this.$store.state.editorChoice.items.length))
+      let latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length'])))
       return latestArticle
     },
   },
@@ -122,9 +120,7 @@ export default {
       title
     }
   },
-  beforeMount () {
-    
-  },
+  
   mounted() {
     this.handleScroll()
   }
