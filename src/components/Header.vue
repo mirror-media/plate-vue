@@ -15,13 +15,13 @@
     </section>
     <nav class="header-menu--section">
       <div class="header-menu">
-        <div v-for="item in headerItem.section" class="dropdown" :class="item.name">
+        <div v-for="item in headerItem.section" class="dropdown" :class="item.name" :style="{ width: 'calc( 100% /' + headerAmount + ')'}">
           <router-link :to="item.href" v-text="item.title"/>
           <div class="dropdown-content">
             <router-link :to="c.href" v-for="c in item.categories" v-text="c.title"/>
           </div>
         </div>
-        <router-link :to="item.href" v-for="item in headerItem.category" v-text="item.title" :class="item.section"></router-link>
+        <router-link :to="item.href" v-for="item in headerItem.category" v-text="item.title" :class="item.section" :style="{ width: 'calc( 100% /' + headerAmount + ')'}" />
       </div>
     </nav>
     <nav class="header-menu--topic">
@@ -119,6 +119,9 @@ export default {
         t.isFeatured && headerItem.topic.length < 7 ? headerItem.topic.push(t) : ''
       })
       return headerItem
+    },
+    headerAmount () {
+      return this.headerItem.section.length + this.headerItem.category.length
     },
     socialLink () {
       return SOCIAL_LINK
@@ -282,7 +285,6 @@ $color-other = #bcbcbc
       width 1024px
       margin 0 auto
       > a
-        min-width 90px
         text-align center
         color #fff
         line-height: 46px
@@ -325,6 +327,7 @@ $color-other = #bcbcbc
           width auto
           margin 0
           > a
+            padding 0 .5em
             color rgba(0,0,0,.5)
             border-bottom 3px solid #000
           > a:hover
@@ -332,7 +335,6 @@ $color-other = #bcbcbc
             color #fff
 
   .dropdown
-    width 90px
     text-align: center
     > a
       padding 0

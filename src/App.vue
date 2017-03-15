@@ -68,7 +68,7 @@ button:focus {
   display none !important
 
 .container
-  width 320px
+  width 100%
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -110,7 +110,7 @@ button:focus {
 
 @media (min-width 600px)
   .container
-    width 500px
+    width 90%
 
 @media (min-width 900px)
   .container

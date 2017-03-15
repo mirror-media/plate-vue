@@ -14,9 +14,11 @@
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="section"></div>
         </div>
-        <article-list :articles='articles.items'>
+        <article-list :articles='articles.items' v-if="title !== 'Audio' && name !== 'videohub' ">
           <!-- <vue-dfp :is="props.vueDfp" pos="TEST" :dfpUnits="props.dfpUnits" :section="props.section"/> -->
         </article-list>
+        <audio-list :audios="audios.items" v-if="title == 'Audio'" />
+        <video-list :playlist="playlist.items" v-if="name == 'videohub'"/>
         <section class="container">
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
@@ -63,6 +65,7 @@ import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
+import AudioList from '../components/AudioList.vue'
 import EditorChoiceFull from '../components/EditorChoiceFull.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
@@ -73,6 +76,7 @@ import Leading from '../components/Leading.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
+import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
 
@@ -119,11 +123,24 @@ const fetchListData = (store, type, sectionStyle) => {
       })
       break
     case CATEGORY:
-      uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': store.state.route.params.title } ), ['id'] )
-      return fetchArticlesByUuid(store, uuid, CATEGORY, { 
-        page: PAGE,
-        max_results: MAXRESULT
-      })
+      let catName = store.state.route.params.title
+      switch(catName) {
+        case 'audio':
+          return fetchAudios(store, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+          break
+        case 'videohub':
+          return fetchYoutubePlaylist(store, MAXRESULT)
+          break
+        default:
+          uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': store.state.route.params.title } ), ['id'] )
+          return fetchArticlesByUuid(store, uuid, CATEGORY, { 
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+      }
       break
     case TOPIC:
       uuid = store.state.route.params.topicId
@@ -145,7 +162,6 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       break
     case SECTION:
       uuid = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': to.params.title } ), ['id'] )
-      console.log('sectionStyle', sectionStyle)
       switch(sectionStyle) {
         case 'full':
           return fetchArticlesByUuid(store, uuid, SECTION, { 
@@ -169,11 +185,24 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       })
       break
     case CATEGORY:
-      uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': to.params.title } ), ['id'] )
-      return fetchArticlesByUuid(store, uuid, CATEGORY, { 
-        page: PAGE,
-        max_results: MAXRESULT
-      })
+      let catName = to.params.title
+      switch(catName) {
+        case 'audio':
+          return fetchAudios(store, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+          break
+        case 'videohub':
+          return fetchYoutubePlaylist(store, MAXRESULT)
+          break
+        default:
+          uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': to.params.title } ), ['id'] )
+          return fetchArticlesByUuid(store, uuid, CATEGORY, { 
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+      }
       break
     case TOPIC:
       uuid = to.params.topicId
@@ -185,10 +214,35 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
   }
 }
 
+const fetchArticlesByAuthor = (store, uuid, params) => {
+  return store.dispatch('FETCH_ARTICLES', {
+    params: Object.assign({
+      page: PAGE,
+      max_results: MAXRESULT,
+      where: {
+        '$or' : [
+          { writers: uuid },
+          { photographers: uuid },
+          { camera_man: uuid },
+          { designers: uuid },
+          { engineers: uuid }
+        ]
+      },
+      sort: '-publishedDate'
+    }, params)
+  })
+}
+
 const fetchArticlesByUuid = (store, uuid, type, params) => {
   return store.dispatch('FETCH_ARTICLES_BY_UUID', { 
     'uuid': uuid,
     'type': type,
+    'params': params
+  })
+}
+
+const fetchAudios = (store, params={}) => {
+  return store.dispatch('FETCH_AUDIOS', { 
     'params': params
   })
 }
@@ -216,24 +270,14 @@ const fetchTopicImagesByUuid = (store, uuid, type, params) => {
     'params': params
   })
 }
-const fetchArticlesByAuthor = (store, uuid, params) => {
-  return store.dispatch('FETCH_ARTICLES', {
-    params: Object.assign({
-      page: PAGE,
-      max_results: MAXRESULT,
-      where: {
-        '$or' : [
-          { writers: uuid },
-          { photographers: uuid },
-          { camera_man: uuid },
-          { designers: uuid },
-          { engineers: uuid }
-        ]
-      },
-      sort: '-publishedDate'
-    }, params)
+
+const fetchYoutubePlaylist = (store, limit, pageToken='') => {
+  return store.dispatch('FETCH_YOUTUBE_PLAY_LIST', { 
+    'limit': limit,
+    'pageToken': pageToken
   })
 }
+
 
 const fetchData = (store) => {
   return fetchCommonData(store).then(() => {
@@ -265,6 +309,7 @@ export default {
     'article-leading': ArticleLeading,
     'article-list': ArticleList,
     'article-list-full': ArticleListFull,
+    'audio-list': AudioList,
     'editorChoice-full': EditorChoiceFull,
     'footer-full': FooterFull,
     'header-full': HeaderFull,
@@ -273,6 +318,7 @@ export default {
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
+    'video-list': VideoList,
     VueDfpProvider
   },
   preFetch: fetchData,
@@ -295,7 +341,6 @@ export default {
     this.page = PAGE
     let type = _.toUpper( _.split( to.path, '/' )[1] )
     let sectionStyle = _.get( _.find( _.get(this.$store.state.commonData, ['sections', 'items']), { 'name': to.params.title } ), ['style'] )
-    console.log('to', to)
     fetchListDataBeforeRouteUpdate(this.$store, type, sectionStyle, to).then(() => {
       next()
     })
@@ -303,11 +348,13 @@ export default {
   },
   data () {
     return {
+      audios: this.$store.state.audios,
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
       loading: false,
       page: PAGE,
+      playlist: this.$store.state.playlist,
     }
   },
   computed: {
@@ -346,9 +393,18 @@ export default {
       }
     },
     hasMore () {
-      switch(this.type) {
+      switch(this.name) {
+        case 'videohub':
+          return _.get(this.playlist, [ 'items', 'length' ], 0) < _.get(this.playlist, [ 'pageInfo', 'totalResults' ], 0)
+          break
         default:
           return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
+      }
+    },
+    name () {
+      switch(this.type) {
+        case CATEGORY:
+          return this.$route.params.title
       }
     },
     section () {
@@ -399,7 +455,8 @@ export default {
         case AUTHOR:
           return this.$route.params.authorName
         case CATEGORY:
-          return _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['title'] )
+          return this.$route.params.title == 'audio' ? 'Audio' :
+            _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['title'] )
         case SECTION:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['title'] )
           break
@@ -486,13 +543,24 @@ export default {
           }
           break
         default:
-          fetchArticlesByUuid(this.$store, this.uuid, this.type, { 
-            page: this.page,
-            max_results: MAXRESULT
-          }).then(() => {
-            this.articles = this.$store.state.articlesByUUID
-            this.loading = false
-          })
+          switch(this.name) {
+            case 'videohub':
+              let pageToken = _.get(this.playlist, ['nextPageToken'])
+              console.log('pageToken', pageToken)
+              fetchYoutubePlaylist(this.$store, MAXRESULT, pageToken).then(() => {
+                this.playlist = this.$store.state.playlist
+              })
+              break
+            default:
+              fetchArticlesByUuid(this.$store, this.uuid, this.type, { 
+                page: this.page,
+                max_results: MAXRESULT
+              }).then(() => {
+                this.articles = this.$store.state.articlesByUUID
+                this.loading = false
+              })
+          }
+          
       }
     },
   },
@@ -547,6 +615,7 @@ $color-other = #bcbcbc
       align-items: center
       flex-direction row
       margin-top 40px
+      padding 0 2em
 
     &__text
       font-size 3rem
@@ -569,6 +638,9 @@ $color-other = #bcbcbc
 
       &.projects
         background linear-gradient(to right, $color-projects 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
+
+      &.hotvideo
+        background linear-gradient(to right, $color-other 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
 
       &.other
         background linear-gradient(to right, $color-other 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
