@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTag, fetchTopic } from './api'
+import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
 
 Vue.use(Vuex)
 
@@ -12,14 +12,16 @@ const store = new Vuex.Store({
         articles: {},
         articlesByUUID: {},
         articlesPopList: {},
+        audios: {},
         authors: [],
         commonData: {},
         dfpId: DFPID,
         editorChoice: {},
         fbAppId: FB_APP_ID,
         fbPagesId: FB_PAGES_ID,
-        latestArticle: {},
         images: {},
+        latestArticle: {},
+        playlist: {},
         searchResult: {},
         tag: {},
         tags: [],
@@ -53,6 +55,12 @@ const store = new Vuex.Store({
         },
         FETCH_ARTICLES_POP_LIST: ({ commit, state }, { params = {} }) => {
             return fetchArticlesPopList(params).then(articlesPopList => commit('SET_ARTICLES_POP_LIST', { articlesPopList }))
+        },
+
+        FETCH_AUDIOS: ({ commit, state }, { params }) => {
+            return fetchAudios(params).then(audios => {
+                commit('SET_AUDIOS', { audios })
+            })
         },
 
         FETCH_COMMONDATA: ({ commit, state }, { endpoints = [] }) => {
@@ -123,7 +131,16 @@ const store = new Vuex.Store({
             return state.users[id] ?
                 Promise.resolve(state.users[id]) :
                 fetchUser(id).then(user => commit('SET_USER', { user }))
-        }
+        },
+
+        FETCH_YOUTUBE_PLAY_LIST: ({ commit, state }, { limit, pageToken }) => {
+            let orig = _.values(state.playlist['items'])
+            return !pageToken ? fetchYoutubePlaylist(limit, pageToken).then(playlist => commit('SET_YOUTUBE_PLAY_LIST', { playlist }))
+                              : fetchYoutubePlaylist(limit, pageToken).then(playlist => {
+                                    playlist['items'] = _.concat(orig, _.get(playlist, ['items']))
+                                    commit('SET_YOUTUBE_PLAY_LIST', { playlist })
+                                })
+        },
     },
 
     mutations: {
@@ -137,6 +154,10 @@ const store = new Vuex.Store({
 
         SET_ARTICLES_POP_LIST: (state, { articlesPopList }) => {
             Vue.set(state, 'articlesPopList', articlesPopList)
+        },
+
+        SET_AUDIOS: (state, { audios }) => {
+            Vue.set(state, 'audios', audios)
         },
 
         SET_AUTHORS: (state, articles) => {
@@ -206,7 +227,12 @@ const store = new Vuex.Store({
 
         SET_USER: (state, { user }) => {
             Vue.set(state.users, user.id, user)
-        }
+        },
+
+        SET_YOUTUBE_PLAY_LIST: (state, { playlist }) => {
+            Vue.set(state, 'playlist', playlist)
+        },
+
     },
 
     getters: {

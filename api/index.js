@@ -1,5 +1,6 @@
 const { API_PROTOCOL, API_HOST, API_PORT, REDIS_HOST, REDIS_PORT, REDIS_AUTH, TWITTER_API } = require('./config')
 const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT } = require('./config')
+const { YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY } = require('./config')
 const express = require('express')
 const redis = require('redis')
 const redisClient = redis.createClient(REDIS_PORT, REDIS_HOST, { no_ready_check: true, password: REDIS_AUTH })
@@ -49,6 +50,22 @@ router.use('/search', function(req, res, next) {
         res.json(response.body)
       }
     })
+});
+
+router.use('/playlist', function(req, res, next) {
+  let query = req.query
+  let url = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${YOUTUBE_PLAYLIST_ID}&key=${YOUTUBE_API_KEY}`
+  superagent
+  .get(url)
+  .timeout(2000)
+  .query(query)
+  .end(function (err, response) {
+    if (err) {
+      res.send(err)
+    } else {
+      res.json(response.body)
+    }
+  })
 });
 
 router.get('*', (req, res) => {

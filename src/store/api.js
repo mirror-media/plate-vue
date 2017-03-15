@@ -98,6 +98,13 @@ function loadArticlesByUuid(uuid = '', type = '', params = {}, isOnlyMeta = true
     return _doFetch(url)
 }
 
+function loadAudios(params = {}) {
+    let query = _buildQuery(params)
+    let url = `${_host}/api/audios`
+    url = `${url}?${query}`
+    return _doFetch(url)
+}
+
 function loadCommonData(endpoints = []) {
     let mapped = _.map(endpoints, (n) => { return 'endpoint=' + n })
     let combo_params = mapped.join('&')
@@ -190,6 +197,11 @@ function loadTopic(params = {}) {
     return _doFetch(url)
 }
 
+function loadYoutubePlaylist (limit = 12, pageToken = '') {
+    let url = `${_host}/api/playlist?maxResults=${limit}&pageToken=${pageToken}`
+    return _doFetch(url)
+}
+
 // warm the front page cache every 15 min
 // make sure to do this only once across all requests
 if (api.onServer && !api.warmCacheStarted) {
@@ -218,12 +230,21 @@ function fetch(child) {
     }
 }
 
-export function fetchIdsByType(type) {
-    return api.cachedIds && api.cachedIds[type] ?
-        Promise.resolve(api.cachedIds[type]) :
-        fetch(`${type}stories`)
+export function fetchArticles(params = {}) {
+    return loadArticles(params)
 }
 
+export function fetchArticlesByUuid(uuid = '', type = '', params = {}, isOnlyMeta = true) {
+    return loadArticlesByUuid(uuid, type, params, isOnlyMeta)
+}
+
+export function fetchArticlesPopList(params = {}) {
+    return loadArticlesPopList(params)
+}
+
+export function fetchAudios(params = {}) {
+    return loadAudios(params)
+}
 
 export function fetchCommonData(endpoints = []) {
     return Promise.all([loadCommonData(endpoints)])
@@ -251,6 +272,16 @@ export function fetchEvent() {
     return loadEvent()
 }
 
+export function fetchIdsByType(type) {
+    return api.cachedIds && api.cachedIds[type] ?
+        Promise.resolve(api.cachedIds[type]) :
+        fetch(`${type}stories`)
+}
+
+export function fetchImages(uuid = '', type = '', params = {}) {
+    return loadImages(uuid, type, params)
+}
+
 export function fetchLatestArticle(params = {}) {
     return loadLatestArticle(params)
 }
@@ -275,18 +306,6 @@ export function fetchTopic(params = {}) {
     return loadTopic(params)
 }
 
-export function fetchArticles(params = {}) {
-    return loadArticles(params)
-}
-
-export function fetchArticlesByUuid(uuid = '', type = '', params = {}, isOnlyMeta = true) {
-    return loadArticlesByUuid(uuid, type, params, isOnlyMeta)
-}
-
-export function fetchArticlesPopList(params = {}) {
-    return loadArticlesPopList(params)
-}
-
-export function fetchImages(uuid = '', type = '', params = {}) {
-    return loadImages(uuid, type, params)
+export function fetchYoutubePlaylist(limit = {}, pageToken ='') {
+    return loadYoutubePlaylist(limit, pageToken)
 }

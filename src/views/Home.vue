@@ -120,7 +120,6 @@ export default {
       title
     }
   },
-  
   mounted() {
     this.handleScroll()
   }
