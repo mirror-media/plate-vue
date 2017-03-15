@@ -185,11 +185,24 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       })
       break
     case CATEGORY:
-      uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': to.params.title } ), ['id'] )
-      return fetchArticlesByUuid(store, uuid, CATEGORY, { 
-        page: PAGE,
-        max_results: MAXRESULT
-      })
+      let catName = to.params.title
+      switch(catName) {
+        case 'audio':
+          return fetchAudios(store, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+          break
+        case 'videohub':
+          return fetchYoutubePlaylist(store, MAXRESULT)
+          break
+        default:
+          uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': to.params.title } ), ['id'] )
+          return fetchArticlesByUuid(store, uuid, CATEGORY, { 
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+      }
       break
     case TOPIC:
       uuid = to.params.topicId
