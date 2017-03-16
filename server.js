@@ -71,6 +71,7 @@ app.get('*', (req, res, next) => {
     return res.end('waiting for compilation... refresh in a moment.')
   }
 
+  res.setHeader('Cache-Control', 'public, max-age=3600')
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 
