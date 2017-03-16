@@ -58,9 +58,14 @@ const store = new Vuex.Store({
         },
 
         FETCH_AUDIOS: ({ commit, state }, { params }) => {
-            return fetchAudios(params).then(audios => {
-                commit('SET_AUDIOS', { audios })
-            })
+            let orig = _.values(state.audios['items'])
+            return state.audios.items && (params.page > 1) ? 
+                fetchAudios(params).then(audios => {
+                    audios['items'] = _.concat(orig, _.get(audios, ['items']))
+                    commit('SET_AUDIOS', { audios })
+                }) : fetchAudios(params).then(audios => {
+                    commit('SET_AUDIOS', { audios })
+                })
         },
 
         FETCH_COMMONDATA: ({ commit, state }, { endpoints = [] }) => {

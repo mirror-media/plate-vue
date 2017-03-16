@@ -91,7 +91,7 @@ export default {
       }
     },
     latestArticle () {
-      let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'title')
+      let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'id')
       let latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length'])))
       return latestArticle
     },
@@ -153,11 +153,13 @@ export default {
 @media (min-width: 600px)
   .list
     &.container
-      width 500px
+      width 100%
+      padding 0 2em
 
 @media (min-width: 1200px)
   .list
     &.container
       width 1024px
+      padding 0
     
 </style>
