@@ -1,50 +1,27 @@
 <template>
   <section class="audioList container">
-    <div class="audioList-block" v-for="item in audios">
-      <div class="audioList-block__time">
-        
-      </div>
-      <div class="audioList-block__proress">
-        
-      </div>
-      <div class="audioList-block__content">
-        <div class="audioList-block__content--cover">
-          
-        </div>
-        <div class="audioList-block__content--text">
-          <h2 v-text="item.title"></h2>
-        </div>
-        <audio :ref="item.id" :id="item.id" :src="item.audio.url" ></audio>
-      </div>
-    </div>
+    <audio-box :sources="getAudioSource(item)" :item="item"  v-for="item in audios" />
   </section>
 </template>
 
 <script>
 
-import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../utils/comm'
 import _ from 'lodash'
+import AudioBox from '../components/AudioBox.vue'
 
 export default {
   name: 'audioList',
   props: ['audios'],
-  methods: {
-    getDuration(itemID) {
-      let el = _.get(this.$refs, [itemID, '0', 'duration'])
-      // el.addEventListener('loadedmetadata', () => {
-      //   return el.duration
-      // })
-      
-    }
+  components: {
+    'audio-box': AudioBox
   },
-  mounted() {
-    // console.log( _.get(this.$refs, ['57f1c6b7a89ee20d00cc487f', '0']) )
-    // this.$refs['57f1c6b7a89ee20d00cc487f'].addEventListener('loadedmetadata', () => {
-    //   console.log(_.get(this.$refs, ['57f1c6b7a89ee20d00cc487f', '0', 'duration']))
-    // })
-    //console.log(this.$refs['57f1c6b7a89ee20d00cc487f'])
-  }
-  
+  methods: {
+    getAudioSource(item) {
+      let audioURL = []
+      audioURL.push(_.get(item, ['audio', 'url']))
+      return audioURL
+    },
+  },
 }
   
 </script>
@@ -52,10 +29,16 @@ export default {
 
 .audioList
   &.container
-    flex-direction row
+    flex-direction column
     flex-wrap wrap
-  &-block
-    width calc( (100% - 40px)/2 )
-    margin 0 10px
+    margin-top 10px
+    padding 0 2em
+
+@media (min-width: 600px)
+  .audioList
+    &.container
+      flex-direction row
+      padding 0
+  
 
 </style>

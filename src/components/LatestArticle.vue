@@ -280,6 +280,17 @@ $color-other = #bcbcbc
             border-left 3px solid $color-projects
           &.other
             border-left 3px solid $color-other
+      .list-narrow
+        &__title
+          h2
+            height auto
+            padding .2em 0 .2em .5em !important
+            margin 0
+            font-weight normal
+            font-size .9rem
+            line-height 1rem
+            border-left none
+
 
   .list-container
     display flex
@@ -345,14 +356,7 @@ $color-other = #bcbcbc
         max-width 100% !important
         min-height 40px
         padding 0 !important
-        h2
-          height auto !important
-          padding .2em 0 .2em .5em !important
-          margin 0
-          font-weight normal
-          font-size .9rem
-          line-height 1rem
-          border-left none !important
+        
           
 .list-narrow__title, .list-wide__title
   > h2

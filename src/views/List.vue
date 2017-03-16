@@ -394,6 +394,9 @@ export default {
     },
     hasMore () {
       switch(this.name) {
+        case 'audio':
+          return _.get(this.audios, [ 'items', 'length' ], 0) < _.get(this.audios, [ 'meta', 'total' ], 0)
+          break
         case 'videohub':
           return _.get(this.playlist, [ 'items', 'length' ], 0) < _.get(this.playlist, [ 'pageInfo', 'totalResults' ], 0)
           break
@@ -412,7 +415,7 @@ export default {
         case CATEGORY:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), (s) => { 
             return _.find(s.categories, { 'id': this.uuid })
-          }), ['name'])
+          }), ['name'], 'other')
         case SECTION:
           return this.$route.params.title
         case TAG:
@@ -544,9 +547,16 @@ export default {
           break
         default:
           switch(this.name) {
+            case 'audio':
+              fetchAudios(this.$store, {
+                page: this.page,
+                max_results: MAXRESULT
+              }).then(() => {
+                this.audios = this.$store.state.audios
+              })
+              break
             case 'videohub':
               let pageToken = _.get(this.playlist, ['nextPageToken'])
-              console.log('pageToken', pageToken)
               fetchYoutubePlaylist(this.$store, MAXRESULT, pageToken).then(() => {
                 this.playlist = this.$store.state.playlist
               })
