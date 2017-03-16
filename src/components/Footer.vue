@@ -7,12 +7,12 @@
       <div><span><a href="http://hyperurl.co/mmfooter">下載ＡＰＰ</a></span></div>
     </div>
     <div class="share mobile-hide">
-      <a class="item" :href="SOCIAL_LINK.LINE" ><img src="https://www.mirrormedia.mg/asset/icon/line@2x.png" class="footer-icon line" /></a>
-      <a class="item" :href="SOCIAL_LINK.WEIBO" ><img src="https://www.mirrormedia.mg/asset/icon/weibo@2x.png" class="footer-icon weibo" /></a>
-      <a class="item" :href="SOCIAL_LINK.FACEBOOK" ><img src="https://www.mirrormedia.mg/asset/icon/facebook@2x.png" class="footer-icon facebook" /></a>
-      <a class="item" :href="SOCIAL_LINK.INSTAGRAM" ><img src="https://www.mirrormedia.mg/asset/icon/instagram@2x.png" class="footer-icon instagram" /></a>
-      <a class="item" :href="SOCIAL_LINK.FEED" ><img src="https://www.mirrormedia.mg/asset/icon/feed@2x.png" class="footer-icon feed" /></a>
-      <a class="item" :href="SOCIAL_LINK.EMAIL" ><img src="https://www.mirrormedia.mg/asset/icon/mail@2x.png" class="footer-icon mail" /></a>
+      <a class="item" :href="SOCIAL_LINK.LINE" ><img src="/public/icon/line@2x.png" class="footer-icon line" /></a>
+      <a class="item" :href="SOCIAL_LINK.WEIBO" ><img src="/public/icon/weibo@2x.png" class="footer-icon weibo" /></a>
+      <a class="item" :href="SOCIAL_LINK.FACEBOOK" ><img src="/public/icon/facebook@2x.png" class="footer-icon facebook" /></a>
+      <a class="item" :href="SOCIAL_LINK.INSTAGRAM" ><img src="/public/icon/instagram@2x.png" class="footer-icon instagram" /></a>
+      <a class="item" :href="SOCIAL_LINK.FEED" ><img src="/public/icon/feed@2x.png" class="footer-icon feed" /></a>
+      <a class="item" :href="SOCIAL_LINK.EMAIL" ><img src="/public/icon/mail@2x.png" class="footer-icon mail" /></a>
     </div>
     <div class="share-mobile mobile-only">
       <div class="share-mobile_btn"><i class="icon line" @click="shareLine"></i></div>

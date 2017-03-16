@@ -4,7 +4,7 @@
     <spinner :show="loading"></spinner>
     <section :style="{ position: 'relative' }">
       <div class="titleBox"/>
-      <figure class="post-image" :style="{ background: 'url(//storage.googleapis.com/mirrormedia-files/assets/images/20170109160902-b20ee536a0e884d73159d4846df1d33d.jpg) center center / cover no-repeat' }"></figure>
+      <figure class="post-image" :style="{ background: 'url(/public/image/timeline-watch.jpg) center center / cover no-repeat' }"></figure>
     </section>
 
     <div class="timelineWrapper">
