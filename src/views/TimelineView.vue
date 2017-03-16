@@ -161,7 +161,7 @@ export default {
     bottom auto
 
   div.titleBox 
-    background url('https://mirrormedia.mg/assets/images/20170109161704-a137077c82006e45acd534a14644f2a0.png') 50% 50% no-repeat
+    background url('/public/image/timeline-watch.png') 50% 50% no-repeat
     background-size contain
     width 390px
     max-width 80%
@@ -341,6 +341,10 @@ export default {
 
     .more-container
       padding 0 20px
+
+@media (min-width 768px)
+  .mobile-only
+    display none
 
 @media (min-width 0px) and (max-width 899px)
   .timeline-view
