@@ -98,33 +98,39 @@
   }
 </script>
 <style lang="stylus">
-  .swiper-container {
-    .swiper-pagination {
-      position: relative;
-      top: 20px;
-      &.swiper-pagination-bullets {
-        bottom: 0;
-      }
-      .swiper-pagination-bullet {
-        bottom: 0;
-        box-shadow: 0 0 7px rgba(65, 65, 65, 0.61);
-        border: 2px solid #000000;
-        background-color: #fff;
-        width: 15px;
-        height: 15px;
-        &.swiper-pagination-bullet-active {
-          background: #b3b3b3;
-          border: none;
-        }
-      }
-    }
-    .swiper-button {
-      display: none;
-      &.enabled {
-        display: block;
-      }
-    }
-    .swiper-button-prev{background-image:url(https://mirrormedia.mg/assets/images/arrow1-2017.png);}
-    .swiper-button-next{background-image:url(https://mirrormedia.mg/assets/images/arrow2-2017.png);}
-  }
+  .swiper-container
+    .swiper-pagination
+      position relative
+      top 20px
+
+      &.swiper-pagination-bullets
+        bottom 0
+      
+      .swiper-pagination-bullet
+        bottom 0
+        box-shadow 0 0 7px rgba(65, 65, 65, 0.61)
+        border 2px solid #000000
+        background-color #fff
+        width 15px
+        height 15px
+
+        &.swiper-pagination-bullet-active
+          background #b3b3b3
+          border none
+        
+      
+    
+    .swiper-button
+      display none
+      
+      &.enabled
+        display block
+      
+    
+    .swiper-button-prev
+      background-image url(/public/icon/arrow1-2017.png)
+    
+    .swiper-button-next
+      background-image url(/public/icon/arrow2-2017.png)
+  
 </style>

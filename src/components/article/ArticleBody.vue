@@ -76,7 +76,7 @@ export default {
   computed: {
     articleUrl() {
       const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-      return `https://www.mirrormedia.mg/story/${slug}`
+      return `/story/${slug}`
     },
     articleStyle() {
       return _.get(this.articleData, [ 'style' ], '')
@@ -315,7 +315,7 @@ export default {
         margin-top 3em
 
         .tags_icon 
-          background-image url(https://www.mirrormedia.mg/story/img/icon/sprite@3x.png)
+          background-image url(/public/icon/sprite@3x.png)
           background-position -733px -741px
           background-repeat no-repeat
           background-size 866px 862px
@@ -456,7 +456,7 @@ export default {
         margin 3em 0
 
         i 
-          background-image url(https://mirrormedia.mg/assets/images/quote.png)
+          background-image url(/public/icon/quote.png)
           width 45px
           height 45px
           background-repeat no-repeat

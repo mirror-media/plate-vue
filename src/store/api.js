@@ -4,7 +4,6 @@ import { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, QUESTIONNAIRE_HOST, QUESTIONNAI
 import { camelizeKeys } from 'humps'
 import { getHost } from '../utils/comm'
 import _ from 'lodash'
-import api from 'create-api'
 import config from '../../api/config'
 import qs from 'qs'
 
@@ -197,37 +196,9 @@ function loadTopic(params = {}) {
     return _doFetch(url)
 }
 
-function loadYoutubePlaylist (limit = 12, pageToken = '') {
+function loadYoutubePlaylist(limit = 12, pageToken = '') {
     let url = `${_host}/api/playlist?maxResults=${limit}&pageToken=${pageToken}`
     return _doFetch(url)
-}
-
-// warm the front page cache every 15 min
-// make sure to do this only once across all requests
-if (api.onServer && !api.warmCacheStarted) {
-    api.warmCacheStarted = true
-    warmCache()
-}
-
-function warmCache() {
-    setTimeout(warmCache, 1000 * 60 * 15)
-}
-
-function fetch(child) {
-    const cache = api.cachedItems
-    if (cache && cache.has(child)) {
-        return Promise.resolve(cache.get(child))
-    } else {
-        return new Promise((resolve, reject) => {
-            api.child(child).once('value', snapshot => {
-                const val = snapshot.val()
-                    // mark the timestamp when this item is cached
-                if (val) val.__lastUpdated = Date.now()
-                cache && cache.set(child, val)
-                resolve(val)
-            }, reject)
-        })
-    }
 }
 
 export function fetchArticles(params = {}) {
@@ -272,12 +243,6 @@ export function fetchEvent() {
     return loadEvent()
 }
 
-export function fetchIdsByType(type) {
-    return api.cachedIds && api.cachedIds[type] ?
-        Promise.resolve(api.cachedIds[type]) :
-        fetch(`${type}stories`)
-}
-
 export function fetchImages(uuid = '', type = '', params = {}) {
     return loadImages(uuid, type, params)
 }
@@ -306,6 +271,6 @@ export function fetchTopic(params = {}) {
     return loadTopic(params)
 }
 
-export function fetchYoutubePlaylist(limit = {}, pageToken ='') {
+export function fetchYoutubePlaylist(limit = {}, pageToken = '') {
     return loadYoutubePlaylist(limit, pageToken)
 }
