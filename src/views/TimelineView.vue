@@ -17,18 +17,20 @@
         <div class="box topLine">
           <div class="clock"></div>
           <div class="innerBox leftLine">
+            <div class="datetime-top mobile-only" v-text="dateformat(item.created_at, 'mm/dd HH:MM')"></div>
             <div class="heroImg">
               <a :href="`https://twitter.com/MirrorWatchTW/status/${getValue(item, [ 'id_str' ], '')}`">
                 <img :src="getValue(item, [ 'extended_entities', 'media', 0, 'media_url_https' ], '/public/notImage.png')" 
                     v-if="getValue(item, [ 'extended_entities', 'media', 0, 'media_url_https' ])"  />
               </a>
             </div>
-
+          <div class="content mobile-only" v-html="twitterAutoLink(item.text, item.entities.urls)"></div>
+          <div class="share mobile-only"></div
           </div>
         </div>
       </section>
     </div>
-    <div class="container" :style="{ marginBottom: '20px' }">
+    <div class="container more-container" :style="{ marginBottom: '20px' }">
       <more v-on:loadMore="loadMore" />
     </div>
     <footer-full :commonData='commonData' :section='sectionName' />
@@ -159,7 +161,7 @@ export default {
     bottom auto
 
   div.titleBox 
-    background url('https://mirrormedia.mg/assets/images/20170109161704-a137077c82006e45acd534a14644f2a0.png') 50% 50% no-repeat
+    background url('/public/image/timeline-watch.png') 50% 50% no-repeat
     background-size contain
     width 390px
     max-width 80%
@@ -188,6 +190,7 @@ export default {
       background transparent
       margin 0 auto
       display flex
+
       .description
         flex 1
         display flex
@@ -195,6 +198,8 @@ export default {
         justify-content flex-start
         align-items flex-end
         width 25%
+        margin-bottom 40px
+
         .datetime 
           font-family Arial
           font-size 24px
@@ -208,8 +213,11 @@ export default {
           text-align right
           padding-right 20px
           padding-top 5px
+
         .content
           padding-right 20px
+          width 100%
+          overflow-wrap break-word
 
       .box 
         flex 3
@@ -288,5 +296,74 @@ export default {
         line-height 1.33
         text-align right
         color #0b4fa2
+
+@media (min-width 0px) and (max-width 767px)
+  .timeline-view
+    div.timelineWrapper
+      padding 40px 20px
+
+      section.tweet
+        .description
+          display none
+          
+        .box
+          margin-top 0
+        
+          .clock
+            display none
+
+          .leftLine
+            padding-left 0
+            margin-left 0
+            margin-bottom 30px
+
+            .datetime-top
+              color #fff
+              width 100%
+              background-color #b3b83f
+              height 2rem
+              line-height 2rem
+              padding-left 30px
+              font-weight 400
+              font-size 1.3rem
+              letter-spacing 2px
+              font-family Arial
+            
+            .content
+              text-align left
+              padding-left 20px
+            
+            .share
+              margin-left 20px
+
+            .heroImg
+              width 100%
+
+    .more-container
+      padding 0 20px
+
+@media (min-width 768px)
+  .mobile-only
+    display none
+
+@media (min-width 0px) and (max-width 899px)
+  .timeline-view
+    div.timelineWrapper
+      section.tweet  
+        .description
+          .datetime
+            font-size 1.3rem
+          
+        .content
+          font-size 1.3rem
+
+    .post-image
+      height 66.66667vw
+
+@media (min-width 0px) and (max-width 1199px)
+  .timeline-view
+    div.timelineWrapper
+      width 100%
+
 
 </style>
