@@ -62,7 +62,9 @@ export default {
   preFetch: fetchCommonData,
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      fetchCommonData(vm.$store)
+      if(to.path !== from.path) {
+        fetchCommonData(vm.$store)
+      }
     })
   },
   data () {
