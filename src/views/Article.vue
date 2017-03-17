@@ -186,11 +186,30 @@
       },
     },
     beforeMount() {},
-    beforeRouteEnter (to, from, next) {
-      console.log('to', to)
-      next(vm => {
-        fetchArticles(vm.$store, to.params.slug)
-      })
+    beforeRouteEnter(to, from, next) {
+      if(process.env.VUE_ENV === 'client' && to.path !== from.path) {
+        const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
+        if(!_targetArticle) {
+          fetchArticles(store, to.params.slug).then(() => {
+            const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+            return fetchLatestArticle(store, {
+              sort: '-publishedDate',
+              where: {
+                'sections': _.get(sections, [ 0, 'id' ])
+              }
+            }).then(() => {
+              return fetchPop(store).then(() => {
+                next(vm => {})
+              })
+            })
+          })
+
+        } else {
+          next()
+        }
+      } else {
+        next()
+      }
     },
     beforeRouteUpdate(to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
@@ -202,7 +221,6 @@
           }
         })
       }).then(() => {
-
         next()
       })
     },

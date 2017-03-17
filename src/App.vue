@@ -108,6 +108,11 @@ button:focus {
   margin 20px auto 20px
   background-color #a8dadc
 
+.leading-embedded
+  .embedded
+    > iframe
+      max-height 100%
+
 @media (min-width 600px)
   .container
     width 90%

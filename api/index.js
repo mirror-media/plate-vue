@@ -20,6 +20,7 @@ router.all('/', function(req, res, next) {
 });
 
 router.use('/twitter', function(req, res, next) {
+
     const query = req.query
     let client = new Twitter(TWITTER_API)
     if (!('screen_name' in query) || query.screen_name === '') {

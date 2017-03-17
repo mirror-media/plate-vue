@@ -1,7 +1,7 @@
 <template>
   <div class="home-view">
     <app-Header :commonData= 'commonData' />
-    <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" />
+    <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
     <editor-choice :editorChoice= 'editorChoice'/>
     <section class="container list">
       <latest-article :latestArticle= 'latestArticle' />
@@ -31,6 +31,7 @@ import Leading from '../components/Leading.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
+import moment from 'moment'
 import truncate from 'truncate'
 
 const MAXRESULT = 20
@@ -73,11 +74,13 @@ export default {
   },
   preFetch: fetchCommonData,
   beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if(to.path !== from.path && vm.$store.state.commonData) {
+    if(process.env.VUE_ENV === 'client' && to.path !== from.path) {
+      next(vm => {
         fetchCommonData(vm.$store)
-      }
-    })
+      })
+    } else {
+      next()
+    }
   },
   data () {
     return {
@@ -92,7 +95,10 @@ export default {
   },
   computed: {
     hasEvent () {
-      return _.get(this.event, ['items']) ? true : false
+      const _eventStartTime = moment(new Date(_.get(this.event, ['items', 0, 'startDate'])))
+      const _eventEndTime = moment(new Date(_.get(this.event, ['items', 0, 'endDate'])))
+      const _now = moment()
+      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime)) ? true : false
     },
     hasMore () {
       return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
