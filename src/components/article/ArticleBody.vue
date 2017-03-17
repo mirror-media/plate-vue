@@ -63,7 +63,7 @@
 </template>
 <script>
 import _ from 'lodash'
-import { DFP_UNITS, MIRROR_MEDIA, SECTION_MAP } from '../../constants'
+import { DFP_UNITS, SECTION_MAP, SITE_URL } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
@@ -76,7 +76,7 @@ export default {
   computed: {
     articleUrl() {
       const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-      return `${MIRROR_MEDIA}/story/${slug}`
+      return `${SITE_URL}/story/${slug}`
     },
     articleStyle() {
       return _.get(this.articleData, [ 'style' ], '')

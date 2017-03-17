@@ -59,7 +59,7 @@
   </div>
 </template>
 <script>
-  import { MIRROR_MEDIA } from '../../constants'
+  import { SITE_URL } from '../../constants'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
   import { getValue } from '../../utils/comm'
   import { shareGooglePlus, shareLine, shareFacebook } from '../../utils/comm'
@@ -73,7 +73,7 @@
     computed: {
       articleUrl() {
         const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        return `${MIRROR_MEDIA}/story/${slug}`
+        return `${SITE_URL}/story/${slug}`
       },
       brief() {
         const { brief } = this.articleData
