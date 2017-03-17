@@ -69,7 +69,7 @@ function loadArticles(params = {}) {
 
 function loadArticlesPopList(params = {}) {
     const { SERVER_PROTOCOL, SERVER_HOST } = config
-    let url = `${SERVER_PROTOCOL}://${SERVER_HOST}/story/json/popularlist.json`
+    let url = `${_host}/api/poplist`
     return _doFetch(url)
 }
 
@@ -157,7 +157,7 @@ function loadLatestArticle(params = {}) {
 }
 
 function loadQuestionnaire(id) {
-    let apiHost = `${QUESTIONNAIRE_PROTOCOL}://${QUESTIONNAIRE_HOST}/questionnaire/${id}/${id}.json`
+    let apiHost = `${_host}/api/questionnaire?${id}/${id}.json`
     return new Promise(resolve => {
         superagent
             .get(apiHost)

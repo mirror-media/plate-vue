@@ -117,7 +117,7 @@ export default {
     },
     styleForCurrArticle() {
       switch(this.articleStyle) {
-        case 'single-col':
+        case 'wide':
           return {
             'single-col': (this.viewport > 1199) ? true : false
           }
