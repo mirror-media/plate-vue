@@ -10,14 +10,14 @@
     <div class="timelineWrapper">
       <section class="tweet" v-for="item in rep">
         <div class="description">
-          <div class="datetime" v-text="dateformat(item.created_at, 'mm/dd HH:MM')"></div>
+          <div class="datetime" v-text="moment(item.created_at).format('mm/dd HH:MM')"></div>
           <div class="content" v-html="twitterAutoLink(item.text, item.entities.urls)"></div>
           <div class="share"></div>
         </div>
         <div class="box topLine">
           <div class="clock"></div>
           <div class="innerBox leftLine">
-            <div class="datetime-top mobile-only" v-text="dateformat(item.created_at, 'mm/dd HH:MM')"></div>
+            <div class="datetime-top mobile-only" v-text="moment(item.created_at).format('mm/dd HH:MM')"></div>
             <div class="heroImg">
               <a :href="`https://twitter.com/MirrorWatchTW/status/${getValue(item, [ 'id_str' ], '')}`">
                 <img :src="getValue(item, [ 'extended_entities', 'media', 0, 'media_url_https' ], '/public/notImage.png')" 
@@ -44,7 +44,7 @@ import FooterFull from '../components/FooterFull.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import More from '../components/More.vue'
 import Spinner from '../components/Spinner.vue'
-import dateformat from 'dateformat'
+import moment from 'moment'
 import twitter from 'twitter-text'
 
 
@@ -109,7 +109,6 @@ export default {
     closeSideBar () {
       this.openSide = false
     },
-    dateformat,
     getValue,
     loadMore() {
       fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10&max_id=${this.lastItemId}`).then(
@@ -124,6 +123,7 @@ export default {
         }
       )
     },
+    moment,
     openSearchBar () {
       this.openSearch = true
     },
