@@ -152,7 +152,7 @@ function loadImages(uuid = '', type = '', params = {}) {
 
 function loadLatestArticle(params = {}) {
     let query = _buildQuery(params)
-    let url = `${_host}/api/posts`
+    let url = `${_host}/api/meta`
     url = `${url}?${query}`
     return _doFetch(url)
 }
