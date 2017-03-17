@@ -86,7 +86,7 @@
   }
 
   const fetchCommonData = (store) => {
-    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'choices' ] } )
+    return store.dispatch('FETCH_COMMONDATA', { endpoints': [  ] } )
   }
 
   const fetchData = (store) => {
