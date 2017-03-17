@@ -186,6 +186,12 @@
       },
     },
     beforeMount() {},
+    beforeRouteEnter (to, from, next) {
+      console.log('to', to)
+      next(vm => {
+        fetchArticles(vm.$store, to.params.slug)
+      })
+    },
     beforeRouteUpdate(to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
         const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})

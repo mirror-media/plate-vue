@@ -119,9 +119,10 @@ function loadEditorChoice() {
     return _doFetch(url)
 }
 
-function loadEvent() {
-    const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+function loadEvent(params = {}) {
+    let query = _buildQuery(params)
     let url = `${_host}/api/event`
+    url = `${url}?${query}`
     return _doFetch(url)
 }
 
@@ -239,8 +240,8 @@ export function fetchEditorChoice() {
     return loadEditorChoice()
 }
 
-export function fetchEvent() {
-    return loadEvent()
+export function fetchEvent(params = {}) {
+    return loadEvent(params)
 }
 
 export function fetchImages(uuid = '', type = '', params = {}) {

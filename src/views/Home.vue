@@ -1,6 +1,7 @@
 <template>
   <div class="home-view">
     <app-Header :commonData= 'commonData' />
+    <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" />
     <editor-choice :editorChoice= 'editorChoice'/>
     <section class="container list">
       <latest-article :latestArticle= 'latestArticle' />
@@ -26,6 +27,7 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticle from '../components/LatestArticle.vue'
 import LatestProject from '../components/LatestProject.vue'
+import Leading from '../components/Leading.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
@@ -35,7 +37,16 @@ const MAXRESULT = 20
 const PAGE = 1
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'choices' ] } )
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'choices' ] } ).then(() => {
+    return store.dispatch('FETCH_EVENT', {
+      params: {
+        'max_results': 1,
+        'where': {
+          isFeatured: true
+        }
+      }
+    })
+  })
 }
 
 const fetchLatestArticle = (store, page) => {
@@ -56,6 +67,7 @@ export default {
     'editor-choice': EditorChoice,
     'latest-article': LatestArticle,
     'latest-project': LatestProject,
+    'leading': Leading,
     'loading': Loading,
     'more': More,
   },
@@ -72,12 +84,16 @@ export default {
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
+      event: this.$store.state.event,
       hasScrollLoadMore: false,
       loading: false,
       page: PAGE,
     }
   },
   computed: {
+    hasEvent () {
+      return _.get(this.event, ['items']) ? true : false
+    },
     hasMore () {
       return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
     },
@@ -89,6 +105,12 @@ export default {
         let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'title')
         return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
       }
+    },
+    eventData () {
+      return _.get(this.event, ['items', '0'])
+    },
+    eventType () {
+      return _.get(this.event, ['items', '0', 'eventType'])
     },
     latestArticle () {
       let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'id')
