@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="leading-embedded" v-else-if="type === 'embedded' && leadingEmedded">
-        <div className = "embedded" v-html="leadingEmedded"></div>
+        <div class="embedded" v-html="leadingEmedded"></div>
       </div>
     </div>
   </div>
@@ -65,7 +65,7 @@ export default {
       return _.get(this.mediaData, [ 'heroVideo' ])
     },
     leadingEmedded() {
-      return _.get(this.mediaData, [ 'embedded' ])
+      return _.get(this.mediaData, [ 'embed' ])
     }
   },
   methods: {
@@ -86,15 +86,13 @@ export default {
 <style lang="stylus" scoped>
   .leading
     width 50%
-    height 0
     margin 0 auto
 
     .leading-container
       position relative
-      padding-bottom 56.25%
-      padding-top 25px
+      padding-top 56.25%
       width 100%
-      height 100%
+      height 0
 
       .leading-slideshow
         position absolute
@@ -125,7 +123,6 @@ export default {
           max-height 100%
 
       .video
-        height 100%
         position absolute
         top 0
         left 0
@@ -137,6 +134,37 @@ export default {
           object-fit contain
           max-height 100%
 
+      .leading-embedded
+        .embedded
+          position absolute
+          top 0
+          left 0
+          width 100%
+          height 100% 
+          display flex
+          justify-content center
+          align-items center
 
+          > iframe
+            max-height 100%
 
+  @media (min-width 831px) and (max-width 1023px)
+    .leading
+      width 60%
+
+  @media (min-width 768px) and (max-width 830px)
+    .leading
+      width 70%
+
+  @media (min-width 600px) and (max-width 767px)
+    .leading
+      width 80%
+
+  @media (min-width 500px) and (max-width 599px)
+    .leading
+      width 90%
+
+  @media (min-width 0px) and (max-width 499px)
+    .leading
+      width 100%
 </style>

@@ -69,7 +69,7 @@ function loadArticles(params = {}) {
 
 function loadArticlesPopList(params = {}) {
     const { SERVER_PROTOCOL, SERVER_HOST } = config
-    let url = `${SERVER_PROTOCOL}://${SERVER_HOST}/story/json/popularlist.json`
+    let url = `${_host}/api/poplist`
     return _doFetch(url)
 }
 
@@ -119,9 +119,10 @@ function loadEditorChoice() {
     return _doFetch(url)
 }
 
-function loadEvent() {
-    const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
+function loadEvent(params = {}) {
+    let query = _buildQuery(params)
     let url = `${_host}/api/event`
+    url = `${url}?${query}`
     return _doFetch(url)
 }
 
@@ -157,18 +158,8 @@ function loadLatestArticle(params = {}) {
 }
 
 function loadQuestionnaire(id) {
-    let apiHost = `${QUESTIONNAIRE_PROTOCOL}://${QUESTIONNAIRE_HOST}/questionnaire/${id}/${id}.json`
-    return new Promise(resolve => {
-        superagent
-            .get(apiHost)
-            .end((err, response) => {
-                if (!err && response) {
-                    resolve(JSON.parse(response.text))
-                } else {
-                    resolve('{\'error\':' + err + '}')
-                }
-            })
-    })
+    let apiHost = `${_host}/api/questionnaire?file=${id}/${id}.json`
+    return _doFetch(apiHost)
 }
 
 function loadSearch(keyword = '', params = {}) {
@@ -239,8 +230,8 @@ export function fetchEditorChoice() {
     return loadEditorChoice()
 }
 
-export function fetchEvent() {
-    return loadEvent()
+export function fetchEvent(params = {}) {
+    return loadEvent(params)
 }
 
 export function fetchImages(uuid = '', type = '', params = {}) {

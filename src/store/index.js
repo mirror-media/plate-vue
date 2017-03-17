@@ -17,6 +17,7 @@ const store = new Vuex.Store({
         commonData: {},
         dfpId: DFPID,
         editorChoice: {},
+        event: {},
         fbAppId: FB_APP_ID,
         fbPagesId: FB_PAGES_ID,
         images: {},
@@ -81,6 +82,12 @@ const store = new Vuex.Store({
             return state.editorChoice.items ?
                 Promise.resolve(state.editorChoice) :
                 fetchEditorChoice().then(editorChoice => commit('SET_EDITORCHOICE', { editorChoice }))
+        },
+
+        FETCH_EVENT: ({ commit, state }, { params }) => {
+            return fetchEvent(params).then(event => {
+                    commit('SET_EVENT', { event })
+                })
         },
 
         FETCH_IMAGES: ({ commit, state }, { uuid, type, params }) => {
@@ -189,6 +196,10 @@ const store = new Vuex.Store({
 
         SET_EDITORCHOICE: (state, { editorChoice }) => {
             Vue.set(state, 'editorChoice', editorChoice.endpoints.choices)
+        },
+
+        SET_EVENT: (state, { event }) => {
+            Vue.set(state, 'event', event)
         },
 
         SET_IMAGES: (state, { images }) => {

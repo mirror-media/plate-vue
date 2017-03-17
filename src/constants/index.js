@@ -161,4 +161,4 @@ export const TAG = 'TAG'
 
 export const TOPIC = 'TOPIC'
 
-export const MIRROR_MEDIA = 'https://mirrormedia.mg'
+export const SITE_URL = 'https://www.mirrormedia.mg'

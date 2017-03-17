@@ -1,6 +1,7 @@
 <template>
   <div class="home-view">
     <app-Header :commonData= 'commonData' />
+    <leading v-if="hasEvent || is404" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
     <editor-choice :editorChoice= 'editorChoice'/>
     <section class="container list">
       <latest-article :latestArticle= 'latestArticle' />
@@ -26,16 +27,27 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticle from '../components/LatestArticle.vue'
 import LatestProject from '../components/LatestProject.vue'
+import Leading from '../components/Leading.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
+import moment from 'moment'
 import truncate from 'truncate'
 
 const MAXRESULT = 20
 const PAGE = 1
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'choices' ] } )
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'choices' ] } ).then(() => {
+    return store.dispatch('FETCH_EVENT', {
+      params: {
+        'max_results': 1,
+        'where': {
+          isFeatured: true
+        }
+      }
+    })
+  })
 }
 
 const fetchLatestArticle = (store, page) => {
@@ -56,31 +68,32 @@ export default {
     'editor-choice': EditorChoice,
     'latest-article': LatestArticle,
     'latest-project': LatestProject,
+    'leading': Leading,
     'loading': Loading,
     'more': More,
   },
   preFetch: fetchCommonData,
   beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if(to.path !== from.path) {
+    if(process.env.VUE_ENV === 'client' && to.path !== from.path) {
+      next(vm => {
         fetchCommonData(vm.$store)
-      }
-    })
+      })
+    } else {
+      next()
+    }
   },
   data () {
     return {
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
+      event: this.$store.state.event,
       hasScrollLoadMore: false,
       loading: false,
       page: PAGE,
     }
   },
   computed: {
-    hasMore () {
-      return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
-    },
     editorChoice () {
       if ( _.get(this.$store.state.editorChoice, ['items', 'length']) > 4) {
         return _.get(this.$store.state.editorChoice, ['items'])
@@ -89,6 +102,24 @@ export default {
         let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'title')
         return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
       }
+    },
+    eventData () {
+      return _.get(this.event, ['items', '0'])
+    },
+    eventType () {
+      return  this.is404 ? 'image' : _.get(this.event, ['items', '0', 'eventType'])
+    },
+    hasEvent () {
+      const _eventStartTime = moment(new Date(_.get(this.event, ['items', 0, 'startDate'])))
+      const _eventEndTime = moment(new Date(_.get(this.event, ['items', 0, 'endDate'])))
+      const _now = moment()
+      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime)) ? true : false
+    },
+    hasMore () {
+      return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
+    },
+    is404 () {
+      return _.get(this.$store.state.route, ['path']) == '/404' ? true : false
     },
     latestArticle () {
       let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'id')

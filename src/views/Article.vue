@@ -162,7 +162,7 @@
         return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
       },
       ifSingleCol() {
-        return (this.articleStyle === 'single-col' || !this.ifRenderAside) ? false : true
+        return (this.articleStyle === 'wide' || !this.ifRenderAside) ? false : true
       },
       latestList() {
         return _.get(this.latestArticle, [ 'items' ], [])
@@ -186,6 +186,31 @@
       },
     },
     beforeMount() {},
+    beforeRouteEnter(to, from, next) {
+      if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.path.length > 1) {
+        const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
+        if(!_targetArticle) {
+          fetchArticles(store, to.params.slug).then(() => {
+            const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+            return fetchLatestArticle(store, {
+              sort: '-publishedDate',
+              where: {
+                'sections': _.get(sections, [ 0, 'id' ])
+              }
+            }).then(() => {
+              return fetchPop(store).then(() => {
+                next(vm => {})
+              })
+            })
+          })
+
+        } else {
+          next()
+        }
+      } else {
+        next()
+      }
+    },
     beforeRouteUpdate(to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
         const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
@@ -196,7 +221,6 @@
           }
         })
       }).then(() => {
-
         next()
       })
     },

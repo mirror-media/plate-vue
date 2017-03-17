@@ -1,4 +1,4 @@
-import { MIRROR_MEDIA } from '../constants'
+import { SITE_URL } from '../constants'
 import _ from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
@@ -42,17 +42,23 @@ export function getHref(relAritlcle = {}) {
 }
 
 export function getImage(article, size) {
+    let image
+    if (article.heroImage && article.heroImage.image) {
+        image = article.heroImage
+    } else {
+        image = article.ogImage
+    }
     switch (size) {
         case 'desktop':
-            return _.get(article, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'])
+            return _.get(image, ['image', 'resizedTargets', 'desktop', 'url'], '/public/notImage.png')
         case 'mobile':
-            return _.get(article, ['heroImage', 'image', 'resizedTargets', 'mobile', 'url'])
+            return _.get(image, ['image', 'resizedTargets', 'mobile', 'url'], '/public/notImage.png')
         case 'tablet':
-            return _.get(article, ['heroImage', 'image', 'resizedTargets', 'tablet', 'url'])
+            return _.get(image, ['image', 'resizedTargets', 'tablet', 'url'], '/public/notImage.png')
         case 'tiny':
-            return _.get(article, ['heroImage', 'image', 'resizedTargets', 'tiny', 'url'])
+            return _.get(image, ['image', 'resizedTargets', 'tiny', 'url'], '/public/notImage.png')
         default:
-            return _.get(article, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'])
+            return _.get(image, ['image', 'resizedTargets', 'desktop', 'url'], '/public/notImage.png')
     }
 }
 
@@ -68,17 +74,17 @@ export function getSection(article) {
 }
 
 export function shareGooglePlus({ route, shared }) {
-    window.open(`https://plus.google.com/share?url=${MIRROR_MEDIA}/${route}`);
+    window.open(`https://plus.google.com/share?url=${SITE_URL}/${route}`);
     shared && shared()
 }
 
 export function shareLine({ title, route, shared }) {
-    window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(title)}%0D%0A${encodeURIComponent(MIRROR_MEDIA + '/' + route)}`)
+    window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(title)}%0D%0A${encodeURIComponent(SITE_URL + '/' + route)}`)
     shared && shared()
 }
 
 export function shareFacebook({ route, shared }) {
-    window.open(`https://www.facebook.com/share.php?u=${MIRROR_MEDIA}/${route}`)
+    window.open(`https://www.facebook.com/share.php?u=${SITE_URL}/${route}`)
     shared && shared()
 }
 

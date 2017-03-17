@@ -2,8 +2,8 @@
   <div class="poplist-container" v-if="(pop.length > 0)">
     <div class="pop_title"><h3>熱門文章</h3></div>
     <div class="pop_list">
-      <slot name="dfpad"></slot>
-      <div class="pop_item" v-for="(o, i) in pop" v-if="i < 8">
+      <!--<slot name="dfpad"></slot>-->
+      <div class="pop_item" v-for="(o, i) in pop" v-if="i < 9">
         <div>
           <router-link :to="o.slug" >
             <div class="pop_item_img"

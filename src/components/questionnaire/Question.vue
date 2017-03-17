@@ -7,6 +7,11 @@
       <div class="content">
         <h3>{{ content }}</h3>
       </div>
+      <div class="audio" v-if="leadingType === 'audio'">
+        <audio :data-file="leadingData.filetype" controls ref="audio">
+          <source :src="leadingData.url" :type="leadingData.filetype" />
+        </audio>
+      </div>
     </div>
   </div>
 </template>
@@ -30,11 +35,13 @@
       },
     },
     props: {
+      content: {},
+      leadingData: {},
+      leadingType: {},
       index: {},
       total: {
         default: () => { return 1 }
       },
-      content: {}
     }
   }
 </script>
@@ -86,6 +93,10 @@
       position relative
       z-index 999
       background-color #fff
+
+      .audio
+        audio
+          width 100%
   
   @media (min-width 768px)
     .question

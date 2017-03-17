@@ -206,9 +206,17 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       break
     case TOPIC:
       uuid = to.params.topicId
+      let topic = _.find( _.get(store.state.commonData, ['topics', 'items']), { 'id': uuid } )
       return fetchArticlesByUuid(store, uuid, TOPIC, { 
         page: PAGE,
         max_results: MAXRESULT
+      }).then(() => {
+        console.log('topic !!', topic)
+        return (!topic) ? fetchTopicByUuid(store, uuid).then(() => {
+          return fetchTopicImagesByUuid(store, uuid, type, {
+            max_results: 25
+          })
+        }) : null
       })
       break
   }
@@ -330,6 +338,7 @@ export default {
   beforeRouteEnter (to, from, next) {
     let type = _.toUpper( _.split( to.path, '/' )[1] )
     next(vm => {
+      console.log('run here')
       let sectionStyle = _.get( _.find( _.get(vm.$store.state.commonData, ['sections', 'items']), 
         { 'name': _.get(to, ['params', 'title']) } ), ['style'] )
       fetchCommonData(vm.$store).then(() => {
@@ -495,6 +504,11 @@ export default {
           return this.$route.params.topicId
       }
     },
+    updated() {
+      if(this.type === TOPIC) {
+        this.updateCustomizedMarkup()
+      }
+    }
   },
   methods: {
     getImage,
@@ -502,11 +516,13 @@ export default {
     insertCustomizedMarkup () {
       if(this.customCSS) {
         const custCss = document.createElement('style') 
+        custCss.setAttribute('id', 'custCSS')
         custCss.appendChild(document.createTextNode(this.customCSS)) 
         document.querySelector('body').appendChild(custCss) 
       }
       if(this.customJS) {
         const custScript = document.createElement('script') 
+        custScript.setAttribute('id', 'custJS')
         custScript.appendChild(document.createTextNode(this.customJS)) 
         document.querySelector('body').appendChild(custScript) 
       }
@@ -573,6 +589,16 @@ export default {
           
       }
     },
+    updateCustomizedMarkup () {
+      if(this.customCSS) {
+        const custCss = document.querySelector('#custCSS') 
+        custCss.innerHTML = this.customCSS
+      }
+      if(this.customJS) {
+        const custScript = document.querySelector('#custJS') 
+        custScript.innerHTML = this.customJS
+      }
+    },
   },
   metaInfo () {
     let title = "鏡傳媒 Mirror Media"
@@ -602,27 +628,26 @@ $color-other = #bcbcbc
       height 700px
       background-color rgba(135, 156, 169, 0.15)
       margin-bottom 20px
-      background-repeat: no-repeat;
-      background-position: center center;
-      background-size: cover;
-      /*display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;*/
+      background-repeat no-repeat
+      background-position center center
+      background-size cover
       padding 50px
       
       &-title
-        height: 200px;
-        width: 400px;
-        display: flex;
-        justify-content: center;
-        align-items: center;  
-        color: #fff;
+        height 200px
+        width 400px
+        display flex
+        justify-content center
+        align-items center  
+        color #fff
+        background-size contain
+        background-position center center
+        background-repeat no-repeat
       
   &-title
     &.container
-      position: relative
-      align-items: center
+      position relative
+      align-items center
       flex-direction row
       margin-top 40px
       padding 0 2em

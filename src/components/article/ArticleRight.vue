@@ -75,7 +75,7 @@ export default {
     getImage,
     getTruncatedVal,
     getTitle(title) {
-      return truncate(title, 14)
+      return truncate(title, 20)
     },
     getSection(article) {
       return  _.get(article, 'sections[0].name') ? _.get(article, 'sections[0].name') : ' '
