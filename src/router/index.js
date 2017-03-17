@@ -26,6 +26,8 @@ export default new Router({
         { path: '/timeline/:title', component: TimelineView },
         { path: '/tag/:tagId/:tagName?', component: List },
         { path: '/topic/:topicId', component: List },
-        { path: '/', component: Home }
+        { path: '/404', component: Home },
+        { path: '/', component: Home },
+        { path: '*', redirect: '/404' }
     ]
 })
