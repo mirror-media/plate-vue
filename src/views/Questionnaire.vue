@@ -7,9 +7,6 @@
       <div class="questionnaire__title">
         <div v-text="questionnaireTitle"></div>
       </div>
-      <div class="questionnaire__title">
-        <div v-text="getValue(questionnaireData, ['title'], '')"></div>
-      </div>
       <div class="questionnaire__btn-start">
         <div @click="start">開始測驗</div>
       </div>
@@ -17,7 +14,7 @@
     <template v-else-if="!finished">
       <div class="questionnaire__bar"></div>
       <div class="questionnaire__question">
-        <question-container :index="(currQuestIndex + 1)" :content="currQuestion" :total="questions.length" />
+        <question-container :index="(currQuestIndex + 1)" :content="currQuestion" :total="questions.length" :leadingData="currQuestionLeadingData" :leadingType="questionLeadingType" />
       </div>
       <div class="questionnaire__options" >
         <template v-for="(o, i) in currOptions">
@@ -26,9 +23,7 @@
                             :showCorrectAnsFlag="showCorrectAnsFlag" @optPick="updateState" :lockPickFlag="lockPickFlag" />
         </template>      
       </div>
-      <div class="questionnaire__description" :class="descShow">
-        過名我性我為充是化海人際裡醫部空風其立友城親後現化用說了中方找太運的在說慢，所制斯之子目何望像思解。來皮方能了越的母國他學謝時本始年狀這阿民眾無等排議素資示業甚上處上手，光發。
-      </div>
+      <div class="questionnaire__description" :class="descShow" v-text="currQuestionExplanation"></div>
       <div class="questionnaire__btn-next">
         <div v-text="btnNextText" @click="goNextQuestion"></div>
       </div>
@@ -108,9 +103,20 @@
       currQuestion() {
         return _.get(this.questionnaireData, [ 'questions', this.currQuestIndex, 'title' ], '')
       },
+      currQuestionExplanation() {
+        return _.get(this.questionnaireData, [ 'questions', this.currQuestIndex, 'explanation' ], '')
+      },
+      currQuestionLeadingData() {
+        switch(this.questionLeadingType) {
+          case 'audio':
+            return _.get(this.questionnaireData, [ 'questions', this.currQuestIndex, 'audio' ], '')
+          default:
+            return
+        }
+      },
       descShow() {
         return {
-          show: this.descShowFlag
+          show: (this.currQuestionExplanation.length > 0 && this.descShowFlag) ? true : false
         }
       },
       designatedOption() {
@@ -133,6 +139,9 @@
       },
       questions() {
         return _.get(this.questionnaireData, [ 'questions' ], [])
+      },
+      questionLeadingType() {
+        return _.get(this.questionnaireData, [ 'leading' ], 'none')
       },
       results() {
         return _.get(this.questionnaireData, [ 'results' ], [])

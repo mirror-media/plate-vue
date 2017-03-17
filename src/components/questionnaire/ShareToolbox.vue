@@ -82,7 +82,7 @@
       left 50vw
       z-index 1011
       display flex
-      margin-left -50px
+      margin-left -75px
 
       .icon
         height 50px
