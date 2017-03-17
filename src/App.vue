@@ -30,7 +30,7 @@ html
   box-sizing inherit;
 
 body
-  font-family 'Noto Sans TC', -apple-system, Microsoft JhengHei,"Segoe UI", Roboto, Ubuntu, "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family -apple-system, Microsoft JhengHei,"Segoe UI", Roboto, Ubuntu, "Droid Sans", "Helvetica Neue", sans-serif;
   background-color #fff
   color #34495e
   overflow-y scroll
