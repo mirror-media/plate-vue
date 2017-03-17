@@ -65,7 +65,7 @@ export default {
       return _.get(this.mediaData, [ 'heroVideo' ])
     },
     leadingEmedded() {
-      return _.get(this.mediaData, [ 'embedded' ])
+      return _.get(this.mediaData, [ 'embed' ])
     }
   },
   methods: {
