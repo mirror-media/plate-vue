@@ -158,18 +158,8 @@ function loadLatestArticle(params = {}) {
 }
 
 function loadQuestionnaire(id) {
-    let apiHost = `${_host}/api/questionnaire?${id}/${id}.json`
-    return new Promise(resolve => {
-        superagent
-            .get(apiHost)
-            .end((err, response) => {
-                if (!err && response) {
-                    resolve(JSON.parse(response.text))
-                } else {
-                    resolve('{\'error\':' + err + '}')
-                }
-            })
-    })
+    let apiHost = `${_host}/api/questionnaire?file=${id}/${id}.json`
+    return _doFetch(apiHost)
 }
 
 function loadSearch(keyword = '', params = {}) {

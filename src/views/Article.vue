@@ -187,7 +187,7 @@
     },
     beforeMount() {},
     beforeRouteEnter(to, from, next) {
-      if(process.env.VUE_ENV === 'client' && to.path !== from.path) {
+      if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.path.length > 1) {
         const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
         if(!_targetArticle) {
           fetchArticles(store, to.params.slug).then(() => {

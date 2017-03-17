@@ -51,15 +51,19 @@ router.use('/poplist', function(req, res, next) {
 
 router.use('/questionnaire', function(req, res, next) {
     const query = req.query
-    superagent
-        .get(`${QUESTIONNAIRE_PROTOCOL}://${QUESTIONNAIRE_HOST}/${query}`)
-        .end((err, response) => {
-            if (!err && response) {
-                res.json(JSON.parse(response.text))
-            } else {
-                res.send('{\'error\':' + err + '}')
-            }
-        })
+    if (!('file' in query) || query.file === '') {
+        res.send('empty file')
+    } else {
+        superagent
+            .get(`${QUESTIONNAIRE_PROTOCOL}://${QUESTIONNAIRE_HOST}/questionnaire/${query.file}`)
+            .end((err, response) => {
+                if (!err && response) {
+                    res.json(JSON.parse(response.text))
+                } else {
+                    res.send('{\'error\':' + err + '}')
+                }
+            })
+    }
 });
 
 router.use('/search', function(req, res, next) {
