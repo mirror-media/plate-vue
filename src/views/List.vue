@@ -206,9 +206,17 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       break
     case TOPIC:
       uuid = to.params.topicId
+      let topic = _.find( _.get(store.state.commonData, ['topics', 'items']), { 'id': uuid } )
       return fetchArticlesByUuid(store, uuid, TOPIC, { 
         page: PAGE,
         max_results: MAXRESULT
+      }).then(() => {
+        console.log('topic !!', topic)
+        return (!topic) ? fetchTopicByUuid(store, uuid).then(() => {
+          return fetchTopicImagesByUuid(store, uuid, type, {
+            max_results: 25
+          })
+        }) : null
       })
       break
   }

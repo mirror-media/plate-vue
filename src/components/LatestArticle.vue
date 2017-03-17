@@ -149,7 +149,7 @@ $color-other = #bcbcbc
             margin 0
             text-align justify
             font-size 1.2rem
-            line-height 1.5rem
+            line-height 1.7rem
           h2
             width 100%
             height auto
@@ -186,7 +186,7 @@ $color-other = #bcbcbc
       .list-narrow, .list-wide
         &__img
           width calc( 100% / 3)
-          padding-top calc( 100% / 3)
+          padding-top calc( 100% / 3 * .6666)
 
       .list-narrow
         > a
@@ -197,7 +197,7 @@ $color-other = #bcbcbc
           justify-content space-between
           width calc( (100% - 30px) / 3 * 2)
           margin 0
-          padding-left 1em
+          padding 1em
           
       .list-wide
         position relative
@@ -209,20 +209,20 @@ $color-other = #bcbcbc
           width calc( (100% - 30px) / 3 * 2)
           height 100%
           padding 0
-          padding-left 1em
+          padding 1em
           margin-left 20px
           p
             position absolute
             left 0
             bottom 0
-            padding-left 1em
+            padding 0 1em
 
     > section:not(:first-child)
       padding 0
       .list-narrow, .list-wide
         &__img
           width calc( 100% / 3)
-          padding-top calc( 100% / 3)
+          padding-top calc( 100% / 3 * .6666)
         &__title
           h2
             width 100%
@@ -239,7 +239,7 @@ $color-other = #bcbcbc
           flex-grow 0
           width calc( (100% - 30px) / 3 * 2)
           margin 0
-          padding-left 1em
+          padding 1em
           
       .list-wide
         margin-bottom 20px
@@ -251,13 +251,13 @@ $color-other = #bcbcbc
           width calc( (100% - 30px) / 3 * 2)
           height 100%
           padding 0
-          padding-left 1em
+          padding 1em
           margin-left 20px
           p
             position absolute
             left 0
             bottom 0
-            padding-left 1em
+            padding 0 1em
 
 @media (min-width: 1200px)
   .latestArticle
