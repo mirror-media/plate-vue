@@ -76,7 +76,7 @@ export default {
   computed: {
     articleUrl() {
       const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-      return `/story/${slug}`
+      return `https://www.mirrormedia.mg/story/${slug}`
     },
     articleStyle() {
       return _.get(this.articleData, [ 'style' ], '')
