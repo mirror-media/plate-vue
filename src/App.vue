@@ -20,6 +20,8 @@
   }
 </script>
 <style lang="stylus">
+@import url(//fonts.googleapis.com/earlyaccess/notosanstc.css)
+
 html
   box-sizing border-box
   font-size 16px
@@ -28,8 +30,7 @@ html
   box-sizing inherit;
 
 body
-  font-family -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  font-size 15px
+  font-family -apple-system, Microsoft JhengHei,"Segoe UI", Roboto, Ubuntu, "Droid Sans", "Helvetica Neue", sans-serif;
   background-color #fff
   color #34495e
   overflow-y scroll

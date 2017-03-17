@@ -1,7 +1,7 @@
 <template>
   <div class="home-view">
     <app-Header :commonData= 'commonData' />
-    <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
+    <leading v-if="hasEvent || is404" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
     <editor-choice :editorChoice= 'editorChoice'/>
     <section class="container list">
       <latest-article :latestArticle= 'latestArticle' />
@@ -94,15 +94,6 @@ export default {
     }
   },
   computed: {
-    hasEvent () {
-      const _eventStartTime = moment(new Date(_.get(this.event, ['items', 0, 'startDate'])))
-      const _eventEndTime = moment(new Date(_.get(this.event, ['items', 0, 'endDate'])))
-      const _now = moment()
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime)) ? true : false
-    },
-    hasMore () {
-      return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
-    },
     editorChoice () {
       if ( _.get(this.$store.state.editorChoice, ['items', 'length']) > 4) {
         return _.get(this.$store.state.editorChoice, ['items'])
@@ -116,7 +107,19 @@ export default {
       return _.get(this.event, ['items', '0'])
     },
     eventType () {
-      return _.get(this.event, ['items', '0', 'eventType'])
+      return  this.is404 ? 'image' : _.get(this.event, ['items', '0', 'eventType'])
+    },
+    hasEvent () {
+      const _eventStartTime = moment(new Date(_.get(this.event, ['items', 0, 'startDate'])))
+      const _eventEndTime = moment(new Date(_.get(this.event, ['items', 0, 'endDate'])))
+      const _now = moment()
+      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime)) ? true : false
+    },
+    hasMore () {
+      return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
+    },
+    is404 () {
+      return _.get(this.$store.state.route, ['path']) == '/404' ? true : false
     },
     latestArticle () {
       let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'id')
