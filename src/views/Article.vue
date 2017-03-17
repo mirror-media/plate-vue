@@ -162,7 +162,7 @@
         return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
       },
       ifSingleCol() {
-        return (this.articleStyle === 'single-col' || !this.ifRenderAside) ? false : true
+        return (this.articleStyle === 'wide' || !this.ifRenderAside) ? false : true
       },
       latestList() {
         return _.get(this.latestArticle, [ 'items' ], [])
