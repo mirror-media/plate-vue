@@ -77,8 +77,13 @@
       }
     })
   }
+
   const fetchPop = (store) => {
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
+  }
+
+  const fetchProjects = (store) => {
+    return store.dispatch('FETCH_DATA_BY_COMBO', { 'endpoints': [ 'projects' ] })
   }
 
   const fetchLatestArticle = (store, params) => {
@@ -91,17 +96,7 @@
 
   const fetchData = (store) => {
     return fetchCommonData(store).then(() => {
-      return fetchArticles(store, store.state.route.params.slug).then(() => {
-        const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-        return fetchLatestArticle(store, {
-          sort: '-publishedDate',
-          where: {
-            'sections': _.get(sections, [ 0, 'id' ])
-          }
-        }).then(() => {
-          return fetchPop(store)
-        })
-      })
+      return fetchArticles(store, store.state.route.params.slug)
     })
   }
 
@@ -109,6 +104,53 @@
   export default {
     name: 'article-view',
     preFetch: fetchData,
+    beforeRouteEnter(to, from, next) {
+      if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.path.length > 1) {
+        const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
+        if(!_targetArticle) {
+          fetchArticles(store, to.params.slug).then(() => {
+            const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+            return fetchLatestArticle(store, {
+              sort: '-publishedDate',
+              where: {
+                'sections': _.get(sections, [ 0, 'id' ])
+              }
+            }).then(() => {
+              next(vm => {})
+            })
+          })
+          fetchPop(store)
+        } else {
+          next()
+        }
+      } else {
+        next()
+      }
+    },
+    beforeRouteUpdate(to, from, next) {
+      fetchArticles(this.$store, to.params.slug).then(() => {
+        const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+        return fetchLatestArticle(store, {
+          sort: '-publishedDate',
+          where: {
+            'sections': _.get(sections, [ 0, 'id' ])
+          }
+        })
+      }).then(() => {
+        next()
+      })
+    },
+    beforeMount() {
+      const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+      fetchLatestArticle(store, {
+        sort: '-publishedDate',
+        where: {
+          'sections': _.get(sections, [ 0, 'id' ])
+        }
+      })
+      fetchPop(store)
+      fetchProjects(store)
+    },
     components: {
       'article-body': ArticleBody,
       'article-body-photography': ArticleBodyPhotography,
@@ -127,14 +169,14 @@
         dfpid: DFP_ID,
         dfpUnits: DFP_UNITS,
         editorChoice: this.$store.state.editorChoice,
-        latestArticle: this.$store.state.latestArticle,
         state: {},
         viewport: undefined,
       }
     },
     computed: {
       articleData() {
-        return _.find(_.get(this.$store, [ 'state', 'articles', 'items']), { 'slug' : this.currArticleSlug })
+        const _data = _.find(_.get(this.$store, [ 'state', 'articles', 'items']), { 'slug' : this.currArticleSlug })
+        return _data ? _data : {}
       },
       articleStyle() {
         return _.get(this.articleData, [ 'style' ], '')
@@ -165,7 +207,7 @@
         return (this.articleStyle === 'wide' || !this.ifRenderAside) ? false : true
       },
       latestList() {
-        return _.get(this.latestArticle, [ 'items' ], [])
+        return _.get(this.$store.state.latestArticle, [ 'items' ], [])
       },
       photography() {
         const { style } = this.articleData;
@@ -175,7 +217,7 @@
         return report
       },
       projectlist() {
-        const { items = [] } = _.get(this.commonData, [ 'projects' ])
+        const items = _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
         return items
       },
       relateds() {
@@ -184,45 +226,6 @@
       sectionId() {
         return _.get(this.articleData, [ 'sections', 0, 'id' ], '')
       },
-    },
-    beforeMount() {},
-    beforeRouteEnter(to, from, next) {
-      if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.path.length > 1) {
-        const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
-        if(!_targetArticle) {
-          fetchArticles(store, to.params.slug).then(() => {
-            const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-            return fetchLatestArticle(store, {
-              sort: '-publishedDate',
-              where: {
-                'sections': _.get(sections, [ 0, 'id' ])
-              }
-            }).then(() => {
-              return fetchPop(store).then(() => {
-                next(vm => {})
-              })
-            })
-          })
-
-        } else {
-          next()
-        }
-      } else {
-        next()
-      }
-    },
-    beforeRouteUpdate(to, from, next) {
-      fetchArticles(this.$store, to.params.slug).then(() => {
-        const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-        return fetchLatestArticle(store, {
-          sort: '-publishedDate',
-          where: {
-            'sections': _.get(sections, [ 0, 'id' ])
-          }
-        })
-      }).then(() => {
-        next()
-      })
     },
     methods: {
       getTruncatedVal,
@@ -250,12 +253,24 @@
       })
     },
     metaInfo() {
-      const { brief, categories, dfpId, fbAppId, fbPagesId, heroImage, id, ogDescription, ogImage, ogTitle, sections, tags, title, topics } = this.articleData
+      const { 
+        brief = {},
+        categories = {},
+        heroImage = {},
+        ogDescription = '',
+        ogImage = {},
+        ogTitle = '',
+        sections = {},
+        slug = '',
+        tags = {},
+        title = '',
+        topics = {}
+      } = this.articleData
       const categorieId = _.get(categories, [ 0, 'id' ], '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const pureBrief = truncate(sanitizeHtml(_.get(brief, [ 'html' ], ''), { allowedTags: [ 'em' ] }), 200)
-      const pureTags = tags.map((t) => (_.get(t, [ 'name' ], '')))
+      const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionId = _.get(sections, [ 0, 'id' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
 
@@ -267,19 +282,16 @@
           { name: 'section-id', content: sectionId },
           { name: 'category-id', content: categorieId },
           { name: 'topic-id', content: topicId },
-          { name: 'DFPIP', content: dfpId },
           { name: 'twitter:card', content: 'summary_large_image' },
           { name: 'twitter:title', content: (ogTitle.length > 0) ? ogTitle : title },
           { name: 'twitter:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
           { name: 'twitter:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
-          { property: 'fb:app_id', content: fbAppId },
-          { property: 'fb:pages', content: fbPagesId },
           { property: 'og:site_name', content: '鏡傳媒 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },
           { property: 'og:title', content: (ogTitle.length > 0) ? ogTitle : title },
           { property: 'og:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
-          { property: 'og:url', content: '/story/' + id },
+          { property: 'og:url', content: '/story/' + slug },
           { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
         ]
       }

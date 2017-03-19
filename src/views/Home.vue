@@ -38,7 +38,7 @@ const MAXRESULT = 20
 const PAGE = 1
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'choices' ] } ).then(() => {
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'choices', 'projects' ] } ).then(() => {
     return store.dispatch('FETCH_EVENT', {
       params: {
         'max_results': 1,
@@ -137,7 +137,9 @@ export default {
     },
     handleScroll () {
       window.onscroll = (e) => {
-        let firstPageArticleHeight = document.getElementById('latestArticle').offsetHeight
+        const _latestArticleDiv = document.querySelector('#latestArticle')
+        if(!_latestArticleDiv) { return }
+        let firstPageArticleHeight = _latestArticleDiv.offsetHeight
         let firstPageArticleBottom = elmYPosition('#latestArticle') + ( firstPageArticleHeight )
         let currentBottom = currentYPosition() + window.innerHeight
         if ( ( currentBottom > firstPageArticleBottom ) && !this.hasScrollLoadMore) {
