@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
+import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchDataByCombo, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
 
 Vue.use(Vuex)
 
@@ -60,7 +60,7 @@ const store = new Vuex.Store({
 
         FETCH_AUDIOS: ({ commit, state }, { params }) => {
             let orig = _.values(state.audios['items'])
-            return state.audios.items && (params.page > 1) ? 
+            return state.audios.items && (params.page > 1) ?
                 fetchAudios(params).then(audios => {
                     audios['items'] = _.concat(orig, _.get(audios, ['items']))
                     commit('SET_AUDIOS', { audios })
@@ -71,11 +71,17 @@ const store = new Vuex.Store({
 
         FETCH_COMMONDATA: ({ commit, state }, { endpoints = [] }) => {
             return fetchCommonData(endpoints).then(commonData => {
-                    commit('SET_COMMONDATA', { commonData })
-                    const _latestArticles = _.get(commonData, ['postsVue'])
-                    _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
-                    _latestArticles ? commit('SET_TAGS', _latestArticles) : null
-                })
+                commit('SET_COMMONDATA', { commonData })
+                const _latestArticles = _.get(commonData, ['postsVue'])
+                _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
+                _latestArticles ? commit('SET_TAGS', _latestArticles) : null
+            })
+        },
+
+        FETCH_DATA_BY_COMBO: ({ commit, state }, { endpoints = [] }) => {
+            return fetchDataByCombo(endpoints).then(data => {
+                commit('SET_DATA_BY_COMBO', { data })
+            })
         },
 
         FETCH_EDITORCHOICE: ({ commit, state }, {}) => {
@@ -86,8 +92,8 @@ const store = new Vuex.Store({
 
         FETCH_EVENT: ({ commit, state }, { params }) => {
             return fetchEvent(params).then(event => {
-                    commit('SET_EVENT', { event })
-                })
+                commit('SET_EVENT', { event })
+            })
         },
 
         FETCH_IMAGES: ({ commit, state }, { uuid, type, params }) => {
@@ -117,20 +123,20 @@ const store = new Vuex.Store({
         FETCH_SEARCH: ({ commit, state }, { keyword, params }) => {
             let orig = _.values(state.searchResult['items'])
             return state.searchResult.items && (params.page > 1) ?
-                    fetchSearch(keyword, params).then(searchResult => {
-                        searchResult['items'] = _.concat(orig, _.get(searchResult, ['hits']))
-                        commit('SET_SEARCH', { searchResult })
-                    }) : fetchSearch(keyword, params).then(searchResult => {
-                        searchResult['items'] = _.get(searchResult, ['hits'])
-                        commit('SET_SEARCH', { searchResult })
-                    })
+                fetchSearch(keyword, params).then(searchResult => {
+                    searchResult['items'] = _.concat(orig, _.get(searchResult, ['hits']))
+                    commit('SET_SEARCH', { searchResult })
+                }) : fetchSearch(keyword, params).then(searchResult => {
+                    searchResult['items'] = _.get(searchResult, ['hits'])
+                    commit('SET_SEARCH', { searchResult })
+                })
         },
 
         FETCH_TAG: ({ commit, state }, { id }) => {
             return state.tag['id'] ?
-                    '' : fetchTag(id).then(tag => {
-                        commit('SET_TAG', { tag })
-                    })
+                '' : fetchTag(id).then(tag => {
+                    commit('SET_TAG', { tag })
+                })
         },
 
         FETCH_TOPIC_BY_UUID: ({ commit, state }, { params }) => {
@@ -147,11 +153,11 @@ const store = new Vuex.Store({
 
         FETCH_YOUTUBE_PLAY_LIST: ({ commit, state }, { limit, pageToken }) => {
             let orig = _.values(state.playlist['items'])
-            return !pageToken ? fetchYoutubePlaylist(limit, pageToken).then(playlist => commit('SET_YOUTUBE_PLAY_LIST', { playlist }))
-                              : fetchYoutubePlaylist(limit, pageToken).then(playlist => {
-                                    playlist['items'] = _.concat(orig, _.get(playlist, ['items']))
-                                    commit('SET_YOUTUBE_PLAY_LIST', { playlist })
-                                })
+            return !pageToken ? fetchYoutubePlaylist(limit, pageToken).then(playlist => commit('SET_YOUTUBE_PLAY_LIST', { playlist })) :
+                fetchYoutubePlaylist(limit, pageToken).then(playlist => {
+                    playlist['items'] = _.concat(orig, _.get(playlist, ['items']))
+                    commit('SET_YOUTUBE_PLAY_LIST', { playlist })
+                })
         },
     },
 
@@ -186,12 +192,16 @@ const store = new Vuex.Store({
             authors = _.concat(origAuthors, authors)
             Vue.set(state, 'authors', _.uniqBy(authors, 'id'))
         },
-        
+
 
         SET_COMMONDATA: (state, { commonData }) => {
             Vue.set(state, 'commonData', commonData)
-            _.get(commonData, ['postsVue']) ? Vue.set(state, 'latestArticle', _.get(commonData, ['postsVue'])) : ''
             _.get(commonData, ['choices']) ? Vue.set(state, 'editorChoice', _.get(commonData, ['choices'])) : ''
+            _.get(commonData, ['postsVue']) ? Vue.set(state, 'latestArticle', _.get(commonData, ['postsVue'])) : ''
+        },
+
+        SET_DATA_BY_COMBO: (state, { data }) => {
+            _.get(data, ['projects']) ? Vue.set(state.commonData, 'projects', _.get(data, ['projects'])) : ''
         },
 
         SET_EDITORCHOICE: (state, { editorChoice }) => {
@@ -219,7 +229,7 @@ const store = new Vuex.Store({
         },
 
         SET_TAG: (state, { tag }) => {
-           Vue.set(state, 'tag', tag)
+            Vue.set(state, 'tag', tag)
         },
 
         SET_TAGS: (state, articles) => {

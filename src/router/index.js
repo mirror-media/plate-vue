@@ -18,8 +18,14 @@ export default new Router({
     routes: [
         { path: '/author/:authorId/:authorName?', component: List },
         { path: '/category/:title', component: List },
-        { path: '/story/:slug', component: Article },
-        { path: '/story/:slug/index.html', component: Article },
+        {
+            path: '/story/:slug',
+            component: Article,
+            children: [{
+                path: 'index.html',
+                component: Article
+            }]
+        },
         { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
         { path: '/search/:keyword', component: Search },
         { path: '/section/:title', component: List },

@@ -338,7 +338,6 @@ export default {
   beforeRouteEnter (to, from, next) {
     let type = _.toUpper( _.split( to.path, '/' )[1] )
     next(vm => {
-      console.log('run here')
       let sectionStyle = _.get( _.find( _.get(vm.$store.state.commonData, ['sections', 'items']), 
         { 'name': _.get(to, ['params', 'title']) } ), ['style'] )
       fetchCommonData(vm.$store).then(() => {
