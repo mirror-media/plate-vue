@@ -70,7 +70,6 @@
   const fetchArticles = (store, slug) => {
     return store.dispatch('FETCH_ARTICLES', {
       params: {
-        related: 'full',
         where: {
           'slug': slug
         }
