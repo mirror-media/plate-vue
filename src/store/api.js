@@ -113,15 +113,6 @@ function loadCommonData(endpoints = []) {
     return _doFetch(url)
 }
 
-function loadDataByCombo(endpoints = []) {
-    let mapped = _.map(endpoints, (n) => { return 'endpoint=' + n })
-    let combo_params = mapped.join('&')
-    const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-    let url = `${_host}/api/combo?`
-    url = url + combo_params
-    return _doFetch(url)
-}
-
 function loadEditorChoice() {
     const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
     let url = `${_host}/api/combo?endpoint=choices`
@@ -232,24 +223,6 @@ export function fetchCommonData(endpoints = []) {
                 }
             })
             return commonData
-        })
-}
-
-export function fetchDataByCombo(endpoints = []) {
-    return Promise.all([loadDataByCombo(endpoints)])
-        .then((data) => {
-            let _data = {}
-            _.map(Object.keys(_.get(data[0], ['endpoints'])), (e) => {
-                _data[e] = _.get(data[0], ['endpoints', e])
-                if (e == 'sections') {
-                    _.forEach(_.get(data[0], ['endpoints', e, 'items']), (s) => {
-                        _.forEach(s.categories, (c) => {
-                            _.set(_data, ['categories', c.name], c)
-                        })
-                    })
-                }
-            })
-            return _data
         })
 }
 

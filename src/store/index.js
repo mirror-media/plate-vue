@@ -81,12 +81,6 @@ const store = new Vuex.Store({
             })
         },
 
-        FETCH_DATA_BY_COMBO: ({ commit, state }, { endpoints = [] }) => {
-            return fetchDataByCombo(endpoints).then(data => {
-                commit('SET_DATA_BY_COMBO', { data })
-            })
-        },
-
         FETCH_EDITORCHOICE: ({ commit, state }, {}) => {
             return state.editorChoice.items ?
                 Promise.resolve(state.editorChoice) :
@@ -201,10 +195,6 @@ const store = new Vuex.Store({
             Vue.set(state, 'commonData', commonData)
             _.get(commonData, ['choices']) ? Vue.set(state, 'editorChoice', _.get(commonData, ['choices'])) : ''
             _.get(commonData, ['postsVue']) ? Vue.set(state, 'latestArticle', _.get(commonData, ['postsVue'])) : ''
-        },
-
-        SET_DATA_BY_COMBO: (state, { data }) => {
-            _.get(data, ['projects']) ? Vue.set(state.commonData, 'projects', _.get(data, ['projects'])) : ''
         },
 
         SET_EDITORCHOICE: (state, { editorChoice }) => {

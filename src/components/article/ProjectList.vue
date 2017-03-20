@@ -9,7 +9,7 @@
               <div>
                 <a :href="`https://mirrormedia.mg/projects/${o.slug}`" >
                   <div class="proj_item_img"
-                      :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
+                      :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
               </div>
@@ -27,7 +27,7 @@
 </template>
 <script>
   import { SECTION_MAP } from '../../constants'
-  import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
+  import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
   import Slider from '../Slider.vue'
   import _ from 'lodash'
 
@@ -64,6 +64,7 @@
         }
       },
       getHref,
+      getImage,
       getTruncatedVal,
       getValue,
     },

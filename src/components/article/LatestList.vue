@@ -3,7 +3,7 @@
     <div class="title"><h4>最新文章</h4></div>
     <div class="list">
       <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
-        <div class="thumbnail" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'tiny', 'url' ], '/asset/review.png') + ')' }">
+        <div class="thumbnail" :style="{ backgroundImage: 'url(' + getImage(o, 'tiny') + ')' }">
           <router-link :to="{ path: getHref(o) }"  :style="{ width: '100%', height: '100%', display: 'block' }"></router-link>
         </div>
         <div class="content">
@@ -19,7 +19,7 @@
   </div>
 </template>
 <script>
-  import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
+  import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
   import _ from 'lodash'
 
   export default {
@@ -30,6 +30,7 @@
     },
     methods: {
       getHref,
+      getImage,
       getTruncatedVal,
       getValue
     },
