@@ -108,7 +108,7 @@ function loadCommonData(endpoints = []) {
     let mapped = _.map(endpoints, (n) => { return 'endpoint=' + n })
     let combo_params = mapped.join('&')
     const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST } = config
-    let url = `${_host}/api/combo?endpoint=sections&endpoint=topics&`
+    let url = `${_host}/api/combo?`
     url = url + combo_params
     return _doFetch(url)
 }
