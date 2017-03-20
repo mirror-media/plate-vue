@@ -7,7 +7,6 @@
 </template>
 
 <style lang="stylus">
-@import url(//fonts.googleapis.com/earlyaccess/notosanstc.css)
 
 html
   box-sizing border-box
