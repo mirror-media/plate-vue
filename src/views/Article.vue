@@ -2,8 +2,8 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
       <div id="fb-root"></div>
-      <app-header :commonData= 'commonData' v-if="(articleStyle !== 'photography')" />
-      <div class="article-container" v-if="(articleStyle !== 'photography')" >
+      <app-header :commonData="commonData" v-if="(articleStyle !== 'photography') && clientSideFlag"></app-header>
+      <div class="article-container" v-if="(articleStyle !== 'photography') && clientSideFlag" >
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
@@ -43,8 +43,8 @@
         </div>
         <share-tools />
       </div>
-      <div v-else>
-        <article-body-photography :articleData="articleData" :viewport="viewport"/>
+      <div v-else-if="(articleStyle === 'photography') && clientSideFlag">
+        <article-body-photography :articleData="articleData" :viewport="viewport" />
       </div>
     </template>
   </vue-dfp-provider>
@@ -82,20 +82,20 @@
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
-  const fetchProjects = (store) => {
-    return store.dispatch('FETCH_DATA_BY_COMBO', { 'endpoints': [ 'projects' ] })
-  }
-
   const fetchLatestArticle = (store, params) => {
     return store.dispatch('FETCH_LATESTARTICLE', { params: params })
   }
 
+  const fetchSSRData = (store) => {
+    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] } )
+  }
+
   const fetchCommonData = (store) => {
-    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [  ] } )
+    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] } )
   }
 
   const fetchData = (store) => {
-    return fetchCommonData(store).then(() => {
+    return fetchSSRData(store).then(() => {
       return fetchArticles(store, store.state.route.params.slug)
     })
   }
@@ -149,7 +149,7 @@
         }
       })
       fetchPop(store)
-      fetchProjects(store)
+      fetchCommonData(store)
     },
     components: {
       'article-body': ArticleBody,
@@ -165,10 +165,10 @@
     },
     data() {
       return {
-        commonData: this.$store.state.commonData,
+        // commonData: this.$store.state.commonData,
+        clientSideFlag: false,
         dfpid: DFP_ID,
         dfpUnits: DFP_UNITS,
-        editorChoice: this.$store.state.editorChoice,
         state: {},
         viewport: undefined,
       }
@@ -184,6 +184,9 @@
       currArticleSlug() {
         return this.$store.state.route.params.slug
       },
+      commonData () { 
+        return this.$store.state.commonData 
+      }, 
       heroCaption() {
         return _.get(this.articleData, [ 'heroCaption' ], '')
       },
@@ -247,7 +250,7 @@
       fbSdkScript.type = 'text/javascript'
       document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
       this.updateViewport()
-
+      this.clientSideFlag = (process.env.VUE_ENV === 'client') ? true : false
       window.addEventListener('resize', () => {
         this.updateViewport()
       })
