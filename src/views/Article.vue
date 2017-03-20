@@ -2,8 +2,8 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
       <div id="fb-root"></div>
-      <app-header :commonData="commonData" v-if="(articleStyle !== 'photography') && clientSideFlag"></app-header>
-      <div class="article-container" v-if="(articleStyle !== 'photography') && clientSideFlag" >
+      <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
+      <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
@@ -43,7 +43,7 @@
         </div>
         <share-tools />
       </div>
-      <div v-else-if="(articleStyle === 'photography') && clientSideFlag">
+      <div v-else-if="(articleStyle === 'photography')">
         <article-body-photography :articleData="articleData" :viewport="viewport" />
       </div>
     </template>
