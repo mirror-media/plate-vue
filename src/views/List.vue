@@ -211,7 +211,6 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
         page: PAGE,
         max_results: MAXRESULT
       }).then(() => {
-        console.log('topic !!', topic)
         return (!topic) ? fetchTopicByUuid(store, uuid).then(() => {
           return fetchTopicImagesByUuid(store, uuid, type, {
             max_results: 25
@@ -503,11 +502,6 @@ export default {
           return this.$route.params.topicId
       }
     },
-    updated() {
-      if(this.type === TOPIC) {
-        this.updateCustomizedMarkup()
-      }
-    }
   },
   methods: {
     getImage,
@@ -606,7 +600,11 @@ export default {
       title
     }
   },
-  
+  updated() {
+    if(this.type === TOPIC) {
+      this.updateCustomizedMarkup()
+    }
+  }
 }
   
 </script>
