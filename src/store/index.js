@@ -71,6 +71,9 @@ const store = new Vuex.Store({
 
         FETCH_COMMONDATA: ({ commit, state }, { endpoints = [] }) => {
             return fetchCommonData(endpoints).then(commonData => {
+                _.map(Object.keys(state.commonData), (e) => {
+                    commonData[e] = state.commonData[e]
+                })
                 commit('SET_COMMONDATA', { commonData })
                 const _latestArticles = _.get(commonData, ['postsVue'])
                 _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null

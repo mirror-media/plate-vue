@@ -64,7 +64,7 @@ export default {
     getTruncatedVal,
     moment,
     hasRelated (article) {
-      return article.relateds.length > 0 ? true : false
+      return _.get(article, ['relateds', 'length']) > 0 ? true : false
     },
     getRelated (article) {
       return _.take(article.relateds, 2)
