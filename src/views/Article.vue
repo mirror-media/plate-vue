@@ -165,7 +165,6 @@
     },
     data() {
       return {
-        // commonData: this.$store.state.commonData,
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpUnits: DFP_UNITS,

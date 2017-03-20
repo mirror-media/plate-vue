@@ -7,7 +7,7 @@
         <div>
           <router-link :to="o.slug" >
             <div class="pop_item_img"
-                  :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
+                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
             </div>
           </router-link>
         </div>
@@ -20,12 +20,13 @@
 </template>
 <script>
   import { SECTION_MAP } from '../../constants'
-  import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
+  import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
   import _ from 'lodash'
   export default {
     computed: {},
     methods: {
       getHref,
+      getImage,
       getTruncatedVal,
       getValue,
       getSectionStyle(sect) {
