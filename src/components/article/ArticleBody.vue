@@ -6,7 +6,8 @@
       </div>
       <div class="date" v-text="date"></div>
     </div>
-    <div class="article_title"><h2 v-text="title"></h2></div>
+    <div class="article_title"><h1 v-text="title"></h1></div>
+    <div class="article_subtitle" v-if="subtitle.length > 0"><h2 v-text="subtitle"></h2></div>
     <div class="article_credit" v-html="credit"></div>
     <main class="article_main">
       <div class="brief">
@@ -136,6 +137,10 @@ export default {
         setNavBtn: true
       }
     },
+    subtitle() {
+      const { subtitle } = this.articleData
+      return subtitle
+    },
     title() {
       const { title } = this.articleData
       return title
@@ -251,13 +256,24 @@ export default {
     
     .article_title 
       width 100%
+      margin 15px 0
 
-      h2 
+      h1 
         font-size 40px
         font-weight 400
-        margin 15px 0
-      
-    
+        margin 0
+
+    .article_subtitle  
+      width 695px
+      display inline-block
+      max-width 695px
+      margin 0 0 15px
+
+      h2
+        font-size 1.5rem
+        font-weight 400
+        margin 0
+
     .article_credit 
       width 695px
       display inline-block
@@ -565,7 +581,16 @@ export default {
     &.single-col 
       margin-top 50px
 
-      .article_basic-info, .article_title, .article_credit 
+      .article_basic-info
+        width 660px
+        margin 0 auto
+
+      .article_title
+        margin 15px auto
+        width 660px
+
+      .article_credit 
+        display block
         width 660px
         margin 0 auto
       
@@ -695,7 +720,7 @@ export default {
 
   @media (min-width 0px) and (max-width 767px)
     .article_body
-      .article_main, .article_credit
+      .article_main, .article_credit, .article_subtitle
         width 100%
         max-width 100%
 
@@ -717,21 +742,41 @@ export default {
 
   @media (max-width 899px) and (min-width 768px)
     .article_body
-      .article_basic-info, .article_title, .article_credit, .article_main
+      .article_basic-info, .article_credit, .article_main, .article_subtitle
         width 645px
         max-width 645px
         margin 0 auto
+        
+      .article_title
+        width 645px
+        max-width 645px
+        margin 15px auto
+
+      .article_subtitle
+        width 645px
+        max-width 645px
+        margin 0 auto 15px
       
   @media (max-width 1199px) and (min-width 900px)
     .article_body
-      .article_basic-info, .article_title, .article_credit, .article_main
+      .article_basic-info, .article_credit, .article_main
         width 695px
         max-width 695px
         margin 0 auto
 
+      .article_title
+        width 695px
+        max-width 695px
+        margin 15px auto
+
+      .article_subtitle
+        width 695px
+        max-width 695px
+        margin 0 auto 15px
+
   @media (max-width 1199px)
     .article_body
-      .article_main, .article_credit
+      .article_main, .article_credit, .article_subtitle
         display block
 
 </style>
