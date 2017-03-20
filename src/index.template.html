@@ -11,6 +11,310 @@
     <meta name="theme-color" content="#f60">
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <style>
+        .header {
+            width: 100%;
+            background-color: #f5f5f5;
+        }
+
+        .header a {
+            display:block;
+            font-size:0;
+            vertical-align:middle;
+        }
+
+        .header-logoSearch {
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            padding: 10px 20px;
+        }
+
+        .header-logoSearch--logo {
+            height: 50px;
+        }
+
+        .header-icon {
+            width:32px;
+        }
+
+        .header-menu--section {
+            display: none;
+        }
+
+        .header-sidebar {
+            display:flex;
+            flex-direction:column;
+            position:fixed;
+            top:0;
+            left:0;
+            z-index:510;
+            width:100%;
+            height:100vh;
+            padding:20px;
+            background-color:#064f77;
+            overflow-y:auto;
+            transform:translate3d(-100%,0,0);
+            transition:.5s ease;
+        }
+
+        .header-sidebar.open {
+            transform:translate3d(0,0,0);
+            transition:.5s ease;
+        }
+        .header-sidebar__close {
+            margin-bottom:20px;
+        }
+        .header-sidebar__close > a {
+            float:right;
+        }
+        .header-sidebar__close img {
+            width:24px;
+            height:24px;
+        }
+        .header-sidebar__menu {
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        .header-sidebar__menu > a {
+            margin-bottom:20px;
+            color:#fff;
+            font-size:1rem;
+            font-weight:300;
+        }
+        .header-sidebar__menu--subscribe, .header-sidebar__menu--download {
+            width:100%;
+            padding:5px;
+            text-align:center;
+            border:1px solid #fff;
+        }
+        .header-sidebar--subscribe {
+            margin-top:20px;
+        }
+
+        .header-searchbar {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:fixed;
+            top:0;
+            left:0;
+            z-index:510;
+            width:100%;
+            height:69px;
+            padding:20px;
+            background-color:hsla(0,0%,100%,.9);
+            box-shadow:0 3px 2px 0 rgba(0,0,0,.1), 0 2px 0 0 #fff;
+            transform:translate3d(0,-75px,0);
+            transition:.5s ease;
+        }
+
+        .header-searchbar.open {
+            transform:translate3d(0,0,0);
+            transition:.5s ease;
+        }
+
+        .header-searchbar > input {
+            width:100%;
+            margin-right:15px;
+            font-size:1.5rem;
+            background-color:transparent;
+            border:none;
+        }
+
+        .header-searchbar > a {
+            width:22px;
+        }
+
+        .header-scrolled {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            position:fixed;
+            top:0;
+            left:0;
+            z-index:500;
+            width:100%;
+            padding:5px 20px;
+            background-color:#fff;
+            box-shadow:0 3px 2px 0 rgba(0,0,0,.1), 0 2px 0 0 #fff;
+        }
+
+        .header-scrolled img {
+            height:32px;
+        }
+        .header-scrolled > div {
+            display:flex;
+        }
+        .header-scrolled > div > a {
+            margin-left:10px;
+        }
+
+        @media (min-width: 1200px) {
+            .header-logoSearch {
+                width:1024px;
+                padding:10px 0;
+                margin:0 auto;
+            }
+            .header-logoSearch__search.desktop-only {
+                display:flex !important;
+                align-items:center;
+                width:250px;
+                height:35px;
+            }
+            .header-logoSearch__search input {
+                float:left;
+                width:200px;
+                height:35px;
+                padding:0 10px;
+                text-align:right;
+                border:1px solid rgb(238, 238, 238);
+                border-radius: 2px;
+                border-right:none;
+            }
+            .header-logoSearch__search button {
+                padding:0;
+                margin:0;
+                background-color:#fff;
+                border:1px solid rgb(238, 238, 238);
+                border-radius: 2px;
+                border-left:none;
+            }
+            .header-logoSearch__search--icon {
+                float:left;
+                width:49px;
+                height:33px;
+            }
+            .header-menu {
+                display:flex;
+                flex-wrap:wrap;
+                justify-content:center;
+                width:1024px;
+                margin:0 auto;
+            }
+            .header-menu > a {
+                text-align:center;
+                color:#fff;
+                line-height: 46px;
+                font-size:1rem;
+            }
+            .header-menu > a:hover.news-people {
+                background-color: #30bac8;
+            }
+            .header-menu > a:hover.entertainment {
+                background-color: #bf3284;
+            }
+            .header-menu > a:hover.foodtravel {
+                background-color: #eac151; 
+            }
+            .header-menu > a:hover.watch {
+                background-color: #c1d16e;   
+            }
+
+            .header-menu--section {
+                display:flex;
+                background-color:#064f77;
+            }
+            .header-menu--section a {
+                color:#fff;
+            }
+            .header-menu--topic {
+                display:flex;
+                justify-content:space-between;
+                position:relative;
+                background-color:#fff;
+                box-shadow:0 0 5px 0 #cccccc;
+            }
+            .header-menu--topic a {
+                min-width:90px;
+                font-size:1rem;
+                text-align:center;
+                color:rgba(0,0,0,.5);
+                line-height:46px;
+            }
+            .header-menu--topic > div {
+                display:flex;
+                justify-content:space-between;
+                width:1024px;
+                margin:0 auto;
+            }
+            .header-menu--topic .header-menu {
+                width:auto;
+                margin:0;
+            }
+            .header-menu--topic .header-menu > a {
+                padding:0 .5em;
+                color:rgba(0,0,0,.5);
+                border-bottom:3px solid #000;
+            }
+            .header-menu--topic .header-menu > a:hover {
+                background-color:#000;
+                color:#fff;
+            }
+            .dropdown {
+                text-align: center;
+            }
+            .dropdown > a {
+                padding:0;
+                font-size:1rem;
+                line-height:43px;
+            }
+            .dropdown-content {
+                display:none;
+                position: absolute;
+                z-index: 10;
+                width:110px;
+                color:#fff;
+                background-color: #333;
+                box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            }
+            .dropdown-content a {
+                font-size: 1rem;
+                padding:14.5px 15px;
+            }
+            .dropdown:hover .dropdown-content {
+                display: block;
+            }
+            .dropdown.news-people {
+                border-top: 3px solid #30bac8;
+            }
+            .dropdown.news-people > .dropdown-content a:hover {
+                color: #30bac8;
+            }
+            .dropdown.news-people:hover {
+                background-color:#30bac8;
+            }
+            .dropdown.entertainment {
+                border-top: 3px solid #bf3284;
+            }
+            .dropdown.entertainment > .dropdown-content a:hover {
+                color: #bf3284;
+            }
+            .dropdown.entertainment:hover {
+                background-color:#bf3284;
+            }
+            .dropdown.foodtravel {
+                border-top: 3px solid #eac151;
+            }
+            .dropdown.foodtravel > .dropdown-content a:hover {
+                color: #eac151;
+            }
+            .dropdown.foodtravel:hover {
+                background-color:#eac151;
+            }
+            .dropdown.watch {
+                border-top: 3px solid #c1d16e;
+            }
+            .dropdown.watch > .dropdown-content a:hover {
+                color: #c1d16e;
+            }
+            .dropdown.watch:hover {
+                background-color:#c1d16e;
+            }
+        }
+
+    </style>
 </head>
 
 <body>

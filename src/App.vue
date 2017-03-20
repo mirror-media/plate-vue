@@ -1,24 +1,11 @@
 <template>
-  <div id="app" v-show="showPage">
+  <div id="app">
     <transition name="fade" mode="out-in">
       <router-view class="view"></router-view>
     </transition>
   </div>
 </template>
-<script>
-  export default {
-    data() {
-      return {
-        showPage: false
-      }
-    },
-    mounted() {
-      window.addEventListener('load', (e) => {
-        this.showPage = true
-      })
-    }
-  }
-</script>
+
 <style lang="stylus">
 @import url(//fonts.googleapis.com/earlyaccess/notosanstc.css)
 
