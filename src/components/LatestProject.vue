@@ -21,18 +21,10 @@ import truncate from 'truncate'
 
 export default {
   name: 'latestProject',
-  components: {
-  },
-  data () {
-    return {
-    }
-  },
-  props: {
-    project: {}
-  },
+  props: ['projects'],
   computed: {
     highlightProject () {
-      return _.take(this.project, 8)
+      return _.take(this.projects, 8)
     }
   },
   methods: {
@@ -42,11 +34,6 @@ export default {
     getHref,
     getTruncatedVal,
   },
-  beforeMount () {
-   
-  },
-  mounted() {
-  }
 }
 
 </script>

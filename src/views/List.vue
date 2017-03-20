@@ -84,7 +84,7 @@ const MAXRESULT = 12
 const PAGE = 1
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
 }
 
 const fetchListData = (store, type, sectionStyle) => {

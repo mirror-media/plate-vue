@@ -1,11 +1,11 @@
 <template>
   <div class="home-view">
     <app-Header :commonData= 'commonData' />
-    <leading v-if="hasEvent || is404" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
+    <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
     <editor-choice :editorChoice= 'editorChoice'/>
     <section class="container list">
       <latest-article :latestArticle= 'latestArticle' />
-      <latest-project :project= 'commonData.projects.items' />
+      <latest-project :projects= 'projects' />
     </section>
     <loading :show="loading" />
     <section class="container">
@@ -37,16 +37,22 @@ import truncate from 'truncate'
 const MAXRESULT = 20
 const PAGE = 1
 
+const fetchSSRData = (store) => {
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'choices' ] } )
+}
+
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'choices', 'projects' ] } ).then(() => {
-    return store.dispatch('FETCH_EVENT', {
-      params: {
-        'max_results': 1,
-        'where': {
-          isFeatured: true
-        }
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] } )
+}
+
+const fetchEvent = (store) => {
+  return store.dispatch('FETCH_EVENT', {
+    params: {
+      'max_results': 1,
+      'where': {
+        isFeatured: true
       }
-    })
+    }
   })
 }
 
@@ -72,11 +78,13 @@ export default {
     'loading': Loading,
     'more': More,
   },
-  preFetch: fetchCommonData,
+  preFetch: fetchSSRData,
   beforeRouteEnter (to, from, next) {
     if(process.env.VUE_ENV === 'client' && to.path !== from.path) {
       next(vm => {
+        fetchSSRData(vm.$store)
         fetchCommonData(vm.$store)
+        fetchEvent(vm.$store)
       })
     } else {
       next()
@@ -84,16 +92,17 @@ export default {
   },
   data () {
     return {
-      commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
-      event: this.$store.state.event,
       hasScrollLoadMore: false,
       loading: false,
       page: PAGE,
     }
   },
   computed: {
+    commonData () {
+      return this.$store.state.commonData
+    },
     editorChoice () {
       if ( _.get(this.$store.state.editorChoice, ['items', 'length']) > 4) {
         return _.get(this.$store.state.editorChoice, ['items'])
@@ -103,11 +112,14 @@ export default {
         return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
       }
     },
+    event () {
+      return this.$store.state.event
+    },
     eventData () {
       return _.get(this.event, ['items', '0'])
     },
     eventType () {
-      return  this.is404 ? 'image' : _.get(this.event, ['items', '0', 'eventType'])
+      return this.is404 ? 'image' : _.get(this.event, ['items', '0', 'eventType'])
     },
     hasEvent () {
       const _eventStartTime = moment(new Date(_.get(this.event, ['items', 0, 'startDate'])))
@@ -118,14 +130,14 @@ export default {
     hasMore () {
       return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
     },
-    is404 () {
-      return _.get(this.$store.state.route, ['path']) == '/404' ? true : false
-    },
     latestArticle () {
       let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'id')
       let latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length'])))
       return latestArticle
     },
+    projects () {
+      return _.get(this.commonData, ['projects', 'items'])
+    }
   },
   methods: {
     loadMore () {
@@ -155,6 +167,10 @@ export default {
       title
     }
   },
+  beforeMount() {
+    fetchCommonData(this.$store)
+    fetchEvent(this.$store)
+  },
   mounted() {
     this.handleScroll()
   }
@@ -165,6 +181,7 @@ export default {
 .editorChoice
   margin-top 40px
 .home-view
+  width 100%
   box-sizing border-box
   h2 
     margin: 0;

@@ -73,7 +73,7 @@
     computed: {
       articleUrl() {
         const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        return `${SITE_URL}/story/${slug}`
+        return `${SITE_URL}/story/${slug}/`
       },
       brief() {
         const { brief } = this.articleData

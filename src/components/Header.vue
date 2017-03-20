@@ -65,9 +65,7 @@ import _ from 'lodash'
 
 export default {
   name: 'app-header',
-  props: {
-    commonData: {},
-  },
+  props: ['commonData'],
   data () {
     return {
       isScrolled: false,
@@ -104,7 +102,7 @@ export default {
       headerItem.section = []
       headerItem.category = []
       headerItem.topic = []
-      _.forEach(this.commonData.sections.items, (s) => {
+      _.forEach(_.get(this.commonData, ['sections', 'items']), (s) => {
         s.href = '/section/' + s.name
         s.isFeatured ? headerItem.section.push(s) : ''
         _.forEach(s.categories, (c) => {
@@ -113,7 +111,7 @@ export default {
           c.isFeatured ? headerItem.category.push(c) : ''
         })
       })
-      _.forEach(this.commonData.topics.items, (t) => {
+      _.forEach(_.get(this.commonData, ['topics', 'items']), (t) => {
         t.href = '/topic/' + t.id
         t.title = t.name
         t.isFeatured && headerItem.topic.length < 7 ? headerItem.topic.push(t) : ''
@@ -144,6 +142,7 @@ $color-projects = #000
 $color-other = #bcbcbc
 
 .header
+  width 100%
   background-color #f5f5f5
   a
     display block

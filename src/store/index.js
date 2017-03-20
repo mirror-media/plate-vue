@@ -71,16 +71,13 @@ const store = new Vuex.Store({
 
         FETCH_COMMONDATA: ({ commit, state }, { endpoints = [] }) => {
             return fetchCommonData(endpoints).then(commonData => {
+                _.map(Object.keys(state.commonData), (e) => {
+                    commonData[e] = state.commonData[e]
+                })
                 commit('SET_COMMONDATA', { commonData })
                 const _latestArticles = _.get(commonData, ['postsVue'])
                 _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
                 _latestArticles ? commit('SET_TAGS', _latestArticles) : null
-            })
-        },
-
-        FETCH_DATA_BY_COMBO: ({ commit, state }, { endpoints = [] }) => {
-            return fetchDataByCombo(endpoints).then(data => {
-                commit('SET_DATA_BY_COMBO', { data })
             })
         },
 
@@ -198,10 +195,6 @@ const store = new Vuex.Store({
             Vue.set(state, 'commonData', commonData)
             _.get(commonData, ['choices']) ? Vue.set(state, 'editorChoice', _.get(commonData, ['choices'])) : ''
             _.get(commonData, ['postsVue']) ? Vue.set(state, 'latestArticle', _.get(commonData, ['postsVue'])) : ''
-        },
-
-        SET_DATA_BY_COMBO: (state, { data }) => {
-            _.get(data, ['projects']) ? Vue.set(state.commonData, 'projects', _.get(data, ['projects'])) : ''
         },
 
         SET_EDITORCHOICE: (state, { editorChoice }) => {

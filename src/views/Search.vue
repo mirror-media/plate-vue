@@ -29,7 +29,7 @@ const MAXRESULT = 12
 const PAGE = 1
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { })
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
 }
 
 const fetchSearch = (store, keyword, params) => {
