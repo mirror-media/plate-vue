@@ -225,7 +225,7 @@
         return _.get(this.articleData, [ 'relateds' ])
       },
       sectionId() {
-        return _.get(this.articleData, [ 'sections', 0, 'id' ], '')
+        return _.get(this.articleData, [ 'sections', 0, 'id' ])
       },
     },
     methods: {
