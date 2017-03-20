@@ -1,6 +1,6 @@
 <template>
   <div class="home-view">
-    <app-Header :commonData= 'commonData' />
+    <app-Header v-if="true" :commonData= 'commonData' />
     <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
     <editor-choice :editorChoice= 'editorChoice'/>
     <section class="container list">
