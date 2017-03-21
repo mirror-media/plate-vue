@@ -48,7 +48,7 @@
     </section>
     <div class="go-next-page" @click="goNextPage" :class="goNextPageClass"></div>
     <div class="btn-toggle-description" :class="switchStatus" @click="toggleDesc">
-      <div class="hint">開啟／關閉文字說明</div>
+      <div class="hint">開啟／關閉圖說</div>
     </div>
     <div class="progress-wrap progress mobile-only" data-progress-percent="25">
       <div class="progress-bar progress"></div>
