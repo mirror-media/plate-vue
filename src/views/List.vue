@@ -97,7 +97,8 @@ const fetchListData = (store, type, sectionStyle) => {
     case AUTHOR:
       uuid = store.state.route.params.authorId
       return fetchArticlesByAuthor(store, uuid, { 
-        page: PAGE
+        page: PAGE,
+        max_results: MAXRESULT
       })
       break
     case SECTION:
@@ -340,13 +341,18 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     let type = _.toUpper( _.split( to.path, '/' )[1] )
-    next(vm => {
-      let sectionStyle = _.get( _.find( _.get(vm.$store.state.commonData, ['sections', 'items']), 
-        { 'name': _.get(to, ['params', 'title']) } ), ['style'] )
-      fetchCommonData(vm.$store).then(() => {
-        fetchListData(vm.$store, type, sectionStyle)
+    if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
+      next(vm => {
+        console.log('fetch again')
+        let sectionStyle = _.get( _.find( _.get(vm.$store.state.commonData, ['sections', 'items']), 
+          { 'name': _.get(to, ['params', 'title']) } ), ['style'] )
+        fetchCommonData(vm.$store).then(() => {
+          fetchListData(vm.$store, type, sectionStyle)
+        })
       })
-    })
+    } else {
+      next()
+    }
   },
   beforeRouteUpdate (to, from, next) {
     this.page = PAGE

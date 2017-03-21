@@ -226,44 +226,73 @@
       },
       smoothScroll,
       scrollOnePage() {
-        window.addEventListener('scroll', (e) => {
-
+        window.addEventListener('wheel', (e) => {
           const _derection = e.wheelDelta
-          const currTop = this.currentYPosition()
-          const lastTop = window.currTop || currTop
-          const distance = currTop - lastTop
-          let _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`) 
-          if(!this.scrollingFlag && distance > 0 && lastTop !== _targEle && currTop !== _targEle) {
+          if(!this.scrollingFlag && _derection < 0) {
             if((this.sectIndex >= this.sectCount + 1)) { 
+              this.enableScroll()
               return 
             }
-            this.disableScroll()
-            this.sectIndex = this.sectIndex + 1 
+            this.sectIndex = (this.sectIndex < this.sectCount + 1) ? this.sectIndex + 1 : this.sectIndex
             this.sideProgressHandler('pass', (this.sectIndex - 2))
             this.stickflagF = true
             this.scrollingFlag = true
-             _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`)  
             this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
-          } else if(!this.scrollingFlag && distance < 0 && lastTop !== _targEle && currTop !== _targEle) {
+          } else if(!this.scrollingFlag && _derection > 0) {
             if((this.sectIndex <= 2)) { 
               return 
             }
-            this.disableScroll()
-            this.sectIndex = this.sectIndex - 1 
+            this.sectIndex = (this.sectIndex > 2) ? this.sectIndex - 1 : this.sectIndex
             this.sideProgressHandler('back', (this.sectIndex))
             this.scrollingFlag = true
-             _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`)  
             this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
-          } 
-          if(this.scrollingFlag && currTop === _targEle) {
-            setTimeout(() => {
+          }
+        })
+        window.addEventListener('touchmove', (e) => {
+          const _currTouchClientY = e.touches[ 0 ].clientY
+          const _lastTouchClientY = window.touchClientY || _currTouchClientY
+          if(!this.scrollingFlag && _currTouchClientY < _lastTouchClientY) {
+            if((this.sectIndex >= this.sectCount + 1)) { 
               this.enableScroll()
-              this.scrollingFlag = false
-              window.currTop = _targEle
-            }, 1000)
-            return
+              return 
+            }
+            this.sectIndex = (this.sectIndex < this.sectCount + 1) ? this.sectIndex + 1 : this.sectIndex
+            this.scrollingFlag = true
+            this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
+          } else if(!this.scrollingFlag && _currTouchClientY > _lastTouchClientY) {
+            if((this.sectIndex <= 2)) { 
+              return 
+            }
+            this.sectIndex = (this.sectIndex > 2) ? this.sectIndex - 1 : this.sectIndex
+            this.scrollingFlag = true
+            this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
+          }
+          window.touchClientY = _currTouchClientY
+          setTimeout(() => {
+            window.touchClientY = undefined
+          }, 200)
+        })
+        window.addEventListener('scroll', (e) => {
+          const lastTop = window.currTop || currTop
+          const currTop = this.currentYPosition()
+          const distance = currTop - lastTop
+          let _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`) 
+          if((this.sectIndex >= this.sectCount + 1 && currTop >= _targEle)) { 
+            this.enableScroll()
+            this.scrollingFlag = false
+            return 
+          } else {
+            this.disableScroll()
+            if(this.scrollingFlag && currTop === _targEle) {
+              setTimeout(() => {
+                this.scrollingFlag = false
+                window.currTop = _targEle
+              }, 1000)
+              return
+            }
           }
           window.currTop = currTop
+
           this.updateProgressbar(((this.sectIndex - 1) * 100)/this.sectCount)
           if(((this.sectIndex - 1) * 100)/this.sectCount >= 100) {
             document.querySelector('.go-next-page').setAttribute('style', 'display: none;')
@@ -272,7 +301,6 @@
             document.querySelector('.go-next-page').removeAttribute('style')
             document.querySelector('.btn-toggle-description').removeAttribute('style')
           }
-
         })
       },
       shareGooglePlus() {
@@ -321,7 +349,7 @@
       },
     },
     mounted() {
-      // this.disableScroll()
+      this.disableScroll()
       this.scrollOnePage()
       this.updateIndex()
       this.updateIfLandscape()
