@@ -104,7 +104,7 @@
     name: 'article-view',
     preFetch: fetchData,
     beforeRouteEnter(to, from, next) {
-      if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.path.length > 1) {
+      if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
         const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
         if(!_targetArticle) {
           fetchArticles(store, to.params.slug).then(() => {
@@ -330,7 +330,7 @@
         float right
         padding-top 10px
         width 310px
-        margin-top -40px
+        margin-top -50px
       
       .article_footer
         text-align center

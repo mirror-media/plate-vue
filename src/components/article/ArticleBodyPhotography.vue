@@ -47,7 +47,9 @@
       </div>
     </section>
     <div class="go-next-page" @click="goNextPage" :class="goNextPageClass"></div>
-    <div class="btn-toggle-description" :class="switchStatus" @click="toggleDesc"></div>
+    <div class="btn-toggle-description" :class="switchStatus" @click="toggleDesc">
+      <div class="hint">開啟／關閉圖說</div>
+    </div>
     <div class="progress-wrap progress mobile-only" data-progress-percent="25">
       <div class="progress-bar progress"></div>
     </div>
@@ -185,6 +187,7 @@
       getValue,
       goNextPage() {
         this.sectIndex = (this.sectIndex < this.sectCount + 1) ? this.sectIndex + 1 : this.sectIndex
+        this.scrollingFlag = true
         this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
       },
       goHome() {
@@ -223,52 +226,44 @@
       },
       smoothScroll,
       scrollOnePage() {
-        window.addEventListener('wheel', (e) => {
-          const _derection = e.wheelDelta
-          const _htmlHeight = document.documentElement.clientHeight
-          const _lastDelta = window.wheelDelta
-          let _currTop = 0
-          let _targEle = 0
-          if(_derection < 0) {
-            if(!this.scrollingFlag && Math.abs(_derection) > 3) {
-              if(this.sectIndex < this.sectCount + 1) {
-                this.sectIndex = this.sectIndex + 1
-                this.sideProgressHandler('pass', (this.sectIndex - 2))
-                this.stickflagF = true
-              } else {
-                this.sectIndex = this.sectIndex
-              }
-            }
-          } else {
-            if(!this.scrollingFlag && Math.abs(_derection) > 3) {
-              if(this.sectIndex > 2) {
-                this.sectIndex = this.sectIndex - 1
-                this.sideProgressHandler('back', (this.sectIndex))
-              } else {
-                this.sectIndex = this.sectIndex
-              }
-            }
-          }
-          _currTop = this.currentYPosition()
-          _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`)              
-          if(!this.scrollingFlag && Math.abs(_derection) > 3 && _currTop != _targEle) {
-            this.scrollingFlag = true
-            this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
-          } else if((Math.abs(_derection) <= 3 && _currTop === _targEle)) {
-            this.scrollingFlag = false
-          }
+        window.addEventListener('scroll', (e) => {
 
-          if(this.sectIndex >= (this.sectCount + 1) && _currTop >= _targEle) {
-            this.enableScroll()
-          } else if(Math.abs(_derection) <= 3 && this.sectIndex >= (this.sectCount + 1) && _currTop < _targEle) {
-            this.scrollingFlag = false
-          } else {
-            
+          const _derection = e.wheelDelta
+          const currTop = this.currentYPosition()
+          const lastTop = window.currTop || currTop
+          const distance = currTop - lastTop
+          let _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`) 
+          if(!this.scrollingFlag && distance > 0 && lastTop !== _targEle && currTop !== _targEle) {
+            if((this.sectIndex >= this.sectCount + 1)) { 
+              return 
+            }
             this.disableScroll()
+            this.sectIndex = this.sectIndex + 1 
+            this.sideProgressHandler('pass', (this.sectIndex - 2))
+            this.stickflagF = true
+            this.scrollingFlag = true
+             _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`)  
+            this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
+          } else if(!this.scrollingFlag && distance < 0 && lastTop !== _targEle && currTop !== _targEle) {
+            if((this.sectIndex <= 2)) { 
+              return 
+            }
+            this.disableScroll()
+            this.sectIndex = this.sectIndex - 1 
+            this.sideProgressHandler('back', (this.sectIndex))
+            this.scrollingFlag = true
+             _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`)  
+            this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
+          } 
+          if(this.scrollingFlag && currTop === _targEle) {
+            setTimeout(() => {
+              this.enableScroll()
+              this.scrollingFlag = false
+              window.currTop = _targEle
+            }, 1000)
+            return
           }
-          window.wheelDelta = _derection
-        })
-        window.addEventListener('scroll', () => {
+          window.currTop = currTop
           this.updateProgressbar(((this.sectIndex - 1) * 100)/this.sectCount)
           if(((this.sectIndex - 1) * 100)/this.sectCount >= 100) {
             document.querySelector('.go-next-page').setAttribute('style', 'display: none;')
@@ -323,10 +318,10 @@
       updateIfLandscape() {
         const browser = typeof window !== 'undefined'
         this.ifLandscape =  (browser && window.innerHeight < window.innerWidth) ? true : false
-      }
+      },
     },
     mounted() {
-      this.disableScroll()
+      // this.disableScroll()
       this.scrollOnePage()
       this.updateIndex()
       this.updateIfLandscape()
@@ -455,6 +450,7 @@
         justify-content center
         padding-top 10%
         z-index 10
+        background-image linear-gradient(0deg, transparent, rgba(0,0,0,0.5))
         h2
           font-size 2.5rem
           color #fff
@@ -612,6 +608,16 @@
       z-index 102
       width 40px
 
+      .hint
+        font-size 1rem
+        width 150px
+        position absolute
+        top -22px
+        left 5px
+        color rgba(255, 255, 255, 0.8)
+        cursor auto
+        display none
+
       &.on
         background-image url(/public/icon/caption-on.png)
         
@@ -624,6 +630,9 @@
       &:hover
         background-image url(/public/icon/caption-on.png)
 
+        .hint
+          display block
+
   @media (min-width 768px)
     .mobile-only
       display none !important
@@ -634,6 +643,7 @@
         .title
           span
             text-align center
+            padding 20px
         
         &.latest
           .credit
