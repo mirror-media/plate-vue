@@ -22,8 +22,8 @@ export default {
 
 .more
   height 30px
-  margin-top 20px
-  border 1px solid #bcbcbc
+  margin 20px 0 70px
+  padding 0 1em
     
   > button
     display: flex
@@ -31,7 +31,7 @@ export default {
     align-items: center
     width 100%
     height 100%
-    border none
+    border 1px solid #bcbcbc
     background none
 
 .more-container
@@ -47,5 +47,10 @@ export default {
     height 100%
     border none
     background none
+
+@media (min-width: 768px)
+  .more
+    padding 0
+    margin-bottom 0
 
 </style>

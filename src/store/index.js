@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchDataByCombo, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
+import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchDataByCombo, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchLatestArticleNeedRelated, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
 
 Vue.use(Vuex)
 
@@ -111,6 +111,16 @@ const store = new Vuex.Store({
                 })
         },
 
+        FETCH_LATESTARTICLE_NEED_RELATED: ({ commit, state }, { params }) => {
+            let orig = _.values(state.latestArticle['items'])
+            return state.latestArticle.items && params.page < 2 ?
+                Promise.resolve(state.latestArticle) :
+                fetchLatestArticleNeedRelated(params).then(latestArticle => {
+                    latestArticle['items'] = _.concat(orig, _.get(latestArticle, ['items']))
+                    commit('SET_LATESTARTICLE_NEED_RELATED', { latestArticle })
+                })
+        },
+
         FETCH_QUESTIONNAIRE: ({ commit, state }, { id }) => {
             return state.questionnaire[id] ?
                 Promise.resolve(state.questionnaire[id]) :
@@ -210,6 +220,10 @@ const store = new Vuex.Store({
         },
 
         SET_LATESTARTICLE: (state, { latestArticle }) => {
+            Vue.set(state, 'latestArticle', latestArticle)
+        },
+
+        SET_LATESTARTICLE_NEED_RELATED: (state, { latestArticle }) => {
             Vue.set(state, 'latestArticle', latestArticle)
         },
 

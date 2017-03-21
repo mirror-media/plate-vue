@@ -3,7 +3,9 @@
     <template scope="props" slot="dfpPos">
 
       <div class="list-view" v-if="pageStyle == 'feature'">
-        <app-header :commonData= 'commonData' />
+        <section style="width: 100%;">
+          <app-header :commonData= 'commonData' />
+        </section>
         <div class="topic" v-if="type == 'TOPIC'">
           <div class="topic-title"><h1></h1></div>
           <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
@@ -30,7 +32,9 @@
 
       <div class="listFull-view" v-if="pageStyle == 'full'">
         <div id="dfp-HD" class="listFull-dfp dfp-HD">AD HD</div>
-        <header-full :commonData='commonData' :section='section' :sections='commonData.sections' />
+        <section>
+          <header-full :commonData='commonData' :section='section' :sections='commonData.sections' />
+        </section>
         <article-leading :articles='articles.items' v-if="type == 'SECTION'"/>
         <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type == 'SECTION'"/>
         <latestArticle-full :articles='articles.items' v-if="type == 'SECTION'" />

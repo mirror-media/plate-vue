@@ -92,7 +92,9 @@ function loadArticlesByUuid(uuid = '', type = '', params = {}, isOnlyMeta = true
     }
     params.sort = params.sort || '-publishedDate'
     let query = _buildQuery(params)
-    let url = `${_host}/api/listing`
+    let needRelated = _.get(params, ['related']) === 'full' ? true : false
+    let url
+    needRelated ? url = `${_host}/api/meta` : url = `${_host}/api/listing`
     url = `${url}?${query}`
     return _doFetch(url)
 }
