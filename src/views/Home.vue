@@ -59,7 +59,7 @@ const fetchEvent = (store) => {
 }
 
 const fetchLatestArticle = (store, page) => {
-  return store.dispatch('FETCH_LATESTARTICLE', {
+  return store.dispatch('FETCH_LATESTARTICLES', {
     params: {
       'max_results': MAXRESULT,
       'page': page,
@@ -84,9 +84,9 @@ export default {
   beforeRouteEnter (to, from, next) {
     if(process.env.VUE_ENV === 'client' && to.path !== from.path) {
       next(vm => {
-        fetchSSRData(vm.$store)
-        fetchCommonData(vm.$store)
-        fetchEvent(vm.$store)
+        if (_.get(vm.$store, ['state', 'commonData', 'sections', 'items']) || _.get(vm.$store, ['state', 'commonData', 'choices', 'items'])) {
+          fetchSSRData(vm.$store)
+        }
       })
     } else {
       next()
@@ -96,9 +96,9 @@ export default {
     return {
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
-      hasScrollLoadMore: false,
+      hasScrollLoadMore: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE) > 1 ? true : false,
       loading: false,
-      page: PAGE,
+      page: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE)
     }
   },
   computed: {
@@ -110,7 +110,7 @@ export default {
         return _.get(this.$store.state.editorChoice, ['items'])
       } else {
         let orig = _.values(this.$store.state.editorChoice['items'])
-        let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'title')
+        let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticles['items'], 'title')
         return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
       }
     },
@@ -130,10 +130,10 @@ export default {
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime)) ? true : false
     },
     hasMore () {
-      return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticle, [ 'meta', 'total' ], 0)
+      return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticles, [ 'meta', 'total' ], 0)
     },
     latestArticle () {
-      let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticle['items'], 'id')
+      let xorBy = _.xorBy( _.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'id')
       let latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length'])))
       return latestArticle
     },
@@ -145,6 +145,7 @@ export default {
     loadMore () {
       this.page += 1
       this.loading = true
+
       fetchLatestArticle(this.$store, this.page).then(() => {
         this.loading = false
       })
@@ -170,7 +171,9 @@ export default {
     }
   },
   beforeMount() {
-    fetchCommonData(this.$store)
+    if (this.$store.getters.latestArticlesLength === 0) {
+      fetchCommonData(this.$store)
+    }
     fetchEvent(this.$store)
   },
   mounted() {

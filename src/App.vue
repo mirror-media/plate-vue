@@ -33,6 +33,9 @@ a
     &, &:hover, &:link, &:visited
       color #0b4fa2
 
+p, h2, h3
+  font-weight normal
+
 section.tweet 
   .content
     a, a:hover, a:link, a:visited

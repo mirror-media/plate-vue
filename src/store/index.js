@@ -22,6 +22,7 @@ const store = new Vuex.Store({
         fbPagesId: FB_PAGES_ID,
         images: {},
         latestArticle: {},
+        latestArticles: {},
         playlist: {},
         searchResult: {},
         tag: {},
@@ -75,6 +76,7 @@ const store = new Vuex.Store({
                     commonData[e] = state.commonData[e]
                 })
                 commit('SET_COMMONDATA', { commonData })
+                _.get(state, ['latestArticles', 'items', 'length'], 0) !== 0 ? null : commit('SET_POSTVUE', {commonData})
                 const _latestArticles = _.get(commonData, ['postsVue'])
                 _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
                 _latestArticles ? commit('SET_TAGS', _latestArticles) : null
@@ -108,6 +110,16 @@ const store = new Vuex.Store({
                     commit('SET_LATESTARTICLE', { latestArticle })
                     commit('SET_AUTHORS', latestArticle)
                     commit('SET_TAGS', latestArticle)
+                })
+        },
+        // For Home Page
+        FETCH_LATESTARTICLES: ({ commit, state }, { params }) => {
+            let orig = _.values(state.latestArticles['items'])
+            return state.latestArticles.items && params.page < 2 ?
+                Promise.resolve(state.latestArticles) :
+                fetchLatestArticle(params).then(latestArticles => {
+                    latestArticles['items'] = _.concat(orig, _.get(latestArticles, ['items']))
+                    commit('SET_LATESTARTICLES', { latestArticles })
                 })
         },
 
@@ -159,6 +171,7 @@ const store = new Vuex.Store({
     },
 
     mutations: {
+        
         SET_ARTICLES: (state, { articles }) => {
             Vue.set(state, 'articles', articles)
         },
@@ -193,8 +206,7 @@ const store = new Vuex.Store({
 
         SET_COMMONDATA: (state, { commonData }) => {
             Vue.set(state, 'commonData', commonData)
-            _.get(commonData, ['choices']) ? Vue.set(state, 'editorChoice', _.get(commonData, ['choices'])) : ''
-            _.get(commonData, ['postsVue']) ? Vue.set(state, 'latestArticle', _.get(commonData, ['postsVue'])) : ''
+            _.get(commonData, ['choices'], false) ? Vue.set(state, 'editorChoice', _.get(commonData, ['choices'])) : ''
         },
 
         SET_EDITORCHOICE: (state, { editorChoice }) => {
@@ -211,6 +223,14 @@ const store = new Vuex.Store({
 
         SET_LATESTARTICLE: (state, { latestArticle }) => {
             Vue.set(state, 'latestArticle', latestArticle)
+        },
+
+        SET_LATESTARTICLES: (state, { latestArticles }) => {
+            Vue.set(state, 'latestArticles', latestArticles)
+        },
+
+        SET_POSTVUE: (state, { commonData }) => {
+            Vue.set(state, 'latestArticles', _.get(commonData, ['postsVue']))
         },
 
         SET_QUESTIONNAIRE: (state, { questionnaire }) => {
@@ -255,7 +275,9 @@ const store = new Vuex.Store({
     },
 
     getters: {
-
+        latestArticlesLength: state => {
+            return _.get(state.latestArticles, ['items', 'length'], 0)
+        }
     }
 })
 
