@@ -1,6 +1,8 @@
 <template>
   <div class="search-view">
-    <app-header :commonData= 'commonData' />
+    <section style="width: 100%;">
+      <app-header :commonData= 'commonData' />
+    </section>
     <div class="search-title container">
       <span class="search-title__text" v-text="title"></span>
       <div class="search-title__colorBlock"></div>
@@ -125,6 +127,7 @@ export default {
       align-items: center
       flex-direction row
       margin-top 40px
+      padding 0 2em
     &__text
         font-size 3rem
     &__colorBlock

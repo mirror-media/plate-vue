@@ -94,6 +94,7 @@ export default {
     },
     search (searchVal = '') {
       this.$router.push('/search/'+ this.searchVal)
+      this.openSearch = false
     },
   },
   computed: {

@@ -234,6 +234,7 @@ export default {
       height calc(100vh - 200px)
       > figure
         height 100%
+        padding 0
         > img
           height 100%
 

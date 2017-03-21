@@ -1,6 +1,8 @@
 <template>
   <div class="timeline-view">
-    <header-full :commonData='commonData' :section='sectionName' :sections='commonData.sections' />
+    <section>
+      <header-full :commonData='commonData' :section='sectionName' :sections='commonData.sections' />
+    </section>
     <spinner :show="loading"></spinner>
     <section :style="{ position: 'relative' }">
       <div class="titleBox"/>
