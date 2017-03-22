@@ -593,12 +593,13 @@ export default {
       }
     },
     updateCustomizedMarkup () {
+      const custCss = document.querySelector('#custCSS') 
+      const custScript = document.querySelector('#custJS') 
+      if(!custCss || custScript) { this.insertCustomizedMarkup() }
       if(this.customCSS) {
-        const custCss = document.querySelector('#custCSS') 
         custCss.innerHTML = this.customCSS
       }
       if(this.customJS) {
-        const custScript = document.querySelector('#custJS') 
         custScript.innerHTML = this.customJS
       }
     },
