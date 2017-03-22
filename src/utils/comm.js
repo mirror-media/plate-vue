@@ -37,7 +37,7 @@ export function getHref(relAritlcle = {}) {
         case "projects":
             return `/projects/${slug}`
         default:
-            return `/story/${slug}`
+            return `/story/${slug}/`
     }
 }
 

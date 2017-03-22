@@ -316,7 +316,7 @@
           { property: 'og:type', content: 'article' },
           { property: 'og:title', content: (ogTitle.length > 0) ? ogTitle + ' － 鏡週刊 Mirror Media' : title + ' － 鏡週刊 Mirror Media' },
           { property: 'og:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
-          { property: 'og:url', content: '/story/' + slug },
+          { property: 'og:url', content: '/story/' + slug + '/' },
           { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
         ]
       }
