@@ -1,7 +1,6 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
-      <div id="fb-root"></div>
       <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
@@ -247,12 +246,21 @@
         return _.get(o, p, d);
       },
       insertFbSdkScript() {
-        const fbSdkScript = document.createElement('script')
-        fbSdkScript.setAttribute('id', 'fbsdk')
-        fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + this.fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
-        fbSdkScript.async = true
-        fbSdkScript.type = 'text/javascript'
-        document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
+        if(!window.FB) {
+          const fbSdkScript = document.createElement('script')
+          fbSdkScript.setAttribute('id', 'fbsdk')
+          fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + this.fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
+          fbSdkScript.async = true
+          fbSdkScript.type = 'text/javascript'
+          document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
+        } else {
+          window.FB && window.FB.init({
+            appId      : this.fbAppId,
+            xfbml      : true,
+            version    : 'v2.0'
+          })
+          window.FB && window.FB.XFBML.parse()
+        }
       },
       updateViewport() {
         const browser = typeof window !== 'undefined'
