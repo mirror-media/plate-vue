@@ -119,7 +119,7 @@
         border-left 7px solid #414141
         border-top-width 0
         line-height 1.5rem
-        font-size 1.2rem
+        font-size 1.1rem
         display flex
         justify-content center
         align-items center
@@ -132,7 +132,7 @@
           margin 10px 20px
 
           &:hover, &:link, &:visited 
-            color #8c8c8c
+            color rgba(0, 0, 0, 0.49)
             font-weight normal
             border none
           

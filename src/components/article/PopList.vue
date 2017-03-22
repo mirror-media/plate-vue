@@ -69,8 +69,8 @@
         .pop_item_title 
           background-color #fff
           border-top-width 0
-          line-height 18px
-          font-size 13px
+          line-height 1.5rem
+          font-size 1.1rem
           display flex
           justify-content center
           align-items center
@@ -81,7 +81,7 @@
             margin 10px 20px
         
             &:hover, &:link, &:visited
-              color #8c8c8c
+              color rgba(0, 0, 0, 0.49)
               font-weight normal
               border none
 

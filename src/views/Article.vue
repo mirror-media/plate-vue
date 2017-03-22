@@ -177,7 +177,6 @@
     },
     computed: {
       articleUrl() {
-        console.log('slug change', this.currArticleSlug)
         return `${SITE_URL}/story/${this.currArticleSlug}/`
       },
       articleData() {
@@ -269,7 +268,6 @@
       window.addEventListener('resize', () => {
         this.updateViewport()
       })
-      console.log('article mounted')
     },
     metaInfo() {
       const { 
@@ -294,21 +292,21 @@
       const topicId = _.get(topics, [ '_id' ], '')
 
       return {
-        title: title,
+        title: title + ' － 鏡週刊 Mirror Media',
         meta: [
-          { name: 'keywords', content: '鏡週刊,鏡傳媒,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說,' + pureTags.toString() },
+          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說,' + pureTags.toString() },
           { name: 'description', content: pureBrief },
           { name: 'section-id', content: sectionId },
           { name: 'category-id', content: categorieId },
           { name: 'topic-id', content: topicId },
           { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: (ogTitle.length > 0) ? ogTitle : title },
+          { name: 'twitter:title', content: (ogTitle.length > 0) ? ogTitle + ' － 鏡週刊 Mirror Media' : title + ' － 鏡週刊 Mirror Media' },
           { name: 'twitter:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
           { name: 'twitter:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
-          { property: 'og:site_name', content: '鏡傳媒 Mirror Media' },
+          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: (ogTitle.length > 0) ? ogTitle : title },
+          { property: 'og:title', content: (ogTitle.length > 0) ? ogTitle + ' － 鏡週刊 Mirror Media' : title + ' － 鏡週刊 Mirror Media' },
           { property: 'og:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
           { property: 'og:url', content: '/story/' + slug },
           { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },

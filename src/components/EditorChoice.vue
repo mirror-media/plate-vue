@@ -87,6 +87,34 @@ export default {
     jumpToSlideForParent(e) {
       this.jumpToSlide(null, e.target.children[0])
     },
+    getHref,
+    getSrcSet(img) {
+      return `${img.resizedTargets.mobile.url} 600w, ${img.resizedTargets.tablet.url} 900w, ${img.resizedTargets.desktop.url} 1200w`
+    },
+    getImage,
+    getSection,
+    getTitle,
+    getTruncatedVal,
+    getValue,
+    setHoverEvent() {
+      const _targ = document.querySelectorAll('.editorChoice-list__item')
+      const _targII = document.querySelectorAll('.editorChoice-list__item > span')
+      _.map(_targ, (o) => {
+        o.onmouseover = (e) => {
+          this.jumpToSlide(null, e.target.children[0])
+        }
+      })
+      _.map(_targII, (o) => {
+        o.onmouseover = (e) => {
+          this.jumpToSlide(e)
+        }
+      })
+    },
+    styleFor1stitem(sect) {
+      return {
+        borderLeft: SECTION_MAP[ sect ][ "borderLeft" ]
+      }
+    },
     updateNavStatus(ind) {
       const index = (ind !== 6 ) ? (ind % 6) : 1
       const targ = document.querySelector(`.editorChoice-list__item span[index="${(index - 1)}"]`)
@@ -100,39 +128,14 @@ export default {
       targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ "borderLeft" ]};`)
       targ.parentNode.setAttribute('class', `${targOld} active`)
     },
-    getHref,
-    getSrcSet(img) {
-      return `${img.resizedTargets.mobile.url} 600w, ${img.resizedTargets.tablet.url} 900w, ${img.resizedTargets.desktop.url} 1200w`
-    },
-    getImage,
-    getSection,
-    getTitle,
-    getTruncatedVal,
-    getValue,
-    styleFor1stitem(sect) {
-      return {
-        borderLeft: SECTION_MAP[ sect ][ "borderLeft" ]
-      }
-    },
-    setHoverEvent() {
-      const _targ = document.querySelectorAll('.editorChoice-list__item')
-      const _targII = document.querySelectorAll('.editorChoice-list__item > span')
-      _.map(_targ, (o) => {
-        o.addEventListener('mouseover', (e) => {
-          this.jumpToSlide(null, e.target.children[0])
-        })
-      })
-      _.map(_targII, (o) => {
-        o.addEventListener('mouseover', (e) => {
-          this.jumpToSlide(e)
-        })
-      })
-    }
   },
   mounted() {
     this.setHoverEvent()
   },
-  name: 'editorChoice'
+  name: 'editorChoice',
+  updated() {
+    this.setHoverEvent()
+  }
 }
 
 </script>
