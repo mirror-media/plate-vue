@@ -109,8 +109,8 @@ export default {
       if ( _.get(this.$store.state.editorChoice, ['items', 'length']) > 4) {
         return _.get(this.$store.state.editorChoice, ['items'])
       } else {
-        let orig = _.values(this.$store.state.editorChoice['items'])
-        let xorBy = _.xorBy(this.$store.state.editorChoice['items'], this.$store.state.latestArticles['items'], 'title')
+        let orig = _.values(_.get(this.$store.state, ['editorChoice', 'items']))
+        let xorBy = _.xorBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'title')
         return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
       }
     },
