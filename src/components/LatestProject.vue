@@ -1,7 +1,7 @@
 <template>
   <section class="latestProject grid-1-fifth">
     <template v-for="item in highlightProject">
-      <a :href="getHref(item)">
+      <a :href="getHref(item)" :id="'projects-'+ item.name">
         <img class="latestProject__img" :src="getImage(item, 'mobile')">
         <div class="latestProject__title" >
           <h2 v-text="getTruncatedVal(item.title, 22)"></h2>

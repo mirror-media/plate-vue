@@ -1,6 +1,6 @@
 <template>
   <section class="audioList container">
-    <audio-box :sources="getAudioSource(item)" :item="item"  v-for="item in audios" />
+    <audio-box :sources="getAudioSource(item)" :id="'latest-'+ item.id" :item="item"  v-for="item in audios" />
   </section>
 </template>
 

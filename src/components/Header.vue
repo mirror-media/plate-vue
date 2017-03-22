@@ -1,8 +1,8 @@
 <template>
   <header id="header" class="header">
     <section class="header-logoSearch">
-      <a @click="openSideBar()" class="mobile-only"><img src="~public/icon/hamburger@2x.png" class="header-icon"></a>
-      <router-link :to="'/'"><img src="~public/logo.svg" class="header-logoSearch--logo"></router-link>
+      <a @click="openSideBar()" id="menubar" class="mobile-only"><img src="~public/icon/hamburger@2x.png" class="header-icon"></a>
+      <router-link :to="'/'" id="header-logo"><img src="~public/logo.svg" class="header-logoSearch--logo"></router-link>
       <div class="header-logoSearch__search desktop-only">
         <input type="text" v-model="searchVal" @keyup.enter="search(searchVal)" placeholder="">
         <button @click="search(searchVal)">
@@ -16,18 +16,18 @@
     <nav class="header-menu--section">
       <div class="header-menu">
         <div v-for="item in headerItem.section" class="dropdown" :class="item.name" :style="{ width: 'calc( 100% /' + headerAmount + ')'}">
-          <router-link :to="item.href" v-text="item.title"/>
+          <router-link :id="'header-' + item.name" :to="item.href" v-text="item.title"/>
           <div class="dropdown-content">
-            <router-link :to="c.href" v-for="c in item.categories" v-text="c.title"/>
+            <router-link :to="c.href" :id="'header-' + c.name" v-for="c in item.categories" v-text="c.title"/>
           </div>
         </div>
-        <router-link :to="item.href" v-for="item in headerItem.category" v-text="item.title" :class="item.section" :style="{ width: 'calc( 100% /' + headerAmount + ')'}" />
+        <router-link :to="item.href" :id="'header-' + item.name" v-for="item in headerItem.category" v-text="item.title" :class="item.section" :style="{ width: 'calc( 100% /' + headerAmount + ')'}" />
       </div>
     </nav>
     <nav class="header-menu--topic">
       <div>
         <div class="header-menu">
-          <router-link :to="item.href" v-for="item in headerItem.topic" v-text="item.title"/>
+          <router-link :to="item.href" :id="'header-' + item.id" v-for="item in headerItem.topic" v-text="item.title"/>
         </div>
         <a href="">更多</a>
       </div>
@@ -37,11 +37,11 @@
         <a @click="closeSideBar()"><img src="~public/icon/close_white.png"></a>
       </div>
       <div class="header-sidebar__menu">
-        <a :href="item.href" v-for="item in headerItem.topic" v-text="item.title"></a>
-        <a :href="item.href" v-for="item in headerItem.section" v-text="item.title"></a>
-        <a :href="item.href" v-for="item in headerItem.category" v-text="item.title"></a>
-        <a :href="socialLink.SUBSCRIBE" target="_bank" class="header-sidebar__menu--subscribe">訂閱鏡週刊</a>
-        <a :href="socialLink.DOWNLOADAPP" target="_bank" class="header-sidebar__menu--download">下載APP</a>
+        <a :href="item.href" :id="'header-' + item.id" v-for="item in headerItem.topic" v-text="item.title"></a>
+        <a :href="item.href" :id="'header-' + item.name" v-for="item in headerItem.section" v-text="item.title"></a>
+        <a :href="item.href" :id="'header-' + item.name" v-for="item in headerItem.category" v-text="item.title"></a>
+        <a :href="socialLink.SUBSCRIBE" id="footer-subscribe" target="_bank" class="header-sidebar__menu--subscribe">訂閱鏡週刊</a>
+        <a :href="socialLink.DOWNLOADAPP" id="footer-download" target="_bank" class="header-sidebar__menu--download">下載APP</a>
       </div>
     </nav>
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">

@@ -1,6 +1,6 @@
 <template>
   <section class="videoList container">
-    <a :href="getLink(item)" v-for="item in playlist" class="videoList-block" target="_bank">
+    <a :href="getLink(item)" :id="'latest-'+ item.id" v-for="item in playlist" class="videoList-block" target="_bank">
       <div class="videoList-block__img" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }"></div>
       <div class="videoList-block__content">
         <h2 v-text="getTitle(item)"></h2>
