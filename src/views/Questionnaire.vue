@@ -223,18 +223,18 @@
       const _title = this.questionnaireTitle
 
       return {
-        title: this.questionnaireTitle + ' - 鏡傳媒 Mirror Media',
+        title: this.questionnaireTitle + ' - 鏡週刊 Mirror Media',
         meta: [
           { name: 'description', content: _description },
-          { name: 'keywords', content: '鏡週刊,鏡傳媒,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
+          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
           { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: _title },
+          { name: 'twitter:title', content: _title + ' - 鏡週刊 Mirror Media' },
           { name: 'twitter:description', content: _description },
           { name: 'twitter:image', content: _image },
           { property: 'og:description', content: _description },
           { property: 'og:image', content: _image },
           { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:site_name', content: '鏡傳媒 Mirror Media' },
+          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:title', content: _title },
         ]
       }
