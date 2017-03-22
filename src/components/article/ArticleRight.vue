@@ -2,7 +2,7 @@
   <section class="list-container">
 
     <div class="list-narrow">
-      <router-link :to="getHref(article[0])"><div>
+      <router-link :to="getHref(article[0])" :id="'latest-'+ getName(article[0])"><div>
         <div class="list-narrow__img" 
           :style="{ backgroundImage: 'url(' + getImage(article[0], 'mobile') + ')' }"></div>
         <div class="list-narrow__title" :class="getSection(article[0])">
@@ -10,7 +10,7 @@
           <p v-text="getBrief(article[0], 42)"></p>
         </div>
       </div></router-link>
-      <router-link :to="getHref(article[1])"><div>
+      <router-link :to="getHref(article[1])" :id="'latest-'+ getName(article[1])"><div>
         <div class="list-narrow__img"
           :style="{ backgroundImage: 'url(' + getImage(article[1], 'mobile') + ')' }"></div>
         <div class="list-narrow__title" :class="getSection(article[1])">
@@ -21,7 +21,7 @@
     </div>
 
     <div class="list-narrow">
-      <router-link :to="getHref(article[2])"><div>
+      <router-link :to="getHref(article[2])" :id="'latest-'+ getName(article[2])"><div>
         <div class="list-narrow__img"
           :style="{ backgroundImage: 'url(' + getImage(article[2], 'mobile') + ')' }"></div>
         <div class="list-narrow__title" :class="getSection(article[2])">
@@ -29,7 +29,7 @@
           <p v-text="getBrief(article[2], 42)"></p>
         </div>
       </div></router-link>
-      <router-link :to="getHref(article[3])"><div>
+      <router-link :to="getHref(article[3])" :id="'latest-'+ getName(article[3])"><div>
         <div class="list-narrow__img"
           :style="{ backgroundImage: 'url(' + getImage(article[3], 'mobile') + ')' }"></div>
         <div class="list-narrow__title" :class="getSection(article[3])">
@@ -39,7 +39,7 @@
       </div></router-link>
     </div>
 
-     <router-link :to="getHref(article[4])" class="list-wide"><div class="list-wide__img" :style="{ backgroundImage: 'url(' + getImage(article[4], 'desktop') + ')' }">
+     <router-link :to="getHref(article[4])" :id="'latest-'+ getName(article[4])" class="list-wide"><div class="list-wide__img" :style="{ backgroundImage: 'url(' + getImage(article[4], 'desktop') + ')' }">
       <div class="list-wide__title" :class="getSection(article[4])">
         <h2 :class="getSection(article[4])" v-text="getTitle(article[4].title)"></h2>
         <p v-text="getBrief(article[4], 42)"></p>
@@ -50,7 +50,7 @@
 </template>
 <script>
 
-import { getBrief, getHref, getImage, getTruncatedVal } from '../../utils/comm'
+import { getBrief, getHref, getImage, getName, getTruncatedVal } from '../../utils/comm'
 import _ from 'lodash'
 import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
@@ -73,6 +73,7 @@ export default {
     getBrief,
     getHref,
     getImage,
+    getName,
     getTruncatedVal,
     getTitle(title) {
       return truncate(title, 20)

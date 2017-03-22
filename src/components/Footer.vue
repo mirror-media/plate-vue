@@ -1,23 +1,23 @@
 <template>
   <footer :class="ifShowShareBottom">
     <div class="left mobile-hide">
-      <div><span><a href="https://docs.google.com/a/mirrormedia.mg/forms/d/e/1FAIpQLSfrEEGd5Qv160mquHj6H0flpbgliARY0kiLY9WjTYwnV8pBkA/viewform?c=0&w=1">訂閱鏡週刊</a></span></div>
-      <div><span><a href="https://www.mirrormedia.mg/story/ad1018001/index.html?utm_source=mm&utm_medium=footer&utm_campaign=salesteam">廣告合作</a></span></div>
-      <div><span><a href="https://www.mirrormedia.mg/category/campaign">活動專區</a></span></div>
-      <div><span><a href="http://hyperurl.co/mmfooter">下載ＡＰＰ</a></span></div>
+      <div><span><a id="footer-subscribe" href="https://docs.google.com/a/mirrormedia.mg/forms/d/e/1FAIpQLSfrEEGd5Qv160mquHj6H0flpbgliARY0kiLY9WjTYwnV8pBkA/viewform?c=0&w=1">訂閱鏡週刊</a></span></div>
+      <div><span><a id="footer-ad" href="https://www.mirrormedia.mg/story/ad1018001/index.html?utm_source=mm&utm_medium=footer&utm_campaign=salesteam">廣告合作</a></span></div>
+      <div><span><a id="footer-activity" href="https://www.mirrormedia.mg/category/campaign">活動專區</a></span></div>
+      <div><span><a id="footer-download" href="http://hyperurl.co/mmfooter">下載ＡＰＰ</a></span></div>
     </div>
     <div class="share mobile-hide">
-      <a class="item" :href="SOCIAL_LINK.LINE" ><img src="/public/icon/line@2x.png" class="footer-icon line" /></a>
-      <a class="item" :href="SOCIAL_LINK.WEIBO" ><img src="/public/icon/weibo@2x.png" class="footer-icon weibo" /></a>
-      <a class="item" :href="SOCIAL_LINK.FACEBOOK" ><img src="/public/icon/facebook@2x.png" class="footer-icon facebook" /></a>
-      <a class="item" :href="SOCIAL_LINK.INSTAGRAM" ><img src="/public/icon/instagram@2x.png" class="footer-icon instagram" /></a>
-      <a class="item" :href="SOCIAL_LINK.FEED" ><img src="/public/icon/feed@2x.png" class="footer-icon feed" /></a>
-      <a class="item" :href="SOCIAL_LINK.EMAIL" ><img src="/public/icon/mail@2x.png" class="footer-icon mail" /></a>
+      <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" ><img src="/public/icon/line@2x.png" class="footer-icon line" /></a>
+      <a class="item" id="footer-weibo" :href="SOCIAL_LINK.WEIBO" ><img src="/public/icon/weibo@2x.png" class="footer-icon weibo" /></a>
+      <a class="item" id="footer-fb" :href="SOCIAL_LINK.FACEBOOK" ><img src="/public/icon/facebook@2x.png" class="footer-icon facebook" /></a>
+      <a class="item" id="footer-ig" :href="SOCIAL_LINK.INSTAGRAM" ><img src="/public/icon/instagram@2x.png" class="footer-icon instagram" /></a>
+      <a class="item" id="footer-feed" :href="SOCIAL_LINK.FEED" ><img src="/public/icon/feed@2x.png" class="footer-icon feed" /></a>
+      <a class="item" id="footer-email" :href="SOCIAL_LINK.EMAIL" ><img src="/public/icon/mail@2x.png" class="footer-icon mail" /></a>
     </div>
     <div class="share-mobile mobile-only">
-      <div class="share-mobile_btn"><i class="icon line" @click="shareLine"></i></div>
-      <div class="share-mobile_btn"><i class="icon facebook" @click="shareFacebook"></i></div>
-      <div class="share-mobile_btn"><i class="icon google-plus" @click="shareGooglePlus"></i></div>
+      <a class="share-mobile_btn" id="footer-line"><i class="icon line" @click="shareLine"></i></a>
+      <a class="share-mobile_btn" id="footer-fb"><i class="icon facebook" @click="shareFacebook"></i></a>
+      <a class="share-mobile_btn" id="footer-googleplus"><i class="icon google-plus" @click="shareGooglePlus"></i></a>
     </div>
   </footer>
 </template>

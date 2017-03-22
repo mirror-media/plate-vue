@@ -1,6 +1,6 @@
 <template>
   <section class="articleList container">
-    <router-link :to="getHref(item)" v-for="item in articles" class="articleList-block">
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articles" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
       <div class="articleList__content" :class="getSection(item)">

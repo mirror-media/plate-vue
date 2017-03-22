@@ -1,6 +1,6 @@
 <template>
  <div class="more">
-   <button @click="loadMore()"><span>更多文章</span></button>
+   <button @click="loadMore()" id="loadmore"><span>更多文章</span></button>
  </div>
 </template>
 

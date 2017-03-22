@@ -62,6 +62,10 @@ export function getImage(article, size) {
     }
 }
 
+export function getName(article) {
+    return _.get(article, ['name'])
+}
+
 export function getSection(article) {
     switch (_.get(article, ['style'])) {
         case 'article':

@@ -3,7 +3,7 @@
     <app-slider class="editorChoice-slides grid grid-4-fifth desktop-only" slideId="editorChoiceSlider" :option="sliderOption">
       <template scope="props">
         <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice">
-          <router-link :to="getHref(item)">
+          <router-link :to="getHref(item)" :id="'choices-' + item.name">
             <div :id="'slide-' + index" class="editorChoice-image"
             :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }">
             </div>
@@ -12,7 +12,7 @@
       </template>
     </app-slider>
     <div class="editorChoice-list grid grid-1-fifth desktop-only">
-      <router-link v-for="(item, index) in editorChoice" :to="getHref(item)"
+      <router-link v-for="(item, index) in editorChoice" :to="getHref(item) " :id="'choices-' + item.name"
             :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
             :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
             @click="jumpToSlideForParent">
@@ -21,11 +21,11 @@
     </div>
     <div class="editorChoice-list mobile-only">
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice-list-post">
-        <router-link :to="getHref(item)" class="editorChoice-list-post__img">
+        <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice-list-post__img">
           <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure>
         </router-link>
         <div class="editorChoice-list-post__title" :class="getSection(item)">
-          <router-link :to="getHref(item)" ><h2 v-text="getTitle(item, 24)"></h2></router-link>
+          <router-link :to="getHref(item)" :id="'choices-' + item.name"><h2 v-text="getTitle(item, 24)"></h2></router-link>
         </div>
       </div>
     </div>
