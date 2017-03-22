@@ -32,7 +32,8 @@
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
               <!--<vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>-->
             </pop-list>
-            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'photography')" slot="relatedlistBottom" />            
+            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'photography')" slot="relatedlistBottom" />
+            <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
@@ -44,14 +45,16 @@
         <share-tools />
       </div>
       <div v-else-if="(articleStyle === 'photography')">
-        <article-body-photography :articleData="articleData" :viewport="viewport" />
+        <article-body-photography :articleData="articleData" :viewport="viewport">
+          <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+        </article-body-photography>
       </div>
     </template>
   </vue-dfp-provider>
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_UNITS, SECTION_MAP } from '../constants'
+  import { DFP_ID, DFP_UNITS, SECTION_MAP, SITE_URL } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
@@ -173,6 +176,10 @@
       }
     },
     computed: {
+      articleUrl() {
+        console.log('slug change', this.currArticleSlug)
+        return `${SITE_URL}/story/${this.currArticleSlug}/`
+      },
       articleData() {
         const _data = _.find(_.get(this.$store, [ 'state', 'articles', 'items']), { 'slug' : this.currArticleSlug })
         return _data ? _data : {}
@@ -185,7 +192,13 @@
       },
       commonData () { 
         return this.$store.state.commonData 
+      },
+      fbAppId() {
+        return _.get(this.$store, [ 'state', 'fbAppId' ])
       }, 
+      fbCommentDiv() {
+        return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
+      },
       heroCaption() {
         return _.get(this.articleData, [ 'heroCaption' ], '')
       },
@@ -234,6 +247,14 @@
       getValue(o = {}, p = [], d = '') {
         return _.get(o, p, d);
       },
+      insertFbSdkScript() {
+        const fbSdkScript = document.createElement('script')
+        fbSdkScript.setAttribute('id', 'fbsdk')
+        fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + this.fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
+        fbSdkScript.async = true
+        fbSdkScript.type = 'text/javascript'
+        document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
+      },
       updateViewport() {
         const browser = typeof window !== 'undefined'
         if(browser) {
@@ -242,17 +263,13 @@
       },
     },
     mounted() {
-      const { fbAppId } = _.get(this.$store, [ 'state' ])
-      const fbSdkScript = document.createElement('script')
-      fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
-      fbSdkScript.async = true
-      fbSdkScript.type = 'text/javascript'
-      document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
+      this.insertFbSdkScript()
       this.updateViewport()
       this.clientSideFlag = (process.env.VUE_ENV === 'client') ? true : false
       window.addEventListener('resize', () => {
         this.updateViewport()
       })
+      console.log('article mounted')
     },
     metaInfo() {
       const { 
@@ -297,7 +314,17 @@
           { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
         ]
       }
-    }
+    },
+    watch: {
+      articleUrl: () => {
+        window.FB && window.FB.init({
+          appId      : this.fbAppId,
+          xfbml      : true,
+          version    : 'v2.0'
+        })
+        window.FB && window.FB.XFBML.parse()
+      }
+    },
   }
 
 </script>

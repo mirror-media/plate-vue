@@ -55,9 +55,7 @@
       <div class="article_main_proj">
         <proj-list :projects="projlistData" :viewport="viewport" />
       </div>
-      <div class="article_fb_comment" style="margin: 1.5em 0;">
-        <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
-      </div>
+      <slot name="slot_fb_comment"></slot>
     </main>
     <slot name="aside"></slot>
   </div>
@@ -76,10 +74,6 @@ export default {
     'app-slider': Slider
   },
   computed: {
-    articleUrl() {
-      const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-      return `${SITE_URL}/story/${slug}/`
-    },
     articleStyle() {
       return _.get(this.articleData, [ 'style' ], '')
     },

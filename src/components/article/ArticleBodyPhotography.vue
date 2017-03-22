@@ -42,9 +42,7 @@
     <section class="pic-section latest">
       <div class="credit" v-html="credit"></div>
       <related-list-thumbnail :relatedList="relatedList"/>
-      <div class="article_fb_comment">
-        <div class="fb-comments" v-bind:data-href="articleUrl" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>
-      </div>
+      <slot name="slot_fb_comment"></slot>
     </section>
     <div class="go-next-page" @click="goNextPage" :class="goNextPageClass"></div>
     <div class="btn-toggle-description" :class="switchStatus" @click="toggleDesc">
@@ -73,10 +71,6 @@
       'related-list-thumbnail': RelatedListWithThumbnail
     },
     computed: {
-      articleUrl() {
-        const { slug } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ])
-        return `${SITE_URL}/story/${slug}/`
-      },
       brief() {
         const { brief } = this.articleData
         return brief
