@@ -57,6 +57,8 @@
       }
     },
     mounted() {
+      window.shareBoxTop = undefined
+      window.shareBoxLeft = undefined
       this.fixToolBox()
     },
     name: 'share-tools',
@@ -70,6 +72,7 @@
     width 30px
     opacity 0
     box-shadow 0 0 10px rgba(0, 0, 0, 0.5)
+    transition opacity 0.25s
 
     .item
       width 100%
