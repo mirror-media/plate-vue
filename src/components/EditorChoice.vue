@@ -3,29 +3,29 @@
     <app-slider class="editorChoice-slides grid grid-4-fifth desktop-only" slideId="editorChoiceSlider" :option="sliderOption">
       <template scope="props">
         <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice">
-          <a :href="getHref(item)" target="_blank">
+          <router-link :to="getHref(item)">
             <div :id="'slide-' + index" class="editorChoice-image"
             :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }">
             </div>
-          </a>
+          </router-link>
         </swiper-slide>
       </template>
     </app-slider>
     <div class="editorChoice-list grid grid-1-fifth desktop-only">
-      <a v-for="(item, index) in editorChoice" :href="getHref(item)"  target="_blank"
+      <router-link v-for="(item, index) in editorChoice" :to="getHref(item)"
             :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
             :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
             @click="jumpToSlideForParent">
         <span v-text="item.title" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
-      </a>
+      </router-link>
     </div>
     <div class="editorChoice-list mobile-only">
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice-list-post">
-        <a :href="getHref(item)" target="_blank" class="editorChoice-list-post__img">
+        <router-link :to="getHref(item)" class="editorChoice-list-post__img">
           <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure>
-        </a>
+        </router-link>
         <div class="editorChoice-list-post__title" :class="getSection(item)">
-          <a :href="getHref(item)" target="_blank"><h2 v-text="getTitle(item, 24)"></h2></a>
+          <router-link :to="getHref(item)" ><h2 v-text="getTitle(item, 24)"></h2></router-link>
         </div>
       </div>
     </div>
