@@ -68,6 +68,7 @@ import { DFP_UNITS, SECTION_MAP, SITE_URL } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
+import moment from 'moment'
 
 export default {
   components: {
@@ -108,10 +109,8 @@ export default {
     date() {
       const { publishedDate = '' } = this.articleData
       const normalizedDt = new Date(publishedDate)
-      const mm = normalizedDt.getMonth() + 1;
-      const dd = normalizedDt.getDate();
-
-      return [ normalizedDt.getFullYear(), (mm>9 ? '' : '0') + mm, (dd>9 ? '' : '0') + dd ].join('.')
+      const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
+      return datetime
     },
     popularlist() {
       const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ], {})
@@ -156,6 +155,7 @@ export default {
     getHref,
     getTruncatedVal,
     getValue,
+    moment,
     paragraphComposer(item) {
       switch(item.type) {
         case 'blockquote':
