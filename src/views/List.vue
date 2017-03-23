@@ -10,8 +10,7 @@
           <div class="topic-title"><h1></h1></div>
           <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
         </div>
-        <!--<div v-if="type !== 'TOPIC'" id="dfp-test" class="dfp-test"></div>-->
-        <!-- <vue-dfp :is="props.vueDfp" pos="SPCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" />  -->
+        <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" :dfpId="props.dfpId" />
         <div class="list-title container" :class="section">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="section"></div>
@@ -25,7 +24,7 @@
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
         <section class="footer container">
-          <!-- <vue-dfp :is="props.vueDfp" pos="SPCFT" :dfpUnits="props.dfpUnits" :section="props.section" /> -->
+          <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
           <app-footer />
         </section>
       </div>

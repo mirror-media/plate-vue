@@ -3,7 +3,7 @@
     <template scope="props" slot="dfpPos">
       <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
-        <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
+        <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
@@ -23,11 +23,13 @@
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside desktop-only" slot="aside" v-if="ifSingleCol">
-              <vue-dfp :is="props.vueDfp" pos="PCR1" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
+              <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" ></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <vue-dfp :is="props.vueDfp" pos="PCR2" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
+              <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" ></vue-dfp>
               <related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderAside" />
             </aside>
+            <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
               <!--<vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>-->
             </pop-list>
@@ -35,7 +37,7 @@
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" :dfpUnits="props.dfpUnits" :section="props.section"></vue-dfp> 
+            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
@@ -131,15 +133,16 @@
     },
     beforeRouteUpdate(to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
-        const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
+        const sections = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
+        console.log('section', _.get(sections, [ 0, 'id' ]))
         return fetchLatestArticle(store, {
           sort: '-publishedDate',
           where: {
             'sections': _.get(sections, [ 0, 'id' ])
           }
+        }).then(() => {
+          next()
         })
-      }).then(() => {
-        next()
       })
     },
     beforeMount() {
@@ -341,7 +344,6 @@
 
     .article-heromedia
       margin 0 auto
-      padding-top 30px
       background-color #fff
       max-width 1160px
 
@@ -386,7 +388,7 @@
       max-width 1160px
       background-color #fff
       margin 0 auto
-      padding-top 30px
+      padding 20px 0
 
     a, a:hover, a:link, a:visited
       display inline

@@ -76,7 +76,7 @@ const store = new Vuex.Store({
                     commonData[e] = state.commonData[e]
                 })
                 commit('SET_COMMONDATA', { commonData })
-                _.get(state, ['latestArticles', 'items', 'length'], 0) !== 0 ? null : commit('SET_POSTVUE', {commonData})
+                _.get(state, ['latestArticles', 'items', 'length'], 0) !== 0 ? null : commit('SET_POSTVUE', { commonData })
                 const _latestArticles = _.get(commonData, ['postsVue'])
                 _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
                 _latestArticles ? commit('SET_TAGS', _latestArticles) : null
@@ -102,11 +102,9 @@ const store = new Vuex.Store({
         },
 
         FETCH_LATESTARTICLE: ({ commit, state }, { params }) => {
-            let orig = _.values(state.latestArticle['items'])
             return state.latestArticle.items && params.page < 2 ?
                 Promise.resolve(state.latestArticle) :
                 fetchLatestArticle(params).then(latestArticle => {
-                    latestArticle['items'] = _.concat(orig, _.get(latestArticle, ['items']))
                     commit('SET_LATESTARTICLE', { latestArticle })
                     commit('SET_AUTHORS', latestArticle)
                     commit('SET_TAGS', latestArticle)
@@ -171,7 +169,7 @@ const store = new Vuex.Store({
     },
 
     mutations: {
-        
+
         SET_ARTICLES: (state, { articles }) => {
             Vue.set(state, 'articles', articles)
         },

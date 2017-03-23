@@ -1,22 +1,28 @@
 <template>
-  <div class="home-view">
-    <section style="width: 100%;">
-      <app-Header v-if="true" :commonData= 'commonData' />
-    </section>
-    <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
-    <editor-choice :editorChoice= 'editorChoice'/>
-    <section class="container list">
-      <latest-article :latestArticle= 'latestArticle' />
-      <latest-project :projects= 'projects' />
-    </section>
-    <loading :show="loading" />
-    <section class="container">
-      <more v-if="hasMore" v-on:loadMore="loadMore" />
-    </section>
-    <section class="container">
-      <app-footer />
-    </section>
-  </div>
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home">
+    <template scope="props" slot="dfpPos">
+      <div class="home-view">
+        <section style="width: 100%;">
+          <app-Header v-if="true" :commonData= 'commonData' />
+        </section>
+        <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
+        <editor-choice :editorChoice= 'editorChoice'/>
+        <section class="container list">
+          <latest-article :latestArticle= 'latestArticle' />
+          <latest-project :projects= 'projects' />
+        </section>
+        <loading :show="loading" />
+        <section class="container">
+          <more v-if="hasMore" v-on:loadMore="loadMore" />
+        </section>
+        <section class="container">
+          <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <app-footer />
+        </section>
+      </div>
+    </template>
+  </vue-dfp-provider>
 </template>
 
 <script>
@@ -79,6 +85,7 @@ export default {
     'leading': Leading,
     'loading': Loading,
     'more': More,
+    VueDfpProvider
   },
   preFetch: fetchSSRData,
   beforeRouteEnter (to, from, next) {

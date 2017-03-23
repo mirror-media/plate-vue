@@ -23,7 +23,7 @@
     "express": "^4.14.0",
     "humps": "^2.0.0",
     "kc-scroll": "^0.2.2",
-    "kc-vue-dfp": "^0.1.8",
+    "kc-vue-dfp": "^0.9.1",
     "less": "^2.7.2",
     "lodash": "^4.17.4",
     "lru-cache": "^4.0.2",

@@ -43,8 +43,7 @@
       </div>
       <div class="split-line"></div>
       <div style="display: flex; justify-content: space-around;">
-        <!-- <vue-dfp :is="props.vueDfp" pos="PCE1"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" pos="PCE2"></vue-dfp> -->
+        <slot name="dfpad-set"></slot>
       </div>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
@@ -320,6 +319,7 @@ export default {
       
       .article_main_pop 
         clear both
+        margin-top 40px
       
       .article_main_tags 
         clear both
