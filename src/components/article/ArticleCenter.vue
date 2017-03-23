@@ -2,46 +2,46 @@
   <section class="list-container">
 
     <div class="list-narrow">
-      <router-link :to="getHref(article[5])" :id="'latest-'+ getName(article[5])"><div>
+      <router-link :to="getHref(article[0])" :id="'latest-'+ getName(article[0])"><div>
         <div class="list-narrow__img" 
-          :style="{ backgroundImage: 'url(' + getImage(article[5], 'mobile') + ')' }"></div>
-        <div class="list-narrow__title" :class="getSection(article[5])">
-          <h2 v-text="getTitle(article[5].title)" :class="getSection(article[5])"></h2>
-          <p v-text="getBrief(article[5], 42)"></p>
+          :style="{ backgroundImage: 'url(' + getImage(article[0], 'mobile') + ')' }"></div>
+        <div class="list-narrow__title" :class="getSection(article[0])">
+          <h2 v-text="getTitle(article[0].title)" :class="getSection(article[0])"></h2>
+          <p v-text="getBrief(article[0], briefAmount)"></p>
         </div>
       </div></router-link>
-      <router-link :to="getHref(article[6])" :id="'latest-'+ getName(article[6])"><div>
+      <router-link :to="getHref(article[1])" :id="'latest-'+ getName(article[1])"><div>
         <div class="list-narrow__img"
-          :style="{ backgroundImage: 'url(' + getImage(article[6], 'mobile') + ')' }"></div>
-        <div class="list-narrow__title" :class="getSection(article[6])">
-          <h2 v-text="getTitle(article[6].title)" :class="getSection(article[6])"></h2>
-          <p v-text="getBrief(article[6], 42)"></p>
+          :style="{ backgroundImage: 'url(' + getImage(article[1], 'mobile') + ')' }"></div>
+        <div class="list-narrow__title" :class="getSection(article[1])">
+          <h2 v-text="getTitle(article[1].title)" :class="getSection(article[1])"></h2>
+          <p v-text="getBrief(article[1], briefAmount)"></p>
         </div>
       </div></router-link>
     </div>
 
-    <router-link :to="getHref(article[7])" :id="'latest-'+ getName(article[7])" class="list-wide"><div class="list-wide__img" :style="{ backgroundImage: 'url(' + getImage(article[7], 'desktop') + ')' }">
-      <div class="list-wide__title" :class="getSection(article[7])">
-        <h2 v-text="getTitle(article[7].title)" :class="getSection(article[7])"></h2>
-        <p v-text="getBrief(article[7], 42)"></p>
+    <router-link :to="getHref(article[2])" :id="'latest-'+ getName(article[2])" class="list-wide"><div class="list-wide__img" :style="{ backgroundImage: 'url(' + getImage(article[2], 'desktop') + ')' }">
+      <div class="list-wide__title" :class="getSection(article[2])">
+        <h2 v-text="getTitle(article[2].title)" :class="getSection(article[2])"></h2>
+        <p v-text="getBrief(article[2], briefAmount)"></p>
       </div>
     </div></router-link>
 
     <div class="list-narrow">
-      <router-link :to="getHref(article[8])" :id="'latest-'+ getName(article[8])"><div>
+      <router-link :to="getHref(article[3])" :id="'latest-'+ getName(article[3])"><div>
         <div class="list-narrow__img"
-          :style="{ backgroundImage: 'url(' + getImage(article[8], 'mobile') + ')' }"></div>
-        <div class="list-narrow__title" :class="getSection(article[8])">
-          <h2 v-text="getTitle(article[8].title)" :class="getSection(article[8])"></h2>
-          <p v-text="getBrief(article[8], 42)"></p>
+          :style="{ backgroundImage: 'url(' + getImage(article[3], 'mobile') + ')' }"></div>
+        <div class="list-narrow__title" :class="getSection(article[3])">
+          <h2 v-text="getTitle(article[3].title)" :class="getSection(article[3])"></h2>
+          <p v-text="getBrief(article[3], briefAmount)"></p>
         </div>
       </div></router-link>
-      <router-link :to="getHref(article[9])" :id="'latest-'+ getName(article[9])"><div>
+      <router-link :to="getHref(article[4])" :id="'latest-'+ getName(article[4])"><div>
         <div class="list-narrow__img"
-          :style="{ backgroundImage: 'url(' + getImage(article[9], 'mobile') + ')' }"></div>
-        <div class="list-narrow__title" :class="getSection(article[9])">
-          <h2 v-text="getTitle(article[9].title)" :class="getSection(article[9])"></h2>
-          <p v-text="getBrief(article[9], 42)"></p>
+          :style="{ backgroundImage: 'url(' + getImage(article[4], 'mobile') + ')' }"></div>
+        <div class="list-narrow__title" :class="getSection(article[4])">
+          <h2 v-text="getTitle(article[4].title)" :class="getSection(article[4])"></h2>
+          <p v-text="getBrief(article[4], briefAmount)"></p>
         </div>
       </div></router-link>
     </div>
@@ -62,9 +62,7 @@ export default {
     return {
     }
   },
-  props: {
-    article: {}
-  },
+  props: ['article', 'briefAmount'],
   computed: {
     
   },

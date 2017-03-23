@@ -1,9 +1,9 @@
 <template>
   <section id="latestArticle" class="latestArticle">
-    <template v-for="(item, index) in article">
-      <article-right :article='item' :index="index" />
-      <article-center :article='item' /> 
-      <article-left :article='item' /> 
+    <template v-for="(item, index) in articles">
+      <article-right :article="item" :briefAmount="briefAmount" v-if="(index+1)%3 == 1"/>
+      <article-center :article="item" :briefAmount="briefAmount" v-if="(index+1)%3 == 2"/>
+      <article-left :article="item" :briefAmount="briefAmount" v-if="(index+1)%3 == 0"/>
     </template>
   </section>
 </template>
@@ -17,6 +17,8 @@ import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 
+const briefAmount = 42
+
 export default {
   name: 'latestArticle',
   components: {
@@ -26,6 +28,7 @@ export default {
   },
   data () {
     return {
+      briefAmount: briefAmount
     }
   },
   props: {
@@ -35,9 +38,9 @@ export default {
     vueDfp: {}
   },
   computed: {
-    article() {
-      let showArticles = _.take(this.latestArticle, 15 * Math.floor(this.latestArticle.length / 15))
-      return _.chunk(showArticles, 15)
+    articles() {
+      let showArticles = _.take(this.latestArticle, 5 * Math.floor(this.latestArticle.length / 5))
+      return _.chunk(showArticles, 5)
     },
   },
   methods: {
