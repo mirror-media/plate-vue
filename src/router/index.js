@@ -1,3 +1,4 @@
+import { GAID } from '../constants/index'
 import Vue from 'vue'
 import Router from 'vue-router'
 import Meta from 'vue-meta'
@@ -12,7 +13,7 @@ import Questionnaire from '../views/Questionnaire.vue'
 import Search from '../views/Search.vue'
 import TimelineView from '../views/TimelineView.vue'
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     scrollBehavior: () => ({ y: 0 }),
     routes: [
@@ -37,3 +38,17 @@ export default new Router({
         { path: '*', redirect: '/404' }
     ]
 })
+
+if(process.env.VUE_ENV === 'client') {
+    ga('create', GAID, 'auto');
+}
+
+router.afterEach(route => {
+    if(process.env.VUE_ENV === 'client') {
+        setTimeout(() => ga('send', 'pageview', route.path), 500)
+    }
+})
+
+
+
+export default router

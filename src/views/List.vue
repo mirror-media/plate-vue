@@ -297,7 +297,6 @@ const fetchData = (store) => {
     const _sectionStyle = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': store.state.route.params.title } ), ['style'] )
     
     return fetchListData(store, _type, _sectionStyle)
-    
 
     if(_type === TOPIC) {
       const _uuid = store.state.route.params.topicId
@@ -343,7 +342,6 @@ export default {
     let type = _.toUpper( _.split( to.path, '/' )[1] )
     if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
       next(vm => {
-        console.log('fetch again')
         let sectionStyle = _.get( _.find( _.get(vm.$store.state.commonData, ['sections', 'items']), 
           { 'name': _.get(to, ['params', 'title']) } ), ['style'] )
         fetchCommonData(vm.$store).then(() => {
@@ -365,13 +363,11 @@ export default {
   },
   data () {
     return {
-      audios: this.$store.state.audios,
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
       loading: false,
       page: PAGE,
-      playlist: this.$store.state.playlist,
     }
   },
   computed: {
@@ -383,6 +379,9 @@ export default {
         default:
           return this.$store.state.articlesByUUID
       }
+    },
+    audios () {
+      return this.$store.state.audios
     },
     customCSS () { 
       switch(this.type) {
@@ -466,6 +465,9 @@ export default {
         default:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['style'], 'feature' )
       }
+    },
+    playlist () {
+      return this.$store.state.playlist
     },
     tag () {
       return _.get(this.$store.state, [ 'tag' ] )
@@ -605,7 +607,7 @@ export default {
     },
   },
   metaInfo () {
-    let title = '鏡週刊 Mirror Media'
+    let title = this.title + ' - 鏡週刊 Mirror Media'
     let description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
 
     return {
