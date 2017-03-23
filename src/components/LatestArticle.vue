@@ -75,6 +75,8 @@ $color-other = #bcbcbc
         p
           display none
         h2
+          font-size 1.5rem
+          line-height 2rem
           padding .5em
           margin 0
       
@@ -291,7 +293,7 @@ $color-other = #bcbcbc
             margin 0
             font-weight normal
             font-size .9rem
-            line-height 1rem
+            line-height 1.2rem
             border-left none
 
 

@@ -187,6 +187,9 @@ $color-other = #bcbcbc
       padding 0 1em
       border-bottom 1px solid rgba(204, 204, 204, 0.75);
       cursor: pointer
+      > span
+        font-size 1rem
+        line-height 1.5rem
       &:last-child
         border-bottom none
       &.active
@@ -210,6 +213,8 @@ $color-other = #bcbcbc
         &__title
           padding .5em 1em
           h2
+            font-size 1.5rem
+            line-height 2rem
             margin 0
           &.news-people
             border-left 8px solid $color-news

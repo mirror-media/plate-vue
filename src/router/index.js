@@ -12,7 +12,7 @@ import Questionnaire from '../views/Questionnaire.vue'
 import Search from '../views/Search.vue'
 import TimelineView from '../views/TimelineView.vue'
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     scrollBehavior: () => ({ y: 0 }),
     routes: [
@@ -37,3 +37,13 @@ export default new Router({
         { path: '*', redirect: '/404' }
     ]
 })
+
+router.afterEach(route => {
+    if(process.env.VUE_ENV === 'client') {
+        setTimeout(() => ga('send', 'pageview', route.path), 500)
+    }
+})
+
+
+
+export default router
