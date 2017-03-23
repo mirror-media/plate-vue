@@ -1,3 +1,4 @@
+import { GAID } from '../constants/index'
 import Vue from 'vue'
 import Router from 'vue-router'
 import Meta from 'vue-meta'
@@ -37,6 +38,10 @@ const router = new Router({
         { path: '*', redirect: '/404' }
     ]
 })
+
+if(process.env.VUE_ENV === 'client') {
+    ga('create', GAID, 'auto');
+}
 
 router.afterEach(route => {
     if(process.env.VUE_ENV === 'client') {
