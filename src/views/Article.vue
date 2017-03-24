@@ -30,8 +30,10 @@
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
-            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
-              <!--<vue-dfp :is="props.vueDfp" pos="PCPOP" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad"/>-->
+            <pop-list :pop="popularlist" :props="props" slot="poplist" v-if="ifShowPoplist">
+              <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3"/>
+              <vue-dfp :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5"/>
+              <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9"/>
             </pop-list>
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'photography')" slot="relatedlistBottom" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
@@ -294,12 +296,12 @@
         title = '',
         topics = {}
       } = this.articleData
-      const categorieId = _.get(categories, [ 0, 'id' ], '')
+      const categorieName = _.get(categories, [ 0, 'name' ], '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const pureBrief = truncate(sanitizeHtml(_.get(brief, [ 'html' ], ''), { allowedTags: [ 'em' ] }), 200)
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
-      const sectionId = _.get(sections, [ 0, 'id' ], '')
+      const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
 
       return {
@@ -307,8 +309,8 @@
         meta: [
           { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說,' + pureTags.toString() },
           { name: 'description', content: pureBrief },
-          { name: 'section-id', content: sectionId },
-          { name: 'category-id', content: categorieId },
+          { name: 'section-name', content: sectionName },
+          { name: 'category-name', content: categorieName },
           { name: 'topic-id', content: topicId },
           { name: 'twitter:card', content: 'summary_large_image' },
           { name: 'twitter:title', content: (ogTitle.length > 0) ? ogTitle + ' － 鏡週刊 Mirror Media' : title + ' － 鏡週刊 Mirror Media' },

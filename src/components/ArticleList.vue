@@ -1,6 +1,33 @@
 <template>
   <section class="articleList container">
-    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articles" class="articleList-block">
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA3" class="articleList-block">
+      <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
+      </div>
+      <div class="articleList__content" :class="getSection(item)">
+        <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+        <p v-text="getBrief(item, 45)"></p>
+      </div>
+    </router-link>
+    <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA5" class="articleList-block">
+      <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
+      </div>
+      <div class="articleList__content" :class="getSection(item)">
+        <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+        <p v-text="getBrief(item, 45)"></p>
+      </div>
+    </router-link>
+    <vue-dfp :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA9" class="articleList-block">
+      <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
+      </div>
+      <div class="articleList__content" :class="getSection(item)">
+        <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+        <p v-text="getBrief(item, 45)"></p>
+      </div>
+    </router-link>
+    <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesAfterDFPNA9" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
       <div class="articleList__content" :class="getSection(item)">
@@ -12,15 +39,29 @@
 </template>
 
 <script>
-import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../utils/comm'
 
+import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../utils/comm'
+import _ from 'lodash'
 
 export default {
   name: 'articleList',
   components: {
   },
-  props: ['articles'],
-  
+  props: ['articles', 'props'],
+  computed: {
+    articlesBeforeDFPNA3 () {
+      return _.take(this.articles, 2)
+    },
+    articlesBeforeDFPNA5 () {
+      return _.slice(this.articles, 2, 3)
+    },
+    articlesBeforeDFPNA9 () {
+      return _.slice(this.articles, 3, 6)
+    },
+    articlesAfterDFPNA9 () {
+      return _.slice(this.articles, 6)
+    }
+  },
   methods: {
     getBrief,
     getHref,

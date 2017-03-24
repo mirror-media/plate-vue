@@ -9,7 +9,7 @@
         <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" class="event" />
         <editor-choice :editorChoice= 'editorChoice'/>
         <section class="container list">
-          <latest-article :latestArticle= 'latestArticle' />
+          <latest-article :latestArticle= 'latestArticle' :props="props"/>
           <latest-project :projects= 'projects' />
         </section>
         <loading :show="loading" />
