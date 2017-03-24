@@ -167,14 +167,15 @@ export default {
                       <div class="info-box-body">${_.get(item.content, [ 0, 'body' ], '')}</div>
                     </div>
                   </div>`
-        case 'slideshow':
-          return `<div class=\"slideshowImg\">
-                    <img data-src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\"
-                         data-srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
-                                       ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
-                                       ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"
-                         class=\"swiper-lazy\"/>
-                  </div>`
+        case 'ordered-list-item':
+          const _liStrOrdered = item.content.map((i) => {
+            if(typeof(i) !== 'object') {
+              return `<li>${i}</li>`
+            } else {
+              return i.map((j) => (`<li>${j}</li>`)).join('')
+            }
+          }).join('')
+          return `<ol class="${_.get(item, [ 'alignment' ], '')} ordered-list-item">${_liStrOrdered}</ol>`
         case "quoteby":
           const quoteBody = _.get(item.content, [ 0, 'quote' ], '')
           const quoteBy = _.get(item.content, [ 0, 'quoteBy' ], '')
@@ -184,15 +185,23 @@ export default {
                       ${(quoteBy.length > 0) ? `<div class="quote-by">${quoteBy}</div>` : ``}
                     </div>
                   </blockquote>`
+        case 'slideshow':
+          return `<div class=\"slideshowImg\">
+                    <img data-src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\"
+                         data-srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
+                                       ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
+                                       ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"
+                         class=\"swiper-lazy\"/>
+                  </div>`
         case 'unordered-list-item':
-          const _liStr = item.content.map((i) => {
+          const _liStrUnordered = item.content.map((i) => {
             if(typeof(i) !== 'object') {
               return `<li>${i}</li>`
             } else {
               return i.map((j) => (`<li>${j}</li>`)).join('')
             }
           }).join('')
-          return `<ul class="${_.get(item, [ 'alignment' ], '')}">${_liStr}</ul>`
+          return `<ul class="${_.get(item, [ 'alignment' ], '')} unordered-list-item">${_liStrUnordered}</ul>`
         case 'unstyled':
           return (item.content.toString().length > 0) ? `<p>${item.content.toString()}</p>` : ''
         case 'youtube':
@@ -554,7 +563,7 @@ export default {
       
       ul 
         font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
-        font-size 16px
+        font-size 1rem
         line-height 2.2
         letter-spacing 0.3px
         color rgba(0, 0, 0, 0.701961)
@@ -563,14 +572,35 @@ export default {
         margin-left 16px
         list-style none
 
-        li 
-          &::before 
-            content "• "
-            color #2d5b7b
-            font-size 30px
-            line-height 1
-            top 6px
-            position relative
+        &.unordered-list-item
+          li 
+            &::before 
+              content "• "
+              color #2d5b7b
+              font-size 30px
+              line-height 1
+              top 6px
+              position relative
+
+      ol
+        font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
+        font-size 1rem
+        line-height 2.2
+        letter-spacing 0.3px
+        color rgba(0, 0, 0, 0.701961)
+        counter-reset item 0
+        list-style none
+
+        &.ordered-list-item
+          li
+            &::before
+              content counter(item) ". "
+              counter-increment item
+              color #004ea2
+              padding-left 10px
+              padding-right 10px
+              line-height 1
+
           
     &.single-col 
       margin-top 50px
