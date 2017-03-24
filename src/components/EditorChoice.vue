@@ -16,7 +16,7 @@
             :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
             :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
             @click="jumpToSlideForParent">
-        <span v-text="item.title" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
+        <span v-text="getTitle(item, 24)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
       </router-link>
     </div>
     <div class="editorChoice-list mobile-only">

@@ -183,14 +183,14 @@ export default {
           { name: 'twitter:card', content: 'summary_large_image' },
           { name: 'twitter:title', content: title },
           { name: 'twitter:description', content: description },
-          { name: 'twitter:image', content: '/asset/logo.png' },
+          { name: 'twitter:image', content: '/public/notImage.png' },
           { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },
           { property: 'og:title', content: title },
           { property: 'og:description', content: description },
           { property: 'og:url', content: SITE_URL },
-          { property: 'og:image', content: '/asset/logo.png' },
+          { property: 'og:image', content: '/public/notImage.png' },
       ]
     }
   },

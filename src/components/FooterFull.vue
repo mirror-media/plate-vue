@@ -16,9 +16,9 @@
       </div>
       <div class="footerFull__link--horizDivider"></div>
       <div class="footerFull__link--socialMedia">
-        <a :href="socialLink.FACEBOOK" target="_blank"><img class="facebook" src="~public/icon/facebook_white.png"></a>
-        <a :href="socialLink.LINE" target="_blank"><img class="line" src="~public/icon/line_white.png"></a>
-        <a :href="socialLink.WEIBO" target="_blank"><img class="weibo" src="~public/icon/weibo_white.png"></a>
+        <a :href="socialLink.FACEBOOK" target="_blank"><img class="facebook" src="/public/icon/facebook_white.png"></a>
+        <a :href="socialLink.LINE" target="_blank"><img class="line" src="/public/icon/line_white.png"></a>
+        <a :href="socialLink.WEIBO" target="_blank"><img class="weibo" src="/public/icon/weibo_white.png"></a>
       </div>
     </div>
   </footer>
