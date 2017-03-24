@@ -6,7 +6,7 @@
           <app-Header v-if="true" :commonData= 'commonData' />
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" :class="event" />
+        <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" class="event" />
         <editor-choice :editorChoice= 'editorChoice'/>
         <section class="container list">
           <latest-article :latestArticle= 'latestArticle' />
