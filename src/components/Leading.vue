@@ -148,6 +148,16 @@ export default {
           > iframe
             max-height 100%
 
+    &.event
+      .leading-container
+        padding-top 0
+        height auto
+
+        .leading-embedded
+          .embedded
+            position static
+            display block
+
   @media (min-width 831px) and (max-width 1023px)
     .leading
       width 60%
