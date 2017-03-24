@@ -1,9 +1,12 @@
 <template>
   <section id="latestArticle" class="latestArticle">
     <template v-for="(item, index) in articles">
-      <article-right :article="item" :briefAmount="briefAmount" v-if="(index+1)%3 == 1"/>
-      <article-center :article="item" :briefAmount="briefAmount" v-if="(index+1)%3 == 2"/>
-      <article-left :article="item" :briefAmount="briefAmount" v-if="(index+1)%3 == 0"/>
+      <article-right :article="item" :briefAmount="briefAmount" :props="props" 
+        :hasDFP="index === 0" v-if="(index+1)%3 == 1"/>
+      <article-center :article="item" :briefAmount="briefAmount" :props="props" 
+        :hasDFP="index === 1" v-if="(index+1)%3 == 2"/>
+      <article-left :article="item" :briefAmount="briefAmount" :props="props" 
+        :hasDFP="index === 2" v-if="(index+1)%3 == 0"/>
     </template>
   </section>
 </template>
@@ -31,12 +34,7 @@ export default {
       briefAmount: briefAmount
     }
   },
-  props: {
-    latestArticle: {},
-    dfpUnits: {},
-    section: {},
-    vueDfp: {}
-  },
+  props: ['latestArticle', 'dfpUnits', 'props', 'section', 'vueDfp'],
   computed: {
     articles() {
       let showArticles = _.take(this.latestArticle, 5 * Math.floor(this.latestArticle.length / 5))

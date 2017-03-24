@@ -2,8 +2,46 @@
   <div class="poplist-container" v-if="(pop.length > 0)">
     <div class="pop_title"><h3>熱門文章</h3></div>
     <div class="pop_list">
-      <!--<slot name="dfpad"></slot>-->
-      <div class="pop_item" v-for="(o, i) in pop" v-if="i < 9">
+      <div class="pop_item" v-for="(o, i) in popBeforeDFPNA3">
+        <div>
+          <router-link :to="o.slug" >
+            <div class="pop_item_img"
+                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
+            </div>
+          </router-link>
+        </div>
+        <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
+          <router-link :to="o.slug" v-text="getTruncatedVal(o.title, 22)"></router-link>
+        </div>
+      </div>
+      <slot name="dfpNA3"></slot>
+      <div class="pop_item" v-for="(o, i) in popBeforeDFPNA5">
+        <div>
+          <router-link :to="o.slug" >
+            <div class="pop_item_img"
+                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
+            </div>
+          </router-link>
+        </div>
+        <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
+          <router-link :to="o.slug" v-text="getTruncatedVal(o.title, 22)"></router-link>
+        </div>
+      </div>
+      <slot name="dfpNA5"></slot>
+      <div class="pop_item" v-for="(o, i) in popBeforeDFPNA7">
+        <div>
+          <router-link :to="o.slug" >
+            <div class="pop_item_img"
+                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
+            </div>
+          </router-link>
+        </div>
+        <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
+          <router-link :to="o.slug" v-text="getTruncatedVal(o.title, 22)"></router-link>
+        </div>
+      </div>
+      <slot name="dfpNA9"></slot>
+      <div class="pop_item" v-for="(o, i) in popAfterDFPNA7">
         <div>
           <router-link :to="o.slug" >
             <div class="pop_item_img"
@@ -23,7 +61,22 @@
   import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
   import _ from 'lodash'
   export default {
-    computed: {},
+    name: 'pop-list',
+    props: ['pop', 'props'],
+    computed: {
+      popBeforeDFPNA3() {
+        return _.take(this.pop, 2)
+      },
+      popBeforeDFPNA5() {
+        return _.slice(this.pop, 2, 3)
+      },
+      popBeforeDFPNA7() {
+        return _.slice(this.pop, 3, 4)
+      },
+      popAfterDFPNA7() {
+        return _.slice(this.pop, 4, 6)
+      },
+    },
     methods: {
       getHref,
       getImage,
@@ -35,12 +88,6 @@
         return style
       }
     },
-    name: 'pop-list',
-    props: {
-      pop: {
-        default: () => {return []}
-      }
-    }
   }
 </script>
 <style lang="stylus" scoped>

@@ -45,9 +45,9 @@ export const DFP_UNITS = {
         'MBFT': { 'aduid': 'mm_mobile_other_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LPCHD': { 'aduid': 'mm_pc_other_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'margin-top-0', 'center'], 'cont-style': ['width: 970px', 'margin: 20px auto 0'] },
         'LPCFT': { 'aduid': 'mm_pc_other_970x90_FT', 'dimensions': '970x90,970x90', 'cont-class': ['ad-container'], 'cont-style': ['margin: 20px auto 0'] },
-        'LPCNA3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
-        'LPCNA5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
-        'LPCNA9': { 'aduid': 'mm_RWD_other_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
+        'LPCNA4': { 'aduid': 'mm_RWD_other_fluid_NA4', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
+        'LPCNA7': { 'aduid': 'mm_RWD_other_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
+        'LPCNA12': { 'aduid': 'mm_RWD_other_fluid_NA12', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
     },
     '57e1e0e5ee85930e00cad4e9': { // news-people
         // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page

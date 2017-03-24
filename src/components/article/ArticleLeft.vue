@@ -9,7 +9,8 @@
     </div></router-link>
 
     <div class="list-narrow">
-      <router-link :to="getHref(article[1])" :id="'latest-'+ getName(article[1])"><div>
+      <vue-dfp :is="props.vueDfp" pos="LPCNA12" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" v-if="hasDFP"/>
+      <router-link :to="getHref(article[1])" :id="'latest-'+ getName(article[1])" v-if="!hasDFP"><div>
         <div class="list-narrow__img" 
           :style="{ backgroundImage: 'url(' + getImage(article[1], 'mobile') + ')' }"></div>
         <div class="list-narrow__title" :class="getSection(article[1])">
@@ -62,7 +63,7 @@ export default {
     return {
     }
   },
-  props: ['article', 'briefAmount'],
+  props: ['article', 'briefAmount', 'hasDFP', 'props'],
   computed: {
     
   },

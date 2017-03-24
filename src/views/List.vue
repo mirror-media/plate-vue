@@ -15,7 +15,7 @@
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
-        <article-list :articles='articles.items' v-if="title !== 'Audio' && name !== 'videohub' ">
+        <article-list :articles='articles.items' :props="props" v-if="title !== 'Audio' && name !== 'videohub' ">
           <!-- <vue-dfp :is="props.vueDfp" pos="TEST" :dfpUnits="props.dfpUnits" :section="props.section"/> -->
         </article-list>
         <audio-list :audios="audios.items" v-if="title == 'Audio'" />
