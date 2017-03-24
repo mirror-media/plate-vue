@@ -11,9 +11,9 @@
           <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
         </div>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" :dfpId="props.dfpId" />
-        <div class="list-title container" :class="section">
+        <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
-          <div class="list-title__colorBlock" :class="section"></div>
+          <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
         <article-list :articles='articles.items' v-if="title !== 'Audio' && name !== 'videohub' ">
           <!-- <vue-dfp :is="props.vueDfp" pos="TEST" :dfpUnits="props.dfpUnits" :section="props.section"/> -->
@@ -32,7 +32,7 @@
       <div class="listFull-view" v-if="pageStyle == 'full'">
         <div id="dfp-HD" class="listFull-dfp dfp-HD">AD HD</div>
         <section>
-          <header-full :commonData='commonData' :section='section' :sections='commonData.sections' />
+          <header-full :commonData='commonData' :section='sectionName' :sections='commonData.sections' />
         </section>
         <article-leading :articles='articles.items' v-if="type == 'SECTION'"/>
         <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type == 'SECTION'"/>
@@ -52,7 +52,7 @@
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
         <div class="listFull-dfp dfp-FT">AD FT</div>
-        <footer-full :commonData='commonData' :section='section' />
+        <footer-full :commonData='commonData' :section='sectionName' />
       </div>
 
     </template>
@@ -425,7 +425,10 @@ export default {
           return this.$route.params.title
       }
     },
-    section () {
+    section() {
+      return _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ) 
+    },
+    sectionName () {
       switch(this.type) {
         case CATEGORY:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), (s) => { 
@@ -442,7 +445,7 @@ export default {
       }
     },
     sectionfeatured () {
-      return _.get( _.pick( _.get(this.$store.state.commonData, ['sectionfeatured', 'items']), this.section ), [ this.section] )
+      return _.get( _.pick( _.get(this.$store.state.commonData, ['sectionfeatured', 'items']), this.sectionName ), [ this.sectionName] )
     },
     sectionId () {
       switch(this.type) {
@@ -596,7 +599,7 @@ export default {
     updateCustomizedMarkup () {
       const custCss = document.querySelector('#custCSS') 
       const custScript = document.querySelector('#custJS') 
-      if(!custCss || custScript) { this.insertCustomizedMarkup() }
+      if(!custCss || !custScript) { this.insertCustomizedMarkup(); return; }
       if(this.customCSS) {
         custCss.innerHTML = this.customCSS
       }
@@ -606,25 +609,46 @@ export default {
     },
   },
   metaInfo () {
-    let title = this.title + ' - 鏡週刊 Mirror Media'
+    let type = this.type
     let description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
+    let ogImage
+    let ogTitle
+    let ogDescription
+    switch(type) {
+      case SECTION:
+        let imageURL = _.get(this.section, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url'], null) ? _.get(this.section, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url']) : _.get(this.section, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'], null)
+        ogImage = imageURL ? imageURL : '/public/notImage.png'
+        ogTitle = _.get(this.section, ['ogTitle'], null) ? _.get(this.section, ['ogTitle']) : _.get(this.section, ['title'])
+        ogDescription = _.get(this.section, ['ogDescription'], null) ? _.get(this.section, ['ogDescription']) : _.get(this.section, ['description'])
+        break
+      case TOPIC:
+        ogImage = _.get(this.topic, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url'], null) ? _.get(this.topic, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url']) : '/public/notImage.png'
+        ogTitle = _.get(this.topic, ['ogTitle'], null) ? _.get(this.topic, ['ogTitle']) : _.get(this.topic, ['title'])
+        ogDescription = _.get(this.topic, ['ogDescription'], null) ? _.get(this.topic, ['ogDescription']) : description
+      default:
+        ogTitle = this.title
+        ogImage = '/public/notImage.png'
+        ogDescription = description
+
+    }
+    let title = ogTitle + ' - 鏡週刊 Mirror Media'
 
     return {
       title,
       meta: [
           { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說'},
-          { name: 'description', content: description },
+          { name: 'description', content: ogDescription },
           { name: 'twitter:card', content: 'summary_large_image' },
           { name: 'twitter:title', content: title },
-          { name: 'twitter:description', content: description },
-          { name: 'twitter:image', content: '/asset/logo.png' },
+          { name: 'twitter:description', content: ogDescription },
+          { name: 'twitter:image', content: ogImage },
           { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },
           { property: 'og:title', content: title },
-          { property: 'og:description', content: description },
+          { property: 'og:description', content: ogDescription },
           { property: 'og:url', content: SITE_URL },
-          { property: 'og:image', content: '/asset/logo.png' },
+          { property: 'og:image', content: ogImage },
       ]
     }
   },

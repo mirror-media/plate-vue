@@ -2,51 +2,51 @@
   <header>
     <nav class="headerFull" :style="{opacity: opacity}" v-show="defaultNav">
       <div class="headerFull__menu">
-        <a @click="openSideBar()"><img src="~public/icon/hamburger_white.png"></a>
+        <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png"></a>
       </div>
       <div class="headerFull__logo">
         <router-link :to=" '/section/' + section "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
         <router-link to="/">
-          <img class="headerFull__link--icon desktop-only" src="~public/icon/logo_black@3x.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/logo_black@3x.png">
         </router-link>
         <a :href="socialLink.FACEBOOK" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="~public/icon/facebook_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/facebook_white.png">
         </a>
         <a :href="socialLink.LINE" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="~public/icon/line_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/line_white.png">
         </a>
         <a :href="socialLink.WEIBO" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="~public/icon/weibo_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/weibo_white.png">
         </a>
         <a @click="openSearchBar()">
-          <img class="headerFull__link--icon" src="~public/icon/search_white.png">
+          <img class="headerFull__link--icon" src="/public/icon/search_white.png">
         </a>
       </div>
     </nav>
     <nav class="headerFull headerFull--black" :style="{opacity: 1-opacity}" v-show="blackNav">
       <div class="headerFull__menu">
-        <a @click="openSideBar()"><img src="~public/icon/hamburger_white.png"></a>
+        <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png"></a>
       </div>
       <div class="headerFull__logo">
         <router-link :to=" '/section/' + section "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
         <router-link to="/">
-          <img class="headerFull__link--icon desktop-only" src="~public/icon/logo_black@3x.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/logo_black@3x.png">
         </router-link>
         <a :href="socialLink.FACEBOOK" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="~public/icon/facebook_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/facebook_white.png">
         </a>
         <a :href="socialLink.LINE" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="~public/icon/line_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/line_white.png">
         </a>
         <a :href="socialLink.WEIBO" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="~public/icon/weibo_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/weibo_white.png">
         </a>
         <a @click="openSearchBar()">
-          <img class="headerFull__link--icon" src="~public/icon/search_white.png">
+          <img class="headerFull__link--icon" src="/public/icon/search_white.png">
         </a>
       </div>
     </nav>
@@ -70,7 +70,7 @@
       <div class="searchFull-container">
         <input type="text" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)">
         <a @click="closeSearchBar()">
-          <img src="~public/icon/close.png">
+          <img src="/public/icon/close.png">
         </a>
       </div>
       <div class="searchFull-curtain" @click="closeSearchBar()"></div>
