@@ -12,7 +12,11 @@
     <main class="article_main">
       <div class="brief">
         <div v-for="p in briefArr">
-          <div v-if="p.type !== 'slideshow'" v-html="paragraphComposer(p)"></div>
+          <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
+          <div v-else-if="p.type === 'audio'" is="audio-box" 
+                  :sources="getAudioSource(getValue(p, [ 'content', 0], {}))" 
+                  :id="'latest-'+ p.id" 
+                  :item="getValue(p, [ 'content', 0], {})"></div>
           <div v-else is="app-slider" class="per-slide" :option="sliderOption">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])">
@@ -26,7 +30,11 @@
       <div class="split-line"></div>
       <div class="content">
         <div v-for="p in contArr">
-          <div v-if="p.type !== 'slideshow'" v-html="paragraphComposer(p)"></div>
+          <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
+          <div v-else-if="p.type === 'audio'" is="audio-box" 
+                  :sources="getAudioSource(getValue(p, [ 'content', 0], {}))" 
+                  :id="'latest-'+ p.id" 
+                  :item="getValue(p, [ 'content', 0], {})"></div>
           <div v-else is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])">
@@ -63,14 +71,16 @@
 import _ from 'lodash'
 import { DFP_UNITS, SECTION_MAP, SITE_URL } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
+import AudioBox from '../../components/AudioBox.vue'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
 import moment from 'moment'
 
 export default {
   components: {
+    'app-slider': Slider,
+    'audio-box': AudioBox,
     'proj-list': ProjectList,
-    'app-slider': Slider
   },
   computed: {
     articleStyle() {
@@ -145,6 +155,11 @@ export default {
     },
   },
   methods: {
+    getAudioSource(item) {
+      let audioURL = []
+      audioURL.push(_.get(item, [ 'url' ]))
+      return audioURL
+    },
     getHref,
     getTruncatedVal,
     getValue,
@@ -371,7 +386,7 @@ export default {
           i, cite, em, var, address, dfn 
             font-style normal        
       
-      & > .content 
+      > .content 
         h2 
           color #000
           margin-top 40px
@@ -402,6 +417,17 @@ export default {
                     
         .embedded 
           text-align center
+
+        .audioBox
+          width 100%
+          
+          .audioBox-content
+            h2
+              margin-top 10px
+              display flex
+              justify-content center
+              align-items center
+              font-size 1.5rem
         
       a, a:hover, a:link, a:visited 
         color #3195b3
