@@ -62,7 +62,7 @@
   import _ from 'lodash'
   export default {
     name: 'pop-list',
-    props: ['pop', 'props'],
+    props: ['pop'],
     computed: {
       popBeforeDFPNA3() {
         return _.take(this.pop, 2)

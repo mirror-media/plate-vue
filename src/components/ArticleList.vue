@@ -8,7 +8,7 @@
         <p v-text="getBrief(item, 45)"></p>
       </div>
     </router-link>
-    <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+    <slot name="dfpNA3"></slot>
     <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA5" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
@@ -17,7 +17,7 @@
         <p v-text="getBrief(item, 45)"></p>
       </div>
     </router-link>
-    <vue-dfp :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+    <slot name="dfpNA5"></slot>
     <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA9" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
@@ -26,7 +26,7 @@
         <p v-text="getBrief(item, 45)"></p>
       </div>
     </router-link>
-    <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+    <slot name="dfpNA9"></slot>
     <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesAfterDFPNA9" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
@@ -47,7 +47,7 @@ export default {
   name: 'articleList',
   components: {
   },
-  props: ['articles', 'props'],
+  props: ['articles'],
   computed: {
     articlesBeforeDFPNA3 () {
       return _.take(this.articles, 2)
