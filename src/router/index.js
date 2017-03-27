@@ -6,6 +6,7 @@ import Meta from 'vue-meta'
 Vue.use(Router)
 Vue.use(Meta)
 
+import NotFound from '../views/404.vue'
 import Article from '../views/Article.vue'
 import Home from '../views/Home.vue'
 import List from '../views/List.vue'
@@ -33,7 +34,7 @@ const router = new Router({
         { path: '/timeline/:title', component: TimelineView },
         { path: '/tag/:tagId/:tagName?', component: List },
         { path: '/topic/:topicId', component: List },
-        { path: '/404', component: Home },
+        { path: '/404', component: NotFound },
         { path: '/', component: Home },
         { path: '*', redirect: '/404' }
     ]

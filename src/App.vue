@@ -54,6 +54,9 @@ button:focus {
     outline: none
 }
 
+#app
+  overflow hidden
+
 .desktop-only
   display none !important
 
