@@ -4,14 +4,14 @@
     <div class="pop_list">
       <div class="pop_item" v-for="(o, i) in popBeforeDFPNA3">
         <div>
-          <router-link :to="o.slug" >
+          <router-link :to="o.slug" :id="'popular-' + i">
             <div class="pop_item_img"
                   :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
             </div>
           </router-link>
         </div>
         <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="o.slug" v-text="getTruncatedVal(o.title, 22)"></router-link>
+          <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)"></router-link>
         </div>
       </div>
       <slot name="dfpNA3"></slot>
@@ -24,33 +24,33 @@
           </router-link>
         </div>
         <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="o.slug" v-text="getTruncatedVal(o.title, 22)"></router-link>
+          <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)"></router-link>
         </div>
       </div>
       <slot name="dfpNA5"></slot>
       <div class="pop_item" v-for="(o, i) in popBeforeDFPNA7">
         <div>
-          <router-link :to="o.slug" >
+          <router-link :to="o.slug" :id="'popular-' + i">
             <div class="pop_item_img"
                   :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
             </div>
           </router-link>
         </div>
         <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="o.slug" v-text="getTruncatedVal(o.title, 22)"></router-link>
+          <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)"></router-link>
         </div>
       </div>
       <slot name="dfpNA9"></slot>
       <div class="pop_item" v-for="(o, i) in popAfterDFPNA7">
         <div>
-          <router-link :to="o.slug" >
+          <router-link :to="o.slug" :id="'popular-' + i">
             <div class="pop_item_img"
                   :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
             </div>
           </router-link>
         </div>
         <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="o.slug" v-text="getTruncatedVal(o.title, 22)"></router-link>
+          <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)"></router-link>
         </div>
       </div>
     </div>

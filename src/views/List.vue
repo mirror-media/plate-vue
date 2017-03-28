@@ -653,6 +653,7 @@ export default {
     let ogImage
     let ogTitle
     let ogDescription
+    let sectionName = _.get(this.sectionName)
     switch(type) {
       case SECTION:
         let imageURL = _.get(this.section, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url'], null) ? _.get(this.section, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url']) : _.get(this.section, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'], null)
@@ -682,6 +683,7 @@ export default {
       meta: [
           { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說'},
           { name: 'description', content: ogDescription },
+          { name: 'section-name', content: this.sectionName },
           { name: 'twitter:card', content: 'summary_large_image' },
           { name: 'twitter:title', content: title },
           { name: 'twitter:description', content: ogDescription },

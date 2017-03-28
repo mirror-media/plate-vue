@@ -150,7 +150,7 @@ export default {
     tags() {
       const { tags } = this.articleData
       return tags.map((o) => {
-        return `<a href=\"/tag/${_.get(o, [ 'id' ], '')}/${_.get(o, [ 'name' ], '')}\">${_.get(o, [ 'name' ], '')}</a>`
+        return `<a href=\"/tag/${_.get(o, [ 'id' ], '')}/${_.get(o, [ 'name' ], '')}\" id=\"tag-${_.get(o, [ 'id' ], '')}\">${_.get(o, [ 'name' ], '')}</a>`
       }).join('、')
     },
   },
