@@ -7,14 +7,14 @@
           <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10">
             <div class="proj_item">
               <div>
-                <a :href="`https://mirrormedia.mg/projects/${o.slug}`" >
+                <a :href="`https://mirrormedia.mg/projects/${o.slug}`" :id="'projects-' + o.name">
                   <div class="proj_item_img"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
               </div>
               <div class="proj_item_title">
-                <a :href="`https://mirrormedia.mg/projects/${o.slug}`" >
+                <a :href="`https://mirrormedia.mg/projects/${o.slug}`" :id="'projects-' + o.name">
                   {{ getTruncatedVal(o.title, 22) }}
                 </a>
               </div>

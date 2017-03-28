@@ -4,14 +4,14 @@
     <div class="list">
       <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
         <div class="thumbnail" :style="{ backgroundImage: 'url(' + getImage(o, 'tiny') + ')' }">
-          <router-link :to="{ path: getHref(o) }"  :style="{ width: '100%', height: '100%', display: 'block' }"></router-link>
+          <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }"></router-link>
         </div>
         <div class="content">
           <div class="content_category">
-            <router-link :to="{ path: getHref(o) }" >{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
+            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
           </div>
           <div class="content_title">
-            <router-link :to="{ path: getHref(o) }" >{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</router-link>
+            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</router-link>
           </div>
         </div>
       </div>
