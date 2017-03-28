@@ -117,7 +117,7 @@ export default {
         return _.get(this.$store.state.editorChoice, ['items'])
       } else {
         let orig = _.values(_.get(this.$store.state, ['editorChoice', 'items']))
-        let xorBy = _.xorBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'title')
+        let xorBy = _.xorBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'id']), 'title')
         return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
       }
     },
@@ -140,7 +140,8 @@ export default {
       return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticles, [ 'meta', 'total' ], 0)
     },
     latestArticle () {
-      let xorBy = _.xorBy( _.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'id')
+      let unionBy = _.unionBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'id')
+      let xorBy = _.xorBy( _.get(this.$store.state, ['editorChoice', 'items']), unionBy, 'id')
       let latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length'])))
       return latestArticle
     },
