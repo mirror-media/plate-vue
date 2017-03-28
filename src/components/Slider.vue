@@ -82,7 +82,7 @@
     mounted() {
       // this.swiper.update()
       // this.swiper.slideTo(2, 1000, false)
-      window[ 'refs' ] = {}
+      if(!window[ 'refs' ]) window[ 'refs' ] = {}
       window[ 'refs' ][ this.slideId ] = this.swiper
     },
     name: 'app-slider',

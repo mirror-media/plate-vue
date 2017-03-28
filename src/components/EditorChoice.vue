@@ -19,10 +19,12 @@
         <span v-text="getTitle(item, 24)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
       </router-link>
     </div>
+    <div class="editorChoice-title mobile-only"><h2>編輯精選</h2></div>
     <div class="editorChoice-list mobile-only">
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice-list-post">
         <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice-list-post__img">
           <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure>
+          <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
         </router-link>
         <div class="editorChoice-list-post__title" :class="getSection(item)">
           <router-link :to="getHref(item)" :id="'choices-' + item.name"><h2 v-text="getTitle(item, 24)"></h2></router-link>
@@ -96,6 +98,14 @@ export default {
     getTitle,
     getTruncatedVal,
     getValue,
+    getSectionStyle(sect) {
+      const sectionId = _.get(sect, [ 'id' ])
+      const style = { 
+        backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
+        width:  _.get( SECTION_MAP, [sectionId, 'label-width-tablet'], '60px'),
+      }
+      return style
+    },
     setHoverEvent() {
       const _targ = document.querySelectorAll('.editorChoice-list__item')
       const _targII = document.querySelectorAll('.editorChoice-list__item > span')
@@ -150,7 +160,7 @@ $color-other = #bcbcbc
 
 .editorChoice
   &.container
-    flex-direction: row
+    flex-direction column
     width 100%
     height auto
     margin-bottom 35px
@@ -172,6 +182,26 @@ $color-other = #bcbcbc
     & img
       width 100%
       height 100%
+
+  &-title
+    width 100%
+    padding 0 2em
+    margin-bottom 10px
+    color #356d9c
+
+    > h2
+      margin 0
+      overflow hidden
+
+      &::after
+        content ""
+        display inline-block
+        height .5em
+        vertical-align middle
+        width 100%
+        margin-right -100%
+        margin-left 10px
+        border-top 5px solid #356d9c
 
   &-list
     height 100%
@@ -199,9 +229,27 @@ $color-other = #bcbcbc
       flex-direction column
       width 100%
       padding 0 1em
+
       > div:not(:last-child)
         margin-bottom 20px
+
       .editorChoice-list-post
+
+        > a
+          position relative
+          color #fff
+
+          .section-label
+            position absolute
+            width 60px
+            height 35px
+            top -35px
+            background-color #000
+            display flex 
+            justify-content center
+            align-items center 
+            font-size 1.2rem           
+
         &__img
           > figure
             width 100%
@@ -210,29 +258,15 @@ $color-other = #bcbcbc
             background-position 50% 50%
             background-repeat no-repeat
             background-size cover
+                
         &__title
-          padding .5em 1em
+          padding .5em 0
+
           h2
             font-size 1.5rem
             line-height 2rem
             margin 0
-          &.news-people
-            border-left 8px solid $color-news
-
-          &.entertainment
-            border-left 8px solid $color-entertainment
-
-          &.foodtravel
-            border-left 8px solid $color-foodtravel
-
-          &.watch
-            border-left 8px solid $color-watch
-
-          &.projects
-            border-left 8px solid $color-projects
-
-          &.other
-            border-left 8px solid $color-other
+            font-weight 300
 
 @media (min-width: 600px)
   .editorChoice-list
