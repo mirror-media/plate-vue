@@ -6,7 +6,7 @@
     <spinner :show="loading"></spinner>
     <section :style="{ position: 'relative' }">
       <div class="titleBox"/>
-      <figure class="post-image" :style="{ background: 'url(/public/image/timeline-watch.jpg) center center / cover no-repeat' }"></figure>
+      <figure class="post-image" :style="{ background: 'url(https://www.mirrormedia.mg/assets/images/20170320141850-acc898b5c64351723a13f93a9981fdf5.jpg) center center / cover no-repeat' }"></figure>
     </section>
 
     <div class="timelineWrapper">
@@ -51,7 +51,7 @@ import twitter from 'twitter-text'
 
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections' ] })
 }
 
 const fetchData = (store) => {
@@ -98,7 +98,7 @@ export default {
     },
   },
   metaInfo () {
-    const title = 'Timeline :: ' + this.$route.params.title.toUpperCase()
+    const title = 'Timeline :: ' + _.upperCase(this.$route.params.title)
     return {
       title,
       meta: [{ vmid: 'description', name: 'description', content: title }]
@@ -163,7 +163,7 @@ export default {
     bottom auto
 
   div.titleBox 
-    background url('/public/image/timeline-watch.png') 50% 50% no-repeat
+    background url('https://www.mirrormedia.mg/assets/images/20170320153732-080767900ee77ee4eb5afe2a26eb225f.png') 50% 50% no-repeat
     background-size contain
     width 390px
     max-width 80%

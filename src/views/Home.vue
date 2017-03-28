@@ -195,9 +195,7 @@ export default {
     }
   },
   beforeMount() {
-    if (this.$store.getters.latestArticlesLength === 0) {
-      fetchCommonData(this.$store)
-    }
+    fetchCommonData(this.$store)
     fetchEvent(this.$store)
   },
   mounted() {

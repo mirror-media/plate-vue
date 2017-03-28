@@ -273,9 +273,7 @@ const store = new Vuex.Store({
     },
 
     getters: {
-        latestArticlesLength: state => {
-            return _.get(state.latestArticles, ['items', 'length'], 0)
-        }
+        
     }
 })
 
