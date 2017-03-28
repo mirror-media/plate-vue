@@ -29,7 +29,7 @@
         <div class="header-menu">
           <router-link :to="item.href" :id="'header-' + item.id" v-for="item in headerItem.topic" v-text="item.title"/>
         </div>
-        <a href="">更多</a>
+        <router-link to="/section/topic">更多</router-link>
       </div>
     </nav>
     <nav class="header-sidebar mobile-only" :class="{ open: openSide }">

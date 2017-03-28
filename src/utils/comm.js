@@ -27,17 +27,26 @@ export function getAuthorHref(author = {}) {
 }
 
 export function getBrief(article, count = 30) {
-    let brief = sanitizeHtml(_.get(article, ['brief', 'html'], ''), { allowedTags: [] })
+    let brief
+    if (_.split(_.get(article, ['href']), '/')[1] == 'topic') {
+        brief = _.get(article, ['ogDescription'])
+    } else {
+        brief = sanitizeHtml(_.get(article, ['brief', 'html'], ''), { allowedTags: [] })
+    }
     return truncate(brief, count)
 }
 
 export function getHref(relAritlcle = {}) {
-    const { style = '', slug } = relAritlcle
+    const { href, style = '', slug } = relAritlcle
     switch (style) {
         case "projects":
             return `/projects/${slug}`
         default:
-            return `/story/${slug}/`
+            if (_.split(href, '/')[1] == 'topic') {
+                return href
+            } else {
+                return `/story/${slug}/`
+            }
     }
 }
 

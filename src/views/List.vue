@@ -10,15 +10,15 @@
           <div class="topic-title"><h1></h1></div>
           <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
         </div>
-        <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" :dfpId="props.dfpId" />
+        <!-- <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" :dfpId="props.dfpId" /> -->
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
         <article-list :articles='articles.items' v-if="title !== 'Audio' && name !== 'videohub' ">
-          <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3"/>
+          <!-- <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3"/>
           <vue-dfp :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5"/>
-          <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9"/>
+          <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9"/> -->
         </article-list>
         <audio-list :audios="audios.items" v-if="title == 'Audio'" />
         <video-list :playlist="playlist.items" v-if="name == 'videohub'"/>
@@ -26,7 +26,7 @@
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
         <section class="footer container">
-          <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <!-- <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" /> -->
           <app-footer />
         </section>
       </div>
@@ -266,6 +266,12 @@ const fetchTag = (store, id) => {
   })
 }
 
+const fetchTopics = (store, params) => {
+  return store.dispatch('FETCH_TOPIC_BY_UUID', { 
+    'params': params
+  })
+}
+
 const fetchTopicByUuid = (store, uuid) => {
   return store.dispatch('FETCH_TOPIC_BY_UUID', { 
     'params': {
@@ -377,6 +383,16 @@ export default {
         case AUTHOR:
           return this.$store.state.articles
           break
+        case SECTION:
+          if (this.$route.params.title === 'topic') {
+            return this.$store.state.commonData.topics
+          } else {
+            return this.$store.state.articlesByUUID
+          }
+          break
+        case TOPIC:
+          return this.$store.state.articlesByUUID
+          break
         default:
           return this.$store.state.articlesByUUID
       }
@@ -437,7 +453,11 @@ export default {
             return _.find(s.categories, { 'id': this.uuid })
           }), ['name'], 'other')
         case SECTION:
-          return this.$route.params.title
+          if (this.$route.params.title === 'topic') {
+            return 'other'
+          } else {
+            return this.$route.params.title
+          }
         case TAG:
           return _.get(this.tag, 'sections[0].name' )
         case TOPIC:
@@ -484,7 +504,11 @@ export default {
           return this.$route.params.title == 'audio' ? 'Audio' :
             _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['title'] )
         case SECTION:
-          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['title'] )
+          if (this.$route.params.title === 'topic') {
+            return 'Topic'
+          } else {
+            return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['title'] )
+          }
           break
         case TAG: 
           return this.$route.params.tagName
@@ -495,11 +519,19 @@ export default {
     topic() {
       if(this.type === TOPIC) {
         return (this.$store.state.topic.items) ? 
-          Object.assign(this.$store.state.topic.items[ 0 ], { images: this.$store.state.images })
+          _.assign(_.get(this.$store.state, ['topic', 'items[0]']), { images: _.get(this.$store.state, ['images']) })
           : _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.uuid } )
       } else {
-        return this.$store.state.topic
+        return _.get(this.$store.state, ['topic'])
       }
+    },
+    test() {
+      return this.$route.params.topicId === 'topic' ? true : false
+    },
+    topicLeadingImage() {
+      let image
+      image = this.$route.params.topicId === 'topic' ? 'https://www.mirrormedia.mg/assets/images/20170327145812-d869cc5a2e580e94e4be4cc5da40b153.png' : getImage(this.topic, 'desktop')
+      return image
     },
     type () {
       return  _.toUpper( _.split( this.$route.path, '/' )[1] )
@@ -523,18 +555,18 @@ export default {
     getImage,
     getValue,
     insertCustomizedMarkup () {
+      const custCss = document.createElement('style') 
+      const custScript = document.createElement('script') 
+      custCss.setAttribute('id', 'custCSS')
+      custScript.setAttribute('id', 'custJS')
       if(this.customCSS) {
-        const custCss = document.createElement('style') 
-        custCss.setAttribute('id', 'custCSS')
         custCss.appendChild(document.createTextNode(this.customCSS)) 
-        document.querySelector('body').appendChild(custCss) 
       }
       if(this.customJS) {
-        const custScript = document.createElement('script') 
-        custScript.setAttribute('id', 'custJS')
         custScript.appendChild(document.createTextNode(this.customJS)) 
-        document.querySelector('body').appendChild(custScript) 
       }
+      document.querySelector('body').appendChild(custCss) 
+      document.querySelector('body').appendChild(custScript) 
     },
     loadMore () {
       this.page += 1
@@ -561,13 +593,26 @@ export default {
               })
               break
             default:
-              fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
-                page: this.page,
-                max_results: MAXRESULT
-              }).then(() => {
-                this.articles = this.$store.state.articlesByUUID
-                this.loading = false
-              })
+              if (this.$route.params.title === 'topic') {
+                fetchTopics(this.$store, {
+                  page: this.page,
+                  max_results: MAXRESULT
+                }).then(() => {
+                  let orig = _.values(this.articles['items'])
+                  let concat = _.concat(orig, _.get(this.$store.state, ['topic', 'items']))
+                  let loaded = _.get(this.$store.state, ['topic'])
+                  this.articles['meta'] = _.get(this.$store.state, ['topic', 'meta'])
+                  this.articles['items'] = concat
+                })
+              } else {
+                fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
+                  page: this.page,
+                  max_results: MAXRESULT
+                }).then(() => {
+                  this.articles = this.$store.state.articlesByUUID
+                  this.loading = false
+                })
+              }
           }
           break
         default:
@@ -603,7 +648,7 @@ export default {
       const custScript = document.querySelector('#custJS') 
       if(!custCss || !custScript) { this.insertCustomizedMarkup(); return; }
       if(this.customCSS) {
-        custCss.innerHTML = this.customCSS
+        this.test ? custCss.innerHTML = '' : custCss.innerHTML = this.customCSS
       }
       if(this.customJS) {
         custScript.innerHTML = this.customJS
@@ -620,13 +665,18 @@ export default {
       case SECTION:
         let imageURL = _.get(this.section, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url'], null) ? _.get(this.section, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url']) : _.get(this.section, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'], null)
         ogImage = imageURL ? imageURL : '/public/notImage.png'
-        ogTitle = _.get(this.section, ['ogTitle'], null) ? _.get(this.section, ['ogTitle']) : _.get(this.section, ['title'])
+        ogTitle = _.get(this.section, ['ogTitle'], null) ? _.get(this.section, ['ogTitle']) : _.get(this.section, ['title'], this.title)
         ogDescription = _.get(this.section, ['ogDescription'], null) ? _.get(this.section, ['ogDescription']) : _.get(this.section, ['description'])
         break
       case TOPIC:
         ogImage = _.get(this.topic, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url'], null) ? _.get(this.topic, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url']) : '/public/notImage.png'
-        ogTitle = _.get(this.topic, ['ogTitle'], null) ? _.get(this.topic, ['ogTitle']) : _.get(this.topic, ['title'])
+        if (this.$route.params.topicId === 'topic') {
+          ogTitle = 'Topic'
+        } else {
+          ogTitle = _.get(this.topic, ['ogTitle'], null) ? _.get(this.topic, ['ogTitle']) : _.get(this.topic, ['title'])
+        }
         ogDescription = _.get(this.topic, ['ogDescription'], null) ? _.get(this.topic, ['ogDescription']) : description
+        break
       default:
         ogTitle = this.title
         ogImage = '/public/notImage.png'
