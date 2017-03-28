@@ -525,14 +525,6 @@ export default {
         return _.get(this.$store.state, ['topic'])
       }
     },
-    test() {
-      return this.$route.params.topicId === 'topic' ? true : false
-    },
-    topicLeadingImage() {
-      let image
-      image = this.$route.params.topicId === 'topic' ? 'https://www.mirrormedia.mg/assets/images/20170327145812-d869cc5a2e580e94e4be4cc5da40b153.png' : getImage(this.topic, 'desktop')
-      return image
-    },
     type () {
       return  _.toUpper( _.split( this.$route.path, '/' )[1] )
     },
