@@ -160,6 +160,7 @@ $color-other = #bcbcbc
 
 .editorChoice
   &.container
+    display block
     flex-direction column
     width 100%
     height auto
@@ -286,6 +287,7 @@ $color-other = #bcbcbc
 @media (min-width: 1200px)
   .editorChoice
     &.container
+      display flex
       flex-direction: row
       width 1024px
       height 500px
