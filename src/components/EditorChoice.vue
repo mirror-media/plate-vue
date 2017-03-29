@@ -225,11 +225,12 @@ $color-other = #bcbcbc
         border-bottom none
       &.active
         background-color #fff
+
     &.mobile-only
       display flex
       flex-direction column
-      width 100%
-      padding 0 1em
+      width 90%
+      margin 0 auto
 
       > div:not(:last-child)
         margin-bottom 20px
@@ -275,6 +276,7 @@ $color-other = #bcbcbc
       flex-direction row
       flex-wrap wrap
       justify-content space-between
+      width 100%
       padding 0 2em
       > div:first-child
         width 100%

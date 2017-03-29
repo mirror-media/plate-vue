@@ -13,14 +13,18 @@
             <LatestArticleAside :latestList="latestArticle" :viewport="viewport" v-for="n in 4" />
           </aside>
           <main>
-            <LatestArticleMain :latestList="latestArticle" :viewport="viewport" />
+            <LatestArticleMain :latestList="latestArticle" :viewport="viewport">
+              <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
+            </LatestArticleMain>
             <ProjectList class="desktop-only" :projects="projects" :viewport="viewport" />
             <PopularArticles :popList="popularlist" />
           </main>
         </section>
         <loading :show="loading" />
         <section class="container">
-          <app-footer v-if="viewport > 599"/>
+          <app-footer v-if="viewport > 1199"/>
         </section>
       </div>
     </template>
@@ -207,6 +211,9 @@ export default {
 .editorChoice
   margin-top 40px
 
+.articleList-block
+  display none
+
 .home-view
   width 100%
   box-sizing border-box
@@ -249,7 +256,7 @@ export default {
             border-top 5px solid #356d9c
 
     main
-      width 80%
+      width 90%
       margin 0 auto
 
 @media (min-width: 600px)
