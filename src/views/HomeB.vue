@@ -5,19 +5,21 @@
         <section style="width: 100%;">
           <app-Header v-if="true" :commonData= 'commonData' />
         </section>
-        <!-- <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" /> -->
         <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" class="event" />
         <editor-choice :editorChoice= 'editorChoice'/>
         <section class="container list">
-          <latest-article :latestArticle= 'latestArticle' :props="props"/>
-          <latest-project :projects= 'projects' />
+          <aside>
+            <div class="aside-title mobile-only"><h2>最新文章</h2></div>
+            <LatestArticleAside :latestList="latestArticle" :viewport="viewport" v-for="n in 4" />
+          </aside>
+          <main>
+            <LatestArticleMain :latestList="latestArticle" :viewport="viewport" />
+            <ProjectList class="desktop-only" :projects="projects" :viewport="viewport" />
+            <PopularArticles :popList="popularlist" />
+          </main>
         </section>
         <loading :show="loading" />
         <section class="container">
-          <more v-if="hasMore" v-on:loadMore="loadMore" />
-        </section>
-        <section class="container">
-          <!-- <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" /> -->
           <app-footer />
         </section>
       </div>
@@ -33,11 +35,12 @@ import _ from 'lodash'
 import EditorChoice from '../components/EditorChoice.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
-import LatestArticle from '../components/LatestArticle.vue'
-import LatestProject from '../components/LatestProject.vue'
+import LatestArticleAside from '../components/LatestArticleAside.vue'
+import LatestArticleMain from '../components/LatestArticleMain.vue'
 import Leading from '../components/Leading.vue'
 import Loading from '../components/Loading.vue'
-import More from '../components/More.vue'
+import PopularArticles from '../components/PopularArticles.vue'
+import ProjectList from '../components/article/ProjectList.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import truncate from 'truncate'
@@ -74,25 +77,31 @@ const fetchLatestArticle = (store, page) => {
   })
 }
 
+const fetchPop = (store) => {
+  return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
+}
+
 export default {
   name: 'home-view',
   components: {
     'app-footer': Footer,
     'app-Header': Header,
     'editor-choice': EditorChoice,
-    'latest-article': LatestArticle,
-    'latest-project': LatestProject,
     'leading': Leading,
     'loading': Loading,
-    'more': More,
-    VueDfpProvider
+    LatestArticleAside,
+    LatestArticleMain,
+    PopularArticles,
+    ProjectList,
+    VueDfpProvider,
   },
   preFetch: fetchSSRData,
   beforeRouteEnter (to, from, next) {
     if(process.env.VUE_ENV === 'client' && to.path !== from.path) {
       next(vm => {
-        if (!_.get(vm.$store, ['state', 'commonData', 'sections', 'items'], null) || !_.get(vm.$store, ['state', 'commonData', 'choices', 'items'], null)) {
+        if (_.get(vm.$store, ['state', 'commonData', 'sections', 'items']) || _.get(vm.$store, ['state', 'commonData', 'choices', 'items'])) {
           fetchSSRData(vm.$store)
+          fetchPop(vm.$store)
         }
       })
     } else {
@@ -105,7 +114,8 @@ export default {
       dfpUnits: DFP_UNITS,
       hasScrollLoadMore: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE) > 1 ? true : false,
       loading: false,
-      page: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE)
+      page: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE),
+      viewport: undefined,
     }
   },
   computed: {
@@ -117,7 +127,7 @@ export default {
         return _.get(this.$store.state.editorChoice, ['items'])
       } else {
         let orig = _.values(_.get(this.$store.state, ['editorChoice', 'items']))
-        let xorBy = _.xorBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'id']), 'title')
+        let xorBy = _.xorBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'title')
         return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
       }
     },
@@ -136,41 +146,25 @@ export default {
       const _now = moment()
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime)) ? true : false
     },
-    hasMore () {
-      return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticles, [ 'meta', 'total' ], 0)
-    },
     latestArticle () {
-      let unionBy = _.unionBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'id')
-      let xorBy = _.xorBy( _.get(this.$store.state, ['editorChoice', 'items']), unionBy, 'id')
+      let xorBy = _.xorBy( _.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'id')
       let latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length'])))
       return latestArticle
+    },
+    popularlist() {
+      const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
+      return report
     },
     projects () {
       return _.get(this.commonData, ['projects', 'items'])
     }
   },
   methods: {
-    loadMore () {
-      this.page += 1
-      this.loading = true
-
-      fetchLatestArticle(this.$store, this.page).then(() => {
-        this.loading = false
-      })
-    },
-    handleScroll () {
-      window.onscroll = (e) => {
-        const _latestArticleDiv = document.querySelector('#latestArticle')
-        if(!_latestArticleDiv) { return }
-        let firstPageArticleHeight = _latestArticleDiv.offsetHeight
-        let firstPageArticleBottom = elmYPosition('#latestArticle') + ( firstPageArticleHeight )
-        let currentBottom = currentYPosition() + window.innerHeight
-        if ( ( currentBottom > firstPageArticleBottom ) && !this.hasScrollLoadMore) {
-          this.hasScrollLoadMore = true
-          this.loadMore()
+    updateViewport() {
+        if(process.env.VUE_ENV === 'client') {
+          this.viewport = document.querySelector('body').offsetWidth
         }
-      } 
-    }
+    },
   },
   metaInfo () {
     let title = '鏡週刊 Mirror Media'
@@ -197,10 +191,14 @@ export default {
   },
   beforeMount() {
     fetchCommonData(this.$store)
+    fetchPop(this.$store)
     fetchEvent(this.$store)
   },
   mounted() {
-    this.handleScroll()
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
   }
 }
   
@@ -208,11 +206,11 @@ export default {
 <style lang="stylus" scoped>
 .editorChoice
   margin-top 40px
+
 .home-view
   width 100%
   box-sizing border-box
-  padding-bottom 50px 
-  
+
   h2 
     margin: 0;
     font-family Noto Sans TC,sans-serif
@@ -225,21 +223,84 @@ export default {
 
 .list
   &.container
-    flex-direction row
-    flex-wrap wrap
-    align-items flex-start
     width 100%
+
+    aside
+      .aside-title
+        // overflow hidden
+        padding: 0 2rem;
+
+        h2
+          font-size 1.5rem
+          color #356d9c
+          font-weight 400
+          overflow hidden
+          margin-bottom 10px
+
+          &::after
+            content ""
+            display inline-block
+            height .5em
+            vertical-align middle
+            width 100%
+            margin-right -100%
+            margin-left 10px
+            border-top 5px solid #356d9c
+
+    main
+      width 80%
+      margin 0 auto
 
 @media (min-width: 600px)
   .list
     &.container
       width 100%
-      padding 0 2em
+      padding 0 2rem
+
+      // main
+
+      aside
+        display flex
+        flex-wrap wrap
+        justify-content space-between
+
+        .aside-title
+          width 100%
+          color #356d9c
+          margin-bottom 10px
+          // overflow hidden
+
+          h2
+            font-size 1.5rem
+            color #356d9c
+
+            &::after
+              content ""
+              display inline-block
+              height .5em
+              vertical-align middle
+              width 100%
+              margin-right -100%
+              margin-left 10px
+              border-top 5px solid #356d9c
+
+      main
+        width 100%
 
 @media (min-width: 1200px)
   .list
     &.container
       width 1024px
       padding 0
+      flex-direction row
+      flex-wrap wrap
+      align-items flex-start
+
+      main
+        width 75%
+
+      aside
+        width 25%
+        padding 0 30px 0 0
     
 </style>

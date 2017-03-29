@@ -7,15 +7,20 @@
           <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10">
             <div class="proj_item">
               <div>
-                <a :href="`https://mirrormedia.mg/projects/${o.slug}`" :id="'projects-' + o.name">
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name">
                   <div class="proj_item_img"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
               </div>
               <div class="proj_item_title">
-                <a :href="`https://mirrormedia.mg/projects/${o.slug}`" :id="'projects-' + o.name">
-                  {{ getTruncatedVal(o.title, 22) }}
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name">
+                  {{ getTruncatedVal(o.title, 20) }}
+                </a>
+              </div>
+              <div class="proj_item_desc">
+                <a :href="`${siteUrl}/projects/${o.slug}`" >
+                  {{ getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20) }}
                 </a>
               </div>
             </div>
@@ -23,13 +28,16 @@
         </template>
       </app-slider>
     </div>
+    <div class="slide-nav-btn prev" @click="goPrev"></div>
+    <div class="slide-nav-btn next" @click="goNext"></div>
   </div>
 </template>
 <script>
-  import { SECTION_MAP } from '../../constants'
+  import { SECTION_MAP, SITE_URL } from '../../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
   import Slider from '../Slider.vue'
   import _ from 'lodash'
+  import sanitizeHtml from 'sanitize-html'
 
   export default {
     components: {
@@ -48,13 +56,18 @@
           paginationable: true,
           paginationClickable: true,
           paginationHide: false,
-          setNavBtn: true,
+          setNavBtn: false,
           slidesPerView: this.slidesPerView,
           spaceBetween: 30,
         }
       },
       sliderId() {
         return `proj`
+      }
+    },
+    data() {
+      return {
+        siteUrl: SITE_URL
       }
     },
     methods: {
@@ -67,6 +80,13 @@
       getImage,
       getTruncatedVal,
       getValue,
+      goPrev() {
+        window.refs[ this.sliderId ].slidePrev()
+      },
+      goNext() {
+        window.refs[ this.sliderId ].slideNext()
+      },
+      sanitizeHtml
     },
     name: 'project-list',
     props: {
@@ -82,19 +102,45 @@
 <style lang="stylus">
 .project-container 
   font-size 18px
+  position relative
+
+  .proj_title
+    border-bottom 5px solid #000
+
+    h3
+      width 4rem
+      background-color #000
+      color #fff
+      font-size 1rem
+      display flex
+      justify-content center
+      align-items flex-end
+      height 1.5rem
+      margin 0
 
   .proj_list 
-    margin-top 10px
     display flex
     align-content flex-start
     flex-wrap wrap
     justify-content space-between
+    
+    padding 20px 20px 10px 0
+    border 1px solid rgba(0, 0, 0, 0.29)
+
+    .swiper-container
+      .swiper-wrapper
+        .swiper-slide-active
+          .proj_item
+            border-left none
 
     .proj_item 
       vertical-align top
-      margin-bottom 30px
 
-      > div:not([class="proj_item_title"])
+      padding-left 30px
+      border-left 1px solid rgba(0, 0, 0, 0.18)
+      height 95%
+
+      > div:not([class="proj_item_title"]):not([class="proj_item_desc"])
         position relative
         height 0
         padding-top 66.67%
@@ -114,33 +160,54 @@
         background-size cover
         background-position center center
       
-      .proj_item_title 
+      .proj_item_title, .proj_item_desc
         background-color #fff
-        border-left 7px solid #414141
         border-top-width 0
         line-height 1.5rem
         font-size 1.1rem
-        display flex
-        justify-content center
-        align-items center
-        min-height 60px
-
+        padding 10px 0
 
         a 
-          width 95%
+          width 100%
           max-height 100%
-          margin 10px 20px
+          margin 10px 0
 
           &:hover, &:link, &:visited 
-            color rgba(0, 0, 0, 0.49)
             font-weight normal
             border none
-          
-  .swiper-button-prev 
-    background-image url(/public/icon/left-2017.png)!important
+      
+      .proj_item_title
+        a 
+          &:hover, &:link, &:visited 
+            color rgba(0, 0, 0, 0.8)
 
-  .swiper-button-next 
-    background-image url(/public/icon/right-2017.png)!important
+      .proj_item_desc
+        padding 0 0 10px
+
+        a 
+          &:hover, &:link, &:visited 
+            color rgba(0, 0, 0, 0.49)
+
+
+  .slide-nav-btn
+    background-size contain
+    background-repeat no-repeat
+    background-position center center
+    position absolute
+    width 25px
+    height 50px
+    top 50%
+    z-index 20
+    cursor pointer
+
+    &.prev
+      left 0
+      background-image url(/public/icon/B-left.png)
+    
+    &.next
+      right 0
+      background-image url(/public/icon/B-right.png)
+
 
 @media (min-width 0px) and (max-width 499px)
   .project-container 
