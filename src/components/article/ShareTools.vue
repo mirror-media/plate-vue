@@ -1,6 +1,6 @@
 <template>
   <div class="share-toolbox mobile-hide">
-    <div class="item mm-icon" @click="goHome"></div>
+    <div class="item mm-icon" @click="goHome" id="share-home"></div>
     <div class="item line" @click="shareLine" id="share-line"></div>
     <div class="item facebook" @click="shareFacebook" id="share-fb"></div>
     <div class="item g-plus" @click="shareGooglePlus" id="share-google"></div>
