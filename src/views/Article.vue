@@ -45,7 +45,7 @@
             </div>
           </div>
         </div>
-        <share-tools />
+        <share-tools v-if="viewport > 767" />
       </div>
       <div v-else-if="(articleStyle === 'photography')">
         <article-body-photography :articleData="articleData" :viewport="viewport">
@@ -136,7 +136,6 @@
     beforeRouteUpdate(to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
         const sections = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
-        console.log('section', _.get(sections, [ 0, 'id' ]))
         return fetchLatestArticle(store, {
           sort: '-publishedDate',
           where: {

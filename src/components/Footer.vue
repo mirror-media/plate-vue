@@ -77,16 +77,6 @@
         }
         window.touchClientY = _currTouchClientY
       })
-      // window.addEventListener('scroll', () => {
-      //   const lastTop = window.currTopForShareBottom || 0
-      //   const currTop = currentYPosition()
-      //   if(currTop > lastTop - 10) {
-      //     this.scrollDirection = 'down'
-      //   } else {
-      //     this.scrollDirection = 'up'
-      //   }
-      //   window.currTopForShareBottom = currTop
-      // })
     }
   }
 </script>
