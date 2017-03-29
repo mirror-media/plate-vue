@@ -1,6 +1,7 @@
 <template>
   <section class="latestArticle-full">
-    <div class="latestArticle-full-dfp dfp-l3">AD L3</div>
+    <vue-dfp :is="props.vueDfp" pos="LMBL3" extClass="mobile-hide mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" 
+        :dfpId="props.dfpId" />
     <div class="latestArticle-full-post-container">
       <h2>最新新聞 Latest Stories</h2>
       <div class="latestArticle-full-posts">
@@ -23,7 +24,10 @@
       
     </div>
     <div class="latestArticle-full-dfp dfp-R desktop-only">
-      <div>AD R3 R4</div>
+      <vue-dfp :is="props.vueDfp" pos="LPCR3" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
+        :dfpId="props.dfpId" />
+      <vue-dfp :is="props.vueDfp" pos="LPCR4" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
+        :dfpId="props.dfpId" />
     </div>
   </section>
 </template>
@@ -35,9 +39,7 @@ import moment from 'moment'
 
 export default {
   name: 'latestArticle-full',
-  props: {
-    articles: {},
-  },
+  props: ['articles', 'props'],
   methods: {
     getAuthor,
     getBrief,
@@ -136,13 +138,8 @@ export default {
     width 300px
     min-width 300px
     margin 0 auto
-    background-color #ffe066
     > div
-      height 250px      
-
-    &.dfp-l3
-      height 250px
-      margin-bottom 35px
+      height 250px    
 
 @media (min-width: 1200px)
   .latestArticle-full

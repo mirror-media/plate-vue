@@ -1,6 +1,6 @@
 <template>
   <section class="article-leading">
-    <div v-for="article in highlightArticle">
+    <div v-for="(article, index) in highlightArticle">
       <a :href="getHref(article)" class="article-leading-img">
         <figure>
           <img :src="getImage(article, 'desktop')">
@@ -15,7 +15,12 @@
           <a :href="getHref(article)"><h2 v-text="article.title"></h2></a>
           <a :href="getHref(article)"><p v-text="getBrief(article, 200) + ' <More>' "></p></a>
         </div>
-        <div class="article-leading-post__dfp dfp-l1 dfp-l2">AD L1 L2</div>
+        <div class="article-leading-post__dfp dfp-l1 dfp-l2">
+          <vue-dfp :is="props.vueDfp" pos="LPCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="index === 0" :dfpId="props.dfpId" />
+          <vue-dfp :is="props.vueDfp" pos="LPCR2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="index === 1" :dfpId="props.dfpId" />
+          <vue-dfp :is="props.vueDfp" pos="LMBL1" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" v-if="index === 0" :dfpId="props.dfpId" />
+          <vue-dfp :is="props.vueDfp" pos="LMBL2" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" v-if="index === 1" :dfpId="props.dfpId" />
+        </div>
       </div>
       <div class="article-leading-related" v-if="hasRelated(article)">
         <div>
@@ -52,10 +57,7 @@ import objectFitImages from 'object-fit-images'
 
 export default {
   name: 'article-leading',
-  props: {
-    articles: {},
-  },
-  
+  props: ['articles', 'props'],  
   methods: {
     getAuthor,
     getBrief,
@@ -151,9 +153,8 @@ export default {
         line-height 30px
     &__dfp
       width 300px
-      height 250px
+      height auto
       margin 0 auto
-      background-color #ffe066
 
   &-related
     padding 0 32px 35px
