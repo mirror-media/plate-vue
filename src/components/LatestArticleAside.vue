@@ -1,11 +1,17 @@
 <template>
-  <div class="latest-aside-container" v-if="(latestList.length > 0)">
+  <div class="latest-aside-container" v-if="groupedArticle">
     <div class="latest-list">
-      <div class="latest-list_item" v-for="(o, i) in latestList" v-if="i < 4">
-        <router-link :to="getHref(o)" v-if="i < 1">
-          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
-          <div class="latest-list_item_label" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
+      <div class="latest-list_item">
+        <router-link :to="getHref(getValue(groupedArticle))">
+          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
+          <div class="latest-list_item_label" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
         </router-link>
+        <div class="latest-list_item_title" :style="getSectionStyleBorderTop(getValue(groupedArticle, [ 'sections', 0 ], ''))">
+          <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)"></router-link>
+        </div>
+      </div>
+
+      <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])">
         <div class="latest-list_item_title" :style="getSectionStyleBorderTop(getValue(o, [ 'sections', 0 ], ''))">
           <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)"></router-link>
         </div>
@@ -48,8 +54,8 @@ export default {
     }
   },
   props: {
-    latestList: {
-      default: () => { return [] }
+    groupedArticle: {
+      default: () => { return undefined }
     },
     viewport: {
       default: () => { return undefined }

@@ -1,12 +1,12 @@
 <template>
-  <footer :class="ifShowShareBottom">
+  <footer class="left" :class="ifShowShareBottom">
     <div class="left mobile-hide">
       <div><span><a id="footer-subscribe" href="https://docs.google.com/a/mirrormedia.mg/forms/d/e/1FAIpQLSfrEEGd5Qv160mquHj6H0flpbgliARY0kiLY9WjTYwnV8pBkA/viewform?c=0&w=1">訂閱鏡週刊</a></span></div>
       <div><span><a id="footer-ad" href="https://www.mirrormedia.mg/story/ad1018001/index.html?utm_source=mm&utm_medium=footer&utm_campaign=salesteam">廣告合作</a></span></div>
       <div><span><a id="footer-activity" href="https://www.mirrormedia.mg/category/campaign">活動專區</a></span></div>
       <div><span><a id="footer-download" href="http://hyperurl.co/mmfooter">下載ＡＰＰ</a></span></div>
     </div>
-    <div class="share mobile-hide">
+    <div class="follow mobile-hide">
       <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" ><img src="/public/icon/line@2x.png" class="footer-icon line" /></a>
       <a class="item" id="footer-weibo" :href="SOCIAL_LINK.WEIBO" ><img src="/public/icon/weibo@2x.png" class="footer-icon weibo" /></a>
       <a class="item" id="footer-fb" :href="SOCIAL_LINK.FACEBOOK" ><img src="/public/icon/facebook@2x.png" class="footer-icon facebook" /></a>
@@ -83,11 +83,11 @@
 <style lang="stylus" scoped>
   footer 
     display flex
-    border-top 2px solid #000
     padding-top 15px
     padding-bottom 50px
     justify-content space-between
     margin-top 20px
+    border-top 2px solid #000
 
     .left 
       display flex
@@ -99,7 +99,7 @@
         font-weight bold
       
     
-    .share 
+    .follow 
       display flex
       justify-content space-around
       align-items center
@@ -119,7 +119,6 @@
       background-color #064f77
       z-index 99
       transition bottom 0.25s
-      border-top none
 
       .share-mobile
         display flex
@@ -156,8 +155,14 @@
       &.show
         bottom 0
 
+  @media (min-width 0px) and (max-width 1199px)
+    .mobile-hide
+      display none!important
+
   @media (max-width 1199px)
     footer
+      border-top none
+
       .left
         div
           width 20%

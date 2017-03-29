@@ -67,6 +67,11 @@ function loadArticles(params = {}) {
     return _doFetch(url)
 }
 
+function loadArticlesGroupedList(params = {}) {
+    let apiHost = `${_host}/api/grouped`
+    return _doFetch(apiHost)
+}
+
 function loadArticlesPopList(params = {}) {
     const { SERVER_PROTOCOL, SERVER_HOST } = config
     let url = `${_host}/api/poplist`
@@ -200,6 +205,10 @@ export function fetchArticles(params = {}) {
 
 export function fetchArticlesByUuid(uuid = '', type = '', params = {}, isOnlyMeta = true) {
     return loadArticlesByUuid(uuid, type, params, isOnlyMeta)
+}
+
+export function fetchArticlesGroupedList(params = {}) {
+    return loadArticlesGroupedList(params)
 }
 
 export function fetchArticlesPopList(params = {}) {

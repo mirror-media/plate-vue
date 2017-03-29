@@ -19,21 +19,33 @@ router.all('/', function(req, res, next) {
     next()
 });
 
-router.use('/twitter', function(req, res, next) {
+router.use('/grouped', function(req, res, next) {
+    // const query = req.query
+    superagent
+        .get(`${SERVER_PROTOCOL}://${SERVER_HOST}/json/grouped.json`)
+        .end((err, response) => {
+            if (!err && response) {
+                res.json(JSON.parse(response.text))
+            } else {
+                res.send('{\'error\':' + err + '}')
+            }
+        })
+});
 
-    const query = req.query
-    let client = new Twitter(TWITTER_API)
-    if (!('screen_name' in query) || query.screen_name === '') {
-        res.send('empty screen_name')
-    } else {
-        client.get('statuses/user_timeline', query, function(err, data) {
+router.use('/playlist', function(req, res, next) {
+    let query = req.query
+    let url = `${YOUTUBE_PROTOCOL}://${YOUTUBE_HOST}?part=snippet&playlistId=${YOUTUBE_PLAYLIST_ID}&key=${YOUTUBE_API_KEY}`
+    superagent
+        .get(url)
+        .timeout(YOUTUBE_API_TIMEOUT)
+        .query(query)
+        .end(function(err, response) {
             if (err) {
                 res.send(err)
             } else {
-                res.json(data)
+                res.json(response.body)
             }
         })
-    }
 });
 
 router.use('/poplist', function(req, res, next) {
@@ -84,20 +96,21 @@ router.use('/search', function(req, res, next) {
         })
 });
 
-router.use('/playlist', function(req, res, next) {
-    let query = req.query
-    let url = `${YOUTUBE_PROTOCOL}://${YOUTUBE_HOST}?part=snippet&playlistId=${YOUTUBE_PLAYLIST_ID}&key=${YOUTUBE_API_KEY}`
-    superagent
-        .get(url)
-        .timeout(YOUTUBE_API_TIMEOUT)
-        .query(query)
-        .end(function(err, response) {
+router.use('/twitter', function(req, res, next) {
+
+    const query = req.query
+    let client = new Twitter(TWITTER_API)
+    if (!('screen_name' in query) || query.screen_name === '') {
+        res.send('empty screen_name')
+    } else {
+        client.get('statuses/user_timeline', query, function(err, data) {
             if (err) {
                 res.send(err)
             } else {
-                res.json(response.body)
+                res.json(data)
             }
         })
+    }
 });
 
 router.get('*', (req, res) => {
