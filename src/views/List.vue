@@ -10,15 +10,15 @@
           <div class="topic-title"><h1></h1></div>
           <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
         </div>
-        <!-- <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" :dfpId="props.dfpId" /> -->
+        <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" :dfpId="props.dfpId" />
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
-        <article-list :articles='articles.items' v-if="title !== 'Audio' && name !== 'videohub' ">
-          <!-- <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3"/>
+        <article-list :articles='articles.items' :hasDFP='hasDFP' v-if="title !== 'Audio' && name !== 'videohub' ">
+          <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3"/>
           <vue-dfp :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5"/>
-          <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9"/> -->
+          <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9"/>
         </article-list>
         <audio-list :audios="audios.items" v-if="title == 'Audio'" />
         <video-list :playlist="playlist.items" v-if="name == 'videohub'"/>
@@ -26,19 +26,19 @@
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
         <section class="footer container">
-          <!-- <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" /> -->
+          <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
           <app-footer />
         </section>
       </div>
 
       <div class="listFull-view" v-if="pageStyle == 'full'">
-        <div id="dfp-HD" class="listFull-dfp dfp-HD">AD HD</div>
+        <!-- <div id="dfp-HD" class="listFull-dfp dfp-HD">AD HD</div> -->
         <section>
           <header-full :commonData='commonData' :section='sectionName' :sections='commonData.sections' />
         </section>
-        <article-leading :articles='articles.items' v-if="type == 'SECTION'"/>
+        <article-leading :articles='articles.items' :props="props" v-if="type == 'SECTION'"/>
         <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type == 'SECTION'"/>
-        <latestArticle-full :articles='articles.items' v-if="type == 'SECTION'" />
+        <latestArticle-full :articles='articles.items' :props="props" v-if="type == 'SECTION'" />
         <section v-if="(type == 'TAG' && pageStyle == 'full')" class="tag-gallery" 
                   :style="{ backgroundImage: 'url(' + getImage(tag, 'desktop') + ')' }">
           <div class="tag-gallery-headline">
@@ -53,7 +53,8 @@
         <article-list-full :articles='articles.items' v-if="type == 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
-        <div class="listFull-dfp dfp-FT">AD FT</div>
+        <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <footer-full :commonData='commonData' :section='sectionName' />
       </div>
 
@@ -424,6 +425,9 @@ export default {
         default:
           return null
       }
+    },
+    hasDFP () {
+      return this.type === TOPIC || this.$route.params.title === 'topic' ? false : true
     },
     hasMore () {
       switch(this.name) {

@@ -1,6 +1,6 @@
 <template>
   <section class="articleList container">
-    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA3" class="articleList-block">
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA3" v-if="hasDFP" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
       <div class="articleList__content" :class="getSection(item)">
@@ -8,8 +8,8 @@
         <p v-text="getBrief(item, 45)"></p>
       </div>
     </router-link>
-    <slot name="dfpNA3"></slot>
-    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA5" class="articleList-block">
+    <slot name="dfpNA3" v-if="hasDFP"></slot>
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA5" v-if="hasDFP" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
       <div class="articleList__content" :class="getSection(item)">
@@ -17,8 +17,8 @@
         <p v-text="getBrief(item, 45)"></p>
       </div>
     </router-link>
-    <slot name="dfpNA5"></slot>
-    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA9" class="articleList-block">
+    <slot name="dfpNA5" v-if="hasDFP"></slot>
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA9" v-if="hasDFP" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
       <div class="articleList__content" :class="getSection(item)">
@@ -26,8 +26,16 @@
         <p v-text="getBrief(item, 45)"></p>
       </div>
     </router-link>
-    <slot name="dfpNA9"></slot>
-    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesAfterDFPNA9" class="articleList-block">
+    <slot name="dfpNA9" v-if="hasDFP"></slot>
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesAfterDFPNA9" v-if="hasDFP" class="articleList-block">
+      <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
+      </div>
+      <div class="articleList__content" :class="getSection(item)">
+        <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+        <p v-text="getBrief(item, 45)"></p>
+      </div>
+    </router-link>
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articles" v-if="!hasDFP" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
       <div class="articleList__content" :class="getSection(item)">
@@ -47,7 +55,7 @@ export default {
   name: 'articleList',
   components: {
   },
-  props: ['articles'],
+  props: ['articles', 'hasDFP'],
   computed: {
     articlesBeforeDFPNA3 () {
       return _.take(this.articles, 2)
