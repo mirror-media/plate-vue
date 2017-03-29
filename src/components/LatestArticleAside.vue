@@ -67,6 +67,11 @@ export default {
         .latest-list_item_title
           border-top-style solid
 
+      &:last-child
+        .latest-list_item_title
+          &::after
+            display none
+
       > a
         position relative
         display block
@@ -87,6 +92,7 @@ export default {
 
           bottom 0
           left 10%
+          z-index 10
       
       &_title
         color rgba(0, 0, 0, 0.65)
@@ -100,10 +106,22 @@ export default {
         padding 15px 10px
         font-size 1.3rem
         line-height 1.7rem
-        // box-shadow -5px 0 20px -3px rgba(51, 51, 51, 0.2), 5px 0 20px -3px rgba(51, 51, 51, 0.2)
+        box-shadow 0 0 6px rgba(0,0,0,0.5)
+        position relative
+
+        &::after
+          content ""
+          display block
+          width 100%
+          height 12px
+          position absolute
+          left 0
+          bottom -6px
+          z-index 10
+          background-color #ffffff
+          border-bottom 1px solid #999
 
         font-weight 300
-
         width 80%
         margin 0 auto
 
@@ -133,7 +151,10 @@ export default {
           width 100%
           border-left none
           border-right none
+          box-shadow none
           
+          &::after
+            display none
           // > a
 
 @media (min-width: 1200px)  

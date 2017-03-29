@@ -211,6 +211,8 @@ export default {
 .home-view
   width 100%
   box-sizing border-box
+  padding-bottom 50px 
+  
   h2 
     margin: 0;
     font-family Noto Sans TC,sans-serif

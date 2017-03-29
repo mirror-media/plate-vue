@@ -10,10 +10,7 @@
         <section class="container list">
           <aside>
             <div class="aside-title mobile-only"><h2>最新文章</h2></div>
-            <LatestArticleAside :latestList="latestArticle" :viewport="viewport" />
-            <LatestArticleAside :latestList="latestArticle" :viewport="viewport" />
-            <LatestArticleAside :latestList="latestArticle" :viewport="viewport" />
-            <LatestArticleAside :latestList="latestArticle" :viewport="viewport" />
+            <LatestArticleAside :latestList="latestArticle" :viewport="viewport" v-for="n in 4" />
           </aside>
           <main>
             <LatestArticleMain :latestList="latestArticle" :viewport="viewport" />
