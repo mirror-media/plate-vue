@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchDataByCombo, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
+import { fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchDataByCombo, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchSectionList, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
 
 Vue.use(Vuex)
 
@@ -12,6 +12,7 @@ const store = new Vuex.Store({
         articles: {},
         articlesByUUID: {},
         articlesPopList: {},
+        articlesGroupedList: {},
         audios: {},
         authors: [],
         commonData: {},
@@ -55,6 +56,11 @@ const store = new Vuex.Store({
                     commit('SET_TAGS', articles)
                 })
         },
+        
+        FETCH_ARTICLES_GROUPED_LIST: ({ commit, state }, { params = {} }) => {
+            return fetchArticlesGroupedList(params).then(articlesGroupedList => commit('SET_ARTICLES_GROUPED_LIST', { articlesGroupedList }))
+        },
+        
         FETCH_ARTICLES_POP_LIST: ({ commit, state }, { params = {} }) => {
             return fetchArticlesPopList(params).then(articlesPopList => commit('SET_ARTICLES_POP_LIST', { articlesPopList }))
         },
@@ -176,6 +182,10 @@ const store = new Vuex.Store({
 
         SET_ARTICLES_BY_UUID: (state, { articles }) => {
             Vue.set(state, 'articlesByUUID', articles)
+        },
+
+        SET_ARTICLES_GROUPED_LIST: (state, { articlesGroupedList }) => {
+            Vue.set(state, 'articlesGroupedList', articlesGroupedList)
         },
 
         SET_ARTICLES_POP_LIST: (state, { articlesPopList }) => {

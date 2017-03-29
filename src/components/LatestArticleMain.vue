@@ -91,12 +91,16 @@ export default {
     getValue,
     getSectionStyle(sect) {
       const sectionId = _.get(sect, [ 'id' ])
-      const style = (this.viewport > 1199) ? { 
+      let device = 'label-width'
+      if(this.viewport < 600) {
+        device = 'label-width-mobile'
+      } else if(this.viewport > 599 && this.viewport < 1200) {
+        device = 'label-width-tablet'
+      }
+
+      const style = { 
         backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
-        width:  _.get( SECTION_MAP, [sectionId, 'label-width'], '45px'),
-      } : { 
-        backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
-        width:  _.get( SECTION_MAP, [sectionId, 'label-width-tablet'], '60px'),
+        width:  _.get( SECTION_MAP, [sectionId, device], '45px'),
       }
       return style
     },
@@ -128,6 +132,12 @@ export default {
       align-content flex-start
       flex-wrap wrap
       justify-content space-between
+
+      .ad-container
+        margin-bottom 15px
+        border-bottom 1px solid rgba(0,0,0,0.28)
+        width 100%
+        padding-bottom 15px
 
       &_item
         vertical-align top
@@ -237,6 +247,9 @@ export default {
         flex-direction column
         width 100%
 
+        .ad-container
+          border-bottom none
+
         &_item
           width 100%
           border-bottom none
@@ -251,6 +264,7 @@ export default {
               height 60px
               width 60px
               font-size 1.2rem
+              padding 10px
               
 
           &_title
@@ -281,6 +295,9 @@ export default {
       .latest-list
         flex-direction row
 
+        .ad-container
+          width 31%
+
         &_item
           width 31%
           display block
@@ -294,6 +311,7 @@ export default {
               top -25px
               left 0
               font-size 0.9rem
+              padding 0
 
           &_title
             padding-left 0

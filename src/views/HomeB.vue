@@ -5,12 +5,13 @@
         <section style="width: 100%;">
           <app-Header v-if="true" :commonData= 'commonData' />
         </section>
+        <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" class="event" />
         <editor-choice :editorChoice= 'editorChoice'/>
         <section class="container list">
           <aside>
             <div class="aside-title mobile-only"><h2>最新文章</h2></div>
-            <LatestArticleAside :latestList="latestArticle" :viewport="viewport" v-for="n in 4" />
+            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="o in groupedArticle" />
           </aside>
           <main>
             <LatestArticleMain :latestList="latestArticle" :viewport="viewport">
@@ -24,7 +25,8 @@
         </section>
         <loading :show="loading" />
         <section class="container">
-          <app-footer v-if="viewport > 1199"/>
+          <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <app-footer v-if="viewport > 599"/>
         </section>
       </div>
     </template>
@@ -53,7 +55,7 @@ const MAXRESULT = 20
 const PAGE = 1
 
 const fetchSSRData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'choices' ] } )
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] } )
 }
 
 const fetchCommonData = (store) => {
@@ -71,14 +73,8 @@ const fetchEvent = (store) => {
   })
 }
 
-const fetchLatestArticle = (store, page) => {
-  return store.dispatch('FETCH_LATESTARTICLES', {
-    params: {
-      'max_results': MAXRESULT,
-      'page': page,
-      'sort':'-publishedDate'
-    }
-  })
+const fetchArticlesGroupedList = (store) => {
+  return store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
 }
 
 const fetchPop = (store) => {
@@ -103,8 +99,9 @@ export default {
   beforeRouteEnter (to, from, next) {
     if(process.env.VUE_ENV === 'client' && to.path !== from.path) {
       next(vm => {
-        if (_.get(vm.$store, ['state', 'commonData', 'sections', 'items']) || _.get(vm.$store, ['state', 'commonData', 'choices', 'items'])) {
+        if (_.get(vm.$store, ['state', 'commonData', 'sections', 'items']) || _.get(vm.$store, ['state', 'articlesGroupedList', 'choices'])) {
           fetchSSRData(vm.$store)
+          fetchArticlesGroupedList(vm.$store)
           fetchPop(vm.$store)
         }
       })
@@ -116,24 +113,19 @@ export default {
     return {
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
-      hasScrollLoadMore: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE) > 1 ? true : false,
       loading: false,
-      page: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE),
       viewport: undefined,
     }
   },
   computed: {
+    articlesGroupedList() {
+      return this.$store.state.articlesGroupedList
+    },
     commonData () {
       return this.$store.state.commonData
     },
     editorChoice () {
-      if ( _.get(this.$store.state.editorChoice, ['items', 'length']) > 4) {
-        return _.get(this.$store.state.editorChoice, ['items'])
-      } else {
-        let orig = _.values(_.get(this.$store.state, ['editorChoice', 'items']))
-        let xorBy = _.xorBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'title')
-        return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
-      }
+      return _.get(this.articlesGroupedList, ['choices'])
     },
     event () {
       return this.$store.state.event
@@ -144,6 +136,9 @@ export default {
     eventType () {
       return this.is404 ? 'image' : _.get(this.event, ['items', '0', 'eventType'])
     },
+    groupedArticle() {
+      return _.slice(_.get(this.articlesGroupedList, ['grouped']))
+    },
     hasEvent () {
       const _eventStartTime = moment(new Date(_.get(this.event, ['items', 0, 'startDate'])))
       const _eventEndTime = moment(new Date(_.get(this.event, ['items', 0, 'endDate'])))
@@ -151,9 +146,7 @@ export default {
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime)) ? true : false
     },
     latestArticle () {
-      let xorBy = _.xorBy( _.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'id')
-      let latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length'])))
-      return latestArticle
+      return _.get(this.articlesGroupedList, ['latest'])
     },
     popularlist() {
       const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
@@ -197,6 +190,7 @@ export default {
     fetchCommonData(this.$store)
     fetchPop(this.$store)
     fetchEvent(this.$store)
+    fetchArticlesGroupedList(this.$store)
   },
   mounted() {
     this.updateViewport()
@@ -212,7 +206,7 @@ export default {
   margin-top 40px
 
 .articleList-block
-  display none
+  display block
 
 .home-view
   width 100%
