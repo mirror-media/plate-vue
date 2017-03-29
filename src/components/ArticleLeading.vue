@@ -1,7 +1,7 @@
 <template>
   <section class="article-leading">
     <div v-for="(article, index) in highlightArticle">
-      <a :href="getHref(article)" class="article-leading-img">
+      <a :href="getHref(article)" :id="'leading-' + article.id" class="article-leading-img">
         <figure>
           <img :src="getImage(article, 'desktop')">
         </figure>
@@ -12,8 +12,8 @@
           <span class="article-leading-post__meta--date" v-text="moment(article.publishedDate).format('Y.MM.DD')"></span>
         </div>
         <div class="article-leading-post__content">
-          <a :href="getHref(article)"><h2 v-text="article.title"></h2></a>
-          <a :href="getHref(article)"><p v-text="getBrief(article, 200) + ' <More>' "></p></a>
+          <a :href="getHref(article)" :id="'leading-' + article.id"><h2 v-text="article.title"></h2></a>
+          <a :href="getHref(article)" :id="'leading-' + article.id"><p v-text="getBrief(article, 200) + ' <More>' "></p></a>
         </div>
         <div class="article-leading-post__dfp dfp-l1 dfp-l2">
           <vue-dfp :is="props.vueDfp" pos="LPCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="index === 0" :dfpId="props.dfpId" />
@@ -27,12 +27,12 @@
           <span>相關文章 Related Stories</span>
           <template v-for="related in getRelated(article)">
             <div class="article-leading-related-post">
-              <a :href="getHref(related)" class="article-leading-related-post__img">
+              <a :href="getHref(related)" :id="'related-' + related.id" class="article-leading-related-post__img">
                 <figure :style="{ backgroundImage: 'url(' + getImage(related, 'mobile') + ')' }"></figure>
               </a>
               <div class="article-leading-related-post__content">
-                <a href=""><h3 v-text="related.title"></h3></a>
-                <a href="" class="desktop-only"><p v-html="getBrief(related, 55)"></p></a>
+                <a :href="getHref(related)" :id="'related-' + related.id"><h3 v-text="related.title"></h3></a>
+                <a :href="getHref(related)" :id="'related-' + related.id" class="desktop-only"><p v-html="getBrief(related, 55)"></p></a>
                 <div class="article-leading-related-post__content--meta">
                   <span class="article-leading-related-post__content--author" 
                         v-html="getAuthor(related, 'writers')"></span>

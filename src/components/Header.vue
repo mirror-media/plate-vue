@@ -40,8 +40,21 @@
         <a :href="item.href" :id="'header-' + item.id" v-for="item in headerItem.topic" v-text="item.title"></a>
         <a :href="item.href" :id="'header-' + item.name" v-for="item in headerItem.section" v-text="item.title"></a>
         <a :href="item.href" :id="'header-' + item.name" v-for="item in headerItem.category" v-text="item.title"></a>
-        <a :href="socialLink.SUBSCRIBE" id="footer-subscribe" target="_bank" class="header-sidebar__menu--subscribe">訂閱鏡週刊</a>
-        <a :href="socialLink.DOWNLOADAPP" id="footer-download" target="_bank" class="header-sidebar__menu--download">下載APP</a>
+        <a :href="socialLink.DOWNLOADAPP" id="footer-download" target="_bank" class="header-sidebar__menu--download">
+          <img src="/public/icon/download_lightgray.png">
+          <span>下載APP</span>
+        </a>
+        <div class="header-sidebar__menu--second">
+          <a :href="socialLink.EMAIL" target="_bank"><img src="/public/icon/mail_lightgray.png"></a>
+          <a :href="socialLink.FEED" target="_bank"><img src="/public/icon/feed_lightgray.png"></a>
+        </div>
+      </div>
+      <div class="header-sidebar__socialMedia">
+        <span>追蹤鏡傳媒</span>
+        <a :href="socialLink.LINE" target="_bank"><img src="/public/icon/line_blue.png"></a>
+        <a :href="socialLink.WEIBO" target="_bank"><img src="/public/icon/weibo_blue.png"></a>
+        <a :href="socialLink.FACEBOOK" target="_bank"><img src="/public/icon/facebook_blue.png"></a>
+        <a :href="socialLink.INSTAGRAM" target="_bank"><img src="/public/icon/instagram_blue.png"></a>
       </div>
     </nav>
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">

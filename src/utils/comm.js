@@ -5,7 +5,7 @@ import truncate from 'truncate'
 
 export function getAuthor(article, option = '') {
     let writers = (_.get(article, ['writers', 'length'], 0) > 0) ?
-        '文｜' + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '">' + _.get(n, ['name'], null) + '</a>' }).join('、') : ''
+        '文｜' + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, ['name'], null) + '</a>' }).join('、') : ''
     let photographers = (_.get(article, ['photographers', 'length'], 0) > 0) ?
         '<br>攝影｜' + _.map(article.photographers, (n) => { return _.get(n, ['name'], null) }).join('、') : ''
     let designers = (_.get(article, ['designers', 'length'], 0) > 0) ?

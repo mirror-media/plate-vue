@@ -161,22 +161,22 @@ $color-other = #bcbcbc
             line-height 2rem
             border-left none
           &.news-people
-            border-left 8px solid $color-news
+            border-left 7px solid $color-news
 
           &.entertainment
-            border-left 8px solid $color-entertainment
+            border-left 7px solid $color-entertainment
 
           &.foodtravel
-            border-left 8px solid $color-foodtravel
+            border-left 7px solid $color-foodtravel
 
           &.watch
-            border-left 8px solid $color-watch
+            border-left 7px solid $color-watch
 
           &.projects
-            border-left 8px solid $color-projects
+            border-left 7px solid $color-projects
 
           &.other
-            border-left 8px solid $color-other
+            border-left 7px solid $color-other
 
       .list-narrow
         > a
@@ -272,17 +272,17 @@ $color-other = #bcbcbc
           p
             display none !important
           &.news-people
-            border-left 3px solid $color-news
+            border-left 7px solid $color-news
           &.entertainment
-            border-left 3px solid $color-entertainment
+            border-left 7px solid $color-entertainment
           &.foodtravel
-            border-left 3px solid $color-foodtravel
+            border-left 7px solid $color-foodtravel
           &.watch
-            border-left 3px solid $color-watch
+            border-left 7px solid $color-watch
           &.projects
-            border-left 3px solid $color-projects
+            border-left 7px solid $color-projects
           &.other
-            border-left 3px solid $color-other
+            border-left 7px solid $color-other
       .list-narrow
         &__title
           h2
@@ -364,20 +364,20 @@ $color-other = #bcbcbc
 .list-narrow__title, .list-wide__title
   > h2
     &.news-people
-      border-left 3px solid $color-news
+      border-left 7px solid $color-news
 
     &.entertainment
-      border-left 3px solid $color-entertainment
+      border-left 7px solid $color-entertainment
 
     &.foodtravel
-      border-left 3px solid $color-foodtravel
+      border-left 7px solid $color-foodtravel
 
     &.watch
-      border-left 3px solid $color-watch
+      border-left 7px solid $color-watch
 
     &.projects
-      border-left 3px solid $color-projects
+      border-left 7px solid $color-projects
 
     &.other
-      border-left 3px solid $color-other
+      border-left 7px solid $color-other
 </style>

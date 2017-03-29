@@ -128,8 +128,5 @@ button:focus {
   .container
     width 1024px
 
-@media (min-width 1800px)
-  .container
-    width 1200px
 
 </style>

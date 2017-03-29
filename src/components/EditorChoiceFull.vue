@@ -4,12 +4,12 @@
     <div class="editorChoice-full-post-container">
       <template v-for="article in highlightArticle">
         <div class="editorChoice-full-post">
-          <router-link :to="getHref(article)" class="editorChoice-full-post__img">
+          <router-link :to="getHref(article)" :id="'choice-' + article.id" class="editorChoice-full-post__img">
             <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
           </router-link>
           <div class="editorChoice-full-post__content">
-            <router-link :to="getHref(article)"><h2 v-text="article.title"></h2></router-link>
-            <router-link :to="getHref(article)"><p v-html="getBrief(article, 100)"></p></router-link>
+            <router-link :to="getHref(article)" :id="'choice-' + article.id"><h2 v-text="article.title"></h2></router-link>
+            <router-link :to="getHref(article)" :id="'choice-' + article.id"><p v-html="getBrief(article, 100)"></p></router-link>
           </div>
           <div class="editorChoice-full-post__meta">
             <span class="editorChoice-full-post__meta--author" v-show="getAuthor(article, 'writers')" v-html="getAuthor(article, 'writers')"></span>

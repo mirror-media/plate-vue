@@ -10,15 +10,16 @@
           <div class="topic-title"><h1></h1></div>
           <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
         </div>
-        <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="type !== 'TOPIC'" :dfpId="props.dfpId" />
+        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
+          :section="props.section" :dfpId="props.dfpId" />
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
         <article-list :articles='articles.items' :hasDFP='hasDFP' v-if="title !== 'Audio' && name !== 'videohub' ">
-          <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3"/>
-          <vue-dfp :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5"/>
-          <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9"/>
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3"/>
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5"/>
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9"/>
         </article-list>
         <audio-list :audios="audios.items" v-if="title == 'Audio'" />
         <video-list :playlist="playlist.items" v-if="name == 'videohub'"/>
@@ -26,13 +27,15 @@
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
         <section class="footer container">
-          <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
+            :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
+            :section="props.section" :dfpId="props.dfpId" />
           <app-footer />
         </section>
       </div>
 
       <div class="listFull-view" v-if="pageStyle == 'full'">
-        <!-- <div id="dfp-HD" class="listFull-dfp dfp-HD">AD HD</div> -->
         <section>
           <header-full :commonData='commonData' :section='sectionName' :sections='commonData.sections' />
         </section>
@@ -53,8 +56,8 @@
         <article-list-full :articles='articles.items' v-if="type == 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
-        <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <!-- <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" /> -->
         <footer-full :commonData='commonData' :section='sectionName' />
       </div>
 
@@ -86,7 +89,8 @@ import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
 
-const MAXRESULT = 12
+const MAXRESULT = 9
+const LOADMOREMAXRESULT = 12
 const PAGE = 1
 
 const fetchCommonData = (store) => {
@@ -153,7 +157,7 @@ const fetchListData = (store, type, sectionStyle) => {
       uuid = store.state.route.params.topicId
       return fetchArticlesByUuid(store, uuid, TOPIC, { 
         page: PAGE,
-        max_results: MAXRESULT
+        max_results: LOADMOREMAXRESULT
       })
   }
 }
@@ -216,7 +220,7 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       let topic = _.find( _.get(store.state.commonData, ['topics', 'items']), { 'id': uuid } )
       return fetchArticlesByUuid(store, uuid, TOPIC, { 
         page: PAGE,
-        max_results: MAXRESULT
+        max_results: LOADMOREMAXRESULT
       }).then(() => {
         return (!topic) ? fetchTopicByUuid(store, uuid).then(() => {
           return fetchTopicImagesByUuid(store, uuid, type, {
@@ -478,11 +482,11 @@ export default {
         case CATEGORY:
           return _.get( _.find( _.get(this.commonData, ['sections', 'items']), (s) => { 
             return _.find(s.categories, { 'id': this.uuid })
-          }), ['id'], 'home')
+          }), ['id'], 'other')
         case SECTION:
-          return this.uuid
+          return _.get(this,['uuid'], 'other')
         default:
-          return 'home'
+          return 'other'
       }      
     },
     pageStyle () {
@@ -570,7 +574,8 @@ export default {
       switch(this.type) {
         case AUTHOR:
           fetchArticlesByAuthor(this.$store, this.uuid, { 
-            page: this.page
+            page: this.page,
+            max_results: LOADMOREMAXRESULT,
           }).then(() => {
             this.articles = this.$store.state.articles
             this.loading = false          
@@ -581,7 +586,7 @@ export default {
             case 'full':
               fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
                 page: this.page,
-                max_results: MAXRESULT,
+                max_results: LOADMOREMAXRESULT,
                 related: 'full'
               }).then(() => {
                 this.articles = this.$store.state.articlesByUUID
@@ -592,7 +597,7 @@ export default {
               if (this.$route.params.title === 'topic') {
                 fetchTopics(this.$store, {
                   page: this.page,
-                  max_results: MAXRESULT
+                  max_results: LOADMOREMAXRESULT
                 }).then(() => {
                   let orig = _.values(this.articles['items'])
                   let concat = _.concat(orig, _.get(this.$store.state, ['topic', 'items']))
@@ -603,7 +608,7 @@ export default {
               } else {
                 fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
                   page: this.page,
-                  max_results: MAXRESULT
+                  max_results: LOADMOREMAXRESULT
                 }).then(() => {
                   this.articles = this.$store.state.articlesByUUID
                   this.loading = false
@@ -782,15 +787,6 @@ $color-other = #bcbcbc
 .listFull
   &-view
     background-color #f5f5f5
-  &-dfp
-    width 300px
-    margin 0 auto 35px
-    background-color #ffe066
-    &.dfp-FT
-      height 250px
-    &.dfp-HD
-      display none
-      height 250px
 
 .tag-gallery 
   display flex
@@ -833,7 +829,7 @@ $color-other = #bcbcbc
   .list
     &-title
       &.container
-        padding-left 10px
+        padding-left 0
 
 @media (min-width: 1200px)
   .listFull
