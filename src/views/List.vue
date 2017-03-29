@@ -27,10 +27,14 @@
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
         <section class="footer container">
-          <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
+          <vue-dfp v-if="type !== 'TOPIC'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
             :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
+          <vue-dfp v-if="type !== 'TOPIC'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
             :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp v-if="type === 'TOPIC' && getValue(topic, ['dfp'], '').length > 0" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
+            :section="props.section" :dfpId="props.dfpId" :unitId="getValue(topic, ['dfp'], '')" />
+          <vue-dfp v-if="type === 'TOPIC' && getValue(topic, ['mobileDfp'], '').length > 0" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
+            :section="props.section" :dfpId="props.dfpId" :unitId="getValue(topic, ['mobileDfp'], '')" />
           <app-footer />
         </section>
       </div>

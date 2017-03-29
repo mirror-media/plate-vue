@@ -369,7 +369,7 @@
         float right
         padding-top 10px
         width 310px
-        margin-top -50px
+        margin-top -30px
       
       .article_footer
         text-align center
