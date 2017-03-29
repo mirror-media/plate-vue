@@ -20,7 +20,7 @@
         </section>
         <loading :show="loading" />
         <section class="container">
-          <app-footer />
+          <app-footer v-if="viewport > 599"/>
         </section>
       </div>
     </template>
