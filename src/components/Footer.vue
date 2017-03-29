@@ -59,16 +59,34 @@
       smoothScroll,
     },
     mounted() {
-      window.addEventListener('scroll', () => {
-        const lastTop = window.currTopForShareBottom || 0
-        const currTop = currentYPosition()
-        if(currTop > lastTop - 10) {
+      window.addEventListener('wheel', (e) => {
+        const _derection = e.wheelDelta
+        if(_derection <= 0) {
           this.scrollDirection = 'down'
         } else {
           this.scrollDirection = 'up'
         }
-        window.currTopForShareBottom = currTop
       })
+      window.addEventListener('touchmove', (e) => {
+        const _currTouchClientY = e.touches[ 0 ].clientY
+        const _lastTouchClientY = window.touchClientY || _currTouchClientY
+        if(_currTouchClientY <= _lastTouchClientY) {
+          this.scrollDirection = 'down'
+        } else {
+          this.scrollDirection = 'up'
+        }
+        window.touchClientY = _currTouchClientY
+      })
+      // window.addEventListener('scroll', () => {
+      //   const lastTop = window.currTopForShareBottom || 0
+      //   const currTop = currentYPosition()
+      //   if(currTop > lastTop - 10) {
+      //     this.scrollDirection = 'down'
+      //   } else {
+      //     this.scrollDirection = 'up'
+      //   }
+      //   window.currTopForShareBottom = currTop
+      // })
     }
   }
 </script>

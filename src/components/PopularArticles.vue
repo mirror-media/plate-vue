@@ -67,12 +67,12 @@
         width 100%
         border-bottom 1px solid rgba(0, 0, 0, 0.2)
         padding 15px 0 20px
+        display flex
 
         &:last-child
           border-bottom none
 
         &_label
-          float left
           margin-right 10px
           color #fff
           display flex
@@ -82,11 +82,12 @@
           width 60px
           height 60px
           font-size 1.2rem
+          flex 0 0 60px
 
         &_title
-          font-size 1.3rem
+          font-size 1.2rem
           font-weight 300
-          line-height 1.7rem
+          line-height 1.6rem
 
   @media (min-width: 1200px)
     .poplist-container
@@ -108,6 +109,7 @@
             width 40px
             height 40px
             font-size 0.8rem
+            flex 0 0 40px
 
           &_title
             font-size 1rem
