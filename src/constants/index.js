@@ -46,12 +46,12 @@ export const DFP_UNITS = {
         'MBFT': { 'aduid': 'mm_mobile_hp_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LPCHD': { 'aduid': 'mm_pc_hp_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': [''] },
         'LPCFT': { 'aduid': 'mm_pc_hp_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LPCNA4': { 'aduid': 'mm_RWD_hp_fluid_NA4', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
-        'LPCNA7': { 'aduid': 'mm_RWD_hp_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
-        'LPCNA12': { 'aduid': 'mm_RWD_hp_fluid_NA12', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
-        'LPCNA3': { 'aduid': 'mm_RWD_hp_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
-        'LPCNA5': { 'aduid': 'mm_RWD_hp_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
-        'LPCNA9': { 'aduid': 'mm_RWD_hp_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['margin-bottom: 17px'] },
+        'LPCNA4': { 'aduid': 'mm_RWD_hp_fluid_NA4', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA7': { 'aduid': 'mm_RWD_hp_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA12': { 'aduid': 'mm_RWD_hp_fluid_NA12', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA3': { 'aduid': 'mm_RWD_hp_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA5': { 'aduid': 'mm_RWD_hp_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA9': { 'aduid': 'mm_RWD_hp_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
     },
     'other': { //  topic
         // MBHD, MBAR1, MBAR2, MBE1, MBFT : position on mobile article page
