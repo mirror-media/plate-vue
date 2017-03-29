@@ -2,7 +2,49 @@
   <div class="latest-main-container" v-if="(latestList.length > 0)">
     <div class="latest-main-container_title desktop-only"><h3>最新文章</h3></div>
     <div class="latest-list">
-      <div class="latest-list_item" v-for="(o, i) in latestList" v-if="i < 12">
+      <div class="latest-list_item" v-for="(o, i) in latestListBeforeDFPNA3">
+        <router-link :to="getHref(o)">
+          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
+          <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
+        </router-link>
+        <div class="latest-list_item_title">
+          <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
+          <router-link :to="getHref(o)">
+            <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
+            <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
+          </router-link>
+        </div>
+      </div>
+      <slot name="dfpNA3"></slot>
+      <div class="latest-list_item" v-for="(o, i) in latestListBeforeDFPNA5">
+        <router-link :to="getHref(o)">
+          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
+          <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
+        </router-link>
+        <div class="latest-list_item_title">
+          <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
+          <router-link :to="getHref(o)">
+            <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
+            <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
+          </router-link>
+        </div>
+      </div>
+      <slot name="dfpNA5"></slot>
+      <div class="latest-list_item" v-for="(o, i) in latestListBeforeDFPNA9">
+        <router-link :to="getHref(o)">
+          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
+          <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
+        </router-link>
+        <div class="latest-list_item_title">
+          <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
+          <router-link :to="getHref(o)">
+            <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
+            <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
+          </router-link>
+        </div>
+      </div>
+      <slot name="dfpNA9"></slot>
+      <div class="latest-list_item" v-for="(o, i) in latestListAfterDFPNA9">
         <router-link :to="getHref(o)">
           <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
           <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
@@ -26,6 +68,20 @@ import sanitizeHtml from 'sanitize-html'
 
 export default {
   name: 'latest-list-main',
+  computed: {
+    latestListBeforeDFPNA3() {
+      return _.take(this.latestList, 2)
+    },
+    latestListBeforeDFPNA5() {
+      return _.slice(this.latestList, 2, 3)
+    },
+    latestListBeforeDFPNA9() {
+      return _.slice(this.latestList, 3, 6)
+    },
+    latestListAfterDFPNA9() {
+      return _.slice(this.latestList, 6, 9)
+    },
+  },
   data() {
     return {}
   },

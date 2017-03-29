@@ -122,7 +122,7 @@ export default {
           border-bottom 1px solid #999
 
         font-weight 300
-        width 80%
+        width 90%
         margin 0 auto
 
         > a
