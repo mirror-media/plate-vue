@@ -130,7 +130,7 @@ $color-other = #bcbcbc
       top 0
       bottom 0
       left -15px
-      width 5px
+      width 7px
       
     p
       display none
@@ -145,6 +145,7 @@ $color-other = #bcbcbc
     &.container
       flex-direction row
       justify-content flex-start
+      width 788px
     &-block
       width calc( (100% - 40px) / 2 )
       margin 0 10px 40px
@@ -157,6 +158,8 @@ $color-other = #bcbcbc
 
 @media (min-width: 1200px)
   .articleList
+    &.container
+      width 1044px
     &-block
       width calc( (100% - 60px) / 3 )
 

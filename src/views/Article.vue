@@ -1,7 +1,9 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
     <template scope="props" slot="dfpPos">
-      <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
+      <section style="width: 100%;">
+        <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
+      </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <div class="split-line"></div>
