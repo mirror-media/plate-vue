@@ -33,9 +33,9 @@
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
-              <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3"/>
-              <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5"/>
-              <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9"/>
+              <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3"/>
+              <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5"/>
+              <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9"/>
             </pop-list>
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'photography')" slot="relatedlistBottom" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
