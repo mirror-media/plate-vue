@@ -123,7 +123,7 @@ button:focus {
     display none !important
 
   .desktop-only
-    display block !important
+    display flex !important
 
   .container
     width 1024px

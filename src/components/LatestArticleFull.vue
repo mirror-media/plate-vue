@@ -135,6 +135,7 @@ export default {
         color #999
     
   &-dfp
+    flex-direction column
     width 300px
     min-width 300px
     margin 0 auto
