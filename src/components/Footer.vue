@@ -1,5 +1,5 @@
 <template>
-  <footer class="left" :class="ifShowShareBottom">
+  <footer class="left">
     <div class="left mobile-hide">
       <div><span><a id="footer-subscribe" href="https://docs.google.com/a/mirrormedia.mg/forms/d/e/1FAIpQLSfrEEGd5Qv160mquHj6H0flpbgliARY0kiLY9WjTYwnV8pBkA/viewform?c=0&w=1">訂閱鏡週刊</a></span></div>
       <div><span><a id="footer-ad" href="https://www.mirrormedia.mg/story/ad1018001/index.html?utm_source=mm&utm_medium=footer&utm_campaign=salesteam">廣告合作</a></span></div>
@@ -14,7 +14,12 @@
       <a class="item" id="footer-feed" :href="SOCIAL_LINK.FEED" ><img src="/public/icon/feed@2x.png" class="footer-icon feed" /></a>
       <a class="item" id="footer-email" :href="SOCIAL_LINK.EMAIL" ><img src="/public/icon/mail@2x.png" class="footer-icon mail" /></a>
     </div>
-    <div class="share-mobile mobile-only">
+    <div class="mobile-follow mobile-only">
+      <a href="https://docs.google.com/a/mirrormedia.mg/forms/d/e/1FAIpQLSfrEEGd5Qv160mquHj6H0flpbgliARY0kiLY9WjTYwnV8pBkA/viewform?c=0&w=1">訂閱鏡週刊</a> - 
+      <router-link to="/story/ad1018001">廣告合作</router-link> - 
+      <router-link to="/category/campaign">活動專區</router-link>
+    </div>
+    <div class="share-mobile mobile-only" :class="ifShowShareBottom" v-if="ifShare">
       <a class="share-mobile_btn" id="footer-line"><i class="icon line" @click="shareLine"></i></a>
       <a class="share-mobile_btn" id="footer-fb"><i class="icon facebook" @click="shareFacebook"></i></a>
       <a class="share-mobile_btn" id="footer-googleplus"><i class="icon google-plus" @click="shareGooglePlus"></i></a>
@@ -77,6 +82,11 @@
         }
         window.touchClientY = _currTouchClientY
       })
+    },
+    props: {
+      ifShare: {
+        default: () => { return true }
+      }
     }
   }
 </script>
@@ -109,21 +119,21 @@
       
   @media (min-width 0px) and (max-width 767px)
     footer
-      position fixed
-      bottom -50px
-      left 0
-      height 50px
-      width 100vw
-      padding 0
-      margin 0
-      background-color #064f77
-      z-index 99
-      transition bottom 0.25s
-
+      width 100%
+      
       .share-mobile
         display flex
-        width 100%
+        width 100vw
         height 100%
+        position fixed 
+        bottom -50px
+        left 0
+        height 50px
+        padding 0
+        margin 0
+        background-color #064f77
+        z-index 99
+        transition bottom 0.25s
 
         &_btn
           height 100%
@@ -152,12 +162,26 @@
             background-image url(/public/icon/google-plus.png)
             background-size 23%
 
-      &.show
-        bottom 0
+        &.show
+          bottom 0
 
   @media (min-width 0px) and (max-width 1199px)
     .mobile-hide
       display none!important
+
+    .mobile-follow
+      width 100%
+      border 1px solid rgba(0, 0, 0, 0.19)
+      margin-bottom 20px
+      padding 10px 20px
+      box-shadow 0 0 10px rgba(0, 0, 0, 0.2)
+      font-size 1.2rem
+      color rgba(0, 0, 0, 0.4)
+      text-align center
+
+      > a 
+        &:hover, &:link, &:visited
+          color rgba(0, 0, 0, 0.4)
 
   @media (max-width 1199px)
     footer

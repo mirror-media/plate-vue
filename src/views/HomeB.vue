@@ -22,14 +22,14 @@
               <vue-dfp :is="props.vueDfp" pos="LMBNA5" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
               <vue-dfp :is="props.vueDfp" pos="LMBNA9" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
             </LatestArticleMain>
-            <ProjectList class="desktop-only" :projects="projects" :viewport="viewport" />
+            <ProjectList class="mobile-hidden" :projects="projects" :viewport="viewport" />
             <PopularArticles :popList="popularlist" />
           </main>
         </section>
         <loading :show="loading" />
-        <section class="container">
+        <section class="container footer">
           <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <app-footer v-if="viewport > 599"/>
+          <app-footer :ifShare="false" />
         </section>
       </div>
     </template>
@@ -256,6 +256,10 @@ export default {
       width 90%
       margin 0 auto
 
+section.footer
+  width 100%
+  padding 0 2rem
+
 @media (min-width: 600px)
   .list
     &.container
@@ -291,6 +295,10 @@ export default {
 
       main
         width 100%
+
+  section.footer
+    width 100%
+    padding 0 2rem
 
 @media (min-width: 1200px)
   .list
