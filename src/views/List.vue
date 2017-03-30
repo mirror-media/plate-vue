@@ -27,9 +27,9 @@
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
         <section class="footer container">
-          <vue-dfp v-if="type !== 'TOPIC'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
+          <vue-dfp v-if="type !== 'TOPIC' && title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
             :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="type !== 'TOPIC'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
+          <vue-dfp v-if="type !== 'TOPIC' && title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
             :section="props.section" :dfpId="props.dfpId" />
           <vue-dfp v-if="type === 'TOPIC' && getValue(topic, ['dfp'], '').length > 0" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
             :section="props.section" :dfpId="props.dfpId" :unitId="getValue(topic, ['dfp'], '')" />
@@ -37,6 +37,7 @@
             :section="props.section" :dfpId="props.dfpId" :unitId="getValue(topic, ['mobileDfp'], '')" />
           <app-footer />
         </section>
+        <share />
       </div>
 
       <div class="listFull-view" v-if="pageStyle == 'full'">
@@ -60,8 +61,8 @@
         <article-list-full :articles='articles.items' v-if="type == 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
-        <!-- <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" /> -->
+        <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <footer-full :commonData='commonData' :section='sectionName' />
       </div>
 
@@ -89,6 +90,7 @@ import Leading from '../components/Leading.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
+import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
@@ -345,6 +347,7 @@ export default {
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
+    'share': Share,
     'video-list': VideoList,
     VueDfpProvider
   },
