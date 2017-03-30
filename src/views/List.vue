@@ -17,9 +17,9 @@
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
         <article-list :articles='articles.items' :hasDFP='hasDFP' v-if="title !== 'Audio' && name !== 'videohub' ">
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3"/>
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5"/>
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9"/>
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3" :dfpId="props.dfpId" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5" :dfpId="props.dfpId" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9" :dfpId="props.dfpId" />
         </article-list>
         <audio-list :audios="audios.items" v-if="title == 'Audio'" />
         <video-list :playlist="playlist.items" v-if="name == 'videohub'"/>
