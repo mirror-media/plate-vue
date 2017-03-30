@@ -15,9 +15,12 @@
           </aside>
           <main>
             <LatestArticleMain :latestList="latestArticle" :viewport="viewport">
-              <vue-dfp :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
-              <vue-dfp :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
-              <vue-dfp :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA3" extClass="mobile-hidden" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA5" extClass="mobile-hidden" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA9" extClass="mobile-hidden" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
+              <vue-dfp :is="props.vueDfp" pos="LMBNA3" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
+              <vue-dfp :is="props.vueDfp" pos="LMBNA5" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
+              <vue-dfp :is="props.vueDfp" pos="LMBNA9" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
             </LatestArticleMain>
             <ProjectList class="desktop-only" :projects="projects" :viewport="viewport" />
             <PopularArticles :popList="popularlist" />
