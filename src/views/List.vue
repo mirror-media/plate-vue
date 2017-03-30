@@ -92,7 +92,7 @@ import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
-import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
+import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
 
 const MAXRESULT = 9
