@@ -11,7 +11,7 @@
         </swiper-slide>
       </template>
     </app-slider>
-    <div class="editorChoice-list grid grid-1-fifth desktop-only">
+    <div class="editorChoice-list grid grid-1-fifth">
       <router-link v-for="(item, index) in editorChoice" :to="getHref(item) " :id="'choices-' + item.name"
             :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
             :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
@@ -205,6 +205,7 @@ $color-other = #bcbcbc
         border-top 5px solid #356d9c
 
   &-list
+    display none
     height 100%
     a:last-child
       div
@@ -295,6 +296,7 @@ $color-other = #bcbcbc
       height 500px
       margin-bottom 35px
     &-list
+      display block
       background-color #f6f6f6
 
 </style>

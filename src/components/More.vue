@@ -22,7 +22,7 @@ export default {
 
 .more
   height 30px
-  margin 20px 0 70px
+  margin 20px 0
   padding 0 1em
     
   > button

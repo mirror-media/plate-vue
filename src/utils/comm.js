@@ -87,17 +87,17 @@ export function getSection(article) {
 }
 
 export function shareGooglePlus({ route, shared }) {
-    window.open(`https://plus.google.com/share?url=${SITE_URL}/${route}`);
+    window.open(`https://plus.google.com/share?url=${SITE_URL}${route}`);
     shared && shared()
 }
 
 export function shareLine({ title, route, shared }) {
-    window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(title)}%0D%0A${encodeURIComponent(SITE_URL + '/' + route)}`)
+    window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(title)}%0D%0A${encodeURIComponent(SITE_URL + route)}`)
     shared && shared()
 }
 
 export function shareFacebook({ route, shared }) {
-    window.open(`https://www.facebook.com/share.php?u=${SITE_URL}/${route}`)
+    window.open(`https://www.facebook.com/share.php?u=${SITE_URL}${route}`)
     shared && shared()
 }
 

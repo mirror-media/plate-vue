@@ -17,8 +17,9 @@
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
         <section class="container">
-          <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <app-footer />
+          <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp :is="props.vueDfp" pos="MBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <app-footer v-if="viewport > 599" />
         </section>
       </div>
     </template>
@@ -105,7 +106,8 @@ export default {
       dfpUnits: DFP_UNITS,
       hasScrollLoadMore: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE) > 1 ? true : false,
       loading: false,
-      page: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE)
+      page: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE),
+      viewport: undefined,
     }
   },
   computed: {
@@ -147,7 +149,7 @@ export default {
     },
     projects () {
       return _.get(this.commonData, ['projects', 'items'])
-    }
+    },
   },
   methods: {
     loadMore () {
@@ -170,7 +172,12 @@ export default {
           this.loadMore()
         }
       } 
-    }
+    },
+    updateViewport() {
+      if(process.env.VUE_ENV === 'client') {
+        this.viewport = document.querySelector('body').offsetWidth
+      }
+    },
   },
   metaInfo () {
     let title = '鏡週刊 Mirror Media'
@@ -201,6 +208,10 @@ export default {
   },
   mounted() {
     this.handleScroll()
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
   }
 }
   
