@@ -177,7 +177,7 @@ export default {
               font-weight 300 
               line-height 1.7rem 
 
-            &hover, &link, &visited
+            &:hover, &:link, &:visited
               color #8c8c8c
               font-weight normal
               border none
