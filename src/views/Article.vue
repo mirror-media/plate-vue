@@ -24,7 +24,7 @@
         </div>
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
-            <aside class="article_aside desktop-only" slot="aside" v-if="ifSingleCol">
+            <aside class="article_aside mobile-hidden" slot="aside" v-if="ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" ></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" ></vue-dfp>
