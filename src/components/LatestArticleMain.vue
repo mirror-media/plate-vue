@@ -2,61 +2,22 @@
   <div class="latest-main-container" v-if="(latestList.length > 0)">
     <div class="latest-main-container_title desktop-only"><h3>最新文章</h3></div>
     <div class="latest-list">
-      <div class="latest-list_item" v-for="(o, i) in latestListBeforeDFPNA3">
-        <router-link :to="getHref(o)">
-          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
-          <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
-        </router-link>
-        <div class="latest-list_item_title">
-          <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
+      <template v-for="(articles, index) in latestArticleArr">
+        <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
           <router-link :to="getHref(o)">
-            <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
-            <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
+            <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
+            <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)" :class="labelClass(o)"></div>
           </router-link>
+          <div class="latest-list_item_title">
+            <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)" :class="labelClass(o)"></div>
+            <router-link :to="getHref(o)">
+              <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
+              <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
+            </router-link>
+          </div>
         </div>
-      </div>
-      <slot name="dfpNA3"></slot>
-      <div class="latest-list_item" v-for="(o, i) in latestListBeforeDFPNA5">
-        <router-link :to="getHref(o)">
-          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
-          <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
-        </router-link>
-        <div class="latest-list_item_title">
-          <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
-          <router-link :to="getHref(o)">
-            <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
-            <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
-          </router-link>
-        </div>
-      </div>
-      <slot name="dfpNA5"></slot>
-      <div class="latest-list_item" v-for="(o, i) in latestListBeforeDFPNA9">
-        <router-link :to="getHref(o)">
-          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
-          <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
-        </router-link>
-        <div class="latest-list_item_title">
-          <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
-          <router-link :to="getHref(o)">
-            <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
-            <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
-          </router-link>
-        </div>
-      </div>
-      <slot name="dfpNA9"></slot>
-      <div class="latest-list_item" v-for="(o, i) in latestListAfterDFPNA9">
-        <router-link :to="getHref(o)">
-          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
-          <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
-        </router-link>
-        <div class="latest-list_item_title">
-          <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', 0, 'title' ], '')"></div>
-          <router-link :to="getHref(o)">
-            <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
-            <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
-          </router-link>
-        </div>
-      </div>
+        <slot :name="slotArr[ index ]" v-if="index < 3"></slot>
+      </template>
     </div>
   </div>
 </template>
@@ -81,10 +42,14 @@ export default {
     latestListAfterDFPNA9() {
       return _.slice(this.latestList, 6, 9)
     },
+    latestArticleArr() {
+      return [this.latestListBeforeDFPNA3, this.latestListBeforeDFPNA5, this.latestListBeforeDFPNA9, this.latestListAfterDFPNA9]
+    },
+    slotArr() {
+      return ['dfpNA3', 'dfpNA5', 'dfpNA9']
+    }
   },
-  data() {
-    return {}
-  },
+  data() { return { }},
   methods: {
     getHref,
     getTruncatedVal,
@@ -99,10 +64,23 @@ export default {
       }
 
       const style = { 
-        backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
-        width:  _.get( SECTION_MAP, [sectionId, device], '45px'),
+        backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgb(86, 86, 86)'),
+        width:  _.get( SECTION_MAP, [sectionId, device], (this.viewport > 599 && this.viewport < 1200) ? '60px' : 'auto'),
+        display: (sectionId || (!sectionId && this.viewport < 1199)) ? 'flex' : 'none!important'
       }
       return style
+    },
+    getLabel(article) {
+      const section = _.get(article, [ 'sections', 0, 'title' ], '')
+      const category = _.get(article, [ 'categories', 0, 'title' ], '')
+      return (section.length > 0) ? section : category
+    },
+    labelClass(article) {
+      const section = _.get(article, [ 'sections', 0, 'title' ], '')
+      const ifLabelWidthAuto = (section.length > 0) ? false : true
+      return {
+        'label-width-auto' : (this.viewport > 599 && this.viewport < 1200) ? false : ifLabelWidthAuto,
+      }
     },
     sanitizeHtml
   },
@@ -117,6 +95,10 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
+  .label-width-auto
+    white-space nowrap
+    padding 0 20px !important
+
   .latest-main-container
     font-size 1.1rem
 
@@ -310,6 +292,7 @@ export default {
               width 45px
               top -25px
               left 0
+              right auto
               font-size 0.9rem
               padding 0
 

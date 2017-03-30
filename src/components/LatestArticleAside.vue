@@ -2,7 +2,7 @@
   <div class="latest-aside-container" v-if="groupedArticle">
     <div class="latest-list">
       <div class="latest-list_item">
-        <router-link :to="getHref(getValue(groupedArticle))">
+        <router-link :to="getHref(groupedArticle)">
           <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
           <div class="latest-list_item_label" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
         </router-link>
