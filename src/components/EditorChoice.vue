@@ -39,10 +39,6 @@ import { SECTION_MAP } from '../constants'
 import { getHref, getImage, getSection, getTitle, getTruncatedVal, getValue } from '../utils/comm'
 import Slider from './Slider.vue'
 import _ from 'lodash'
-import moment from 'moment'
-import sanitizeHtml from 'sanitize-html'
-import truncate from 'truncate'
-
 
 export default {
   beforeMount () {},
@@ -50,17 +46,17 @@ export default {
     'app-slider': Slider
   },
   computed: {
-    sliderOption() {
+    sliderOption () {
       return {
         setNavBtn: false,
         grabCursor: false,
-        autoplay : 5000,
+        autoplay: 5000,
         autoplayDisableOnInteraction: false,
         onSlideChangeStart: (swiper) => {
           this.updateNavStatus(swiper.activeIndex)
         }
       }
-    },
+    }
   },
   data () {
     return {
@@ -71,26 +67,26 @@ export default {
     editorChoice: this.editorChoice
   },
   methods: {
-    jumpToSlide(e, pTarget) {
-      if(!e && !pTarget) { return }
+    jumpToSlide (e, pTarget) {
+      if (!e && !pTarget) { return }
       const targ = pTarget || e.target
       const targOld = targ.parentNode.getAttribute('class')
       const targSect = targ.getAttribute('section')
       const i = Number(targ.getAttribute('index'))
       window.refs[ 'editorChoiceSlider' ].slideTo((i + 1), 1000, false)
       const lastTarg = document.querySelector(`.${targOld}.active`)
-      if(lastTarg) {
+      if (lastTarg) {
         lastTarg.setAttribute('class', `${targOld}`)
         lastTarg.removeAttribute('style')
       }
-      targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ "borderLeft" ]};`)
+      targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
       targ.parentNode.setAttribute('class', `${targOld} active`)
     },
-    jumpToSlideForParent(e) {
+    jumpToSlideForParent (e) {
       this.jumpToSlide(null, e.target.children[0])
     },
     getHref,
-    getSrcSet(img) {
+    getSrcSet (img) {
       return `${img.resizedTargets.mobile.url} 600w, ${img.resizedTargets.tablet.url} 900w, ${img.resizedTargets.desktop.url} 1200w`
     },
     getImage,
@@ -98,15 +94,15 @@ export default {
     getTitle,
     getTruncatedVal,
     getValue,
-    getSectionStyle(sect) {
+    getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
-      const style = { 
-        backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
-        width:  _.get( SECTION_MAP, [sectionId, 'label-width-tablet'], '60px'),
+      const style = {
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18)'),
+        width: _.get(SECTION_MAP, [ sectionId, 'label-width-tablet' ], '60px')
       }
       return style
     },
-    setHoverEvent() {
+    setHoverEvent () {
       const _targ = document.querySelectorAll('.editorChoice-list__item')
       const _targII = document.querySelectorAll('.editorChoice-list__item > span')
       _.map(_targ, (o) => {
@@ -120,34 +116,33 @@ export default {
         }
       })
     },
-    styleFor1stitem(sect) {
+    styleFor1stitem (sect) {
       return {
-        borderLeft: SECTION_MAP[ sect ][ "borderLeft" ]
+        borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
       }
     },
-    updateNavStatus(ind) {
-      const index = (ind !== 6 ) ? (ind % 6) : 1
+    updateNavStatus (ind) {
+      const index = (ind !== 6) ? (ind % 6) : 1
       const targ = document.querySelector(`.editorChoice-list__item span[index="${(index - 1)}"]`)
       const targOld = targ.parentNode.getAttribute('class')
       const targSect = targ.getAttribute('section')
       const lastTarg = document.querySelector(`.${targOld}.active`)
-      if(lastTarg) {
+      if (lastTarg) {
         lastTarg.setAttribute('class', `${targOld}`)
-        lastTarg.removeAttribute('style')        
+        lastTarg.removeAttribute('style')
       }
-      targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ "borderLeft" ]};`)
+      targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
       targ.parentNode.setAttribute('class', `${targOld} active`)
-    },
+    }
   },
-  mounted() {
+  mounted () {
     this.setHoverEvent()
   },
   name: 'editorChoice',
-  updated() {
+  updated () {
     this.setHoverEvent()
   }
 }
-
 </script>
 <style lang="stylus" scoped>
 

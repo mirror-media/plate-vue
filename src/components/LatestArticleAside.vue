@@ -30,24 +30,24 @@ export default {
     getHref,
     getTruncatedVal,
     getValue,
-    getSectionStyle(sect) {
+    getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
-      const style = (this.viewport > 1199) ? { 
-        backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18);'),
-        width:  _.get( SECTION_MAP, [sectionId, 'label-width'], '45px'),
-      } : { 
-        backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18);'),
-        width:  _.get( SECTION_MAP, [sectionId, 'label-width-tablet'], '60px'),
+      const style = (this.viewport > 1199) ? {
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);'),
+        width: _.get(SECTION_MAP, [ sectionId, 'label-width' ], '45px')
+      } : {
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);'),
+        width: _.get(SECTION_MAP, [ sectionId, 'label-width-tablet' ], '60px')
       }
       return style
     },
-    getSectionStyleBorderTop(sect) {
+    getSectionStyleBorderTop (sect) {
       const sectionId = _.get(sect, [ 'id' ])
-      const style = (this.viewport > 1199) ? { 
-        borderTopColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
+      const style = (this.viewport > 1199) ? {
+        borderTopColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18)'),
         borderTopWidth: '5px'
-      } : { 
-        borderTopColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
+      } : {
+        borderTopColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18)'),
         borderTopWidth: '10px'
       }
       return style
@@ -60,7 +60,7 @@ export default {
     viewport: {
       default: () => { return undefined }
     }
-  },
+  }
 }
 </script>
 <style lang="stylus" scoped>

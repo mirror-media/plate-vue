@@ -23,40 +23,38 @@ import VueHowler from 'vue-howler'
 
 export default {
   name: 'audioBox',
-  props: [ 'item'],
-  mixins: [VueHowler],
+  props: [ 'item' ],
+  mixins: [ VueHowler ],
   computed: {
-    hasCover() {
-      let cover = _.get(this.item, [ 'coverPhoto', 'image', 'resizedTargets', 'tiny', 'url' ])
-      return cover ? true : false
+    hasCover () {
+      const cover = _.get(this.item, [ 'coverPhoto', 'image', 'resizedTargets', 'tiny', 'url' ])
+      return cover
     },
     progressWidth () {
-      return (this.seek/this.duration)*100 < 1 ? 100 : (this.seek/this.duration)*100
+      return (this.seek / this.duration) * 100 < 1 ? 100 : (this.seek / this.duration) * 100
     }
   },
   methods: {
-    getImage(item) {
+    getImage (item) {
       return _.get(item, [ 'coverPhoto', 'image', 'resizedTargets', 'tiny', 'url' ], '/public/icon/audio@2x.png')
     },
     getCoverCss (item) {
-      let cover = _.get(item, [ 'coverPhoto', 'image', 'resizedTargets', 'tiny', 'url' ])
-      return cover ? 'backgroundImage: url(' + cover +'), background-size: cover, background-position: 50% 50%' :
-              'backgroundImage: url(/public/icon/audio@2x.png), background-size: 80px 40px, background-position: 50% 50%'
+      const cover = _.get(item, [ 'coverPhoto', 'image', 'resizedTargets', 'tiny', 'url' ])
+      return cover ? 'backgroundImage: url(' + cover + '), background-size: cover, background-position: 50% 50%'
+        : 'backgroundImage: url(/public/icon/audio@2x.png), background-size: 80px 40px, background-position: 50% 50%'
     },
-    handleChange(e) {
+    handleChange (e) {
       console.log(e.target.value)
       this.setSeek(parseInt(e.target.value))
     },
-    toMMSS(seconds) {
+    toMMSS (seconds) {
       seconds = parseInt(seconds, 10)
-      let minutes = parseInt(seconds / 60) % 60
+      const minutes = parseInt(seconds / 60) % 60
       seconds = seconds % 60
-
       return (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds)
     }
-  },
+  }
 }
-  
 </script>
 <style lang="stylus" scoped>
 

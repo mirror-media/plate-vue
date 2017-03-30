@@ -90,8 +90,5 @@
 
           .related_item_title
             font-size 1rem
-        
-      
-    
   
 </style>

@@ -23,14 +23,14 @@
       getImage,
       getTruncatedVal,
       getValue,
-      getSectionStyle(sect) {
+      getSectionStyle (sect) {
         const sectionId = _.get(sect, [ 'id' ])
-        const style = { backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], '#000') }
+        const style = { backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#000') }
         return style
       }
     },
     props: {
-      popList : {
+      popList: {
         default: () => { return [] }
       }
     }

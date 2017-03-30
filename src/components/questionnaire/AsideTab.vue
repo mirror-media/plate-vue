@@ -5,25 +5,24 @@
 </template>
 <script>
   export default {
-    computed: {},
     methods: {
-      tabMarginTop(index, number, total) {
-        return (index < 7)? '-5%' : `${- 5 - ((index - 6) * 150)}%`
+      tabMarginTop (index, number, total) {
+        return (index < 7) ? '-5%' : `${-5 - ((index - 6) * 150)}%`
       },
-      tabName(n) {
+      tabName (n) {
         return `Ｑ${(n)}`
       },
-      tabTop(index, number, total) {
+      tabTop (index, number, total) {
         return (12 * (number - 1)) + '%'
       },
-      tabZindex(index, number, total) {
+      tabZindex (index, number, total) {
         let zIndex = 999
-        if(index !== number) {
+        if (index !== number) {
           const distance = Math.abs(index - number)
           zIndex = total - distance
         }
         return zIndex
-      },
+      }
     },
     name: 'aside-tab',
     props: {
@@ -65,6 +64,5 @@
       font-weight normal
       color #007cbf
       transition: margin-top 0.25s, z-index 0.1s;
-
 
 </style>

@@ -17,10 +17,10 @@ import _ from 'lodash'
 
 export default {
   name: 'videoList',
-  props: ['playlist'],
+  props: [ 'playlist' ],
   methods: {
     getBrief (item) {
-      return getTruncatedVal(_.get(item, ['snippet', 'description'], ''), 45)
+      return getTruncatedVal(_.get(item, [ 'snippet', 'description' ], ''), 45)
     },
     getImage (item) {
       return _.get(item, [ 'snippet', 'thumbnails', 'medium', 'url' ], '')
@@ -29,11 +29,11 @@ export default {
       return 'https://youtu.be/' + _.get(item, [ 'snippet', 'resourceId', 'videoId' ], '')
     },
     getTitle (item) {
-      return getTruncatedVal( _.get(item, ['snippet', 'title'], ''), 20)
-    },
-  },
+      return getTruncatedVal(_.get(item, [ 'snippet', 'title' ], ''), 20)
+    }
+  }
 }
-  
+
 </script>
 <style lang="stylus" scoped>
 

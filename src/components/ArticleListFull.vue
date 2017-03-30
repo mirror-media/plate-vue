@@ -31,8 +31,7 @@ export default {
   name: 'articleList-full',
   components: {
   },
-  props: ['articles'],
-  
+  props: [ 'articles' ],
   methods: {
     getAuthor,
     getBrief,
@@ -40,10 +39,9 @@ export default {
     getImage,
     getSection,
     getTruncatedVal,
-    moment,
-  },
+    moment
+  }
 }
-  
 </script>
 <style lang="stylus" scoped>
 

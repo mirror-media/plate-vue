@@ -47,7 +47,7 @@ export default {
     'app-slider': Slider
   },
   computed: {
-    sliderOption() {
+    sliderOption () {
       return {
         paginationable: false,
         paginationClickable: true,
@@ -55,16 +55,16 @@ export default {
         setNavBtn: true
       }
     },
-    slideshowImgs() {
+    slideshowImgs () {
       return _.get(this.mediaData, [ 'images', 'items' ], [])
     },
-    leadingImg() {
+    leadingImg () {
       return _.get(this.mediaData, [ 'heroImage' ])
     },
-    leadingVideo() {
+    leadingVideo () {
       return _.get(this.mediaData, [ 'heroVideo' ])
     },
-    leadingEmedded() {
+    leadingEmedded () {
       return _.get(this.mediaData, [ 'embed' ])
     }
   },
@@ -79,9 +79,9 @@ export default {
     type: {
       default: () => { return {} }
     }
-  },
+  }
 }
-  
+
 </script>
 <style lang="stylus" scoped>
   .leading

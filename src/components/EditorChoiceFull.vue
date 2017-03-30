@@ -29,16 +29,15 @@ import moment from 'moment'
 export default {
   name: 'editorChoice-full',
   props: {
-    sectionfeatured: {},
+    sectionfeatured: {}
   },
-  
   methods: {
     getAuthor,
     getBrief,
     getHref,
     getImage,
     getTruncatedVal,
-    moment,
+    moment
   },
   computed: {
     highlightArticle () {
@@ -46,7 +45,6 @@ export default {
     }
   }
 }
-
 </script>
 <style lang="stylus" scoped>
 

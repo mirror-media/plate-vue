@@ -59,7 +59,6 @@
   </div>
 </template>
 <script>
-  import { SITE_URL } from '../../constants'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
   import { getValue } from '../../utils/comm'
   import { shareGooglePlus, shareLine, shareFacebook } from '../../utils/comm'
@@ -71,62 +70,61 @@
       'related-list-thumbnail': RelatedListWithThumbnail
     },
     computed: {
-      brief() {
+      brief () {
         const { brief } = this.articleData
         return brief
       },
-      captionStyle() {
+      captionStyle () {
         return {
-          show: (this.descSwitch || (this.viewport < 768 && !this.ifLandscape)) ? true : false,
-          hide: (!this.descSwitch) ? true : false
+          show: (this.descSwitch || (this.viewport < 768 && !this.ifLandscape)),
+          hide: !this.descSwitch
         }
       },
-      contentArr() {
+      contentArr () {
         const { apiData } = _.get(this.articleData, [ 'content' ], [])
         return apiData
       },
-      credit() {
-        const { cameraMan, designers, engineers, extendByline, photographers, writers } = this.articleData
+      credit () {
+        const { cameraMan, designers, engineers, photographers, writers } = this.articleData
         const creditWriterStr = (writers.length > 0) ? '文｜' + writers.map((o) => (`<a class=\"white\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
         const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.map((o) => (`<a class=\"white\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
         const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.map((o) => (`<a class=\"white\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
         const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.map((o) => (`<a class=\"white\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
         const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.map((o) => (`<a class=\"white\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditElse = (extendByline.length> 0) ? extendByline + '&nbsp;' : ''
         return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
       },
-      goNextPageClass() {
+      goNextPageClass () {
         return {
-          center: (this.viewport < 768 && !this.ifLandscape) ? true : false
+          center: (this.viewport < 768 && !this.ifLandscape)
         }
       },
-      heroCaption() {
+      heroCaption () {
         const { heroCaption } = this.articleData
-        return heroCaption        
+        return heroCaption
       },
-      heroImg() {
+      heroImg () {
         const { heroImage } = this.articleData
         return heroImage
       },
-      landscapeClass() {
+      landscapeClass () {
         return {
           landscape: this.ifLandscape
         }
       },
-      ifRenderProgressSidebar() {
-        return (this.viewport > 1200) ? true : false
+      ifRenderProgressSidebar () {
+        return (this.viewport > 1200)
       },
-      imgArr() {
+      imgArr () {
         return _.filter(this.contentArr, { type: 'image' })
       },
-      relatedList() {
+      relatedList () {
         const { relateds } = this.articleData
         return relateds
       },
-      sectionsInfo() {
+      sectionsInfo () {
         const _htmlHeight = document.documentElement.clientHeight
         const _sectArr = document.querySelectorAll('section.pic-section')
-        let _sectInfo = []
+        const _sectInfo = []
         _.map(_sectArr, (elem, index) => {
           const _eleTop = this.elmYPosition(`section.pic-section:nth-child(${(index + 1)})`)
           const _eleBtm = _eleTop + _htmlHeight
@@ -135,83 +133,86 @@
         })
         return _sectInfo
       },
-      sectCount() {
+      sectCount () {
         return document.querySelectorAll('section.pic-section').length
       },
-      switchStatus() {
+      switchStatus () {
         return {
-          on: (this.descSwitch) ? true : false,
-          off: (!this.descSwitch) ? true : false,
-          hide: (!this.ifLandscape) ? true : false
-        }        
+          on: this.descSwitch,
+          off: !this.descSwitch,
+          hide: !this.ifLandscape
+        }
       },
-      title() {
+      title () {
         const { title } = this.articleData
         return title
       }
     },
-    data() {
+    data () {
       return {
         descSwitch: false,
         ifLandscape: false,
         scrollingFlag: false,
         sectIndex: 2,
-        stickflag: [],
+        stickflag: []
       }
     },
     methods: {
       currentYPosition,
-      disableScroll() {
-        if (window.addEventListener) // older FF
+      disableScroll () {
+        if (window.addEventListener) { // older FF
           window.addEventListener('DOMMouseScroll', this.preventDefault, false)
+        }
         window.onwheel = this.preventDefault // modern standard
         window.onmousewheel = document.onmousewheel = this.preventDefault // older browsers, IE
-        window.ontouchmove  = this.preventDefault // mobile
-        document.onkeydown  = this.preventDefaultForScrollKeys
+        window.ontouchmove = this.preventDefault // mobile
+        document.onkeydown = this.preventDefaultForScrollKeys
       },
       elmYPosition,
-      enableScroll() {
-          if (window.removeEventListener)
-            window.removeEventListener('DOMMouseScroll', this.preventDefault, false)
-          window.onmousewheel = document.onmousewheel = null; 
-          window.onwheel = null; 
-          window.ontouchmove = null;  
-          document.onkeydown = null;  
+      enableScroll () {
+        if (window.removeEventListener) {
+          window.removeEventListener('DOMMouseScroll', this.preventDefault, false)
+        }
+        window.onmousewheel = document.onmousewheel = null
+        window.onwheel = null
+        window.ontouchmove = null
+        document.onkeydown = null
       },
       getValue,
-      goNextPage() {
+      goNextPage () {
         this.sectIndex = (this.sectIndex < this.sectCount + 1) ? this.sectIndex + 1 : this.sectIndex
         this.scrollingFlag = true
         this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
       },
-      goHome() {
+      goHome () {
         window.location.href = '/'
       },
-      goPage(e) {
+      goPage (e) {
         const targIndex = Number(e.target.getAttribute('index')) + 2
-        if(this.sectIndex < targIndex) {
-          for(let i = this.sectIndex - 1; i < targIndex; i++){
+        if (this.sectIndex < targIndex) {
+          for (let i = this.sectIndex - 1; i < targIndex; i++) {
             this.sideProgressHandler('pass', i)
           }
         } else {
-          for(let i = targIndex - 1; i < this.sectIndex; i++){
+          for(let i = targIndex - 1; i < this.sectIndex; i++) {
             this.sideProgressHandler('back', i)
           }
         }
         this.sectIndex = targIndex
         this.smoothScroll(`section.pic-section:nth-child(${(targIndex)})`)
         this.scrollingFlag = false
-      },    
-      keys() {
-        return {37: 1, 38: 1, 39: 1, 40: 1}
       },
-      preventDefault(e) {
+      keys () {
+        return { 37: 1, 38: 1, 39: 1, 40: 1 }
+      },
+      preventDefault (e) {
         e = e || window.event
-        if (e.preventDefault)
+        if (e.preventDefault) {
           e.preventDefault()
+        }
         e.returnValue = false
       },
-      preventDefaultForScrollKeys(e) {
+      preventDefaultForScrollKeys (e) {
         // doesn't work
         if (this.keys[e.keyCode]) {
           this.preventDefault(e)
@@ -219,22 +220,22 @@
         }
       },
       smoothScroll,
-      scrollOnePage() {
+      scrollOnePage () {
         window.addEventListener('wheel', (e) => {
           const _derection = e.wheelDelta
-          if(!this.scrollingFlag && _derection < 0) {
-            if((this.sectIndex >= this.sectCount + 1)) { 
+          if (!this.scrollingFlag && _derection < 0) {
+            if ((this.sectIndex >= this.sectCount + 1)) { 
               this.enableScroll()
-              return 
+              return
             }
             this.sectIndex = (this.sectIndex < this.sectCount + 1) ? this.sectIndex + 1 : this.sectIndex
             this.sideProgressHandler('pass', (this.sectIndex - 2))
             this.stickflagF = true
             this.scrollingFlag = true
             this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
-          } else if(!this.scrollingFlag && _derection > 0) {
-            if((this.sectIndex <= 2)) { 
-              return 
+          } else if (!this.scrollingFlag && _derection > 0) {
+            if ((this.sectIndex <= 2)) {
+              return
             }
             this.sectIndex = (this.sectIndex > 2) ? this.sectIndex - 1 : this.sectIndex
             this.sideProgressHandler('back', (this.sectIndex))
@@ -297,19 +298,19 @@
           }
         })
       },
-      shareGooglePlus() {
+      shareGooglePlus () {
         shareGooglePlus({ route: this.$route.path })
       },
-      shareLine() {
+      shareLine () {
         shareLine({ 
           route: this.$route.path,
           title: document.querySelector('meta[property="og:title"]').getAttribute('content')
         })
       },
-      shareFacebook() {
+      shareFacebook () {
         shareFacebook({ route: this.$route.path })
       },
-      sideProgressHandler(action, index) {
+      sideProgressHandler (action, index) {
         const _targElement = document.querySelector(`.stick:nth-child(${index})`)
         const _targContainer = document.querySelector('.stick-container')
         if(!_targElement) { return }
@@ -322,27 +323,27 @@
             break
         }
       },
-      stickBottom(index) {
+      stickBottom (index) {
         return {
           bottom: `${((this.imgArr.length - index) * 7)}px`
         }
       },
-      toggleDesc() {
+      toggleDesc () {
         this.descSwitch = (this.descSwitch) ? false : true
       },
-      updateIndex() {
+      updateIndex () {
         
       },
-      updateProgressbar(percentage){
+      updateProgressbar (percentage){
         const _progressBar = document.querySelector('.progress-bar')
         _progressBar.setAttribute('style', `left: ${percentage}%;`)
       },
-      updateIfLandscape() {
+      updateIfLandscape () {
         const browser = typeof window !== 'undefined'
         this.ifLandscape =  (browser && window.innerHeight < window.innerWidth) ? true : false
       },
     },
-    mounted() {
+    mounted () {
       this.disableScroll()
       this.scrollOnePage()
       this.updateIndex()

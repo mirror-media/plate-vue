@@ -53,8 +53,6 @@
 
 import { getBrief, getHref, getImage, getName, getTruncatedVal } from '../../utils/comm'
 import _ from 'lodash'
-import moment from 'moment'
-import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 
 export default {
@@ -63,31 +61,20 @@ export default {
     return {
     }
   },
-  props: ['article', 'briefAmount', 'hasDFP', 'props'],
-  computed: {
-    
-  },
+  props: [ 'article', 'briefAmount', 'hasDFP', 'props' ],
   methods: {
     getBrief,
     getHref,
     getImage,
     getName,
     getTruncatedVal,
-    getTitle(title) {
+    getTitle (title) {
       return truncate(title, 20)
     },
-    getSection(article) {
-      return  _.get(article, 'sections[0].name') ? _.get(article, 'sections[0].name') : 'other'
+    getSection (article) {
+      return _.get(article, 'sections[0].name') ? _.get(article, 'sections[0].name') : 'other'
     }
-  },
-  beforeMount () {
-   
-  },
-  mounted() {
   }
 }
 
 </script>
-<style lang="stylus" scoped>
-
-</style>

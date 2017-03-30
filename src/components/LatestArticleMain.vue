@@ -30,36 +30,36 @@ import sanitizeHtml from 'sanitize-html'
 export default {
   name: 'latest-list-main',
   computed: {
-    latestListBeforeDFPNA3() {
+    latestListBeforeDFPNA3 () {
       return _.take(this.latestList, 2)
     },
-    latestListBeforeDFPNA5() {
+    latestListBeforeDFPNA5 () {
       return _.slice(this.latestList, 2, 3)
     },
-    latestListBeforeDFPNA9() {
+    latestListBeforeDFPNA9 () {
       return _.slice(this.latestList, 3, 6)
     },
-    latestListAfterDFPNA9() {
+    latestListAfterDFPNA9 () {
       return _.slice(this.latestList, 6, 9)
     },
-    latestArticleArr() {
-      return [this.latestListBeforeDFPNA3, this.latestListBeforeDFPNA5, this.latestListBeforeDFPNA9, this.latestListAfterDFPNA9]
+    latestArticleArr () {
+      return [ this.latestListBeforeDFPNA3, this.latestListBeforeDFPNA5, this.latestListBeforeDFPNA9, this.latestListAfterDFPNA9 ]
     },
-    slotArr() {
-      return ['dfpNA3', 'dfpNA5', 'dfpNA9']
+    slotArr () {
+      return [ 'dfpNA3', 'dfpNA5', 'dfpNA9' ]
     }
   },
-  data() { return { }},
+  data () { return { } },
   methods: {
     getHref,
     getTruncatedVal,
     getValue,
-    getSectionStyle(sect) {
+    getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
       let device = 'label-width'
-      if(this.viewport < 600) {
+      if (this.viewport < 600) {
         device = 'label-width-mobile'
-      } else if(this.viewport > 599 && this.viewport < 1200) {
+      } else if (this.viewport > 599 && this.viewport < 1200) {
         device = 'label-width-tablet'
       }
 
@@ -70,16 +70,16 @@ export default {
       }
       return style
     },
-    getLabel(article) {
+    getLabel (article) {
       const section = _.get(article, [ 'sections', 0, 'title' ], '')
       const category = _.get(article, [ 'categories', 0, 'title' ], '')
       return (section.length > 0) ? section : category
     },
-    labelClass(article) {
+    labelClass (article) {
       const section = _.get(article, [ 'sections', 0, 'title' ], '')
-      const ifLabelWidthAuto = (section.length > 0) ? false : true
+      const ifLabelWidthAuto = !(section.length > 0)
       return {
-        'label-width-auto' : (this.viewport > 599 && this.viewport < 1200) ? false : ifLabelWidthAuto,
+        'label-width-auto': (this.viewport > 599 && this.viewport < 1200) ? false : ifLabelWidthAuto
       }
     },
     sanitizeHtml

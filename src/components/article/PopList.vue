@@ -62,32 +62,32 @@
   import _ from 'lodash'
   export default {
     name: 'pop-list',
-    props: ['pop'],
+    props: [ 'pop' ],
     computed: {
-      popBeforeDFPNA3() {
+      popBeforeDFPNA3 () {
         return _.take(this.pop, 2)
       },
-      popBeforeDFPNA5() {
+      popBeforeDFPNA5 () {
         return _.slice(this.pop, 2, 3)
       },
-      popBeforeDFPNA7() {
+      popBeforeDFPNA7 () {
         return _.slice(this.pop, 3, 4)
       },
-      popAfterDFPNA7() {
+      popAfterDFPNA7 () {
         return _.slice(this.pop, 4, 6)
-      },
+      }
     },
     methods: {
       getHref,
       getImage,
       getTruncatedVal,
       getValue,
-      getSectionStyle(sect) {
+      getSectionStyle (sect) {
         const sectionId = _.get(sect, [ 'id' ])
-        const style = { borderLeft: _.get( SECTION_MAP, [sectionId, 'borderLeft'], '7px solid rgba(140, 140, 140, 0.18);') }
+        const style = { borderLeft: _.get(SECTION_MAP, [ sectionId, 'borderLeft' ], '7px solid rgba(140, 140, 140, 0.18);') }
         return style
       }
-    },
+    }
   }
 </script>
 <style lang="stylus" scoped>
@@ -159,8 +159,5 @@
       .pop_list 
         .pop_item
           width 45%
-        
-      
-    
-  
+          
 </style>

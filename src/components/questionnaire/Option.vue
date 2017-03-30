@@ -9,30 +9,30 @@
 <script>
   export default {
     computed: {
-      optClass() {
+      optClass () {
         return {
-          correct: (this.status && this.correctFlag) || (this.showCorrectAnsFlag && this.optId === this.designatedOptId) || (this.gameType === 'mind'  && this.correctFlag),
+          correct: (this.status && this.correctFlag) || (this.showCorrectAnsFlag && this.optId === this.designatedOptId) || (this.gameType === 'mind' && this.correctFlag),
           wrong: this.status && this.wrongFlag
         }
-      },
+      }
     },
-    data() {
+    data () {
       return {
         correctFlag: false,
         status: false,
-        showDesc: false, 
+        showDesc: false,
         showCorrectAns: false,
         thisQuestId: this.questId,
-        wrongFlag: false,
+        wrongFlag: false
       }
     },
     name: 'option-container',
     methods: {
-      optPick() {
-        if(!this.lockPickFlag && (!this.status || (this.status && this.gameType === 'mind'))) {
-          if(this.gameType !== 'mind') {
-            if(this.optId !== this.designatedOptId) {
-              this.status = true 
+      optPick () {
+        if (!this.lockPickFlag && (!this.status || (this.status && this.gameType === 'mind'))) {
+          if (this.gameType !== 'mind') {
+            if (this.optId !== this.designatedOptId) {
+              this.status = true
               this.correctFlag = false
               this.showCorrectAns = true
               this.showDesc = true
@@ -41,13 +41,13 @@
               this.correctFlag = true
               this.showCorrectAns = true
               this.showDesc = true
-              this.status = true 
+              this.status = true
               this.wrongFlag = false
             }
           } else {
             this.correctFlag = true
           }
-          this.$emit('optPick', { showDesc: this.showDesc, showCorrectAns: this.showCorrectAns, answer: { questId: this.questId, optId: this.optId } })
+          this.$emit('optPick', { showDesc: this.showDesc, showCorrectAns: this.showCorrectAns, answer: { questId: this.questId, optId: this.optId }})
         }
       }
     },
@@ -71,19 +71,19 @@
       },
       showCorrectAnsFlag: {
         default: () => { return false }
-      },
+      }
     },
-    updated() {
-      if(this.thisQuestId !== this.questId) {
-        this.correctFlag =  false
+    updated () {
+      if (this.thisQuestId !== this.questId) {
+        this.correctFlag = false
         this.status = false
         this.showDesc = false
         this.showCorrectAns = false
         this.thisQuestId = this.questId
         this.wrongFlag = false
       } else {
-        if(this.optId !== this.designatedOptId && this.gameType === 'mind') {
-          this.correctFlag =  false
+        if (this.optId !== this.designatedOptId && this.gameType === 'mind') {
+          this.correctFlag = false
         }
       }
     }

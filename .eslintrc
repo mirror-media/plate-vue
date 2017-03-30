@@ -1,0 +1,9 @@
+{
+    'extends': 'vue',
+    'plugins': [
+        'import'
+    ],
+    'rules': { 
+      'array-bracket-spacing': [ 2, 'always' ],
+    } 
+}

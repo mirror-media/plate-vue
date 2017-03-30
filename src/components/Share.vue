@@ -19,19 +19,19 @@ export default {
     }
   },
   methods: {
-    shareGooglePlus() {
+    shareGooglePlus () {
       shareGooglePlus({ route: this.$route.path })
     },
-    shareLine() {
-      shareLine({ 
+    shareLine () {
+      shareLine({
         route: this.$route.path,
         title: document.querySelector('meta[property="og:title"]').getAttribute('content')
       })
     },
-    shareFacebook() {
+    shareFacebook () {
       shareFacebook({ route: this.$route.path })
     },
-    toggleShare() {
+    toggleShare () {
       this.isOpen = !this.isOpen
     }
   }

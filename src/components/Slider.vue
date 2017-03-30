@@ -16,22 +16,22 @@
       SwiperSlide
     },
     computed: {
-      navBtnClass() {
+      navBtnClass () {
         // return `${this.slideId}-navbtn`
         return {
-          enabled: (this.option[ 'setNavBtn' ]) ? true: false
+          enabled: (this.option[ 'setNavBtn' ])
         }
       },
-      swiperPagiantionId() {
+      swiperPagiantionId () {
         return `${this.slideId}-pagination`
       },
-      swiper() {
+      swiper () {
         return this.$refs[ this.slideId ].swiper
       },
-      slideComp() {
+      slideComp () {
         return SwiperSlide
       },
-      swiperOption() {
+      swiperOption () {
         const defaultOpt = {
           notNextTick: true,
           direction: 'horizontal',
@@ -47,42 +47,42 @@
           // pagination: `#${this.swiperPagiantionId}`,
           // paginationClickable: true,
           // paginationHide: false,
-          uniqueNavElements :true,
+          uniqueNavElements: true,
           // mousewheelControl: true,
           // preloadImages: true,
           // updateOnImagesReady : true,
-          lazyLoading : true,
-          lazyLoadingInPrevNext : true,
-          lazyLoadingOnTransitionStart : true,
+          lazyLoading: true,
+          lazyLoadingInPrevNext: true,
+          lazyLoadingOnTransitionStart: true,
           // zoom : true,
 
-          prevButton:'.swiper-button-prev',
-          nextButton:'.swiper-button-next',
-          observer:true,
-          observeParents:true,
+          prevButton: '.swiper-button-prev',
+          nextButton: '.swiper-button-next',
+          observer: true,
+          observeParents: true
           // virtualTranslate : true,
         }
-        if(this.option[ 'paginationable' ]) {
+        if (this.option[ 'paginationable' ]) {
           this.option[ 'pagination' ] = `#${this.swiperPagiantionId}`
         }
-        if(this.$refs[ this.slideId ]) {
+        if (this.$refs[ this.slideId ]) {
           this.swiper.update()
         }
-        return Object.assign(defaultOpt, this.option);
-      },
+        return Object.assign(defaultOpt, this.option)
+      }
     },
-    data() {
+    data () {
       return {}
     },
     methods: {
-      slideTo() {
+      slideTo () {
         return this.swiper.slideNext()
-      },
+      }
     },
-    mounted() {
+    mounted () {
       // this.swiper.update()
       // this.swiper.slideTo(2, 1000, false)
-      if(!window[ 'refs' ]) window[ 'refs' ] = {}
+      if (!window[ 'refs' ]) window[ 'refs' ] = {}
       window[ 'refs' ][ this.slideId ] = this.swiper
     },
     name: 'app-slider',
@@ -94,7 +94,7 @@
         }
       },
       option: { default: () => { return {} } }
-    },
+    }
   }
 </script>
 <style lang="stylus">

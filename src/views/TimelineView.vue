@@ -49,7 +49,6 @@ import Spinner from '../components/Spinner.vue'
 import moment from 'moment'
 import twitter from 'twitter-text'
 
-
 const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections' ] })
 }
@@ -60,7 +59,7 @@ const fetchData = (store) => {
 
 function fetchTwitter (url) {
   const superagent = require('superagent')
-  let apiHost = '/api'
+  const apiHost = '/api'
   return new Promise(resolve => {
     superagent
     .get(apiHost + url)
@@ -86,22 +85,22 @@ export default {
       sectionName: this.$store.state.route.params.title
     }
   },
-  components: { 
+  components: {
     'footer-full': FooterFull,
     'header-full': HeaderFull,
     'more': More,
     Spinner
   },
   computed: {
-    lastItemId() {
+    lastItemId () {
       return _.get(_.last(this.rep), 'id', 0)
-    },
+    }
   },
   metaInfo () {
     const title = 'Timeline :: ' + _.upperCase(this.$route.params.title)
     return {
       title,
-      meta: [{ vmid: 'description', name: 'description', content: title }]
+      meta: [ { vmid: 'description', name: 'description', content: title } ]
     }
   },
   methods: {
@@ -112,10 +111,10 @@ export default {
       this.openSide = false
     },
     getValue,
-    loadMore() {
+    loadMore () {
       fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10&max_id=${this.lastItemId}`).then(
         response => {
-          if(response.length > 0 && !response[0][ 'code' ]) {
+          if (response.length > 0 && !response[0][ 'code' ]) {
             this.rep = this.rep.concat(response)
           }
           this.loading = false
@@ -132,13 +131,13 @@ export default {
     openSideBar () {
       this.openSide = true
     },
-    twitterAutoLink: twitter.autoLink,
+    twitterAutoLink: twitter.autoLink
   },
   preFetch: fetchData,
   beforeMount () {
     fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10`).then(
       response => {
-        if(response.length > 0 && !response[0][ 'code' ]) {
+        if (response.length > 0 && !response[0][ 'code' ]) {
           this.rep = response
         }
         this.loading = false
