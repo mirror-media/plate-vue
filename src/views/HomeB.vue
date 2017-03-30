@@ -50,7 +50,7 @@ import Leading from '../components/Leading.vue'
 import Loading from '../components/Loading.vue'
 import PopularArticles from '../components/PopularArticles.vue'
 import ProjectList from '../components/article/ProjectList.vue'
-import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
+import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import truncate from 'truncate'
 

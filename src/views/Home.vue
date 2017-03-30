@@ -39,7 +39,7 @@ import LatestProject from '../components/LatestProject.vue'
 import Leading from '../components/Leading.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
-import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
+import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import truncate from 'truncate'
 

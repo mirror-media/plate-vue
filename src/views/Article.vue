@@ -70,7 +70,7 @@
   import RelatedList from '../components/article/RelatedList.vue'
   import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
   import ShareTools from '../components/article/ShareTools.vue'
-  import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
+  import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import sanitizeHtml from 'sanitize-html'
   import store from '../store'
   import truncate from 'truncate'
