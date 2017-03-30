@@ -69,7 +69,7 @@
 </template>
 <script>
 import _ from 'lodash'
-import { DFP_UNITS, SECTION_MAP, SITE_URL } from '../../constants'
+import { SECTION_MAP } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
 import AudioBox from '../../components/AudioBox.vue'
 import ProjectList from './ProjectList.vue'
@@ -80,50 +80,50 @@ export default {
   components: {
     'app-slider': Slider,
     'audio-box': AudioBox,
-    'proj-list': ProjectList,
+    'proj-list': ProjectList
   },
   computed: {
-    articleStyle() {
+    articleStyle () {
       return _.get(this.articleData, [ 'style' ], '')
     },
-    briefArr() {
+    briefArr () {
       return _.get(this.articleData, [ 'brief', 'apiData' ], [])
     },
-    category() {
-      const categoryId =  _.get(this.articleData, [ 'categories', 0, 'id' ])
-      const categoryTitle =  _.get(this.articleData, [ 'categories', 0, 'title' ])
+    category () {
+      const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ])
+      const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ])
       const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
-      const style = { borderLeft: _.get( SECTION_MAP, [sectionId, 'borderLeft'], '7px solid #414141;') }
+      const style = { borderLeft: _.get(SECTION_MAP, [ sectionId, 'borderLeft' ], '7px solid #414141;') }
       return { categoryId, categoryTitle, style }
     },
-    contArr() {
+    contArr () {
       return _.get(this.articleData, [ 'content', 'apiData' ], [])
     },
-    credit() {
+    credit () {
       const { cameraMan, designers, engineers, extendByline, photographers, writers } = this.articleData
       const creditWriterStr = (writers.length > 0) ? '文｜' + writers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditElse = (extendByline.length> 0) ? extendByline + '&nbsp;' : ''
+      const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
       return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
     },
-    date() {
+    date () {
       const { publishedDate = '' } = this.articleData
       const normalizedDt = new Date(publishedDate)
       const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
       return datetime
     },
-    popularlist() {
+    popularlist () {
       const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ], {})
       return report
     },
-    styleForCurrArticle() {
-      switch(this.articleStyle) {
+    styleForCurrArticle () {
+      switch (this.articleStyle) {
         case 'wide':
           return {
-            'single-col': (this.viewport > 1199) ? true : false
+            'single-col': (this.viewport > 1199)
           }
         default:
           return {
@@ -131,7 +131,7 @@ export default {
           }
       }
     },
-    sliderOption() {
+    sliderOption () {
       return {
         paginationable: true,
         paginationClickable: true,
@@ -139,24 +139,24 @@ export default {
         setNavBtn: true
       }
     },
-    subtitle() {
+    subtitle () {
       const { subtitle } = this.articleData
       return subtitle
     },
-    title() {
+    title () {
       const { title } = this.articleData
       return title
     },
-    tags() {
+    tags () {
       const { tags } = this.articleData
       return tags.map((o) => {
         return `<a href=\"/tag/${_.get(o, [ 'id' ], '')}/${_.get(o, [ 'name' ], '')}\" id=\"tag-${_.get(o, [ 'id' ], '')}\">${_.get(o, [ 'name' ], '')}</a>`
       }).join('、')
-    },
+    }
   },
   methods: {
-    getAudioSource(item) {
-      let audioURL = []
+    getAudioSource (item) {
+      const audioURL = []
       audioURL.push(_.get(item, [ 'url' ]))
       return audioURL
     },
@@ -164,8 +164,8 @@ export default {
     getTruncatedVal,
     getValue,
     moment,
-    paragraphComposer(item) {
-      switch(item.type) {
+    paragraphComposer (item) {
+      switch (item.type) {
         case 'blockquote':
           return `<blockquote class="quote"><i class="quoteIcon"></i><div class="quote-content">${_.get(item.content, [ 0 ], '')}</div></blockquote>`
         case 'embeddedcode':
@@ -184,15 +184,14 @@ export default {
                   </div>`
         case 'ordered-list-item':
           const _liStrOrdered = item.content.map((i) => {
-            if(typeof(i) !== 'object') {
+            if (typeof i !== 'object') {
               return `<li>${i}</li>`
             } else {
               return i.map((j) => (`<li>${j}</li>`)).join('')
             }
           }).join('')
           return `<ol class="${_.get(item, [ 'alignment' ], '')} ordered-list-item">${_liStrOrdered}</ol>`
-        case "quoteby":
-          const quoteBody = _.get(item.content, [ 0, 'quote' ], '')
+        case 'quoteby':
           const quoteBy = _.get(item.content, [ 0, 'quoteBy' ], '')
           return `<blockquote class="blockquote">
                     <div class="content">
@@ -210,7 +209,7 @@ export default {
                   </div>`
         case 'unordered-list-item':
           const _liStrUnordered = item.content.map((i) => {
-            if(typeof(i) !== 'object') {
+            if (typeof i !== 'object') {
               return `<li>${i}</li>`
             } else {
               return i.map((j) => (`<li>${j}</li>`)).join('')
@@ -226,7 +225,7 @@ export default {
       }
     }
   },
-  mounted() {},
+  mounted () {},
   name: 'article-body',
   props: {
     articleData: {
@@ -238,7 +237,7 @@ export default {
     viewport: {
       default: () => { return undefined }
     }
-  },
+  }
 }
 </script>
 <style lang="stylus">

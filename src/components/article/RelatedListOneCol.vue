@@ -13,16 +13,15 @@
   import { getHref, getValue } from '../../utils/comm'
   import _ from 'lodash'
 
-
   export default {
     computed: {
-      containerStyle() {
-        return { border: _.get( SECTION_MAP, [ this.sectionId, 'border' ], '2px solid #414141;') }
+      containerStyle () {
+        return { border: _.get(SECTION_MAP, [ this.sectionId, 'border' ], '2px solid #414141;') }
       },
-      titleStyle() {
-        return { color: _.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
+      titleStyle () {
+        return { color: _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
       },
-      sectionId() {
+      sectionId () {
         return _.get(this.$store, [ 'state', 'articles', 'items', 0, 'sections', 0, 'id' ])
       }
     },
@@ -30,18 +29,18 @@
       getHref,
       getValue
     },
-    mounted() {
-        const customCSS = `.related-list-container-bottom .list > .title::before { content: ""; border-color: transparent transparent transparent ${_.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
-        const custCss = document.createElement('style')
-        custCss.appendChild(document.createTextNode(customCSS))
-        document.querySelector('body').appendChild(custCss)
+    mounted () {
+      const customCSS = `.related-list-container-bottom .list > .title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+      const custCss = document.createElement('style')
+      custCss.appendChild(document.createTextNode(customCSS))
+      document.querySelector('body').appendChild(custCss)
     },
     name: 'related-list-container-bottom',
     props: {
       relateds: {
         default: []
       }
-    },
+    }
   }
 
 </script>
@@ -106,8 +105,5 @@
         &:last-child
           border-bottom none
           padding-bottom 0
-        
-      
-    
   
 </style>

@@ -36,7 +36,6 @@
   import { SECTION_MAP, SITE_URL } from '../../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
   import Slider from '../Slider.vue'
-  import _ from 'lodash'
   import sanitizeHtml from 'sanitize-html'
 
   export default {
@@ -44,46 +43,46 @@
       'app-slider': Slider
     },
     computed: {
-      ifShowProjects() {
+      ifShowProjects () {
         const browser = typeof window !== 'undefined'
-        return (browser && this.viewport) ? true : false
+        return (browser && this.viewport)
       },
-      slidesPerView() {
+      slidesPerView () {
         return (this.viewport < 768) ? 1 : 3
       },
-      sliderOption() {
+      sliderOption () {
         return {
           paginationable: true,
           paginationClickable: true,
           paginationHide: false,
           setNavBtn: false,
           slidesPerView: this.slidesPerView,
-          spaceBetween: 30,
+          spaceBetween: 30
         }
       },
-      sliderId() {
+      sliderId () {
         return `proj`
       }
     },
-    data() {
+    data () {
       return {
         siteUrl: SITE_URL
       }
     },
     methods: {
-      borderLeftStyle(sect) {
+      borderLeftStyle (sect) {
         return {
-          borderLeft: SECTION_MAP[ sect ][ "borderLeft" ]
+          borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
         }
       },
       getHref,
       getImage,
       getTruncatedVal,
       getValue,
-      goPrev() {
+      goPrev () {
         window.refs[ this.sliderId ].slidePrev()
       },
-      goNext() {
+      goNext () {
         window.refs[ this.sliderId ].slideNext()
       },
       sanitizeHtml
@@ -96,7 +95,7 @@
       viewport: {
         default: () => { return undefined }
       }
-    },
+    }
   }
 </script>
 <style lang="stylus">

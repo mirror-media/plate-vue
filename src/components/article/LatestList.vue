@@ -24,8 +24,8 @@
 
   export default {
     computed: {
-      pureLatest() {
-        return _.filter(this.latest, (o) => { return _.get(o, [ 'slug' ], '') !== this.currArticleSlug; });
+      pureLatest () {
+        return _.filter(this.latest, (o) => { return _.get(o, [ 'slug' ], '') !== this.currArticleSlug })
       }
     },
     methods: {

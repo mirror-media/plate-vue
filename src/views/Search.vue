@@ -35,7 +35,7 @@ const fetchCommonData = (store) => {
 }
 
 const fetchSearch = (store, keyword, params) => {
-  return store.dispatch('FETCH_SEARCH', { 
+  return store.dispatch('FETCH_SEARCH', {
     'keyword': keyword,
     'params': params
   })
@@ -43,7 +43,7 @@ const fetchSearch = (store, keyword, params) => {
 
 const fetchData = (store) => {
   return fetchCommonData(store).then(() => {
-    return fetchSearch(store, store.state.route.params.keyword, { 
+    return fetchSearch(store, store.state.route.params.keyword, {
       page: PAGE,
       max_results: MAXRESULT
     })
@@ -57,7 +57,7 @@ export default {
     'app-header': Header,
     'article-list': ArticleList,
     'loading': Loading,
-    'more': More,
+    'more': More
   },
   preFetch: fetchData,
   beforeRouteEnter (to, from, next) {
@@ -73,16 +73,15 @@ export default {
     fetchSearch(this.$store, to.params.keyword, {
       page: PAGE,
       max_results: MAXRESULT
-    }).then(()=>{
+    }).then(() => {
       next()
     })
-    
   },
   data () {
     return {
       commonData: this.$store.state.commonData,
       loading: false,
-      page: PAGE,
+      page: PAGE
     }
   },
   computed: {
@@ -100,7 +99,7 @@ export default {
     loadMore () {
       this.page += 1
       this.loading = true
-      fetchSearch(this.$store, this.$route.params.keyword, { 
+      fetchSearch(this.$store, this.$route.params.keyword, {
         page: this.page,
         max_results: MAXRESULT
       }).then(() => {
@@ -109,12 +108,12 @@ export default {
     }
   },
   metaInfo () {
-    let title = "鏡傳媒 Mirror Media"
+    let title = '鏡傳媒 Mirror Media'
     title = (this.title) ? this.title + ' - ' + title : title
     return {
       title
     }
-  },
+  }
 }
 </script>
 

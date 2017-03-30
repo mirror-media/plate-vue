@@ -10,9 +10,9 @@
 
 export default {
   name: 'loading',
-  props: ['show']
+  props: [ 'show' ]
 }
-  
+
 </script>
 <style lang="stylus" scoped>
 $offset = 126

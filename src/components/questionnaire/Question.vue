@@ -19,20 +19,20 @@
   export default {
     name: 'question-container',
     methods: {
-      tabLeft(index, number, total) {
+      tabLeft (index, number, total) {
         return (20 * (number - 1)) + '%'
       },
-      tabMarginLeft(index, number, total) {
-        return (index < 5)? '-5%' : `${- 5 - ((index - 4) * 20)}%`
+      tabMarginLeft (index, number, total) {
+        return (index < 5) ? '-5%' : `${-5 - ((index - 4) * 20)}%`
       },
-      tabZindex(index, number, total) {
+      tabZindex (index, number, total) {
         let zIndex = 998
-        if(index != number) {
+        if (index !== number) {
           const distance = Math.abs(index - number)
           zIndex = total - distance
         }
         return zIndex
-      },
+      }
     },
     props: {
       content: {},
@@ -41,7 +41,7 @@
       index: {},
       total: {
         default: () => { return 1 }
-      },
+      }
     }
   }
 </script>

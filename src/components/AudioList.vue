@@ -11,19 +11,18 @@ import AudioBox from '../components/AudioBox.vue'
 
 export default {
   name: 'audioList',
-  props: ['audios'],
+  props: [ 'audios' ],
   components: {
     'audio-box': AudioBox
   },
   methods: {
-    getAudioSource(item) {
-      let audioURL = []
-      audioURL.push(_.get(item, ['audio', 'url']))
+    getAudioSource (item) {
+      const audioURL = []
+      audioURL.push(_.get(item, [ 'audio', 'url' ]))
       return audioURL
-    },
-  },
+    }
+  }
 }
-  
 </script>
 <style lang="stylus" scoped>
 
@@ -39,6 +38,5 @@ export default {
     &.container
       flex-direction row
       padding 0
-  
 
 </style>

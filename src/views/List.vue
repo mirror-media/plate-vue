@@ -72,7 +72,7 @@
 
 <script>
 
-import { AUTHOR, CATEGORY, SEARCH, SECTION, SITE_URL, TAG, TOPIC } from '../constants/index'
+import { AUTHOR, CATEGORY, SECTION, SITE_URL, TAG, TOPIC } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { getImage, getValue } from '../utils/comm'
 import _ from 'lodash'
@@ -92,8 +92,12 @@ import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
+<<<<<<< Updated upstream
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
+=======
+import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
+>>>>>>> Stashed changes
 
 const MAXRESULT = 9
 const LOADMOREMAXRESULT = 12
@@ -105,26 +109,26 @@ const fetchCommonData = (store) => {
 
 const fetchListData = (store, type, sectionStyle) => {
   let uuid
-  switch(type) {
+  switch (type) {
     case AUTHOR:
       uuid = store.state.route.params.authorId
-      return fetchArticlesByAuthor(store, uuid, { 
+      return fetchArticlesByAuthor(store, uuid, {
         page: PAGE,
         max_results: MAXRESULT
       })
       break
     case SECTION:
-      uuid = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': store.state.route.params.title } ), ['id'] )
-      switch(sectionStyle) {
+      uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': store.state.route.params.title }), [ 'id' ])
+      switch (sectionStyle) {
         case 'full':
-          return fetchArticlesByUuid(store, uuid, SECTION, { 
+          return fetchArticlesByUuid(store, uuid, SECTION, {
             page: PAGE,
             max_results: MAXRESULT,
             related: 'full'
           })
           break
         default:
-          return fetchArticlesByUuid(store, uuid, SECTION, { 
+          return fetchArticlesByUuid(store, uuid, SECTION, {
             page: PAGE,
             max_results: MAXRESULT
           })
@@ -133,15 +137,15 @@ const fetchListData = (store, type, sectionStyle) => {
     case TAG:
       uuid = store.state.route.params.tagId
       return fetchTag(store, uuid).then(() => {
-        return fetchArticlesByUuid(store, uuid, TAG, { 
+        return fetchArticlesByUuid(store, uuid, TAG, {
           page: PAGE,
           max_results: MAXRESULT
         })
       })
       break
     case CATEGORY:
-      let catName = store.state.route.params.title
-      switch(catName) {
+      const catName = store.state.route.params.title
+      switch (catName) {
         case 'audio':
           return fetchAudios(store, {
             page: PAGE,
@@ -152,8 +156,8 @@ const fetchListData = (store, type, sectionStyle) => {
           return fetchYoutubePlaylist(store, MAXRESULT)
           break
         default:
-          uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': store.state.route.params.title } ), ['id'] )
-          return fetchArticlesByUuid(store, uuid, CATEGORY, { 
+          uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': store.state.route.params.title }), [ 'id' ])
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
           })
@@ -161,7 +165,7 @@ const fetchListData = (store, type, sectionStyle) => {
       break
     case TOPIC:
       uuid = store.state.route.params.topicId
-      return fetchArticlesByUuid(store, uuid, TOPIC, { 
+      return fetchArticlesByUuid(store, uuid, TOPIC, {
         page: PAGE,
         max_results: LOADMOREMAXRESULT
       })
@@ -170,25 +174,25 @@ const fetchListData = (store, type, sectionStyle) => {
 
 const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
   let uuid
-  switch(type) {
+  switch (type) {
     case AUTHOR:
       uuid = to.params.authorId
-      return fetchArticlesByAuthor(store, uuid, { 
+      return fetchArticlesByAuthor(store, uuid, {
         page: PAGE
       })
       break
     case SECTION:
-      uuid = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': to.params.title } ), ['id'] )
-      switch(sectionStyle) {
+      uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
+      switch (sectionStyle) {
         case 'full':
-          return fetchArticlesByUuid(store, uuid, SECTION, { 
+          return fetchArticlesByUuid(store, uuid, SECTION, {
             page: PAGE,
             max_results: MAXRESULT,
             related: 'full'
           })
           break
         default:
-          return fetchArticlesByUuid(store, uuid, SECTION, { 
+          return fetchArticlesByUuid(store, uuid, SECTION, {
             page: PAGE,
             max_results: MAXRESULT
           })
@@ -196,14 +200,14 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       break
     case TAG:
       uuid = to.params.tagId
-      return fetchArticlesByUuid(store, uuid, TAG, { 
+      return fetchArticlesByUuid(store, uuid, TAG, {
         page: PAGE,
         max_results: MAXRESULT
       })
       break
     case CATEGORY:
-      let catName = to.params.title
-      switch(catName) {
+      const catName = to.params.title
+      switch (catName) {
         case 'audio':
           return fetchAudios(store, {
             page: PAGE,
@@ -214,8 +218,8 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
           return fetchYoutubePlaylist(store, MAXRESULT)
           break
         default:
-          uuid = _.get( _.find( _.get(store.state.commonData, ['categories']), { 'name': to.params.title } ), ['id'] )
-          return fetchArticlesByUuid(store, uuid, CATEGORY, { 
+          uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
           })
@@ -223,8 +227,8 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       break
     case TOPIC:
       uuid = to.params.topicId
-      let topic = _.find( _.get(store.state.commonData, ['topics', 'items']), { 'id': uuid } )
-      return fetchArticlesByUuid(store, uuid, TOPIC, { 
+      const topic = _.find(_.get(store.state.commonData, [ 'topics', 'items' ]), { 'id': uuid })
+      return fetchArticlesByUuid(store, uuid, TOPIC, {
         page: PAGE,
         max_results: LOADMOREMAXRESULT
       }).then(() => {
@@ -244,7 +248,7 @@ const fetchArticlesByAuthor = (store, uuid, params) => {
       page: PAGE,
       max_results: MAXRESULT,
       where: {
-        '$or' : [
+        '$or': [
           { writers: uuid },
           { photographers: uuid },
           { camera_man: uuid },
@@ -258,33 +262,33 @@ const fetchArticlesByAuthor = (store, uuid, params) => {
 }
 
 const fetchArticlesByUuid = (store, uuid, type, params) => {
-  return store.dispatch('FETCH_ARTICLES_BY_UUID', { 
+  return store.dispatch('FETCH_ARTICLES_BY_UUID', {
     'uuid': uuid,
     'type': type,
     'params': params
   })
 }
 
-const fetchAudios = (store, params={}) => {
-  return store.dispatch('FETCH_AUDIOS', { 
+const fetchAudios = (store, params = {}) => {
+  return store.dispatch('FETCH_AUDIOS', {
     'params': params
   })
 }
 
 const fetchTag = (store, id) => {
-  return store.dispatch('FETCH_TAG', { 
+  return store.dispatch('FETCH_TAG', {
     'id': id
   })
 }
 
 const fetchTopics = (store, params) => {
-  return store.dispatch('FETCH_TOPIC_BY_UUID', { 
+  return store.dispatch('FETCH_TOPIC_BY_UUID', {
     'params': params
   })
 }
 
 const fetchTopicByUuid = (store, uuid) => {
-  return store.dispatch('FETCH_TOPIC_BY_UUID', { 
+  return store.dispatch('FETCH_TOPIC_BY_UUID', {
     'params': {
       where: {
         _id: uuid
@@ -294,31 +298,30 @@ const fetchTopicByUuid = (store, uuid) => {
 }
 
 const fetchTopicImagesByUuid = (store, uuid, type, params) => {
-  return store.dispatch('FETCH_IMAGES', { 
+  return store.dispatch('FETCH_IMAGES', {
     'uuid': uuid,
     'type': type,
     'params': params
   })
 }
 
-const fetchYoutubePlaylist = (store, limit, pageToken='') => {
-  return store.dispatch('FETCH_YOUTUBE_PLAY_LIST', { 
+const fetchYoutubePlaylist = (store, limit, pageToken = '') => {
+  return store.dispatch('FETCH_YOUTUBE_PLAY_LIST', {
     'limit': limit,
     'pageToken': pageToken
   })
 }
 
-
 const fetchData = (store) => {
   return fetchCommonData(store).then(() => {
-    const _type = _.toUpper( _.split( store.state.route.path, '/' )[1] )
-    const _sectionStyle = _.get( _.find( _.get(store.state.commonData, ['sections', 'items']), { 'name': store.state.route.params.title } ), ['style'] )
-    
+    const _type = _.toUpper(_.split(store.state.route.path, '/')[1])
+    const _sectionStyle = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': store.state.route.params.title }), [ 'style' ])
+
     return fetchListData(store, _type, _sectionStyle)
 
-    if(_type === TOPIC) {
+    if (_type === TOPIC) {
       const _uuid = store.state.route.params.topicId
-      const _topic = _.find( _.get(store.state.commonData, ['topics', 'items']), { 'id': _uuid } )
+      const _topic = _.find(_.get(store.state.commonData, [ 'topics', 'items' ]), { 'id': _uuid })
       return (!_topic) ? fetchTopicByUuid(store, _uuid).then(() => {
         return fetchTopicImagesByUuid(store, _uuid, _type, {
           max_results: 25
@@ -352,17 +355,17 @@ export default {
     VueDfpProvider
   },
   preFetch: fetchData,
-  mounted() {
-    if(this.type === SECTION || this.type === TOPIC || this.type === TAG) {
+  mounted () {
+    if (this.type === SECTION || this.type === TOPIC || this.type === TAG) {
       this.insertCustomizedMarkup()
     }
   },
   beforeRouteEnter (to, from, next) {
-    let type = _.toUpper( _.split( to.path, '/' )[1] )
-    if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
+    const type = _.toUpper(_.split(to.path, '/')[1])
+    if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
       next(vm => {
-        let sectionStyle = _.get( _.find( _.get(vm.$store.state.commonData, ['sections', 'items']), 
-          { 'name': _.get(to, ['params', 'title']) } ), ['style'] )
+        const sectionStyle = _.get(_.find(_.get(vm.$store.state.commonData, [ 'sections', 'items' ]),
+          { 'name': _.get(to, [ 'params', 'title' ]) }), [ 'style' ])
         fetchCommonData(vm.$store).then(() => {
           fetchListData(vm.$store, type, sectionStyle)
         })
@@ -373,12 +376,11 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     this.page = PAGE
-    let type = _.toUpper( _.split( to.path, '/' )[1] )
-    let sectionStyle = _.get( _.find( _.get(this.$store.state.commonData, ['sections', 'items']), { 'name': to.params.title } ), ['style'] )
+    const type = _.toUpper(_.split(to.path, '/')[1])
+    const sectionStyle = _.get(_.find(_.get(this.$store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ])
     fetchListDataBeforeRouteUpdate(this.$store, type, sectionStyle, to).then(() => {
       next()
     })
-    
   },
   data () {
     return {
@@ -386,12 +388,12 @@ export default {
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
       loading: false,
-      page: PAGE,
+      page: PAGE
     }
   },
   computed: {
     articles () {
-      switch(this.type) {
+      switch (this.type) {
         case AUTHOR:
           return this.$store.state.articles
           break
@@ -412,36 +414,35 @@ export default {
     audios () {
       return this.$store.state.audios
     },
-    customCSS () { 
-      switch(this.type) {
+    customCSS () {
+      switch (this.type) {
         case SECTION:
-          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['css'], null ) 
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'css' ], null)
         case TAG:
-          return _.get( this.tag, ['css'] )
+          return _.get(this.tag, [ 'css' ])
         case TOPIC:
-          const _style = _.get(this.topic , ['style'], null )
+          const _style = _.get(this.topic, [ 'style' ], null)
           return _style
         default:
           return null
       }
-    }, 
-    customJS () { 
-      switch(this.type) {
+    },
+    customJS () {
+      switch (this.type) {
         case SECTION:
-          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['javascript'], null ) 
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'javascript' ], null)
         case TOPIC:
-          const _javascript = _.get(this.topic , ['javascript'], null )
+          const _javascript = _.get(this.topic, [ 'javascript' ], null)
           return _javascript
-
         default:
           return null
       }
     },
     hasDFP () {
-      return this.type === TOPIC || this.$route.params.title === 'topic' ? false : true
+      return !(this.type === TOPIC || this.$route.params.title === 'topic')
     },
     hasMore () {
-      switch(this.name) {
+      switch (this.name) {
         case 'audio':
           return _.get(this.audios, [ 'items', 'length' ], 0) < _.get(this.audios, [ 'meta', 'total' ], 0)
           break
@@ -453,20 +454,20 @@ export default {
       }
     },
     name () {
-      switch(this.type) {
+      switch (this.type) {
         case CATEGORY:
           return this.$route.params.title
       }
     },
-    section() {
-      return _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ) 
+    section () {
+      return _.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title })
     },
     sectionName () {
-      switch(this.type) {
+      switch (this.type) {
         case CATEGORY:
-          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), (s) => { 
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
             return _.find(s.categories, { 'id': this.uuid })
-          }), ['name'], 'other')
+          }), [ 'name' ], 'other')
         case SECTION:
           if (this.$route.params.title === 'topic') {
             return 'other'
@@ -474,7 +475,7 @@ export default {
             return this.$route.params.title
           }
         case TAG:
-          return _.get(this.tag, 'sections[0].name' )
+          return _.get(this.tag, 'sections[0].name')
         case TOPIC:
           return 'other'
         default:
@@ -482,116 +483,116 @@ export default {
       }
     },
     sectionfeatured () {
-      return _.get( _.pick( _.get(this.$store.state.commonData, ['sectionfeatured', 'items']), this.sectionName ), [ this.sectionName] )
+      return _.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.sectionName), [ this.sectionName ])
     },
     sectionId () {
-      switch(this.type) {
+      switch (this.type) {
         case CATEGORY:
-          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), (s) => { 
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
             return _.find(s.categories, { 'id': this.uuid })
-          }), ['id'], 'other')
+          }), [ 'id' ], 'other')
         case SECTION:
-          return _.get(this,['uuid'], 'other')
+          return _.get(this, [ 'uuid' ], 'other')
         default:
           return 'other'
-      }      
+      }
     },
     pageStyle () {
-      switch(this.type) {
+      switch (this.type) {
         case TAG:
-          return _.get(this.$store.state, [ 'tag', 'style' ], 'feature' )
+          return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
           break
         default:
-          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['style'], 'feature' )
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'style' ], 'feature')
       }
     },
     playlist () {
       return this.$store.state.playlist
     },
     tag () {
-      return _.get(this.$store.state, [ 'tag' ] )
+      return _.get(this.$store.state, [ 'tag' ])
     },
     title () {
-      switch(this.type) {
+      switch (this.type) {
         case AUTHOR:
           return this.$route.params.authorName
         case CATEGORY:
-          return this.$route.params.title == 'audio' ? 'Audio' :
-            _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['title'] )
+          return this.$route.params.title === 'audio' ? 'Audio'
+            : _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'title' ])
         case SECTION:
           if (this.$route.params.title === 'topic') {
             return 'Topic'
           } else {
-            return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['title'] )
+            return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'title' ])
           }
           break
-        case TAG: 
+        case TAG:
           return this.$route.params.tagName
         case TOPIC:
-          return _.get( _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.$route.params.topicId } ), ['name'] )
+          return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])
       }
     },
-    topic() {
-      if(this.type === TOPIC) {
-        return (this.$store.state.topic.items) ? 
-          _.assign(_.get(this.$store.state, ['topic', 'items[0]']), { images: _.get(this.$store.state, ['images']) })
-          : _.find( _.get(this.commonData, ['topics', 'items']), { 'id': this.uuid } )
+    topic () {
+      if (this.type === TOPIC) {
+        return (this.$store.state.topic.items)
+          ? _.assign(_.get(this.$store.state, [ 'topic', 'items[0]' ]), { images: _.get(this.$store.state, [ 'images' ]) })
+          : _.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.uuid })
       } else {
-        return _.get(this.$store.state, ['topic'])
+        return _.get(this.$store.state, [ 'topic' ])
       }
     },
     type () {
-      return  _.toUpper( _.split( this.$route.path, '/' )[1] )
+      return _.toUpper(_.split(this.$route.path, '/')[1])
     },
     uuid () {
-      switch(this.type) {
+      switch (this.type) {
         case AUTHOR:
           return this.$route.params.authorId
         case CATEGORY:
-          return _.get( _.find( _.get(this.commonData, ['categories']), { 'name': this.$route.params.title } ), ['id'] )
+          return _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'id' ])
         case SECTION:
-          return _.get( _.find( _.get(this.commonData, ['sections', 'items']), { 'name': this.$route.params.title } ), ['id'] )
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'id' ])
         case TAG:
           return this.$route.params.tagId
         case TOPIC:
           return this.$route.params.topicId
       }
-    },
+    }
   },
   methods: {
     getImage,
     getValue,
     insertCustomizedMarkup () {
-      const custCss = document.createElement('style') 
-      const custScript = document.createElement('script') 
+      const custCss = document.createElement('style')
+      const custScript = document.createElement('script')
       custCss.setAttribute('id', 'custCSS')
       custScript.setAttribute('id', 'custJS')
-      if(this.customCSS) {
-        custCss.appendChild(document.createTextNode(this.customCSS)) 
+      if (this.customCSS) {
+        custCss.appendChild(document.createTextNode(this.customCSS))
       }
-      if(this.customJS) {
-        custScript.appendChild(document.createTextNode(this.customJS)) 
+      if (this.customJS) {
+        custScript.appendChild(document.createTextNode(this.customJS))
       }
-      document.querySelector('body').appendChild(custCss) 
-      document.querySelector('body').appendChild(custScript) 
+      document.querySelector('body').appendChild(custCss)
+      document.querySelector('body').appendChild(custScript)
     },
     loadMore () {
       this.page += 1
       this.loading = true
-      switch(this.type) {
+      switch (this.type) {
         case AUTHOR:
-          fetchArticlesByAuthor(this.$store, this.uuid, { 
+          fetchArticlesByAuthor(this.$store, this.uuid, {
             page: this.page,
-            max_results: LOADMOREMAXRESULT,
+            max_results: LOADMOREMAXRESULT
           }).then(() => {
             this.articles = this.$store.state.articles
-            this.loading = false          
+            this.loading = false
           })
           break
         case SECTION:
           switch (this.pageStyle) {
             case 'full':
-              fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
+              fetchArticlesByUuid(this.$store, this.uuid, SECTION, {
                 page: this.page,
                 max_results: LOADMOREMAXRESULT,
                 related: 'full'
@@ -606,14 +607,13 @@ export default {
                   page: this.page,
                   max_results: LOADMOREMAXRESULT
                 }).then(() => {
-                  let orig = _.values(this.articles['items'])
-                  let concat = _.concat(orig, _.get(this.$store.state, ['topic', 'items']))
-                  let loaded = _.get(this.$store.state, ['topic'])
-                  this.articles['meta'] = _.get(this.$store.state, ['topic', 'meta'])
-                  this.articles['items'] = concat
+                  const orig = _.values(this.articles[ 'items' ])
+                  const concat = _.concat(orig, _.get(this.$store.state, [ 'topic', 'items' ]))
+                  this.articles[ 'meta' ] = _.get(this.$store.state, [ 'topic', 'meta' ])
+                  this.articles[ 'items' ] = concat
                 })
               } else {
-                fetchArticlesByUuid(this.$store, this.uuid, SECTION, { 
+                fetchArticlesByUuid(this.$store, this.uuid, SECTION, {
                   page: this.page,
                   max_results: LOADMOREMAXRESULT
                 }).then(() => {
@@ -624,7 +624,7 @@ export default {
           }
           break
         default:
-          switch(this.name) {
+          switch (this.name) {
             case 'audio':
               fetchAudios(this.$store, {
                 page: this.page,
@@ -634,13 +634,13 @@ export default {
               })
               break
             case 'videohub':
-              let pageToken = _.get(this.playlist, ['nextPageToken'])
+              const pageToken = _.get(this.playlist, [ 'nextPageToken' ])
               fetchYoutubePlaylist(this.$store, MAXRESULT, pageToken).then(() => {
                 this.playlist = this.$store.state.playlist
               })
               break
             default:
-              fetchArticlesByUuid(this.$store, this.uuid, this.type, { 
+              fetchArticlesByUuid(this.$store, this.uuid, this.type, {
                 page: this.page,
                 max_results: MAXRESULT
               }).then(() => {
@@ -648,58 +648,56 @@ export default {
                 this.loading = false
               })
           }
-          
       }
     },
     updateCustomizedMarkup () {
-      const custCss = document.querySelector('#custCSS') 
-      const custScript = document.querySelector('#custJS') 
-      if(!custCss || !custScript) { this.insertCustomizedMarkup(); return; }
-      if(this.customCSS) {
+      const custCss = document.querySelector('#custCSS')
+      const custScript = document.querySelector('#custJS')
+      if (!custCss || !custScript) { this.insertCustomizedMarkup(); return }
+      if (this.customCSS) {
         this.test ? custCss.innerHTML = '' : custCss.innerHTML = this.customCSS
       }
-      if(this.customJS) {
+      if (this.customJS) {
         custScript.innerHTML = this.customJS
       }
-    },
+    }
   },
   metaInfo () {
-    let type = this.type
-    let description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
+    const type = this.type
+    const description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
     let ogImage
     let ogTitle
     let ogDescription
-    let sectionName = _.get(this.sectionName)
-    switch(type) {
+    const sectionName = _.get(this.sectionName)
+    switch (type) {
       case SECTION:
-        let imageURL = _.get(this.section, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url'], null) ? _.get(this.section, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url']) : _.get(this.section, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'], null)
+        const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
         ogImage = imageURL ? imageURL : '/public/notImage.png'
-        ogTitle = _.get(this.section, ['ogTitle'], null) ? _.get(this.section, ['ogTitle']) : _.get(this.section, ['title'], this.title)
-        ogDescription = _.get(this.section, ['ogDescription'], null) ? _.get(this.section, ['ogDescription']) : _.get(this.section, ['description'])
+        ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? _.get(this.section, [ 'ogTitle' ]) : _.get(this.section, [ 'title' ], this.title)
+        ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? _.get(this.section, [ 'ogDescription' ]) : _.get(this.section, [ 'description' ])
         break
       case TOPIC:
-        ogImage = _.get(this.topic, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url'], null) ? _.get(this.topic, ['ogImage', 'image', 'resizedTargets', 'desktop', 'url']) : '/public/notImage.png'
+        ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : '/public/notImage.png'
         if (this.$route.params.topicId === 'topic') {
           ogTitle = 'Topic'
         } else {
-          ogTitle = _.get(this.topic, ['ogTitle'], null) ? _.get(this.topic, ['ogTitle']) : _.get(this.topic, ['title'])
+          ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ])
         }
-        ogDescription = _.get(this.topic, ['ogDescription'], null) ? _.get(this.topic, ['ogDescription']) : description
+        ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? _.get(this.topic, [ 'ogDescription' ]) : description
         break
       default:
         ogTitle = this.title
         ogImage = '/public/notImage.png'
         ogDescription = description
-
     }
-    let title = ogTitle + ' - 鏡週刊 Mirror Media'
+    const title = ogTitle + ' - 鏡週刊 Mirror Media'
 
     return {
       title,
       meta: [
-          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說'},
+          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
           { name: 'description', content: ogDescription },
-          { name: 'section-name', content: this.sectionName },
+          { name: 'section-name', content: sectionName },
           { name: 'twitter:card', content: 'summary_large_image' },
           { name: 'twitter:title', content: title },
           { name: 'twitter:description', content: ogDescription },
@@ -710,17 +708,17 @@ export default {
           { property: 'og:title', content: title },
           { property: 'og:description', content: ogDescription },
           { property: 'og:url', content: SITE_URL },
-          { property: 'og:image', content: ogImage },
+          { property: 'og:image', content: ogImage }
       ]
     }
   },
-  updated() {
-    if(this.type === TOPIC) {
+  updated () {
+    if (this.type === TOPIC) {
       this.updateCustomizedMarkup()
     }
   }
 }
-  
+
 </script>
 <style lang="stylus" scoped>
 

@@ -14,30 +14,30 @@
 
   export default {
     computed: {
-      resultId() {
+      resultId () {
         return _.get(this.result, [ 'id' ], '')
       },
-      resultTitle() {
+      resultTitle () {
         return _.get(this.result, [ 'title' ], '')
-      },
+      }
     },
-    data() {
+    data () {
       return {}
     },
     methods: {
-      closeShareTools() {
+      closeShareTools () {
         this.$emit('closeShareTools')
       },
-      shareGooglePlus() {
-        shareGooglePlus({ 
+      shareGooglePlus () {
+        shareGooglePlus({
           route: `q/${this.questionnaireId}/${this.resultId}`,
           shared: () => {
             this.$emit('closeShareTools')
-          } 
+          }
         })
       },
-      shareLine() {
-        shareLine({ 
+      shareLine () {
+        shareLine({
           route: `q/${this.questionnaireId}/${this.resultId}`,
           title: document.querySelector('meta[property="og:title"]').getAttribute('content'),
           shared: () => {
@@ -45,12 +45,12 @@
           }
         })
       },
-      shareFacebook() {
-        shareFacebook({ 
+      shareFacebook () {
+        shareFacebook({
           route: `q/${this.questionnaireId}/${this.resultId}`,
           shared: () => {
             this.$emit('closeShareTools')
-          } 
+          }
         })
       }
     },
@@ -62,7 +62,7 @@
       result: {
         default: () => { return {} }
       }
-    },
+    }
   }
 </script>
 <style lang="stylus" scoped>

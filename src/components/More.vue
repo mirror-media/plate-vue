@@ -8,15 +8,13 @@
 
 export default {
   name: 'more',
-  props: {
-  },
   methods: {
     loadMore () {
       this.$emit('loadMore')
     }
-  },
+  }
 }
-  
+
 </script>
 <style lang="stylus" scoped>
 

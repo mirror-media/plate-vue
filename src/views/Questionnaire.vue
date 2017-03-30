@@ -51,22 +51,18 @@
   </div>
 </template>
 <script>
-  import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
+  import { smoothScroll } from 'kc-scroll'
   import { getValue } from '../utils/comm'
   import _ from 'lodash'
   import AsideTab from '../components/questionnaire/AsideTab.vue'
   import Option from '../components/questionnaire/Option.vue'
   import Question from '../components/questionnaire/Question.vue'
   import ShareToolbox from '../components/questionnaire/ShareToolbox.vue'
-  import store from '../store'
 
   const fetchQuestionnaire = (store) => {
     return store.dispatch('FETCH_QUESTIONNAIRE', {
       id: store.state.route.params.questionnaireId
     })
-  }
-  const fetchArticles = (store, params = {}) => {
-    return store.dispatch('FETCH_ARTICLES', params)
   }
 
   export default {
@@ -76,7 +72,7 @@
       'question-container': Question,
       'share-toolbox': ShareToolbox
     },
-    data() {
+    data () {
       return {
         answerSlip: {},
         currQuestIndex: 0,
@@ -90,77 +86,77 @@
         selectedOpt: '',
         shareToolboxFlag: false,
         startFlag: false,
-        showCorrectAnsFlag: this.$store.state.showCorrectAns,
+        showCorrectAnsFlag: this.$store.state.showCorrectAns
       }
     },
     computed: {
-      btnNextText() {
+      btnNextText () {
         return ((this.currQuestIndex + 1) !== this.questions.length) ? '下一題' : '看結果'
       },
-      currOptions() {
+      currOptions () {
         return _.get(this.questionnaireData, [ 'questions', this.currQuestIndex, 'options' ])
       },
-      currQuestion() {
+      currQuestion () {
         return _.get(this.questionnaireData, [ 'questions', this.currQuestIndex, 'title' ], '')
       },
-      currQuestionExplanation() {
+      currQuestionExplanation () {
         return _.get(this.questionnaireData, [ 'questions', this.currQuestIndex, 'explanation' ], '')
       },
-      currQuestionLeadingData() {
-        switch(this.questionLeadingType) {
+      currQuestionLeadingData () {
+        switch (this.questionLeadingType) {
           case 'audio':
             return _.get(this.questionnaireData, [ 'questions', this.currQuestIndex, 'audio' ], '')
           default:
             return
         }
       },
-      descShow() {
+      descShow () {
         return {
-          show: (this.currQuestionExplanation.length > 0 && this.descShowFlag) ? true : false
+          show: (this.currQuestionExplanation.length > 0 && this.descShowFlag)
         }
       },
-      designatedOption() {
+      designatedOption () {
         return (this.gameType !== 'mind') ? _.get(this.questions, [ this.currQuestIndex, 'designated_option' ], '') : this.selectedOpt
       },
-      gameType() {
+      gameType () {
         return _.get(this.questionnaireData, [ 'type' ], 'mind')
       },
-      questionnaireData() {
+      questionnaireData () {
         return _.get(this.$store.state, [ 'questionnaire', this.questionnaireId ])
       },
-      questionnaireDesc() {
+      questionnaireDesc () {
         return _.get(this.questionnaireData, [ 'subtitle' ], '來玩玩看鏡傳媒小測驗吧')
       },
-      questionnaireImg() {
+      questionnaireImg () {
         return _.get(this.questionnaireData, [ 'image', 'url' ], '/public/notImage.png')
-      },      
-      questionnaireTitle() {
+      },
+      questionnaireTitle () {
         return _.get(this.questionnaireData, [ 'title' ], '鏡傳媒小測驗')
       },
-      questions() {
+      questions () {
         return _.get(this.questionnaireData, [ 'questions' ], [])
       },
-      questionLeadingType() {
+      questionLeadingType () {
         return _.get(this.questionnaireData, [ 'leading' ], 'none')
       },
-      results() {
+      results () {
         return _.get(this.questionnaireData, [ 'results' ], [])
       },
-      shareToolboxClass() {
+      shareToolboxClass () {
         return {
           show: this.shareToolboxFlag
         }
       }
     },
     methods: {
-      closeShareTools() {
+      closeShareTools () {
         this.shareToolboxFlag = false
       },
       getValue,
       smoothScroll,
-      updateState({ showDesc, showCorrectAns, answer }) {
+      updateState ({ showDesc, showCorrectAns, answer }) {
         this.descShowFlag = showDesc
-        if(this.gameType !== 'mind') {
+        if (this.gameType !== 'mind') {
           this.lockPickFlag = true
         } else {
           this.selectedOpt = answer.optId
@@ -168,23 +164,23 @@
         this.showCorrectAnsFlag = showCorrectAns
         this.answerSlip[ answer.questId ] = answer
       },
-      goNextQuestion(e) {
-        if(((!this.descShowFlag || !this.showCorrectAnsFlag) && this.gameType !== 'mind') 
-            || (this.gameType === 'mind' && !this.answerSlip[ this.questions[ this.currQuestIndex ][ 'id' ] ])) { return }
+      goNextQuestion (e) {
+        if (((!this.descShowFlag || !this.showCorrectAnsFlag) && this.gameType !== 'mind') ||
+          (this.gameType === 'mind' && !this.answerSlip[ this.questions[ this.currQuestIndex ][ 'id' ] ])) { return }
 
         this.currQuestIndex = (this.currQuestIndex !== this.questions.length) ? (this.currQuestIndex + 1) : 0
         this.descShowFlag = false
-        this.finished = (this.currQuestIndex !== this.questions.length) ? false : true
+        this.finished = (this.currQuestIndex === this.questions.length)
         this.lockPickFlag = false
         this.smoothScroll(null, 1)
         this.showCorrectAnsFlag = false
 
         this.currResult = (this.finished) ? this.getQuestionnaireResult() : {}
       },
-      openShareTools() {
+      openShareTools () {
         this.shareToolboxFlag = true
       },
-      playAgain() {
+      playAgain () {
         this.currQuestIndex = 0
         this.descShowFlag = false
         this.finished = false
@@ -193,15 +189,15 @@
         this.answerSlip = {}
         this.smoothScroll(null, 1)
       },
-      getAnswerSlip() {
+      getAnswerSlip () {
         return this.answerSlip
       },
-      getQuestionnaireResult() {
+      getQuestionnaireResult () {
         const answerSlip = this.getAnswerSlip()
         const score = _.chain(this.questions)
                         .map((itm, idx) => {
-                          let { id, options } = itm
-                          let s = _.find(options, { id: answerSlip[ id ][ 'optId' ] })[ 'score' ]
+                          const { id, options } = itm
+                          const s = _.find(options, { id: answerSlip[ id ][ 'optId' ] })[ 'score' ]
                           return s
                         }).reduce((t, n) => (t + n)).value()
         const rs = _.chain(this.results)
@@ -210,12 +206,12 @@
                     }).first().value()
         return rs
       },
-      start() {
+      start () {
         this.startFlag = true
       }
     },
-    mounted() {},
-    metaInfo() {
+    mounted () {},
+    metaInfo () {
       const _specificResult = _.find(this.results, { id: this.resultId })
 
       const _description = _.get(_specificResult, [ 'title' ], this.questionnaireDesc)
@@ -235,17 +231,12 @@
           { property: 'og:image', content: _image },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-          { property: 'og:title', content: _title },
+          { property: 'og:title', content: _title }
         ]
       }
     },
     name: 'questionnaire-view',
-    preFetch: fetchQuestionnaire,    
-    updated() {
-    },
-    watch: {
-
-    }
+    preFetch: fetchQuestionnaire
   }
 </script>
 <style lang="stylus" scoped>

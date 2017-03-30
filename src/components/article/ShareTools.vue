@@ -7,11 +7,11 @@
   </div>
 </template>
 <script>
-  import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
+  import { currentYPosition, elmYPosition } from 'kc-scroll'
   import { shareGooglePlus, shareLine, shareFacebook } from '../../utils/comm'
   export default {
     methods: {
-      fixToolBox() {
+      fixToolBox () {
         const article = document.querySelector('.article')
         const header = document.querySelector('.header')
         const headerLogo = document.querySelector('.header-logoSearch')
@@ -20,49 +20,47 @@
         window.addEventListener('scroll', () => {
           const currTop = currentYPosition()
           const headerLogoBtm = elmYPosition('.header-logoSearch') + headerLogo.clientHeight
-          if(currTop > headerLogoBtm) {
+          if (currTop > headerLogoBtm) {
             sbLoo.setAttribute('class', 'item mm-icon active')
           } else {
-            sbLoo.setAttribute('class', 'item mm-icon')            
+            sbLoo.setAttribute('class', 'item mm-icon')
           }
-          if(window.shareBoxLeft && window.shareBoxTop) {
-            
+          if (window.shareBoxLeft && window.shareBoxTop) {
           } else {
             window.shareBoxTop = header.offsetTop + header.offsetHeight
             window.shareBoxLeft = article.offsetLeft - shareBox.offsetWidth
             shareBox.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)
           }
         })
-        window.addEventListener( 'resize',  () => {
+        window.addEventListener('resize', () => {
           shareBox.removeAttribute('styel')
           window.shareBoxTop = header.offsetTop + header.offsetHeight
           window.shareBoxLeft = article.offsetLeft - shareBox.offsetWidth
           shareBox.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)
         })
       },
-      goHome() {
+      goHome () {
         window.location.href = '/'
       },
-      shareGooglePlus() {
+      shareGooglePlus () {
         shareGooglePlus({ route: this.$route.path })
       },
-      shareLine() {
-        shareLine({ 
+      shareLine () {
+        shareLine({
           route: this.$route.path,
           title: document.querySelector('meta[property="og:title"]').getAttribute('content')
         })
       },
-      shareFacebook() {
+      shareFacebook () {
         shareFacebook({ route: this.$route.path })
       }
     },
-    mounted() {
+    mounted () {
       window.shareBoxTop = undefined
       window.shareBoxLeft = undefined
       this.fixToolBox()
     },
-    name: 'share-tools',
-
+    name: 'share-tools'
   }
 </script>
 <style lang="stylus" scoped>

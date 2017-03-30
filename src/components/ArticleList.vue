@@ -55,7 +55,7 @@ export default {
   name: 'articleList',
   components: {
   },
-  props: ['articles', 'hasDFP'],
+  props: [ 'articles', 'hasDFP' ],
   computed: {
     articlesBeforeDFPNA3 () {
       return _.take(this.articles, 2)
@@ -75,10 +75,9 @@ export default {
     getHref,
     getImage,
     getSection,
-    getTruncatedVal,
-  },
+    getTruncatedVal
+  }
 }
-  
 </script>
 <style lang="stylus" scoped>
 

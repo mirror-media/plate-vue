@@ -49,7 +49,6 @@
 </template>
 <script>
 
-import { SOCIAL_LINK } from '../constants/index'
 import { getAuthor, getBrief, getHref, getImage, getTruncatedVal } from '../utils/comm'
 import _ from 'lodash'
 import moment from 'moment'
@@ -57,7 +56,7 @@ import objectFitImages from 'object-fit-images'
 
 export default {
   name: 'article-leading',
-  props: ['articles', 'props'],  
+  props: [ 'articles', 'props' ],
   methods: {
     getAuthor,
     getBrief,
@@ -66,7 +65,7 @@ export default {
     getTruncatedVal,
     moment,
     hasRelated (article) {
-      return _.get(article, ['relateds', 'length']) > 0 ? true : false
+      return _.get(article, [ 'relateds', 'length' ]) > 0
     },
     getRelated (article) {
       return _.take(article.relateds, 2)
@@ -75,9 +74,9 @@ export default {
   computed: {
     highlightArticle () {
       return _.take(this.articles, 2)
-    },
+    }
   },
-  mounted() {
+  mounted () {
     objectFitImages()
   }
 }

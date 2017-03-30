@@ -1,8 +1,8 @@
 export const imageComposer = (article) => {
   let image
-  let heroImage = article.heroImage
-  let facebookImage = article.ogImage
-  
+  const heroImage = article.heroImage
+  const facebookImage = article.ogImage
+
   if (heroImage && heroImage.image) {
     return {
       desktopImage: heroImage.image.resizedTargets.desktop.url,

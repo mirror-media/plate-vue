@@ -16,9 +16,6 @@ import _ from 'lodash'
 import ArticleCenter from '../components/article/ArticleCenter.vue'
 import ArticleLeft from '../components/article/ArticleLeft.vue'
 import ArticleRight from '../components/article/ArticleRight.vue'
-import moment from 'moment'
-import sanitizeHtml from 'sanitize-html'
-import truncate from 'truncate'
 
 const briefAmount = 42
 
@@ -27,27 +24,19 @@ export default {
   components: {
     'article-center': ArticleCenter,
     'article-left': ArticleLeft,
-    'article-right': ArticleRight,
+    'article-right': ArticleRight
   },
   data () {
     return {
       briefAmount: briefAmount
     }
   },
-  props: ['latestArticle', 'dfpUnits', 'props', 'section', 'vueDfp'],
+  props: [ 'latestArticle', 'dfpUnits', 'props', 'section', 'vueDfp' ],
   computed: {
-    articles() {
-      let showArticles = _.take(this.latestArticle, 5 * Math.floor(this.latestArticle.length / 5))
+    articles () {
+      const showArticles = _.take(this.latestArticle, 5 * Math.floor(this.latestArticle.length / 5))
       return _.chunk(showArticles, 5)
-    },
-  },
-  methods: {
-    
-  },
-  beforeMount () {
-   
-  },
-  mounted() {
+    }
   }
 }
 

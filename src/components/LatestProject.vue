@@ -15,13 +15,10 @@
 
 import { getBrief, getImage, getSection, getHref, getTruncatedVal } from '../utils/comm'
 import _ from 'lodash'
-import moment from 'moment'
-import sanitizeHtml from 'sanitize-html'
-import truncate from 'truncate'
 
 export default {
   name: 'latestProject',
-  props: ['projects'],
+  props: [ 'projects' ],
   computed: {
     highlightProject () {
       return _.take(this.projects, 8)
@@ -32,8 +29,8 @@ export default {
     getImage,
     getSection,
     getHref,
-    getTruncatedVal,
-  },
+    getTruncatedVal
+  }
 }
 
 </script>

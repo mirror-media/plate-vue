@@ -36,12 +36,12 @@ export default {
   },
   data () {
     return {
-      socialLink: SOCIAL_LINK,
+      socialLink: SOCIAL_LINK
     }
   },
   computed: {
     menuItem () {
-      let menuItem = {}
+      const menuItem = {}
       menuItem.section = []
       menuItem.category = []
       _.forEach(this.commonData.sections.items, (s) => {
@@ -56,8 +56,8 @@ export default {
       return menuItem
     },
     sectionLogo () {
-      return _.get( _.find( _.get(this.commonData, [ 'sections', 'items' ]), { name: this.section }), [ 'image' ], null)
-    },
+      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.section }), [ 'image' ], null)
+    }
   },
   methods: {
     getSectionLogoUrl () {
@@ -69,7 +69,7 @@ export default {
     getSectionLogoHeight () {
       return _.get(this.sectionLogo, [ 'image', 'height' ])
     }
-  },
+  }
 }
 </script>
 <style lang="stylus" scoped>

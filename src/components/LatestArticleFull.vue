@@ -39,14 +39,14 @@ import moment from 'moment'
 
 export default {
   name: 'latestArticle-full',
-  props: ['articles', 'props'],
+  props: [ 'articles', 'props' ],
   methods: {
     getAuthor,
     getBrief,
     getHref,
     getImage,
     getTruncatedVal,
-    moment,
+    moment
   },
   computed: {
     latestArticle () {

@@ -34,39 +34,39 @@
   export default {
     name: 'footer',
     computed: {
-      ifShowShareBottom() {
+      ifShowShareBottom () {
         return {
-          show: (this.scrollDirection !== 'up') ? true : false
+          show: (this.scrollDirection !== 'up')
         }
       }
     },
-    data() {
+    data () {
       return {
         scrollDirection: 'up',
         SOCIAL_LINK: SOCIAL_LINK
       }
     },
     methods: {
-      currentYPosition, 
-      elmYPosition, 
-      shareFacebook() {
+      currentYPosition,
+      elmYPosition,
+      shareFacebook () {
         shareFacebook({ route: this.$route.path })
       },
-      shareLine() {
-        shareLine({ 
+      shareLine () {
+        shareLine({
           route: this.$route.path,
           title: document.querySelector('meta[property="og:title"]').getAttribute('content')
         })
       },
-      shareGooglePlus() {
+      shareGooglePlus () {
         shareGooglePlus({ route: this.$route.path })
       },
-      smoothScroll,
+      smoothScroll
     },
-    mounted() {
+    mounted () {
       window.addEventListener('wheel', (e) => {
         const _derection = e.wheelDelta
-        if(_derection <= 0) {
+        if (_derection <= 0) {
           this.scrollDirection = 'down'
         } else {
           this.scrollDirection = 'up'
@@ -75,7 +75,7 @@
       window.addEventListener('touchmove', (e) => {
         const _currTouchClientY = e.touches[ 0 ].clientY
         const _lastTouchClientY = window.touchClientY || _currTouchClientY
-        if(_currTouchClientY <= _lastTouchClientY) {
+        if (_currTouchClientY <= _lastTouchClientY) {
           this.scrollDirection = 'down'
         } else {
           this.scrollDirection = 'up'

@@ -80,12 +80,12 @@
 <script>
 
 import { SOCIAL_LINK } from '../constants/index'
-import { currentYPosition, elmYPosition } from 'kc-scroll'
+import { currentYPosition } from 'kc-scroll'
 import _ from 'lodash'
 
 export default {
   name: 'header-full',
-  props: ['commonData', 'section', 'sections'],
+  props: [ 'commonData', 'section', 'sections' ],
   data () {
     return {
       blackNav: false,
@@ -93,7 +93,7 @@ export default {
       opacity: 1,
       openSearch: false,
       openSide: false,
-      searchVal: '',
+      searchVal: ''
     }
   },
   methods: {
@@ -116,30 +116,30 @@ export default {
       this.openSide = true
     },
     search (searchVal = '') {
-      this.$router.push('/search/'+ this.searchVal)
+      this.$router.push('/search/' + this.searchVal)
     },
     handleScroll () {
       window.onscroll = (e) => {
         this.opacity = 1 - currentYPosition() / 300
         this.opacity < 0 ? this.defaultNav = false : this.defaultNav = true
         this.opacity < 1 ? this.blackNav = true : this.blackNav = false
-      } 
+      }
     }
   },
   computed: {
     menuItem () {
-      return _.get( _.find( _.get(this.sections, ['items']), { name: this.section } ), ['categories'])
+      return _.get(_.find(_.get(this.sections, [ 'items' ]), { name: this.section }), [ 'categories' ])
     },
     sectionLogo () {
-      return _.get( _.find( _.get(this.commonData, [ 'sections', 'items' ]), { name: this.section }), [ 'image' ], null)
+      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.section }), [ 'image' ], null)
     },
     socialLink () {
       return SOCIAL_LINK
     }
   },
-  mounted() {
+  mounted () {
     this.handleScroll()
-  },
+  }
 }
 
 </script>

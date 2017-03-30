@@ -78,13 +78,13 @@ import _ from 'lodash'
 
 export default {
   name: 'app-header',
-  props: ['commonData'],
+  props: [ 'commonData' ],
   data () {
     return {
       isScrolled: false,
       searchVal: '',
       openSearch: false,
-      openSide: false,
+      openSide: false
     }
   },
   methods: {
@@ -106,17 +106,17 @@ export default {
       this.openSide = true
     },
     search (searchVal = '') {
-      this.$router.push('/search/'+ this.searchVal)
+      this.$router.push('/search/' + this.searchVal)
       this.openSearch = false
-    },
+    }
   },
   computed: {
     headerItem () {
-      let headerItem = {}
+      const headerItem = {}
       headerItem.section = []
       headerItem.category = []
       headerItem.topic = []
-      _.forEach(_.get(this.commonData, ['sections', 'items']), (s) => {
+      _.forEach(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
         s.href = '/section/' + s.name
         s.isFeatured ? headerItem.section.push(s) : ''
         _.forEach(s.categories, (c) => {
@@ -125,7 +125,7 @@ export default {
           c.isFeatured ? headerItem.category.push(c) : ''
         })
       })
-      _.forEach(_.get(this.commonData, ['topics', 'items']), (t) => {
+      _.forEach(_.get(this.commonData, [ 'topics', 'items' ]), (t) => {
         t.href = '/topic/' + t.id
         t.title = t.name
         t.isFeatured && headerItem.topic.length < 7 ? headerItem.topic.push(t) : ''
@@ -139,7 +139,7 @@ export default {
       return SOCIAL_LINK
     }
   },
-  mounted() {
+  mounted () {
     this.handleScroll()
   }
 }
