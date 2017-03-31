@@ -50,7 +50,7 @@
         <div class="tags" v-html="tags"></div>
       </div>
       <div class="split-line"></div>
-      <div style="display: flex; justify-content: space-around;">
+      <div class="dfpad-set" style="display: flex; justify-content: space-around;">
         <slot name="dfpad-set"></slot>
       </div>
       <div class="article_main_related_bottom">
@@ -93,7 +93,7 @@ export default {
       const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ])
       const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ])
       const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
-      const style = { borderLeft: _.get(SECTION_MAP, [ sectionId, 'borderLeft' ], '7px solid #414141;') }
+      const style = { borderLeft: _.get(SECTION_MAP, [ sectionId, 'borderLeft' ], '7px solid #bcbcbc;') }
       return { categoryId, categoryTitle, style }
     },
     contArr () {
@@ -650,7 +650,7 @@ export default {
         max-width 950px
         display block
 
-        p, h2, .split-line, .embedded, .article_main_pop, .article_main_proj, .article_main_related_bottom, .article_fb_comment, ul, .youtube 
+        p, h2, .split-line, .embedded, .article_main_pop, .article_main_proj, .article_main_related_bottom, .article_fb_comment, ul, .youtube, .dfpad-set
           padding 0 145px
 
         .article_main_pop

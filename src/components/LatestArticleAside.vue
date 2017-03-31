@@ -85,6 +85,9 @@ export default {
         .latest-list_item_img
           padding-top 66.67%
           width 100%
+          background-position center center
+          background-repeat no-repeat
+          background-size cover
 
         .latest-list_item_label
           position absolute
@@ -105,14 +108,14 @@ export default {
         display flex
         justify-content center
         align-items center
-        border-bottom 1px solid rgba(0, 0, 0, 0.35)
+        border-bottom 1px solid rgba(0, 0, 0, 0.25)
 
-        border-left 1px solid rgba(0, 0, 0, 0.35)
-        border-right 1px solid rgba(0, 0, 0, 0.35)
+        border-left 1px solid rgba(0, 0, 0, 0.25)
+        border-right 1px solid rgba(0, 0, 0, 0.25)
         padding 15px 10px
         font-size 1.3rem
         line-height 1.7rem
-        box-shadow 0 0 6px rgba(0,0,0,0.5)
+        box-shadow 0 0 6px rgba(0,0,0,0.25)
         position relative
 
         &::after
@@ -161,7 +164,6 @@ export default {
           
           &::after
             display none
-          // > a
 
 @media (min-width: 1200px)  
   .latest-aside-container
@@ -170,7 +172,6 @@ export default {
     .latest-list
       .latest-list_item
         > a
-        //   .latest-list_item_img
           .latest-list_item_label
             height 25px
             width 45px
