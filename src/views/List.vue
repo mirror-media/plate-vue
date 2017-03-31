@@ -92,12 +92,7 @@ import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
-<<<<<<< Updated upstream
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import truncate from 'truncate'
-=======
-import VueDfpProvider from 'kc-vue-dfp/DfpProvider.vue'
->>>>>>> Stashed changes
 
 const MAXRESULT = 9
 const LOADMOREMAXRESULT = 12
