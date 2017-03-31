@@ -10,7 +10,7 @@
           <p v-text="getBrief(article[0], briefAmount)"></p>
         </div>
       </div></router-link>
-      <router-link :to="getHref(article[1])" :id="'latest-'+ getName(article[1])" v-if="!hasDFP"><div>
+      <router-link :to="getHref(article[1])" :id="'latest-'+ getName(article[1])"><div>
         <div class="list-narrow__img"
           :style="{ backgroundImage: 'url(' + getImage(article[1], 'mobile') + ')' }"></div>
         <div class="list-narrow__title" :class="getSection(article[1])">
@@ -18,7 +18,7 @@
           <p v-text="getBrief(article[1], briefAmount)"></p>
         </div>
       </div></router-link>
-      <vue-dfp :is="props.vueDfp" pos="LPCNA7" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" v-if="hasDFP"/>
+      <!-- <vue-dfp :is="props.vueDfp" pos="LPCNA7" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" v-if="hasDFP"/> -->
     </div>
 
     <router-link :to="getHref(article[2])" :id="'latest-'+ getName(article[2])" class="list-wide"><div class="list-wide__img" :style="{ backgroundImage: 'url(' + getImage(article[2], 'desktop') + ')' }">
