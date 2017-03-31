@@ -66,7 +66,7 @@ export default {
       const style = { 
         backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], '#bcbcbc'),
         width:  _.get( SECTION_MAP, [sectionId, device], (this.viewport > 599 && this.viewport < 1200) ? '60px' : 'auto'),
-        display: (sectionId || (!sectionId && this.viewport < 1199)) ? 'flex' : 'none!important'
+        // display: (sectionId || (!sectionId && this.viewport < 1199)) ? 'flex' : 'none!important'
       }
       return style
     },

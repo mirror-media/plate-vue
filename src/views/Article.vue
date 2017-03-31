@@ -6,6 +6,7 @@
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
@@ -32,6 +33,7 @@
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
               <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5"/>
@@ -42,6 +44,7 @@
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="MBFT" extClass="full mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />            
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
@@ -410,6 +413,14 @@
     .article-container
       .article-heromedia, .article
          max-width 100%
+  
+  @media (max-width 999px)
+    .mobile-hide
+      display none !important
+
+  @media (min-width 1000px)
+    .mobile-only
+      display none !important
 
   @media (min-width 768px) and (max-width 1199px)
     .article-container

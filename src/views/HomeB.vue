@@ -5,7 +5,8 @@
         <section style="width: 100%;">
           <app-Header v-if="true" :commonData= 'commonData' />
         </section>
-        <vue-dfp :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" class="event" />
         <editor-choice :editorChoice= 'editorChoice'/>
         <section class="container list">
@@ -15,20 +16,21 @@
           </aside>
           <main>
             <LatestArticleMain :latestList="latestArticle" :viewport="viewport">
-              <vue-dfp :is="props.vueDfp" pos="LPCNA3" extClass="mobile-hidden" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
-              <vue-dfp :is="props.vueDfp" pos="LPCNA5" extClass="mobile-hidden" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
-              <vue-dfp :is="props.vueDfp" pos="LPCNA9" extClass="mobile-hidden" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
               <vue-dfp :is="props.vueDfp" pos="LMBNA3" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
               <vue-dfp :is="props.vueDfp" pos="LMBNA5" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
               <vue-dfp :is="props.vueDfp" pos="LMBNA9" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
             </LatestArticleMain>
-            <ProjectList class="mobile-hidden" :projects="projects" :viewport="viewport" />
+            <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />
             <PopularArticles :popList="popularlist" />
           </main>
         </section>
         <loading :show="loading" />
         <section class="container footer">
-          <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
           <app-footer :ifShare="false" />
         </section>
       </div>

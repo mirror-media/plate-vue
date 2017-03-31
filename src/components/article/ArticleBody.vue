@@ -133,7 +133,7 @@ export default {
     },
     sliderOption () {
       return {
-        paginationable: true,
+        paginationable: false,
         paginationClickable: true,
         paginationHide: false,
         setNavBtn: true
@@ -206,6 +206,7 @@ export default {
                                        ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
                                        ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"
                          class=\"swiper-lazy\"/>
+                    <div class=\"img-caption\">${_.get(item.content, [ 0, 'description' ], '')}</div>
                   </div>`
         case 'unordered-list-item':
           const _liStrUnordered = item.content.map((i) => {
@@ -696,7 +697,20 @@ export default {
             img 
               width 100%
               object-fit contain
+              object-position center center
               max-height 450px
+
+            .img-caption
+              width 70%
+              margin 0 auto
+              padding 8px
+              color rgba(0,0,0,0.498)
+              font-size 1rem
+              text-align center
+
+      .swiper-pagination
+        .swiper-pagination-bullet.swiper-pagination-bullet-active
+          background-color rgba(179, 179, 179, 0.61)
 
   @media (min-width 0px) and (max-width 499px)
     .article_body
@@ -732,7 +746,7 @@ export default {
           
               .info-box-body
                 ul
-                  text-indent -42px
+                  text-indent 0
                   line-height 2rem
                   letter-spacing 0.05rem
                   padding-left 0
@@ -759,13 +773,6 @@ export default {
               font-size 3rem
               top 15px
               left 10px
-
-      .per-slide 
-        height 300px
-
-        .swiper-wrapper 
-          height 250px
-
 
   @media (min-width 0px) and (max-width 767px)
     .article_body
@@ -806,13 +813,18 @@ export default {
         max-width 645px
         margin 0 auto 15px
       
-  @media (max-width 1199px) and (min-width 900px)
+  @media (min-width 900px) and (max-width 1199px)
     .article_body
-      .article_basic-info, .article_credit, .article_main
+      color #ffffff
+      .article_basic-info
         width 695px
         max-width 695px
         margin 0 auto
 
+      .article_credit, .article_main
+        width 695px
+        max-width 695px
+        margin 0 auto
       .article_title
         width 695px
         max-width 695px
