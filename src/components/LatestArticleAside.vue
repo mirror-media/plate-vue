@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])">
+      <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])" v-if="i < 3">
         <div class="latest-list_item_title" :style="getSectionStyleBorderTop(getValue(o, [ 'sections', 0 ], ''))">
           <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)"></router-link>
         </div>
