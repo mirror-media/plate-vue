@@ -534,7 +534,7 @@ export default {
     topic () {
       if (this.type === TOPIC) {
         return (this.$store.state.topic.items)
-          ? _.assign(_.get(this.$store.state, [ 'topic', 'items', '0' ]), { images: _.get(this.$store.state, [ 'images' ])})
+          ? _.assign(_.get(this.$store.state, [ 'topic', 'items', '0' ]), { images: _.get(this.$store.state, [ 'images' ]) })
           : _.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.uuid })
       } else {
         return _.get(this.$store.state, [ 'topic' ])

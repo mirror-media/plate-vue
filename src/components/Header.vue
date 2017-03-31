@@ -45,16 +45,16 @@
           <span>下載APP</span>
         </a>
         <div class="header-sidebar__menu--second">
-          <a :href="socialLink.EMAIL" target="_bank"><img src="/public/icon/mail_lightgray.png"></a>
-          <a :href="socialLink.FEED" target="_bank"><img src="/public/icon/feed_lightgray.png"></a>
+          <a id="footer-email" :href="socialLink.EMAIL" target="_bank"><img src="/public/icon/mail_lightgray.png"></a>
+          <a id="footer-feed" :href="socialLink.FEED" target="_bank"><img src="/public/icon/feed_lightgray.png"></a>
         </div>
       </div>
       <div class="header-sidebar__socialMedia">
         <span>追蹤鏡傳媒</span>
-        <a :href="socialLink.LINE" target="_bank"><img src="/public/icon/line_blue.png"></a>
-        <a :href="socialLink.WEIBO" target="_bank"><img src="/public/icon/weibo_blue.png"></a>
-        <a :href="socialLink.FACEBOOK" target="_bank"><img src="/public/icon/facebook_blue.png"></a>
-        <a :href="socialLink.INSTAGRAM" target="_bank"><img src="/public/icon/instagram_blue.png"></a>
+        <a id="footer-line" :href="socialLink.LINE" target="_bank"><img src="/public/icon/line_blue.png"></a>
+        <a id="footer-weibo" :href="socialLink.WEIBO" target="_bank"><img src="/public/icon/weibo_blue.png"></a>
+        <a id="footer-fb" :href="socialLink.FACEBOOK" target="_bank"><img src="/public/icon/facebook_blue.png"></a>
+        <a id="footer-ig" :href="socialLink.INSTAGRAM" target="_bank"><img src="/public/icon/instagram_blue.png"></a>
       </div>
     </nav>
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">

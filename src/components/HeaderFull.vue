@@ -108,7 +108,7 @@ export default {
     },
     getSectionLogoUrl () {
       if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
-        let section = _.find(_.get(this.sections, [ 'items' ]), { id: '57dfe3b0ee85930e00cad4d7' })
+        const section = _.find(_.get(this.sections, [ 'items' ]), { id: '57dfe3b0ee85930e00cad4d7' })
         return _.get(section, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ])
       } else {
         return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
