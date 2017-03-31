@@ -6,7 +6,7 @@
         <section style="width: 100%;">
           <app-header :commonData= 'commonData' />
         </section>
-        <div class="topic" v-if="type == 'TOPIC'">
+        <div class="topic" v-if="type === 'TOPIC'">
           <div class="topic-title"><h1></h1></div>
           <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
         </div>
@@ -40,30 +40,22 @@
         <share />
       </div>
 
-      <div class="listFull-view" v-if="pageStyle == 'full'">
+      <div class="listFull-view" v-if="pageStyle === 'full'">
         <section>
-          <header-full :commonData='commonData' :section='sectionName' :sections='commonData.sections' />
+          <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
         </section>
-        <article-leading :articles='articles.items' :props="props" v-if="type == 'SECTION'"/>
-        <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type == 'SECTION'"/>
-        <latestArticle-full :articles='articles.items' :props="props" v-if="type == 'SECTION'" />
-        <section v-if="(type == 'TAG' && pageStyle == 'full')" class="tag-gallery" 
-                  :style="{ backgroundImage: 'url(' + getImage(tag, 'desktop') + ')' }">
-          <div class="tag-gallery-headline">
-            <h1 class="tag-gallery-headline__enName"></h1>
-            <h3 class="tag-gallery-headline__zhName"></h3>
-            <div class="tag-gallery-intro">
-              <span class="tag-gallery-intro__title"></span>
-              <img src="~public/icon/tag-arrow.png"/>
-            </div>
-          </div>
-        </section>
-        <article-list-full :articles='articles.items' v-if="type == 'TAG'" />
+        <article-leading :articles='articles.items' :props="props" v-if="type === 'SECTION'"/>
+        <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
+        <latestArticle-full :articles='articles.items' :props="props" v-if="type === 'SECTION'" />
+        <leading-watch v-if="(type == 'TAG' && pageStyle == 'full') || (type === 'TOPIC' && sectionName === 'watch')"
+          :tag='tag' :topic='topic' :type='type'/>
+        <article-list-full :articles='articles.items'
+          v-if="type === 'TAG' || (type === 'TOPIC' && sectionName === 'watch')" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
         <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <footer-full :commonData='commonData' :section='sectionName' />
+        <footer-full :commonData='commonData' :sectionName='sectionName' />
       </div>
 
     </template>
@@ -87,6 +79,7 @@ import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import LatestArticleFull from '../components/LatestArticleFull.vue'
 import Leading from '../components/Leading.vue'
+import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
@@ -160,10 +153,19 @@ const fetchListData = (store, type, sectionStyle) => {
       break
     case TOPIC:
       uuid = store.state.route.params.topicId
+      const topic = _.find(_.get(store.state.commonData, [ 'topics', 'items' ]), { 'id': uuid })
+      
       return fetchArticlesByUuid(store, uuid, TOPIC, {
         page: PAGE,
         max_results: LOADMOREMAXRESULT
+      }).then(() => {
+        return (!topic) ? fetchTopicByUuid(store, uuid).then(() => {
+          return fetchTopicImagesByUuid(store, uuid, type, {
+            max_results: 25
+          })
+        }) : null
       })
+      break
   }
 }
 
@@ -195,9 +197,12 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       break
     case TAG:
       uuid = to.params.tagId
-      return fetchArticlesByUuid(store, uuid, TAG, {
-        page: PAGE,
-        max_results: MAXRESULT
+      console.log('uuid', uuid)
+      return fetchTag(store, uuid).then(() => {
+        return fetchArticlesByUuid(store, uuid, TAG, {
+          page: PAGE,
+          max_results: MAXRESULT
+        })
       })
       break
     case CATEGORY:
@@ -311,20 +316,7 @@ const fetchData = (store) => {
   return fetchCommonData(store).then(() => {
     const _type = _.toUpper(_.split(store.state.route.path, '/')[1])
     const _sectionStyle = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': store.state.route.params.title }), [ 'style' ])
-
     return fetchListData(store, _type, _sectionStyle)
-
-    if (_type === TOPIC) {
-      const _uuid = store.state.route.params.topicId
-      const _topic = _.find(_.get(store.state.commonData, [ 'topics', 'items' ]), { 'id': _uuid })
-      return (!_topic) ? fetchTopicByUuid(store, _uuid).then(() => {
-        return fetchTopicImagesByUuid(store, _uuid, _type, {
-          max_results: 25
-        })
-      }) : null
-    } else {
-      return
-    }
   })
 }
 
@@ -342,6 +334,7 @@ export default {
     'header-full': HeaderFull,
     'latestArticle-full': LatestArticleFull,
     'leading': Leading,
+    'leading-watch': LeadingWatch,
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
@@ -472,6 +465,9 @@ export default {
         case TAG:
           return _.get(this.tag, 'sections[0].name')
         case TOPIC:
+          if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
+            return 'watch'
+          }
           return 'other'
         default:
           return 'other'
@@ -497,6 +493,11 @@ export default {
         case TAG:
           return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
           break
+        case TOPIC:
+          if (this.$route.params.topicId === '586cd15c3c1f950d00ce2e78') {
+            return 'full'
+          }
+          return 'feature'
         default:
           return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'style' ], 'feature')
       }
@@ -522,15 +523,18 @@ export default {
           }
           break
         case TAG:
-          return this.$route.params.tagName
+          return _.get(this.tag, [ 'name' ])
         case TOPIC:
+          if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
+            return '錶展特區'
+          }
           return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])
       }
     },
     topic () {
       if (this.type === TOPIC) {
         return (this.$store.state.topic.items)
-          ? _.assign(_.get(this.$store.state, [ 'topic', 'items[0]' ]), { images: _.get(this.$store.state, [ 'images' ]) })
+          ? _.assign(_.get(this.$store.state, [ 'topic', 'items', '0' ]), { images: _.get(this.$store.state, [ 'images' ])})
           : _.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.uuid })
       } else {
         return _.get(this.$store.state, [ 'topic' ])
@@ -606,6 +610,7 @@ export default {
                   const concat = _.concat(orig, _.get(this.$store.state, [ 'topic', 'items' ]))
                   this.articles[ 'meta' ] = _.get(this.$store.state, [ 'topic', 'meta' ])
                   this.articles[ 'items' ] = concat
+                  this.loading = false
                 })
               } else {
                 fetchArticlesByUuid(this.$store, this.uuid, SECTION, {
@@ -626,12 +631,14 @@ export default {
                 max_results: MAXRESULT
               }).then(() => {
                 this.audios = this.$store.state.audios
+                this.loading = false
               })
               break
             case 'videohub':
               const pageToken = _.get(this.playlist, [ 'nextPageToken' ])
               fetchYoutubePlaylist(this.$store, MAXRESULT, pageToken).then(() => {
                 this.playlist = this.$store.state.playlist
+                this.loading = false
               })
               break
             default:
@@ -650,7 +657,7 @@ export default {
       const custScript = document.querySelector('#custJS')
       if (!custCss || !custScript) { this.insertCustomizedMarkup(); return }
       if (this.customCSS) {
-        this.test ? custCss.innerHTML = '' : custCss.innerHTML = this.customCSS
+        custCss.innerHTML = this.customCSS
       }
       if (this.customJS) {
         custScript.innerHTML = this.customJS
@@ -676,7 +683,7 @@ export default {
         if (this.$route.params.topicId === 'topic') {
           ogTitle = 'Topic'
         } else {
-          ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ])
+          ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
         }
         ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? _.get(this.topic, [ 'ogDescription' ]) : description
         break
@@ -787,43 +794,6 @@ $color-other = #bcbcbc
 .listFull
   &-view
     background-color #f5f5f5
-
-.tag-gallery 
-  display flex
-  justify-content center
-  align-items center
-  width 100%
-  height calc(100vh - 200px)
-  background-position center center
-  background-repeat no-repeat
-  background-size cover
-  &-headline
-    text-align center
-    color #fff
-    > h1
-      margin 0
-      font-size 42px
-      font-weight 700
-    > h3
-      margin 7px 0 26px
-      font-size 19px
-      font-weight 300
-    &__enName, &__zhName
-      visibility hidden
-    &__enName:after, &__zhName:after
-      visibility visible
-  &-intro
-    &__title
-      visibility hidden
-    &__title:after
-      visibility visible
-    > span
-      margin-right 8px
-      font-size 16px
-      font-weight 300
-    > img
-      vertical-align middle
-      height 8px
 
 @media (min-width: 600px)
   .list

@@ -5,7 +5,7 @@
         <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png"></a>
       </div>
       <div class="headerFull__logo">
-        <router-link :to=" '/section/' + section "><img :src="getSectionLogoUrl()"></router-link>
+        <router-link :to=" '/section/' + sectionName "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
         <router-link to="/">
@@ -30,7 +30,7 @@
         <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png"></a>
       </div>
       <div class="headerFull__logo">
-        <router-link :to=" '/section/' + section "><img :src="getSectionLogoUrl()"></router-link>
+        <router-link :to=" '/section/' + sectionName "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
         <router-link to="/">
@@ -59,7 +59,7 @@
           <a class="sidebarFull__close--text" @click="closeSideBar()">CLOSE THE MENU</a>
         </div>
         <nav class="sidebarFull__menu">
-          <router-link :to="'/section/' + section" class="sidebarFull__menu--main">主頁</router-link>
+          <router-link :to="'/section/' + sectionName" class="sidebarFull__menu--main">主頁</router-link>
           <div class="sidebarFull__menu--horizDivider"></div>
           <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title"></router-link>
         </nav>
@@ -85,7 +85,7 @@ import _ from 'lodash'
 
 export default {
   name: 'header-full',
-  props: [ 'commonData', 'section', 'sections' ],
+  props: [ 'commonData', 'sectionName', 'sections' ],
   data () {
     return {
       blackNav: false,
@@ -107,7 +107,12 @@ export default {
       this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
     },
     getSectionLogoUrl () {
-      return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+      if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
+        let section = _.find(_.get(this.sections, [ 'items' ]), { id: '57dfe3b0ee85930e00cad4d7' })
+        return _.get(section, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ])
+      } else {
+        return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+      }
     },
     openSearchBar () {
       this.openSearch = true
@@ -128,10 +133,10 @@ export default {
   },
   computed: {
     menuItem () {
-      return _.get(_.find(_.get(this.sections, [ 'items' ]), { name: this.section }), [ 'categories' ])
+      return _.get(_.find(_.get(this.sections, [ 'items' ]), { name: this.sectionName }), [ 'categories' ])
     },
     sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.section }), [ 'image' ], null)
+      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
     },
     socialLink () {
       return SOCIAL_LINK

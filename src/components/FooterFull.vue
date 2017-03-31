@@ -1,7 +1,7 @@
 <template>
   <footer class="footerFull">
     <div class="footerFull__logo">
-      <router-link :to="'/section/' + this.section" :style="{ height: getSectionLogoHeight() + 'px' }">
+      <router-link :to="'/section/' + this.sectionName" :style="{ height: getSectionLogoHeight() + 'px' }">
         <img :src="getSectionLogoUrl()" :style="{ width: getSectionLogoWidth() + 'px', height: getSectionLogoHeight() + 'px' }">
       </router-link>
     </div>
@@ -32,7 +32,7 @@ export default {
   name: 'footer-full',
   props: {
     commonData: {},
-    section: ''
+    sectionName: ''
   },
   data () {
     return {
@@ -56,7 +56,7 @@ export default {
       return menuItem
     },
     sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.section }), [ 'image' ], null)
+      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
     }
   },
   methods: {
