@@ -29,15 +29,15 @@ export const DFP_UNITS = {
         'PCE2': { 'aduid': 'test_pc_np_ap_300x250_E2', 'dimensions': '300x250', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         'PCFT': { 'aduid': 'test_pc_np_ap_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': [''] },
         // PCPOP1, PCPOP2, PCPOP3 : position in poplist
-        'PCPOP3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP7': { 'aduid': 'mm_RWD_other_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
+        'PCPOP3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP7': { 'aduid': 'mm_RWD_other_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
         // SPCHD, SPCFT : position on listing page
         'LPCHD': { 'aduid': 'test_pc_np_ap_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'margin-top-0', 'center'], 'cont-style': ['width: 970px', 'margin: 20px auto 0'] },
         'LPCFT': { 'aduid': 'test_pc_np_ap_970x90_FT', 'dimensions': '970x90,970x90', 'cont-class': ['ad-container'], 'cont-style': ['margin: 20px auto 0'] },
-        'LPCNA3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA9': { 'aduid': 'mm_RWD_other_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA9': { 'aduid': 'mm_RWD_other_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
     },
     'home': { //  homepage
         'LMBHD': { 'aduid': 'mm_mobile_hp_320x100_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
@@ -52,12 +52,12 @@ export const DFP_UNITS = {
         'LMBNA9': { 'aduid': 'mm_mobile_hp_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
         'LPCHD': { 'aduid': 'mm_pc_hp_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': [''] },
         'LPCFT': { 'aduid': 'mm_pc_hp_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container', 'center'], 'cont-style': ['margin-top: 20px'] },
-        'LPCNA4': { 'aduid': 'mm_PC_hp_fluid_NA4', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA7': { 'aduid': 'mm_PC_hp_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA12': { 'aduid': 'mm_PC_hp_fluid_NA12', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA3': { 'aduid': 'mm_PC_hp_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA5': { 'aduid': 'mm_PC_hp_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA9': { 'aduid': 'mm_PC_hp_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA4': { 'aduid': 'mm_PC_hp_fluid_NA4', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA7': { 'aduid': 'mm_PC_hp_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA12': { 'aduid': 'mm_PC_hp_fluid_NA12', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA3': { 'aduid': 'mm_PC_hp_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA5': { 'aduid': 'mm_PC_hp_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA9': { 'aduid': 'mm_PC_hp_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
     },
     'other': { //  topic
         // MBHD, MBAR1, MBAR2, MBE1, MBFT : position on mobile article page
@@ -79,15 +79,15 @@ export const DFP_UNITS = {
         'PCE2': { 'aduid': 'mm_pc_other_ap_300x250_E2', 'dimensions': '300x250', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         'PCFT': { 'aduid': 'mm_pc_other_ap_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': [''] },
         // PCPOP1, PCPOP2, PCPOP3 : position in poplist
-        'PCPOP3': { 'aduid': 'mm_RWD_other_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP5': { 'aduid': 'mm_RWD_other_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP7': { 'aduid': 'mm_RWD_other_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
+        'PCPOP3': { 'aduid': 'mm_RWD_other_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP5': { 'aduid': 'mm_RWD_other_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP7': { 'aduid': 'mm_RWD_other_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
         // 
         'LPCHD': { 'aduid': 'mm_pc_other_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': ['width: 970px', 'margin: 20px auto 0'] },
         'LPCFT': { 'aduid': 'mm_pc_other_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': ['width: 970px', 'margin: 20px auto 0'] },
-        'LPCNA3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA9': { 'aduid': 'mm_RWD_other_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA9': { 'aduid': 'mm_RWD_other_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
     },
     '57e1e0e5ee85930e00cad4e9': { // news-people
         // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
@@ -109,15 +109,15 @@ export const DFP_UNITS = {
         'PCE2': { 'aduid': 'mm_pc_np_ap_300x250_E2', 'dimensions': '300x250', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         'PCFT': { 'aduid': 'mm_pc_np_ap_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': [''] },
         // PCPOP1, PCPOP2, PCPOP3 : position in poplist
-        'PCPOP3': { 'aduid': 'mm_RWD_np_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP5': { 'aduid': 'mm_RWD_np_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP7': { 'aduid': 'mm_RWD_np_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
+        'PCPOP3': { 'aduid': 'mm_RWD_np_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP5': { 'aduid': 'mm_RWD_np_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP7': { 'aduid': 'mm_RWD_np_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
         // SPCHD, SPCFT : position on listing page
         'LPCHD': { 'aduid': 'mm_pc_np_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': ['width: 970px', 'margin: 20px auto 0'] },
         'LPCFT': { 'aduid': 'mm_pc_np_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': ['margin: 20px auto 0'] },
-        'LPCNA3': { 'aduid': 'mm_RWD_np_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA5': { 'aduid': 'mm_RWD_np_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA9': { 'aduid': 'mm_RWD_np_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA3': { 'aduid': 'mm_RWD_np_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA5': { 'aduid': 'mm_RWD_np_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA9': { 'aduid': 'mm_RWD_np_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
     },
     '57e1e11cee85930e00cad4ea': { // entertainment
         // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
@@ -139,15 +139,15 @@ export const DFP_UNITS = {
         'PCE2': { 'aduid': 'mm_pc_ent_ap_300x250_E2', 'dimensions': '300x250', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         'PCFT': { 'aduid': 'mm_pc_ent_ap_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': [''] },
         // PCPOP1, PCPOP2, PCPOP3 : position in poplist
-        'PCPOP3': { 'aduid': 'mm_RWD_ent_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP5': { 'aduid': 'mm_RWD_ent_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP7': { 'aduid': 'mm_RWD_ent_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
+        'PCPOP3': { 'aduid': 'mm_RWD_ent_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP5': { 'aduid': 'mm_RWD_ent_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP7': { 'aduid': 'mm_RWD_ent_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
         // SPCHD, SPCFT : position on listing page
         'LPCHD': { 'aduid': 'mm_pc_ent_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': ['width: 970px', 'margin: 20px auto 0'] },
         'LPCFT': { 'aduid': 'mm_pc_ent_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': ['margin: 20px auto 0'] },
-        'LPCNA3': { 'aduid': 'mm_RWD_ent_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA5': { 'aduid': 'mm_RWD_ent_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA9': { 'aduid': 'mm_RWD_ent_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA3': { 'aduid': 'mm_RWD_ent_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA5': { 'aduid': 'mm_RWD_ent_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA9': { 'aduid': 'mm_RWD_ent_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
     },
     '57dfe399ee85930e00cad4d6': { // food-travle
         // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
@@ -169,16 +169,16 @@ export const DFP_UNITS = {
         'PCE2': { 'aduid': 'mm_pc_fnt_ap_300x250_E2', 'dimensions': '300x250', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         'PCFT': { 'aduid': 'mm_pc_fnt_ap_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': [''] },
         // PCPOP1, PCPOP2, PCPOP3 : position in poplist
-        'PCPOP3': { 'aduid': 'mm_RWD_fnt_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP5': { 'aduid': 'mm_RWD_fnt_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP7': { 'aduid': 'mm_RWD_fnt_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
+        'PCPOP3': { 'aduid': 'mm_RWD_fnt_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP5': { 'aduid': 'mm_RWD_fnt_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP7': { 'aduid': 'mm_RWD_fnt_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
         // SPCHD, SPCFT : position on listing page
         'LPCHD': { 'aduid': 'mm_pc_fnt_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': ['width: 970px', 'margin: 20px auto 0'] },
         'LPCFT': { 'aduid': 'mm_pc_fnt_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': ['margin: 20px auto 0'] },
         'LPCR1': { 'aduid': 'mm_pc_fnt_300x600_R1', 'dimensions': '300x250,300x600', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
-        'LPCNA3': { 'aduid': 'mm_RWD_fnt_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA5': { 'aduid': 'mm_RWD_fnt_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA9': { 'aduid': 'mm_RWD_fnt_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA3': { 'aduid': 'mm_RWD_fnt_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA5': { 'aduid': 'mm_RWD_fnt_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA9': { 'aduid': 'mm_RWD_fnt_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
 
     },
     '57dfe3cfee85930e00cad4d8': { // hot-video
@@ -202,15 +202,15 @@ export const DFP_UNITS = {
         'PCE2': { 'aduid': 'mm_pc_other_ap_300x250_E2', 'dimensions': '300x250', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         'PCFT': { 'aduid': 'mm_pc_other_ap_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': [''] },
         // PCPOP1, PCPOP2, PCPOP3 : position in poplist
-        'PCPOP3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP7': { 'aduid': 'mm_RWD_other_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
+        'PCPOP3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP7': { 'aduid': 'mm_RWD_other_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
         // SPCHD, SPCFT : position on listing page
         'LPCHD': { 'aduid': 'mm_pc_other_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'margin-top-0', 'center'], 'cont-style': ['width: 970px', 'margin: 20px auto 0'] },
         'LPCFT': { 'aduid': 'mm_pc_other_970x90_FT', 'dimensions': '970x90,970x90', 'cont-class': ['ad-container'], 'cont-style': ['margin: 20px auto 0'] },
-        'LPCNA3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA9': { 'aduid': 'mm_RWD_other_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA9': { 'aduid': 'mm_RWD_other_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
     },
     '57dfe3b0ee85930e00cad4d7': { // watch
         // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
@@ -234,9 +234,9 @@ export const DFP_UNITS = {
         'PCE2': { 'aduid': 'mm_pc_wat_ap_300x250_E2', 'dimensions': '300x250', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         'PCFT': { 'aduid': 'mm_pc_wat_ap_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container'], 'cont-style': [''] },
         // PCPOP1, PCPOP2, PCPOP3 : position in poplist
-        'PCPOP3': { 'aduid': 'mm_RWD_wat_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP5': { 'aduid': 'mm_RWD_wat_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
-        'PCPOP7': { 'aduid': 'mm_RWD_wat_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': [''] },
+        'PCPOP3': { 'aduid': 'mm_RWD_wat_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP5': { 'aduid': 'mm_RWD_wat_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'PCPOP7': { 'aduid': 'mm_RWD_wat_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'pop_item', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
         // SPCHD, SPCFT : position on listing page
         'LPCHD': { 'aduid': 'mm_pc_wat_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': ['width: 970px', 'margin: 20px auto 0'] },
         'LPCR1': { 'aduid': 'mm_pc_wat_300x250_R1', 'dimensions': '300x250', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': [''] },
@@ -244,9 +244,9 @@ export const DFP_UNITS = {
         'LPCR3': { 'aduid': 'mm_pc_wat_300x250_R3', 'dimensions': '300x250', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': ['margin-bottom: 10px'] },
         'LPCR4': { 'aduid': 'mm_pc_wat_300x600_R4', 'dimensions': '300x250,300x600', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': [''] },
         'LPCFT': { 'aduid': 'mm_pc_wat_970x90_FT', 'dimensions': '970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': ['margin-bottom: 35px'] },
-        'LPCNA3': { 'aduid': 'mm_RWD_wat_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA5': { 'aduid': 'mm_RWD_wat_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
-        'LPCNA9': { 'aduid': 'mm_RWD_wat_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': [''] },
+        'LPCNA3': { 'aduid': 'mm_RWD_wat_fluid_NA3', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA5': { 'aduid': 'mm_RWD_wat_fluid_NA5', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
+        'LPCNA9': { 'aduid': 'mm_RWD_wat_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
     },
 }
 

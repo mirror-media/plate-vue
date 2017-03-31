@@ -105,13 +105,12 @@ $color-other = #bcbcbc
     box-shadow 5px 15px 5px #bcbcbc
 
   &__img
-    height 183px
+    padding-top: 66.66%
     background-position 50% 50%
     background-repeat no-repeat
     background-size cover
 
   &__content
-    height 91.5px
     padding 0 15px 15px 30px
     text-align justify
 
@@ -132,7 +131,6 @@ $color-other = #bcbcbc
       width 7px
       
     p
-      display none
       margin 0
       padding 1em 0
       color #999
@@ -148,8 +146,6 @@ $color-other = #bcbcbc
     &-block
       width calc( (100% - 40px) / 2 )
       margin 0 10px 40px
-    &__img
-      padding-top: 66.66%
     &__content
       height auto
       p
