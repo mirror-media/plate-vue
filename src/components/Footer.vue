@@ -19,10 +19,10 @@
       <router-link to="/story/ad1018001">廣告合作</router-link> - 
       <router-link to="/category/campaign">活動專區</router-link>
     </div>
-    <div class="share-mobile mobile-only" :class="ifShowShareBottom" v-if="ifShare">
-      <a class="share-mobile_btn" id="footer-line"><i class="icon line" @click="shareLine"></i></a>
-      <a class="share-mobile_btn" id="footer-fb"><i class="icon facebook" @click="shareFacebook"></i></a>
-      <a class="share-mobile_btn" id="footer-googleplus"><i class="icon google-plus" @click="shareGooglePlus"></i></a>
+    <div class="share-mobile" :class="ifShowShareBottom" v-if="ifShare">
+      <a class="share-mobile_btn" id="share-line"><i class="icon line" @click="shareLine"></i></a>
+      <a class="share-mobile_btn" id="share-fb"><i class="icon facebook" @click="shareFacebook"></i></a>
+      <a class="share-mobile_btn" id="share-googleplus"><i class="icon google-plus" @click="shareGooglePlus"></i></a>
     </div>
   </footer>
 </template>
@@ -164,6 +164,11 @@
 
         &.show
           bottom 0
+
+  @media (min-width 768px)
+    footer
+      .share-mobile
+        display none
 
   @media (min-width 0px) and (max-width 1199px)
     .mobile-hide

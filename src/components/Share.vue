@@ -1,9 +1,9 @@
 <template>
   <div class="share">
     <a class="share__icon share--toggle" @click="toggleShare()"><img :src="isOpen ? '/public/icon/close_white.png' : '/public/icon/share-white.png'"></a>
-    <a class="share__icon share__icon--list share--line" :class="[isOpen ? 'open' : '']" @click="shareLine"><img src="/public/icon/line_white_v2.png"></a>
-    <a class="share__icon share__icon--list share--fb" :class="[isOpen ? 'open' : '']" @click="shareFacebook"><img src="/public/icon/facebook_white.png"></a>
-    <a class="share__icon share__icon--list share--google" :class="[isOpen ? 'open' : '']" @click="shareGooglePlus"><img src="/public/icon/google-plus.png"></a>
+    <a id="share-line" class="share__icon share__icon--list share--line" :class="[isOpen ? 'open' : '']" @click="shareLine"><img src="/public/icon/line_white_v2.png"></a>
+    <a id="share-fb" class="share__icon share__icon--list share--fb" :class="[isOpen ? 'open' : '']" @click="shareFacebook"><img src="/public/icon/facebook_white.png"></a>
+    <a id="share-google" class="share__icon share__icon--list share--google" :class="[isOpen ? 'open' : '']" @click="shareGooglePlus"><img src="/public/icon/google-plus.png"></a>
   </div>
 </template>
 
@@ -41,6 +41,7 @@ export default {
 <style lang="stylus" scoped>
 
 .share
+  display none
   position fixed
   right 20px
   bottom 20px
@@ -94,8 +95,8 @@ export default {
       width 20px
       height auto
 
-@media (min-width 1200px)
+@media (min-width 600px)
   .share
-    display none
+    display block
 
 </style>

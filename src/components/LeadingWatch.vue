@@ -44,7 +44,7 @@ export default {
       } else {
         return getImage(this.tag, 'desktop')
       }
-    },
+    }
   }
 }
 

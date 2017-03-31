@@ -99,7 +99,7 @@ export const DFP_UNITS = {
         // MBHD, MBL1, MBFT
         'LMBHD': { 'aduid': 'mm_mobile_np_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LMBL1': { 'aduid': 'mm_mobile_np_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LMBFT': { 'aduid': 'mm_mobile_np_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': ['margin-bottom: 70px'] },
+        'LMBFT': { 'aduid': 'mm_mobile_np_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
         // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
         'PCHD': { 'aduid': 'mm_pc_np_ap_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': [''] },
         'PCR1': { 'aduid': 'mm_pc_np_ap_300x250_R1', 'dimensions': '300x250', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
@@ -129,7 +129,7 @@ export const DFP_UNITS = {
         // MBHD, MBL1, MBFT : position on listing page
         'LMBHD': { 'aduid': 'mm_mobile_ent_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LMBL1': { 'aduid': 'mm_mobile_ent_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LMBFT': { 'aduid': 'mm_mobile_ent_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': ['margin-bottom: 70px'] },
+        'LMBFT': { 'aduid': 'mm_mobile_ent_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
         // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
         'PCHD': { 'aduid': 'mm_pc_ent_ap_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': [''] },
         'PCR1': { 'aduid': 'mm_pc_ent_ap_300x250_R1', 'dimensions': '300x250', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
@@ -159,7 +159,7 @@ export const DFP_UNITS = {
         // MBHD, MBL1, MBFT : position on listing page
         'LMBHD': { 'aduid': 'mm_mobile_fnt_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LMBL1': { 'aduid': 'mm_mobile_fnt_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LMBFT': { 'aduid': 'mm_mobile_fnt_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': ['margin-bottom: 70px'] },
+        'LMBFT': { 'aduid': 'mm_mobile_fnt_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
         // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
         'PCHD': { 'aduid': 'mm_pc_fnt_ap_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': ['ad-container', 'center', 'margin-top-0'], 'cont-style': [''] },
         'PCR1': { 'aduid': 'mm_pc_fnt_ap_300x250_R1', 'dimensions': '300x250', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
