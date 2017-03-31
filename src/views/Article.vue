@@ -343,7 +343,7 @@
   }
 
 </script>
-<style lang="stylus">
+<style lang="stylus" scoped>
   .article-container
     width 100%
     background-color #414141
