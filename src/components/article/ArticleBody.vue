@@ -815,7 +815,6 @@ export default {
       
   @media (min-width 900px) and (max-width 1199px)
     .article_body
-      color #ffffff
       .article_basic-info
         width 695px
         max-width 695px
