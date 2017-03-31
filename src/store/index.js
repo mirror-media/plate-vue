@@ -146,10 +146,9 @@ const store = new Vuex.Store({
     },
 
     FETCH_TAG: ({ commit, state }, { id }) => {
-      return state.tag[ 'id' ]
-        ? '' : fetchTag(id).then(tag => {
-          commit('SET_TAG', { tag })
-        })
+      return fetchTag(id).then(tag => {
+        commit('SET_TAG', { tag })
+      })
     },
 
     FETCH_TOPIC_BY_UUID: ({ commit, state }, { params }) => {
