@@ -1,12 +1,12 @@
-const { API_PROTOCOL, API_HOST, API_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_READ_AUTH, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_WRITE_AUTH, REDIS_TIMEOUT, TWITTER_API } = require('./config')
+const { API_PROTOCOL, API_HOST, API_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_AUTH, REDIS_TIMEOUT, TWITTER_API } = require('./config')
 const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } = require('./config')
 const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT } = require('./config')
 const { YOUTUBE_PROTOCOL, YOUTUBE_HOST, YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY, YOUTUBE_API_TIMEOUT } = require('./config')
 const express = require('express')
 const isProd = process.env.NODE_ENV === 'production'
 const redis = require('redis')
-const redisReadClient = redis.createClient(REDIS_READ_PORT, REDIS_READ_HOST, { no_ready_check: true, password: REDIS_READ_AUTH })
-const redisWriteClient = isProd ? redis.createClient(REDIS_WRITE_PORT, REDIS_WRITE_HOST, { no_ready_check: true, password: REDIS_WRITE_AUTH }) : redisReadClient
+const redisReadClient = redis.createClient(REDIS_READ_PORT, REDIS_READ_HOST, { no_ready_check: true, password: REDIS_AUTH })
+const redisWriteClient = isProd ? redis.createClient(REDIS_WRITE_PORT, REDIS_WRITE_HOST, { no_ready_check: true, password: REDIS_AUTH }) : redisReadClient
 const router = express.Router()
 const superagent = require('superagent')
 const Twitter = require('twitter')
