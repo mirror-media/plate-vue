@@ -40,7 +40,7 @@ export const DFP_UNITS = {
         'LPCNA9': { 'aduid': 'mm_RWD_other_fluid_NA9', 'dimensions': 'fluid', 'cont-class': ['ad-container', 'articleList-block', 'margin-top-0'], 'cont-style': ['background-color: #f4f1e9'] },
     },
     'home': { //  homepage
-        'LMBHD': { 'aduid': 'mm_mobile_hp_320x100_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
+        'LMBHD': { 'aduid': 'mm_mobile_hp_320x100_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
         'LMBFS': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LMBL1': { 'aduid': 'mm_mobile_hp_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LMBFT': { 'aduid': 'mm_mobile_hp_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': ['margin-top: 20px'] },
