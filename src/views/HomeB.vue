@@ -8,7 +8,7 @@
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <vue-dfp :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" class="event" />
-        <editor-choice :editorChoice= 'editorChoice'/>
+        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" />
         <section class="container list">
           <aside>
             <div class="aside-title mobile-only"><h2>最新文章</h2></div>

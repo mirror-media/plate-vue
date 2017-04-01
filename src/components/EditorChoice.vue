@@ -64,7 +64,12 @@ export default {
     }
   },
   props: {
-    editorChoice: this.editorChoice
+    editorChoice: {
+      default: () => { return this.editorChoice }
+    },
+    viewport: {
+      default: () => { return undefined }
+    }
   },
   methods: {
     jumpToSlide (e, pTarget) {
@@ -96,21 +101,26 @@ export default {
     getValue,
     getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
+      let device = 'label-width'
+      if (this.viewport < 1200) {
+        device = 'label-width-mobile'
+      } 
+
       const style = {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18)'),
-        width: _.get(SECTION_MAP, [ sectionId, 'label-width-tablet' ], '60px')
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc'),
+        width: _.get( SECTION_MAP, [sectionId, device], (this.viewport > 599 && this.viewport < 1200) ? '60px' : 'auto'),
       }
       return style
     },
     setHoverEvent () {
       const _targ = document.querySelectorAll('.editorChoice-list__item')
-      const _targII = document.querySelectorAll('.editorChoice-list__item > span')
+      const _targChilde = document.querySelectorAll('.editorChoice-list__item > span')
       _.map(_targ, (o) => {
         o.onmouseover = (e) => {
           this.jumpToSlide(null, e.target.children[0])
         }
       })
-      _.map(_targII, (o) => {
+      _.map(_targChilde, (o) => {
         o.onmouseover = (e) => {
           this.jumpToSlide(e)
         }
