@@ -29,7 +29,7 @@
       </div>
       <div class="split-line"></div>
       <div class="content">
-        <div v-for="p in contArr">
+        <div v-for="(p, index) in contArr">
           <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
                   :sources="getAudioSource(getValue(p, [ 'content', 0], {}))" 
@@ -43,6 +43,8 @@
               </swiper-slide>
             </template>
           </div>
+          <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
+          <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
         </div>
       </div>
       <div class="article_main_tags" v-if="tags.length > 0">
@@ -152,6 +154,22 @@ export default {
       return tags.map((o) => {
         return `<a href=\"/tag/${_.get(o, [ 'id' ], '')}/${_.get(o, [ 'name' ], '')}\" id=\"tag-${_.get(o, [ 'id' ], '')}\">${_.get(o, [ 'name' ], '')}</a>`
       }).join('、')
+    },
+    firstTwoUnstyledParagraph () {
+      const { content } = this.articleData
+      let count = 0
+      let index = 0
+      let lastUnstyled = 0
+      let records = []
+      while(count < 2 && index < content[ 'apiData' ].length) {
+        if(content[ 'apiData' ][ index ][ 'type' ] ===  'unstyled' && (lastUnstyled + 4) < index) {
+          count ++
+          lastUnstyled = index
+          records.push(index)
+        }
+        index ++
+      }
+      return records
     }
   },
   methods: {
@@ -168,6 +186,8 @@ export default {
       switch (item.type) {
         case 'blockquote':
           return `<blockquote class="quote"><i class="quoteIcon"></i><div class="quote-content">${_.get(item.content, [ 0 ], '')}</div></blockquote>`
+        case 'code-block':
+          return `<code>${_.get(item.content, [ 0 ], '')}</code>`
         case 'embeddedcode':
           return `<div class=\"embedded\">${_.get(item.content, [ 0, 'embeddedCode' ], '')}</div>`
         case 'header-two':
@@ -307,6 +327,7 @@ export default {
 
       .innerImg 
         clear both
+        margin 1.5em 0
 
         img 
           width 100%
@@ -417,6 +438,7 @@ export default {
                     
         .embedded 
           text-align center
+          margin 1.5em 0
 
         .audioBox
           width 100%
@@ -437,9 +459,7 @@ export default {
         padding-bottom 5px
       
       code 
-        background-color #85faff
-        font-size 18px
-        padding 4px 0
+        line-height 2rem
       
       blockquote.blockquote 
         clear both
@@ -682,16 +702,22 @@ export default {
               padding 0
                 
     .per-slide 
-      height 500px
+      // height 500px
       width 100%
+      margin 1.5em 0
 
       .swiper-wrapper 
-        height 450px
+        // height 450px
+        display flex
+        align-items center
 
         .swiper-slide 
           display flex
           align-items center
           justify-content center
+
+          > div
+            width 100%
 
           .slideshowImg 
             img 

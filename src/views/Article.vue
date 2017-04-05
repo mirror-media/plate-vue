@@ -1,5 +1,5 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions">
     <template scope="props" slot="dfpPos">
       <section style="width: 100%;">
         <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
@@ -34,6 +34,9 @@
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
             <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-AR1" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-AR1" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-AR2" :dfpId="props.dfpId" />
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
               <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5"/>
@@ -57,6 +60,12 @@
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
         </article-body-photography>
       </div>
+      <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
+        <div class="ad">
+          <vue-dfp :is="props.vueDfp" pos="MBCVR" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <div class="close" @click="closeCoverAd"></div>
+        </div>
+      </div>
     </template>
   </vue-dfp-provider>
 </template>
@@ -66,6 +75,7 @@
   import { getTruncatedVal } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
+  import Cookie from 'vue-cookie'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
@@ -180,6 +190,7 @@
         dfpid: DFP_ID,
         dfpUnits: DFP_UNITS,
         state: {},
+        showDfpCoverAdFlag: false,
         viewport: undefined,
       }
     },
@@ -199,6 +210,22 @@
       },
       commonData () { 
         return this.$store.state.commonData 
+      },
+      dfpOptions() {
+        return {
+          afterEachAdLoaded: (event) => {
+            const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
+            const position = dfpCover.getAttribute('pos')
+            if(position === 'LMBCVR' || position === 'MBCVR') {
+              const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
+              if(adDisplayStatus === 'none') {
+                this.showDfpCoverAdFlag = false
+              } else {
+                this.updateCookie()
+              }
+            }
+          }
+        }
       },
       fbAppId() {
         return _.get(this.$store, [ 'state', 'fbAppId' ])
@@ -250,6 +277,9 @@
       },
     },
     methods: {
+      closeCoverAd() {
+        this.showDfpCoverAdFlag = false
+      },
       getTruncatedVal,
       getValue(o = {}, p = [], d = '') {
         return _.get(o, p, d);
@@ -269,6 +299,15 @@
             version    : 'v2.0'
           })
           window.FB && window.FB.XFBML.parse()
+        }
+      },
+      updateCookie() {
+        const cookie = Cookie.get('visited')
+        if(!cookie) {
+          Cookie.set('visited', 'true', { expires: '10m' })
+          this.showDfpCoverAdFlag = true
+        } else {
+          this.showDfpCoverAdFlag = false
         }
       },
       updateViewport() {

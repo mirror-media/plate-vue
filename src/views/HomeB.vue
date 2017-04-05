@@ -1,5 +1,5 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions">
     <template scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
@@ -33,6 +33,12 @@
           <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
           <app-footer :ifShare="false" />
         </section>
+        <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
+          <div class="ad">
+            <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+            <div class="close" @click="closeCoverAd"></div>
+          </div>
+        </div>
       </div>
     </template>
   </vue-dfp-provider>
@@ -43,6 +49,7 @@
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { DFP_ID, DFP_UNITS, SITE_URL } from '../constants'
 import _ from 'lodash'
+import Cookie from 'vue-cookie'
 import EditorChoice from '../components/EditorChoice.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
@@ -119,6 +126,7 @@ export default {
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
       loading: false,
+      showDfpCoverAdFlag: false,
       viewport: undefined,
     }
   },
@@ -128,6 +136,22 @@ export default {
     },
     commonData () {
       return this.$store.state.commonData
+    },
+    dfpOptions() {
+      return {
+        afterEachAdLoaded: (event) => {
+          const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
+          const position = dfpCover.getAttribute('pos')
+          if(position === 'LMBCVR' || position === 'MBCVR') {
+            const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
+            if(adDisplayStatus === 'none') {
+              this.showDfpCoverAdFlag = false
+            } else {
+              this.updateCookie()
+            }
+          }
+        }
+      }
     },
     editorChoice () {
       return _.get(this.articlesGroupedList, ['choices'])
@@ -162,6 +186,18 @@ export default {
     }
   },
   methods: {
+    closeCoverAd() {
+      this.showDfpCoverAdFlag = false
+    },
+    updateCookie() {
+      const cookie = Cookie.get('visited')
+      if(!cookie) {
+        Cookie.set('visited', 'true', { expires: '10m' })
+        this.showDfpCoverAdFlag = true
+      } else {
+        this.showDfpCoverAdFlag = false
+      }
+    },
     updateViewport() {
         if(process.env.VUE_ENV === 'client') {
           this.viewport = document.querySelector('body').offsetWidth
@@ -202,6 +238,7 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
+    // this.updateCookie()
   }
 }
   
