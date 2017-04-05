@@ -106,6 +106,35 @@ button:focus {
     > iframe
       max-height 100%
 
+.dfp-cover
+  height 100vh
+  width 100vw
+  position fixed
+  top 0
+  left 0
+  z-index 9997
+  background-color rgba(0, 0, 0, 0.7)
+  display flex
+  justify-content center
+  align-items center
+
+  > .ad
+    position relative
+    width 320px
+    height 480px
+
+    > .close
+      position absolute
+      top -16px
+      right -16px
+      width 32px
+      height 32px
+      background-image url(/public/icon/close-btn.png)
+      background-repeat no-repeat
+      background-size contain
+      background-position center center
+      cursor pointer
+
 @media (min-width 600px)
   .container
     width 90%

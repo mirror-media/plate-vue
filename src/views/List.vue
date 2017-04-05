@@ -1,5 +1,5 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions">
     <template scope="props" slot="dfpPos">
 
       <div class="list-view" v-if="pageStyle == 'feature'">
@@ -57,7 +57,12 @@
         <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <footer-full :commonData='commonData' :sectionName='sectionName' />
       </div>
-
+      <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
+        <div class="ad">
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <div class="close" @click="closeCoverAd"></div>
+        </div>
+      </div>
     </template>
   </vue-dfp-provider>
 </template>
@@ -72,6 +77,7 @@ import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
 import AudioList from '../components/AudioList.vue'
+import Cookie from 'vue-cookie'
 import EditorChoiceFull from '../components/EditorChoiceFull.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
@@ -376,7 +382,8 @@ export default {
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
       loading: false,
-      page: PAGE
+      page: PAGE,
+      showDfpCoverAdFlag: false,
     }
   },
   computed: {
@@ -424,6 +431,22 @@ export default {
           return _javascript
         default:
           return null
+      }
+    },
+    dfpOptions() {
+      return {
+        afterEachAdLoaded: (event) => {
+          const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
+          const position = dfpCover.getAttribute('pos')
+          if(position === 'LMBCVR' || position === 'MBCVR') {
+            const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
+            if(adDisplayStatus === 'none') {
+              this.showDfpCoverAdFlag = false
+            } else {
+              this.updateCookie()
+            }
+          }
+        }
       }
     },
     hasDFP () {
@@ -559,6 +582,9 @@ export default {
     }
   },
   methods: {
+    closeCoverAd() {
+      this.showDfpCoverAdFlag = false
+    },
     getImage,
     getValue,
     insertCustomizedMarkup () {
@@ -650,6 +676,15 @@ export default {
                 this.loading = false
               })
           }
+      }
+    },
+    updateCookie() {
+      const cookie = Cookie.get('visited')
+      if(!cookie) {
+        Cookie.set('visited', 'true', { expires: '10m' })
+        this.showDfpCoverAdFlag = true
+      } else {
+        this.showDfpCoverAdFlag = false
       }
     },
     updateCustomizedMarkup () {
