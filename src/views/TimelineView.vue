@@ -26,8 +26,8 @@
                     v-if="getValue(item, [ 'extended_entities', 'media', 0, 'media_url_https' ])"  />
               </a>
             </div>
-          <div class="content mobile-only" v-html="twitterAutoLink(item.text, item.entities.urls)"></div>
-          <div class="share mobile-only"></div
+            <div class="content mobile-only" v-html="twitterAutoLink(item.text, item.entities.urls)"></div>
+            <div class="share mobile-only"></div>
           </div>
         </div>
       </section>
