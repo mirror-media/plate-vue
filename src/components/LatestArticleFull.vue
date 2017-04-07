@@ -1,6 +1,6 @@
 <template>
   <section class="latestArticle-full">
-    <vue-dfp :is="props.vueDfp" pos="LMBL3" extClass="mobile-hide mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" 
+    <vue-dfp :is="props.vueDfp" pos="LMBL3" extClass="center mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" 
         :dfpId="props.dfpId" />
     <div class="latestArticle-full-post-container">
       <h2>最新新聞 Latest Stories</h2>

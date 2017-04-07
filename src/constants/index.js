@@ -246,7 +246,7 @@ export const DFP_UNITS = {
         'LMBHD': { 'aduid': 'mm_mobile_wat_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LMBL1': { 'aduid': 'mm_mobile_wat_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LMBL2': { 'aduid': 'mm_mobile_wat_300x250_L2', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LMBL3': { 'aduid': 'mm_mobile_wat_300x250_L3', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
+        'LMBL3': { 'aduid': 'mm_mobile_wat_300x250_L3', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': ['margin-bottom: 20px'] },
         'LMBFT': { 'aduid': 'mm_mobile_wat_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': ['margin-bottom: 10px'] },
         'LMBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
