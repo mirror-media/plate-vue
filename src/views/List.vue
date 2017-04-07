@@ -71,7 +71,7 @@
 
 <script>
 
-import { AUTHOR, CATEGORY, SECTION, SITE_URL, TAG, TOPIC } from '../constants/index'
+import { AUTHOR, CAMPAIGN_ID, CATEGORY, MARKETING_ID, SECTION, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { getImage, getValue } from '../utils/comm'
 import _ from 'lodash'
@@ -152,14 +152,14 @@ const fetchListData = (store, type, sectionStyle) => {
           return fetchYoutubePlaylist(store, MAXRESULT)
           break
         case 'campaign':
-          uuid = '5859e7e5c0ff6d0d00246263'
+          uuid = CAMPAIGN_ID
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
           })
           break
         case 'marketing':
-          uuid = '57fca2f5c9b7a70e004e6df9'
+          uuid = MARKETING_ID
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
@@ -239,14 +239,14 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
           return fetchYoutubePlaylist(store, MAXRESULT)
           break
         case 'campaign':
-          uuid = '5859e7e5c0ff6d0d00246263'
+          uuid = CAMPAIGN_ID
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
           })
           break
         case 'marketing':
-          uuid = '57fca2f5c9b7a70e004e6df9'
+          uuid = MARKETING_ID
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
@@ -518,7 +518,7 @@ export default {
         case TAG:
           return _.get(this.tag, 'sections[0].name')
         case TOPIC:
-          if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
+          if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
             return 'watch'
           }
           return 'other'
@@ -547,7 +547,7 @@ export default {
           return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
           break
         case TOPIC:
-          if (this.$route.params.topicId === '586cd15c3c1f950d00ce2e78') {
+          if (this.$route.params.topicId === TOPIC_WATCH_ID) {
             return 'full'
           }
           return 'feature'
@@ -586,7 +586,7 @@ export default {
         case TAG:
           return _.get(this.tag, [ 'name' ])
         case TOPIC:
-          if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
+          if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
             return '錶展特區'
           }
           return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])

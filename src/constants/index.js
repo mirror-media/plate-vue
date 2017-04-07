@@ -321,4 +321,10 @@ export const TAG = 'TAG'
 
 export const TOPIC = 'TOPIC'
 
+export const CAMPAIGN_ID = '5859e7e5c0ff6d0d00246263'
+
+export const MARKETING_ID = '57fca2f5c9b7a70e004e6df9'
+
+export const TOPIC_WATCH_ID = '586cd15c3c1f950d00ce2e78'
+
 export const SITE_URL = 'https://www.mirrormedia.mg'
