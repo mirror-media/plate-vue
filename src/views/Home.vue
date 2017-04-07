@@ -180,14 +180,6 @@ export default {
     closeCoverAd() {
       this.showDfpCoverAdFlag = false
     },
-    loadMore () {
-      this.page += 1
-      this.loading = true
-
-      fetchLatestArticle(this.$store, this.page).then(() => {
-        this.loading = false
-      })
-    },
     handleScroll () {
       window.onscroll = (e) => {
         const _latestArticleDiv = document.querySelector('#latestArticle')
@@ -200,6 +192,14 @@ export default {
           this.loadMore()
         }
       } 
+    },
+    loadMore () {
+      this.page += 1
+      this.loading = true
+
+      fetchLatestArticle(this.$store, this.page).then(() => {
+        this.loading = false
+      })
     },
     updateCookie() {
       const cookie = Cookie.get('visited')
@@ -244,6 +244,7 @@ export default {
     fetchEvent(this.$store)
   },
   mounted() {
+    window.utmx('url','A/B')
     this.handleScroll()
     this.updateViewport()
     window.addEventListener('resize', () => {
