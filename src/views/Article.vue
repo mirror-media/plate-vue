@@ -71,7 +71,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_UNITS, SECTION_MAP, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, SECTION_MAP, SITE_URL } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
@@ -224,7 +224,9 @@
                 this.updateCookie()
               }
             }
-          }
+          },
+          setCentering: true,
+          sizeMapping: DFP_SIZE_MAPPING,
         }
       },
       fbAppId() {
