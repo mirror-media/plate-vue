@@ -151,6 +151,20 @@ const fetchListData = (store, type, sectionStyle) => {
         case 'videohub':
           return fetchYoutubePlaylist(store, MAXRESULT)
           break
+        case 'campaign':
+          uuid = '5859e7e5c0ff6d0d00246263'
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+          break
+        case 'marketing':
+          uuid = '57fca2f5c9b7a70e004e6df9'
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+          break
         default:
           uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': store.state.route.params.title }), [ 'id' ])
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
@@ -205,7 +219,6 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       break
     case TAG:
       uuid = to.params.tagId
-      console.log('uuid', uuid)
       return fetchTag(store, uuid).then(() => {
         return fetchArticlesByUuid(store, uuid, TAG, {
           page: PAGE,
@@ -224,6 +237,20 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
           break
         case 'videohub':
           return fetchYoutubePlaylist(store, MAXRESULT)
+          break
+        case 'campaign':
+          uuid = '5859e7e5c0ff6d0d00246263'
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+          break
+        case 'marketing':
+          uuid = '57fca2f5c9b7a70e004e6df9'
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
           break
         default:
           uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
@@ -539,8 +566,16 @@ export default {
         case AUTHOR:
           return this.$route.params.authorName
         case CATEGORY:
-          return this.$route.params.title === 'audio' ? 'Audio'
-            : _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'title' ])
+          switch (this.$route.params.title) {
+            case 'audio':
+              return 'Audio'
+            case 'marketing':
+              return '企劃特輯'
+            case 'campaign':
+              return '活動專區'
+            default:
+              return _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'title' ])
+          }
         case SECTION:
           if (this.$route.params.title === 'topic') {
             return 'Topic'
@@ -708,10 +743,12 @@ export default {
     let ogImage
     let ogTitle
     let ogDescription
-    const sectionName = _.get(this.sectionName)
+    let sectionName
+    _.get(this, [ 'type' ]) === 'SECTION' || _.get(this, [ 'type' ]) === 'CATEGORY' ? sectionName = _.get(this, [ 'sectionName' ]) : ''
     switch (type) {
       case SECTION:
         const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
+        sectionName = _.get(this, [ 'sectionName' ])
         ogImage = imageURL ? imageURL : '/public/notImage.png'
         ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? _.get(this.section, [ 'ogTitle' ]) : _.get(this.section, [ 'title' ], this.title)
         ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? _.get(this.section, [ 'ogDescription' ]) : _.get(this.section, [ 'description' ])
