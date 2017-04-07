@@ -446,7 +446,8 @@ export default {
               this.updateCookie()
             }
           }
-        }
+        },
+        setCentering: true,
       }
     },
     hasDFP () {

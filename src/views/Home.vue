@@ -135,7 +135,8 @@ export default {
               this.updateCookie()
             }
           }
-        }
+        },
+        setCentering: true,
       }
     },
     editorChoice () {
