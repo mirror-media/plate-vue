@@ -71,7 +71,7 @@
 
 <script>
 
-import { AUTHOR, CATEGORY, SECTION, SITE_URL, TAG, TOPIC } from '../constants/index'
+import { AUTHOR, CAMPAIGN_ID, CATEGORY, MARKETING_ID, SECTION, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { getImage, getValue } from '../utils/comm'
 import _ from 'lodash'
@@ -151,6 +151,20 @@ const fetchListData = (store, type, sectionStyle) => {
         case 'videohub':
           return fetchYoutubePlaylist(store, MAXRESULT)
           break
+        case 'campaign':
+          uuid = CAMPAIGN_ID
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+          break
+        case 'marketing':
+          uuid = MARKETING_ID
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+          break
         default:
           uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': store.state.route.params.title }), [ 'id' ])
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
@@ -205,7 +219,6 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       break
     case TAG:
       uuid = to.params.tagId
-      console.log('uuid', uuid)
       return fetchTag(store, uuid).then(() => {
         return fetchArticlesByUuid(store, uuid, TAG, {
           page: PAGE,
@@ -224,6 +237,20 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
           break
         case 'videohub':
           return fetchYoutubePlaylist(store, MAXRESULT)
+          break
+        case 'campaign':
+          uuid = CAMPAIGN_ID
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
+          break
+        case 'marketing':
+          uuid = MARKETING_ID
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
+            page: PAGE,
+            max_results: MAXRESULT
+          })
           break
         default:
           uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
@@ -491,7 +518,7 @@ export default {
         case TAG:
           return _.get(this.tag, 'sections[0].name')
         case TOPIC:
-          if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
+          if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
             return 'watch'
           }
           return 'other'
@@ -520,7 +547,7 @@ export default {
           return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
           break
         case TOPIC:
-          if (this.$route.params.topicId === '586cd15c3c1f950d00ce2e78') {
+          if (this.$route.params.topicId === TOPIC_WATCH_ID) {
             return 'full'
           }
           return 'feature'
@@ -539,8 +566,16 @@ export default {
         case AUTHOR:
           return this.$route.params.authorName
         case CATEGORY:
-          return this.$route.params.title === 'audio' ? 'Audio'
-            : _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'title' ])
+          switch (this.$route.params.title) {
+            case 'audio':
+              return 'Audio'
+            case 'marketing':
+              return '企劃特輯'
+            case 'campaign':
+              return '活動專區'
+            default:
+              return _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'title' ])
+          }
         case SECTION:
           if (this.$route.params.title === 'topic') {
             return 'Topic'
@@ -551,7 +586,7 @@ export default {
         case TAG:
           return _.get(this.tag, [ 'name' ])
         case TOPIC:
-          if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
+          if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
             return '錶展特區'
           }
           return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])
@@ -708,10 +743,12 @@ export default {
     let ogImage
     let ogTitle
     let ogDescription
-    const sectionName = _.get(this.sectionName)
+    let sectionName
+    _.get(this, [ 'type' ]) === 'SECTION' || _.get(this, [ 'type' ]) === 'CATEGORY' ? sectionName = _.get(this, [ 'sectionName' ]) : ''
     switch (type) {
       case SECTION:
         const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
+        sectionName = _.get(this, [ 'sectionName' ])
         ogImage = imageURL ? imageURL : '/public/notImage.png'
         ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? _.get(this.section, [ 'ogTitle' ]) : _.get(this.section, [ 'title' ], this.title)
         ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? _.get(this.section, [ 'ogDescription' ]) : _.get(this.section, [ 'description' ])
