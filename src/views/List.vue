@@ -12,6 +12,8 @@
         </div>
         <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
           :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
+          :section="props.section" :dfpId="props.dfpId" />
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
@@ -751,9 +753,7 @@ export default {
     }
   },
   updated () {
-    if (this.type === TOPIC) {
-      this.updateCustomizedMarkup()
-    }
+    this.updateCustomizedMarkup()
   }
 }
 

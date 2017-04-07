@@ -142,7 +142,7 @@ $color-other = #bcbcbc
     &.container
       flex-direction row
       justify-content flex-start
-      width 788px
+      width 100%
     &-block
       width calc( (100% - 40px) / 2 )
       margin 0 10px 40px
