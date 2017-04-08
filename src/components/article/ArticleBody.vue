@@ -118,7 +118,7 @@ export default {
       return datetime
     },
     popularlist () {
-      const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ], {})
+      const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ], { report : []} )
       return report
     },
     styleForCurrArticle () {
