@@ -53,7 +53,7 @@ router.use('/playlist', function(req, res, next) {
 router.use('/poplist', function(req, res, next) {
     // const query = req.query
     superagent
-        .get(`${SERVER_PROTOCOL}://${SERVER_HOST}/story/json/popularlist.json`)
+        .get(`${SERVER_PROTOCOL}://${SERVER_HOST}/json/popularlist.json`)
         .end((err, response) => {
             if (!err && response) {
                 res.json(JSON.parse(response.text))
