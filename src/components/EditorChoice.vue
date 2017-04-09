@@ -246,17 +246,20 @@ $color-other = #bcbcbc
         > a
           position relative
           color #fff
+          display block
 
           .section-label
             position absolute
             width 60px
             height 35px
-            top -35px
             background-color #000
             display flex 
             justify-content center
             align-items center 
-            font-size 1.2rem           
+            font-size 1.2rem       
+            top auto
+            bottom 0
+            left 0
 
         &__img
           > figure

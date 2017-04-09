@@ -144,12 +144,12 @@ export default {
     .latest-list
       .latest-list_item
         > a
-          display inline
-
           .latest-list_item_label
             height 35px
             width 60px
-            top -35px
+            top auto
+            bottom 0
+            left 0
             font-size 1.2rem
         
         &_title
@@ -175,8 +175,10 @@ export default {
           .latest-list_item_label
             height 25px
             width 45px
-            top -25px
             font-size 0.9rem
+            top auto
+            bottom 0
+            left 0
         
         &_title
           color rgba(0, 0, 0, 0.35)

@@ -138,7 +138,8 @@ export default {
         paginationable: false,
         paginationClickable: true,
         paginationHide: false,
-        setNavBtn: true
+        setNavBtn: true,
+        lazyLoadingInPrevNextAmount: 2,
       }
     },
     subtitle () {
@@ -647,7 +648,12 @@ export default {
               padding-right 10px
               line-height 1
 
-          
+      .split-line
+        clear both
+
+      .dfpad-set
+        clear both
+
     &.single-col 
       margin-top 50px
 
