@@ -39,7 +39,6 @@
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])">
                 <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
-                <div class="swiper-lazy-preloader"></div>
               </swiper-slide>
             </template>
           </div>
