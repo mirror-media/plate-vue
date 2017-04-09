@@ -151,9 +151,16 @@ router.get('*', (req, res) => {
                     .get(apiHost + req.url)
                     .timeout(API_TIMEOUT)
                     .end((err, response) => {
-                        res.send(JSON.parse(response.text))
-                        console.log('save to redis', decodeURIComponent(req.url))
-                        redisWriteClient.set(decodeURIComponent(req.url), response.text, 'EX', REDIS_TIMEOUT)
+                        if (!err && response) {
+                            res.send(JSON.parse(response.text))
+                            console.log('save to redis', decodeURIComponent(req.url))
+                            redisWriteClient.set(decodeURIComponent(req.url), response.text, 'EX', REDIS_TIMEOUT)
+                        } else {
+                            res.send(err)
+                            // res.status(500).end('Internal Error 500')
+                            console.error(`error during fetch data : ${req.url}`)
+                            console.error(err)  
+                        }
                     })
             }
         } catch (e) {
