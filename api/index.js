@@ -157,7 +157,6 @@ router.get('*', (req, res) => {
                             redisWriteClient.set(decodeURIComponent(req.url), response.text, 'EX', REDIS_TIMEOUT)
                         } else {
                             res.send(err)
-                            // res.status(500).end('Internal Error 500')
                             console.error(`error during fetch data : ${req.url}`)
                             console.error(err)  
                         }
