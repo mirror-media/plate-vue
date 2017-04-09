@@ -212,7 +212,7 @@
     },
     mounted () {},
     metaInfo () {
-      if(!this.questionnaireData) {
+      if(!this.questionnaireData && process.env.VUE_ENV === 'server') {
         throw { massage : 'Page Not Found', code: '404' }
       }
 

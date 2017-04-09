@@ -328,7 +328,7 @@
       })
     },
     metaInfo() {
-      if(!this.articleData.slug) {
+      if(!this.articleData.slug && process.env.VUE_ENV === 'server') {
         throw { massage : 'Page Not Found', code: '404' }
       }
       const { 

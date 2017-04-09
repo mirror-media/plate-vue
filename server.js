@@ -83,9 +83,17 @@ app.get('*', (req, res, next) => {
         renderStream.once('data', () => {
             // res.write(indexHTML.head)
             const { title, meta } = context.meta.inject()
-            let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
-            _indexHead = _indexHead.replace(/<meta.*?name="description".*?\/>/g, meta.text())
-            res.write(_indexHead)
+            let _indexHead = indexHTML.head
+            try{
+                let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
+                _indexHead = _indexHead.replace(/<meta.*?name="description".*?\>/g, meta.text()) 
+                res.write(_indexHead)
+            }catch(err) {
+                res.status(500).end('Internal Error 500')
+                console.error(`error during render : ${req.url}`)
+                console.error(err)                
+
+            }
         })
 
         renderStream.on('data', chunk => {
