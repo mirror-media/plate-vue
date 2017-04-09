@@ -328,3 +328,7 @@ export const MARKETING_ID = '57fca2f5c9b7a70e004e6df9'
 export const TOPIC_WATCH_ID = '586cd15c3c1f950d00ce2e78'
 
 export const SITE_URL = 'https://www.mirrormedia.mg'
+
+export const FB_APP_ID = '175313259598308'
+
+export const FB_PAGE_ID = '1855418728011324'

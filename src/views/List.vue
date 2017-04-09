@@ -71,7 +71,7 @@
 
 <script>
 
-import { AUTHOR, CAMPAIGN_ID, CATEGORY, MARKETING_ID, SECTION, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
+import { AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { getImage, getValue } from '../utils/comm'
 import _ from 'lodash'
@@ -788,6 +788,8 @@ export default {
           { name: 'twitter:title', content: title },
           { name: 'twitter:description', content: ogDescription },
           { name: 'twitter:image', content: ogImage },
+          { property: 'fb:app_id', content: FB_APP_ID },
+          { property: 'fb:pages', content: FB_PAGE_ID },
           { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },

@@ -47,7 +47,7 @@
 <script>
 
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { DFP_ID, DFP_UNITS, SITE_URL } from '../constants'
+import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_URL } from '../constants'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import EditorChoice from '../components/EditorChoice.vue'
@@ -218,6 +218,8 @@ export default {
           { name: 'twitter:title', content: title },
           { name: 'twitter:description', content: description },
           { name: 'twitter:image', content: '/public/notImage.png' },
+          { property: 'fb:app_id', content: FB_APP_ID },
+          { property: 'fb:pages', content: FB_PAGE_ID },         
           { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },
