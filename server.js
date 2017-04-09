@@ -84,7 +84,7 @@ app.get('*', (req, res, next) => {
             // res.write(indexHTML.head)
             const { title, meta } = context.meta.inject()
             let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
-            _indexHead = _indexHead.replace(/<meta.*?name="description".*?\/>/g, meta.text())
+            _indexHead = _indexHead.replace(/<meta.*?name="description".*?\>/g, meta.text()) 
             res.write(_indexHead)
         })
 

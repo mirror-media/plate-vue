@@ -773,7 +773,7 @@ export default {
         ogImage = '/public/notImage.png'
         ogDescription = description
     }
-    if(!ogTitle) {
+    if(!ogTitle && process.env.VUE_ENV === 'server') {
       throw { massage : 'Page Not Found', code: '404' }
     }
     const title = ogTitle + ' - 鏡週刊 Mirror Media'
