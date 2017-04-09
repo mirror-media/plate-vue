@@ -51,6 +51,7 @@
   </div>
 </template>
 <script>
+  import { FB_APP_ID, FB_PAGE_ID } from '../constants'
   import { smoothScroll } from 'kc-scroll'
   import { getValue } from '../utils/comm'
   import _ from 'lodash'
@@ -231,6 +232,8 @@
           { name: 'twitter:title', content: _title + ' - 鏡週刊 Mirror Media' },
           { name: 'twitter:description', content: _description },
           { name: 'twitter:image', content: _image },
+          { property: 'fb:app_id', content: FB_APP_ID },
+          { property: 'fb:pages', content: FB_PAGE_ID },         
           { property: 'og:description', content: _description },
           { property: 'og:image', content: _image },
           { property: 'og:locale', content: 'zh_TW' },
