@@ -285,12 +285,11 @@ export default {
           display block
 
           > a
-            display inline
-
             .latest-list_item_label
               height 25px
               width 45px
-              top -25px
+              top auto
+              bottom 0
               left 0
               right auto
               font-size 0.9rem
