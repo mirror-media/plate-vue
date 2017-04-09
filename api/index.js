@@ -1,4 +1,4 @@
-const { API_PROTOCOL, API_HOST, API_PORT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_AUTH, REDIS_TIMEOUT, TWITTER_API } = require('./config')
+const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_AUTH, REDIS_TIMEOUT, TWITTER_API } = require('./config')
 const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } = require('./config')
 const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT } = require('./config')
 const { YOUTUBE_PROTOCOL, YOUTUBE_HOST, YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY, YOUTUBE_API_TIMEOUT } = require('./config')
@@ -149,6 +149,7 @@ router.get('*', (req, res) => {
                 // no data then http request
                 superagent
                     .get(apiHost + req.url)
+                    .timeout(API_TIMEOUT)
                     .end((err, response) => {
                         res.send(JSON.parse(response.text))
                         console.log('save to redis', decodeURIComponent(req.url))
