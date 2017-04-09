@@ -328,6 +328,9 @@
       })
     },
     metaInfo() {
+      if(!this.articleData.slug) {
+        throw { massage : 'Page Not Found', code: '404' }
+      }
       const { 
         brief = {},
         categories = {},

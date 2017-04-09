@@ -30,6 +30,9 @@ router.use('/grouped', function(req, res, next) {
                 res.json(JSON.parse(response.text))
             } else {
                 res.send('{\'error\':' + err + '}')
+                // res.status(500).end('Internal Error 500')
+                console.error(`error during fetch data from grouped : ${req.url}`)
+                console.error(err)  
             }
         })
 });
@@ -44,6 +47,9 @@ router.use('/playlist', function(req, res, next) {
         .end(function(err, response) {
             if (err) {
                 res.send(err)
+                // res.status(500).end('Internal Error 500')
+                console.error(`error during fetch data from playlist : ${req.url}`)
+                console.error(err)    
             } else {
                 res.json(response.body)
             }
@@ -59,6 +65,9 @@ router.use('/poplist', function(req, res, next) {
                 res.json(JSON.parse(response.text))
             } else {
                 res.send('{\'error\':' + err + '}')
+                // res.status(500).end('Internal Error 500')
+                console.error(`error during fetch data from poplist : ${req.url}`)
+                console.error(err)    
             }
         })
 });
@@ -75,6 +84,9 @@ router.use('/questionnaire', function(req, res, next) {
                     res.json(JSON.parse(response.text))
                 } else {
                     res.send('{\'error\':' + err + '}')
+                    // res.status(500).end('Internal Error 500')
+                    console.error(`error during fetch data from questionnaire : ${req.url}`)
+                    console.error(err)    
                 }
             })
     }
@@ -92,6 +104,9 @@ router.use('/search', function(req, res, next) {
         .end(function(err, response) {
             if (err) {
                 res.send(err)
+                // res.status(500).end('Internal Error 500')
+                console.error(`error during fetch data from search : ${req.url}`)
+                console.error(err)    
             } else {
                 res.json(response.body)
             }
@@ -108,6 +123,9 @@ router.use('/twitter', function(req, res, next) {
         client.get('statuses/user_timeline', query, function(err, data) {
             if (err) {
                 res.send(err)
+                // res.status(500).end('Internal Error 500')
+                console.error(`error during fetch data from twitter : ${req.url}`)
+                console.error(err)                
             } else {
                 res.json(data)
             }
@@ -139,6 +157,9 @@ router.get('*', (req, res) => {
             }
         } catch (e) {
             res.send(e)
+            // res.status(500).end('Internal Error 500')
+            console.error(`error during fetch data from api : ${req.url}`)
+            console.error(e)
         }
     })
 })

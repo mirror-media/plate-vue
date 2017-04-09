@@ -79,41 +79,50 @@ app.get('*', (req, res, next) => {
     const context = { url: req.url }
     const renderStream = renderer.renderToStream(context)
 
-    renderStream.once('data', () => {
-        // res.write(indexHTML.head)
-        const { title, meta } = context.meta.inject()
-        let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
-        _indexHead = _indexHead.replace(/<meta.*?name="description".*?\/>/g, meta.text())
-        res.write(_indexHead)
-    })
+    try {
+        renderStream.once('data', () => {
+            // res.write(indexHTML.head)
+            const { title, meta } = context.meta.inject()
+            let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
+            _indexHead = _indexHead.replace(/<meta.*?name="description".*?\/>/g, meta.text())
+            res.write(_indexHead)
+        })
 
-    renderStream.on('data', chunk => {
-        res.write(chunk)
-    })
+        renderStream.on('data', chunk => {
+            res.write(chunk)
+        })
 
-    renderStream.on('end', () => {
-        // embed initial store state
-        if (context.initialState) {
-            res.write(
-                `<script>window.__INITIAL_STATE__=${
-          serialize(context.initialState, { isJSON: true })
-        }</script>`
-            )
-        }
-        res.end(indexHTML.tail)
-        console.log(`whole request: ${Date.now() - s}ms`)
-    })
+        renderStream.on('end', () => {
+            // embed initial store state
+            if (context.initialState) {
+                res.write(
+                    `<script>window.__INITIAL_STATE__=${
+                    serialize(context.initialState, { isJSON: true })
+                    }</script>`
+                )
+            }
+            res.end(indexHTML.tail)
+            console.log(`whole request: ${Date.now() - s}ms`)
+        })
 
-    renderStream.on('error', err => {
-        if (err && err.code === '404') {
-            res.status(404).end('404 | Page Not Found')
-            return
-        }
-        // Render Error Page or Redirect
+        renderStream.on('error', err => {
+            if (err && err.code === '404') {
+                // res.status(404).end('404 | Page Not Found')
+                res.redirect('/404')
+                console.error(err)
+                return
+            }
+            // Render Error Page or Redirect
+            res.status(500).end('Internal Error 500')
+            console.error(`error during render : ${req.url}`)
+            console.error(err)
+        })
+    } catch(e) {
         res.status(500).end('Internal Error 500')
         console.error(`error during render : ${req.url}`)
         console.error(err)
-    })
+    }
+    
 })
 
 app.use('/api', require('./api/index'))

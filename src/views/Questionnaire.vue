@@ -212,6 +212,10 @@
     },
     mounted () {},
     metaInfo () {
+      if(!this.questionnaireData) {
+        throw { massage : 'Page Not Found', code: '404' }
+      }
+
       const _specificResult = _.find(this.results, { id: this.resultId })
 
       const _description = _.get(_specificResult, [ 'title' ], this.questionnaireDesc)
