@@ -424,6 +424,7 @@
       
       .split-line
         overflow hidden
+        clear both
 
         &::after
           content ""
