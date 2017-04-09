@@ -92,6 +92,7 @@
     return store.dispatch('FETCH_ARTICLES', {
       params: {
         related: 'full',
+        clean: 'content',
         where: {
           'slug': slug
         }
