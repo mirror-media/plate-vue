@@ -50,6 +50,7 @@
 
 import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../utils/comm'
 import _ from 'lodash'
+import moment from 'moment'
 
 export default {
   name: 'articleList',
@@ -58,16 +59,21 @@ export default {
   props: [ 'articles', 'hasDFP' ],
   computed: {
     articlesBeforeDFPNA3 () {
-      return _.take(this.articles, 2)
+      return _.take(this.sortedArticles, 2)
     },
     articlesBeforeDFPNA5 () {
-      return _.slice(this.articles, 2, 3)
+      return _.slice(this.sortedArticles, 2, 3)
     },
     articlesBeforeDFPNA9 () {
-      return _.slice(this.articles, 3, 6)
+      return _.slice(this.sortedArticles, 3, 6)
     },
     articlesAfterDFPNA9 () {
-      return _.slice(this.articles, 6)
+      return _.slice(this.sortedArticles, 6)
+    },
+    sortedArticles () {
+      return _.sortBy(this.articles, [ function (a) {
+        return -moment(a.publishedDate).unix()
+      } ])
     }
   },
   methods: {
@@ -75,7 +81,8 @@ export default {
     getHref,
     getImage,
     getSection,
-    getTruncatedVal
+    getTruncatedVal,
+    moment
   }
 }
 </script>
