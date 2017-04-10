@@ -12,7 +12,7 @@ const Twitter = require('twitter')
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
-const redisPoolRead = RedisConnectionPool('myRedisPool', {
+const redisPoolRead = RedisConnectionPool('myRedisPoolRead', {
     host: REDIS_READ_HOST, // default
     port: REDIS_READ_PORT, //default
     max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50, // defalut
@@ -22,10 +22,10 @@ const redisPoolRead = RedisConnectionPool('myRedisPool', {
       auth_pass: REDIS_AUTH
     } //options for createClient of node-redis, optional
   })
-const redisPoolWrite = isProd ? RedisConnectionPool('myRedisPool', {
+const redisPoolWrite = isProd ? RedisConnectionPool('myRedisPoolWrite', {
     host: REDIS_WRITE_HOST, // default
     port: REDIS_WRITE_PORT, //default
-    max_clients: 30, // defalut
+    max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50, // defalut
     perform_checks: false, // checks for needed push/pop functionality
     database: 0, // database number to use
     options: {
