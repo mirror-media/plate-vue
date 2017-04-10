@@ -1,4 +1,4 @@
-const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_AUTH, REDIS_TIMEOUT, TWITTER_API } = require('./config')
+const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, REDIS_AUTH, REDIS_MAX_CLIENT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_TIMEOUT, TWITTER_API } = require('./config')
 const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } = require('./config')
 const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT } = require('./config')
 const { YOUTUBE_PROTOCOL, YOUTUBE_HOST, YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY, YOUTUBE_API_TIMEOUT } = require('./config')
@@ -15,7 +15,7 @@ const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 const redisPoolRead = RedisConnectionPool('myRedisPool', {
     host: REDIS_READ_HOST, // default
     port: REDIS_READ_PORT, //default
-    max_clients: 30, // defalut
+    max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50, // defalut
     perform_checks: false, // checks for needed push/pop functionality
     database: 0, // database number to use
     options: {
