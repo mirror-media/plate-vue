@@ -382,6 +382,10 @@ export default {
     if (this.type === SECTION || this.type === TOPIC || this.type === TAG) {
       this.insertCustomizedMarkup()
     }
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
   },
   beforeRouteEnter (to, from, next) {
     const type = _.toUpper(_.split(to.path, '/')[1])
@@ -419,6 +423,7 @@ export default {
       loading: false,
       page: PAGE,
       showDfpCoverAdFlag: false,
+      viewport: undefined,
     }
   },
   computed: {
@@ -741,7 +746,12 @@ export default {
       if (this.customJS) {
         custScript.innerHTML = this.customJS
       }
-    }
+    },
+    updateViewport() {
+        if(process.env.VUE_ENV === 'client') {
+          this.viewport = document.querySelector('body').offsetWidth
+        }
+    },
   },
   metaInfo () {
     const type = this.type
