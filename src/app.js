@@ -5,6 +5,8 @@ import router from './router'
 import { sync } from 'vuex-router-sync'
 import * as filters from './filters'
 
+Vue.config.devtools = true
+
 // sync the router with the vuex store.
 // this registers `store.state.route`
 sync(store, router)
