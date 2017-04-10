@@ -17,7 +17,7 @@ import ArticleCenter from '../components/article/ArticleCenter.vue'
 import ArticleLeft from '../components/article/ArticleLeft.vue'
 import ArticleRight from '../components/article/ArticleRight.vue'
 
-const briefAmount = 42
+const briefAmount = 40
 
 export default {
   name: 'latestArticle',
@@ -62,8 +62,8 @@ $color-other = #bcbcbc
         p
           display none
         h2
-          font-size 1.5rem
-          line-height 2rem
+          font-size 1.25rem
+          line-height 1.6rem
           padding .5em
           margin 0
       
@@ -138,7 +138,7 @@ $color-other = #bcbcbc
         &__title
           p
             display block
-            margin 0
+            margin 10px 0 0
             text-align justify
             font-size 1.2rem
             line-height 1.7rem
@@ -184,12 +184,9 @@ $color-other = #bcbcbc
         > a
           margin-bottom 20px
         &__title
-          display flex
-          flex-direction column
-          justify-content space-between
           width calc( (100% - 30px) / 3 * 2)
           margin 0
-          padding 1em
+          padding .5em 1em
           
       .list-wide
         position relative
@@ -200,14 +197,8 @@ $color-other = #bcbcbc
           transform translateY(-50%)
           width calc( (100% - 30px) / 3 * 2)
           height 100%
-          padding 0
-          padding 1em
+          padding .5em 1em
           margin-left 20px
-          p
-            position absolute
-            left 0
-            bottom 0
-            padding 0 1em
 
     > section:not(:first-child)
       padding 0
@@ -225,13 +216,10 @@ $color-other = #bcbcbc
         > a
           margin-bottom 20px
         &__title
-          display flex
-          flex-direction column
-          justify-content space-between
           flex-grow 0
           width calc( (100% - 30px) / 3 * 2)
           margin 0
-          padding 1em
+          padding .5em 1em
           
       .list-wide
         margin-bottom 20px
@@ -243,13 +231,9 @@ $color-other = #bcbcbc
           width calc( (100% - 30px) / 3 * 2)
           height 100%
           padding 0
-          padding 1em
+          padding .5em 1em
           margin-left 20px
-          p
-            position absolute
-            left 0
-            bottom 0
-            padding 0 1em
+          
 
 @media (min-width: 1200px)
   .latestArticle
