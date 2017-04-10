@@ -69,7 +69,7 @@ export default {
     getName,
     getTruncatedVal,
     getTitle (title) {
-      return truncate(title, 20)
+      return truncate(title, 19)
     },
     getSection (article) {
       return _.get(article, 'sections[0].name') ? _.get(article, 'sections[0].name') : 'other'

@@ -274,10 +274,10 @@ $color-other = #bcbcbc
           padding .5em 0
 
           h2
-            font-size 1.5rem
-            line-height 2rem
+            font-size 1.25rem
+            line-height 1.6rem
             margin 0
-            font-weight 300
+            font-weight normal
 
 @media (min-width: 600px)
   .editorChoice-list

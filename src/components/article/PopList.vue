@@ -159,5 +159,12 @@
       .pop_list 
         .pop_item
           width 45%
+  @media (min-width 768px)
+    .poplist-container
+      .pop_list
+        .pop_item
+          .pop_item_title
+            height 97px
+
           
 </style>
