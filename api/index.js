@@ -155,12 +155,12 @@ router.get('*', (req, res) => {
     res.header("Access-Control-Allow-Headers", "X-Requested-With")
     // console.log(apiHost)
     // console.log(decodeURIComponent(req.url))
-    
+    const s = Date.now()
     redisPoolRead.get(decodeURIComponent(req.url), function (err, data) {
         try {
             if (!err && data) {
                 // have data
-                console.log('got data from redis.', decodeURIComponent(req.url))
+                console.log(`got data from redis.(${Date.now() - s}ms)`, decodeURIComponent(req.url))
                 res.json(JSON.parse(data))
             } else {
                 // no data then http request
@@ -169,7 +169,7 @@ router.get('*', (req, res) => {
                     .timeout(API_TIMEOUT)
                     .end((err, response) => {
                         if (!err && response) {
-                            console.log('got data from api.', decodeURIComponent(req.url))
+                            console.log(`got data from api.((${Date.now() - s}ms)`, decodeURIComponent(req.url))
                             res.send(JSON.parse(response.text))
                             redisPoolWrite.set(decodeURIComponent(req.url), response.text, function (err) {
                                 if(err) {
