@@ -18,7 +18,18 @@
       </div>
     </router-link>
     <slot name="dfpNA5" v-if="hasDFP"></slot>
-    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA9" v-if="hasDFP" class="articleList-block">
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA9BeforeL1" v-if="hasDFP" class="articleList-block">
+      <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
+      </div>
+      <div class="articleList__content" :class="getSection(item)">
+        <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+        <p v-text="getBrief(item, 45)"></p>
+      </div>
+    </router-link>
+    <div class="articleList__dfp--l1">
+      <slot name="dfpL1" v-if="hasDFP"></slot>
+    </div>
+    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA9AfterL1" v-if="hasDFP" class="articleList-block">
       <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
       </div>
       <div class="articleList__content" :class="getSection(item)">
@@ -64,8 +75,11 @@ export default {
     articlesBeforeDFPNA5 () {
       return _.slice(this.sortedArticles, 2, 3)
     },
-    articlesBeforeDFPNA9 () {
-      return _.slice(this.sortedArticles, 3, 6)
+    articlesBeforeDFPNA9BeforeL1 () {
+      return _.slice(this.sortedArticles, 3, 4)
+    },
+    articlesBeforeDFPNA9AfterL1 () {
+      return _.slice(this.sortedArticles, 4, 6)
     },
     articlesAfterDFPNA9 () {
       return _.slice(this.sortedArticles, 6)
@@ -143,6 +157,11 @@ $color-other = #bcbcbc
       color #999
       font-weight 300
       line-height 1.3rem
+
+  &__dfp
+    &--l1
+      width calc( 100% - 20px )
+      margin 0 10px 40px
 
 @media (min-width: 600px)
   .articleList

@@ -82,7 +82,7 @@ export const DFP_UNITS = {
         'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         // 
         'LMBHD': { 'aduid': 'mm_mobile_other_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LMBL1': { 'aduid': 'mm_mobile_other_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
+        'LMBL1': { 'aduid': 'mm_mobile_other_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': ['margin: 0'] },
         'LMBFT': { 'aduid': 'mm_mobile_other_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LMBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
@@ -114,7 +114,7 @@ export const DFP_UNITS = {
         'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         // MBHD, MBL1, MBFT
         'LMBHD': { 'aduid': 'mm_mobile_np_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LMBL1': { 'aduid': 'mm_mobile_np_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
+        'LMBL1': { 'aduid': 'mm_mobile_np_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': ['margin: 0'] },
         'LMBFT': { 'aduid': 'mm_mobile_np_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
         'LMBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
@@ -146,7 +146,7 @@ export const DFP_UNITS = {
         'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },        
         // MBHD, MBL1, MBFT : position on listing page
         'LMBHD': { 'aduid': 'mm_mobile_ent_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LMBL1': { 'aduid': 'mm_mobile_ent_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
+        'LMBL1': { 'aduid': 'mm_mobile_ent_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': ['margin: 0'] },
         'LMBFT': { 'aduid': 'mm_mobile_ent_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
         'LMBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
@@ -178,7 +178,7 @@ export const DFP_UNITS = {
         'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },        
         // MBHD, MBL1, MBFT : position on listing page
         'LMBHD': { 'aduid': 'mm_mobile_fnt_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LMBL1': { 'aduid': 'mm_mobile_fnt_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
+        'LMBL1': { 'aduid': 'mm_mobile_fnt_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': ['margin: 0'] },
         'LMBFT': { 'aduid': 'mm_mobile_fnt_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container', 'center'], 'cont-style': [''] },
         'LMBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
@@ -212,7 +212,7 @@ export const DFP_UNITS = {
         'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },        
         // MBHD, MBL1, MBFT : position on listing page
         'LMBHD': { 'aduid': 'mm_mobile_other_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
-        'LMBL1': { 'aduid': 'mm_mobile_other_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': [''] },
+        'LMBL1': { 'aduid': 'mm_mobile_other_300x250_L1', 'dimensions': '300x250', 'cont-class': ['ad-container'], 'cont-style': ['margin: 0'] },
         'LMBFT': { 'aduid': 'mm_mobile_other_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': ['ad-container'], 'cont-style': [''] },
         'LMBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': ['ad-container', 'margin-top-0'], 'cont-style': [''] },
         // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
