@@ -189,7 +189,7 @@ export default {
         case 'code-block':
           return `<code>${_.get(item.content, [ 0 ], '')}</code>`
         case 'embeddedcode':
-          return `<div class=\"embedded\">${_.get(item.content, [ 0, 'embeddedCode' ], '')}</div>`
+          return `<div class=\"embedded\ ${_.get(item.content, [ 0, 'alignment' ], '')}">${_.get(item.content, [ 0, 'embeddedCode' ], '')}<div class=\"caption\">${_.get(item.content, [ 0, 'caption' ], '')}</div></div>`
         case 'header-two':
           return `<h2>${item.content.toString()}</h2>`
         case 'image':
@@ -439,6 +439,19 @@ export default {
         .embedded 
           text-align center
           margin 1.5em 0
+          clear both
+          display flex
+          flex-direction column
+          align-items center
+
+          > .caption 
+            font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
+            font-size 15px
+            line-height 1.7
+            letter-spacing 0.3px
+            color rgba(0, 0, 0, 0.498039)
+            padding-top 10px
+            padding-bottom 10px
 
         .audioBox
           width 100%
