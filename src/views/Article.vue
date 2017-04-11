@@ -117,9 +117,7 @@
   }
 
   const fetchData = (store) => {
-    return fetchSSRData(store).then(() => {
-      return fetchArticles(store, store.state.route.params.slug)
-    })
+    return  Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
   }
 
 
