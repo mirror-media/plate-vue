@@ -78,15 +78,18 @@ app.get('*', (req, res, next) => {
   var s = Date.now()
   const context = { url: req.url }
   const renderStream = renderer.renderToStream(context)
+  console.log(`**********got renderStream. ${Date.now() - s}ms`)
 
   try {
     renderStream.once('data', () => {
       // res.write(indexHTML.head)
       try {
+        // const startWriteHead = Date.now()
         const { title, meta } = context.meta.inject()
         let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
         _indexHead = _indexHead.replace(/<meta.*?name="description".*?>/g, meta.text()) 
         res.write(_indexHead)
+        // console.log(`**********res.write(_indexHead) ${Date.now() - startWriteHead}ms`)
       } catch (e) {
         res.status(500).end('Internal Error 500')
         console.error(`error during renderStream.once : ${req.url}`)
@@ -96,7 +99,9 @@ app.get('*', (req, res, next) => {
 
     renderStream.on('data', chunk => {
       try {
+        // const startWriteChunk = Date.now()
         res.write(chunk)
+        // console.log(`**********res.write(chunk) ${Date.now() - startWriteChunk}ms`)
       } catch (e) {
         res.status(500).end('Internal Error 500')
         console.error(`error during renderStream.on data : ${req.url}`)
@@ -107,6 +112,7 @@ app.get('*', (req, res, next) => {
     renderStream.on('end', () => {
       try {
         // embed initial store state
+        // const startWriteEnd = Date.now()
         if (context.initialState) {
           res.write(
             `<script>window.__INITIAL_STATE__=${
@@ -115,6 +121,7 @@ app.get('*', (req, res, next) => {
           )
         }
         res.end(indexHTML.tail)
+        // console.log(`**********res.write(chunk) ${Date.now() - startWriteEnd}ms`)
         console.log(`whole request: ${Date.now() - s}ms`)
       } catch (e) {
         res.status(500).end('Internal Error 500')

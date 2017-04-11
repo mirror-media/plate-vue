@@ -28,11 +28,15 @@ export default context => {
   // updated.
   return Promise.all(matchedComponents.map(component => {
     if (component.preFetch) {
-      return component.preFetch(store)
+      const startPreFetch = Date.now()
+      const promise = component.preFetch(store)
+      const preFetchTime = Date.now() - startPreFetch
+      console.log(`**********took ${preFetchTime}ms for prefetching ${component.name}`)
+      return promise
     }
   })).then(() => {
     isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
-
+    const initialStateStart = Date.now()
     // After all preFetch hooks are resolved, our store is now
     // filled with the state needed to render the app.
     // Expose the state on the render context, and let the request handler
@@ -40,6 +44,7 @@ export default context => {
     // store to pick-up the server-side state without having to duplicate
     // the initial data fetching on the client.
     context.initialState = store.state
+    console.log(`**********initialState finished ${Date.now() - initialStateStart}ms`)
     return app
   })
 }

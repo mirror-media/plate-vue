@@ -1,4 +1,5 @@
 <template>
+  <renderingEnd v-if="articleData" :renderingStart="renderingStart()">
   <div class="article_body" v-if="articleData" :class="styleForCurrArticle">
     <div class="article_basic-info">
       <div class="category">
@@ -66,6 +67,7 @@
       <slot name="slot_fb_comment"></slot>
     </main>
     <slot name="aside"></slot>
+    <renderingEnd :renderingEnd="renderingEnd()" />
   </div>
 </template>
 <script>
@@ -172,6 +174,11 @@ export default {
       return records
     }
   },
+  data() {
+    return {
+      renderingStartTime: undefined
+    }
+  },
   methods: {
     getAudioSource (item) {
       const audioURL = []
@@ -244,13 +251,26 @@ export default {
         default:
           return
       }
+    },
+    renderingStart () {
+      if(this.articleData) {
+        this.renderingStartTime = Date.now()
+      }
+      return this.renderingStartTime
+    },
+    renderingEnd () {
+      const renderTime = Date.now() - this.renderingStartTime
+      if(process.env.VUE_ENV === 'server') {
+        console.log(`**********Rendering ArticleBody.vue finished (${renderTime}ms)`)
+      }
+      return renderTime
     }
   },
   mounted () {},
   name: 'article-body',
   props: {
     articleData: {
-      default: () => { return {} }
+      default: () => { return undefined }
     },
     projlistData: {
       default: () => { return [] }
@@ -258,7 +278,7 @@ export default {
     viewport: {
       default: () => { return undefined }
     }
-  }
+  },
 }
 </script>
 <style lang="stylus">
