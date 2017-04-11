@@ -399,9 +399,10 @@ export default {
           console.log('fetch common data sucessfully')
           fetchListData(store, type, sectionStyle).then(() => {
             console.log('fetch common data sucessfully')            
+          }).then(() => {
+            next()
           })
         })
-        next()
     } else {
       console.log('first rendering')
       next()
