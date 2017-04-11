@@ -189,7 +189,7 @@ export default {
         case 'code-block':
           return `<code>${_.get(item.content, [ 0 ], '')}</code>`
         case 'embeddedcode':
-          return `<div class=\"embedded\ ${_.get(item.content, [ 0, 'alignment' ], '')}">${_.get(item.content, [ 0, 'embeddedCode' ], '')}<div class=\"img-caption\">${_.get(item.content, [ 0, 'caption' ], '')}</div></div>`
+          return `<div class=\"embedded\ ${_.get(item.content, [ 0, 'alignment' ], '')}">${_.get(item.content, [ 0, 'embeddedCode' ], '')}<div class=\"caption\">${_.get(item.content, [ 0, 'caption' ], '')}</div></div>`
         case 'header-two':
           return `<h2>${item.content.toString()}</h2>`
         case 'image':
