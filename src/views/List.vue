@@ -95,6 +95,7 @@ import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
+import store from '../store'
 
 const MAXRESULT = 9
 const LOADMOREMAXRESULT = 12
@@ -392,19 +393,15 @@ export default {
     const type = _.toUpper(_.split(to.path, '/')[1])
     if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
       console.log([to, from])
-      setTimeout(() => {
-        next(vm => {
-          const sectionStyle = _.get(_.find(_.get(vm.$store.state.commonData, [ 'sections', 'items' ]),
+        const sectionStyle = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]),
             { 'name': _.get(to, [ 'params', 'title' ]) }), [ 'style' ])
-          console.log([sectionStyle, type])
-          fetchCommonData(vm.$store).then(() => {
-            console.log('fetch common data sucessfully')
-            fetchListData(vm.$store, type, sectionStyle).then(() => {
-              console.log('fetch common data sucessfully')            
-            })
+        fetchCommonData(store).then(() => {
+          console.log('fetch common data sucessfully')
+          fetchListData(store, type, sectionStyle).then(() => {
+            console.log('fetch common data sucessfully')            
           })
         })
-      }, 300)
+        next()
     } else {
       console.log('first rendering')
       next()
