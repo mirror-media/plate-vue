@@ -22,6 +22,7 @@
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3" :dfpId="props.dfpId" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5" :dfpId="props.dfpId" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9" :dfpId="props.dfpId" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBL1" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpL1" :dfpId="props.dfpId" />
         </article-list>
         <audio-list :audios="audios.items" v-if="title == 'Audio'" />
         <video-list :playlist="playlist.items" v-if="name == 'videohub'"/>
@@ -391,17 +392,19 @@ export default {
     const type = _.toUpper(_.split(to.path, '/')[1])
     if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
       console.log([to, from])
-      next(vm => {
-        const sectionStyle = _.get(_.find(_.get(vm.$store.state.commonData, [ 'sections', 'items' ]),
-          { 'name': _.get(to, [ 'params', 'title' ]) }), [ 'style' ])
-        console.log([sectionStyle, type])
-        fetchCommonData(vm.$store).then(() => {
-          console.log('fetch common data sucessfully')
-          fetchListData(vm.$store, type, sectionStyle).then(() => {
-            console.log('fetch common data sucessfully')            
+      setTimeout(() => {
+        next(vm => {
+          const sectionStyle = _.get(_.find(_.get(vm.$store.state.commonData, [ 'sections', 'items' ]),
+            { 'name': _.get(to, [ 'params', 'title' ]) }), [ 'style' ])
+          console.log([sectionStyle, type])
+          fetchCommonData(vm.$store).then(() => {
+            console.log('fetch common data sucessfully')
+            fetchListData(vm.$store, type, sectionStyle).then(() => {
+              console.log('fetch common data sucessfully')            
+            })
           })
         })
-      })
+      }, 300)
     } else {
       console.log('first rendering')
       next()
