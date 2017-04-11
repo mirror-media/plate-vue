@@ -26,7 +26,7 @@
         <p v-text="getBrief(item, 45)"></p>
       </div>
     </router-link>
-    <div class="articleList__dfp--l1">
+    <div class="articleList__dfp--l1 mobile-only">
       <slot name="dfpL1" v-if="hasDFP"></slot>
     </div>
     <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articlesBeforeDFPNA9AfterL1" v-if="hasDFP" class="articleList-block">

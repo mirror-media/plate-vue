@@ -105,18 +105,18 @@ const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
 }
 
-const fetchListData = (store, type, sectionStyle) => {
+const fetchListData = (store, type, sectionStyle, to) => {
   let uuid
   switch (type) {
     case AUTHOR:
-      uuid = store.state.route.params.authorId
+      uuid = to.params.authorId
       return fetchArticlesByAuthor(store, uuid, {
         page: PAGE,
         max_results: MAXRESULT
       })
       break
     case SECTION:
-      uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': store.state.route.params.title }), [ 'id' ])
+      uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
       switch (sectionStyle) {
         case 'full':
           return fetchArticlesByUuid(store, uuid, SECTION, {
@@ -133,7 +133,7 @@ const fetchListData = (store, type, sectionStyle) => {
       }
       break
     case TAG:
-      uuid = store.state.route.params.tagId
+      uuid = to.params.tagId
       return fetchTag(store, uuid).then(() => {
         return fetchArticlesByUuid(store, uuid, TAG, {
           page: PAGE,
@@ -142,7 +142,7 @@ const fetchListData = (store, type, sectionStyle) => {
       })
       break
     case CATEGORY:
-      const catName = store.state.route.params.title
+      const catName = to.params.title
       switch (catName) {
         case 'audio':
           return fetchAudios(store, {
@@ -168,7 +168,7 @@ const fetchListData = (store, type, sectionStyle) => {
           })
           break
         default:
-          uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': store.state.route.params.title }), [ 'id' ])
+          uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
@@ -176,7 +176,7 @@ const fetchListData = (store, type, sectionStyle) => {
       }
       break
     case TOPIC:
-      uuid = store.state.route.params.topicId
+      uuid = to.params.topicId
       const topic = _.find(_.get(store.state.commonData, [ 'topics', 'items' ]), { 'id': uuid })
       
       return fetchArticlesByUuid(store, uuid, TOPIC, {
@@ -353,7 +353,7 @@ const fetchData = (store) => {
   return fetchCommonData(store).then(() => {
     const _type = _.toUpper(_.split(store.state.route.path, '/')[1])
     const _sectionStyle = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': store.state.route.params.title }), [ 'style' ])
-    return fetchListData(store, _type, _sectionStyle)
+    return fetchListData(store, _type, _sectionStyle, store.state.route)
   })
 }
 
@@ -397,7 +397,7 @@ export default {
             { 'name': _.get(to, [ 'params', 'title' ]) }), [ 'style' ])
         fetchCommonData(store).then(() => {
           console.log('fetch common data sucessfully')
-          fetchListData(store, type, sectionStyle).then(() => {
+          fetchListData(store, type, sectionStyle, to).then(() => {
             console.log('fetch common data sucessfully')            
           }).then(() => {
             next()
