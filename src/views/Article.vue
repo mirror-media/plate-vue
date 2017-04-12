@@ -1,7 +1,6 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions">
     <template scope="props" slot="dfpPos">
-      <renderingStart :renderingStart="renderingStart()" />
       <section style="width: 100%;">
         <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
       </section>
@@ -67,7 +66,6 @@
           <div class="close" @click="closeCoverAd"></div>
         </div>
       </div>
-      <renderingEnd :renderingEnd="renderingEnd()" />
     </template>
   </vue-dfp-provider>
 </template>

@@ -1,5 +1,4 @@
 <template>
-  <renderingEnd v-if="articleData" :renderingStart="renderingStart()">
   <div class="article_body" v-if="articleData" :class="styleForCurrArticle">
     <div class="article_basic-info">
       <div class="category">
@@ -67,7 +66,6 @@
       <slot name="slot_fb_comment"></slot>
     </main>
     <slot name="aside"></slot>
-    <renderingEnd :renderingEnd="renderingEnd()" />
   </div>
 </template>
 <script>
@@ -849,7 +847,7 @@ export default {
             &.right, &.left
               float none
               width 100%
-              margin 0
+              margin 1.5rem 0
               border-bottom none
               padding-bottom 0
         
