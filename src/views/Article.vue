@@ -313,7 +313,7 @@
       renderingEnd () {
         const renderTime = Date.now() - this.renderingStartTime
         if(process.env.VUE_ENV === 'server') {
-          console.log(`**********Rendering Article.vue finished (${renderTime}ms)`)
+          // console.log(`**********Rendering Article.vue finished (${renderTime}ms)`)
         }
         return renderTime
       },
