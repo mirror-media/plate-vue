@@ -717,6 +717,24 @@ export default {
                 this.loading = false
               })
               break
+            case 'marketing':
+              fetchArticlesByUuid(this.$store, MARKETING_ID, this.type, {
+                page: this.page,
+                max_results: MAXRESULT
+              }).then(() => {
+                this.articles = this.$store.state.articlesByUUID
+                this.loading = false
+              })
+              break
+            case 'campaign':
+              fetchArticlesByUuid(this.$store, CAMPAIGN_ID, this.type, {
+                page: this.page,
+                max_results: MAXRESULT
+              }).then(() => {
+                this.articles = this.$store.state.articlesByUUID
+                this.loading = false
+              })
+              break
             default:
               fetchArticlesByUuid(this.$store, this.uuid, this.type, {
                 page: this.page,
