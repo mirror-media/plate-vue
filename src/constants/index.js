@@ -301,7 +301,7 @@ export const SOCIAL_LINK = {
     DOWNLOADAPP: 'http://hyperurl.co/mmfooter',
     EMAIL: 'mailto:mirror885@mirrormedia.mg',
     FACEBOOK: 'https://www.facebook.com/mirrormediamg/',
-    FEED: 'https://www.mirrormedia.mg/story/rss.xml',
+    FEED: 'https://www.mirrormedia.mg/rss/rss.xml',
     INSTAGRAM: 'https://www.instagram.com/mirror_media/',
     LINE: 'https://line.me/R/ti/p/%40cuk1273e',
     SUBSCRIBE: 'https://goo.gl/forms/g2ny8HzAXTAfwH6I2',
