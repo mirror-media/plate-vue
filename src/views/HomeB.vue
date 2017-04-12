@@ -31,7 +31,7 @@
         <section class="container footer">
           <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
           <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <app-footer :ifShare="false" />
+          <app-footer :ifShare="false" style="padding: 0 2rem;"/>
         </section>
         <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <div class="ad">
@@ -300,8 +300,8 @@ export default {
 
 section.footer
   width 100%
-  padding 0 2rem
-
+     
+      
 @media (min-width: 600px)
   .list
     &.container
@@ -342,6 +342,7 @@ section.footer
     width 100%
     padding 0 2rem
 
+
 @media (min-width: 1200px)
   .list
     &.container
@@ -357,5 +358,8 @@ section.footer
       aside
         width 25%
         padding 0 30px 0 0
+
+  section.footer
+    width 1024px
     
 </style>

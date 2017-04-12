@@ -250,19 +250,6 @@ export default {
           return
       }
     },
-    renderingStart () {
-      if(this.articleData) {
-        this.renderingStartTime = Date.now()
-      }
-      return this.renderingStartTime
-    },
-    renderingEnd () {
-      const renderTime = Date.now() - this.renderingStartTime
-      if(process.env.VUE_ENV === 'server') {
-        // console.log(`**********Rendering ArticleBody.vue finished (${renderTime}ms)`)
-      }
-      return renderTime
-    }
   },
   mounted () {},
   name: 'article-body',

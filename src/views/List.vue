@@ -38,7 +38,7 @@
             :section="props.section" :dfpId="props.dfpId" :unitId="getValue(topic, ['dfp'], '')" />
           <vue-dfp v-if="type === 'TOPIC' && getValue(topic, ['mobileDfp'], '').length > 0" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
             :section="props.section" :dfpId="props.dfpId" :unitId="getValue(topic, ['mobileDfp'], '')" />
-          <app-footer />
+          <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
         </section>
         <share />
       </div>

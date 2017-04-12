@@ -6,10 +6,9 @@ cluster.setupMaster({
 });
 // Fork workers.
 for (let i = 0; i < numCPUs; i++) { 
-  console.log('forked a new peocess')
   cluster.fork()
 }
 cluster.on('disconnect', function(worker) { 
-  console.log('disconnect!') // This can probably use some work. cluster.fork();
+  console.log('a process disconnect!') // This can probably use some work. cluster.fork();
   cluster.fork()
 });
