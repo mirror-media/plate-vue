@@ -1,6 +1,7 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions">
     <template scope="props" slot="dfpPos">
+      <renderingStart :renderingStart="renderingStart()" />
       <section style="width: 100%;">
         <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
       </section>
@@ -66,6 +67,7 @@
           <div class="close" @click="closeCoverAd"></div>
         </div>
       </div>
+      <renderingEnd :renderingEnd="renderingEnd()" />
     </template>
   </vue-dfp-provider>
 </template>
@@ -301,6 +303,19 @@
           })
           window.FB && window.FB.XFBML.parse()
         }
+      },
+      renderingStart () {
+        if(this.articleData) {
+          this.renderingStartTime = Date.now()
+        }
+        return this.renderingStartTime
+      },
+      renderingEnd () {
+        const renderTime = Date.now() - this.renderingStartTime
+        if(process.env.VUE_ENV === 'server') {
+          console.log(`**********Rendering Article.vue finished (${renderTime}ms)`)
+        }
+        return renderTime
       },
       updateCookie() {
         const cookie = Cookie.get('visited')
