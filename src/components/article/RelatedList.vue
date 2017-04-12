@@ -139,6 +139,7 @@
   .related-list-container 
     width 300px
     margin 0 auto 20px
+    background-color #fff
 
     .list
       margin-top 20px

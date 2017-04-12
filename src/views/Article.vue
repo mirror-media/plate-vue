@@ -47,7 +47,7 @@
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-            <vue-dfp :is="props.vueDfp" pos="MBFT" extClass="full mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />            
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />            
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
@@ -276,6 +276,9 @@
       sectionId() {
         return _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
       },
+      styleDfpAd() {
+        return (this.viewport < 321) ? 'ad-fit' : ''
+      },
     },
     methods: {
       closeCoverAd() {
@@ -490,5 +493,8 @@
       .article
         padding 100px 50px 0
 
+.ad-fit
+  position relative
+  margin-left -15px !important
 
 </style>
