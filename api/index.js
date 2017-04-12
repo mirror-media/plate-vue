@@ -49,6 +49,7 @@ router.use('/grouped', function(req, res, next) {
                 // res.status(500).end('Internal Error 500')
                 console.error(`error during fetch data from grouped : ${req.url}`)
                 console.error(err)  
+                process.exit(1)
             }
         })
 });
@@ -66,6 +67,7 @@ router.use('/playlist', function(req, res, next) {
                 // res.status(500).end('Internal Error 500')
                 console.error(`error during fetch data from playlist : ${req.url}`)
                 console.error(err)    
+                process.exit(1)
             } else {
                 res.json(response.body)
             }
@@ -83,7 +85,8 @@ router.use('/poplist', function(req, res, next) {
                 res.send('{\'error\':' + err + '}')
                 // res.status(500).end('Internal Error 500')
                 console.error(`error during fetch data from poplist : ${req.url}`)
-                console.error(err)    
+                console.error(err) 
+                process.exit(1)   
             }
         })
 });
@@ -102,7 +105,8 @@ router.use('/questionnaire', function(req, res, next) {
                     res.send('{\'error\':' + err + '}')
                     // res.status(500).end('Internal Error 500')
                     console.error(`error during fetch data from questionnaire : ${req.url}`)
-                    console.error(err)    
+                    console.error(err)   
+                    process.exit(1) 
                 }
             })
     }
@@ -123,6 +127,7 @@ router.use('/search', function(req, res, next) {
                 // res.status(500).end('Internal Error 500')
                 console.error(`error during fetch data from search : ${req.url}`)
                 console.error(err)    
+                process.exit(1)
             } else {
                 res.json(response.body)
             }
@@ -141,7 +146,8 @@ router.use('/twitter', function(req, res, next) {
                 res.send(err)
                 // res.status(500).end('Internal Error 500')
                 console.error(`error during fetch data from twitter : ${req.url}`)
-                console.error(err)                
+                console.error(err) 
+                process.exit(1)               
             } else {
                 res.json(data)
             }
@@ -191,6 +197,7 @@ router.get('*', (req, res) => {
                             res.send(err)
                             console.error(`error during fetch data : ${req.url}`)
                             console.error(err)  
+                            process.exit(1)
                         }
                     })
             }
@@ -199,6 +206,7 @@ router.get('*', (req, res) => {
             // res.status(500).end('Internal Error 500')
             console.error(`error during fetch data from api : ${req.url}`)
             console.error(e)
+            process.exit(1)
         }
     });
 
