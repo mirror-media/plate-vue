@@ -12,7 +12,7 @@
               <a :href="getHref(item)"><h2 v-text="item.title"></h2></a>
               <div class="articleListFull-post__meta">
                 <span class="articleListFull-post__meta--author" v-show="getAuthor(item, 'writers')" v-html="getAuthor(item, 'writers') + ' ｜ '"></span>
-                <span class="articleListFull-post__meta--date" v-text="moment(item.publishedDate).format('Y.MM.DD')"></span>
+                <span class="articleListFull-post__meta--date" v-text="moment(new Date(item.publishedDate)).format('Y.MM.DD')"></span>
               </div>
               <a :href="getHref(item)" class="desktop-only"><p v-text="getBrief(item, 70)"></p></a>
             </div>

@@ -9,7 +9,7 @@
       <div class="article-leading-post">
         <div class="article-leading-post__meta">
           <span class="article-leading-post__meta--author" v-html="getAuthor(article)"></span>
-          <span class="article-leading-post__meta--date" v-text="moment(article.publishedDate).format('Y.MM.DD')"></span>
+          <span class="article-leading-post__meta--date" v-text="moment(new Date(article.publishedDate)).format('Y.MM.DD')"></span>
         </div>
         <div class="article-leading-post__content">
           <a :href="getHref(article)" :id="'leading-' + article.id"><h2 v-text="article.title"></h2></a>
@@ -37,7 +37,7 @@
                   <span class="article-leading-related-post__content--author" 
                         v-html="getAuthor(related, 'writers')"></span>
                   <span class="article-leading-related-post__content--date" 
-                        v-text="moment(related.publishedDate).format('Y.MM.DD')"></span>
+                        v-text="moment(new Date(related.publishedDate)).format('Y.MM.DD')"></span>
                 </div>
               </div>
             </div>
