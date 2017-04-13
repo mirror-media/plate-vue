@@ -42,7 +42,7 @@
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9"/>
             </pop-list>
-            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'photography')" slot="relatedlistBottom" />
+            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'wide')" slot="relatedlistBottom" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
