@@ -4,14 +4,14 @@
     <div class="related_list">
       <div class="related_item" v-for="(o, i) in relatedList">
         <div>
-          <a :href="o.slug" >
+          <a :href="getHref(o)" >
             <div class="related_item_img"
                   :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
             </div>
           </a>
         </div>
         <div class="related_item_title">
-          <a :href="o.slug" v-text="getTruncatedVal(o.title, 22)"></a>
+          <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)"></a>
         </div>
       </div>
     </div>
