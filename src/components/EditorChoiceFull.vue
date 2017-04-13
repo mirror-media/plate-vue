@@ -13,7 +13,7 @@
           </div>
           <div class="editorChoice-full-post__meta">
             <span class="editorChoice-full-post__meta--author" v-show="getAuthor(article, 'writers')" v-html="getAuthor(article, 'writers')"></span>
-            <span class="editorChoice-full-post__meta--date" v-text="moment(article.publishedDate).format('Y.MM.DD')"></span>
+            <span class="editorChoice-full-post__meta--date" v-text="moment(new Date(article.publishedDate)).format('Y.MM.DD')"></span>
           </div>
         </div>
       </template>

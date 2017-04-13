@@ -7,19 +7,19 @@
           <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10">
             <div class="proj_item">
               <div>
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name">
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-1'">
                   <div class="proj_item_img"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
               </div>
               <div class="proj_item_title">
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name">
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-2'">
                   {{ getTruncatedVal(o.title, 20) }}
                 </a>
               </div>
               <div class="proj_item_desc">
-                <a :href="`${siteUrl}/projects/${o.slug}`" >
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-3'">
                   {{ getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20) }}
                 </a>
               </div>

@@ -226,11 +226,10 @@ export default {
                   </blockquote>`
         case 'slideshow':
           return `<div class=\"slideshowImg\">
-                    <img data-src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\"
-                         data-srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
+                    <img src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\"
+                         srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
                                        ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
-                                       ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"
-                         class=\"swiper-lazy\"/>
+                                       ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\" />
                     <div class=\"img-caption\">${_.get(item.content, [ 0, 'description' ], '')}</div>
                   </div>`
         case 'unordered-list-item':

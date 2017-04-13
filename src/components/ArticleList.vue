@@ -86,7 +86,7 @@ export default {
     },
     sortedArticles () {
       return _.sortBy(this.articles, [ function (a) {
-        return -moment(a.publishedDate).unix()
+        return -moment(new Date(a.publishedDate)).unix()
       } ])
     }
   },
