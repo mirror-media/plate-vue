@@ -94,7 +94,11 @@
         related: 'full',
         clean: 'content',
         where: {
-          'slug': slug
+          'slug': {
+            '$in': [
+              slug
+            ]
+          }
         }
       }
     })
