@@ -71,8 +71,13 @@
     }
 
     .header-logoSearch {
-        display:flex;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-align-items:center;
         align-items:center;
+        -webkit-justify-content:space-between;
         justify-content:space-between;
         padding: 10px 20px;
     }
@@ -98,12 +103,14 @@
         padding:20px;
         background-color:#064f77;
         overflow-y:auto;
+        -webkit-transform:translate3d(-100%,0,0);
         transform:translate3d(-100%,0,0);
         transition:.5s ease;
         height: 100%;
     }
 
     .header-sidebar.open {
+        -webkit-transform:translate3d(0,0,0);
         transform:translate3d(0,0,0);
         transition:.5s ease;
     }
@@ -118,8 +125,13 @@
         height:24px;
     }
     .header-sidebar__menu {
-        display:flex;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: column;
         flex-direction:column;
+        -webkit-align-items:center;
         align-items:center;
     }
     .header-sidebar__menu > a {
@@ -146,7 +158,11 @@
     }
 
     .header-sidebar__menu--second {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
         display: flex;
+        -webkit-justify-content:space-between;
         justify-content:space-between;
     }
 
@@ -163,7 +179,11 @@
     }
 
     .header-sidebar__socialMedia {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
         display: flex;
+        -webkit-justify-content: space-between;
         justify-content: space-between;
         padding: 15px 20px;
         margin: 20px -20px -20px;
@@ -179,8 +199,13 @@
     }
 
     .header-searchbar {
-        display:flex;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-justify-content:space-between;
         justify-content:space-between;
+        -webkit-align-items:center;
         align-items:center;
         position:fixed;
         top:0;
@@ -191,11 +216,13 @@
         padding:20px;
         background-color:hsla(0,0%,100%,.9);
         box-shadow:0 3px 2px 0 rgba(0,0,0,.1), 0 2px 0 0 #fff;
+        -webkit-transform:translate3d(0,-75px,0);
         transform:translate3d(0,-75px,0);
         transition:.5s ease;
     }
 
     .header-searchbar.open {
+        -webkit-transform:translate3d(0,0,0);
         transform:translate3d(0,0,0);
         transition:.5s ease;
     }
@@ -213,7 +240,9 @@
     }
 
     .header-scrolled {
+        display: -webkit-flex;
         display:flex;
+        -webkit-justify-content:space-between;
         justify-content:space-between;
         align-items:center;
         position:fixed;
@@ -230,7 +259,10 @@
         height:32px;
     }
     .header-scrolled > div {
-        display:flex;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
     }
     .header-scrolled > div > a {
         margin-left:10px;
@@ -243,7 +275,9 @@
             margin:0 auto;
         }
         .header-logoSearch__search.desktop-only {
+            display: -webkit-flex !important;
             display:flex !important;
+            -webkit-align-items:center;
             align-items:center;
             width:250px;
             height:35px;
@@ -272,8 +306,11 @@
             height:33px;
         }
         .header-menu {
+            display: -webkit-flex;
             display:flex;
+            -webkit-flex-wrap: wrap;
             flex-wrap:wrap;
+            -webkit-justify-content:center;
             justify-content:center;
             width:1024px;
             margin:0 auto;
@@ -298,14 +335,21 @@
         }
 
         .header-menu--section {
-            display:flex;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
             background-color:#064f77;
         }
         .header-menu--section a {
             color:#fff;
         }
         .header-menu--topic {
-            display:flex;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-justify-content:space-between;
             justify-content:space-between;
             position:relative;
             background-color:#fff;
@@ -319,7 +363,11 @@
             line-height:46px;
         }
         .header-menu--topic > div {
-            display:flex;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-justify-content:space-between;
             justify-content:space-between;
             width:1024px;
             margin:0 auto;
