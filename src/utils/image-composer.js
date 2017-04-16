@@ -10,7 +10,7 @@ export const imageComposer = (article) => {
     }
   }
 
-  let source
+  // let source
   if (image) {
     const regex = /.+~(.+)/
     source = image.match(regex)

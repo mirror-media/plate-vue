@@ -89,7 +89,7 @@ const store = new Vuex.Store({
       })
     },
 
-    FETCH_EDITORCHOICE: ({ commit, state }, {}) => {
+    FETCH_EDITORCHOICE: ({ commit, state }, { params }) => {
       return state.editorChoice.items
         ? Promise.resolve(state.editorChoice)
         : fetchEditorChoice().then(editorChoice => commit('SET_EDITORCHOICE', { editorChoice }))
@@ -155,12 +155,6 @@ const store = new Vuex.Store({
       return fetchTopic(params).then(topic => {
         commit('SET_TOPIC_BY_UUID', { topic })
       })
-    },
-
-    FETCH_USER: ({ commit, state }, { id }) => {
-      return state.users[ id ]
-        ? Promise.resolve(state.users[ id ])
-        : fetchUser(id).then(user => commit('SET_USER', { user }))
     },
 
     FETCH_YOUTUBE_PLAY_LIST: ({ commit, state }, { limit, pageToken }) => {

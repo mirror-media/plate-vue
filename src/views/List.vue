@@ -72,7 +72,7 @@
 
 <script>
 
-import { AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
+import { AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { getImage, getValue } from '../utils/comm'
 import _ from 'lodash'
@@ -114,7 +114,6 @@ const fetchListData = (store, type, sectionStyle, to) => {
         page: PAGE,
         max_results: MAXRESULT
       })
-      break
     case SECTION:
       uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
       switch (sectionStyle) {
@@ -124,14 +123,12 @@ const fetchListData = (store, type, sectionStyle, to) => {
             max_results: MAXRESULT,
             related: 'full'
           })
-          break
         default:
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: PAGE,
             max_results: MAXRESULT
           })
       }
-      break
     case TAG:
       uuid = to.params.tagId
       return fetchTag(store, uuid).then(() => {
@@ -140,7 +137,6 @@ const fetchListData = (store, type, sectionStyle, to) => {
           max_results: MAXRESULT
         })
       })
-      break
     case CATEGORY:
       const catName = to.params.title
       switch (catName) {
@@ -149,24 +145,20 @@ const fetchListData = (store, type, sectionStyle, to) => {
             page: PAGE,
             max_results: MAXRESULT
           })
-          break
         case 'videohub':
           return fetchYoutubePlaylist(store, MAXRESULT)
-          break
         case 'campaign':
           uuid = CAMPAIGN_ID
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
           })
-          break
         case 'marketing':
           uuid = MARKETING_ID
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
           })
-          break
         default:
           uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
@@ -174,11 +166,10 @@ const fetchListData = (store, type, sectionStyle, to) => {
             max_results: MAXRESULT
           })
       }
-      break
     case TOPIC:
       uuid = to.params.topicId
       const topic = _.find(_.get(store.state.commonData, [ 'topics', 'items' ]), { 'id': uuid })
-      
+
       return fetchArticlesByUuid(store, uuid, TOPIC, {
         page: PAGE,
         max_results: LOADMOREMAXRESULT
@@ -189,7 +180,6 @@ const fetchListData = (store, type, sectionStyle, to) => {
           })
         }) : null
       })
-      break
   }
 }
 
@@ -201,7 +191,6 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
       return fetchArticlesByAuthor(store, uuid, {
         page: PAGE
       })
-      break
     case SECTION:
       uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
       switch (sectionStyle) {
@@ -211,14 +200,12 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
             max_results: MAXRESULT,
             related: 'full'
           })
-          break
         default:
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: PAGE,
             max_results: MAXRESULT
           })
       }
-      break
     case TAG:
       uuid = to.params.tagId
       return fetchTag(store, uuid).then(() => {
@@ -227,7 +214,6 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
           max_results: MAXRESULT
         })
       })
-      break
     case CATEGORY:
       const catName = to.params.title
       switch (catName) {
@@ -236,24 +222,20 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
             page: PAGE,
             max_results: MAXRESULT
           })
-          break
         case 'videohub':
           return fetchYoutubePlaylist(store, MAXRESULT)
-          break
         case 'campaign':
           uuid = CAMPAIGN_ID
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
           })
-          break
         case 'marketing':
           uuid = MARKETING_ID
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: PAGE,
             max_results: MAXRESULT
           })
-          break
         default:
           uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
@@ -261,7 +243,6 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
             max_results: MAXRESULT
           })
       }
-      break
     case TOPIC:
       uuid = to.params.topicId
       const topic = _.find(_.get(store.state.commonData, [ 'topics', 'items' ]), { 'id': uuid })
@@ -275,7 +256,6 @@ const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
           })
         }) : null
       })
-      break
   }
 }
 
@@ -392,17 +372,17 @@ export default {
   beforeRouteEnter (to, from, next) {
     const type = _.toUpper(_.split(to.path, '/')[1])
     if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
-      console.log([to, from])
-        const sectionStyle = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]),
+      console.log([ to, from ])
+      const sectionStyle = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]),
             { 'name': _.get(to, [ 'params', 'title' ]) }), [ 'style' ])
-        fetchCommonData(store).then(() => {
+      fetchCommonData(store).then(() => {
+        console.log('fetch common data sucessfully')
+        fetchListData(store, type, sectionStyle, to).then(() => {
           console.log('fetch common data sucessfully')
-          fetchListData(store, type, sectionStyle, to).then(() => {
-            console.log('fetch common data sucessfully')            
-          }).then(() => {
-            next()
-          })
+        }).then(() => {
+          next()
         })
+      })
     } else {
       console.log('first rendering')
       next()
@@ -424,7 +404,7 @@ export default {
       loading: false,
       page: PAGE,
       showDfpCoverAdFlag: false,
-      viewport: undefined,
+      viewport: undefined
     }
   },
   computed: {
@@ -432,17 +412,14 @@ export default {
       switch (this.type) {
         case AUTHOR:
           return this.$store.state.articles
-          break
         case SECTION:
           if (this.$route.params.title === 'topic') {
             return this.$store.state.commonData.topics
           } else {
             return this.$store.state.articlesByUUID
           }
-          break
         case TOPIC:
           return this.$store.state.articlesByUUID
-          break
         default:
           return this.$store.state.articlesByUUID
       }
@@ -474,21 +451,21 @@ export default {
           return null
       }
     },
-    dfpOptions() {
+    dfpOptions () {
       return {
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
-          if(position === 'LMBCVR' || position === 'MBCVR') {
+          if (position === 'LMBCVR' || position === 'MBCVR') {
             const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-            if(adDisplayStatus === 'none') {
+            if (adDisplayStatus === 'none') {
               this.showDfpCoverAdFlag = false
             } else {
               this.updateCookie()
             }
           }
         },
-        setCentering: true,
+        setCentering: true
       }
     },
     hasDFP () {
@@ -498,10 +475,8 @@ export default {
       switch (this.name) {
         case 'audio':
           return _.get(this.audios, [ 'items', 'length' ], 0) < _.get(this.audios, [ 'meta', 'total' ], 0)
-          break
         case 'videohub':
           return _.get(this.playlist, [ 'items', 'length' ], 0) < _.get(this.playlist, [ 'pageInfo', 'totalResults' ], 0)
-          break
         default:
           return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
       }
@@ -557,7 +532,6 @@ export default {
       switch (this.type) {
         case TAG:
           return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
-          break
         case TOPIC:
           if (this.$route.params.topicId === TOPIC_WATCH_ID) {
             return 'full'
@@ -594,7 +568,6 @@ export default {
           } else {
             return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'title' ])
           }
-          break
         case TAG:
           return _.get(this.tag, [ 'name' ])
         case TOPIC:
@@ -632,7 +605,7 @@ export default {
     }
   },
   methods: {
-    closeCoverAd() {
+    closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
     getImage,
@@ -746,9 +719,9 @@ export default {
           }
       }
     },
-    updateCookie() {
+    updateCookie () {
       const cookie = Cookie.get('visited')
-      if(!cookie) {
+      if (!cookie) {
         Cookie.set('visited', 'true', { expires: '10m' })
         this.showDfpCoverAdFlag = true
       } else {
@@ -766,11 +739,11 @@ export default {
         custScript.innerHTML = this.customJS
       }
     },
-    updateViewport() {
-        if(process.env.VUE_ENV === 'client') {
-          this.viewport = document.querySelector('body').offsetWidth
-        }
-    },
+    updateViewport () {
+      if (process.env.VUE_ENV === 'client') {
+        this.viewport = document.querySelector('body').offsetWidth
+      }
+    }
   },
   metaInfo () {
     const type = this.type
@@ -784,7 +757,7 @@ export default {
       case SECTION:
         const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
         sectionName = _.get(this, [ 'sectionName' ])
-        ogImage = imageURL ? imageURL : '/public/notImage.png'
+        ogImage = imageURL || '/public/notImage.png'
         ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? _.get(this.section, [ 'ogTitle' ]) : _.get(this.section, [ 'title' ], this.title)
         ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? _.get(this.section, [ 'ogDescription' ]) : _.get(this.section, [ 'description' ])
         break
@@ -802,15 +775,18 @@ export default {
         ogImage = '/public/notImage.png'
         ogDescription = description
     }
-    if(!ogTitle && process.env.VUE_ENV === 'server') {
-      throw { massage : 'Page Not Found', code: '404' }
+    if (!ogTitle && process.env.VUE_ENV === 'server') {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
     }
-    const title = ogTitle + ' - 鏡週刊 Mirror Media'
+    const title = ogTitle + ` - ${SITE_TITLE}`
 
     return {
       title,
       meta: [
-          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
+          { name: 'keywords', content: SITE_KEYWORDS },
           { name: 'description', content: ogDescription },
           { name: 'section-name', content: sectionName },
           { name: 'twitter:card', content: 'summary_large_image' },

@@ -6,5 +6,9 @@
     'rules': { 
       'array-bracket-spacing': [ 2, 'always' ],
       'camelcase': [0, 'never']
-    } 
+    },
+    'globals': {
+      'location': true,
+      'source': true
+    }
 }

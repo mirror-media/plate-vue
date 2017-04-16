@@ -25,7 +25,7 @@
         </div>
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
-            <aside class="article_aside mobile-hidden" slot="aside" v-if="ifSingleCol">
+            <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" ></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" ></vue-dfp>
@@ -71,7 +71,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
@@ -113,25 +113,24 @@
   }
 
   const fetchSSRData = (store) => {
-    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] } )
+    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
   }
 
   const fetchCommonData = (store) => {
-    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] } )
+    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
   }
 
   const fetchData = (store) => {
-    return  Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
+    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
   }
-
 
   export default {
     name: 'article-view',
     preFetch: fetchData,
-    beforeRouteEnter(to, from, next) {
-      if(process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
+    beforeRouteEnter (to, from, next) {
+      if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
         const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
-        if(!_targetArticle) {
+        if (!_targetArticle) {
           fetchArticles(store, to.params.slug).then(() => {
             const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
             return fetchLatestArticle(store, {
@@ -151,7 +150,7 @@
         next()
       }
     },
-    beforeRouteUpdate(to, from, next) {
+    beforeRouteUpdate (to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
         const sections = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
         return fetchLatestArticle(store, {
@@ -164,7 +163,7 @@
         })
       })
     },
-    beforeMount() {
+    beforeMount () {
       const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
       fetchLatestArticle(store, {
         sort: '-publishedDate',
@@ -185,43 +184,43 @@
       'related-list': RelatedList,
       'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
-      'vue-dfp-provider': VueDfpProvider,
+      'vue-dfp-provider': VueDfpProvider
     },
-    data() {
+    data () {
       return {
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpUnits: DFP_UNITS,
         state: {},
         showDfpCoverAdFlag: false,
-        viewport: undefined,
+        viewport: undefined
       }
     },
     computed: {
-      articleUrl() {
+      articleUrl () {
         return `${SITE_URL}/story/${this.currArticleSlug}/`
       },
-      articleData() {
-        const _data = _.find(_.get(this.$store, [ 'state', 'articles', 'items']), { 'slug' : this.currArticleSlug })
-        return _data ? _data : {}
+      articleData () {
+        const _data = _.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.currArticleSlug })
+        return _data || {}
       },
-      articleStyle() {
+      articleStyle () {
         return _.get(this.articleData, [ 'style' ], '')
       },
-      currArticleSlug() {
+      currArticleSlug () {
         return this.$store.state.route.params.slug
       },
-      commonData () { 
-        return this.$store.state.commonData 
+      commonData () {
+        return this.$store.state.commonData
       },
-      dfpOptions() {
+      dfpOptions () {
         return {
           afterEachAdLoaded: (event) => {
             const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
             const position = dfpCover.getAttribute('pos')
-            if(position === 'LMBCVR' || position === 'MBCVR') {
+            if (position === 'LMBCVR' || position === 'MBCVR') {
               const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-              if(adDisplayStatus === 'none') {
+              if (adDisplayStatus === 'none') {
                 this.showDfpCoverAdFlag = false
               } else {
                 this.updateCookie()
@@ -229,71 +228,68 @@
             }
           },
           setCentering: true,
-          sizeMapping: DFP_SIZE_MAPPING,
+          sizeMapping: DFP_SIZE_MAPPING
         }
       },
-      fbAppId() {
+      fbAppId () {
         return _.get(this.$store, [ 'state', 'fbAppId' ])
-      }, 
-      fbCommentDiv() {
+      },
+      fbCommentDiv () {
         return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
       },
-      heroCaption() {
+      heroCaption () {
         return _.get(this.articleData, [ 'heroCaption' ], '')
       },
-      heroImage() {
+      heroImage () {
         return _.get(this.articleData, [ 'heroImage' ])
       },
-      heroVideo() {
+      heroVideo () {
         const { heroImage, heroVideo, ogImage } = this.articleData
-        const heroImgUrl= _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
+        const heroImgUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const poster = (ogImgUrl) ? ogImgUrl : ((heroImgUrl) ? heroImgUrl : '/asset/review.png')
+        const poster = ogImgUrl || (heroImgUrl || '/asset/review.png')
         return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
       },
-      ifRenderAside() {
-        return (this.viewport < 1200) ? false : true
+      ifRenderAside () {
+        return this.viewport >= 1200
       },
-      ifShowPoplist() {
+      ifShowPoplist () {
         return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
       },
-      ifSingleCol() {
-        return (this.articleStyle === 'wide' || !this.ifRenderAside) ? false : true
+      ifSingleCol () {
+        return (this.articleStyle === 'wide' || !this.ifRenderAside)
       },
-      latestList() {
+      latestList () {
         return _.get(this.$store.state.latestArticle, [ 'items' ], [])
       },
-      photography() {
-        const { style } = this.articleData;
-      },
-      popularlist() {
+      popularlist () {
         const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
         return report
       },
-      projectlist() {
+      projectlist () {
         const items = _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
         return items
       },
-      relateds() {
+      relateds () {
         return _.get(this.articleData, [ 'relateds' ])
       },
-      sectionId() {
+      sectionId () {
         return _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
       },
-      styleDfpAd() {
+      styleDfpAd () {
         return (this.viewport < 321) ? 'ad-fit' : ''
-      },
+      }
     },
     methods: {
-      closeCoverAd() {
+      closeCoverAd () {
         this.showDfpCoverAdFlag = false
       },
       getTruncatedVal,
-      getValue(o = {}, p = [], d = '') {
-        return _.get(o, p, d);
+      getValue (o = {}, p = [], d = '') {
+        return _.get(o, p, d)
       },
-      insertFbSdkScript() {
-        if(!window.FB) {
+      insertFbSdkScript () {
+        if (!window.FB) {
           const fbSdkScript = document.createElement('script')
           fbSdkScript.setAttribute('id', 'fbsdk')
           fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + this.fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
@@ -302,42 +298,45 @@
           document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
         } else {
           window.FB && window.FB.init({
-            appId      : this.fbAppId,
-            xfbml      : true,
-            version    : 'v2.0'
+            appId: this.fbAppId,
+            xfbml: true,
+            version: 'v2.0'
           })
           window.FB && window.FB.XFBML.parse()
         }
       },
-      updateCookie() {
+      updateCookie () {
         const cookie = Cookie.get('visited')
-        if(!cookie) {
+        if (!cookie) {
           Cookie.set('visited', 'true', { expires: '10m' })
           this.showDfpCoverAdFlag = true
         } else {
           this.showDfpCoverAdFlag = false
         }
       },
-      updateViewport() {
+      updateViewport () {
         const browser = typeof window !== 'undefined'
-        if(browser) {
+        if (browser) {
           this.viewport = document.querySelector('body').offsetWidth
         }
-      },
+      }
     },
-    mounted() {
+    mounted () {
       this.insertFbSdkScript()
       this.updateViewport()
-      this.clientSideFlag = (process.env.VUE_ENV === 'client') ? true : false
+      this.clientSideFlag = process.env.VUE_ENV === 'client'
       window.addEventListener('resize', () => {
         this.updateViewport()
       })
     },
-    metaInfo() {
-      if(!this.articleData.slug && process.env.VUE_ENV === 'server') {
-        throw { massage : 'Page Not Found', code: '404' }
+    metaInfo () {
+      if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
+        const e = new Error()
+        e.massage = 'Page Not Found'
+        e.code = '404'
+        throw e
       }
-      const { 
+      const {
         brief = {},
         categories = {},
         heroImage = {},
@@ -359,9 +358,9 @@
       const topicId = _.get(topics, [ '_id' ], '')
 
       return {
-        title: title + ' － 鏡週刊 Mirror Media',
+        title: title + ` － ${SITE_TITLE}`,
         meta: [
-          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說,' + pureTags.toString() },
+          { name: 'keywords', content: SITE_KEYWORDS + ',' + pureTags.toString() },
           { name: 'description', content: pureBrief },
           { name: 'section-name', content: sectionName },
           { name: 'category-name', content: categorieName },
@@ -378,20 +377,20 @@
           { property: 'og:title', content: (ogTitle.length > 0) ? ogTitle + ' － 鏡週刊 Mirror Media' : title + ' － 鏡週刊 Mirror Media' },
           { property: 'og:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
           { property: 'og:url', content: SITE_URL + '/story/' + slug + '/' },
-          { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
+          { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') }
         ]
       }
     },
     watch: {
       articleUrl: () => {
         window.FB && window.FB.init({
-          appId      : this.fbAppId,
-          xfbml      : true,
-          version    : 'v2.0'
+          appId: this.fbAppId,
+          xfbml: true,
+          version: 'v2.0'
         })
         window.FB && window.FB.XFBML.parse()
       }
-    },
+    }
   }
 
 </script>

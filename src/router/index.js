@@ -43,12 +43,12 @@ const router = new Router({
 })
 
 if (process.env.VUE_ENV === 'client') {
-  ga('create', GAID, 'auto')
+  window.ga('create', GAID, 'auto')
 }
 
 router.afterEach(route => {
   if (process.env.VUE_ENV === 'client') {
-    setTimeout(() => ga('send', 'pageview', route.path), 500)
+    setTimeout(() => window.ga('send', 'pageview', route.path), 500)
   }
 })
 

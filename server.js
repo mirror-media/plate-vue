@@ -124,12 +124,17 @@ app.get('*', (req, res, next) => {
     }
   })
 
+  let ifPageNotFound = false
   renderStream.on('error', err => {
     if (err && err.code === '404') {
       // res.status(404).end('404 | Page Not Found')
-      res.redirect('/404')
+      // res.redirect('/404')
+      ifPageNotFound = true
+      res.writeHead(302, {
+        'Location': '/404'
+      })
+      res.end()
       console.error(err)
-      process.exit(1)
       return
     }
     // Render Error Page or Redirect
@@ -137,6 +142,11 @@ app.get('*', (req, res, next) => {
     console.error(`error during renderStream.on error : ${req.url}`)
     console.error(err)
     process.exit(1)
+  })
+  res.on('finish', function () {
+    if (ifPageNotFound) {
+      process.exit(1)
+    }
   })
 })
 

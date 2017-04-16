@@ -327,7 +327,7 @@
         }
       },
       toggleDesc () {
-        this.descSwitch = (this.descSwitch) ? false : true
+        this.descSwitch = !this.descSwitch
       },
       updateProgressbar (percentage) {
         const _progressBar = document.querySelector('.progress-bar')
@@ -335,13 +335,12 @@
       },
       updateIfLandscape () {
         const browser = typeof window !== 'undefined'
-        this.ifLandscape = (browser && window.innerHeight < window.innerWidth) ? true : false
+        this.ifLandscape = browser && window.innerHeight < window.innerWidth
       }
     },
     mounted () {
       this.disableScroll()
       this.scrollOnePage()
-      this.updateIndex()
       this.updateIfLandscape()
 
       window.addEventListener('resize', () => {
