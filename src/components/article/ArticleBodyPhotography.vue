@@ -194,7 +194,7 @@
             this.sideProgressHandler('pass', i)
           }
         } else {
-          for(let i = targIndex - 1; i < this.sectIndex; i++) {
+          for (let i = targIndex - 1; i < this.sectIndex; i++) {
             this.sideProgressHandler('back', i)
           }
         }
@@ -224,7 +224,7 @@
         window.addEventListener('wheel', (e) => {
           const _derection = e.wheelDelta
           if (!this.scrollingFlag && _derection < 0) {
-            if ((this.sectIndex >= this.sectCount + 1)) { 
+            if ((this.sectIndex >= this.sectCount + 1)) {
               this.enableScroll()
               return
             }
@@ -246,17 +246,17 @@
         window.addEventListener('touchmove', (e) => {
           const _currTouchClientY = e.touches[ 0 ].clientY
           const _lastTouchClientY = window.touchClientY || _currTouchClientY
-          if(!this.scrollingFlag && _currTouchClientY < _lastTouchClientY) {
-            if((this.sectIndex >= this.sectCount + 1)) { 
+          if (!this.scrollingFlag && _currTouchClientY < _lastTouchClientY) {
+            if ((this.sectIndex >= this.sectCount + 1)) {
               this.enableScroll()
-              return 
+              return
             }
             this.sectIndex = (this.sectIndex < this.sectCount + 1) ? this.sectIndex + 1 : this.sectIndex
             this.scrollingFlag = true
             this.smoothScroll(`section.pic-section:nth-child(${this.sectIndex})`)
-          } else if(!this.scrollingFlag && _currTouchClientY > _lastTouchClientY) {
-            if((this.sectIndex <= 2)) { 
-              return 
+          } else if (!this.scrollingFlag && _currTouchClientY > _lastTouchClientY) {
+            if ((this.sectIndex <= 2)) {
+              return
             }
             this.sectIndex = (this.sectIndex > 2) ? this.sectIndex - 1 : this.sectIndex
             this.scrollingFlag = true
@@ -268,17 +268,15 @@
           }, 200)
         })
         window.addEventListener('scroll', (e) => {
-          const lastTop = window.currTop || currTop
           const currTop = this.currentYPosition()
-          const distance = currTop - lastTop
-          let _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`) 
-          if((this.sectIndex >= this.sectCount + 1 && currTop >= _targEle)) { 
+          const _targEle = this.elmYPosition(`section.pic-section:nth-child(${this.sectIndex})`)
+          if ((this.sectIndex >= this.sectCount + 1 && currTop >= _targEle)) {
             this.enableScroll()
             this.scrollingFlag = false
-            return 
+            return
           } else {
             this.disableScroll()
-            if(this.scrollingFlag && currTop === _targEle) {
+            if (this.scrollingFlag && currTop === _targEle) {
               setTimeout(() => {
                 this.scrollingFlag = false
                 window.currTop = _targEle
@@ -288,8 +286,8 @@
           }
           window.currTop = currTop
 
-          this.updateProgressbar(((this.sectIndex - 1) * 100)/this.sectCount)
-          if(((this.sectIndex - 1) * 100)/this.sectCount >= 100) {
+          this.updateProgressbar(((this.sectIndex - 1) * 100) / this.sectCount)
+          if (((this.sectIndex - 1) * 100) / this.sectCount >= 100) {
             document.querySelector('.go-next-page').setAttribute('style', 'display: none;')
             document.querySelector('.btn-toggle-description').setAttribute('style', 'display: none;')
           } else {
@@ -302,7 +300,7 @@
         shareGooglePlus({ route: this.$route.path })
       },
       shareLine () {
-        shareLine({ 
+        shareLine({
           route: this.$route.path,
           title: document.querySelector('meta[property="og:title"]').getAttribute('content')
         })
@@ -313,8 +311,8 @@
       sideProgressHandler (action, index) {
         const _targElement = document.querySelector(`.stick:nth-child(${index})`)
         const _targContainer = document.querySelector('.stick-container')
-        if(!_targElement) { return }
-        switch(action) {
+        if (!_targElement) { return }
+        switch (action) {
           case 'pass':
             _targElement.setAttribute('style', `bottom: ${(_targContainer.offsetHeight - (index * 7))}px;`)
             break
@@ -331,17 +329,14 @@
       toggleDesc () {
         this.descSwitch = (this.descSwitch) ? false : true
       },
-      updateIndex () {
-        
-      },
-      updateProgressbar (percentage){
+      updateProgressbar (percentage) {
         const _progressBar = document.querySelector('.progress-bar')
         _progressBar.setAttribute('style', `left: ${percentage}%;`)
       },
       updateIfLandscape () {
         const browser = typeof window !== 'undefined'
-        this.ifLandscape =  (browser && window.innerHeight < window.innerWidth) ? true : false
-      },
+        this.ifLandscape = (browser && window.innerHeight < window.innerWidth) ? true : false
+      }
     },
     mounted () {
       this.disableScroll()

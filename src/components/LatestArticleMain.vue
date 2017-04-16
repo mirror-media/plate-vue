@@ -63,10 +63,9 @@ export default {
         device = 'label-width-tablet'
       }
 
-      const style = { 
-        backgroundColor: _.get( SECTION_MAP, [sectionId, 'bgcolor'], '#bcbcbc'),
-        width:  _.get( SECTION_MAP, [sectionId, device], (this.viewport > 599 && this.viewport < 1200) ? '60px' : 'auto'),
-        // display: (sectionId || (!sectionId && this.viewport < 1199)) ? 'flex' : 'none!important'
+      const style = {
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc'),
+        width: _.get(SECTION_MAP, [ sectionId, device ], (this.viewport > 599 && this.viewport < 1200) ? '60px' : 'auto')
       }
       return style
     },

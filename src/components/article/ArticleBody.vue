@@ -117,7 +117,7 @@ export default {
       return datetime
     },
     popularlist () {
-      const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ], { report : []} )
+      const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ], { report: [] })
       return report
     },
     styleForCurrArticle () {
@@ -138,7 +138,7 @@ export default {
         paginationClickable: true,
         paginationHide: false,
         setNavBtn: true,
-        lazyLoadingInPrevNextAmount: 2,
+        lazyLoadingInPrevNextAmount: 2
       }
     },
     subtitle () {
@@ -157,22 +157,22 @@ export default {
     },
     firstTwoUnstyledParagraph () {
       const { content } = this.articleData
+      const records = []
       let count = 0
       let index = 0
       let lastUnstyled = 0
-      let records = []
-      while(count < 2 && index < content[ 'apiData' ].length) {
-        if(content[ 'apiData' ][ index ][ 'type' ] ===  'unstyled' && (lastUnstyled + 4) < index) {
-          count ++
+      while (count < 2 && index < content[ 'apiData' ].length) {
+        if (content[ 'apiData' ][ index ][ 'type' ] === 'unstyled' && (lastUnstyled + 4) < index) {
+          count++
           lastUnstyled = index
           records.push(index)
         }
-        index ++
+        index++
       }
       return records
     }
   },
-  data() {
+  data () {
     return {
       renderingStartTime: undefined
     }
@@ -248,7 +248,7 @@ export default {
         default:
           return
       }
-    },
+    }
   },
   mounted () {},
   name: 'article-body',
@@ -262,7 +262,7 @@ export default {
     viewport: {
       default: () => { return undefined }
     }
-  },
+  }
 }
 </script>
 <style lang="stylus">
