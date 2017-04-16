@@ -72,7 +72,7 @@
 
 <script>
 
-import { AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
+import { AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { getImage, getValue } from '../utils/comm'
 import _ from 'lodash'
@@ -781,12 +781,12 @@ export default {
       e.code = '404'
       throw e
     }
-    const title = ogTitle + ' - 鏡週刊 Mirror Media'
+    const title = ogTitle + ` - ${SITE_TITLE}`
 
     return {
       title,
       meta: [
-          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
+          { name: 'keywords', content: SITE_KEYWORDS },
           { name: 'description', content: ogDescription },
           { name: 'section-name', content: sectionName },
           { name: 'twitter:card', content: 'summary_large_image' },

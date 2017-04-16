@@ -71,7 +71,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
   import { getTruncatedVal } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
@@ -358,9 +358,9 @@
       const topicId = _.get(topics, [ '_id' ], '')
 
       return {
-        title: title + ' － 鏡週刊 Mirror Media',
+        title: title + ` － ${SITE_TITLE}`,
         meta: [
-          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說,' + pureTags.toString() },
+          { name: 'keywords', content: SITE_KEYWORDS + ',' + pureTags.toString() },
           { name: 'description', content: pureBrief },
           { name: 'section-name', content: sectionName },
           { name: 'category-name', content: categorieName },

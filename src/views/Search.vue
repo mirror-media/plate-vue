@@ -21,6 +21,7 @@
 <script>
 
 import _ from 'lodash'
+import { SITE_TITLE } from '../constants'
 import ArticleList from '../components/ArticleList.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
@@ -108,7 +109,7 @@ export default {
     }
   },
   metaInfo () {
-    let title = '鏡傳媒 Mirror Media'
+    let title = SITE_TITLE
     title = (this.title) ? this.title + ' - ' + title : title
     return {
       title
