@@ -102,11 +102,11 @@ export default {
     },
     credit () {
       const { cameraMan, designers, engineers, extendByline, photographers, writers } = this.articleData
-      const creditWriterStr = (writers.length > 0) ? '文｜' + writers.filter((o) => (o ? true : false)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.filter((o) => (o ? true : false)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.filter((o) => (o ? true : false)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.filter((o) => (o ? true : false)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.filter((o) => (o ? true : false)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditWriterStr = (writers.length > 0) ? '文｜' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}/${o.name}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
       return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
     },

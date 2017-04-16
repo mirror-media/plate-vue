@@ -48,17 +48,16 @@ import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
-import truncate from 'truncate'
 
 const MAXRESULT = 20
 const PAGE = 1
 
 const fetchSSRData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'choices' ] } )
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'choices' ] })
 }
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] } )
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] })
 }
 
 const fetchEvent = (store) => {
@@ -77,7 +76,7 @@ const fetchLatestArticle = (store, page) => {
     params: {
       'max_results': MAXRESULT,
       'page': page,
-      'sort':'-publishedDate'
+      'sort': '-publishedDate'
     }
   })
 }
@@ -97,9 +96,9 @@ export default {
   },
   preFetch: fetchSSRData,
   beforeRouteEnter (to, from, next) {
-    if(process.env.VUE_ENV === 'client' && to.path !== from.path) {
+    if (process.env.VUE_ENV === 'client' && to.path !== from.path) {
       next(vm => {
-        if (!_.get(vm.$store, ['state', 'commonData', 'sections', 'items'], null) || !_.get(vm.$store, ['state', 'commonData', 'choices', 'items'], null)) {
+        if (!_.get(vm.$store, [ 'state', 'commonData', 'sections', 'items' ], null) || !_.get(vm.$store, [ 'state', 'commonData', 'choices', 'items' ], null)) {
           fetchSSRData(vm.$store)
         }
       })
@@ -111,87 +110,87 @@ export default {
     return {
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
-      hasScrollLoadMore: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE) > 1 ? true : false,
+      hasScrollLoadMore: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE) > 1,
       loading: false,
-      page: _.get(this.$store.state, ['latestArticles', 'meta', 'page'], PAGE),
+      page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
       showDfpCoverAdFlag: false,
-      viewport: undefined,
+      viewport: undefined
     }
   },
   computed: {
     commonData () {
       return this.$store.state.commonData
     },
-    dfpOptions() {
+    dfpOptions () {
       return {
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
-          if(position === 'LMBCVR' || position === 'MBCVR') {
+          if (position === 'LMBCVR' || position === 'MBCVR') {
             const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-            if(adDisplayStatus === 'none') {
+            if (adDisplayStatus === 'none') {
               this.showDfpCoverAdFlag = false
             } else {
               this.updateCookie()
             }
           }
         },
-        setCentering: true,
+        setCentering: true
       }
     },
     editorChoice () {
-      if ( _.get(this.$store.state.editorChoice, ['items', 'length']) > 4) {
-        return _.get(this.$store.state.editorChoice, ['items'])
+      if (_.get(this.$store.state.editorChoice, [ 'items', 'length' ]) > 4) {
+        return _.get(this.$store.state.editorChoice, [ 'items' ])
       } else {
-        let orig = _.values(_.get(this.$store.state, ['editorChoice', 'items']))
-        let xorBy = _.xorBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'id']), 'title')
-        return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length']))))
+        const orig = _.values(_.get(this.$store.state, [ 'editorChoice', 'items' ]))
+        const xorBy = _.xorBy(_.get(this.$store.state, [ 'editorChoice', 'items' ]), _.get(this.$store.state, [ 'latestArticles', 'id' ]), 'title')
+        return _.concat(orig, _.take(xorBy, (5 - _.get(this.$store.state.editorChoice, [ 'items', 'length' ]))))
       }
     },
     event () {
       return this.$store.state.event
     },
     eventData () {
-      return _.get(this.event, ['items', '0'])
+      return _.get(this.event, [ 'items', '0' ])
     },
     eventType () {
-      return this.is404 ? 'image' : _.get(this.event, ['items', '0', 'eventType'])
+      return this.is404 ? 'image' : _.get(this.event, [ 'items', '0', 'eventType' ])
     },
     hasEvent () {
-      const _eventStartTime = moment(new Date(_.get(this.event, ['items', 0, 'startDate'])))
-      const _eventEndTime = moment(new Date(_.get(this.event, ['items', 0, 'endDate'])))
+      const _eventStartTime = moment(new Date(_.get(this.event, [ 'items', 0, 'startDate' ])))
+      const _eventEndTime = moment(new Date(_.get(this.event, [ 'items', 0, 'endDate' ])))
       const _now = moment()
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime)) ? true : false
+      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     hasMore () {
       return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticles, [ 'meta', 'total' ], 0)
     },
     latestArticle () {
-      let unionBy = _.unionBy(_.get(this.$store.state, ['editorChoice', 'items']), _.get(this.$store.state, ['latestArticles', 'items']), 'id')
-      let xorBy = _.xorBy( _.get(this.$store.state, ['editorChoice', 'items']), unionBy, 'id')
-      let latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state.editorChoice, ['items', 'length'])))
+      const unionBy = _.unionBy(_.get(this.$store.state, [ 'editorChoice', 'items' ]), _.get(this.$store.state, [ 'latestArticles', 'items' ]), 'id')
+      const xorBy = _.xorBy(_.get(this.$store.state, [ 'editorChoice', 'items' ]), unionBy, 'id')
+      const latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state.editorChoice, [ 'items', 'length' ])))
       return latestArticle
     },
     projects () {
-      return _.get(this.commonData, ['projects', 'items'])
-    },
+      return _.get(this.commonData, [ 'projects', 'items' ])
+    }
   },
   methods: {
-    closeCoverAd() {
+    closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
     handleScroll () {
       window.onscroll = (e) => {
         const _latestArticleDiv = document.querySelector('#latestArticle')
-        if(!_latestArticleDiv) { return }
-        let firstPageArticleHeight = _latestArticleDiv.offsetHeight
-        let firstPageArticleBottom = elmYPosition('#latestArticle') + ( firstPageArticleHeight )
-        let currentBottom = currentYPosition() + window.innerHeight
-        if ( ( currentBottom > firstPageArticleBottom ) && !this.hasScrollLoadMore) {
+        if (!_latestArticleDiv) { return }
+        const firstPageArticleHeight = _latestArticleDiv.offsetHeight
+        const firstPageArticleBottom = elmYPosition('#latestArticle') + (firstPageArticleHeight)
+        const currentBottom = currentYPosition() + window.innerHeight
+        if ((currentBottom > firstPageArticleBottom) && !this.hasScrollLoadMore) {
           this.hasScrollLoadMore = true
           this.loadMore()
         }
-      } 
+      }
     },
     loadMore () {
       this.page += 1
@@ -201,29 +200,29 @@ export default {
         this.loading = false
       })
     },
-    updateCookie() {
+    updateCookie () {
       const cookie = Cookie.get('visited')
-      if(!cookie) {
+      if (!cookie) {
         Cookie.set('visited', 'true', { expires: '10m' })
         this.showDfpCoverAdFlag = true
       } else {
         this.showDfpCoverAdFlag = false
       }
     },
-    updateViewport() {
-      if(process.env.VUE_ENV === 'client') {
+    updateViewport () {
+      if (process.env.VUE_ENV === 'client') {
         this.viewport = document.querySelector('body').offsetWidth
       }
-    },
+    }
   },
   metaInfo () {
-    let title = '鏡週刊 Mirror Media'
-    let description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
+    const title = '鏡週刊 Mirror Media'
+    const description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
 
     return {
       title,
       meta: [
-          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說'},
+          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
           { name: 'description', content: description },
           { name: 'twitter:card', content: 'summary_large_image' },
           { name: 'twitter:title', content: title },
@@ -237,16 +236,16 @@ export default {
           { property: 'og:title', content: title },
           { property: 'og:description', content: description },
           { property: 'og:url', content: SITE_URL },
-          { property: 'og:image', content: '/public/notImage.png' },
+          { property: 'og:image', content: '/public/notImage.png' }
       ]
     }
   },
-  beforeMount() {
+  beforeMount () {
     fetchCommonData(this.$store)
     fetchEvent(this.$store)
   },
-  mounted() {
-    window.utmx('url','A/B')
+  mounted () {
+    window.utmx('url', 'A/B')
     this.handleScroll()
     this.updateViewport()
     window.addEventListener('resize', () => {
@@ -254,7 +253,7 @@ export default {
     })
   }
 }
-  
+
 </script>
 <style lang="stylus" scoped>
 .editorChoice

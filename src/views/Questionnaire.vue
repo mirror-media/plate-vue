@@ -213,8 +213,11 @@
     },
     mounted () {},
     metaInfo () {
-      if(!this.questionnaireData && process.env.VUE_ENV === 'server') {
-        throw { massage : 'Page Not Found', code: '404' }
+      if (!this.questionnaireData && process.env.VUE_ENV === 'server') {
+        const e = new Error()
+        e.massage = 'Page Not Found'
+        e.code = '404'
+        throw e
       }
 
       const _specificResult = _.find(this.results, { id: this.resultId })
@@ -233,7 +236,7 @@
           { name: 'twitter:description', content: _description },
           { name: 'twitter:image', content: _image },
           { property: 'fb:app_id', content: FB_APP_ID },
-          { property: 'fb:pages', content: FB_PAGE_ID },         
+          { property: 'fb:pages', content: FB_PAGE_ID },
           { property: 'og:description', content: _description },
           { property: 'og:image', content: _image },
           { property: 'og:locale', content: 'zh_TW' },

@@ -16,7 +16,6 @@ export function getAuthor (article, option = '') {
   switch (option) {
     case 'writers':
       return writers
-      break
     default:
       return (writers + photographers + designers + engineers + external)
   }
