@@ -19,34 +19,31 @@
 
   export default {
     computed: {
-      containerStyle() {
-        return { border: _.get( SECTION_MAP, [ this.sectionId, 'border' ], '2px solid #414141;') }
+      containerStyle () {
+        return { border: _.get(SECTION_MAP, [ this.sectionId, 'border' ], '2px solid #414141;') }
       },
-      titleStyle() {
-        return { color: _.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
+      titleStyle () {
+        return { color: _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
       },
-      sectionId() {
+      sectionId () {
         return _.get(this.$store, [ 'state', 'articles', 'items', 0, 'sections', 0, 'id' ])
       }
     },
     methods: {
-
-      makeRelatedFixed() {
+      makeRelatedFixed () {
         const articleDom = document.querySelector('.article_main')
         const asideTop = elmYPosition('.article_aside')
         const asideDom = document.querySelector('.article_aside')
-        const tHtml = document.documentElement;
-        
+        const tHtml = document.documentElement
 
-        const customCSS = `.related-list-container .list > .title::before { content: ""; border-color: transparent transparent transparent ${_.get( SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+        const customCSS = `.related-list-container .list > .title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
         const custCss = document.createElement('style')
         custCss.appendChild(document.createTextNode(customCSS))
         document.querySelector('body').appendChild(custCss)
 
-
         window.addEventListener('scroll', (e) => {
           const relatedDom = document.querySelector('.related-list-container')
-          if(!relatedDom || !asideDom.offsetLeft) { return }
+          if (!relatedDom || !asideDom.offsetLeft) { return }
           const currTop = currentYPosition()
           const currBottom = currentYPosition() + tHtml.clientHeight
           // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
@@ -54,23 +51,23 @@
           const asideBottom = asideTop + asideHeight
           const mainHeight = articleDom.clientHeight
 
-          if( window.relatedTop < asideBottom && relatedDom.getAttribute('style')) {
+          if (window.relatedTop < asideBottom && relatedDom.getAttribute('style')) {
             relatedDom.removeAttribute('style')
             window.relatedTop = elmYPosition('.related-list-container')
           }
 
-          if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
+          if (window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
             // const footerTop = elmYPosition('.article_footer > div:first-child')
-            const footerTop = elmYPosition('.article_footer')            
+            const footerTop = elmYPosition('.article_footer')
             relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
-            if(footerTop < (currTop + relatedDom.clientHeight + 50)) {
+            if (footerTop < (currTop + relatedDom.clientHeight + 50)) {
               relatedDom.setAttribute('style', 'position: fixed; top: ' + (footerTop - (currTop + relatedDom.clientHeight + 50)) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             }
-          } else if(window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
+          } else if (window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
             // const footerTop = elmYPosition('.article_footer > div:first-child')
             const footerTop = elmYPosition('.article_footer')
             relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
-            if(footerTop < (currBottom + 50)) {
+            if (footerTop < (currBottom + 50)) {
               relatedDom.setAttribute('style', 'position: fixed; bottom: ' + ((currBottom + 50) - footerTop) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
             }
           } else {
@@ -78,53 +75,49 @@
             window.relatedTop = elmYPosition('.related-list-container')
             window.relatedBottom = elmYPosition('.related-list-container') + relatedDom.clientHeight
             window.relatedWidth = relatedDom.offsetWidth
-            window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
+            window.relatedOffsetLeft = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
           }
         })
         window.addEventListener('resize', (e) => {
           this.updateRelatedListStyle()
         })
       },
-      getBrief(rawBrief) {
+      getBrief (rawBrief) {
         return truncate(sanitizeHtml(rawBrief, { allowedTags: [ 'em' ] }), 70)
       },
       getHref,
       getValue,
-      updateRelatedListStyle() {
-        const tHtml = document.documentElement;
+      updateRelatedListStyle () {
+        const tHtml = document.documentElement
         const currTop = currentYPosition()
         const currBottom = currentYPosition() + tHtml.clientHeight
         // const mainBottom = elmYPosition('.article_main') + document.querySelector('.article_main').clientHeight
         const aside = document.querySelector('.article_aside')
-        if(!aside) { return }
+        if (!aside) { return }
         const asideHeight = aside.clientHeight
-        const asideTop = elmYPosition('.article_aside')
-        const asideBottom = asideTop + asideHeight
 
         const mainHeight = document.querySelector('.article_main').clientHeight
         const relatedDom = document.querySelector('.related-list-container')
-        if(!relatedDom || !aside.offsetLeft) { return }
-        const relatedTop = elmYPosition('.related-list-container')
-        if(window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
+        if (!relatedDom || !aside.offsetLeft) { return }
+        if (window.relatedTop && currTop > window.relatedTop && relatedDom.clientHeight < tHtml.clientHeight) {
           relatedDom.removeAttribute('style')
-          window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
+          window.relatedOffsetLeft = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
           relatedDom.setAttribute('style', 'position: fixed; top: 0; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
-        } else if(window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
+        } else if (window.relatedTop && currBottom >= window.relatedBottom && relatedDom.clientHeight >= tHtml.clientHeight && mainHeight > asideHeight) {
           const footerTop = elmYPosition('.article_footer')
           // const footerTop = elmYPosition('.article_footer > div:first-child')
           relatedDom.removeAttribute('style')
-          window.relatedOffsetLeft  = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
+          window.relatedOffsetLeft = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
           relatedDom.setAttribute('style', 'position: fixed; bottom: 20px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
-          if(footerTop < (currBottom + 20)) {
+          if (footerTop < (currBottom + 20)) {
             relatedDom.setAttribute('style', 'position: fixed; bottom: ' + ((currBottom + 20) - footerTop) + 'px; width: ' + window.relatedWidth + 'px; left: ' + window.relatedOffsetLeft + 'px;')
           }
         } else {
           relatedDom.removeAttribute('style')
         }
-
-      },
+      }
     },
-    mounted() {
+    mounted () {
       this.makeRelatedFixed()
     },
     name: 'related-list',

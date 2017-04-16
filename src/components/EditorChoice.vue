@@ -104,11 +104,11 @@ export default {
       let device = 'label-width'
       if (this.viewport < 1200) {
         device = 'label-width-mobile'
-      } 
+      }
 
       const style = {
         backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc'),
-        width: _.get( SECTION_MAP, [sectionId, device], (this.viewport > 599 && this.viewport < 1200) ? '60px' : 'auto'),
+        width: _.get(SECTION_MAP, [ sectionId, device ], (this.viewport > 599 && this.viewport < 1200) ? '60px' : 'auto')
       }
       return style
     },
