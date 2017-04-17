@@ -40,7 +40,7 @@
           <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)"></router-link>
         </div>
       </div>
-      <slot name="dfpNA9"></slot>
+      <slot name="dfpNA7"></slot>
       <div class="pop_item" v-for="(o, i) in popAfterDFPNA7">
         <div>
           <router-link :to="o.slug" :id="'popular-' + i">
