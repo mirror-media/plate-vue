@@ -457,6 +457,9 @@ export default {
             padding-top 10px
             padding-bottom 10px
 
+          > iframe
+            max-width 100%
+
         .audioBox
           width 100%
           
