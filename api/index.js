@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, REDIS_AUTH, REDIS_MAX_CLIENT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_TIMEOUT, TWITTER_API } = require('./config')
 const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } = require('./config')
 const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT } = require('./config')
@@ -178,18 +179,22 @@ router.get('*', (req, res) => {
                     )
                     .end((err, response) => {
                         if (!err && response) {
-                            res.send(JSON.parse(response.text))
-                            redisPoolWrite.set(decodeURIComponent(req.url), response.text, function (err) {
-                                if(err) {
-                                    console.log('redis writing in fail. ', decodeURIComponent(req.url), err)
-                                } else {
-                                    redisPoolWrite.expire(decodeURIComponent(req.url), REDIS_TIMEOUT, function(error, d) {
-                                        if(error) {
-                                            console.log('failed to set redis expire time. ', decodeURIComponent(req.url), err)
-                                        }
-                                    })
-                                }
-                            })
+                            const res_data = JSON.parse(response.text)
+                            const res_num = _.get(res_data, [ '_meta', 'total' ])
+                            res.send(res_data)
+                            if (res_num && res_num > 0) {
+                              redisPoolWrite.set(decodeURIComponent(req.url), response.text, function (err) {
+                                  if(err) {
+                                      console.log('redis writing in fail. ', decodeURIComponent(req.url), err)
+                                  } else {
+                                      redisPoolWrite.expire(decodeURIComponent(req.url), REDIS_TIMEOUT, function(error, d) {
+                                          if(error) {
+                                              console.log('failed to set redis expire time. ', decodeURIComponent(req.url), err)
+                                          }
+                                      })
+                                  }
+                              })
+                            }
                         } else {
                             res.send(err)
                             console.error(`error during fetch data : ${req.url}`)
