@@ -250,6 +250,9 @@
         const poster = ogImgUrl || (heroImgUrl || '/asset/review.png')
         return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
       },
+      ifLockJS () {
+        return _.get(this.articleData, [ 'lockJS' ])
+      },
       ifRenderAside () {
         return this.viewport >= 1200
       },
@@ -328,6 +331,12 @@
       window.addEventListener('resize', () => {
         this.updateViewport()
       })
+      if (this.ifLockJS) {
+        document.oncontextmenu = function () { return false }
+        document.onkeydown = function (event) { if (event.keyCode === 67) { return false } }
+        document.ondragstart = function () { return false }
+        document.onselectstart = function () { return false }
+      }
     },
     metaInfo () {
       if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
