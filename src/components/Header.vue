@@ -38,10 +38,10 @@
         <a @click="closeSideBar()"><img src="/public/icon/close_white.png"></a>
       </div>
       <div class="header-sidebar__menu">
+        <a href="https://www.mirrorfiction.com/" id="header-mirrorfictionSidebar" target="_blank">鏡文學</a>
         <a :href="item.href" :id="'header-' + item.id" v-for="item in headerItem.topic" v-text="item.title"></a>
         <a :href="item.href" :id="'header-' + item.name" v-for="item in headerItem.section" v-text="item.title"></a>
         <a :href="item.href" :id="'header-' + item.name" v-for="item in headerItem.category" v-text="item.title"></a>
-        <a href="https://www.mirrorfiction.com/" id="header-mirrorfictionSidebar" target="_blank">鏡文學</a>
         <a :href="socialLink.DOWNLOADAPP" id="footer-download" target="_blank" class="header-sidebar__menu--download">
           <img src="/public/icon/download_lightgray.png">
           <span>下載APP</span>
