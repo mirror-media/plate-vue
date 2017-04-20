@@ -46,14 +46,24 @@
         <p v-text="getBrief(item, 45)"></p>
       </div>
     </router-link>
-    <router-link :to="getHref(item)" :id="'latest-'+ item.name" v-for="item in articles" v-if="!hasDFP" class="articleList-block">
-      <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-      </div>
-      <div class="articleList__content" :class="getSection(item)">
-        <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
-        <p v-text="getBrief(item, 45)"></p>
-      </div>
-    </router-link>
+    <template v-for="item in articles" v-if="!hasDFP">
+      <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects'">
+        <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
+        </div>
+        <div class="articleList__content" :class="getSection(item)">
+          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <p v-text="getBrief(item, 45)"></p>
+        </div>
+      </router-link>
+      <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style === 'projects'">
+        <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
+        </div>
+        <div class="articleList__content" :class="getSection(item)">
+          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <p v-text="getBrief(item, 45)"></p>
+        </div>
+      </a>
+    </template>
   </section>
 </template>
 
