@@ -23,6 +23,7 @@
         </div>
         <router-link :to="item.href" :id="'header-' + item.name" v-for="item in headerItem.category" v-text="item.title" :class="item.section" :style="{ width: 'calc( 100% /' + headerAmount + ')'}" />
       </div>
+      <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction" class="header--mirrorfiction" target="_blank">鏡文學</a>
     </nav>
     <nav class="header-menu--topic">
       <div>
@@ -40,21 +41,22 @@
         <a :href="item.href" :id="'header-' + item.id" v-for="item in headerItem.topic" v-text="item.title"></a>
         <a :href="item.href" :id="'header-' + item.name" v-for="item in headerItem.section" v-text="item.title"></a>
         <a :href="item.href" :id="'header-' + item.name" v-for="item in headerItem.category" v-text="item.title"></a>
-        <a :href="socialLink.DOWNLOADAPP" id="footer-download" target="_bank" class="header-sidebar__menu--download">
+        <a href="https://www.mirrorfiction.com/" id="header-mirrorfictionSidebar" target="_blank">鏡文學</a>
+        <a :href="socialLink.DOWNLOADAPP" id="footer-download" target="_blank" class="header-sidebar__menu--download">
           <img src="/public/icon/download_lightgray.png">
           <span>下載APP</span>
         </a>
         <div class="header-sidebar__menu--second">
-          <a id="footer-email" :href="socialLink.EMAIL" target="_bank"><img src="/public/icon/mail_lightgray.png"></a>
-          <a id="footer-feed" :href="socialLink.FEED" target="_bank"><img src="/public/icon/feed_lightgray.png"></a>
+          <a id="footer-email" :href="socialLink.EMAIL" target="_blank"><img src="/public/icon/mail_lightgray.png"></a>
+          <a id="footer-feed" :href="socialLink.FEED" target="_blank"><img src="/public/icon/feed_lightgray.png"></a>
         </div>
       </div>
       <div class="header-sidebar__socialMedia">
         <span>追蹤鏡傳媒</span>
-        <a id="footer-line" :href="socialLink.LINE" target="_bank"><img src="/public/icon/line_blue.png"></a>
-        <a id="footer-weibo" :href="socialLink.WEIBO" target="_bank"><img src="/public/icon/weibo_blue.png"></a>
-        <a id="footer-fb" :href="socialLink.FACEBOOK" target="_bank"><img src="/public/icon/facebook_blue.png"></a>
-        <a id="footer-ig" :href="socialLink.INSTAGRAM" target="_bank"><img src="/public/icon/instagram_blue.png"></a>
+        <a id="footer-line" :href="socialLink.LINE" target="_blank"><img src="/public/icon/line_blue.png"></a>
+        <a id="footer-weibo" :href="socialLink.WEIBO" target="_blank"><img src="/public/icon/weibo_blue.png"></a>
+        <a id="footer-fb" :href="socialLink.FACEBOOK" target="_blank"><img src="/public/icon/facebook_blue.png"></a>
+        <a id="footer-ig" :href="socialLink.INSTAGRAM" target="_blank"><img src="/public/icon/instagram_blue.png"></a>
       </div>
     </nav>
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">
