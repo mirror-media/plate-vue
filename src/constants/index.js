@@ -256,6 +256,7 @@ export const DFP_UNITS = {
     'PCE1': { 'aduid': 'mm_pc_wat_ap_300x250_E1', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCE2': { 'aduid': 'mm_pc_wat_ap_300x250_E2', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCFT': { 'aduid': 'mm_pc_wat_ap_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
+    'PCFF': { 'aduid': 'mm_pc_wat_ap_200x200_floating', 'dimensions': '200x200', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCPOP1, PCPOP2, PCPOP3 : position in poplist
     'PCPOP3': { 'aduid': 'mm_RWD_wat_ap_fluid_NA3', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'pop_item', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'PCPOP5': { 'aduid': 'mm_RWD_wat_ap_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'pop_item', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
@@ -319,6 +320,8 @@ export const SECTION = 'SECTION'
 export const TAG = 'TAG'
 
 export const TOPIC = 'TOPIC'
+
+export const SECTION_WATCH_ID = '57dfe3b0ee85930e00cad4d7'
 
 export const CAMPAIGN_ID = '5859e7e5c0ff6d0d00246263'
 

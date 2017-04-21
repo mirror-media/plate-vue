@@ -66,16 +66,20 @@
           <div class="close" @click="closeCoverAd"></div>
         </div>
       </div>
+      <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
+        <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpFF"/>
+      </dfp-fixed>
     </template>
   </vue-dfp-provider>
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
   import { getTruncatedVal, lockJS, unLockJS } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import Cookie from 'vue-cookie'
+  import DfpFixed from '../components/DfpFixed.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
@@ -179,6 +183,7 @@
       'article-body-photography': ArticleBodyPhotography,
       'app-footer': Footer,
       'app-header': Header,
+      'dfp-fixed': DfpFixed,
       'latest-list': LatestList,
       'pop-list': PopList,
       'related-list': RelatedList,
@@ -193,6 +198,7 @@
         dfpUnits: DFP_UNITS,
         state: {},
         showDfpCoverAdFlag: false,
+        showDfpFixedBtn: false,
         viewport: undefined
       }
     },
@@ -216,14 +222,22 @@
       dfpOptions () {
         return {
           afterEachAdLoaded: (event) => {
-            const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
-            const position = dfpCover.getAttribute('pos')
+            const dfpCurrAd = document.querySelector(`#${event.slot.getSlotElementId()}`)
+            const position = dfpCurrAd.getAttribute('pos')
             if (position === 'LMBCVR' || position === 'MBCVR') {
-              const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
+              const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
               if (adDisplayStatus === 'none') {
                 this.showDfpCoverAdFlag = false
               } else {
                 this.updateCookie()
+              }
+            }
+            if (position === 'PCFF') {
+              const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
+              if (adDisplayStatus === 'none') {
+                this.showDfpFixedBtn = false
+              } else {
+                this.showDfpFixedBtn = true
               }
             }
           },
@@ -236,6 +250,9 @@
       },
       fbCommentDiv () {
         return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
+      },
+      hasDfpFixed () {
+        return this.sectionId === SECTION_WATCH_ID
       },
       heroCaption () {
         return _.get(this.articleData, [ 'heroCaption' ], '')
@@ -293,6 +310,9 @@
       },
       closeCoverAd () {
         this.showDfpCoverAdFlag = false
+      },
+      closeDfpFixed () {
+        this.showDfpFixedBtn = false
       },
       getTruncatedVal,
       getValue (o = {}, p = [], d = '') {
