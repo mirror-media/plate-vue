@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { getValue } from '../utils/comm'
+import { getValue, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import FooterFull from '../components/FooterFull.vue'
 import HeaderFull from '../components/HeaderFull.vue'
@@ -104,6 +104,9 @@ export default {
     }
   },
   methods: {
+    checkIfLockJS () {
+      unLockJS()
+    },
     closeSearchBar () {
       this.openSearch = false
     },
@@ -132,6 +135,9 @@ export default {
       this.openSide = true
     },
     twitterAutoLink: twitter.autoLink
+  },
+  mounted () {
+    this.checkIfLockJS()
   },
   preFetch: fetchData,
   beforeMount () {

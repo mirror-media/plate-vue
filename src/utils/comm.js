@@ -122,3 +122,21 @@ export function getHost () {
     return `${host}:${port}`
   }
 }
+
+export function lockJS () {
+  if (process.env.VUE_ENV === 'client') {
+    document.oncontextmenu = function () { return false }
+    document.onkeydown = function (event) { if (event.keyCode === 67) { return false } }
+    document.ondragstart = function () { return false }
+    document.onselectstart = function () { return false }
+  }
+}
+
+export function unLockJS () {
+  if (process.env.VUE_ENV === 'client') {
+    document.oncontextmenu = function () { return true }
+    document.onkeydown = function (event) { if (event.keyCode === 67) { return true } }
+    document.ondragstart = function () { return true }
+    document.onselectstart = function () { return true }
+  }
+}

@@ -22,6 +22,7 @@
 
 import _ from 'lodash'
 import { SITE_TITLE } from '../constants'
+import { unLockJS } from '../utils/comm'
 import ArticleList from '../components/ArticleList.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
@@ -97,6 +98,9 @@ export default {
     }
   },
   methods: {
+    checkIfLockJS () {
+      unLockJS()
+    },
     loadMore () {
       this.page += 1
       this.loading = true
@@ -114,6 +118,9 @@ export default {
     return {
       title
     }
+  },
+  mounted () {
+    this.checkIfLockJS()
   }
 }
 </script>

@@ -47,6 +47,7 @@
 <script>
 
 import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../constants'
+import { unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import EditorChoice from '../components/EditorChoice.vue'
@@ -185,6 +186,9 @@ export default {
     }
   },
   methods: {
+    checkIfLockJS () {
+      unLockJS()
+    },
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
@@ -240,6 +244,7 @@ export default {
       this.updateViewport()
     })
     // this.updateCookie()
+    this.checkIfLockJS()
   }
 }
 

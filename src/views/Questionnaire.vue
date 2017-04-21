@@ -53,7 +53,7 @@
 <script>
   import { FB_APP_ID, FB_PAGE_ID, SITE_KEYWORDS, SITE_TITLE } from '../constants'
   import { smoothScroll } from 'kc-scroll'
-  import { getValue } from '../utils/comm'
+  import { getValue, unLockJS } from '../utils/comm'
   import _ from 'lodash'
   import AsideTab from '../components/questionnaire/AsideTab.vue'
   import Option from '../components/questionnaire/Option.vue'
@@ -150,6 +150,9 @@
       }
     },
     methods: {
+      checkIfLockJS () {
+        unLockJS()
+      },
       closeShareTools () {
         this.shareToolboxFlag = false
       },
@@ -211,7 +214,9 @@
         this.startFlag = true
       }
     },
-    mounted () {},
+    mounted () {
+      this.checkIfLockJS()
+    },
     metaInfo () {
       if (!this.questionnaireData && process.env.VUE_ENV === 'server') {
         const e = new Error()
