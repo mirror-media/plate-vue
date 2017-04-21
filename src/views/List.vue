@@ -731,6 +731,8 @@ export default {
     updateCustomizedMarkup () {
       const custCss = document.querySelector('#custCSS')
       const custScript = document.querySelector('#custJS')
+      custCss.innerHTML = ''
+      custScript.innerHTML = ''
       if (!custCss || !custScript) { this.insertCustomizedMarkup(); return }
       if (this.customCSS) {
         custCss.innerHTML = this.customCSS
