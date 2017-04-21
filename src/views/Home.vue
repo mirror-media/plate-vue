@@ -35,6 +35,7 @@
 <script>
 
 import { currentYPosition, elmYPosition } from 'kc-scroll'
+import { unLockJS } from '../utils/comm'
 import { DFP_ID, DFP_UNITS, SITE_DESCRIPTION, SITE_TITLE, SITE_URL, FB_APP_ID, FB_PAGE_ID } from '../constants'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
@@ -176,6 +177,9 @@ export default {
     }
   },
   methods: {
+    checkIfLockJS () {
+      unLockJS()
+    },
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
@@ -251,6 +255,7 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
+    this.checkIfLockJS()
   }
 }
 

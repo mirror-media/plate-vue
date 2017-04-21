@@ -4,14 +4,17 @@
     <div class="list">
       <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
         <div class="thumbnail" :style="{ backgroundImage: 'url(' + getImage(o, 'tiny') + ')' }">
-          <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }"></router-link>
+          <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'"></router-link>
+          <a :href="`${site_url}getHref(o)`" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style === 'projects'"></a>
         </div>
         <div class="content">
           <div class="content_category">
-            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
+            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
+            <a :href="`${site_url}getHref(o)`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
           </div>
           <div class="content_title">
-            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</router-link>
+            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</router-link>
+            <a :href="`${site_url}getHref(o)`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</a>
           </div>
         </div>
       </div>
@@ -19,11 +22,15 @@
   </div>
 </template>
 <script>
+  import { SITE_URL } from '../../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
   import _ from 'lodash'
 
   export default {
     computed: {
+      site_url () {
+        return SITE_URL
+      },
       pureLatest () {
         return _.filter(this.latest, (o) => { return _.get(o, [ 'slug' ], '') !== this.currArticleSlug })
       }

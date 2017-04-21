@@ -74,7 +74,7 @@
 
 import { AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
-import { getImage, getValue } from '../utils/comm'
+import { getImage, getValue, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
@@ -368,6 +368,7 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
+    this.checkIfLockJS()
   },
   beforeRouteEnter (to, from, next) {
     const type = _.toUpper(_.split(to.path, '/')[1])
@@ -605,6 +606,9 @@ export default {
     }
   },
   methods: {
+    checkIfLockJS () {
+      unLockJS()
+    },
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },

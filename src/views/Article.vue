@@ -72,7 +72,7 @@
 <script>
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
-  import { getTruncatedVal } from '../utils/comm'
+  import { getTruncatedVal, lockJS, unLockJS } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import Cookie from 'vue-cookie'
@@ -284,6 +284,13 @@
       }
     },
     methods: {
+      checkIfLockJS () {
+        if (this.ifLockJS) {
+          lockJS()
+        } else {
+          unLockJS()
+        }
+      },
       closeCoverAd () {
         this.showDfpCoverAdFlag = false
       },
@@ -331,12 +338,7 @@
       window.addEventListener('resize', () => {
         this.updateViewport()
       })
-      if (this.ifLockJS) {
-        document.oncontextmenu = function () { return false }
-        document.onkeydown = function (event) { if (event.keyCode === 67) { return false } }
-        document.ondragstart = function () { return false }
-        document.onselectstart = function () { return false }
-      }
+      this.checkIfLockJS()
     },
     metaInfo () {
       if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
@@ -391,13 +393,14 @@
       }
     },
     watch: {
-      articleUrl: () => {
+      articleUrl: function () {
         window.FB && window.FB.init({
           appId: this.fbAppId,
           xfbml: true,
           version: 'v2.0'
         })
         window.FB && window.FB.XFBML.parse()
+        this.checkIfLockJS()
       }
     }
   }
