@@ -23,7 +23,7 @@ export const DFP_UNITS = {
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mm_mobile_other_ap_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'MBAR1': { 'aduid': 'mm_mobile_other_ap_300x250_AT1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mm_mobile_other_ap_300x250_AT2', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR2': { 'aduid': 'mm_mobile_other_ap_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mm_mobile_other_ap_300x250_E1', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mm_mobile_other_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -76,7 +76,7 @@ export const DFP_UNITS = {
     // MBHD, MBAR1, MBAR2, MBE1, MBFT : position on mobile article page
     'MBHD': { 'aduid': 'mm_mobile_other_ap_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'MBAR1': { 'aduid': 'mm_mobile_other_ap_300x250_AT1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mm_mobile_other_ap_300x250_AT2', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR2': { 'aduid': 'mm_mobile_other_ap_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mm_mobile_other_ap_300x250_E1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mm_mobile_other_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -108,7 +108,7 @@ export const DFP_UNITS = {
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mm_mobile_np_ap_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'MBAR1': { 'aduid': 'mm_mobile_np_ap_300x250_AT1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mm_mobile_np_ap_300x250_AT2', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR2': { 'aduid': 'mm_mobile_np_ap_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mm_mobile_np_ap_300x250_E1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mm_mobile_np_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -140,7 +140,7 @@ export const DFP_UNITS = {
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mm_mobile_ent_ap_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'MBAR1': { 'aduid': 'mm_mobile_ent_ap_300x250_AT1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mm_mobile_ent_ap_300x250_AT2', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR2': { 'aduid': 'mm_mobile_ent_ap_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mm_mobile_ent_ap_300x250_E1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mm_mobile_ent_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -172,7 +172,7 @@ export const DFP_UNITS = {
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mm_mobile_fnt_ap_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'MBAR1': { 'aduid': 'mm_mobile_fnt_ap_300x250_AT1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mm_mobile_fnt_ap_300x250_AT2', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR2': { 'aduid': 'mm_mobile_fnt_ap_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mm_mobile_fnt_ap_300x250_E1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mm_mobile_fnt_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -205,7 +205,7 @@ export const DFP_UNITS = {
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mm_mobile_other_ap_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'MBAR1': { 'aduid': 'mm_mobile_other_ap_300x250_AT1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mm_mobile_other_ap_300x250_AT2', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR2': { 'aduid': 'mm_mobile_other_ap_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mm_mobile_other_ap_300x250_E1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mm_mobile_other_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -237,7 +237,7 @@ export const DFP_UNITS = {
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
     'MBHD': { 'aduid': 'mm_mobile_wat_ap_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'MBAR1': { 'aduid': 'mm_mobile_wat_ap_300x250_AT1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBAR2': { 'aduid': 'mm_mobile_wat_ap_300x250_AT2', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
+    'MBAR2': { 'aduid': 'mm_mobile_wat_ap_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mm_mobile_wat_ap_300x250_E1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mm_mobile_wat_ap_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
