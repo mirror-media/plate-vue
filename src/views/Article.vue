@@ -13,7 +13,7 @@
           :poster="heroVideo.poster">
             Your browser does not support the video tag.
           </video>
-          <div class="playpause"></div>
+          <div class="playpause play" @click="doPlayVideoByBtn" target=".heroimg.video"></div>
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article-heromedia" v-else="heroImage">
@@ -314,6 +314,17 @@
       closeDfpFixed () {
         this.showDfpFixedBtn = false
       },
+      doPlayVideoByBtn (e) {
+        console.log(e.target)
+        const source = e.target
+        const targ = source.getAttribute('target')
+        const targDOM = document.querySelector(targ)
+        const sourceClass = source.getAttribute('class')
+        const ifPlay = sourceClass.indexOf(' play') > -1
+        source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
+        targDOM && ifPlay && targDOM.play()
+        targDOM && !ifPlay && targDOM.pause()
+      },
       getTruncatedVal,
       getValue (o = {}, p = [], d = '') {
         return _.get(o, p, d)
@@ -435,6 +446,7 @@
       margin 0 auto
       background-color #fff
       max-width 1160px
+      position relative
 
       .heroimg
         width 100%
@@ -442,7 +454,35 @@
       .heroimg-caption
         margin-top 5px
         padding 5px 50px 0
-      
+
+      .playpause
+        background-repeat no-repeat
+        width 60px
+        height 60px
+        position absolute
+        margin auto
+        background-size contain
+        background-position center
+        top 50%
+        left 50%
+        margin-left -30px
+        margin-top -30px
+        cursor pointer
+
+        &.play
+          background-image url('/public/icon/play-btn@2x.png')
+
+          
+        &.pause
+          background-image url('/public/icon/pause-btn@2x.png')
+          opacity 0
+          animation fade-in 0.5s ease-out
+
+      &:hover
+        .playpause
+          &.pause
+            opacity 1
+            animation fade-out 0.5s ease-out
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
@@ -511,6 +551,11 @@
       .article-heromedia
         .heroimg-caption
           text-align center
+        .playpause
+          margin-left -50px
+          margin-top -50px
+          width 100px
+          height 100px
       
       .article
         padding 100px 50px 0
@@ -518,5 +563,19 @@
 .ad-fit
   position relative
   margin-left -15px !important
+
+@keyframes fade-in
+  0%
+    opacity 1
+
+  100%
+    opacity 0
+
+@keyframes fade-out
+  0%
+    opacity 0
+
+  100%
+    opacity 1
 
 </style>
