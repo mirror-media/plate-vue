@@ -538,6 +538,15 @@
       .article-heromedia, .article
          max-width 100%
   
+  @media (min-width 768px)
+    .article-container
+      .article-heromedia
+        .playpause
+          margin-left -50px
+          margin-top -50px
+          width 100px
+          height 100px
+
   @media (max-width 999px)
     .mobile-hide
       display none !important
@@ -551,11 +560,6 @@
       .article-heromedia
         .heroimg-caption
           text-align center
-        .playpause
-          margin-left -50px
-          margin-top -50px
-          width 100px
-          height 100px
       
       .article
         padding 100px 50px 0
