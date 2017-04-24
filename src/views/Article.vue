@@ -441,7 +441,7 @@
       
       .heroimg-caption
         margin-top 5px
-        padding 0 50px
+        padding 5px 50px 0
       
     
     .article
@@ -487,7 +487,7 @@
     .article-container
       .article-heromedia
         .heroimg-caption
-          padding 0 25px
+          padding 5px 25px 0
           line-height 1.3rem
       
       .article
