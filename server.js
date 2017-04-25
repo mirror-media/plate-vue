@@ -134,7 +134,11 @@ app.get('*', (req, res, next) => {
         'Location': '/404'
       })
       res.end()
+      console.log('##########REQUEST URL(404)############')
+      console.log('REQUEST URL:', req.url)
       console.error(err)
+      console.log('######################')
+      console.log('######################')
       return
     }
     // Render Error Page or Redirect
