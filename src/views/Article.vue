@@ -323,7 +323,14 @@
         const ifPlay = sourceClass.indexOf(' play') > -1
         source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
         targDOM && ifPlay && targDOM.play()
-        targDOM && !ifPlay && targDOM.pause()
+        targDOM.removeEventListener('pause', this.heroVideoPausedHandler)
+        targDOM.addEventListener('pause', this.heroVideoPausedHandler)
+      },
+      heroVideoPausedHandler (e) {
+        const source = document.querySelector('.article-heromedia > .playpause')
+        const sourceClass = source.getAttribute('class')
+        const ifPlay = sourceClass.indexOf(' play') > -1
+        source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
       },
       getTruncatedVal,
       getValue (o = {}, p = [], d = '') {
@@ -468,19 +475,13 @@
         margin-left -30px
         margin-top -30px
         cursor pointer
+        background-image url('/public/icon/play-btn@2x.png')
 
         &.play
-          background-image url('/public/icon/play-btn@2x.png')
-
+          display block
           
         &.pause
-          background-image url('/public/icon/pause-btn@2x.png')
           display none
-
-      &:hover
-        .playpause
-          &.pause
-            display block
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
