@@ -9,8 +9,9 @@
         <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
-          <video class="heroimg video" width="100%" height="100%" :src="getValue(heroVideo, [ 'video', 'url' ])" type="video/mp4" controls
+          <video class="heroimg video" width="100%" height="100%" controls
           :poster="heroVideo.poster">
+            <source :src="getValue(heroVideo, [ 'video', 'url' ])" :type="getValue(heroVideo, [ 'video', 'filetype' ])">
             Your browser does not support the video tag.
           </video>
           <div class="playpause play" @click="doPlayVideoByBtn" target=".heroimg.video"></div>
@@ -315,7 +316,6 @@
         this.showDfpFixedBtn = false
       },
       doPlayVideoByBtn (e) {
-        console.log(e.target)
         const source = e.target
         const targ = source.getAttribute('target')
         const targDOM = document.querySelector(targ)
@@ -475,14 +475,12 @@
           
         &.pause
           background-image url('/public/icon/pause-btn@2x.png')
-          opacity 0
-          animation fade-in 0.5s ease-out
+          display none
 
       &:hover
         .playpause
           &.pause
-            opacity 1
-            animation fade-out 0.5s ease-out
+            display block
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
@@ -538,6 +536,15 @@
       .article-heromedia, .article
          max-width 100%
   
+  @media (min-width 768px)
+    .article-container
+      .article-heromedia
+        .playpause
+          margin-left -50px
+          margin-top -50px
+          width 100px
+          height 100px
+
   @media (max-width 999px)
     .mobile-hide
       display none !important
@@ -551,11 +558,6 @@
       .article-heromedia
         .heroimg-caption
           text-align center
-        .playpause
-          margin-left -50px
-          margin-top -50px
-          width 100px
-          height 100px
       
       .article
         padding 100px 50px 0
