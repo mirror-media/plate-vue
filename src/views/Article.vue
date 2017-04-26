@@ -67,9 +67,9 @@
           <div class="close" @click="closeCoverAd"></div>
         </div>
       </div>
-      <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
+      <!-- <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
         <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpFF"/>
-      </dfp-fixed>
+      </dfp-fixed> -->
     </template>
   </vue-dfp-provider>
 </template>
