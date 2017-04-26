@@ -181,8 +181,8 @@ router.get('*', (req, res) => {
                         if (!err && response) {
                             const res_data = JSON.parse(response.text)
                             const res_num = _.get(res_data, [ '_meta', 'total' ])
-                            res.send(res_data)
                             if (res_num && res_num > 0) {
+                              res.send(res_data)
                               redisPoolWrite.set(decodeURIComponent(req.url), response.text, function (err) {
                                   if(err) {
                                       console.log('redis writing in fail. ', decodeURIComponent(req.url), err)
@@ -194,6 +194,8 @@ router.get('*', (req, res) => {
                                       })
                                   }
                               })
+                            } else {
+                              res.status(404).send(res_data)
                             }
                         } else {
                             res.send(err)
