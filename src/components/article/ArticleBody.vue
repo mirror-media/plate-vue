@@ -51,10 +51,10 @@
         <div class="tags" v-html="tags"></div>
       </div>
       <div class="split-line"></div>
-      <div class="herbsapi">
+      <!-- <div class="herbsapi">
         <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
         <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
-      </div>
+      </div> -->
       <div class="dfpad-set" style="display: flex; justify-content: space-around;">
         <slot name="dfpad-set"></slot>
       </div>
