@@ -195,7 +195,7 @@ router.get('*', (req, res) => {
                                   }
                               })
                             } else {
-                              res.status(404).send(res_data)
+                              res.send(res_data)
                             }
                         } else {
                             res.send(err)
