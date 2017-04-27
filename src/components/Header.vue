@@ -4,7 +4,7 @@
       <a @click="openSideBar()" id="menubar" class="mobile-only"><img src="/public/icon/hamburger@2x.png" class="header-icon"></a>
       <router-link :to="'/'" id="header-logo"><img src="/public/logo.svg" class="header-logoSearch--logo"></router-link>
       <div class="header-logoSearch__search desktop-only">
-        <input type="text" v-model="searchVal" @keyup.enter="search(searchVal)" placeholder="">
+        <input type="text" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()" placeholder="">
         <button @click="search(searchVal)">
           <img class="header-logoSearch__search--icon" src="/public/icon/search.svg" />
         </button>
@@ -83,6 +83,7 @@ export default {
   props: [ 'commonData' ],
   data () {
     return {
+      isChanged: false,
       isScrolled: false,
       searchVal: '',
       openSearch: false,
@@ -101,6 +102,9 @@ export default {
         currentYPosition() > 69 ? this.isScrolled = true : this.isScrolled = false
       })
     },
+    hasChanged () {
+      this.isChanged = true
+    },
     openSearchBar () {
       this.openSearch = true
     },
@@ -108,8 +112,10 @@ export default {
       this.openSide = true
     },
     search (searchVal = '') {
-      this.$router.push('/search/' + this.searchVal)
-      this.openSearch = false
+      if (this.isChanged && searchVal !== '') {
+        this.$router.push('/search/' + this.searchVal)
+        this.openSearch = false
+      }
     }
   },
   computed: {
