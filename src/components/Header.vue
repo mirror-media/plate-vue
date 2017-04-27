@@ -85,9 +85,9 @@ export default {
     return {
       isChanged: false,
       isScrolled: false,
-      searchVal: '',
       openSearch: false,
-      openSide: false
+      openSide: false,
+      searchVal: _.get(this.$route, [ 'params', 'keyword' ])
     }
   },
   methods: {
@@ -149,6 +149,7 @@ export default {
   },
   mounted () {
     this.handleScroll()
+    console.log('mounted Header')
   }
 }
 

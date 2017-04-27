@@ -1,4 +1,4 @@
-import { GAID } from '../constants/index'
+import { GA_ID } from '../constants/index'
 import Vue from 'vue'
 import Router from 'vue-router'
 import Meta from 'vue-meta'
@@ -43,7 +43,7 @@ const router = new Router({
 })
 
 if (process.env.VUE_ENV === 'client') {
-  window.ga('create', GAID, 'auto')
+  window.ga('create', GA_ID, 'auto')
 }
 
 router.afterEach(route => {
