@@ -68,7 +68,7 @@
     </div>
     <div class="searchFull" v-show="openSearch">
       <div class="searchFull-container">
-        <input type="text" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)">
+        <input type="text" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()">
         <a @click="closeSearchBar()">
           <img src="/public/icon/close.png">
         </a>
@@ -90,6 +90,7 @@ export default {
     return {
       blackNav: false,
       defaultNav: true,
+      isChanged: false,
       opacity: 1,
       openSearch: false,
       openSide: false,
@@ -121,7 +122,10 @@ export default {
       this.openSide = true
     },
     search (searchVal = '') {
-      this.$router.push('/search/' + this.searchVal)
+      if (this.isChanged && searchVal !== '') {
+        this.$router.push('/search/' + this.searchVal)
+        this.openSearch = false
+      }
     },
     handleScroll () {
       window.onscroll = (e) => {
@@ -129,6 +133,9 @@ export default {
         this.opacity < 0 ? this.defaultNav = false : this.defaultNav = true
         this.opacity < 1 ? this.blackNav = true : this.blackNav = false
       }
+    },
+    hasChanged () {
+      this.isChanged = true
     }
   },
   computed: {
