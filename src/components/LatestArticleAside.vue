@@ -2,24 +2,24 @@
   <div class="latest-aside-container" v-if="groupedArticle">
     <div class="latest-list">
       <div class="latest-list_item">
-        <router-link :to="getHref(groupedArticle)" :id="`latest-group-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style !== 'projects'">
+        <router-link :to="getHref(groupedArticle)" :id="`group-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style !== 'projects'">
           <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
           <div class="latest-list_item_label" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
         </router-link>
-        <a :href="getHref(groupedArticle)" :id="`latest-group-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style === 'projects'">
+        <a :href="getHref(groupedArticle)" :id="`group-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style === 'projects'">
           <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
           <div class="latest-list_item_label" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
         </a>
         <div class="latest-list_item_title" :style="getSectionStyleBorderTop(getValue(groupedArticle, [ 'sections', 0 ], ''))">
-          <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`latest-group-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style !== 'projects'"></router-link>
-          <a :href="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`latest-group-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style === 'projects'"></a>
+          <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style !== 'projects'"></router-link>
+          <a :href="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style === 'projects'"></a>
         </div>
       </div>
 
       <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])" v-if="i < 3">
         <div class="latest-list_item_title" :style="getSectionStyleBorderTop(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`latest-group-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style !== 'projects'"></router-link>
-          <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`latest-group-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style === 'projects'"></a>
+          <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group-latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style !== 'projects'"></router-link>
+          <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group-latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style === 'projects'"></a>
         </div>
       </div>
     </div>
@@ -112,7 +112,7 @@ export default {
       &_title
         color rgba(0, 0, 0, 0.65)
         display flex
-        justify-content center
+        justify-content flex-start
         align-items center
         border-bottom 1px solid rgba(0, 0, 0, 0.25)
 
