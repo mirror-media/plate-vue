@@ -230,7 +230,7 @@ export default {
                   </blockquote>`
         case 'slideshow':
           return `<div class=\"slideshowImg\">
-                    <img src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\"
+                    <img src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
                          srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
                                        ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
                                        ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\" />
@@ -247,14 +247,52 @@ export default {
           return `<ul class="${_.get(item, [ 'alignment' ], '')} unordered-list-item">${_liStrUnordered}</ul>`
         case 'unstyled':
           return (item.content.toString().length > 0) ? `<p>${item.content.toString()}</p>` : ''
+        case 'video':
+          return `<div class="video ${_.get(item, [ 'alignment' ], '')}">
+                    <video width="100%" height="100%" controls controlsList="nodownload" id="${_.get(item, [ 'id' ], '')}${_.get(item.content, [ 0, 'id' ], '')}">
+                      <source src="${_.get(item.content, [ 0, 'url' ], '')}" type="${_.get(item.content, [ 0, 'filetype' ], '')}">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="playpause play" target="${_.get(item, [ 'id' ], '')}${_.get(item.content, [ 0, 'id' ], '')}"></div>
+                  </div>`
         case 'youtube':
-          return `<div class=\"youtube\"><div class=\"youtube-container\"><iframe width=\"560\" alt=\"\" height=\"315\" src=\"https://www.youtube.com/embed/${_.get(item.content, [ 0, 'youtubeId' ], '')}\" frameborder=\"0\" allowfullscreen> </iframe></div></div>`
+          return `<div class=\"youtube\">
+                    <div class=\"youtube-container\">
+                      <iframe width=\"560\" alt=\"\" height=\"315\" src=\"https://www.youtube.com/embed/${_.get(item.content, [ 0, 'youtubeId' ], '')}\" frameborder=\"0\" allowfullscreen> </iframe>
+                    </div>
+                    <div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div>
+                  </div>`
         default:
           return
       }
+    },
+    setUpPlayBtnsAbility () {
+      const playBtns = document.querySelectorAll('.article_body .playpause')
+      _.map(playBtns, (btn) => {
+        btn.addEventListener('click', (e) => {
+          const source = e.target
+          const targ = source.getAttribute('target')
+          const targDOM = document.querySelector(`video[id="${targ}"]`)
+          const sourceClass = source.getAttribute('class')
+          const ifPlay = sourceClass.indexOf(' play') > -1
+          source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
+          targDOM && ifPlay && targDOM.play()
+          targDOM.removeEventListener('pause', this.videoPausedHandler)
+          targDOM.addEventListener('pause', this.videoPausedHandler)
+        })
+      })
+    },
+    videoPausedHandler (e) {
+      const targ = e.target
+      const source = document.querySelector(`.playpause[target="${targ.getAttribute('id')}"]`)
+      const sourceClass = source.getAttribute('class')
+      const ifPlay = sourceClass.indexOf(' play') > -1
+      source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
     }
   },
-  mounted () {},
+  mounted () {
+    this.setUpPlayBtnsAbility()
+  },
   name: 'article-body',
   props: {
     articleData: {
@@ -432,7 +470,7 @@ export default {
             align-items center
             display flex
             justify-content center
-            margin 25px 0
+            margin 25px 0 5px
             padding-bottom 56.25%
             padding-top 25px
             position relative
@@ -443,6 +481,15 @@ export default {
               position absolute
               top 0
               left 0
+
+          > .caption 
+            font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
+            font-size 15px
+            line-height 1.7
+            letter-spacing 0.3px
+            color rgba(0, 0, 0, 0.498039)
+            padding-top 10px
+            padding-bottom 10px
                     
         .embedded 
           text-align center
@@ -474,6 +521,33 @@ export default {
               justify-content center
               align-items center
               font-size 1.5rem
+
+        .video
+          text-align center
+          margin 1.5em auto
+          clear both
+          position relative
+
+          .playpause
+            background-repeat no-repeat
+            width 60px
+            height 60px
+            position absolute
+            margin auto
+            background-size contain
+            background-position center
+            top 50%
+            left 50%
+            margin-left -30px
+            margin-top -30px
+            cursor pointer
+            background-image url('/public/icon/play-btn@2x.png')
+
+            &.play
+              display block
+              
+            &.pause
+              display none
         
       a, a:hover, a:link, a:visited 
         color #3195b3

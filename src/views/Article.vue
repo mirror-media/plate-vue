@@ -9,7 +9,7 @@
         <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
-          <video class="heroimg video" width="100%" height="100%" controls
+          <video class="heroimg video" width="100%" height="100%" controls controlsList="nodownload"
           :poster="heroVideo.poster">
             <source :src="getValue(heroVideo, [ 'video', 'url' ])" :type="getValue(heroVideo, [ 'video', 'filetype' ])">
             Your browser does not support the video tag.

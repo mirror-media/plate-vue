@@ -7,6 +7,14 @@
 </template>
 
 <style lang="stylus">
+video::-internal-media-controls-download-button
+  display none
+
+video::-webkit-media-controls-enclosure
+  overflow hidden
+
+video::-webkit-media-controls-panel
+  width calc(100% + 30px)
 
 html
   box-sizing border-box
