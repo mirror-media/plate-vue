@@ -61,8 +61,8 @@
       </a>
     </template>
 
-    <div class="articleList__dfp--l1 mobile-only">
-      <slot name="dfpL1" v-if="hasDFP"></slot>
+    <div class="articleList__dfp--l1 mobile-only" v-if="hasDFP">
+      <slot name="dfpL1"></slot>
     </div>
 
     <template v-for="item in articlesBeforeDFPNA9AfterL1" v-if="hasDFP">
