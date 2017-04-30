@@ -25,9 +25,9 @@ export default {
   right 15px
   > img
     position absolute
-    top -15px
-    right -15px
-    width 30px
+    top -12.5px
+    right -12.5px
+    width 25px
     cursor pointer
 
 @media (min-width 1201px)

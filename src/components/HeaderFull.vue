@@ -68,7 +68,7 @@
     </div>
     <div class="searchFull" v-show="openSearch">
       <div class="searchFull-container">
-        <input type="text" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()">
+        <input type="search" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()">
         <a @click="closeSearchBar()">
           <img src="/public/icon/close.png">
         </a>

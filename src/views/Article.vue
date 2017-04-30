@@ -48,7 +48,7 @@
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />            
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
@@ -67,9 +67,9 @@
           <div class="close" @click="closeCoverAd"></div>
         </div>
       </div>
-      <!-- <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
+      <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
         <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpFF"/>
-      </dfp-fixed> -->
+      </dfp-fixed>
     </template>
   </vue-dfp-provider>
 </template>

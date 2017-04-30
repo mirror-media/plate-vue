@@ -4,7 +4,7 @@
       <a @click="openSideBar()" id="menubar" class="mobile-only"><img src="/public/icon/hamburger@2x.png" class="header-icon"></a>
       <router-link :to="'/'" id="header-logo"><img src="/public/logo.svg" class="header-logoSearch--logo"></router-link>
       <div class="header-logoSearch__search desktop-only">
-        <input type="text" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()" placeholder="">
+        <input type="search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()" placeholder="">
         <button @click="search(searchVal)">
           <img class="header-logoSearch__search--icon" src="/public/icon/search.svg" />
         </button>
@@ -60,7 +60,7 @@
       </div>
     </nav>
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">
-      <input type="text" v-model="searchVal" @keyup.enter="search(searchVal)" placeholder="搜尋">
+      <input type="search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()" placeholder="搜尋">
       <a @click="closeSearchBar()"><img src="/public/icon/close.png"></a>
     </section>
     <section class="header-scrolled mobile-only" v-show="isScrolled">
