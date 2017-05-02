@@ -14,6 +14,7 @@
       <section class="footer container">
         <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
       </section>
+      <share />
     </template>
     <template v-if="pageStyle === 'full'">
       <section>
@@ -24,6 +25,7 @@
       <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
       <loading :show="loading" />
       <footer-full :commonData='commonData' :sectionName='sectionName' />
+      <share />
     </template>
   </div>
 </template>
@@ -45,6 +47,7 @@ import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
+import Share from '../components/Share.vue'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -66,7 +69,8 @@ export default {
     'leading-watch': LeadingWatch,
     'loading': Loading,
     'more': More,
-    'more-full': MoreFull
+    'more-full': MoreFull,
+    'share': Share
   },
   preFetch: fetchData,
   data () {
@@ -285,7 +289,9 @@ export default {
     const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : '/public/notImage.png'
     const ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
     const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? _.get(this.topic, [ 'ogDescription' ]) : description
-    const title = ogTitle + ` - ${SITE_TITLE}`
+    const title = ogTitle + ' - ' + SITE_TITLE
+    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+
     return {
       title,
       meta: [
@@ -302,7 +308,7 @@ export default {
           { property: 'og:type', content: 'article' },
           { property: 'og:title', content: title },
           { property: 'og:description', content: ogDescription },
-          { property: 'og:url', content: SITE_URL },
+          { property: 'og:url', content: ogUrl },
           { property: 'og:image', content: ogImage }
       ]
     }
@@ -313,30 +319,37 @@ export default {
 <style lang="stylus" scoped>
 
 .topic
-  display none
+  position relative
   width 100%
-  height 700px
+  padding-top 66.66%
   background-color rgba(135, 156, 169, 0.15)
   margin-bottom 20px
   background-repeat no-repeat
   background-position center center
   background-size cover
-  padding 50px
   &-view
     background-color #f2f2f2
   &-title
-    height 200px
-    width 400px
-    display flex
-    justify-content center
-    align-items center  
-    color #fff
-    background-size contain
-    background-position center center
+    position absolute
+    top 50%
+    left 50%
+    transform translate(-50%, -50%)
+    width 80%
+    height 50%
+    background-size cover
     background-repeat no-repeat
+    h1
+      margin 0
 
-@media (min-width: 1200px)
+@media (min-width: 900px)
   .topic
-    display block
+    height 600px
+    padding-top 0
+    &-title
+      height 200px
+      width 400px
+      color #fff
+      background-size contain
+      background-position center center
 
 </style>
