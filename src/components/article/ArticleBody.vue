@@ -830,12 +830,13 @@ export default {
               max-height 450px
 
             .img-caption
-              width 70%
+              width 100%
               margin 0 auto
-              padding 8px
+              padding 8px 0
               color rgba(0,0,0,0.498)
               font-size 1rem
-              text-align center
+              text-align left
+              line-height 1.4rem
 
       .swiper-pagination
         .swiper-pagination-bullet.swiper-pagination-bullet-active
@@ -939,10 +940,12 @@ export default {
         blockquote.blockquote
           padding 0
 
+
+
     .article_fb_comment
       margin-bottom 60px!important
 
-
+  
   @media (max-width 899px) and (min-width 768px)
     .article_body
       .article_basic-info, .article_credit, .article_main, .article_subtitle
@@ -988,6 +991,17 @@ export default {
     .herbsapi
       br
         display inline
+
+  @media (min-width 768px)
+    .article_body
+      .per-slide 
+        .swiper-wrapper 
+          .swiper-slide 
+            .slideshowImg 
+              .img-caption
+                width 70%
+                padding 8px
+                text-align center
     
 
 </style>
