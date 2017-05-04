@@ -20,7 +20,7 @@ const router = new Router({
   mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
-    { path: '/author/:authorId/:authorName?', component: List },
+    { path: '/author/:authorId/', component: List },
     { path: '/category/:title', component: List },
     {
       path: '/story/:slug',
@@ -35,7 +35,7 @@ const router = new Router({
     { path: '/search/:keyword', component: Search },
     { path: '/section/:title', component: List },
     { path: '/timeline/:title', component: TimelineView },
-    { path: '/tag/:tagId/:tagName?', component: List },
+    { path: '/tag/:tagId', component: List },
     { path: '/topic/:topicId', component: Topic },
     { path: '/404', component: NotFound },
     { path: '/', component: Home },

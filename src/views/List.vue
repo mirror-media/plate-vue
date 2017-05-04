@@ -2,14 +2,8 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions">
     <template scope="props" slot="dfpPos">
 
-      <div class="list-view" v-if="pageStyle == 'feature'">
-        <section style="width: 100%;">
-          <app-header :commonData= 'commonData' />
-        </section>
-        <div class="topic" v-if="type === 'TOPIC'">
-          <div class="topic-title"><h1></h1></div>
-          <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
-        </div>
+      <div class="list-view" v-if="pageStyle === 'feature'">
+        <app-header :commonData= 'commonData' />
         <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
           :section="props.section" :dfpId="props.dfpId" />
         <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
@@ -18,63 +12,57 @@
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
-        <article-list :articles='articles.items' :hasDFP='hasDFP' v-if="title !== 'Audio' && name !== 'videohub' ">
+        <article-list :articles='articles.items' :hasDFP='hasDFP' v-if="categoryName !== 'audio' && categoryName !== 'videohub' ">
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3" :dfpId="props.dfpId" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5" :dfpId="props.dfpId" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9" :dfpId="props.dfpId" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBL1" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpL1" :dfpId="props.dfpId" />
         </article-list>
-        <audio-list :audios="audios.items" v-if="title == 'Audio'" />
-        <video-list :playlist="playlist.items" v-if="name == 'videohub'"/>
+        <audio-list :audios="audios.items" v-if="categoryName == 'audio'" />
+        <video-list :playlist="playlist.items" v-if="categoryName == 'videohub'"/>
         <section class="container">
           <more v-if="hasMore" v-on:loadMore="loadMore" />
         </section>
         <section class="footer container">
-          <vue-dfp v-if="type !== 'TOPIC' && title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
+          <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
             :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="type !== 'TOPIC' && title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
+          <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
             :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="type === 'TOPIC' && getValue(topic, ['dfp'], '').length > 0" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
-            :section="props.section" :dfpId="props.dfpId" :unitId="getValue(topic, ['dfp'], '')" />
-          <vue-dfp v-if="type === 'TOPIC' && getValue(topic, ['mobileDfp'], '').length > 0" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
-            :section="props.section" :dfpId="props.dfpId" :unitId="getValue(topic, ['mobileDfp'], '')" />
           <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
         </section>
         <share />
       </div>
 
       <div class="listFull-view" v-if="pageStyle === 'full'">
-        <section>
-          <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-        </section>
+        <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
         <article-leading :articles='articles.items' :props="props" v-if="type === 'SECTION'"/>
         <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
         <latestArticle-full :articles='articles.items' :props="props" v-if="type === 'SECTION'" />
-        <leading-watch v-if="(type == 'TAG' && pageStyle == 'full') || (type === 'TOPIC' && sectionName === 'watch')"
-          :tag='tag' :topic='topic' :type='type'/>
-        <article-list-full :articles='articles.items'
-          v-if="type === 'TAG' || (type === 'TOPIC' && sectionName === 'watch')" />
+        <leading-watch v-if="type == 'TAG'" :tag='tag' :type='type'/>
+        <article-list-full :articles='articles.items' v-if="type === 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
         <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <footer-full :commonData='commonData' :sectionName='sectionName' />
       </div>
+
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
         <div class="ad">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
           <div class="close" @click="closeCoverAd"></div>
         </div>
       </div>
+
     </template>
   </vue-dfp-provider>
 </template>
-
 <script>
 
-import { AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
+import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
-import { getImage, getValue, unLockJS } from '../utils/comm'
+// import { currentYPosition, elmYPosition } from 'kc-scroll'
+import { unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
@@ -87,7 +75,6 @@ import FooterFull from '../components/FooterFull.vue'
 import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import LatestArticleFull from '../components/LatestArticleFull.vue'
-import Leading from '../components/Leading.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
@@ -95,7 +82,7 @@ import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import store from '../store'
+import vStore from '../store'
 
 const MAXRESULT = 9
 const LOADMOREMAXRESULT = 12
@@ -103,159 +90,67 @@ const PAGE = 1
 
 const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
+    .then(() => {
+      if (_.toUpper(_.split(store.state.route.path, '/')[1]) === TAG) {
+        return store.dispatch('FETCH_TAG', {
+          'id': store.state.route.params.tagId
+        })
+      }
+    })
 }
 
-const fetchListData = (store, type, sectionStyle, to) => {
-  let uuid
+const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, pageToken = '') => {
+  const page = isLoadMore || PAGE
+  const maxResults = isLoadMore ? LOADMOREMAXRESULT : MAXRESULT
   switch (type) {
     case AUTHOR:
-      uuid = to.params.authorId
       return fetchArticlesByAuthor(store, uuid, {
-        page: PAGE,
-        max_results: MAXRESULT
+        page: page,
+        max_results: maxResults
       })
+    case CATEGORY:
+      switch (uuid) {
+        case AUDIO_ID:
+          return fetchAudios(store, {
+            page: page,
+            max_results: maxResults
+          })
+        case VIDEOHUB_ID:
+          return fetchYoutubePlaylist(store, maxResults, pageToken)
+        default:
+          return fetchArticlesByUuid(store, uuid, CATEGORY, {
+            page: page,
+            max_results: maxResults
+          })
+      }
     case SECTION:
-      uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
-      switch (sectionStyle) {
+      switch (pageStyle) {
         case 'full':
           return fetchArticlesByUuid(store, uuid, SECTION, {
-            page: PAGE,
-            max_results: MAXRESULT,
+            page: page,
+            max_results: maxResults,
             related: 'full'
           })
         default:
           return fetchArticlesByUuid(store, uuid, SECTION, {
-            page: PAGE,
-            max_results: MAXRESULT
+            page: page,
+            max_results: maxResults
           })
       }
     case TAG:
-      uuid = to.params.tagId
-      return fetchTag(store, uuid).then(() => {
-        return fetchArticlesByUuid(store, uuid, TAG, {
-          page: PAGE,
-          max_results: MAXRESULT
+      if (needFetchTag) {
+        return fetchTag(store, uuid).then(() => {
+          return fetchArticlesByUuid(store, uuid, TAG, {
+            page: page,
+            max_results: maxResults
+          })
         })
-      })
-    case CATEGORY:
-      const catName = to.params.title
-      switch (catName) {
-        case 'audio':
-          return fetchAudios(store, {
-            page: PAGE,
-            max_results: MAXRESULT
-          })
-        case 'videohub':
-          return fetchYoutubePlaylist(store, MAXRESULT)
-        case 'campaign':
-          uuid = CAMPAIGN_ID
-          return fetchArticlesByUuid(store, uuid, CATEGORY, {
-            page: PAGE,
-            max_results: MAXRESULT
-          })
-        case 'marketing':
-          uuid = MARKETING_ID
-          return fetchArticlesByUuid(store, uuid, CATEGORY, {
-            page: PAGE,
-            max_results: MAXRESULT
-          })
-        default:
-          uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
-          return fetchArticlesByUuid(store, uuid, CATEGORY, {
-            page: PAGE,
-            max_results: MAXRESULT
-          })
-      }
-    case TOPIC:
-      uuid = to.params.topicId
-      const topic = _.find(_.get(store.state.commonData, [ 'topics', 'items' ]), { 'id': uuid })
-
-      return fetchArticlesByUuid(store, uuid, TOPIC, {
-        page: PAGE,
-        max_results: LOADMOREMAXRESULT
-      }).then(() => {
-        return (!topic) ? fetchTopicByUuid(store, uuid).then(() => {
-          return fetchTopicImagesByUuid(store, uuid, type, {
-            max_results: 25
-          })
-        }) : null
-      })
-  }
-}
-
-const fetchListDataBeforeRouteUpdate = (store, type, sectionStyle, to) => {
-  let uuid
-  switch (type) {
-    case AUTHOR:
-      uuid = to.params.authorId
-      return fetchArticlesByAuthor(store, uuid, {
-        page: PAGE
-      })
-    case SECTION:
-      uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
-      switch (sectionStyle) {
-        case 'full':
-          return fetchArticlesByUuid(store, uuid, SECTION, {
-            page: PAGE,
-            max_results: MAXRESULT,
-            related: 'full'
-          })
-        default:
-          return fetchArticlesByUuid(store, uuid, SECTION, {
-            page: PAGE,
-            max_results: MAXRESULT
-          })
-      }
-    case TAG:
-      uuid = to.params.tagId
-      return fetchTag(store, uuid).then(() => {
+      } else {
         return fetchArticlesByUuid(store, uuid, TAG, {
-          page: PAGE,
-          max_results: MAXRESULT
+          page: page,
+          max_results: maxResults
         })
-      })
-    case CATEGORY:
-      const catName = to.params.title
-      switch (catName) {
-        case 'audio':
-          return fetchAudios(store, {
-            page: PAGE,
-            max_results: MAXRESULT
-          })
-        case 'videohub':
-          return fetchYoutubePlaylist(store, MAXRESULT)
-        case 'campaign':
-          uuid = CAMPAIGN_ID
-          return fetchArticlesByUuid(store, uuid, CATEGORY, {
-            page: PAGE,
-            max_results: MAXRESULT
-          })
-        case 'marketing':
-          uuid = MARKETING_ID
-          return fetchArticlesByUuid(store, uuid, CATEGORY, {
-            page: PAGE,
-            max_results: MAXRESULT
-          })
-        default:
-          uuid = _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
-          return fetchArticlesByUuid(store, uuid, CATEGORY, {
-            page: PAGE,
-            max_results: MAXRESULT
-          })
       }
-    case TOPIC:
-      uuid = to.params.topicId
-      const topic = _.find(_.get(store.state.commonData, [ 'topics', 'items' ]), { 'id': uuid })
-      return fetchArticlesByUuid(store, uuid, TOPIC, {
-        page: PAGE,
-        max_results: LOADMOREMAXRESULT
-      }).then(() => {
-        return (!topic) ? fetchTopicByUuid(store, uuid).then(() => {
-          return fetchTopicImagesByUuid(store, uuid, type, {
-            max_results: 25
-          })
-        }) : null
-      })
   }
 }
 
@@ -298,30 +193,6 @@ const fetchTag = (store, id) => {
   })
 }
 
-const fetchTopics = (store, params) => {
-  return store.dispatch('FETCH_TOPIC_BY_UUID', {
-    'params': params
-  })
-}
-
-const fetchTopicByUuid = (store, uuid) => {
-  return store.dispatch('FETCH_TOPIC_BY_UUID', {
-    'params': {
-      where: {
-        _id: uuid
-      }
-    }
-  })
-}
-
-const fetchTopicImagesByUuid = (store, uuid, type, params) => {
-  return store.dispatch('FETCH_IMAGES', {
-    'uuid': uuid,
-    'type': type,
-    'params': params
-  })
-}
-
 const fetchYoutubePlaylist = (store, limit, pageToken = '') => {
   return store.dispatch('FETCH_YOUTUBE_PLAY_LIST', {
     'limit': limit,
@@ -329,12 +200,26 @@ const fetchYoutubePlaylist = (store, limit, pageToken = '') => {
   })
 }
 
-const fetchData = (store) => {
-  return fetchCommonData(store).then(() => {
-    const _type = _.toUpper(_.split(store.state.route.path, '/')[1])
-    const _sectionStyle = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': store.state.route.params.title }), [ 'style' ])
-    return fetchListData(store, _type, _sectionStyle, store.state.route)
-  })
+const getUUID = (store, type, to) => {
+  switch (type) {
+    case AUTHOR:
+      return to.params.authorId
+    case CATEGORY:
+      switch (to.params.title) {
+        case 'audio':
+          return AUDIO_ID
+        case 'campaign':
+          return CAMPAIGN_ID
+        case 'marketing':
+          return MARKETING_ID
+        case 'videohub':
+          return VIDEOHUB_ID
+        default:
+          return _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
+      }
+    case SECTION:
+      return _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
+  }
 }
 
 export default {
@@ -350,53 +235,15 @@ export default {
     'footer-full': FooterFull,
     'header-full': HeaderFull,
     'latestArticle-full': LatestArticleFull,
-    'leading': Leading,
     'leading-watch': LeadingWatch,
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
     'share': Share,
     'video-list': VideoList,
-    VueDfpProvider
+    'vue-dfp-provider': VueDfpProvider
   },
-  preFetch: fetchData,
-  mounted () {
-    if (this.type === SECTION || this.type === TOPIC || this.type === TAG) {
-      this.insertCustomizedMarkup()
-    }
-    this.updateViewport()
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
-    this.checkIfLockJS()
-  },
-  beforeRouteEnter (to, from, next) {
-    const type = _.toUpper(_.split(to.path, '/')[1])
-    if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
-      console.log([ to, from ])
-      const sectionStyle = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]),
-            { 'name': _.get(to, [ 'params', 'title' ]) }), [ 'style' ])
-      fetchCommonData(store).then(() => {
-        console.log('fetch common data sucessfully')
-        fetchListData(store, type, sectionStyle, to).then(() => {
-          console.log('fetch common data sucessfully')
-        }).then(() => {
-          next()
-        })
-      })
-    } else {
-      console.log('first rendering')
-      next()
-    }
-  },
-  beforeRouteUpdate (to, from, next) {
-    this.page = PAGE
-    const type = _.toUpper(_.split(to.path, '/')[1])
-    const sectionStyle = _.get(_.find(_.get(this.$store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ])
-    fetchListDataBeforeRouteUpdate(this.$store, type, sectionStyle, to).then(() => {
-      next()
-    })
-  },
+  preFetch: fetchCommonData,
   data () {
     return {
       commonData: this.$store.state.commonData,
@@ -413,20 +260,20 @@ export default {
       switch (this.type) {
         case AUTHOR:
           return this.$store.state.articles
-        case SECTION:
+        default:
           if (this.$route.params.title === 'topic') {
             return this.$store.state.commonData.topics
-          } else {
-            return this.$store.state.articlesByUUID
           }
-        case TOPIC:
-          return this.$store.state.articlesByUUID
-        default:
           return this.$store.state.articlesByUUID
       }
     },
     audios () {
       return this.$store.state.audios
+    },
+    categoryName () {
+      if (this.type === CATEGORY) {
+        return _.get(this.$route, [ 'params', 'title' ])
+      }
     },
     customCSS () {
       switch (this.type) {
@@ -434,9 +281,6 @@ export default {
           return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'css' ], null)
         case TAG:
           return _.get(this.tag, [ 'css' ])
-        case TOPIC:
-          const _style = _.get(this.topic, [ 'style' ], null)
-          return _style
         default:
           return null
       }
@@ -445,9 +289,6 @@ export default {
       switch (this.type) {
         case SECTION:
           return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'javascript' ], null)
-        case TOPIC:
-          const _javascript = _.get(this.topic, [ 'javascript' ], null)
-          return _javascript
         default:
           return null
       }
@@ -470,10 +311,10 @@ export default {
       }
     },
     hasDFP () {
-      return !(this.type === TOPIC || this.$route.params.title === 'topic')
+      return !(this.$route.params.title === 'topic')
     },
     hasMore () {
-      switch (this.name) {
+      switch (this.$route.params.title) {
         case 'audio':
           return _.get(this.audios, [ 'items', 'length' ], 0) < _.get(this.audios, [ 'meta', 'total' ], 0)
         case 'videohub':
@@ -482,37 +323,19 @@ export default {
           return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
       }
     },
-    name () {
+    pageStyle () {
       switch (this.type) {
-        case CATEGORY:
-          return this.$route.params.title
+        case TAG:
+          return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
+        default:
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'style' ], 'feature')
       }
+    },
+    playlist () {
+      return _.get(this.$store.state, [ 'playlist' ])
     },
     section () {
       return _.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title })
-    },
-    sectionName () {
-      switch (this.type) {
-        case CATEGORY:
-          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
-            return _.find(s.categories, { 'id': this.uuid })
-          }), [ 'name' ], 'other')
-        case SECTION:
-          if (this.$route.params.title === 'topic') {
-            return 'other'
-          } else {
-            return this.$route.params.title
-          }
-        case TAG:
-          return _.get(this.tag, 'sections[0].name')
-        case TOPIC:
-          if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
-            return 'watch'
-          }
-          return 'other'
-        default:
-          return 'other'
-      }
     },
     sectionfeatured () {
       return _.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.sectionName), [ this.sectionName ])
@@ -529,21 +352,23 @@ export default {
           return 'other'
       }
     },
-    pageStyle () {
+    sectionName () {
       switch (this.type) {
-        case TAG:
-          return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
-        case TOPIC:
-          if (this.$route.params.topicId === TOPIC_WATCH_ID) {
-            return 'full'
+        case CATEGORY:
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
+            return _.find(s.categories, { 'id': this.uuid })
+          }), [ 'name' ], 'other')
+        case SECTION:
+          if (this.$route.params.title === 'topic') {
+            return 'other'
+          } else {
+            return this.$route.params.title
           }
-          return 'feature'
+        case TAG:
+          return _.get(this.$store.state, [ 'tag', 'sections', '0', 'name' ], 'other')
         default:
-          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'style' ], 'feature')
+          return 'other'
       }
-    },
-    playlist () {
-      return this.$store.state.playlist
     },
     tag () {
       return _.get(this.$store.state, [ 'tag' ])
@@ -551,7 +376,7 @@ export default {
     title () {
       switch (this.type) {
         case AUTHOR:
-          return this.$route.params.authorName
+          return _.get(this.$store.state, [ 'authors', '0', 'name' ])
         case CATEGORY:
           switch (this.$route.params.title) {
             case 'audio':
@@ -570,38 +395,29 @@ export default {
             return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'title' ])
           }
         case TAG:
-          return _.get(this.tag, [ 'name' ])
-        case TOPIC:
-          if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
-            return '錶展特區'
-          }
-          return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])
-      }
-    },
-    topic () {
-      if (this.type === TOPIC) {
-        return (this.$store.state.topic.items)
-          ? _.assign(_.get(this.$store.state, [ 'topic', 'items', '0' ]), { images: _.get(this.$store.state, [ 'images' ]) })
-          : _.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.uuid })
-      } else {
-        return _.get(this.$store.state, [ 'topic' ])
+          return _.get(this.$store.state, [ 'tag', 'name' ])
       }
     },
     type () {
-      return _.toUpper(_.split(this.$route.path, '/')[1])
+      return _.toUpper(_.split(vStore.state.route.path, '/')[1])
     },
     uuid () {
       switch (this.type) {
         case AUTHOR:
           return this.$route.params.authorId
         case CATEGORY:
-          return _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'id' ])
+          switch (this.$route.params.title) {
+            case 'marketing':
+              return MARKETING_ID
+            case 'campaign':
+              return CAMPAIGN_ID
+            default:
+              return _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'id' ])
+          }
         case SECTION:
           return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'id' ])
         case TAG:
           return this.$route.params.tagId
-        case TOPIC:
-          return this.$route.params.topicId
       }
     }
   },
@@ -612,8 +428,11 @@ export default {
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
-    getImage,
-    getValue,
+    // handleScroll () {
+    //   window.onscroll = (e) => {
+
+    //   }
+    // },
     insertCustomizedMarkup () {
       const custCss = document.createElement('style')
       const custScript = document.createElement('script')
@@ -625,103 +444,25 @@ export default {
       if (this.customJS) {
         custScript.appendChild(document.createTextNode(this.customJS))
       }
-      document.querySelector('body').appendChild(custCss)
-      document.querySelector('body').appendChild(custScript)
+      if (!document.getElementById('custCSS') || !document.getElementById('custJS')) {
+        document.querySelector('body').appendChild(custCss)
+        document.querySelector('body').appendChild(custScript)
+      } else {
+        document.querySelector('#custCSS').innerHTML = this.customCSS
+        document.querySelector('#custJS').innerHTML = this.customJS
+      }
     },
     loadMore () {
+      let pageToken
       this.page += 1
       this.loading = true
-      switch (this.type) {
-        case AUTHOR:
-          fetchArticlesByAuthor(this.$store, this.uuid, {
-            page: this.page,
-            max_results: LOADMOREMAXRESULT
-          }).then(() => {
-            this.articles = this.$store.state.articles
-            this.loading = false
-          })
-          break
-        case SECTION:
-          switch (this.pageStyle) {
-            case 'full':
-              fetchArticlesByUuid(this.$store, this.uuid, SECTION, {
-                page: this.page,
-                max_results: LOADMOREMAXRESULT,
-                related: 'full'
-              }).then(() => {
-                this.articles = this.$store.state.articlesByUUID
-                this.loading = false
-              })
-              break
-            default:
-              if (this.$route.params.title === 'topic') {
-                fetchTopics(this.$store, {
-                  page: this.page,
-                  max_results: LOADMOREMAXRESULT
-                }).then(() => {
-                  const orig = _.values(this.articles[ 'items' ])
-                  const concat = _.concat(orig, _.get(this.$store.state, [ 'topic', 'items' ]))
-                  this.articles[ 'meta' ] = _.get(this.$store.state, [ 'topic', 'meta' ])
-                  this.articles[ 'items' ] = concat
-                  this.loading = false
-                })
-              } else {
-                fetchArticlesByUuid(this.$store, this.uuid, SECTION, {
-                  page: this.page,
-                  max_results: LOADMOREMAXRESULT
-                }).then(() => {
-                  this.articles = this.$store.state.articlesByUUID
-                  this.loading = false
-                })
-              }
-          }
-          break
-        default:
-          switch (this.name) {
-            case 'audio':
-              fetchAudios(this.$store, {
-                page: this.page,
-                max_results: MAXRESULT
-              }).then(() => {
-                this.audios = this.$store.state.audios
-                this.loading = false
-              })
-              break
-            case 'videohub':
-              const pageToken = _.get(this.playlist, [ 'nextPageToken' ])
-              fetchYoutubePlaylist(this.$store, MAXRESULT, pageToken).then(() => {
-                this.playlist = this.$store.state.playlist
-                this.loading = false
-              })
-              break
-            case 'marketing':
-              fetchArticlesByUuid(this.$store, MARKETING_ID, this.type, {
-                page: this.page,
-                max_results: MAXRESULT
-              }).then(() => {
-                this.articles = this.$store.state.articlesByUUID
-                this.loading = false
-              })
-              break
-            case 'campaign':
-              fetchArticlesByUuid(this.$store, CAMPAIGN_ID, this.type, {
-                page: this.page,
-                max_results: MAXRESULT
-              }).then(() => {
-                this.articles = this.$store.state.articlesByUUID
-                this.loading = false
-              })
-              break
-            default:
-              fetchArticlesByUuid(this.$store, this.uuid, this.type, {
-                page: this.page,
-                max_results: MAXRESULT
-              }).then(() => {
-                this.articles = this.$store.state.articlesByUUID
-                this.loading = false
-              })
-          }
+      if (this.uuid === VIDEOHUB_ID) {
+        pageToken = _.get(this.$store.state.playlist, [ 'nextPageToken' ])
       }
+      return fetchListData(this.$store, this.type, this.pageStyle, this.uuid, this.page, false, pageToken)
+      .then(() => {
+        this.loading = false
+      })
     },
     updateCookie () {
       const cookie = Cookie.get('visited')
@@ -737,7 +478,6 @@ export default {
       const custScript = document.querySelector('#custJS')
       custCss.innerHTML = ''
       custScript.innerHTML = ''
-      if (!custCss || !custScript) { this.insertCustomizedMarkup(); return }
       if (this.customCSS) {
         custCss.innerHTML = this.customCSS
       }
@@ -751,69 +491,108 @@ export default {
       }
     }
   },
+  watch: {
+    customCSS: function () {
+      this.updateCustomizedMarkup()
+    },
+    uuid: function () {
+      this.page = PAGE
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    const type = _.toUpper(_.split(to.path, '/')[1])
+    const pageStyle = _.get(_.find(_.get(vStore.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ], 'feature')
+
+    if (from.matched.length !== 0) { // check whether first time
+      fetchListData(vStore, type, pageStyle, getUUID(vStore, type, to), false, true)
+      .then(() => next())
+    } else {
+      next()
+    }
+  },
+  beforeRouteUpdate (to, from, next) {
+    const type = _.toUpper(_.split(to.path, '/')[1])
+    const pageStyle = _.get(_.find(_.get(this.$store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ], 'feature')
+
+    fetchListData(this.$store, type, pageStyle, getUUID(this.$store, type, to), false, true)
+    .then(() => next())
+  },
+  beforeRouteLeave (to, from, next) {
+    const custCss = document.querySelector('#custCSS')
+    const custScript = document.querySelector('#custJS')
+    custCss.innerHTML = ''
+    custScript.innerHTML = ''
+    next()
+  },
+  beforeMount () {
+    // only fetch at first time
+    fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
+  },
+  mounted () {
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
+    this.checkIfLockJS()
+    this.insertCustomizedMarkup()
+  },
   metaInfo () {
     const type = this.type
+
     const description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
     let ogImage
     let ogTitle
     let ogDescription
     let sectionName
-    _.get(this, [ 'type' ]) === 'SECTION' || _.get(this, [ 'type' ]) === 'CATEGORY' ? sectionName = _.get(this, [ 'sectionName' ]) : ''
     switch (type) {
       case SECTION:
+        sectionName = this.sectionName
         const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
-        sectionName = _.get(this, [ 'sectionName' ])
         ogImage = imageURL || '/public/notImage.png'
         ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? _.get(this.section, [ 'ogTitle' ]) : _.get(this.section, [ 'title' ], this.title)
         ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? _.get(this.section, [ 'ogDescription' ]) : _.get(this.section, [ 'description' ])
         break
-      case TOPIC:
-        ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : '/public/notImage.png'
-        if (this.$route.params.topicId === 'topic') {
-          ogTitle = 'Topic'
-        } else {
-          ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
-        }
-        ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? _.get(this.topic, [ 'ogDescription' ]) : description
-        break
-      default:
+      case CATEGORY:
+        sectionName = this.sectionName
         ogTitle = this.title
         ogImage = '/public/notImage.png'
         ogDescription = description
+        break
+      default:
+        ogTitle = this.title || ''
+        ogImage = '/public/notImage.png'
+        ogDescription = description
     }
-    if (!ogTitle && process.env.VUE_ENV === 'server') {
+    if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
       const e = new Error()
       e.massage = 'Page Not Found'
       e.code = '404'
       throw e
     }
-    const title = ogTitle + ` - ${SITE_TITLE}`
 
+    const title = ogTitle + ` - ${SITE_TITLE}`
     return {
-      title,
+      title: title,
       meta: [
-          { name: 'keywords', content: SITE_KEYWORDS },
-          { name: 'description', content: ogDescription },
-          { name: 'section-name', content: sectionName },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: title },
-          { name: 'twitter:description', content: ogDescription },
-          { name: 'twitter:image', content: ogImage },
-          { property: 'fb:app_id', content: FB_APP_ID },
-          { property: 'fb:pages', content: FB_PAGE_ID },
-          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-          { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: title },
-          { property: 'og:description', content: ogDescription },
-          { property: 'og:url', content: ogUrl },
-          { property: 'og:image', content: ogImage }
+        { name: 'keywords', content: SITE_KEYWORDS },
+        { name: 'description', content: ogDescription },
+        { name: 'section-name', content: sectionName },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: ogDescription },
+        { name: 'twitter:image', content: ogImage },
+        { property: 'fb:app_id', content: FB_APP_ID },
+        { property: 'fb:pages', content: FB_PAGE_ID },
+        { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
+        { property: 'og:locale', content: 'zh_TW' },
+        { property: 'og:type', content: 'article' },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: ogDescription },
+        { property: 'og:url', content: ogUrl },
+        { property: 'og:image', content: ogImage }
       ]
     }
-  },
-  updated () {
-    this.updateCustomizedMarkup()
   }
 }
 
@@ -830,27 +609,6 @@ $color-other = #bcbcbc
 .list
   &-view
     background-color #f2f2f2
-    .topic
-      width 100%
-      height 700px
-      background-color rgba(135, 156, 169, 0.15)
-      margin-bottom 20px
-      background-repeat no-repeat
-      background-position center center
-      background-size cover
-      padding 50px
-      
-      &-title
-        height 200px
-        width 400px
-        display flex
-        justify-content center
-        align-items center  
-        color #fff
-        background-size contain
-        background-position center center
-        background-repeat no-repeat
-      
   &-title
     &.container
       position relative
@@ -926,5 +684,4 @@ $color-other = #bcbcbc
 
 .other
   color $color-other
-
 </style>

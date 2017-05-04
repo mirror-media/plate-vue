@@ -289,7 +289,7 @@ export default {
     const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : '/public/notImage.png'
     const ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
     const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? _.get(this.topic, [ 'ogDescription' ]) : description
-    const title = ogTitle + ' - ' + SITE_TITLE
+    const title = ogTitle + ` - ${SITE_TITLE}`
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
 
     return {
