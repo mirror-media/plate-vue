@@ -155,7 +155,7 @@ export default {
       return _.slice(this.sortedArticles, 6)
     },
     sortedArticles () {
-      return _.sortBy(this.articles, [ function (a) {
+      return _.sortBy(_.filter(this.articles, 'title'), [ function (a) {
         return -moment(new Date(a.publishedDate)).unix()
       } ])
     }

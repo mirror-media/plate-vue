@@ -149,7 +149,6 @@ export default {
   },
   mounted () {
     this.handleScroll()
-    console.log('mounted Header')
   }
 }
 
