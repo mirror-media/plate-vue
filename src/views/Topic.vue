@@ -292,6 +292,13 @@ export default {
     const title = ogTitle + ` - ${SITE_TITLE}`
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
 
+    if (!ogTitle && process.env.VUE_ENV === 'server') {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    }
+
     return {
       title,
       meta: [
