@@ -132,6 +132,12 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
             related: 'full'
           })
         default:
+          if (uuid === 'topic' && isLoadMore) {
+            return fetchTopics(store, {
+              page: page,
+              max_results: maxResults
+            })
+          }
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
             max_results: maxResults
@@ -190,6 +196,12 @@ const fetchAudios = (store, params = {}) => {
 const fetchTag = (store, id) => {
   return store.dispatch('FETCH_TAG', {
     'id': id
+  })
+}
+
+const fetchTopics = (store, params) => {
+  return store.dispatch('FETCH_TOPIC_BY_UUID', {
+    'params': params
   })
 }
 
@@ -347,7 +359,7 @@ export default {
             return _.find(s.categories, { 'id': this.uuid })
           }), [ 'id' ], 'other')
         case SECTION:
-          return _.get(this, [ 'uuid' ], 'other')
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'id' ], 'other')
         default:
           return 'other'
       }
@@ -415,7 +427,11 @@ export default {
               return _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'id' ])
           }
         case SECTION:
-          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'id' ])
+          if (this.$route.params.title === 'topic') {
+            return 'topic'
+          } else {
+            return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'id' ])
+          }
         case TAG:
           return this.$route.params.tagId
       }
@@ -461,6 +477,12 @@ export default {
       }
       return fetchListData(this.$store, this.type, this.pageStyle, this.uuid, this.page, false, pageToken)
       .then(() => {
+        if (this.uuid === 'topic') {
+          const orig = _.values(this.articles[ 'items' ])
+          const concat = _.concat(orig, _.get(this.$store.state, [ 'topic', 'items' ]))
+          this.articles[ 'meta' ] = _.get(this.$store.state, [ 'topic', 'meta' ])
+          this.articles[ 'items' ] = concat
+        }
         this.loading = false
       })
     },
