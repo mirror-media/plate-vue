@@ -284,7 +284,7 @@ export const DFP_OPTIONS = {
   collapseEmptyDivs: 'original',
   refreshExisting: true,
   disablePublisherConsole: false,
-  disableInitialLoad: false,
+  disableInitialLoad: true,
   setCentering: false,
   noFetch: false,
   namespace: undefined,

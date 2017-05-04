@@ -17,7 +17,7 @@
           <div class="playpause play" @click="doPlayVideoByBtn" target=".heroimg.video"></div>
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
-        <div class="article-heromedia" v-else="heroImage">
+        <div class="article-heromedia" v-else-if="heroImage">
           <img v-if="heroImage && heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
           :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
