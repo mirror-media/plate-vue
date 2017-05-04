@@ -99,7 +99,7 @@ export const DFP_UNITS = {
     'PCPOP7': { 'aduid': 'mm_RWD_other_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'pop_item', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
 
     'LPCHD': { 'aduid': 'mm_pc_other_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto 0' ] },
-    'LPCFT': { 'aduid': 'mm_pc_other_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto 0' ] },
+    'LPCFT': { 'aduid': 'mm_pc_other_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto' ] },
     'LPCNA3': { 'aduid': 'mm_RWD_other_fluid_NA3', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA5': { 'aduid': 'mm_RWD_other_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA9': { 'aduid': 'mm_RWD_other_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] }
@@ -131,7 +131,7 @@ export const DFP_UNITS = {
     'PCPOP7': { 'aduid': 'mm_RWD_np_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'pop_item', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     // SPCHD, SPCFT : position on listing page
     'LPCHD': { 'aduid': 'mm_pc_np_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto 0' ] },
-    'LPCFT': { 'aduid': 'mm_pc_np_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 20px auto 0' ] },
+    'LPCFT': { 'aduid': 'mm_pc_np_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 20px auto' ] },
     'LPCNA3': { 'aduid': 'mm_RWD_np_fluid_NA3', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA5': { 'aduid': 'mm_RWD_np_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA9': { 'aduid': 'mm_RWD_np_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] }
@@ -163,7 +163,7 @@ export const DFP_UNITS = {
     'PCPOP7': { 'aduid': 'mm_RWD_ent_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'pop_item', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     // SPCHD, SPCFT : position on listing page
     'LPCHD': { 'aduid': 'mm_pc_ent_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto 0' ] },
-    'LPCFT': { 'aduid': 'mm_pc_ent_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 20px auto 0' ] },
+    'LPCFT': { 'aduid': 'mm_pc_ent_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 20px auto' ] },
     'LPCNA3': { 'aduid': 'mm_RWD_ent_fluid_NA3', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA5': { 'aduid': 'mm_RWD_ent_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA9': { 'aduid': 'mm_RWD_ent_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] }
@@ -195,7 +195,7 @@ export const DFP_UNITS = {
     'PCPOP7': { 'aduid': 'mm_RWD_fnt_ap_fluid_NA7', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'pop_item', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     // SPCHD, SPCFT : position on listing page
     'LPCHD': { 'aduid': 'mm_pc_fnt_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto 0' ] },
-    'LPCFT': { 'aduid': 'mm_pc_fnt_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 20px auto 0' ] },
+    'LPCFT': { 'aduid': 'mm_pc_fnt_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 20px auto' ] },
     'LPCR1': { 'aduid': 'mm_pc_fnt_300x600_R1', 'dimensions': '300x250,300x600', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'LPCNA3': { 'aduid': 'mm_RWD_fnt_fluid_NA3', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA5': { 'aduid': 'mm_RWD_fnt_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },

@@ -12,22 +12,23 @@
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
-        <article-list :articles='articles.items' :hasDFP='hasDFP' v-if="categoryName !== 'audio' && categoryName !== 'videohub' ">
+        <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' v-if="categoryName !== 'audio' && categoryName !== 'videohub' ">
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3" :dfpId="props.dfpId" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5" :dfpId="props.dfpId" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9" :dfpId="props.dfpId" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBL1" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpL1" :dfpId="props.dfpId" />
         </article-list>
-        <audio-list :audios="audios.items" v-if="categoryName == 'audio'" />
-        <video-list :playlist="playlist.items" v-if="categoryName == 'videohub'"/>
+        <audio-list :audios="audios.items" v-if="categoryName === 'audio'" />
+        <video-list :playlist="playlist.items" v-if="categoryName === 'videohub'"/>
         <section class="container">
-          <more v-if="hasMore" v-on:loadMore="loadMore" />
+          <more v-if="hasMore && (categoryName === 'audio' || categoryName === 'videohub')" v-on:loadMore="loadMore" />
         </section>
+        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <article-list id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
+          v-if="categoryName !== 'audio' && categoryName !== 'videohub'" v-show="hasAutoScroll"/>
+        <loading :show="loading" />
         <section class="footer container">
-          <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
-            :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
-            :section="props.section" :dfpId="props.dfpId" />
           <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
         </section>
         <share />
@@ -61,7 +62,7 @@
 
 import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
-// import { currentYPosition, elmYPosition } from 'kc-scroll'
+import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
@@ -84,8 +85,7 @@ import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import vStore from '../store'
 
-const MAXRESULT = 9
-const LOADMOREMAXRESULT = 12
+const MAXRESULT = 12
 const PAGE = 1
 
 const fetchCommonData = (store) => {
@@ -101,26 +101,25 @@ const fetchCommonData = (store) => {
 
 const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, pageToken = '') => {
   const page = isLoadMore || PAGE
-  const maxResults = isLoadMore ? LOADMOREMAXRESULT : MAXRESULT
   switch (type) {
     case AUTHOR:
       return fetchArticlesByAuthor(store, uuid, {
         page: page,
-        max_results: maxResults
+        max_results: MAXRESULT
       })
     case CATEGORY:
       switch (uuid) {
         case AUDIO_ID:
           return fetchAudios(store, {
             page: page,
-            max_results: maxResults
+            max_results: MAXRESULT
           })
         case VIDEOHUB_ID:
-          return fetchYoutubePlaylist(store, maxResults, pageToken)
+          return fetchYoutubePlaylist(store, MAXRESULT, pageToken)
         default:
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: page,
-            max_results: maxResults
+            max_results: MAXRESULT
           })
       }
     case SECTION:
@@ -128,19 +127,19 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
         case 'full':
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
-            max_results: maxResults,
+            max_results: MAXRESULT,
             related: 'full'
           })
         default:
           if (uuid === 'topic' && isLoadMore) {
             return fetchTopics(store, {
               page: page,
-              max_results: maxResults
+              max_results: MAXRESULT
             })
           }
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
-            max_results: maxResults
+            max_results: MAXRESULT
           })
       }
     case TAG:
@@ -148,13 +147,13 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
         return fetchTag(store, uuid).then(() => {
           return fetchArticlesByUuid(store, uuid, TAG, {
             page: page,
-            max_results: maxResults
+            max_results: MAXRESULT
           })
         })
       } else {
         return fetchArticlesByUuid(store, uuid, TAG, {
           page: page,
-          max_results: maxResults
+          max_results: MAXRESULT
         })
       }
   }
@@ -258,9 +257,12 @@ export default {
   preFetch: fetchCommonData,
   data () {
     return {
+      articleListAutoScrollHeight: 0,
+      canScrollLoadMord: true,
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
+      hasAutoScroll: false,
       loading: false,
       page: PAGE,
       showDfpCoverAdFlag: false,
@@ -281,6 +283,12 @@ export default {
     },
     audios () {
       return this.$store.state.audios
+    },
+    autoScrollArticles () {
+      return _.take(this.articles.items, 12)
+    },
+    autoScrollArticlesLoadMore () {
+      return _.slice(this.articles.items, 12)
     },
     categoryName () {
       if (this.type === CATEGORY) {
@@ -444,11 +452,26 @@ export default {
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
-    // handleScroll () {
-    //   window.onscroll = (e) => {
+    handleScroll () {
+      window.onscroll = (e) => {
+        if (document.querySelector('#articleList')) {
+          const currentBottom = currentYPosition() + window.innerHeight
+          const articleListHeight = document.querySelector('#articleList').offsetHeight
+          const articleListBottom = elmYPosition('#articleList') + articleListHeight
+          this.articleListAutoScrollHeight = document.querySelector('#articleListAutoScroll').offsetHeight
+          const articleListAutoScrollBottom = elmYPosition('#articleListAutoScroll') + this.articleListAutoScrollHeight
+          if (currentBottom > (articleListBottom - 300) && this.canScrollLoadMord && (this.page === 1) && this.hasMore) {
+            this.canScrollLoadMord = false
+            this.loadMore()
+          }
 
-    //   }
-    // },
+          if (currentBottom > (articleListAutoScrollBottom - 300) && this.canScrollLoadMord && (this.page > 1) && this.hasMore) {
+            this.canScrollLoadMord = false
+            this.loadMore()
+          }
+        }
+      }
+    },
     insertCustomizedMarkup () {
       const custCss = document.createElement('style')
       const custScript = document.createElement('script')
@@ -484,6 +507,7 @@ export default {
           this.articles[ 'items' ] = concat
         }
         this.loading = false
+        this.hasAutoScroll = true
       })
     },
     updateCookie () {
@@ -514,11 +538,16 @@ export default {
     }
   },
   watch: {
+    articleListAutoScrollHeight: function () {
+      this.canScrollLoadMord = true
+    },
     customCSS: function () {
       this.updateCustomizedMarkup()
     },
     uuid: function () {
       this.page = PAGE
+      this.articleListAutoScrollHeight = 0
+      this.hasAutoScroll = false
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -557,6 +586,7 @@ export default {
     })
     this.checkIfLockJS()
     this.insertCustomizedMarkup()
+    this.handleScroll()
   },
   metaInfo () {
     const type = this.type
@@ -586,6 +616,7 @@ export default {
         ogImage = '/public/notImage.png'
         ogDescription = description
     }
+
     if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
       const e = new Error()
       e.massage = 'Page Not Found'
