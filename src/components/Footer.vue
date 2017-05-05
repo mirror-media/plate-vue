@@ -120,6 +120,8 @@
   @media (min-width 0px) and (max-width 767px)
     footer
       width 100%
+      padding 1rem 2rem 0
+      margin-bottom 40px
       
       .share-mobile
         display flex
