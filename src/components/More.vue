@@ -31,6 +31,8 @@ export default {
     height 100%
     border 1px solid #bcbcbc
     background none
+    > span
+      margin 0 auto
 
 .more-container
   width 100%
