@@ -98,7 +98,7 @@ router.use('/questionnaire', function(req, res, next) {
         res.send('empty file')
     } else {
         superagent
-            .get(`${QUESTIONNAIRE_PROTOCOL}://${QUESTIONNAIRE_HOST}/questionnaire/${query.file}`)
+            .get(`${SERVER_PROTOCOL}://${SERVER_HOST}/questionnaire/${query.file}`)
             .end((err, response) => {
                 if (!err && response) {
                     res.json(JSON.parse(response.text))

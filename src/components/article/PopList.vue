@@ -120,7 +120,7 @@
           font-size 1.1rem
           display flex
           justify-content center
-          align-items center
+          align-items flex-start
         
           a 
             width 95%
