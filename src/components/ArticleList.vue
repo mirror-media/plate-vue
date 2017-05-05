@@ -155,6 +155,9 @@ export default {
       return _.slice(this.sortedArticles, 6)
     },
     sortedArticles () {
+      if (_.get(this.$route, [ 'params', 'title' ]) === 'topic') {
+        return this.articles
+      }
       return _.sortBy(_.filter(this.articles, 'title'), [ function (a) {
         return -moment(new Date(a.publishedDate)).unix()
       } ])

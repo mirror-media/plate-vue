@@ -168,6 +168,11 @@
         })
       })
     },
+    beforeRouteLeave (to, from, next) {
+      const mediafarmersScript = document.querySelector('#mediafarmersJS')
+      document.querySelector('body').removeChild(mediafarmersScript)
+      next()
+    },
     beforeMount () {
       const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
       fetchLatestArticle(store, {
@@ -353,6 +358,14 @@
           window.FB && window.FB.XFBML.parse()
         }
       },
+      insertMediafarmersScript () {
+        const mediafarmersScript = document.createElement('script')
+        mediafarmersScript.setAttribute('id', 'mediafarmersJS')
+        mediafarmersScript.setAttribute('src', 'https://mediafarmers.org/api/api.js')
+        if (!document.getElementById('mediafarmersJS')) {
+          document.querySelector('body').appendChild(mediafarmersScript)
+        }
+      },
       updateCookie () {
         const cookie = Cookie.get('visited')
         if (!cookie) {
@@ -361,6 +374,11 @@
         } else {
           this.showDfpCoverAdFlag = false
         }
+      },
+      updateMediafarmersScript () {
+        const mediafarmersScript = document.querySelector('#mediafarmersJS')
+        document.querySelector('body').removeChild(mediafarmersScript)
+        this.insertMediafarmersScript()
       },
       updateViewport () {
         const browser = typeof window !== 'undefined'
@@ -371,6 +389,7 @@
     },
     mounted () {
       this.insertFbSdkScript()
+      this.insertMediafarmersScript()
       this.updateViewport()
       this.clientSideFlag = process.env.VUE_ENV === 'client'
       window.addEventListener('resize', () => {
@@ -439,6 +458,7 @@
         })
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
+        this.updateMediafarmersScript()
       }
     }
   }

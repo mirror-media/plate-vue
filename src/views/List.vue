@@ -399,8 +399,6 @@ export default {
           return _.get(this.$store.state, [ 'authors', '0', 'name' ])
         case CATEGORY:
           switch (this.$route.params.title) {
-            case 'audio':
-              return 'Audio'
             case 'marketing':
               return '企劃特輯'
             case 'campaign':
