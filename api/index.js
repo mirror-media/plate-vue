@@ -166,6 +166,20 @@ router.get('*', (req, res) => {
         try {
             if (!err && data) {
                 // have data
+                redisPoolRead.ttl(decodeURIComponent(req.url), (_err, _data) => {
+                  if (!_err && _data) {
+                    if (_data === -1) {
+                      redisPoolWrite.del(decodeURIComponent(req.url), (_e, _d) => {
+                        if (_e) {
+                          console.log('deleting key ', decodeURIComponent(req.url), 'from redis in fail ', _err)
+                        }
+                      })
+                    }
+                  } else {
+                    console.log('fetching ttl in fail ', _err)
+                  }
+                })
+                
                 res.json(JSON.parse(data))
             } else {
                 // no data then http request
