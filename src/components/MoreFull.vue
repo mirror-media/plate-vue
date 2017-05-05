@@ -32,6 +32,8 @@ export default {
     letter-spacing 10px
     border none
     background-color #333
+    > span
+      margin 0 auto
 
 @media (min-width: 1200px)
   .moreFull
