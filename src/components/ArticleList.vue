@@ -105,7 +105,7 @@
       </a>
     </template>
 
-    <template v-for="item in articles" v-if="!hasDFP">
+    <template v-for="item in sortedArticles" v-if="!hasDFP">
       <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects'">
         <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>

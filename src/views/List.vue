@@ -29,7 +29,7 @@
           v-if="categoryName !== 'audio' && categoryName !== 'videohub'" v-show="hasAutoScroll"/>
         <loading :show="loading" />
         <section class="footer container">
-          <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
+          <app-footer />
         </section>
         <share />
       </div>
@@ -577,6 +577,7 @@ export default {
   },
   beforeMount () {
     // only fetch at first time
+    this.$store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
     fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
   },
   mounted () {
