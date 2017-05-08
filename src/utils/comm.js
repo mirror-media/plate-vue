@@ -1,4 +1,4 @@
-import { SITE_URL } from '../constants'
+import { SITE_DOMAIN, SITE_URL } from '../constants'
 import _ from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
@@ -138,5 +138,15 @@ export function unLockJS () {
     document.onkeydown = function (event) { if (event.keyCode === 67) { return true } }
     document.ondragstart = function () { return true }
     document.onselectstart = function () { return true }
+  }
+}
+
+export function currEnv () {
+  if (process.env.VUE_ENV === 'client') {
+    if (location.host.indexOf(SITE_DOMAIN) === 0 || location.host.indexOf(`www.${SITE_DOMAIN}`) === 0) {
+      return 'prod'
+    } else {
+      return 'dev'
+    }
   }
 }

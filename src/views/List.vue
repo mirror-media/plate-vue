@@ -1,30 +1,28 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
 
       <div class="list-view" v-if="pageStyle === 'feature'">
         <app-header :commonData= 'commonData' />
-        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :dfpUnits="props.dfpUnits" 
-          :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :dfpUnits="props.dfpUnits" 
-          :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :config="props.config" />
+        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :config="props.config" />
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
         <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' v-if="categoryName !== 'audio' && categoryName !== 'videohub' ">
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA3" :dfpId="props.dfpId" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA5" :dfpId="props.dfpId" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpNA9" :dfpId="props.dfpId" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBL1" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpL1" :dfpId="props.dfpId" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
         </article-list>
         <audio-list :audios="audios.items" v-if="categoryName === 'audio'" />
         <video-list :playlist="playlist.items" v-if="categoryName === 'videohub'"/>
         <section class="container">
           <more v-if="hasMore && (categoryName === 'audio' || categoryName === 'videohub')" v-on:loadMore="loadMore" />
         </section>
-        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :config="props.config" />
+        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :config="props.config" />
         <article-list id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
           v-if="categoryName !== 'audio' && categoryName !== 'videohub'" v-show="hasAutoScroll"/>
         <loading :show="loading" />
@@ -43,14 +41,14 @@
         <article-list-full :articles='articles.items' v-if="type === 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
-        <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :config="props.config" />
+        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :config="props.config" />
         <footer-full :commonData='commonData' :sectionName='sectionName' />
       </div>
 
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
         <div class="ad">
-          <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only" :config="props.config" />
           <div class="close" @click="closeCoverAd"></div>
         </div>
       </div>
@@ -63,7 +61,7 @@
 import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { unLockJS } from '../utils/comm'
+import { currEnv, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
@@ -260,6 +258,7 @@ export default {
       articleListAutoScrollHeight: 0,
       canScrollLoadMord: true,
       dfpid: DFP_ID,
+      dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       loading: false,
       showDfpCoverAdFlag: false,
@@ -554,6 +553,9 @@ export default {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.querySelector('body').offsetWidth
       }
+    },
+    updateSysStage () {
+      this.dfpMode = currEnv()
     }
   },
   watch: {
@@ -606,6 +608,7 @@ export default {
     this.checkIfLockJS()
     this.insertCustomizedMarkup()
     this.handleScroll()
+    this.updateSysStage()
   },
   metaInfo () {
     const type = this.type
@@ -665,6 +668,9 @@ export default {
         { property: 'og:image', content: ogImage }
       ]
     }
+  },
+  updated () {
+    this.updateSysStage()
   }
 }
 

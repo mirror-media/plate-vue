@@ -1,15 +1,15 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
           <app-Header v-if="true" :commonData= 'commonData' />
         </section>
-        <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 1199)"  :config="props.config"/>
+        <vue-dfp :is="props.vueDfp" pos="LMBHD" extClass="mobile-only"  :config="props.config"/>
         <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" class="event" />
         <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" />
-        <vue-dfp :is="props.vueDfp" pos="LMBL1" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LMBL1" extClass="mobile-only"  :config="props.config"/>
         <section class="container list">
           <aside>
             <div class="aside-title mobile-only"><h2>最新文章</h2></div>
@@ -17,12 +17,12 @@
           </aside>
           <main>
             <LatestArticleMain :latestList="latestArticle" :viewport="viewport">
-              <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
-              <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
-              <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
-              <vue-dfp :is="props.vueDfp" pos="LMBNA3" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
-              <vue-dfp :is="props.vueDfp" pos="LMBNA5" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
-              <vue-dfp :is="props.vueDfp" pos="LMBNA9" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA3" extClass="mobile-only"  slot="dfpNA3" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA5" extClass="mobile-only"  slot="dfpNA5" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA9" extClass="mobile-only"  slot="dfpNA9" :config="props.config"/>
             </LatestArticleMain>
             <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />
             <PopularArticles :popList="popularlist" />
@@ -30,13 +30,13 @@
         </section>
         <loading :show="loading" />
         <section class="container footer">
-          <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1199)"  :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only"  :config="props.config"/>
           <app-footer :ifShare="false" />
         </section>
         <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <div class="ad">
-            <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only"  :config="props.config"/>
             <div class="close" @click="closeCoverAd"></div>
           </div>
         </div>
@@ -48,7 +48,7 @@
 <script>
 
 import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../constants'
-import { unLockJS } from '../utils/comm'
+import { currEnv, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import EditorChoice from '../components/EditorChoice.vue'
@@ -124,6 +124,7 @@ export default {
   data () {
     return {
       dfpid: DFP_ID,
+      dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       loading: false,
       showDfpCoverAdFlag: false,
@@ -206,6 +207,9 @@ export default {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.querySelector('body').offsetWidth
       }
+    },
+    updateSysStage () {
+      this.dfpMode = currEnv()
     }
   },
   metaInfo () {
@@ -246,6 +250,10 @@ export default {
     })
     // this.updateCookie()
     this.checkIfLockJS()
+    this.updateSysStage()
+  },
+  updated () {
+    this.updateSysStage()
   }
 }
 
