@@ -521,12 +521,6 @@ export default {
       }
       return fetchListData(this.$store, this.type, this.pageStyle, this.uuid, currentPage, false, pageToken)
       .then(() => {
-        if (this.uuid === 'topic') {
-          // const orig = _.values(this.articles[ 'items' ])
-          // const concat = _.concat(orig, _.get(this.$store.state, [ 'topic', 'items' ]))
-          // this.articles[ 'meta' ] = _.get(this.$store.state, [ 'topic', 'meta' ])
-          // this.articles[ 'items' ] = concat
-        }
         this.loading = false
       })
     },
