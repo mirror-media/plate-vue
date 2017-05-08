@@ -4,7 +4,7 @@
       <app-header :commonData= 'commonData' />
       <div class="topic">
         <div class="topic-title"><h1></h1></div>
-        <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="topic"/>
+        <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"/>
       </div>
       <article-list :articles='articles.items' :hasDFP='false' />
       <section class="container">
@@ -48,12 +48,50 @@ import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
+import store from '../store'
 
 const MAXRESULT = 12
 const PAGE = 1
 
 const fetchData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
+  .then(() => {
+    if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': store.state.route.params.topicId }))) {
+      return fetchTopicByUuid(store, store.state.route.params.topicId)
+    }
+  })
+}
+
+const fetchTopicByUuid = (store, uuid) => {
+  return store.dispatch('FETCH_TOPIC_BY_UUID', {
+    'params': {
+      where: {
+        _id: uuid
+      }
+    }
+  })
+}
+
+const fetchTopicImages = (store, uuid) => {
+  return store.dispatch('FETCH_IMAGES', {
+    'uuid': uuid,
+    'type': TOPIC,
+    'params': {
+      max_results: 25
+    }
+  })
+}
+
+const fetchArticlesByUuid = (store, uuid, isLoadMore) => {
+  const page = isLoadMore || PAGE
+  return store.dispatch('FETCH_ARTICLES_BY_UUID', {
+    'uuid': uuid,
+    'type': TOPIC,
+    'params': {
+      page: page,
+      max_results: MAXRESULT
+    }
+  })
 }
 
 export default {
@@ -79,7 +117,6 @@ export default {
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
       loading: false,
-      page: PAGE,
       showDfpCoverAdFlag: false
     }
   },
@@ -113,6 +150,9 @@ export default {
     hasMore () {
       return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
     },
+    page () {
+      return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE)
+    },
     pageStyle () {
       switch (this.$route.params.topicId) {
         case TOPIC_WATCH_ID:
@@ -139,10 +179,15 @@ export default {
       return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])
     },
     topic () {
-      if (_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.uuid })) {
-        return _.assign(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.uuid }), { images: _.get(this.$store.state, [ 'images' ]) })
+      if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
+        return _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })
       } else {
-        return _.assign(_.get(this.$store.state, [ 'topic', 'items', '0' ]), { images: _.get(this.$store.state, [ 'images' ]) })
+        return _.get(this.$store.state, [ 'topic', 'items', '0' ])
+      }
+    },
+    mediaData () {
+      return {
+        images: _.get(this.$store.state, [ 'images' ])
       }
     },
     uuid () {
@@ -159,6 +204,7 @@ export default {
       const custScript = document.createElement('script')
       custCss.setAttribute('id', 'custCSS')
       custScript.setAttribute('id', 'custJS')
+
       if (this.customCSS) {
         custCss.appendChild(document.createTextNode(this.customCSS))
       }
@@ -174,17 +220,12 @@ export default {
       }
     },
     loadMore () {
-      this.page += 1
+      let currentPage = this.page
+      currentPage += 1
       this.loading = true
 
-      this.$store.dispatch('FETCH_ARTICLES_BY_UUID', {
-        'uuid': this.uuid,
-        'type': TOPIC,
-        'params': {
-          page: this.page,
-          max_results: MAXRESULT
-        }
-      }).then(() => {
+      fetchArticlesByUuid(this.$store, this.uuid, currentPage)
+      .then(() => {
         this.loading = false
       })
     },
@@ -201,36 +242,23 @@ export default {
       }
     }
   },
+  beforeRouteEnter (to, from, next) {
+    if (from.matched.length !== 0) {
+      fetchTopicByUuid(store, to.params.topicId)
+    }
+    next()
+  },
   beforeRouteUpdate (to, from, next) {
     const uuid = _.split(to.path, '/')[2]
-    const topic = _.find(_.get(this.$store.state.commonData, [ 'topics', 'items' ]), { 'id': uuid })
+    const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
     this.page = PAGE
 
-    this.$store.dispatch('FETCH_ARTICLES_BY_UUID', {
-      'uuid': uuid,
-      'type': TOPIC,
-      'params': {
-        page: PAGE,
-        max_results: MAXRESULT
-      }
-    }).then(() => {
-      this.$store.dispatch('FETCH_IMAGES', {
-        'uuid': uuid,
-        'type': TOPIC,
-        'params': {
-          max_results: 25
-        }
-      }).then(() => {
+    fetchArticlesByUuid(this.$store, uuid, false)
+    .then(() => {
+      fetchTopicImages(this.$store, uuid)
+      .then(() => {
         if (!topic) {
-          this.$store.dispatch('FETCH_TOPIC_BY_UUID', {
-            'params': {
-              where: {
-                _id: uuid
-              }
-            }
-          }).then(() => {
-            _.assign(_.get(this.$store.state, [ 'topic', 'items', '0' ]), { images: _.get(this.$store.state, [ 'images' ]) })
-          })
+          fetchTopicByUuid(this.$store, uuid)
         }
       }).then(() => next())
     })
@@ -243,37 +271,11 @@ export default {
     next()
   },
   beforeMount () {
+    console.log('beforeMount')
     const uuid = _.split(this.$route.path, '/')[2]
-    const topic = _.find(_.get(this.$store.state.commonData, [ 'topics', 'items' ]), { 'id': uuid })
 
-    this.$store.dispatch('FETCH_ARTICLES_BY_UUID', {
-      'uuid': uuid,
-      'type': TOPIC,
-      'params': {
-        page: PAGE,
-        max_results: MAXRESULT
-      }
-    })
-
-    this.$store.dispatch('FETCH_IMAGES', {
-      'uuid': uuid,
-      'type': TOPIC,
-      'params': {
-        max_results: 25
-      }
-    }).then(() => {
-      if (!topic) {
-        this.$store.dispatch('FETCH_TOPIC_BY_UUID', {
-          'params': {
-            where: {
-              _id: uuid
-            }
-          }
-        }).then(() => {
-          _.assign(_.get(this.$store.state, [ 'topic', 'items', '0' ]), { images: _.get(this.$store.state, [ 'images' ]) })
-        })
-      }
-    })
+    fetchArticlesByUuid(this.$store, uuid, false)
+    fetchTopicImages(this.$store, uuid)
   },
   mounted () {
     this.insertCustomizedMarkup()

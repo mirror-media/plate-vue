@@ -106,7 +106,7 @@
     </template>
 
     <template v-for="item in sortedArticles" v-if="!hasDFP">
-      <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects'">
+      <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects' && !isSectionTopic">
         <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
@@ -114,7 +114,15 @@
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </router-link>
-      <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style === 'projects'">
+      <router-link :to="getTopicHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="isSectionTopic">
+        <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
+        </div>
+        <div class="articleList__content" :class="getSection(item)">
+          <h2 v-text="getTruncatedVal(item.name, 20)"></h2>
+          <p v-text="getTruncatedVal(item.ogDescription, 45)"></p>
+        </div>
+      </router-link>
+      <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style === 'projects' && !isSectionTopic">
         <div class="articleList__img" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
@@ -154,6 +162,9 @@ export default {
     articlesAfterDFPNA9 () {
       return _.slice(this.sortedArticles, 6)
     },
+    isSectionTopic () {
+      return (_.get(this.$route, [ 'params', 'title' ]) === 'topic')
+    },
     sortedArticles () {
       if (_.get(this.$route, [ 'params', 'title' ]) === 'topic') {
         return this.articles
@@ -168,6 +179,9 @@ export default {
     getHref,
     getImage,
     getSection,
+    getTopicHref (item) {
+      return `/topic/${_.get(item, [ 'id' ])}`
+    },
     getTruncatedVal,
     moment
   }
