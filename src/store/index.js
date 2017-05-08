@@ -29,6 +29,7 @@ const store = new Vuex.Store({
     tag: {},
     tags: [],
     topic: {},
+    topics: {},
     questionnaire: {}
   },
 
@@ -157,6 +158,14 @@ const store = new Vuex.Store({
       })
     },
 
+    FETCH_TOPICS: ({ commit, state }, { params }) => {
+      const orig = _.values(state.topics.items)
+      return fetchTopic(params).then(topics => {
+        topics[ 'items' ] = _.concat(orig, _.get(topics, [ 'items' ]))
+        commit('SET_TOPICS', { topics })
+      })
+    },
+
     FETCH_YOUTUBE_PLAY_LIST: ({ commit, state }, { limit, pageToken }) => {
       const orig = _.values(state.playlist[ 'items' ])
       return !pageToken ? fetchYoutubePlaylist(limit, pageToken).then(playlist => commit('SET_YOUTUBE_PLAY_LIST', { playlist }))
@@ -206,6 +215,7 @@ const store = new Vuex.Store({
 
     SET_COMMONDATA: (state, { commonData }) => {
       Vue.set(state, 'commonData', commonData)
+      Vue.set(state, 'topics', commonData.topics)
       _.get(commonData, [ 'choices' ], false) ? Vue.set(state, 'editorChoice', _.get(commonData, [ 'choices' ])) : ''
     },
 
@@ -264,6 +274,10 @@ const store = new Vuex.Store({
       Vue.set(state, 'topic', topic)
     },
 
+    SET_TOPICS: (state, { topics }) => {
+      Vue.set(state, 'topics', topics)
+    },
+
     SET_USER: (state, { user }) => {
       Vue.set(state.users, user.id, user)
     },
@@ -275,7 +289,9 @@ const store = new Vuex.Store({
   },
 
   getters: {
-
+    topics: state => {
+      return state.topics
+    }
   }
 })
 

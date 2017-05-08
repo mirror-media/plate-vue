@@ -199,7 +199,7 @@ const fetchTag = (store, id) => {
 }
 
 const fetchTopics = (store, params) => {
-  return store.dispatch('FETCH_TOPIC_BY_UUID', {
+  return store.dispatch('FETCH_TOPICS', {
     'params': params
   })
 }
@@ -259,12 +259,9 @@ export default {
     return {
       articleListAutoScrollHeight: 0,
       canScrollLoadMord: true,
-      commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpUnits: DFP_UNITS,
-      hasAutoScroll: false,
       loading: false,
-      page: PAGE,
       showDfpCoverAdFlag: false,
       viewport: undefined
     }
@@ -276,7 +273,7 @@ export default {
           return this.$store.state.articles
         default:
           if (this.$route.params.title === 'topic') {
-            return this.$store.state.commonData.topics
+            return this.$store.state.topics
           }
           return this.$store.state.articlesByUUID
       }
@@ -294,6 +291,9 @@ export default {
       if (this.type === CATEGORY) {
         return _.get(this.$route, [ 'params', 'title' ])
       }
+    },
+    commonData () {
+      return this.$store.state.commonData
     },
     customCSS () {
       switch (this.type) {
@@ -330,6 +330,17 @@ export default {
         setCentering: true
       }
     },
+    hasAutoScroll () {
+      switch (this.type) {
+        case AUTHOR:
+          return _.get(this.$store.state, [ 'articles', 'meta', 'page' ], PAGE) !== 1
+        default:
+          if (this.$route.params.title === 'topic') {
+            return _.get(this.$store.state, [ 'topics', 'meta', 'page' ], PAGE) !== 1
+          }
+          return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE) !== 1
+      }
+    },
     hasDFP () {
       return !(this.$route.params.title === 'topic')
     },
@@ -341,6 +352,17 @@ export default {
           return _.get(this.playlist, [ 'items', 'length' ], 0) < _.get(this.playlist, [ 'pageInfo', 'totalResults' ], 0)
         default:
           return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
+      }
+    },
+    page () {
+      switch (this.type) {
+        case AUTHOR:
+          return _.get(this.$store.state, [ 'articles', 'meta', 'page' ], PAGE)
+        default:
+          if (this.$route.params.title === 'topic') {
+            return _.get(this.$store.state, [ 'topics', 'meta', 'page' ], PAGE)
+          }
+          return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE)
       }
     },
     pageStyle () {
@@ -491,21 +513,15 @@ export default {
     },
     loadMore () {
       let pageToken
-      this.page += 1
+      let currentPage = this.page
+      currentPage += 1
       this.loading = true
       if (this.uuid === VIDEOHUB_ID) {
         pageToken = _.get(this.$store.state.playlist, [ 'nextPageToken' ])
       }
-      return fetchListData(this.$store, this.type, this.pageStyle, this.uuid, this.page, false, pageToken)
+      return fetchListData(this.$store, this.type, this.pageStyle, this.uuid, currentPage, false, pageToken)
       .then(() => {
-        if (this.uuid === 'topic') {
-          const orig = _.values(this.articles[ 'items' ])
-          const concat = _.concat(orig, _.get(this.$store.state, [ 'topic', 'items' ]))
-          this.articles[ 'meta' ] = _.get(this.$store.state, [ 'topic', 'meta' ])
-          this.articles[ 'items' ] = concat
-        }
         this.loading = false
-        this.hasAutoScroll = true
       })
     },
     updateCookie () {
@@ -545,7 +561,6 @@ export default {
     uuid: function () {
       this.page = PAGE
       this.articleListAutoScrollHeight = 0
-      this.hasAutoScroll = false
     }
   },
   beforeRouteEnter (to, from, next) {
