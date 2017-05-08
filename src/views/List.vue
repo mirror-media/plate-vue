@@ -270,22 +270,22 @@ export default {
     articles () {
       switch (this.type) {
         case AUTHOR:
-          return this.$store.state.articles
+          return this.$store.state.articles.items
         default:
           if (this.$route.params.title === 'topic') {
-            return this.$store.state.topics
+            return this.$store.state.topics.items
           }
-          return this.$store.state.articlesByUUID
+          return _.uniqBy(this.$store.state.articlesByUUID.items, 'slug')
       }
     },
     audios () {
       return this.$store.state.audios
     },
     autoScrollArticles () {
-      return _.take(this.articles.items, 12)
+      return _.take(this.articles, 12)
     },
     autoScrollArticlesLoadMore () {
-      return _.slice(this.articles.items, 12)
+      return _.slice(this.articles, 12)
     },
     categoryName () {
       if (this.type === CATEGORY) {
@@ -347,11 +347,16 @@ export default {
     hasMore () {
       switch (this.$route.params.title) {
         case 'audio':
-          return _.get(this.audios, [ 'items', 'length' ], 0) < _.get(this.audios, [ 'meta', 'total' ], 0)
+          return _.get(this.audios, [ 'length' ], 0) < _.get(this.$store.state, [ 'audios', 'meta', 'total' ], 0)
         case 'videohub':
-          return _.get(this.playlist, [ 'items', 'length' ], 0) < _.get(this.playlist, [ 'pageInfo', 'totalResults' ], 0)
+          return _.get(this.playlist, [ 'length' ], 0) < _.get(this.$store.state, [ 'playlist', 'pageInfo', 'totalResults' ], 0)
+        case 'topic':
+          return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'topics', 'meta', 'total' ], 0)
         default:
-          return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
+          if (this.type === AUTHOR) {
+            return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articles', 'meta', 'total' ], 0)
+          }
+          return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'total' ], 0)
       }
     },
     page () {
