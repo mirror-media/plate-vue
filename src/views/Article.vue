@@ -1,12 +1,12 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
       <section style="width: 100%;">
         <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
-        <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
+        <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <video class="heroimg video" width="100%" height="100%" controls controlsList="nodownload"
@@ -27,28 +27,28 @@
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
-              <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" ></vue-dfp>
+              <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" ></vue-dfp>
+              <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderAside" />
             </aside>
-            <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
-            <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
-            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-set" :dfpId="props.dfpId" />
-            <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-AR1" :dfpId="props.dfpId" />
-            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-AR1" :dfpId="props.dfpId" />
-            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" slot="dfpad-AR2" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
-              <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3"/>
-              <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5"/>
-              <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA7"/>
+              <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpId="props.dfpId" slot="dfpNA3" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpId="props.dfpId" slot="dfpNA5" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
             </pop-list>
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'wide')" slot="relatedlistBottom" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config"/>
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
@@ -63,12 +63,12 @@
       </div>
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
         <div class="ad">
-          <vue-dfp :is="props.vueDfp" pos="MBCVR" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp :is="props.vueDfp" pos="MBCVR" extClass="mobile-only" :config="props.config"/>
           <div class="close" @click="closeCoverAd"></div>
         </div>
       </div>
       <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
-        <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpFF"/>
+        <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/>
       </dfp-fixed>
     </template>
   </vue-dfp-provider>
@@ -76,7 +76,7 @@
 <script>
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
-  import { getTruncatedVal, lockJS, unLockJS } from '../utils/comm'
+  import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import Cookie from 'vue-cookie'
@@ -201,6 +201,7 @@
       return {
         clientSideFlag: false,
         dfpid: DFP_ID,
+        dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
         state: {},
         showDfpCoverAdFlag: false,
@@ -385,6 +386,9 @@
         if (browser) {
           this.viewport = document.querySelector('body').offsetWidth
         }
+      },
+      updateSysStage () {
+        this.dfpMode = currEnv()
       }
     },
     mounted () {
@@ -396,6 +400,7 @@
         this.updateViewport()
       })
       this.checkIfLockJS()
+      this.updateSysStage()
     },
     metaInfo () {
       if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
@@ -448,6 +453,9 @@
           { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') }
         ]
       }
+    },
+    updated () {
+      this.updateSysStage()
     },
     watch: {
       articleUrl: function () {
