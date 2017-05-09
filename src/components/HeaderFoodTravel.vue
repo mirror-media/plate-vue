@@ -2,19 +2,19 @@
   <header>
     <nav class="headerFoodTravel">
       <div class="headerFoodTravel__logo">
-        <router-link to="/">
+        <router-link to="/" id="header-home">
           <img class="headerFoodTravel__link--icon" src="/public/icon/logo_black@3x.png">
         </router-link>
       </div>
       <div class="headerFoodTravel__menu">
         <a class="headerFoodTravel__menu--ham mobile-only" @click="openSideBar()"><img src="/public/icon/hamburger@2x.png"></a>
-        <router-link class="headerFoodTravel__menu--item desktop-only" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title"></router-link>
+        <router-link class="headerFoodTravel__menu--item desktop-only" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title" :id="'header-' + item.name"></router-link>
       </div>
       <div class="headerFoodTravel__social-and-search">
-        <a :href="socialLink.FACEBOOK" target="_blank">
+        <a :href="socialLink.FACEBOOK" target="_blank" id="header-facebook">
           <img class="headerFoodTravel__link--icon desktop-only" src="/public/icon/facebook@2x.png">
         </a>
-        <a :href="socialLink.LINE" target="_blank">
+        <a :href="socialLink.LINE" target="_blank" id="header-line">
           <img class="headerFoodTravel__link--icon desktop-only" src="/public/icon/line@2x.png">
         </a>
         <a @click="openSearchBar()">
@@ -31,7 +31,7 @@
           <a class="sidebarFull__close--text" @click="closeSideBar()"></a>
         </div>
         <nav class="sidebarFull__menu">
-          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title"></router-link>
+          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title" :id="'header-' + item.name"></router-link>
         </nav>
       </div>
       <div class="sidebarFull-curtain" @click="closeSideBar()" v-show="openSide"></div>

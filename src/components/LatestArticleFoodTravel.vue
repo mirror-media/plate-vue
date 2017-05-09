@@ -5,14 +5,14 @@
             <div class="topicsArticle-full-posts">
                 <template v-for="(article, index) in topics">
                     <div class="topicsArticle-full-post">
-                        <a :href="'/topic/' + article.id" :id="'topics-' + article.id" class="topicsArticle-full-post__img">
+                        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" target="_blank">
                             <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
                         </a>
                         <div class="topicsArticle-full-post__content">
-                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id">
+                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-title'" target="_blank">
                                 <h2 v-text="article.name"></h2>
                             </a>
-                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id">
+                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-brief'" target="_blank">
                                 <p v-html="getTruncatedVal(article.ogDescription, 45)"></p>
                             </a>
                         </div>
@@ -26,14 +26,14 @@
             <div class="latestArticle-full-posts">
                 <template v-for="(article, index) in latestArticle">
                     <div :class="'latestArticle-full-post-' + (index % 2)">
-                        <a :href="getHref(article)" :id="'latest-' + article.id" class="latestArticle-full-post__img">
+                        <a :href="getHref(article)" :id="'latest-' + article.id + '-image'" class="latestArticle-full-post__img" target="_blank">
                             <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
                         </a>
                         <div class="latestArticle-full-post__content">
-                            <a :href="getHref(article)" :id="'latest-' + article.id">
+                            <a :href="getHref(article)" :id="'latest-' + article.id + '-title'" target="_blank">
                                 <h2 v-text="article.title"></h2>
                             </a>
-                            <a :href="getHref(article)" :id="'latest-' + article.id">
+                            <a :href="getHref(article)" :id="'latest-' + article.id + '-brief'" target="_blank">
                                 <p v-html="getBrief(article, 70)"></p>
                             </a>
                             <div class="latestArticle-full-post__meta">
@@ -51,14 +51,14 @@
             <div class="topicsArticle-full-posts">
                 <template v-for="(article, index) in topics">
                     <div class="topicsArticle-full-post">
-                        <a :href="'/topic/' + article.id" :id="'topics-' + article.id" class="topicsArticle-full-post__img">
+                        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" target="_blank">
                             <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
                         </a>
                         <div class="topicsArticle-full-post__content">
-                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id">
+                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-title'" target="_blank">
                                 <h2 v-text="article.name"></h2>
                             </a>
-                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id">
+                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-brief'" target="_blank">
                                 <p v-html="getTruncatedVal(article.ogDescription, 45)"></p>
                             </a>
                         </div>
@@ -353,7 +353,7 @@
                     padding 0 0 50% 0
                     flex-direction column
 
-                    img_width = 100%
+                    img_width = 295px
                     content_width = 90%
 
                     .topicsArticle-full-post__content

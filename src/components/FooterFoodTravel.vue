@@ -1,14 +1,14 @@
 <template>
   <footer class="footer-foodtravel">
     <div class="footer-foodtravel__logo">
-      <router-link :to="'/section/' + this.sectionName">
+      <router-link :to="'/section/' + this.sectionName" :id="'footer-' + this.sectionName + '-backToTop'">
         <img :src="getSectionLogoUrl()"/>
       </router-link>
     </div>
 
     <div class="footer-foodtravel__menu">
-      <router-link :to="item.href" v-for="item in menuItem.section" v-text="item.title"></router-link>
-      <router-link :to="item.href" v-for="item in menuItem.category" v-text="item.title"></router-link>
+      <router-link :to="item.href" v-for="item in menuItem.section" v-text="item.title" :id="'footer-' + item.href"></router-link>
+      <router-link :to="item.href" v-for="item in menuItem.category" v-text="item.title" :id="'footer-' + item.href"></router-link>
     </div>
 
     <div class="footer-foodtravel__vertDivider"></div>
@@ -17,12 +17,12 @@
 
     <div class="footer-foodtravel__link">
       <div class="footer-foodtravel__link--subscribe">
-        <a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a> - <a :href="socialLink.AD">廣告合作</a>
+        <a :href="socialLink.SUBSCRIBE" target="_blank" id="footer-subscribe">訂閱鏡週刊</a> - <a :href="socialLink.AD">廣告合作</a>
       </div>
       <div class="footer-foodtravel__link--socialMedia">
-        <a :href="socialLink.FACEBOOK" target="_blank"><img class="facebook" src="/public/icon/facebook_white.png"></a>
-        <a :href="socialLink.LINE" target="_blank"><img class="line" src="/public/icon/line_white.png"></a>
-        <a :href="socialLink.WEIBO" target="_blank"><img class="weibo" src="/public/icon/weibo_white.png"></a>
+        <a :href="socialLink.FACEBOOK" target="_blank" id="footer-facebook"><img class="facebook" src="/public/icon/facebook_white.png"></a>
+        <a :href="socialLink.LINE" target="_blank" id="footer-line"><img class="line" src="/public/icon/line_white.png"></a>
+        <a :href="socialLink.WEIBO" target="_blank" id="footer-weibo"><img class="weibo" src="/public/icon/weibo_white.png"></a>
       </div>
     </div>
     

@@ -72,6 +72,7 @@
       }
     },
     data () {
+      return {}
     },
     methods: {
       slideTo () {
@@ -80,7 +81,8 @@
     },
     mounted () {
       // this.swiper.update()
-      // this.swiper.slideTo(2, 1000, false)
+      // this.swiper.slideTo(2, 1000, true)
+      // this.swiper.update(true)
       if (!window[ 'refs' ]) window[ 'refs' ] = {}
       window[ 'refs' ][ this.slideId ] = this.swiper
     },

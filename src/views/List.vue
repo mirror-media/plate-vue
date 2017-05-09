@@ -1,7 +1,6 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
-
       <!--<div class="list-view" v-if="pageStyle === 'feature'">-->
         <div class="list-view" v-if="(pageStyle == 'feature') && (sectionName != 'foodtravel' || type == 'CATEGORY')">
         <app-header :commonData= 'commonData' />
@@ -33,14 +32,13 @@
         <share />
       </div>
 
-
       <div v-if="(sectionName == 'foodtravel') && (type == 'SECTION')" class="foodtravel-redesign">
         <section>
           <header-foodtravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
         </section>
         <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
         <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
-        <latestArticle-foodtravel :articles='articles.items' :commonData='commonData' :props="props" v-if="type === 'SECTION'" />
+        <latestArticle-foodtravel :articles='articles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" />
         <more-foodtravel v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
         <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
@@ -183,17 +181,12 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
       }
     case SECTION:
       // Fetch foodtravel list data
-      if (to.params.title === 'foodtravel') {
+      if (uuid === '57dfe399ee85930e00cad4d6') {
         return fetchArticlesByUuid(store, uuid, SECTION, {
             page: PAGE,
             max_results: MAXRESULT,
             related: 'full'
-          })
-        //   .then(() => {
-        //   return fetchTopicImagesByUuid(store, uuid, type, {
-        //     max_results: 25
-        //   })
-        // })
+        })
       }
       switch (pageStyle) {
         case 'full':

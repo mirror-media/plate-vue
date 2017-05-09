@@ -1,14 +1,14 @@
 <template>
-    <div class="project-container" v-if="(sectionfeatured.length > 0)">
+    <div class="featured-container" v-if="(sectionfeatured.length > 0)">
     <items-title-rect class="header-rect">精選<br>影音</items-title-rect>
-    <div class="proj_list">
+    <div class="featured_list">
       <app-slider :option="sliderOption" v-if="ifShowFeatured" :slideId="sliderId">
         <template scope="props">
           <swiper-slide :is="props.slide" v-for="(o, i) in sectionfeatured" v-if="i < 10">
-            <div class="proj_item">
+            <div class="featured_item">
               <div>
-                <a :href="`${siteUrl}/story/${o.slug}`" :id="'story-' + o.name + '-1'">
-                  <div class="proj_item_img"
+                <a :href="`${siteUrl}/story/${o.slug}`" :id="'featured-' + o.name" target="_blank">
+                  <div class="featured_item_img"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   <img class="play-btn" src="../../public/icon/play-foodtravel.png" alt="">
                   <p>{{ o.title }}</p>
@@ -45,14 +45,10 @@
       slidesPerView () {
         return (this.viewport < 752) ? 1 : 3
       },
-      paginationShow () {
-        // return (this.viewport < 752) ? true : false
-      },
       sliderOption () {
         return {
           paginationable: true,
           paginationClickable: true,
-          paginationShow: this.paginationShow,
           setNavBtn: false,
           slidesPerView: this.slidesPerView,
           spaceBetween: 0,
@@ -61,7 +57,7 @@
         }
       },
       sliderId () {
-        return `proj`
+        return `featured`
       }
     },
     data () {
@@ -69,7 +65,19 @@
         siteUrl: SITE_URL
       }
     },
+    mounted () {
+      this.updateViewport()
+      window.addEventListener('resize', () => {
+        this.updateViewport()
+      })
+    },
     methods: {
+      updateViewport () {
+        if (process.env.VUE_ENV === 'client') {
+          this.viewport = document.querySelector('body').offsetWidth + 1
+          this.viewport = this.viewport - 1
+        }
+      },
       borderLeftStyle (sect) {
         return {
           borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
@@ -87,7 +95,7 @@
       },
       sanitizeHtml
     },
-    // name: 'project-list',
+    name: 'featuredStory-foodtravel',
     props: {
       sectionfeatured: {
         default: () => { return [] }
@@ -115,7 +123,7 @@
 //             margin-left 8.3%
 
 
-.project-container 
+.featured-container 
   font-size 18px
   position relative
   margin-top 5%
@@ -126,7 +134,7 @@
     // margin-top 8.3%
     // margin-left 8.3%
 
-  .proj_title
+  .featured_title
     // border-bottom 5px solid #000
 
     h3
@@ -140,7 +148,7 @@
       height 1.5rem
       margin 0
 
-  .proj_list 
+  .featured_list 
     display flex
     align-content flex-start
     flex-wrap wrap
@@ -149,27 +157,27 @@
     padding 20px 20px 10px 0
     border none
 
-    .proj_item 
+    .featured_item 
       vertical-align top
 
       padding-left 0
       border-left none
       height 95%
 
-      > div:not([class="proj_item_title"]):not([class="proj_item_desc"])
+      > div:not([class="featured_item_title"]):not([class="featured_item_desc"])
         position relative
         height 0
         padding-top 66.67%
         
         > a
-          .proj_item_img
+          .featured_item_img
             height 100%
             width 100%
             position absolute
             top 0
             left 0
 
-      .proj_item_img 
+      .featured_item_img 
         width 100%
         height 150px
         background-repeat no-repeat
@@ -189,7 +197,7 @@
             left 45%
 
       
-      .proj_item_title, .proj_item_desc
+      .featured_item_title, .featured_item_desc
         background-color #fff
         border-top-width 0
         line-height 1.5rem
@@ -205,12 +213,12 @@
             font-weight normal
             border none
       
-      .proj_item_title
+      .featured_item_title
         a 
           &:hover, &:link, &:visited 
             color rgba(0, 0, 0, 0.8)
 
-      .proj_item_desc
+      .featured_item_desc
         padding 0 0 10px
 
         a 
@@ -221,9 +229,9 @@
     .swiper-container
       .swiper-wrapper
         .swiper-slide
-            .proj_item
+            .featured_item
                 border-left none
-                .proj_item_img
+                .featured_item_img
                     width 100%
                     height 80%
                     top 10%
@@ -233,12 +241,12 @@
 
         // left
         .swiper-slide-active
-          .proj_item
+          .featured_item
             border-left none
             a
                 pointer-events none
                 cursor default
-            .proj_item_img
+            .featured_item_img
                 width 100%
                 height 80%
                 // left 30%
@@ -249,9 +257,9 @@
                     display none
         // center
         .swiper-slide-next
-          .proj_item
+          .featured_item
             border-left none
-            .proj_item_img
+            .featured_item_img
                 width 100%
                 height 100%
                 top 0
@@ -267,9 +275,9 @@
                     margin-bottom 10px
         // right
         .swiper-slide-next + .swiper-slide
-            .proj_item
+            .featured_item
                 border-left none
-                .proj_item_img
+                .featured_item_img
                     width 100%
                     height 80%
                     // left -10%
@@ -300,16 +308,16 @@
 
 // Tablet
 @media (min-width 768px) and (max-width 1365px)
-  .project-container 
-    .proj_list
-        .proj_item
+  .featured-container 
+    .featured_list
+        .featured_item
             margin-bottom 0
         .swiper-container
             .swiper-wrapper
                 .swiper-slide
-                    .proj_item
+                    .featured_item
                         border-left none
-                        .proj_item_img
+                        .featured_item_img
                             width 100%
                             height 150%
                             top 25%
@@ -318,12 +326,12 @@
                                 display none
                 // left
                 .swiper-slide-active
-                    .proj_item
+                    .featured_item
                         border-left none
                         a
                             pointer-events none
                             cursor default
-                        .proj_item_img
+                        .featured_item_img
                             width 100%
                             height 150%
                             // left 30%
@@ -336,13 +344,13 @@
                             display none        
                 // center
                 .swiper-slide-next
-                    .proj_item
+                    .featured_item
                         border-left none
                         // width 200%
                         height 25vh
                         // position absolute
                         // left -100%
-                        .proj_item_img
+                        .featured_item_img
                             width 200%
                             height 200%
                             left -50%
@@ -359,9 +367,9 @@
                                 margin-bottom 10px
                 // right
                 .swiper-slide-next + .swiper-slide
-                    .proj_item
+                    .featured_item
                         border-left none
-                        .proj_item_img
+                        .featured_item_img
                             width 100%
                             height 150%
                             // left -10%
@@ -375,22 +383,22 @@
                             display none 
 // Mobile
 @media (min-width 0px) and (max-width 767px)
-    .project-container
+    .featured-container
         margin-top 50px
         margin-left 5%
         margin-right 5% 
-        .proj_list
+        .featured_list
             margin-top 20px
             padding 0
             height 45vh
-            .proj_item
+            .featured_item
                 margin-bottom 0
             .swiper-container
                 .swiper-wrapper
                     .swiper-slide
-                        .proj_item
+                        .featured_item
                             border-left none
-                            .proj_item_img
+                            .featured_item_img
                                 width 100%
                                 height 100%
                                 top 0
@@ -399,12 +407,12 @@
                                     display none
                     // left
                     .swiper-slide-next
-                        .proj_item
+                        .featured_item
                             border-left none
                             a
                                 pointer-events none
                                 cursor default
-                            .proj_item_img
+                            .featured_item_img
                                 width 100%
                                 height 100%
                                 left 0
@@ -417,13 +425,13 @@
                             //     display none        
                     // center
                     .swiper-slide-active
-                        .proj_item
+                        .featured_item
                             border-left none
                             // width 100%
                             // height 20vh
                             // position absolute
                             // left -100%
-                            .proj_item_img
+                            .featured_item_img
                                 width 100%
                                 height 100%
                                 left 0
@@ -440,9 +448,9 @@
                                     margin-bottom 10px
                     // right
                     .swiper-slide-next + .swiper-slide
-                        .proj_item
+                        .featured_item
                             border-left none
-                            .proj_item_img
+                            .featured_item_img
                                 width 100%
                                 height 100%
                                 left 0
