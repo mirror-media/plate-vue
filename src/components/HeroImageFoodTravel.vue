@@ -27,7 +27,7 @@ export default {
       return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
     }
   },
-  props: ['commonData', 'sectionName']
+  props: [ 'commonData', 'sectionName' ]
 }
 </script>
 

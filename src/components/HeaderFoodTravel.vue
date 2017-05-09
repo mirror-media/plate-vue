@@ -58,8 +58,8 @@
   import _ from 'lodash'
   export default {
     name: 'header-full',
-    props: ['commonData', 'sectionName', 'sections'],
-    data() {
+    props: [ 'commonData', 'sectionName', 'sections' ],
+    data () {
       return {
         blackNav: false,
         defaultNav: true,
@@ -70,35 +70,35 @@
       }
     },
     methods: {
-      closeSearchBar() {
+      closeSearchBar () {
         this.openSearch = false
       },
-      closeSideBar() {
+      closeSideBar () {
         this.openSide = false
       },
-      getHeaderDFPHeight() {
+      getHeaderDFPHeight () {
         this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
       },
-      getSectionLogoUrl() {
-        if (_.get(this.$route, ['params', 'topicId']) === '586cd15c3c1f950d00ce2e78') {
-          const section = _.find(_.get(this.sections, ['items']), {
+      getSectionLogoUrl () {
+        if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
+          const section = _.find(_.get(this.sections, [ 'items' ]), {
             id: '57dfe3b0ee85930e00cad4d7'
           })
-          return _.get(section, ['image', 'image', 'resizedTargets', 'desktop', 'url'])
+          return _.get(section, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ])
         } else {
-          return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/asset/logo.png'
+          return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
         }
       },
-      openSearchBar() {
+      openSearchBar () {
         this.openSearch = true
       },
-      openSideBar() {
+      openSideBar () {
         this.openSide = true
       },
-      search(searchVal = '') {
+      search (searchVal = '') {
         this.$router.push('/search/' + this.searchVal)
       },
-      handleScroll() {
+      handleScroll () {
         window.onscroll = (e) => {
           this.opacity = 1 - currentYPosition() / 300
           this.opacity < 0 ? this.defaultNav = false : this.defaultNav = true
@@ -107,21 +107,21 @@
       }
     },
     computed: {
-      menuItem() {
-        return _.get(_.find(_.get(this.sections, ['items']), {
+      menuItem () {
+        return _.get(_.find(_.get(this.sections, [ 'items' ]), {
           name: this.sectionName
-        }), ['categories'])
+        }), [ 'categories' ])
       },
-      sectionLogo() {
-        return _.get(_.find(_.get(this.commonData, ['sections', 'items']), {
+      sectionLogo () {
+        return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), {
           name: this.sectionName
-        }), ['image'], null)
+        }), [ 'image' ], null)
       },
-      socialLink() {
+      socialLink () {
         return SOCIAL_LINK
       }
     },
-    mounted() {
+    mounted () {
       this.handleScroll()
     }
   }

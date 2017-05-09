@@ -80,32 +80,31 @@
         getImage,
         getTruncatedVal
     } from '../utils/comm'
-    import _ from 'lodash'
     import moment from 'moment'
     export default {
-        name: 'latestArticle-foodtravel',
-        props: ['articles', 'props', 'commonData'],
-        components: {
-            'items-title-rect': ItemsTitleRect
+      name: 'latestArticle-foodtravel',
+      props: [ 'articles', 'props', 'commonData' ],
+      components: {
+        'items-title-rect': ItemsTitleRect
+      },
+      methods: {
+        getAuthor,
+        getBrief,
+        getHref,
+        getImage,
+        getTruncatedVal,
+        moment
+      },
+      computed: {
+        latestArticle () {
+          return this.articles
         },
-        methods: {
-            getAuthor,
-            getBrief,
-            getHref,
-            getImage,
-            getTruncatedVal,
-            moment
-        },
-        computed: {
-            latestArticle() {
-                return this.articles
-            },
-            topics() {
-                return this.commonData.topics.items.filter((o) => {
-                    if(o.hasOwnProperty('sections')) return o.sections[0] === '57dfe399ee85930e00cad4d6' //foodtravel
-                })
-            }
+        topics () {
+          return this.commonData.topics.items.filter((o) => {
+            if (o.hasOwnProperty('sections')) return o.sections[0] === '57dfe399ee85930e00cad4d6' // foodtravel
+          })
         }
+      }
     }
 </script>
 

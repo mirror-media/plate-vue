@@ -32,8 +32,6 @@
 
 import { SOCIAL_LINK } from '../constants/index'
 import _ from 'lodash'
-
-
 export default {
   name: 'footer-full',
   props: {

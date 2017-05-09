@@ -26,14 +26,7 @@
 </template>
 
 <script>
-import ItemsTitleRect from './ItemsTitleRect.vue'
-
-// export default {
-//     components: {
-//         'items-title-rect': ItemsTitleRect
-//     },
-//     props: ['sectionfeatured']
-// }
+  import ItemsTitleRect from './ItemsTitleRect.vue'
   import { SECTION_MAP, SITE_URL } from '../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../utils/comm'
   import Slider from './Slider.vue'
@@ -53,7 +46,7 @@ import ItemsTitleRect from './ItemsTitleRect.vue'
         return (this.viewport < 752) ? 1 : 3
       },
       paginationShow () {
-        return (this.viewport < 752) ? true : false
+        // return (this.viewport < 752) ? true : false
       },
       sliderOption () {
         return {

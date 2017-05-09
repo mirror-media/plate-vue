@@ -72,7 +72,6 @@
       }
     },
     data () {
-      return {}
     },
     methods: {
       slideTo () {
