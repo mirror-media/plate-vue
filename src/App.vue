@@ -6,6 +6,40 @@
   </div>
 </template>
 
+<script>
+  import { mmLog } from './utils/comm.js'
+  import store from './store'
+
+  export default {
+    data () {
+      return {
+        doc: {}
+      }
+    },
+    methods: {
+      launchLogger () {
+        this.doc.addEventListener('click', (event) => {
+          mmLog({
+            eventType: 'click',
+            target: event.target,
+            description: ''
+          }).then((log) => {
+            return store.dispatch('LOG_CLIENT', { params: {
+              clientInfo: log
+            }})
+          }).catch((err) => {
+            console.log(err)
+          })
+        })
+      }
+    },
+    mounted () {
+      this.doc = document
+      this.launchLogger()
+    }
+  }
+</script>
+
 <style lang="stylus">
 video::-internal-media-controls-download-button
   display none

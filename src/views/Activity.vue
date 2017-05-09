@@ -26,7 +26,7 @@
 
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants/index'
 import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-import { disableScroll, enableScroll, getTruncatedVal } from '../utils/comm.js'
+import { enableScroll, getTruncatedVal } from '../utils/comm.js'
 import _ from 'lodash'
 import ActivityDesktopNodesNav from '../components/activity/ActivityDesktopNodesNav.vue'
 import ActivityNode from '../components/activity/ActivityNode.vue'
@@ -172,7 +172,6 @@ export default {
     },
     currentYPosition,
     enableScroll,
-    disableScroll,
     elmYPosition,
     getTruncatedVal,
     goToNext () {
