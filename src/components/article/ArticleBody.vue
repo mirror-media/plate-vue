@@ -448,9 +448,12 @@ export default {
         p 
           strong 
             color rgba(65, 65, 65, 0.61)
-            font-weight normal
+            font-weight bold
+
+          em
+            font-weight bold
           
-          i, cite, em, var, address, dfn 
+          i, cite, var, address, dfn 
             font-style normal        
       
       > .content 
