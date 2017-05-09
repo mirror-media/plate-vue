@@ -31,8 +31,6 @@ function _doFetch (url) {
     // .query('')
     .end(function (err, res) {
       if (err) {
-        console.log(url)
-        console.log(err)
         reject(err)
       } else {
         resolve(camelizeKeys(res.body))
