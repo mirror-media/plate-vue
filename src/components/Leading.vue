@@ -5,12 +5,11 @@
         <app-slider :option="sliderOption">
           <template scope="props">
             <swiper-slide :is="props.slide" v-for="(o, i) in slideshowImgs">
-              <img :data-src="getValue(o, [ 'image', 'url' ])"
-                    :data-srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                                  ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                                  ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`"
-                    class="swiper-lazy" />
-              <div class="swiper-lazy-preloader"></div>
+              <img :src="getValue(o, [ 'image', 'url' ])"
+                   :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
+                              ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
+                              ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+              
             </swiper-slide>
           </template>
         </app-slider>
@@ -49,6 +48,7 @@ export default {
   computed: {
     sliderOption () {
       return {
+        autoplay: 3000,
         paginationable: false,
         paginationClickable: true,
         paginationHide: false,

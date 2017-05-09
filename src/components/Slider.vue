@@ -2,7 +2,7 @@
   <swiper :options="swiperOption" :ref="slideId">
     <slot :slide="slideComp"></slot>
     <slot name="custNav" :thisSwiperId="slideId"></slot>
-    <div class="swiper-pagination" :id="swiperPagiantionId" slot="pagination"></div>
+    <div class="swiper-pagination" :id="swiperPagiantionId" slot="pagination" :style="custStyle"></div>
     <div class="swiper-button swiper-button-prev" :class="navBtnClass" slot="button-prev"></div>
     <div class="swiper-button swiper-button-next" :class="navBtnClass" slot="button-next"></div>
   </swiper>
@@ -38,7 +38,7 @@
           grabCursor: true,
           setWrapperSize: true,
           loop: true,
-
+          initialSlide: 1,
           // effect: 'coverflow',
           // coverflow: {
           //   stretch: 100,
@@ -65,6 +65,9 @@
         if (this.option[ 'paginationable' ]) {
           this.option[ 'pagination' ] = `#${this.swiperPagiantionId}`
         }
+        if (this.option['showPagination']) {
+          this.custStyle = 'top: 1px'
+        }
         if (this.$refs[ this.slideId ]) {
           this.swiper.update()
         }
@@ -72,7 +75,9 @@
       }
     },
     data () {
-      return {}
+      return {
+        custStyle: ''
+      }
     },
     methods: {
       slideTo () {
@@ -81,9 +86,11 @@
     },
     mounted () {
       // this.swiper.update()
-      // this.swiper.slideTo(2, 1000, false)
+      // this.swiper.slideTo(2, 1000, true)
+      // this.swiper.update(true)
       if (!window[ 'refs' ]) window[ 'refs' ] = {}
       window[ 'refs' ][ this.slideId ] = this.swiper
+      window[ 'refs' ][ this.slideId ].init()
     },
     name: 'app-slider',
     props: {
@@ -115,7 +122,7 @@
         height 15px
 
         &.swiper-pagination-bullet-active
-          background #b3b3b3
+          background #4d4d4d
           border none
         
       

@@ -42,6 +42,7 @@
     <section class="pic-section latest">
       <div class="credit" v-html="credit"></div>
       <related-list-thumbnail :relatedList="relatedList"/>
+      <slot name="slot_dfpFT"></slot>
       <slot name="slot_fb_comment"></slot>
     </section>
     <div class="go-next-page" @click="goNextPage" :class="goNextPageClass"></div>
@@ -591,6 +592,7 @@
       .stick-container
         position relative
         height 100%
+        width 100%
 
         .stick
           border-top 3px solid rgba(255, 255, 255, 0.5)

@@ -6,6 +6,38 @@
   </div>
 </template>
 
+<script>
+  import { mmLog } from './utils/comm.js'
+  import store from './store'
+
+  export default {
+    data () {
+      return {
+        doc: {}
+      }
+    },
+    methods: {
+      launchLogger () {
+        this.doc.addEventListener('click', (event) => {
+          mmLog({
+            eventType: 'click',
+            target: event.target,
+            description: ''
+          }).then((log) => {
+            return store.dispatch('LOG_CLIENT', { params: {
+              clientInfo: log
+            }})
+          })
+        })
+      }
+    },
+    mounted () {
+      this.doc = document
+      this.launchLogger()
+    }
+  }
+</script>
+
 <style lang="stylus">
 video::-internal-media-controls-download-button
   display none
@@ -103,12 +135,6 @@ button:focus {
 .fade-enter, .fade-leave-active
   opacity 0
 
-.dfp-test
-  width 970px
-  height 250px
-  margin 20px auto 20px
-  background-color #a8dadc
-
 .leading-embedded
   .embedded
     > iframe
@@ -165,5 +191,12 @@ button:focus {
   .container
     width 1024px
 
+@media only screen and (min-width 0px) and (max-width 1199px)
+  .dfp-desktop
+    display none !important
+
+@media only screen and (min-width 1200px)
+  .dfp-mobile
+    display none !important
 
 </style>
