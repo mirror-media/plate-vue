@@ -422,7 +422,7 @@ export default {
     title () {
       switch (this.type) {
         case AUTHOR:
-          return _.get(this.$store.state, [ 'authors', '0', 'name' ])
+          return _.get(_.find(_.get(this.$store.state, [ 'authors' ]), { 'id': this.uuid }), [ 'name' ])
         case CATEGORY:
           switch (this.$route.params.title) {
             case 'marketing':
