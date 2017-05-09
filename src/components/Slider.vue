@@ -38,7 +38,7 @@
           grabCursor: true,
           setWrapperSize: true,
           loop: true,
-
+          initialSlide: 1,
           // effect: 'coverflow',
           // coverflow: {
           //   stretch: 100,
