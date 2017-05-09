@@ -127,43 +127,6 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
         page: page,
         max_results: MAXRESULT
       })
-//<<<<<<< ff4807dba0db731b7dd1ebcac71c2b50a3256929
-//=======
-//     case SECTION:
-//       uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
-//       if (to.params.title === 'foodtravel') {
-//         return fetchArticlesByUuid(store, uuid, SECTION, {
-//             page: PAGE,
-//             max_results: 8,
-//             related: 'full'
-//           }).then(() => {
-//           return fetchTopicImagesByUuid(store, uuid, type, {
-//             max_results: 25
-//           })
-//         })
-//       }
-//       switch (sectionStyle) {
-//         case 'full':
-//           return fetchArticlesByUuid(store, uuid, SECTION, {
-//             page: PAGE,
-//             max_results: MAXRESULT,
-//             related: 'full'
-//           })
-//         default:
-//           return fetchArticlesByUuid(store, uuid, SECTION, {
-//             page: PAGE,
-//             max_results: MAXRESULT
-//           })
-//       }
-//     case TAG:
-//       uuid = to.params.tagId
-//       return fetchTag(store, uuid).then(() => {
-//         return fetchArticlesByUuid(store, uuid, TAG, {
-//           page: PAGE,
-//           max_results: MAXRESULT
-//         })
-//       })
-// >>>>>>> foodtravel section page redesign, without condition on style
     case CATEGORY:
       switch (uuid) {
         case AUDIO_ID:
@@ -183,9 +146,9 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
       // Fetch foodtravel list data
       if (uuid === '57dfe399ee85930e00cad4d6') {
         return fetchArticlesByUuid(store, uuid, SECTION, {
-            page: PAGE,
-            max_results: MAXRESULT,
-            related: 'full'
+          page: PAGE,
+          max_results: MAXRESULT,
+          related: 'full'
         })
       }
       switch (pageStyle) {
