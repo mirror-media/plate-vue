@@ -34,11 +34,11 @@
 
       <div class="listFull-view" v-if="pageStyle === 'full'">
         <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-        <article-leading :articles='articles.items' :props="props" v-if="type === 'SECTION'"/>
+        <article-leading :articles='articles' :props="props" v-if="type === 'SECTION'"/>
         <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
-        <latestArticle-full :articles='articles.items' :props="props" v-if="type === 'SECTION'" />
+        <latestArticle-full :articles='articles' :props="props" v-if="type === 'SECTION'" />
         <leading-watch v-if="type == 'TAG'" :tag='tag' :type='type'/>
-        <article-list-full :articles='articles.items' v-if="type === 'TAG'" />
+        <article-list-full :articles='articles' v-if="type === 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
         <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :config="props.config" />
