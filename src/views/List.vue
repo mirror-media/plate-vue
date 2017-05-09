@@ -2,7 +2,8 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
 
-      <div class="list-view" v-if="pageStyle === 'feature'">
+      <!--<div class="list-view" v-if="pageStyle === 'feature'">-->
+        <div class="list-view" v-if="(pageStyle == 'feature') && (sectionName != 'foodtravel' || type == 'CATEGORY')">
         <app-header :commonData= 'commonData' />
         <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :config="props.config" />
         <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :config="props.config" />
@@ -32,6 +33,22 @@
         <share />
       </div>
 
+
+      <div v-if="(sectionName == 'foodtravel') && (type == 'SECTION')" class="foodtravel-redesign">
+        <section>
+          <header-foodtravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+        </section>
+        <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
+        <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
+        <latestArticle-foodtravel :articles='articles.items' :commonData='commonData' :props="props" v-if="type === 'SECTION'" />
+        <more-foodtravel v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
+        <loading :show="loading" />
+        <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <footer-foodtravel :commonData='commonData' :sectionName='sectionName' />
+      </div>
+
+      <!-- section/watch -->
       <div class="listFull-view" v-if="pageStyle === 'full'">
         <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
         <article-leading :articles='articles' :props="props" v-if="type === 'SECTION'"/>
@@ -69,15 +86,22 @@ import ArticleListFull from '../components/ArticleListFull.vue'
 import AudioList from '../components/AudioList.vue'
 import Cookie from 'vue-cookie'
 import EditorChoiceFull from '../components/EditorChoiceFull.vue'
+import FeaturedStoryFoodTravel from '../components/FeaturedStoryFoodTravel.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
+import FooterFoodTravel from '../components/FooterFoodTravel.vue'
 import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
+import HeaderFoodTravel from '../components/HeaderFoodTravel.vue'
+import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
 import LatestArticleFull from '../components/LatestArticleFull.vue'
+import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
+import Leading from '../components/Leading.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
+import MoreFoodTravel from '../components/MoreFoodTravel.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -105,6 +129,43 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
         page: page,
         max_results: MAXRESULT
       })
+//<<<<<<< ff4807dba0db731b7dd1ebcac71c2b50a3256929
+//=======
+//     case SECTION:
+//       uuid = _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
+//       if (to.params.title === 'foodtravel') {
+//         return fetchArticlesByUuid(store, uuid, SECTION, {
+//             page: PAGE,
+//             max_results: 8,
+//             related: 'full'
+//           }).then(() => {
+//           return fetchTopicImagesByUuid(store, uuid, type, {
+//             max_results: 25
+//           })
+//         })
+//       }
+//       switch (sectionStyle) {
+//         case 'full':
+//           return fetchArticlesByUuid(store, uuid, SECTION, {
+//             page: PAGE,
+//             max_results: MAXRESULT,
+//             related: 'full'
+//           })
+//         default:
+//           return fetchArticlesByUuid(store, uuid, SECTION, {
+//             page: PAGE,
+//             max_results: MAXRESULT
+//           })
+//       }
+//     case TAG:
+//       uuid = to.params.tagId
+//       return fetchTag(store, uuid).then(() => {
+//         return fetchArticlesByUuid(store, uuid, TAG, {
+//           page: PAGE,
+//           max_results: MAXRESULT
+//         })
+//       })
+// >>>>>>> foodtravel section page redesign, without condition on style
     case CATEGORY:
       switch (uuid) {
         case AUDIO_ID:
@@ -121,6 +182,19 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
           })
       }
     case SECTION:
+      // Fetch foodtravel list data
+      if (to.params.title === 'foodtravel') {
+        return fetchArticlesByUuid(store, uuid, SECTION, {
+            page: PAGE,
+            max_results: MAXRESULT,
+            related: 'full'
+          })
+        //   .then(() => {
+        //   return fetchTopicImagesByUuid(store, uuid, type, {
+        //     max_results: 25
+        //   })
+        // })
+      }
       switch (pageStyle) {
         case 'full':
           return fetchArticlesByUuid(store, uuid, SECTION, {
@@ -241,13 +315,20 @@ export default {
     'article-list-full': ArticleListFull,
     'audio-list': AudioList,
     'editorChoice-full': EditorChoiceFull,
+    'featuredStory-foodtravel': FeaturedStoryFoodTravel,
     'footer-full': FooterFull,
+    'footer-foodtravel': FooterFoodTravel,
     'header-full': HeaderFull,
+    'header-foodtravel': HeaderFoodTravel,
+    'heroImage-foodtravel': HeroImageFoodTravel,
     'latestArticle-full': LatestArticleFull,
+    'latestArticle-foodtravel': LatestArticleFoodTravel,
+    'leading': Leading,
     'leading-watch': LeadingWatch,
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
+    'more-foodtravel': MoreFoodTravel,
     'share': Share,
     'video-list': VideoList,
     'vue-dfp-provider': VueDfpProvider
@@ -520,8 +601,102 @@ export default {
       let currentPage = this.page
       currentPage += 1
       this.loading = true
+// <<<<<<< ff4807dba0db731b7dd1ebcac71c2b50a3256929
       if (this.uuid === VIDEOHUB_ID) {
         pageToken = _.get(this.$store.state.playlist, [ 'nextPageToken' ])
+// =======
+//       switch (this.type) {
+//         case AUTHOR:
+//           fetchArticlesByAuthor(this.$store, this.uuid, {
+//             page: this.page,
+//             max_results: LOADMOREMAXRESULT
+//           }).then(() => {
+//             this.articles = this.$store.state.articles
+//             this.loading = false
+//           })
+//           break
+//         case SECTION:
+//           switch (this.pageStyle) {
+//             case 'full':
+//               fetchArticlesByUuid(this.$store, this.uuid, SECTION, {
+//                 page: this.page,
+//                 max_results: LOADMOREMAXRESULT,
+//                 related: 'full'
+//               }).then(() => {
+//                 this.articles = this.$store.state.articlesByUUID
+//                 this.loading = false
+//               })
+//               break
+//             default:
+//               if (this.$route.params.title === 'topic') {
+//                 fetchTopics(this.$store, {
+//                   page: this.page,
+//                   max_results: LOADMOREMAXRESULT
+//                 }).then(() => {
+//                   const orig = _.values(this.articles[ 'items' ])
+//                   const concat = _.concat(orig, _.get(this.$store.state, [ 'topic', 'items' ]))
+//                   this.articles[ 'meta' ] = _.get(this.$store.state, [ 'topic', 'meta' ])
+//                   this.articles[ 'items' ] = concat
+//                   this.loading = false
+//                 })
+//               } else {
+//                 fetchArticlesByUuid(this.$store, this.uuid, SECTION, {
+//                   page: this.page,
+//                   max_results: LOADMOREMAXRESULT,
+//                   related: 'full'
+//                 }).then(() => {
+//                   this.articles = this.$store.state.articlesByUUID
+//                   this.loading = false
+//                 })
+//               }
+//           }
+//           break
+//         default:
+//           switch (this.name) {
+//             case 'audio':
+//               fetchAudios(this.$store, {
+//                 page: this.page,
+//                 max_results: MAXRESULT
+//               }).then(() => {
+//                 this.audios = this.$store.state.audios
+//                 this.loading = false
+//               })
+//               break
+//             case 'videohub':
+//               const pageToken = _.get(this.playlist, [ 'nextPageToken' ])
+//               fetchYoutubePlaylist(this.$store, MAXRESULT, pageToken).then(() => {
+//                 this.playlist = this.$store.state.playlist
+//                 this.loading = false
+//               })
+//               break
+//             case 'marketing':
+//               fetchArticlesByUuid(this.$store, MARKETING_ID, this.type, {
+//                 page: this.page,
+//                 max_results: MAXRESULT
+//               }).then(() => {
+//                 this.articles = this.$store.state.articlesByUUID
+//                 this.loading = false
+//               })
+//               break
+//             case 'campaign':
+//               fetchArticlesByUuid(this.$store, CAMPAIGN_ID, this.type, {
+//                 page: this.page,
+//                 max_results: MAXRESULT
+//               }).then(() => {
+//                 this.articles = this.$store.state.articlesByUUID
+//                 this.loading = false
+//               })
+//               break
+//             default:
+//               fetchArticlesByUuid(this.$store, this.uuid, this.type, {
+//                 page: this.page,
+//                 max_results: MAXRESULT
+//               }).then(() => {
+//                 this.articles = this.$store.state.articlesByUUID
+//                 this.loading = false
+//               })
+//           }
+// >>>>>>> foodtravel section page redesign, without condition on style
       }
       return fetchListData(this.$store, this.type, this.pageStyle, this.uuid, currentPage, false, pageToken)
       .then(() => {
@@ -726,6 +901,9 @@ $color-other = #bcbcbc
 .listFull
   &-view
     background-color #f5f5f5
+
+.foodtravel-redesign
+  background-image url("../../public/foodtravelbg.jpg")
 
 @media (min-width: 600px)
   .list

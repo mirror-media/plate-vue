@@ -3,15 +3,15 @@ import _ from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 
-export function getAuthor (article, option = '') {
+export function getAuthor (article, option = '', delimiter = '｜') {
   const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
-    ? '文｜' + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, [ 'name' ], null) + '</a>' }).join('、') : ''
+    ? `文${delimiter}` + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, [ 'name' ], null) + '</a>' }).join('、') : ''
   const photographers = (_.get(article, [ 'photographers', 'length' ], 0) > 0)
-    ? '<br>攝影｜' + _.map(article.photographers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
+    ? `<br>攝影${delimiter}` + _.map(article.photographers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
   const designers = (_.get(article, [ 'designers', 'length' ], 0) > 0)
-    ? '<br>設計｜' + _.map(article.designers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
+    ? `<br>設計${delimiter}` + _.map(article.designers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
   const engineers = (_.get(article, [ 'engineers', 'length' ], 0) > 0)
-    ? '<br>工程｜' + _.map(article.engineers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
+    ? `<br>工程${delimiter}` + _.map(article.engineers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
   const external = '<br>' + _.get(article, 'extendByline', '')
   switch (option) {
     case 'writers':
