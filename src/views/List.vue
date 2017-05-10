@@ -1,8 +1,8 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
-
-      <div class="list-view" v-if="pageStyle === 'feature'">
+      <!--<div class="list-view" v-if="pageStyle === 'feature'">-->
+        <div class="list-view" v-if="(pageStyle == 'feature') && (sectionName != 'foodtravel' || type == 'CATEGORY')">
         <app-header :commonData= 'commonData' />
         <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :config="props.config" />
         <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :config="props.config" />
@@ -32,6 +32,21 @@
         <share />
       </div>
 
+      <div v-if="(sectionName == 'foodtravel') && (type == 'SECTION')" class="foodtravel-redesign">
+        <section>
+          <header-foodtravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+        </section>
+        <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
+        <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
+        <latestArticle-foodtravel :articles='articles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" />
+        <more-foodtravel v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
+        <loading :show="loading" />
+        <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <footer-foodtravel :commonData='commonData' :sectionName='sectionName' />
+      </div>
+
+      <!-- section/watch -->
       <div class="listFull-view" v-if="pageStyle === 'full'">
         <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
         <article-leading :articles='articles' :props="props" v-if="type === 'SECTION'"/>
@@ -58,7 +73,7 @@
 </template>
 <script>
 
-import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
+import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, unLockJS } from '../utils/comm'
@@ -69,15 +84,21 @@ import ArticleListFull from '../components/ArticleListFull.vue'
 import AudioList from '../components/AudioList.vue'
 import Cookie from 'vue-cookie'
 import EditorChoiceFull from '../components/EditorChoiceFull.vue'
+import FeaturedStoryFoodTravel from '../components/FeaturedStoryFoodTravel.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
+import FooterFoodTravel from '../components/FooterFoodTravel.vue'
 import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
+import HeaderFoodTravel from '../components/HeaderFoodTravel.vue'
+import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
 import LatestArticleFull from '../components/LatestArticleFull.vue'
+import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
+import MoreFoodTravel from '../components/MoreFoodTravel.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -121,6 +142,14 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
           })
       }
     case SECTION:
+      // Fetch foodtravel list data
+      if (uuid === SECTION_FOODTRAVEL_ID) {
+        return fetchArticlesByUuid(store, uuid, SECTION, {
+          page: page,
+          max_results: MAXRESULT,
+          related: 'full'
+        })
+      }
       switch (pageStyle) {
         case 'full':
           return fetchArticlesByUuid(store, uuid, SECTION, {
@@ -241,13 +270,19 @@ export default {
     'article-list-full': ArticleListFull,
     'audio-list': AudioList,
     'editorChoice-full': EditorChoiceFull,
+    'featuredStory-foodtravel': FeaturedStoryFoodTravel,
     'footer-full': FooterFull,
+    'footer-foodtravel': FooterFoodTravel,
     'header-full': HeaderFull,
+    'header-foodtravel': HeaderFoodTravel,
+    'heroImage-foodtravel': HeroImageFoodTravel,
     'latestArticle-full': LatestArticleFull,
+    'latestArticle-foodtravel': LatestArticleFoodTravel,
     'leading-watch': LeadingWatch,
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
+    'more-foodtravel': MoreFoodTravel,
     'share': Share,
     'video-list': VideoList,
     'vue-dfp-provider': VueDfpProvider
@@ -726,6 +761,9 @@ $color-other = #bcbcbc
 .listFull
   &-view
     background-color #f5f5f5
+
+.foodtravel-redesign
+  background-image url("../../public/foodtravelbg.jpg")
 
 @media (min-width: 600px)
   .list

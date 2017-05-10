@@ -79,7 +79,7 @@
 </template>
 <script>
 
-import { SOCIAL_LINK } from '../constants/index'
+import { SECTION_WATCH_ID, SOCIAL_LINK, TOPIC_WATCH_ID } from '../constants/index'
 import { currentYPosition } from 'kc-scroll'
 import _ from 'lodash'
 
@@ -108,8 +108,8 @@ export default {
       this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
     },
     getSectionLogoUrl () {
-      if (_.get(this.$route, [ 'params', 'topicId' ]) === '586cd15c3c1f950d00ce2e78') {
-        const section = _.find(_.get(this.sections, [ 'items' ]), { id: '57dfe3b0ee85930e00cad4d7' })
+      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
+        const section = _.find(_.get(this.sections, [ 'items' ]), { id: SECTION_WATCH_ID })
         return _.get(section, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ])
       } else {
         return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'

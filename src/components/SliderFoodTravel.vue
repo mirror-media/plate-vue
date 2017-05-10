@@ -2,7 +2,7 @@
   <swiper :options="swiperOption" :ref="slideId">
     <slot :slide="slideComp"></slot>
     <slot name="custNav" :thisSwiperId="slideId"></slot>
-    <div class="swiper-pagination" :id="swiperPagiantionId" slot="pagination"></div>
+    <div class="swiper-pagination" :id="swiperPagiantionId" slot="pagination" :style="'top:' + showPagiantion + '20px'"></div>
     <div class="swiper-button swiper-button-prev" :class="navBtnClass" slot="button-prev"></div>
     <div class="swiper-button swiper-button-next" :class="navBtnClass" slot="button-next"></div>
   </swiper>
@@ -69,6 +69,9 @@
           this.swiper.update()
         }
         return Object.assign(defaultOpt, this.option)
+      },
+      showPagiantion () {
+        return this.option.showPagination ? '-' : ''
       }
     },
     data () {
@@ -102,13 +105,13 @@
   .swiper-container
     .swiper-pagination
       position relative
-      top 20px
+      // top -20px
 
       &.swiper-pagination-bullets
-        bottom 0
+        // bottom 0
       
       .swiper-pagination-bullet
-        bottom 0
+        // bottom 0
         box-shadow 0 0 7px rgba(65, 65, 65, 0.61)
         border 2px solid #000000
         background-color #fff
@@ -116,7 +119,7 @@
         height 15px
 
         &.swiper-pagination-bullet-active
-          background #b3b3b3
+          background #4d4d4d
           border none
         
       

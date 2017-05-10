@@ -324,6 +324,8 @@ export const TOPIC = 'TOPIC'
 
 export const SECTION_WATCH_ID = '57dfe3b0ee85930e00cad4d7'
 
+export const SECTION_FOODTRAVEL_ID = '57dfe399ee85930e00cad4d6'
+
 export const AUDIO_ID = '58ef372a7bce2b0e0048288c'
 
 export const CAMPAIGN_ID = '5859e7e5c0ff6d0d00246263'
