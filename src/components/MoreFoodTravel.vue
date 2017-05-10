@@ -21,6 +21,8 @@ export default {
 .moreFull
   padding 0 40px
   margin-bottom 35px
+  margin-left 8.3%
+  margin-right 8.3%
   > button
     display: flex
     justify-content: center
