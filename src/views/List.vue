@@ -73,7 +73,7 @@
 </template>
 <script>
 
-import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
+import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, unLockJS } from '../utils/comm'
@@ -143,7 +143,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
       }
     case SECTION:
       // Fetch foodtravel list data
-      if (uuid === '57dfe399ee85930e00cad4d6') {
+      if (uuid === SECTION_FOODTRAVEL_ID) {
         return fetchArticlesByUuid(store, uuid, SECTION, {
           page: page,
           max_results: MAXRESULT,

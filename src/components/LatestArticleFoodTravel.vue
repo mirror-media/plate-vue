@@ -72,6 +72,7 @@
 </template>
 
 <script>
+    import { SECTION_FOODTRAVEL_ID } from '../constants/index'
     import ItemsTitleRect from './ItemsTitleRect.vue'
     import {
         getAuthor,
@@ -101,7 +102,7 @@
         },
         topics () {
           return this.commonData.topics.items.filter((o) => {
-            if (o.hasOwnProperty('sections')) return o.sections[0] === '57dfe399ee85930e00cad4d6' // foodtravel
+            if (o.hasOwnProperty('sections')) return o.sections[0] === SECTION_FOODTRAVEL_ID // foodtravel
           })
         }
       }
