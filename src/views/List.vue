@@ -94,7 +94,6 @@ import HeaderFoodTravel from '../components/HeaderFoodTravel.vue'
 import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
 import LatestArticleFull from '../components/LatestArticleFull.vue'
 import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
-import Leading from '../components/Leading.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
@@ -279,7 +278,6 @@ export default {
     'heroImage-foodtravel': HeroImageFoodTravel,
     'latestArticle-full': LatestArticleFull,
     'latestArticle-foodtravel': LatestArticleFoodTravel,
-    'leading': Leading,
     'leading-watch': LeadingWatch,
     'loading': Loading,
     'more': More,
