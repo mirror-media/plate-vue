@@ -2,7 +2,7 @@
   <swiper :options="swiperOption" :ref="slideId">
     <slot :slide="slideComp"></slot>
     <slot name="custNav" :thisSwiperId="slideId"></slot>
-    <div class="swiper-pagination" :id="swiperPagiantionId" slot="pagination"></div>
+    <div class="swiper-pagination" :id="swiperPagiantionId" slot="pagination" :style="custStyle"></div>
     <div class="swiper-button swiper-button-prev" :class="navBtnClass" slot="button-prev"></div>
     <div class="swiper-button swiper-button-next" :class="navBtnClass" slot="button-next"></div>
   </swiper>
@@ -65,6 +65,9 @@
         if (this.option[ 'paginationable' ]) {
           this.option[ 'pagination' ] = `#${this.swiperPagiantionId}`
         }
+        if (this.option['showPagination']) {
+          this.custStyle = 'top: -20px'
+        }
         if (this.$refs[ this.slideId ]) {
           this.swiper.update()
         }
@@ -72,7 +75,9 @@
       }
     },
     data () {
-      return {}
+      return {
+        custStyle: ''
+      }
     },
     methods: {
       slideTo () {
@@ -85,6 +90,7 @@
       // this.swiper.update(true)
       if (!window[ 'refs' ]) window[ 'refs' ] = {}
       window[ 'refs' ][ this.slideId ] = this.swiper
+      window[ 'refs' ][ this.slideId ].init()
     },
     name: 'app-slider',
     props: {
