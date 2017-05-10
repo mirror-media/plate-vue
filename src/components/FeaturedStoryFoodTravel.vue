@@ -29,7 +29,7 @@
   import ItemsTitleRect from './ItemsTitleRect.vue'
   import { SECTION_MAP, SITE_URL } from '../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../utils/comm'
-  import Slider from './Slider.vue'
+  import Slider from './SliderFoodTravel.vue'
   import sanitizeHtml from 'sanitize-html'
 
   export default {
@@ -45,9 +45,13 @@
       slidesPerView () {
         return (this.viewport < 752) ? 1 : 3
       },
+      showPagination () {
+        return this.viewport < 752
+      },
       sliderOption () {
         return {
           paginationable: true,
+          showPagination: this.showPagination,
           paginationClickable: true,
           setNavBtn: false,
           slidesPerView: this.slidesPerView,
@@ -405,6 +409,9 @@
                                 filter brightness(50%)
                                 p
                                     display none
+                                .play-btn
+                                  top 30%
+                                  left 43%
                     // left
                     .swiper-slide-next
                         .featured_item
@@ -421,8 +428,9 @@
                                 box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
                                 p
                                     display none
-                            // .play-btn
-                            //     display none        
+                                .play-btn
+                                  top 30%
+                                  left 43%
                     // center
                     .swiper-slide-active
                         .featured_item
@@ -445,7 +453,10 @@
                                     // font-weight bold
                                     text-shadow 2px 2px 2px #4d4d4d
                                     margin 0 20px
-                                    margin-bottom 10px
+                                    margin-bottom 20px
+                                .play-btn
+                                  top 30%
+                                  left 43%
                     // right
                     .swiper-slide-next + .swiper-slide
                         .featured_item
@@ -460,8 +471,9 @@
                                 box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
                                 p
                                     display none
-                            // .play-btn
-                            //     display none
+                                .play-btn
+                                  top 30%
+                                  left 43%
     .slide-nav-btn
       background-size contain
       background-repeat no-repeat
