@@ -19,9 +19,8 @@ export default {
 <style lang="stylus" scoped>
 
 .moreFull
+  padding 0 40px
   margin-bottom 35px
-  margin-left 8.3%
-  margin-right 8.3%
   > button
     display: flex
     justify-content: center
@@ -33,6 +32,8 @@ export default {
     letter-spacing 10px
     border none
     background-color #333
+    > span
+      margin 0 auto
 
 @media (min-width: 1200px)
   .moreFull
