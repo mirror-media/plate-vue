@@ -30,7 +30,7 @@ const router = new Router({
         component: Article
       } ]
     },
-    // { path: '/homeb', component: HomeB },
+    { path: '/homeb', component: Home },
     { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
     { path: '/search/:keyword', component: Search },
     { path: '/section/:title', component: List },
