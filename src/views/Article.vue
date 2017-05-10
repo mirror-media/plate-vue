@@ -59,6 +59,10 @@
       <div v-else-if="(articleStyle === 'photography')">
         <article-body-photography :articleData="articleData" :viewport="viewport">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+          <div slot="slot_dfpFT">
+            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 767" />
+          </div>
         </article-body-photography>
       </div>
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
