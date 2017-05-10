@@ -38,7 +38,8 @@
         </section>
         <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
         <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
-        <latestArticle-foodtravel :articles='articles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" />
+        <latestArticle-foodtravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" id="articleList" :showLatestOnly="false"/>
+        <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
         <more-foodtravel v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
         <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
@@ -316,9 +317,15 @@ export default {
       return this.$store.state.audios
     },
     autoScrollArticles () {
+      if (this.uuid === SECTION_FOODTRAVEL_ID) {
+        return _.take(this.articles, 8)
+      }
       return _.take(this.articles, 12)
     },
     autoScrollArticlesLoadMore () {
+      if (this.uuid === SECTION_FOODTRAVEL_ID) {
+        return _.slice(this.articles, 8)
+      }
       return _.slice(this.articles, 12)
     },
     categoryName () {
@@ -595,7 +602,12 @@ export default {
   },
   watch: {
     articleListAutoScrollHeight: function () {
-      this.canScrollLoadMord = true
+      if (this.uuid === SECTION_FOODTRAVEL_ID && this.page >= 2) {
+        this.canScrollLoadMord = false
+      } else {
+        this.canScrollLoadMord = true
+      }
+      // this.canScrollLoadMord = true
     },
     customCSS: function () {
       this.updateCustomizedMarkup()

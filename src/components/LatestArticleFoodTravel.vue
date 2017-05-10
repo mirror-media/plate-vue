@@ -1,8 +1,8 @@
 <template>
     <section class="latestArticle-foodtravel">
         <div class="topicsArticle-foodtravel-container mobile-only">
-            <vue-dfp :is="props.vueDfp" pos="LMBL1" extClass="desktop-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-            <div class="topicsArticle-full-posts">
+            <vue-dfp :is="props.vueDfp" pos="LMBL1" extClass="desktop-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" v-if="!this.showLatestOnly"/>
+            <div class="topicsArticle-full-posts" v-if="!this.showLatestOnly">
                 <template v-for="(article, index) in topics">
                     <div class="topicsArticle-full-post">
                         <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" target="_blank">
@@ -22,7 +22,7 @@
         </div>
 
         <div class="latestArticle-foodtravel-container">
-            <items-title-rect class="header-rect">最新<br>文章</items-title-rect>
+            <items-title-rect class="header-rect" v-if="!this.showLatestOnly">最新<br>文章</items-title-rect>
             <div class="latestArticle-full-posts">
                 <template v-for="(article, index) in latestArticle">
                     <div :class="'latestArticle-full-post-' + (index % 2)">
@@ -37,7 +37,7 @@
                                 <p v-html="getBrief(article, 70)"></p>
                             </a>
                             <div class="latestArticle-full-post__meta">
-                                <span class="latestArticle-full-post__meta--author" v-show="getAuthor(article, 'writers', '／')" v-html="getAuthor(article, 'writers', '／')"></span>
+                                <span class="latestArticle-full-post__meta--author" v-if="getAuthor(article, 'writers', '／')" v-html="getAuthor(article, 'writers', '／')"></span>
                             </div>
                         </div>
                     </div>
@@ -47,8 +47,8 @@
 
         <div class="topicsArticle-foodtravel-container desktop-only">
             <vue-dfp :is="props.vueDfp" pos="LPCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
-            :dfpId="props.dfpId" />
-            <div class="topicsArticle-full-posts">
+            :dfpId="props.dfpId" v-if="!this.showLatestOnly"/>
+            <div class="topicsArticle-full-posts" v-if="!this.showLatestOnly">
                 <template v-for="(article, index) in topics">
                     <div class="topicsArticle-full-post">
                         <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" target="_blank">
@@ -84,7 +84,7 @@
     import moment from 'moment'
     export default {
       name: 'latestArticle-foodtravel',
-      props: [ 'articles', 'props', 'commonData' ],
+      props: [ 'articles', 'props', 'commonData', 'showLatestOnly' ],
       components: {
         'items-title-rect': ItemsTitleRect
       },
@@ -219,7 +219,7 @@
 
 
 // Tablet
-@media (min-width: 768px)
+@media (min-width: 600px)
     .latestArticle-foodtravel
         align-items center
         .topicsArticle-foodtravel-container
@@ -278,7 +278,7 @@
                         height 300px 
 
 // PC
-@media (min-width: 1366px)
+@media (min-width: 1200px)
     .latestArticle-foodtravel
         flex-direction row
         align-items flex-start
@@ -308,7 +308,7 @@
                             border-bottom border_style
                             border-left none
                             width content_width
-                            height 36vh
+                            height 38vh
                             padding 0 2% 0 2%
                             // h2
                             //     font-size 24px
@@ -329,7 +329,7 @@
                             border-bottom border_style
                             border-left border_style
                             width content_width
-                            height 36vh
+                            height 38vh
                             padding 0 2% 0 2%
                             // h2
                             //     font-size 24px
@@ -340,7 +340,7 @@
 
                     &__img
                         width img_width
-                        height 44vh
+                        height 46vh
 
         .topicsArticle-foodtravel-container
             flex-direction column

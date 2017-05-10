@@ -155,7 +155,7 @@ export default {
       .line, .weibo  
         margin-left 10px
       
-@media (min-width 768px)
+@media (min-width 600px)
   .footer-foodtravel
     &__menu
       margin-bottom 0
@@ -179,7 +179,7 @@ export default {
         a + a
           margin-left 30px
 
-@media (min-width 1366px)
+@media (min-width 1200px)
   .footer-foodtravel
     flex-direction row
     align-items stretch

@@ -29,7 +29,7 @@
   import ItemsTitleRect from './ItemsTitleRect.vue'
   import { SECTION_MAP, SITE_URL } from '../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../utils/comm'
-  import Slider from './SliderFoodTravel.vue'
+  import Slider from './Slider.vue'
   import sanitizeHtml from 'sanitize-html'
 
   export default {
@@ -69,19 +69,7 @@
         siteUrl: SITE_URL
       }
     },
-    mounted () {
-      this.updateViewport()
-      window.addEventListener('resize', () => {
-        this.updateViewport()
-      })
-    },
     methods: {
-      updateViewport () {
-        if (process.env.VUE_ENV === 'client') {
-          this.viewport = document.querySelector('body').offsetWidth + 1
-          this.viewport = this.viewport - 1
-        }
-      },
       borderLeftStyle (sect) {
         return {
           borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
@@ -311,7 +299,7 @@
       background-image url(/public/icon/arrowr-foodtravel.png)
 
 // Tablet
-@media (min-width 768px) and (max-width 1365px)
+@media (min-width 600px) and (max-width 1199px)
   .featured-container 
     .featured_list
         .featured_item
@@ -386,7 +374,7 @@
                         .play-btn
                             display none 
 // Mobile
-@media (min-width 0px) and (max-width 767px)
+@media (min-width 0px) and (max-width 599px)
     .featured-container
         margin-top 50px
         margin-left 5%
