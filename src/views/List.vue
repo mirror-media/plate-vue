@@ -145,7 +145,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
       // Fetch foodtravel list data
       if (uuid === '57dfe399ee85930e00cad4d6') {
         return fetchArticlesByUuid(store, uuid, SECTION, {
-          page: PAGE,
+          page: page,
           max_results: MAXRESULT,
           related: 'full'
         })

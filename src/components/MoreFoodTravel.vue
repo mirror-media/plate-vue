@@ -1,5 +1,5 @@
 <template>
- <div class="moreFull">
+ <div class="moreFoodTravel">
    <button @click="loadMore()" id="loadmore"><span>更多文章</span></button>
  </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 
 export default {
-  name: 'moreFull',
+  name: 'moreFoodTravel',
   methods: {
     loadMore () {
       this.$emit('loadMore')
@@ -18,7 +18,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 
-.moreFull
+.moreFoodTravel
   padding 0 40px
   margin-bottom 35px
   margin-left 8.3%
@@ -38,7 +38,7 @@ export default {
       margin 0 auto
 
 @media (min-width: 1200px)
-  .moreFull
+  .moreFoodTravel
     margin-bottom 70px
     > button
       height 48px
