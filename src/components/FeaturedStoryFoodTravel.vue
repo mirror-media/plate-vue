@@ -255,7 +255,7 @@
                   left 35%
         // center
         .swiper-slide-next
-          height 50vh
+          height 28vw
           .featured_item
             border-left none
             .featured_item_img
@@ -273,7 +273,7 @@
                     // font-weight bold
                     text-shadow 2px 2px 2px #4d4d4d
                     margin 0 40px
-                    margin-bottom 10px
+                    margin-bottom 20px
         // right
         .swiper-slide-next + .swiper-slide
             .featured_item
@@ -348,6 +348,7 @@
                             display none        
                 // center
                 .swiper-slide-next
+                    height initial
                     .featured_item
                         border-left none
                         // width 200%

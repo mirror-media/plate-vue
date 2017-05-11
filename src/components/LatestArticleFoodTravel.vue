@@ -47,8 +47,8 @@
 
         <div class="topicsArticle-foodtravel-container desktop-only">
             <vue-dfp :is="props.vueDfp" pos="LPCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
-            :dfpId="props.dfpId" v-show="!this.showLatestOnly"/>
-            <div class="topicsArticle-full-posts" v-show="!this.showLatestOnly">
+            :dfpId="props.dfpId" v-if="!this.showLatestOnly"/>
+            <div class="topicsArticle-full-posts" v-if="!this.showLatestOnly">
                 <template v-for="(article, index) in topics">
                     <div class="topicsArticle-full-post">
                         <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" >
@@ -300,6 +300,7 @@
 
                     // Img at left side, content at right side
                     &-0
+                        width 60vw
                         flex-direction row
                         .latestArticle-full-post__content
                             margin 0
@@ -319,6 +320,7 @@
                     
                     // Img at right side, content at left side
                     &-1
+                        width 60vw
                         flex-direction row-reverse
                         justify-content flex-end
                         align-items center
