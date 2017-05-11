@@ -197,7 +197,7 @@ export default {
       justify-content flex-start
       > a
         width 25%
-        font-size 15px
+        font-size 20px
         text-align left
     &__vertDivider
       display block

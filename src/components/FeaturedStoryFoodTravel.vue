@@ -7,7 +7,7 @@
           <swiper-slide :is="props.slide" v-for="(o, i) in sectionfeatured" v-if="i < 10">
             <div class="featured_item">
               <div>
-                <a :href="`${siteUrl}/story/${o.slug}`" :id="'featured-' + o.name" target="_blank">
+                <a :href="`${siteUrl}/story/${o.slug}`" :id="'featured-' + o.name" >
                   <div class="featured_item_img"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   <img class="play-btn" src="../../public/icon/play-foodtravel.png" alt="">
@@ -57,7 +57,8 @@
           slidesPerView: this.slidesPerView,
           spaceBetween: 0,
           simulateTouch: true,
-          grabCursor: true
+          grabCursor: true,
+          autoHeight: true
         }
       },
       sliderId () {
@@ -140,7 +141,8 @@
       height 1.5rem
       margin 0
 
-  .featured_list 
+  .featured_list
+    // height 1000px
     display flex
     align-content flex-start
     flex-wrap wrap
@@ -149,7 +151,7 @@
     padding 20px 20px 10px 0
     border none
 
-    .featured_item 
+    .featured_item
       vertical-align top
 
       padding-left 0
@@ -185,7 +187,7 @@
             width 50px
             height 50px
             position absolute
-            top 40%
+            top 45%
             left 45%
 
       
@@ -225,9 +227,10 @@
                 border-left none
                 .featured_item_img
                     width 100%
-                    height 80%
+                    height 130%
                     top 10%
                     filter brightness(50%)
+                    box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
                     p
                         display none
 
@@ -239,21 +242,27 @@
                 pointer-events none
                 cursor default
             .featured_item_img
-                width 100%
-                height 80%
+                width 150%
+                height 130%
                 // left 30%
                 top 10%
                 filter brightness(40%)
                 box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
                 p
                     display none
+                .play-btn
+                  top 45%
+                  left 35%
         // center
         .swiper-slide-next
+          height 50vh
           .featured_item
             border-left none
             .featured_item_img
-                width 100%
-                height 100%
+                width 150%
+                height 150%
+                left -25%
+                // background-size cover
                 top 0
                 filter brightness(100%)
                 box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
@@ -270,8 +279,8 @@
             .featured_item
                 border-left none
                 .featured_item_img
-                    width 100%
-                    height 80%
+                    width 150%
+                    height 130%
                     // left -10%
                     top 10%
                     z-index -2
@@ -279,6 +288,9 @@
                     box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
                     p
                         display none
+                    .play-btn
+                      top 45%
+                      left 35%
   .slide-nav-btn
     background-size contain
     background-repeat no-repeat
