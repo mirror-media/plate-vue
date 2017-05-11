@@ -5,14 +5,14 @@
             <div class="topicsArticle-full-posts" v-if="!this.showLatestOnly">
                 <template v-for="(article, index) in topics">
                     <div class="topicsArticle-full-post">
-                        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" target="_blank">
+                        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" >
                             <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
                         </a>
                         <div class="topicsArticle-full-post__content">
-                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-title'" target="_blank">
+                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-title'" >
                                 <h2 v-text="article.name"></h2>
                             </a>
-                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-brief'" target="_blank">
+                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-brief'" >
                                 <p v-html="getTruncatedVal(article.ogDescription, 45)"></p>
                             </a>
                         </div>
@@ -26,14 +26,14 @@
             <div class="latestArticle-full-posts">
                 <template v-for="(article, index) in latestArticle">
                     <div :class="'latestArticle-full-post-' + (index % 2)">
-                        <a :href="getHref(article)" :id="'latest-' + article.id + '-image'" class="latestArticle-full-post__img" target="_blank">
+                        <a :href="getHref(article)" :id="'latest-' + article.id + '-image'" class="latestArticle-full-post__img" >
                             <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
                         </a>
                         <div class="latestArticle-full-post__content">
-                            <a :href="getHref(article)" :id="'latest-' + article.id + '-title'" target="_blank">
+                            <a :href="getHref(article)" :id="'latest-' + article.id + '-title'" >
                                 <h2 v-text="article.title"></h2>
                             </a>
-                            <a :href="getHref(article)" :id="'latest-' + article.id + '-brief'" target="_blank">
+                            <a :href="getHref(article)" :id="'latest-' + article.id + '-brief'" >
                                 <p v-html="getBrief(article, 70)"></p>
                             </a>
                             <div class="latestArticle-full-post__meta">
@@ -47,18 +47,18 @@
 
         <div class="topicsArticle-foodtravel-container desktop-only">
             <vue-dfp :is="props.vueDfp" pos="LPCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
-            :dfpId="props.dfpId" v-if="!this.showLatestOnly"/>
-            <div class="topicsArticle-full-posts" v-if="!this.showLatestOnly">
+            :dfpId="props.dfpId" v-show="!this.showLatestOnly"/>
+            <div class="topicsArticle-full-posts" v-show="!this.showLatestOnly">
                 <template v-for="(article, index) in topics">
                     <div class="topicsArticle-full-post">
-                        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" target="_blank">
+                        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" >
                             <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
                         </a>
                         <div class="topicsArticle-full-post__content">
-                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-title'" target="_blank">
+                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-title'" >
                                 <h2 v-text="article.name"></h2>
                             </a>
-                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-brief'" target="_blank">
+                            <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-brief'" >
                                 <p v-html="getTruncatedVal(article.ogDescription, 45)"></p>
                             </a>
                         </div>
