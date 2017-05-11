@@ -1,6 +1,6 @@
 <template>
   <section id="editorChoice" class="editorChoice container">
-    <app-slider class="editorChoice-slides grid grid-4-fifth desktop-only" slideId="editorChoiceSlider" :option="sliderOption">
+    <app-slider class="editorChoice-slides grid grid-4-fifth desktop-only" slideId="editorChoiceSlider" :option="sliderOption" v-if="viewport > 1199">
       <template scope="props">
         <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice">
           <template>
