@@ -308,6 +308,10 @@ export default {
 }
 </script>
 <style lang="stylus">
+  .ad-container
+    > div
+      width 100%
+      
   .article_body 
     width 100%
 
