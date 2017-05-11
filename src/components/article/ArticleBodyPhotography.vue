@@ -592,6 +592,7 @@
       .stick-container
         position relative
         height 100%
+        width 100%
 
         .stick
           border-top 3px solid rgba(255, 255, 255, 0.5)
