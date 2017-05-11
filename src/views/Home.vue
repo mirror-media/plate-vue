@@ -7,7 +7,6 @@
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 1199)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" extClass="mobile-only"  :config="props.config"/>
-        <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" class="event" />
         <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" />
         <vue-dfp :is="props.vueDfp" pos="LMBL1" extClass="mobile-only"  :config="props.config"/>
         <section class="container list">
@@ -34,6 +33,7 @@
           <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only"  :config="props.config"/>
           <app-footer :ifShare="false" />
         </section>
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <div class="ad">
             <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only"  :config="props.config"/>
@@ -56,7 +56,7 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
-import Leading from '../components/Leading.vue'
+import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import PopularArticles from '../components/PopularArticles.vue'
 import ProjectList from '../components/article/ProjectList.vue'
@@ -74,12 +74,13 @@ const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] })
 }
 
-const fetchEvent = (store) => {
+const fetchEvent = (store, eventType = 'embedded') => {
   return store.dispatch('FETCH_EVENT', {
     params: {
       'max_results': 1,
       'where': {
-        isFeatured: true
+        isFeatured: true,
+        eventType: eventType
       }
     }
   })
@@ -99,7 +100,7 @@ export default {
     'app-footer': Footer,
     'app-Header': Header,
     'editor-choice': EditorChoice,
-    'leading': Leading,
+    'live-stream': LiveStream,
     'loading': Loading,
     LatestArticleAside,
     LatestArticleMain,
@@ -158,22 +159,22 @@ export default {
     editorChoice () {
       return _.get(this.articlesGroupedList, [ 'choices' ])
     },
-    event () {
-      return this.$store.state.event
+    eventEmbedded () {
+      return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
     },
-    eventData () {
-      return _.get(this.event, [ 'items', '0' ])
-    },
-    eventType () {
-      return this.is404 ? 'image' : _.get(this.event, [ 'items', '0', 'eventType' ])
+    eventLogo () {
+      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
     },
     groupedArticle () {
       return _.slice(_.get(this.articlesGroupedList, [ 'grouped' ]))
     },
-    hasEvent () {
-      const _eventStartTime = moment(new Date(_.get(this.event, [ 'items', 0, 'startDate' ])))
-      const _eventEndTime = moment(new Date(_.get(this.event, [ 'items', 0, 'endDate' ])))
+    hasEventEmbedded () {
       const _now = moment()
+      const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
+      let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
+      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+        _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+      }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     latestArticle () {
@@ -240,7 +241,8 @@ export default {
   beforeMount () {
     fetchCommonData(this.$store)
     fetchPop(this.$store)
-    fetchEvent(this.$store)
+    fetchEvent(this.$store, 'embedded')
+    fetchEvent(this.$store, 'logo')
     fetchArticlesGroupedList(this.$store)
   },
   mounted () {

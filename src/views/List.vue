@@ -29,6 +29,7 @@
         <section class="footer container">
           <app-footer />
         </section>
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <share />
       </div>
 
@@ -45,6 +46,7 @@
         <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <footer-foodtravel :commonData='commonData' :sectionName='sectionName' />
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
 
       <!-- section/watch -->
@@ -60,6 +62,7 @@
         <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :config="props.config" />
         <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :config="props.config" />
         <footer-full :commonData='commonData' :sectionName='sectionName' />
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
 
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
@@ -96,6 +99,7 @@ import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
 import LatestArticleFull from '../components/LatestArticleFull.vue'
 import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
+import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
@@ -104,6 +108,7 @@ import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import vStore from '../store'
+import moment from 'moment'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -220,6 +225,18 @@ const fetchAudios = (store, params = {}) => {
   })
 }
 
+const fetchEvent = (store, eventType = 'embedded') => {
+  return store.dispatch('FETCH_EVENT', {
+    params: {
+      'max_results': 1,
+      'where': {
+        isFeatured: true,
+        eventType: eventType
+      }
+    }
+  })
+}
+
 const fetchTag = (store, id) => {
   return store.dispatch('FETCH_TAG', {
     'id': id
@@ -280,6 +297,7 @@ export default {
     'latestArticle-full': LatestArticleFull,
     'latestArticle-foodtravel': LatestArticleFoodTravel,
     'leading-watch': LeadingWatch,
+    'live-stream': LiveStream,
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
@@ -371,6 +389,12 @@ export default {
         setCentering: true
       }
     },
+    eventEmbedded () {
+      return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
+    },
+    eventLogo () {
+      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+    },
     hasAutoScroll () {
       switch (this.type) {
         case AUTHOR:
@@ -384,6 +408,15 @@ export default {
     },
     hasDFP () {
       return !(this.$route.params.title === 'topic')
+    },
+    hasEventEmbedded () {
+      const _now = moment()
+      const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
+      let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
+      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+        _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+      }
+      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     hasMore () {
       switch (this.$route.params.title) {
@@ -646,6 +679,8 @@ export default {
     // only fetch at first time
     this.$store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
     fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
+    fetchEvent(this.$store, 'embedded')
+    fetchEvent(this.$store, 'logo')
   },
   mounted () {
     this.updateViewport()

@@ -65,6 +65,7 @@
           </div>
         </article-body-photography>
       </div>
+      <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
         <div class="ad">
           <vue-dfp :is="props.vueDfp" pos="MBCVR" extClass="mobile-only" :config="props.config"/>
@@ -88,11 +89,13 @@
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
+  import LiveStream from '../components/LiveStream.vue'
   import PopList from '../components/article/PopList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
+  import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
   import store from '../store'
   import truncate from 'truncate'
@@ -108,6 +111,18 @@
               slug
             ]
           }
+        }
+      }
+    })
+  }
+
+  const fetchEvent = (store, eventType = 'embedded') => {
+    return store.dispatch('FETCH_EVENT', {
+      params: {
+        'max_results': 1,
+        'where': {
+          isFeatured: true,
+          eventType: eventType
         }
       }
     })
@@ -187,6 +202,8 @@
       })
       fetchPop(store)
       fetchCommonData(store)
+      fetchEvent(store, 'embedded')
+      fetchEvent(store, 'logo')
     },
     components: {
       'article-body': ArticleBody,
@@ -195,6 +212,7 @@
       'app-header': Header,
       'dfp-fixed': DfpFixed,
       'latest-list': LatestList,
+      'live-stream': LiveStream,
       'pop-list': PopList,
       'related-list': RelatedList,
       'related-list-one-col': RelatedListOneCol,
@@ -256,6 +274,12 @@
           sizeMapping: DFP_SIZE_MAPPING
         }
       },
+      eventEmbedded () {
+        return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
+      },
+      eventLogo () {
+        return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+      },
       fbAppId () {
         return _.get(this.$store, [ 'state', 'fbAppId' ])
       },
@@ -264,6 +288,15 @@
       },
       hasDfpFixed () {
         return this.sectionId === SECTION_WATCH_ID
+      },
+      hasEventEmbedded () {
+        const _now = moment()
+        const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
+        let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
+        if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+          _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+        }
+        return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
       },
       heroCaption () {
         return _.get(this.articleData, [ 'heroCaption' ], '')
