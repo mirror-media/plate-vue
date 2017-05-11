@@ -18,7 +18,8 @@ const store = new Vuex.Store({
     commonData: {},
     dfpId: DFPID,
     editorChoice: {},
-    event: {},
+    eventEmbedded: {},
+    eventLogo: {},
     fbAppId: FB_APP_ID,
     fbPagesId: FB_PAGES_ID,
     images: {},
@@ -224,7 +225,15 @@ const store = new Vuex.Store({
     },
 
     SET_EVENT: (state, { event }) => {
-      Vue.set(state, 'event', event)
+      const eventType = _.get(event, [ 'items', '0', 'eventType' ])
+      switch (eventType) {
+        case 'embedded':
+          Vue.set(state, 'eventEmbedded', event)
+          break
+        case 'logo':
+          Vue.set(state, 'eventLogo', event)
+          break
+      }
     },
 
     SET_IMAGES: (state, { images }) => {
