@@ -1,6 +1,6 @@
 <template>
   <section class="latestArticle-full">
-    <vue-dfp :is="props.vueDfp" pos="SMBL3" extClass="center dfp-mobile" :dfpUnits="props.dfpUnits" :section="props.section" 
+    <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="SMBL3" extClass="center" :dfpUnits="props.dfpUnits" :section="props.section" 
         :dfpId="props.dfpId" />
     <div class="latestArticle-full-post-container">
       <h2>最新新聞 Latest Stories</h2>
@@ -24,9 +24,9 @@
       
     </div>
     <div class="latestArticle-full-dfp dfp-R desktop-only">
-      <vue-dfp :is="props.vueDfp" pos="SPCR3" extClass="dfp-desktop" :dfpUnits="props.dfpUnits" :section="props.section" 
+      <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCR3" :dfpUnits="props.dfpUnits" :section="props.section" 
         :dfpId="props.dfpId" />
-      <vue-dfp :is="props.vueDfp" pos="SPCR4" extClass="dfp-desktop" :dfpUnits="props.dfpUnits" :section="props.section" 
+      <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCR4" :dfpUnits="props.dfpUnits" :section="props.section" 
         :dfpId="props.dfpId" />
     </div>
   </section>
@@ -39,7 +39,7 @@ import moment from 'moment'
 
 export default {
   name: 'latestArticle-full',
-  props: [ 'articles', 'props' ],
+  props: [ 'articles', 'isMobile', 'props' ],
   methods: {
     getAuthor,
     getBrief,
