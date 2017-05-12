@@ -1,5 +1,5 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
       <!--<div class="list-view" v-if="pageStyle === 'feature'">-->
         <div class="list-view" v-if="(pageStyle == 'feature') && (sectionName != 'foodtravel' || type == 'CATEGORY')">
