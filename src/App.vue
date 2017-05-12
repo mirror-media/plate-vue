@@ -103,12 +103,6 @@ button:focus {
 .fade-enter, .fade-leave-active
   opacity 0
 
-.dfp-test
-  width 970px
-  height 250px
-  margin 20px auto 20px
-  background-color #a8dadc
-
 .leading-embedded
   .embedded
     > iframe
@@ -165,5 +159,12 @@ button:focus {
   .container
     width 1024px
 
+@media only screen and (min-width 0px) and (max-width 1199px)
+  .dfp-desktop
+    display none !important
+
+@media only screen and (min-width 1200px)
+  .dfp-mobile
+    display none !important
 
 </style>

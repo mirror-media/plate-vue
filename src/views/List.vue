@@ -4,25 +4,25 @@
       <!--<div class="list-view" v-if="pageStyle === 'feature'">-->
         <div class="list-view" v-if="(pageStyle == 'feature') && (sectionName != 'foodtravel' || type == 'CATEGORY')">
         <app-header :commonData= 'commonData' />
-        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :config="props.config" />
-        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :config="props.config" />
+        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="dfp-desktop" :config="props.config" />
+        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="dfp-mobile" :config="props.config" />
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
         <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' v-if="categoryName !== 'audio' && categoryName !== 'videohub' ">
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" extClass="dfp-desktop" slot="dfpNA3" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" extClass="dfp-desktop" slot="dfpNA5" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" extClass="dfp-desktop" slot="dfpNA9" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBL1" extClass="dfp-mobile" slot="dfpL1" :config="props.config" />
         </article-list>
         <audio-list :audios="audios.items" v-if="categoryName === 'audio'" />
         <video-list :playlist="playlist.items" v-if="categoryName === 'videohub'"/>
         <section class="container">
           <more v-if="hasMore && (categoryName === 'audio' || categoryName === 'videohub')" v-on:loadMore="loadMore" />
         </section>
-        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :config="props.config" />
-        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :config="props.config" />
+        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="dfp-desktop" :config="props.config" />
+        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="dfp-mobile" :config="props.config" />
         <article-list id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
           v-if="categoryName !== 'audio' && categoryName !== 'videohub'" v-show="hasAutoScroll"/>
         <loading :show="loading" />
@@ -59,8 +59,8 @@
         <article-list-full :articles='articles' v-if="type === 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
-        <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :config="props.config" />
-        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :config="props.config" />
+        <vue-dfp :is="props.vueDfp" pos="SPCFT" extClass="dfp-desktop" :config="props.config" />
+        <vue-dfp :is="props.vueDfp" pos="SMBFT" extClass="dfp-mobile" :config="props.config" />
         <footer-full :commonData='commonData' :sectionName='sectionName' />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
@@ -432,6 +432,9 @@ export default {
           }
           return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'total' ], 0)
       }
+    },
+    isMobile () {
+      return this.viewport < 1200
     },
     page () {
       switch (this.type) {

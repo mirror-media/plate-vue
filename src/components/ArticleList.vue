@@ -19,7 +19,7 @@
       </a>
     </template>
 
-    <slot name="dfpNA3" v-if="hasDFP"></slot>
+    <slot name="dfpNA3"/>
 
     <template v-for="item in articlesBeforeDFPNA5" v-if="hasDFP">
       <router-link :to="getHref(item)" :id="'latest-'+ item.name"  class="articleList-block" v-if="item.style !== 'projects'">
@@ -40,7 +40,7 @@
       </a>
     </template>
 
-    <slot name="dfpNA5" v-if="hasDFP"></slot>
+    <slot name="dfpNA5"/>
 
     <template v-for="item in articlesBeforeDFPNA9BeforeL1" v-if="hasDFP">
       <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects'">
@@ -62,7 +62,7 @@
     </template>
 
     <div class="articleList__dfp--l1 mobile-only" v-if="hasDFP">
-      <slot name="dfpL1"></slot>
+      <slot name="dfpL1"/>
     </div>
 
     <template v-for="item in articlesBeforeDFPNA9AfterL1" v-if="hasDFP">
@@ -84,7 +84,7 @@
       </a>
     </template>
 
-    <slot name="dfpNA9" v-if="hasDFP"></slot>
+    <slot name="dfpNA9"/>
 
     <template v-for="item in articlesAfterDFPNA9" v-if="hasDFP">
       <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects'">
