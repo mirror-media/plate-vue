@@ -1,8 +1,8 @@
 <template>
     <section class="latestArticle-foodtravel">
-        <div class="topicsArticle-foodtravel-container mobile-only">
-            <vue-dfp :is="props.vueDfp" pos="LMBL1" extClass="desktop-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" v-if="!this.showLatestOnly"/>
-            <div class="topicsArticle-full-posts" v-if="!this.showLatestOnly">
+        <div class="topicsArticle-foodtravel-container mobile-only" v-if="!this.showLatestOnly">
+            <vue-dfp :is="props.vueDfp" pos="LMBSL1" extClass="desktop-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId"/>
+            <div class="topicsArticle-full-posts">
                 <template v-for="(article, index) in topics">
                     <div class="topicsArticle-full-post">
                         <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" >
@@ -31,10 +31,10 @@
                         </a>
                         <div class="latestArticle-full-post__content">
                             <a :href="getHref(article)" :id="'latest-' + article.id + '-title'" >
-                                <h2 v-text="article.title"></h2>
+                                <h2 v-text="getTruncatedVal(article.title, 25)"></h2>
                             </a>
                             <a :href="getHref(article)" :id="'latest-' + article.id + '-brief'" >
-                                <p v-html="getBrief(article, 70)"></p>
+                                <p v-html="getBrief(article, 55)"></p>
                             </a>
                             <div class="latestArticle-full-post__meta">
                                 <span class="latestArticle-full-post__meta--author" v-if="getAuthor(article, 'writers', '／')" v-html="getAuthor(article, 'writers', '／')"></span>
@@ -45,10 +45,10 @@
             </div>
         </div>
 
-        <div class="topicsArticle-foodtravel-container desktop-only">
-            <vue-dfp :is="props.vueDfp" pos="LPCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
-            :dfpId="props.dfpId" v-if="!this.showLatestOnly"/>
-            <div class="topicsArticle-full-posts" v-if="!this.showLatestOnly">
+        <div class="topicsArticle-foodtravel-container desktop-only" v-if="!this.showLatestOnly">
+            <vue-dfp :is="props.vueDfp" pos="LPCSR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
+            :dfpId="props.dfpId"/>
+            <div class="topicsArticle-full-posts">
                 <template v-for="(article, index) in topics">
                     <div class="topicsArticle-full-post">
                         <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" class="topicsArticle-full-post__img" >
@@ -118,7 +118,7 @@
 
     .topicsArticle-foodtravel-container
         margin-top 5%
-        margin-bottom 25px
+        margin-bottom 50px
         .topicsArticle-full-posts
             margin-top 25px
             .topicsArticle-full-post
@@ -163,8 +163,6 @@
                         background-size 100% 100%  
 
     .latestArticle-foodtravel-container
-        margin-top 5%
-        margin-bottom 25px
         .header-rect
             margin-left 5%
 
@@ -223,6 +221,7 @@
     .latestArticle-foodtravel
         align-items center
         .topicsArticle-foodtravel-container
+            margin-bottom 50px
             .topicsArticle-full-posts
                 .topicsArticle-full-post
                     img_width = 80%
@@ -286,13 +285,12 @@
         .latestArticle-foodtravel-container
             margin-left 8.3%
             margin-right 4.3%
-            margin-bottom 50px
             width 88%
             .header-rect
                 margin 0
 
             .latestArticle-full-posts
-                margin-top 50px
+                margin-top 0
                 .latestArticle-full-post
                     img_width = 56%
                     content_width = 100% - img_width
@@ -309,14 +307,9 @@
                             border-bottom border_style
                             border-left none
                             width content_width
+                            height auto
                             height 38vh
                             padding 0 2% 0 2%
-                            // h2
-                            //     font-size 24px
-                            //     line-height 30px
-                            // p, span
-                            //     font-size 16px
-                            //     line-height 22px
                     
                     // Img at right side, content at left side
                     &-1
@@ -333,12 +326,6 @@
                             width content_width
                             height 38vh
                             padding 0 2% 0 2%
-                            // h2
-                            //     font-size 24px
-                            //     line-height 30px
-                            // p, span
-                            //     font-size 16px
-                            //     line-height 22px
 
                     &__img
                         width img_width

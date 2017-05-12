@@ -56,6 +56,7 @@
           setNavBtn: false,
           slidesPerView: this.slidesPerView,
           spaceBetween: 0,
+          initialSlide: 0,
           simulateTouch: true,
           grabCursor: true,
           autoHeight: true
@@ -101,35 +102,15 @@
 </script>
 
 <style lang="stylus" scoped>
-// .featuredstory-foodtravel
-//     display flex
-//     align-items space-between
-//     width 100%
-//     // background-color #f5e2c5
-//     .header-rect
-//         margin-top 5%
-//         margin-left 5%
-
-// @media (min-width: 1200px)
-//     .featuredstory-foodtravel
-//         .header-rect
-//             margin-left 8.3%
-
-
 .featured-container 
   font-size 18px
   position relative
   margin-top 5%
   margin-left 8.3%
   margin-right 8.3%
-
-  //.header-rect
-    // margin-top 8.3%
-    // margin-left 8.3%
+  margin-bottom 5%
 
   .featured_title
-    // border-bottom 5px solid #000
-
     h3
       width 4rem
       background-color #000
@@ -252,7 +233,7 @@
                     display none
                 .play-btn
                   top 45%
-                  left 35%
+                  left 25%
         // center
         .swiper-slide-next
           height 28vw
@@ -436,6 +417,9 @@
                     .swiper-slide-active
                         .featured_item
                             border-left none
+                            a
+                              pointer-events auto
+                              cursor default
                             // width 100%
                             // height 20vh
                             // position absolute
