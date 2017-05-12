@@ -1,8 +1,38 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
-      <!--<div class="list-view" v-if="pageStyle === 'feature'">-->
-        <div class="list-view" v-if="(pageStyle == 'feature') && (sectionName != 'foodtravel' || type == 'CATEGORY')">
+      <div class="foodtravel-redesign" v-if="pageStyle === 'video'">
+        <section>
+          <header-foodtravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+        </section>
+        <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
+        <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
+        <latestArticle-foodtravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" id="articleList" :showLatestOnly="false"/>
+        <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
+        <more-foodtravel v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
+        <loading :show="loading" />
+        <vue-dfp :is="props.vueDfp" pos="LPCSFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LMBSFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <footer-foodtravel :commonData='commonData' :sectionName='sectionName' />
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+      </div>
+
+      <div class="listFull-view" v-else-if="pageStyle === 'full'">
+        <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+        <article-leading :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'"/>
+        <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
+        <latestArticle-full :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'" />
+        <leading-watch v-if="type == 'TAG'" :tag='tag' :type='type'/>
+        <article-list-full :articles='articles' v-if="type === 'TAG'" />
+        <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
+        <loading :show="loading" />
+        <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCFT" :config="props.config" />
+        <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="SMBFT" :config="props.config" />
+        <footer-full :commonData='commonData' :sectionName='sectionName' />
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+      </div>
+
+      <div class="list-view" v-else>
         <app-header :commonData= 'commonData' />
         <vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" />
         <vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" />
@@ -31,38 +61,6 @@
         </section>
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <share />
-      </div>
-
-      <div v-if="(sectionName == 'foodtravel') && (type == 'SECTION')" class="foodtravel-redesign">
-        <section>
-          <header-foodtravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-        </section>
-        <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
-        <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
-        <latestArticle-foodtravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" id="articleList" :showLatestOnly="false"/>
-        <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
-        <more-foodtravel v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
-        <loading :show="loading" />
-        <vue-dfp :is="props.vueDfp" pos="LPCSFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp :is="props.vueDfp" pos="LMBSFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <footer-foodtravel :commonData='commonData' :sectionName='sectionName' />
-        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-      </div>
-
-      <!-- section/watch -->
-      <div class="listFull-view" v-if="pageStyle === 'full'">
-        <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-        <article-leading :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'"/>
-        <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
-        <latestArticle-full :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'" />
-        <leading-watch v-if="type == 'TAG'" :tag='tag' :type='type'/>
-        <article-list-full :articles='articles' v-if="type === 'TAG'" />
-        <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
-        <loading :show="loading" />
-        <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCFT" :config="props.config" />
-        <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="SMBFT" :config="props.config" />
-        <footer-full :commonData='commonData' :sectionName='sectionName' />
-        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
 
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
@@ -159,16 +157,9 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
           })
       }
     case SECTION:
-      // Fetch foodtravel list data
-      if (uuid === SECTION_FOODTRAVEL_ID) {
-        return fetchArticlesByUuid(store, uuid, SECTION, {
-          page: page,
-          max_results: MAXRESULT,
-          related: 'full'
-        })
-      }
       switch (pageStyle) {
         case 'full':
+        case 'video':
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
             max_results: MAXRESULT,
