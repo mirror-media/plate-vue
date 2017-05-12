@@ -2,13 +2,14 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchContacts, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
+import { fetchActivities, fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchContacts, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
 
 Vue.use(Vuex)
 
 const { DFPID, FB_APP_ID, FB_PAGES_ID } = config
 const store = new Vuex.Store({
   state: {
+    activities: {},
     articles: {},
     articlesByUUID: {},
     articlesPopList: {},
@@ -36,6 +37,11 @@ const store = new Vuex.Store({
   },
 
   actions: {
+    FETCH_ACTIVITIES: ({ commit, state }, { params }) => {
+      return fetchActivities(params).then(activities => {
+        commit('SET_ACTIVITIES', { activities })
+      })
+    },
     FETCH_ARTICLES: ({ commit, state }, { params }) => {
       const orig = _.values(state.articles[ 'items' ])
       return fetchArticles(params).then(articles => {
@@ -183,6 +189,10 @@ const store = new Vuex.Store({
   },
 
   mutations: {
+
+    SET_ACTIVITIES: (state, { activities }) => {
+      Vue.set(state, 'activities', activities)
+    },
 
     SET_ARTICLES: (state, { articles }) => {
       Vue.set(state, 'articles', articles)

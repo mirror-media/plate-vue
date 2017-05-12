@@ -13,6 +13,7 @@ import Home from '../views/Home.vue'
 import List from '../views/List.vue'
 import Questionnaire from '../views/Questionnaire.vue'
 import Search from '../views/Search.vue'
+import Timeline from '../views/Timeline.vue'
 import TimelineView from '../views/TimelineView.vue'
 import Topic from '../views/Topic.vue'
 
@@ -35,6 +36,7 @@ const router = new Router({
     { path: '/search/:keyword', component: Search },
     { path: '/section/:title', component: List },
     { path: '/timeline/:title', component: TimelineView },
+    { path: '/timelineTest', component: Timeline },
     { path: '/tag/:tagId', component: List },
     { path: '/topic/:topicId', component: Topic },
     { path: '/404', component: NotFound },
