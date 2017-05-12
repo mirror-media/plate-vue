@@ -19,10 +19,7 @@ export default {
 <style lang="stylus" scoped>
 
 .moreFoodTravel
-  padding 0 40px
-  margin-bottom 35px
-  margin-left 8.3%
-  margin-right 8.3%
+  margin 50px 5%
   > button
     display: flex
     justify-content: center
@@ -39,6 +36,7 @@ export default {
 
 @media (min-width: 1200px)
   .moreFoodTravel
+    margin 50px 8.3%
     margin-bottom 70px
     > button
       height 48px
