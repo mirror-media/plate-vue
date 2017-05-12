@@ -28,7 +28,7 @@ export default {
     height 42px
     font-size 18px
     color #fff
-    letter-spacing 10px
+    letter-spacing 1px
     border none
     background-color #333
     > span

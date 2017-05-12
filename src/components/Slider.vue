@@ -66,7 +66,7 @@
           this.option[ 'pagination' ] = `#${this.swiperPagiantionId}`
         }
         if (this.option['showPagination']) {
-          this.custStyle = 'top: -20px'
+          this.custStyle = 'top: 1px'
         }
         if (this.$refs[ this.slideId ]) {
           this.swiper.update()

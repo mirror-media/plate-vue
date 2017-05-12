@@ -52,9 +52,6 @@
   import {
     SOCIAL_LINK
   } from '../constants/index'
-  import {
-    currentYPosition
-  } from 'kc-scroll'
   import _ from 'lodash'
   export default {
     name: 'header-full',
@@ -90,13 +87,6 @@
       },
       search (searchVal = '') {
         this.$router.push('/search/' + this.searchVal)
-      },
-      handleScroll () {
-        window.onscroll = (e) => {
-          this.opacity = 1 - currentYPosition() / 300
-          this.opacity < 0 ? this.defaultNav = false : this.defaultNav = true
-          this.opacity < 1 ? this.blackNav = true : this.blackNav = false
-        }
       }
     },
     computed: {
@@ -113,9 +103,6 @@
       socialLink () {
         return SOCIAL_LINK
       }
-    },
-    mounted () {
-      this.handleScroll()
     }
   }
 </script>
@@ -165,18 +152,19 @@
     &--item
       justify-content flex-end
       align-items center
-      font-size: 20px
+      font-size: 18px
       font-weight 500
-      letter-spacing 2px
+      letter-spacing 1px
       color #4d4d4d
       width 110px
       // border-left 1px solid black
       // padding-left 5px
     &--item + &--item:before
       content "｜"
-      font-size 20px
-      font-weight 100
-      color grey
+      font-size 18px
+      font-weight 500
+      letter-spacing 8px
+      color #d3d3d3
     &--ham
       margin-left 20px
 
