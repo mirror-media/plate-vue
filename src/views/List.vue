@@ -672,6 +672,12 @@ export default {
     uuid: function () {
       this.page = PAGE
       this.articleListAutoScrollHeight = 0
+      if (this.sectionName === 'other') {
+        window.ga('set', 'contentGroup1', '')
+      } else {
+        window.ga('set', 'contentGroup1', this.sectionName)
+      }
+      window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -715,6 +721,12 @@ export default {
     this.insertCustomizedMarkup()
     this.handleScroll()
     this.updateSysStage()
+    if (this.sectionName === 'other') {
+      window.ga('set', 'contentGroup1', '')
+    } else {
+      window.ga('set', 'contentGroup1', this.sectionName)
+    }
+    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
   },
   metaInfo () {
     const type = this.type

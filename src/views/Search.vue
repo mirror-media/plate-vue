@@ -121,6 +121,15 @@ export default {
   },
   mounted () {
     this.checkIfLockJS()
+
+    window.ga('set', 'contentGroup1', '')
+    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+  },
+  watch: {
+    title: function () {
+      window.ga('set', 'contentGroup1', '')
+      window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+    }
   }
 }
 </script>

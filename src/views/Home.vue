@@ -253,6 +253,7 @@ export default {
     // this.updateCookie()
     this.checkIfLockJS()
     this.updateSysStage()
+    window.ga('send', 'pageview', this.$route.path, { title: SITE_TITLE })
   },
   updated () {
     this.updateSysStage()
