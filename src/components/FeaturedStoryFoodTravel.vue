@@ -1,6 +1,6 @@
 <template>
     <div class="featured-container" v-if="(sectionfeatured.length > 0)">
-    <items-title-rect class="header-rect">精選<br>影音</items-title-rect>
+    <items-title-rect class="header-rect">精選影音</items-title-rect>
     <div class="featured_list">
       <app-slider :option="sliderOption" v-if="ifShowFeatured" :slideId="sliderId">
         <template scope="props">
@@ -108,7 +108,7 @@
   margin-top 5%
   margin-left 8.3%
   margin-right 8.3%
-  margin-bottom 5%
+  margin-bottom 0
 
   .featured_title
     h3
@@ -123,7 +123,6 @@
       margin 0
 
   .featured_list
-    // height 1000px
     display flex
     align-content flex-start
     flex-wrap wrap
@@ -279,7 +278,7 @@
     position absolute
     width 25px
     height 50px
-    top 55%
+    top 49%
     z-index 20
     cursor pointer
 
@@ -369,104 +368,109 @@
                             display none 
 // Mobile
 @media (min-width 0px) and (max-width 599px)
-    .featured-container
-        margin-top 50px
-        margin-left 5%
-        margin-right 5% 
-        .featured_list
-            margin-top 20px
-            padding 0
-            height 45vh
-            .featured_item
-                margin-bottom 0
-            .swiper-container
-                .swiper-wrapper
-                    .swiper-slide
-                        .featured_item
-                            border-left none
-                            .featured_item_img
-                                width 100%
-                                height 100%
-                                top 0
-                                filter brightness(50%)
-                                p
-                                    display none
-                                .play-btn
-                                  top 30%
-                                  left 43%
-                    // left
-                    .swiper-slide-next
-                        .featured_item
-                            border-left none
-                            a
-                                pointer-events none
-                                cursor default
-                            .featured_item_img
-                                width 100%
-                                height 100%
-                                left 0
-                                top 0
-                                filter brightness(40%)
-                                box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
-                                p
-                                    display none
-                                .play-btn
-                                  top 30%
-                                  left 43%
-                    // center
-                    .swiper-slide-active
-                        .featured_item
-                            border-left none
-                            a
-                              pointer-events auto
-                              cursor default
-                            // width 100%
-                            // height 20vh
-                            // position absolute
-                            // left -100%
-                            .featured_item_img
-                                width 100%
-                                height 100%
-                                left 0
-                                top 0
-                                filter brightness(100%)
-                                box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
-                                p
-                                    display block
-                                    color white
-                                    font-size 20px
-                                    // font-weight bold
-                                    text-shadow 2px 2px 2px #4d4d4d
-                                    margin 0 20px
-                                    margin-bottom 20px
-                                .play-btn
-                                  top 30%
-                                  left 43%
-                    // right
-                    .swiper-slide-next + .swiper-slide
-                        .featured_item
-                            border-left none
-                            .featured_item_img
-                                width 100%
-                                height 100%
-                                left 0
-                                top 0
-                                z-index -2
-                                filter brightness(40%)
-                                box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
-                                p
-                                    display none
-                                .play-btn
-                                  top 30%
-                                  left 43%
+  .featured-container
+    margin-top 50px
+    margin-left 5%
+    margin-right 5% 
+    margin-bottom 25px
+    .featured_list
+        margin-top 20px
+        padding 0
+        height auto
+        .featured_item
+            margin-bottom 0
+        .swiper-container
+            height inherit
+            .swiper-wrapper
+                .swiper-slide
+                    .featured_item
+                        border-left none
+                        .featured_item_img
+                            width 100%
+                            height 100%
+                            top 0
+                            filter brightness(50%)
+                            p
+                                display none
+                            .play-btn
+                              top 40%
+                              left 43%
+                // left
+                .swiper-slide-next
+                    .featured_item
+                        border-left none
+                        a
+                            pointer-events none
+                            cursor default
+                        .featured_item_img
+                            width 100%
+                            height 100%
+                            left 0
+                            top 0
+                            filter brightness(40%)
+                            box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+                            p
+                                display none
+                            .play-btn
+                              top 40%
+                              left 43%
+                // center
+                .swiper-slide-active
+                    .featured_item
+                        border-left none
+                        a
+                          pointer-events auto
+                          cursor default
+                        // width 100%
+                        // height 20vh
+                        // position absolute
+                        // left -100%
+                        .featured_item_img
+                            width 100%
+                            height 100%
+                            left 0
+                            top 0
+                            filter brightness(100%)
+                            box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+                            p
+                                display block
+                                color white
+                                font-size 20px
+                                // font-weight bold
+                                text-shadow 2px 2px 2px #4d4d4d
+                                margin 0 20px
+                                margin-bottom 20px
+                            .play-btn
+                              top 40%
+                              left 43%
+                // right
+                .swiper-slide-next + .swiper-slide
+                    .featured_item
+                        border-left none
+                        .featured_item_img
+                            width 100%
+                            height 100%
+                            left 0
+                            top 0
+                            z-index -2
+                            filter brightness(40%)
+                            box-shadow 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+                            p
+                                display none
+                            .play-btn
+                              top 40%
+                              left 43%
     .slide-nav-btn
       background-size contain
       background-repeat no-repeat
       background-position center center
+      // display flex
+      // align-items flex-end
       position absolute
       width 25px
       height 50px
-      top 50vh
+      top 90%
+      // bottom 0
       z-index 20
       cursor pointer
 </style>

@@ -22,7 +22,7 @@
         </div>
 
         <div class="latestArticle-foodtravel-container">
-            <items-title-rect class="header-rect" v-if="!this.showLatestOnly">最新<br>文章</items-title-rect>
+            <items-title-rect class="header-rect" v-if="!this.showLatestOnly">最新文章</items-title-rect>
             <div class="latestArticle-full-posts">
                 <template v-for="(article, index) in latestArticle">
                     <div :class="'latestArticle-full-post-' + (index % 2)">
@@ -135,7 +135,7 @@
                 .topicsArticle-full-post__content
                     display flex
                     flex-direction column
-                    justify-content space-around
+                    justify-content center
                     align-items flex-start
 
                     width content_width
@@ -146,6 +146,7 @@
                         font-weight bold
                         color black
                         line-height 30px
+                        margin 0
                     p, span
                         font-size 16px
                         font-weight normal
@@ -180,11 +181,11 @@
                     flex-direction column
                     justify-content flex-start
                     align-items center
-                    margin-top 50px
+                    margin-top 25px
                     .latestArticle-full-post__content
                         display flex
                         flex-direction column
-                        justify-content space-around
+                        justify-content center
                         align-items flex-start
 
                         border-right border_style
@@ -198,6 +199,7 @@
                             font-weight bold
                             color black
                             line-height 30px
+                            margin 0
                         p, span
                             font-size 16px
                             font-weight normal
@@ -243,7 +245,7 @@
                 margin 0
 
             .latestArticle-full-posts
-                margin-top 50px
+                margin-top 0
                 .latestArticle-full-post
                     img_width = 48%
                     content_width = 95% - img_width + 10%
@@ -309,7 +311,7 @@
                             width content_width
                             height auto
                             height 38vh
-                            padding 0 2% 0 2%
+                            padding 0 2% 10px 2%
                     
                     // Img at right side, content at left side
                     &-1
@@ -333,6 +335,7 @@
 
         .topicsArticle-foodtravel-container
             flex-direction column
+            margin-top 50px
             margin-right 9.5%
             width 300px
             .topicsArticle-full-posts
@@ -340,15 +343,15 @@
                 .topicsArticle-full-post
                     margin 0
                     margin-top 5vh
-                    padding 0 0 50% 0
+                    // padding 0 0 50% 0
                     flex-direction column
 
                     img_width = 295px
                     content_width = 90%
 
                     .topicsArticle-full-post__content
-                        height 150px
-                        padding 80px 1.5% 10% 1.5%
+                        height auto
+                        padding 10% 1.5%
                         width content_width
                     &__img
                         width img_width
