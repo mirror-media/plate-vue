@@ -5,10 +5,10 @@
         <section style="width: 100%;">
           <app-Header v-if="true" :commonData= 'commonData' />
         </section>
-        <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 1199)"  :config="props.config"/>
-        <vue-dfp :is="props.vueDfp" pos="LMBHD" extClass="mobile-only"  :config="props.config"/>
+        <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
+        <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
         <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" />
-        <vue-dfp :is="props.vueDfp" pos="LMBL1" extClass="mobile-only"  :config="props.config"/>
+        <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550)" :config="props.config"/>
         <section class="container list">
           <aside>
             <div class="aside-title mobile-only"><h2>最新文章</h2></div>
@@ -19,9 +19,9 @@
               <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBNA3" extClass="mobile-only"  slot="dfpNA3" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBNA5" extClass="mobile-only"  slot="dfpNA5" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBNA9" extClass="mobile-only"  slot="dfpNA9" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA3" v-if="(viewport < 600)" slot="dfpNA3" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
             </LatestArticleMain>
             <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />
             <PopularArticles :popList="popularlist" />
@@ -29,14 +29,14 @@
         </section>
         <loading :show="loading" />
         <section class="container footer">
-          <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1199)"  :config="props.config"/>
-          <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only"  :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1000)"  :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" pos="LMBFT" v-else-if="(viewport < 550)":config="props.config"/>
           <app-footer :ifShare="false" />
         </section>
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <div class="ad">
-            <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only"  :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config"/>
             <div class="close" @click="closeCoverAd"></div>
           </div>
         </div>
