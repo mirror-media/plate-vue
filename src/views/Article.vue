@@ -404,6 +404,16 @@
           document.querySelector('body').appendChild(mediafarmersScript)
         }
       },
+      sendGA (articleData) {
+        if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
+          window.ga('set', 'contentGroup1', '')
+          window.ga('set', 'contentGroup2', '')
+        } else {
+          window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
+          window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
+        }
+        window.ga('send', 'pageview', this.$route.path, { title: `${_.get(articleData, [ 'title' ])} - ${SITE_TITLE}` })
+      },
       updateCookie () {
         const cookie = Cookie.get('visited')
         if (!cookie) {
@@ -438,6 +448,8 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
+
+      this.sendGA(this.articleData)
     },
     metaInfo () {
       if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
@@ -504,6 +516,7 @@
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
         this.updateMediafarmersScript()
+        this.sendGA(this.articleData)
       }
     }
   }

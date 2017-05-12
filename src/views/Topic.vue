@@ -271,7 +271,6 @@ export default {
     next()
   },
   beforeMount () {
-    console.log('beforeMount')
     const uuid = _.split(this.$route.path, '/')[2]
 
     fetchArticlesByUuid(this.$store, uuid, false)
@@ -280,8 +279,15 @@ export default {
   mounted () {
     this.insertCustomizedMarkup()
     this.checkIfLockJS()
+
+    window.ga('set', 'contentGroup1', '')
+    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
   },
   watch: {
+    uuid: function () {
+      window.ga('set', 'contentGroup1', '')
+      window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+    },
     customCSS: function () {
       this.updateCustomizedMarkup()
     }

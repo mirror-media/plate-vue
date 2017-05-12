@@ -47,10 +47,4 @@ if (process.env.VUE_ENV === 'client') {
   window.ga('create', GA_ID, 'auto')
 }
 
-router.afterEach(route => {
-  if (process.env.VUE_ENV === 'client') {
-    setTimeout(() => window.ga('send', 'pageview', route.path), 500)
-  }
-})
-
 export default router
