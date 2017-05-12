@@ -114,6 +114,13 @@ function loadCommonData (endpoints = []) {
   return _doFetch(url)
 }
 
+function loadContacts (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/contacts`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadEditorChoice () {
   const url = `${_host}/api/combo?endpoint=choices`
   return _doFetch(url)
@@ -226,6 +233,10 @@ export function fetchCommonData (endpoints = []) {
     })
     return commonData
   })
+}
+
+export function fetchContacts (params = {}) {
+  return loadContacts(params)
 }
 
 export function fetchEditorChoice () {

@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
+import { fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchContacts, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
 
 Vue.use(Vuex)
 
@@ -16,6 +16,7 @@ const store = new Vuex.Store({
     audios: {},
     authors: [],
     commonData: {},
+    contact: {},
     dfpId: DFPID,
     editorChoice: {},
     eventEmbedded: {},
@@ -89,6 +90,10 @@ const store = new Vuex.Store({
         _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
         _latestArticles ? commit('SET_TAGS', _latestArticles) : null
       })
+    },
+
+    FETCH_CONTACT: ({ commit, state }, { params }) => {
+      return fetchContacts(params).then(contact => commit('SET_CONTACT', { contact }))
     },
 
     FETCH_EDITORCHOICE: ({ commit, state }, { params }) => {
@@ -218,6 +223,10 @@ const store = new Vuex.Store({
       Vue.set(state, 'commonData', commonData)
       Vue.set(state, 'topics', commonData.topics)
       _.get(commonData, [ 'choices' ], false) ? Vue.set(state, 'editorChoice', _.get(commonData, [ 'choices' ])) : ''
+    },
+
+    SET_CONTACT: (state, { contact }) => {
+      Vue.set(state, 'contact', contact)
     },
 
     SET_EDITORCHOICE: (state, { editorChoice }) => {

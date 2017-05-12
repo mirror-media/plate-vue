@@ -16,10 +16,10 @@
           <a :href="getHref(article)" :id="'leading-' + article.id"><p v-text="getBrief(article, 200) + ' <More>' "></p></a>
         </div>
         <div class="article-leading-post__dfp dfp-l1 dfp-l2">
-          <vue-dfp :is="props.vueDfp" pos="SPCR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="index === 0" :dfpId="props.dfpId" />
-          <vue-dfp :is="props.vueDfp" pos="SPCR2" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" v-if="index === 1" :dfpId="props.dfpId" />
-          <vue-dfp :is="props.vueDfp" pos="SMBL1" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" v-if="index === 0" :dfpId="props.dfpId" />
-          <vue-dfp :is="props.vueDfp" pos="SMBL2" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" v-if="index === 1" :dfpId="props.dfpId" />
+          <vue-dfp v-if="index === 0 && !isMobile" :is="props.vueDfp" pos="SPCR1" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp v-if="index === 1 && !isMobile" :is="props.vueDfp" pos="SPCR2" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp v-if="index === 0 && isMobile" :is="props.vueDfp" pos="SMBL1" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp v-if="index === 1 && isMobile" :is="props.vueDfp" pos="SMBL2" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         </div>
       </div>
       <div class="article-leading-related" v-if="hasRelated(article)">
@@ -56,7 +56,7 @@ import objectFitImages from 'object-fit-images'
 
 export default {
   name: 'article-leading',
-  props: [ 'articles', 'props' ],
+  props: [ 'articles', 'isMobile', 'props' ],
   methods: {
     getAuthor,
     getBrief,

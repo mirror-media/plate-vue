@@ -4,25 +4,25 @@
       <!--<div class="list-view" v-if="pageStyle === 'feature'">-->
         <div class="list-view" v-if="(pageStyle == 'feature') && (sectionName != 'foodtravel' || type == 'CATEGORY')">
         <app-header :commonData= 'commonData' />
-        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="dfp-desktop" :config="props.config" />
-        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="dfp-mobile" :config="props.config" />
+        <vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" />
+        <vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" />
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
         <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' v-if="categoryName !== 'audio' && categoryName !== 'videohub' ">
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" extClass="dfp-desktop" slot="dfpNA3" :config="props.config" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" extClass="dfp-desktop" slot="dfpNA5" :config="props.config" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" extClass="dfp-desktop" slot="dfpNA9" :config="props.config" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBL1" extClass="dfp-mobile" slot="dfpL1" :config="props.config" />
+          <vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
+          <vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
+          <vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
+          <vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
         </article-list>
         <audio-list :audios="audios.items" v-if="categoryName === 'audio'" />
         <video-list :playlist="playlist.items" v-if="categoryName === 'videohub'"/>
         <section class="container">
           <more v-if="hasMore && (categoryName === 'audio' || categoryName === 'videohub')" v-on:loadMore="loadMore" />
         </section>
-        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="dfp-desktop" :config="props.config" />
-        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="dfp-mobile" :config="props.config" />
+        <vue-dfp v-if="title !== 'Topic' && !isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" />
+        <vue-dfp v-if="title !== 'Topic' && isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" />
         <article-list id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
           v-if="categoryName !== 'audio' && categoryName !== 'videohub'" v-show="hasAutoScroll"/>
         <loading :show="loading" />
@@ -52,15 +52,15 @@
       <!-- section/watch -->
       <div class="listFull-view" v-if="pageStyle === 'full'">
         <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-        <article-leading :articles='articles' :props="props" v-if="type === 'SECTION'"/>
+        <article-leading :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'"/>
         <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
-        <latestArticle-full :articles='articles' :props="props" v-if="type === 'SECTION'" />
+        <latestArticle-full :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'" />
         <leading-watch v-if="type == 'TAG'" :tag='tag' :type='type'/>
         <article-list-full :articles='articles' v-if="type === 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
-        <vue-dfp :is="props.vueDfp" pos="SPCFT" extClass="dfp-desktop" :config="props.config" />
-        <vue-dfp :is="props.vueDfp" pos="SMBFT" extClass="dfp-mobile" :config="props.config" />
+        <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCFT" :config="props.config" />
+        <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="SMBFT" :config="props.config" />
         <footer-full :commonData='commonData' :sectionName='sectionName' />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
@@ -117,21 +117,32 @@ const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
     .then(() => {
       if (_.toUpper(_.split(store.state.route.path, '/')[1]) === TAG) {
-        return store.dispatch('FETCH_TAG', {
-          'id': store.state.route.params.tagId
-        })
+        return fetchTag(store, store.state.route.params.tagId)
+      }
+      if (_.toUpper(_.split(store.state.route.path, '/')[1]) === AUTHOR) {
+        return fetchAuthor(store, store.state.route.params.authorId)
       }
     })
 }
 
-const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, pageToken = '') => {
+const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = false, pageToken = '') => {
   const page = isLoadMore || PAGE
   switch (type) {
     case AUTHOR:
-      return fetchArticlesByAuthor(store, uuid, {
-        page: page,
-        max_results: MAXRESULT
-      })
+      if (!hasPrefetch) {
+        return fetchAuthor(store, uuid).then(() => {
+          return fetchArticlesByAuthor(store, uuid, {
+            page: page,
+            max_results: MAXRESULT
+          })
+        })
+      } else {
+        return fetchArticlesByAuthor(store, uuid, {
+          page: page,
+          max_results: MAXRESULT
+        })
+      }
+
     case CATEGORY:
       switch (uuid) {
         case AUDIO_ID:
@@ -176,7 +187,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
           })
       }
     case TAG:
-      if (needFetchTag) {
+      if (!hasPrefetch) {
         return fetchTag(store, uuid).then(() => {
           return fetchArticlesByUuid(store, uuid, TAG, {
             page: page,
@@ -222,6 +233,16 @@ const fetchArticlesByUuid = (store, uuid, type, params) => {
 const fetchAudios = (store, params = {}) => {
   return store.dispatch('FETCH_AUDIOS', {
     'params': params
+  })
+}
+
+const fetchAuthor = (store, uuid) => {
+  return store.dispatch('FETCH_CONTACT', {
+    params: {
+      where: {
+        _id: uuid
+      }
+    }
   })
 }
 
@@ -500,7 +521,7 @@ export default {
     title () {
       switch (this.type) {
         case AUTHOR:
-          return _.get(_.find(_.get(this.$store.state, [ 'authors' ]), { 'id': this.uuid }), [ 'name' ])
+          return _.get(this.$store.state, [ 'contact', 'items', '0', 'name' ])
         case CATEGORY:
           switch (this.$route.params.title) {
             case 'marketing':
@@ -658,7 +679,7 @@ export default {
     const pageStyle = _.get(_.find(_.get(vStore.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ], 'feature')
 
     if (from.matched.length !== 0) { // check whether first time
-      fetchListData(vStore, type, pageStyle, getUUID(vStore, type, to), false, true)
+      fetchListData(vStore, type, pageStyle, getUUID(vStore, type, to), false, false)
       .then(() => next())
     } else {
       next()
@@ -668,7 +689,7 @@ export default {
     const type = _.toUpper(_.split(to.path, '/')[1])
     const pageStyle = _.get(_.find(_.get(this.$store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ], 'feature')
 
-    fetchListData(this.$store, type, pageStyle, getUUID(this.$store, type, to), false, true)
+    fetchListData(this.$store, type, pageStyle, getUUID(this.$store, type, to), false, false)
     .then(() => next())
   },
   beforeRouteLeave (to, from, next) {
@@ -679,9 +700,9 @@ export default {
     next()
   },
   beforeMount () {
-    // only fetch at first time
+    // only fetch at first time after preFetch
     this.$store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
-    fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
+    fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, true)
     fetchEvent(this.$store, 'embedded')
     fetchEvent(this.$store, 'logo')
   },
