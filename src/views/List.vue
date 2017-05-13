@@ -41,9 +41,9 @@
           <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
         <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' v-if="categoryName !== 'audio' && categoryName !== 'videohub' ">
-          <vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
-          <vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
-          <vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
+          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
           <vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
         </article-list>
         <audio-list :audios="audios.items" v-if="categoryName === 'audio'" />
