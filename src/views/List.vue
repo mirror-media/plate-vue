@@ -837,7 +837,7 @@ $color-other = #bcbcbc
     background-color #f5f5f5
 
 .foodtravel-redesign
-  background-image url("../../public/foodtravelbg.jpg")
+  background-image url("/public/foodtravelbg.jpg")
 
 @media (min-width: 600px)
   .list
