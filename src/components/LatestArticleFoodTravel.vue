@@ -113,7 +113,7 @@
 .latestArticle-foodtravel
     display flex
     flex-direction column
-    align-items flex-start
+    align-items center
     width 100%
 
     .topicsArticle-foodtravel-container

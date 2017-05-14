@@ -170,7 +170,7 @@
 
   &__social-and-search
     position absolute
-    top 35%
+    top 30%
     right 0
     display flex
     justify-content space-between
