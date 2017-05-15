@@ -9,7 +9,7 @@
         <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
         <latestArticle-foodtravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" id="articleList" :showLatestOnly="false"/>
         <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
-        <more-foodtravel v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
+        <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" :className="'moreFoodTravel'" />
         <loading :show="loading" />
         <vue-dfp :is="props.vueDfp" pos="LPCSFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
         <vue-dfp :is="props.vueDfp" pos="LMBSFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
@@ -101,7 +101,6 @@ import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
-import MoreFoodTravel from '../components/MoreFoodTravel.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -313,7 +312,6 @@ export default {
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
-    'more-foodtravel': MoreFoodTravel,
     'share': Share,
     'video-list': VideoList,
     'vue-dfp-provider': VueDfpProvider
