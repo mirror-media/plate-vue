@@ -36,7 +36,7 @@ export default {
     }
   },
   mounted () {
-    window.ga('send', 'pageview', this.$route.path, { title: SITE_TITLE })
+    window.ga('send', 'pageview', this.$route.path, { title: '404 - Page Not Found' })
     setTimeout(() => {
       this.$router.push('/')
     }, 3000)
