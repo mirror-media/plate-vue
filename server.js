@@ -86,51 +86,26 @@ app.get('*', (req, res, next) => {
 
   renderStream.once('data', () => {
     // res.write(indexHTML.head)
-    try {
-      
-      const { title, meta } = context.meta.inject()
-      let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
-      _indexHead = _indexHead.replace(/<meta.*?name="description".*?>/g, meta.text()) 
-      res.write(_indexHead)
-    } catch (e) {
-      // res.status(500).end('Internal Error 500')
-      res.status(500).render('500')
-      console.error(`error during renderStream.once : ${req.url}`)
-      console.error(e)
-      ifErrorOccured = true
-    }
+    const { title, meta } = context.meta.inject()
+    let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
+    _indexHead = _indexHead.replace(/<meta.*?name="description".*?>/g, meta.text()) 
+    res.write(_indexHead)
   })
 
   renderStream.on('data', chunk => {
-    try {
-      res.write(chunk)
-    } catch (e) {
-      // res.status(500).end('Internal Error 500')
-      res.status(500).render('500')
-      console.error(`error during renderStream.on data : ${req.url}`)
-      console.error(e)
-      ifErrorOccured = true
-    }
+    res.write(chunk)
   })
 
   renderStream.on('end', () => {
-    try {
-      // embed initial store state
-      if (context.initialState) {
-        res.write(
-          `<script>window.__INITIAL_STATE__=${
-          serialize(context.initialState, { isJSON: true })
-          }</script>`
-        )
-      }
-      res.end(indexHTML.tail)
-    } catch (e) {
-      // res.status(500).end('Internal Error 500')
-      res.status(500).render('500')
-      console.error(`error during renderStream.on end : ${req.url}`)
-      console.error(e)
-      ifErrorOccured = true
+    // embed initial store state
+    if (context.initialState) {
+      res.write(
+        `<script>window.__INITIAL_STATE__=${
+        serialize(context.initialState, { isJSON: true })
+        }</script>`
+      )
     }
+    res.end(indexHTML.tail)
   })
 
   
