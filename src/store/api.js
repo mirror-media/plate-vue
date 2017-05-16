@@ -58,7 +58,6 @@ function loadActivities (params = {}) {
   const query = _buildQuery(params)
   let url = `${_host}/api/activities`
   url = `${url}?${query}`
-  console.log('url', url)
   return _doFetch(url)
 }
 

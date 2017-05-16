@@ -8,13 +8,13 @@
 
 <script>
 
-import { SITE_URL } from '../constants'
+import { SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../constants'
 
 export default {
   name: 'notFound-view',
   metaInfo () {
-    const title = '鏡週刊 Mirror Media'
-    const description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
+    const title = SITE_TITLE
+    const description = SITE_DESCRIPTION
 
     return {
       title,
@@ -36,6 +36,7 @@ export default {
     }
   },
   mounted () {
+    window.ga('send', 'pageview', this.$route.path, { title: SITE_TITLE })
     setTimeout(() => {
       this.$router.push('/')
     }, 3000)
