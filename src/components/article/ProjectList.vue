@@ -52,6 +52,7 @@
       },
       sliderOption () {
         return {
+          initialSlide: 0,
           paginationable: true,
           paginationClickable: true,
           paginationHide: false,
