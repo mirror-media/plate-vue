@@ -54,6 +54,13 @@ function _setupWhereInParam (key, value, params = {}) {
   return params
 }
 
+function loadActivities (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/activities`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadArticles (params = {}) {
   const query = _buildQuery(params)
   let url = `${_host}/api/posts`
@@ -195,6 +202,10 @@ function loadTopic (params = {}) {
 function loadYoutubePlaylist (limit = 12, pageToken = '') {
   const url = `${_host}/api/playlist?maxResults=${limit}&pageToken=${pageToken}`
   return _doFetch(url)
+}
+
+export function fetchActivities (params = {}) {
+  return loadActivities(params)
 }
 
 export function fetchArticles (params = {}) {
