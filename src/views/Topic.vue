@@ -1,8 +1,26 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
-      <div class="topic-view">
-        <template v-if="pageStyle === 'feature'">
+      <div :class="{ 'topic-view': !isTimeline }">
+
+        <template v-if="pageStyle === 'full'">
+          <section>
+            <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+          </section>
+          <leading-watch :topic='topic' :type='`TOPIC`'/>
+          <article-list-full :articles='articles.items' />
+          <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
+          <loading :show="loading" />
+          <footer-full :commonData='commonData' :sectionName='sectionName' />
+          <share />
+        </template>
+
+        <template v-if="isTimeline">
+          <timeline-headline />
+          <timeline-body :customJS="customJS" :highlightNodes="highlightNodes" :viewport="viewport" />
+        </template>
+
+        <template v-else>
           <app-header :commonData= 'commonData' />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
@@ -22,17 +40,7 @@
           </section>
           <share />
         </template>
-        <template v-if="pageStyle === 'full'">
-          <section>
-            <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-          </section>
-          <leading-watch :topic='topic' :type='`TOPIC`'/>
-          <article-list-full :articles='articles.items' />
-          <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
-          <loading :show="loading" />
-          <footer-full :commonData='commonData' :sectionName='sectionName' />
-          <share />
-        </template>
+        
       </div>
     </template>
   </vue-dfp-provider>
@@ -41,7 +49,7 @@
 <script>
 
 import { DFP_ID, DFP_UNITS } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TOPIC, TOPIC_WATCH_ID } from '../constants/index'
+import { FB_APP_ID, FB_PAGE_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { getValue, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
@@ -56,20 +64,58 @@ import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
+import TimelineBody from '../components/timeline/TimelineBody.vue'
+import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
+import moment from 'moment'
 import store from '../store'
 
 const MAXRESULT = 12
 const PAGE = 1
 
 const fetchData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
-  .then(() => {
-    if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': store.state.route.params.topicId }))) {
-      return fetchTopicByUuid(store, store.state.route.params.topicId)
-    }
+  if (store.state.route.params.topicId === TOPIC_PROTEST_ID) {
+    return fetchTimeline(store, TOPIC_PROTEST_ID)
+    // return fetchActivities(store)
+    // .then(() => {
+    //   return fetchNodes(store, {}, true)
+    // })
+  } else {
+    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
+    .then(() => {
+      if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': store.state.route.params.topicId }))) {
+        return fetchTopicByUuid(store, store.state.route.params.topicId)
+      }
+    })
+  }
+}
+
+const fetchTimeline = (store, id) => {
+  return store.dispatch('FETCH_TIMELINE', {
+    'id': id
   })
 }
+
+// const fetchActivities = (store, params = {}) => {
+//   return store.dispatch('FETCH_ACTIVITIES', {
+//     'params': params
+//   })
+// }
+
+// const fetchNodes = (store, params = {}, isHighlight = false) => {
+//   if (isHighlight) {
+//     return store.dispatch('FETCH_NODES', {
+//       'params': {
+//         'where': {
+//           isFeatured: true,
+//         }
+//       }
+//     })
+//   }
+//   return store.dispatch('FETCH_NODES', {
+//     'params': params
+//   })
+// }
 
 const fetchTopicByUuid = (store, uuid) => {
   return store.dispatch('FETCH_TOPIC_BY_UUID', {
@@ -118,6 +164,8 @@ export default {
     'more': More,
     'more-full': MoreFull,
     'share': Share,
+    'timeline-body': TimelineBody,
+    'timeline-headline': TimelineHeadline,
     'vue-dfp-provider': VueDfpProvider
   },
   preFetch: fetchData,
@@ -133,8 +181,11 @@ export default {
     }
   },
   computed: {
+    activities () {
+      return _.get(this.$store.state, [ 'activities', 'items' ])
+    },
     articles () {
-      return this.$store.state.articlesByUUID
+      return _.get(this.$store.state, [ 'articlesByUUID' ])
     },
     customCSS () {
       return _.get(this.topic, [ 'style' ], null)
@@ -171,6 +222,17 @@ export default {
     mobileDfp () {
       return _.get(this.topic, [ 'mobileDfp' ], null)
     },
+    highlightNodes () {
+      return _.sortBy(_.get(this.$store.state, [ 'timeline', 'nodes' ]), [ function (o) {
+        if (true) { // 判斷升降序
+          return -moment(new Date(o.nodeDate))
+        }
+        return moment(new Date(o.nodeDate))
+      } ])
+    },
+    isTimeline () {
+      return this.$route.params.topicId === TOPIC_PROTEST_ID
+    },
     page () {
       return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE)
     },
@@ -200,7 +262,9 @@ export default {
       return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])
     },
     topic () {
-      if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
+      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_PROTEST_ID) {
+        return _.get(this.$store.state, [ 'timeline', 'topic' ])
+      } else if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
         return _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })
       } else {
         return _.get(this.$store.state, [ 'topic', 'items', '0' ])
@@ -298,17 +362,24 @@ export default {
   },
   beforeMount () {
     const uuid = _.split(this.$route.path, '/')[2]
+    if (uuid === TOPIC_PROTEST_ID) {
 
-    fetchArticlesByUuid(this.$store, uuid, false)
-    fetchTopicImages(this.$store, uuid)
+    } else {
+      fetchArticlesByUuid(this.$store, uuid, false)
+      fetchTopicImages(this.$store, uuid)
+    }
   },
   mounted () {
     this.updateViewport()
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
-    this.insertCustomizedMarkup()
+
+    if (this.uuid !== TOPIC_PROTEST_ID) {
+      this.insertCustomizedMarkup()
+    }
     this.checkIfLockJS()
+    this.updateViewport()
 
     window.ga('set', 'contentGroup1', '')
     window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
@@ -319,7 +390,9 @@ export default {
       window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
     },
     customCSS: function () {
-      this.updateCustomizedMarkup()
+      if (this.uuid !== TOPIC_PROTEST_ID) {
+        this.updateCustomizedMarkup()
+      }
     }
   },
   metaInfo () {
@@ -330,12 +403,12 @@ export default {
     const title = ogTitle + ` - ${SITE_TITLE}`
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
 
-    if (!ogTitle && process.env.VUE_ENV === 'server') {
-      const e = new Error()
-      e.massage = 'Page Not Found'
-      e.code = '404'
-      throw e
-    }
+    // if (!ogTitle && process.env.VUE_ENV === 'server') {
+    //   const e = new Error()
+    //   e.massage = 'Page Not Found'
+    //   e.code = '404'
+    //   throw e
+    // }
 
     return {
       title,

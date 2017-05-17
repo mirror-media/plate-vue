@@ -7,6 +7,7 @@ Vue.use(Router)
 Vue.use(Meta)
 
 import NotFound from '../views/404.vue'
+import Activity from '../views/Activity.vue'
 import Article from '../views/Article.vue'
 import Home from '../views/Home.vue'
 // import HomeB from '../views/HomeB.vue'
@@ -20,6 +21,7 @@ const router = new Router({
   mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
+    { path: '/activity/:activityId/', component: Activity },
     { path: '/author/:authorId/', component: List },
     { path: '/category/:title', component: List },
     {

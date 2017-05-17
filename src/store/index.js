@@ -2,7 +2,8 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchActivities, fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchContacts, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
+import moment from 'moment'
+import { fetchActivities, fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchContacts, fetchEditorChoice, fetchEvent, fetchImages, fetchLatestArticle, fetchNodes, fetchQuestionnaire, fetchSearch, fetchTag, fetchTimeline, fetchTopic, fetchYoutubePlaylist } from './api'
 
 Vue.use(Vuex)
 
@@ -24,13 +25,16 @@ const store = new Vuex.Store({
     eventLogo: {},
     fbAppId: FB_APP_ID,
     fbPagesId: FB_PAGES_ID,
+    highlightNodes: {},
     images: {},
     latestArticle: {},
     latestArticles: {},
+    nodes: {},
     playlist: {},
     searchResult: {},
     tag: {},
     tags: [],
+    timeline: {},
     topic: {},
     topics: {},
     questionnaire: {}
@@ -140,6 +144,21 @@ const store = new Vuex.Store({
         })
     },
 
+    FETCH_NODES: ({ commit, state }, { params }) => {
+      const orig = _.values(state.nodes[ 'items' ])
+      if (_.get(params, [ 'where', 'isFeatured' ])) {
+        return fetchNodes(params).then(nodes => {
+          commit('SET_HIGHLIGHTNODES', { nodes })
+        })
+      }
+      return fetchNodes(params).then(nodes => {
+        nodes[ 'items' ] = _.sortBy(_.concat(orig, _.get(nodes, [ 'items' ])), [ function (o) {
+          return -moment(new Date(o.nodeDate))
+        } ])
+        commit('SET_NODES', { nodes })
+      })
+    },
+
     FETCH_QUESTIONNAIRE: ({ commit, state }, { id }) => {
       return state.questionnaire[ id ]
         ? Promise.resolve(state.questionnaire[ id ])
@@ -161,6 +180,12 @@ const store = new Vuex.Store({
     FETCH_TAG: ({ commit, state }, { id }) => {
       return fetchTag(id).then(tag => {
         commit('SET_TAG', { tag })
+      })
+    },
+
+    FETCH_TIMELINE: ({ commit, state }, { id }) => {
+      return fetchTimeline(id).then(timeline => {
+        commit('SET_TIMELINE', { timeline })
       })
     },
 
@@ -255,6 +280,10 @@ const store = new Vuex.Store({
       }
     },
 
+    SET_HIGHLIGHTNODES: (state, { nodes }) => {
+      Vue.set(state, 'highlightNodes', nodes)
+    },
+
     SET_IMAGES: (state, { images }) => {
       Vue.set(state, 'images', images)
     },
@@ -265,6 +294,10 @@ const store = new Vuex.Store({
 
     SET_LATESTARTICLES: (state, { latestArticles }) => {
       Vue.set(state, 'latestArticles', latestArticles)
+    },
+
+    SET_NODES: (state, { nodes }) => {
+      Vue.set(state, 'nodes', nodes)
     },
 
     SET_POSTVUE: (state, { commonData }) => {
@@ -296,6 +329,10 @@ const store = new Vuex.Store({
       })
       _tags = _.concat(origTags, _tags)
       Vue.set(state, 'tags', _.uniqBy(_tags, 'id'))
+    },
+
+    SET_TIMELINE: (state, { timeline }) => {
+      Vue.set(state, 'timeline', timeline)
     },
 
     SET_TOPIC_BY_UUID: (state, { topic }) => {
