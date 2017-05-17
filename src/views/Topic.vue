@@ -1,33 +1,41 @@
 <template>
-  <div class="topic-view">
-    <template v-if="pageStyle === 'feature'">
-      <app-header :commonData= 'commonData' />
-      <div class="topic">
-        <div class="topic-title"><h1></h1></div>
-        <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"/>
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
+    <template scope="props" slot="dfpPos">
+      <div class="topic-view">
+        <template v-if="pageStyle === 'feature'">
+          <app-header :commonData= 'commonData' />
+          <div class="topic">
+            <div class="topic-title"><h1></h1></div>
+            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"/>
+          </div>
+          <article-list :articles='articles.items' :hasDFP='false' />
+          <section class="container">
+            <more v-if="hasMore" v-on:loadMore="loadMore" />
+          </section>
+          <loading :show="loading" />
+          <div><vue-dfp v-if="hasDFP && (viewport > 1200)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
+            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"/></div>
+          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"/></div>
+          <section class="footer container">
+            <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
+          </section>
+          <share />
+        </template>
+        <template v-if="pageStyle === 'full'">
+          <section>
+            <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+          </section>
+          <leading-watch :topic='topic' :type='`TOPIC`'/>
+          <article-list-full :articles='articles.items' />
+          <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
+          <loading :show="loading" />
+          <footer-full :commonData='commonData' :sectionName='sectionName' />
+          <share />
+        </template>
       </div>
-      <article-list :articles='articles.items' :hasDFP='false' />
-      <section class="container">
-        <more v-if="hasMore" v-on:loadMore="loadMore" />
-      </section>
-      <loading :show="loading" />
-      <section class="footer container">
-        <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
-      </section>
-      <share />
     </template>
-    <template v-if="pageStyle === 'full'">
-      <section>
-        <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-      </section>
-      <leading-watch :topic='topic' :type='`TOPIC`'/>
-      <article-list-full :articles='articles.items' />
-      <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
-      <loading :show="loading" />
-      <footer-full :commonData='commonData' :sectionName='sectionName' />
-      <share />
-    </template>
-  </div>
+  </vue-dfp-provider>
 </template>
 
 <script>
@@ -48,6 +56,7 @@ import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
+import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import store from '../store'
 
 const MAXRESULT = 12
@@ -108,16 +117,19 @@ export default {
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
-    'share': Share
+    'share': Share,
+    'vue-dfp-provider': VueDfpProvider
   },
   preFetch: fetchData,
   data () {
     return {
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
+      dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       loading: false,
-      showDfpCoverAdFlag: false
+      showDfpCoverAdFlag: false,
+      viewport: 0
     }
   },
   computed: {
@@ -129,6 +141,9 @@ export default {
     },
     customJS () {
       return _.get(this.topic, [ 'javascript' ], null)
+    },
+    dfp () {
+      return _.get(this.topic, [ 'dfp' ], null)
     },
     dfpOptions () {
       return {
@@ -147,8 +162,14 @@ export default {
         setCentering: true
       }
     },
+    hasDFP () {
+      return this.dfp !== '' || this.mobileDfp !== ''
+    },
     hasMore () {
       return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
+    },
+    mobileDfp () {
+      return _.get(this.topic, [ 'mobileDfp' ], null)
     },
     page () {
       return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE)
@@ -240,6 +261,11 @@ export default {
       if (this.customJS) {
         custScript.innerHTML = this.customJS
       }
+    },
+    updateViewport () {
+      if (process.env.VUE_ENV === 'client') {
+        this.viewport = document.querySelector('body').offsetWidth
+      }
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -277,6 +303,10 @@ export default {
     fetchTopicImages(this.$store, uuid)
   },
   mounted () {
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
     this.insertCustomizedMarkup()
     this.checkIfLockJS()
 
