@@ -73,6 +73,20 @@ export const DFP_UNITS = {
     'LPCNA9': { 'aduid': 'mm_PC_hp_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] }
   },
   'other': { //  topic
+
+    'SMBHD': { 'aduid': 'mm_mobile_wat_sec_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
+    'SMBL1': { 'aduid': 'mm_mobile_wat_sec_300x250_L1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
+    'SMBL2': { 'aduid': 'mm_mobile_wat_sec_300x250_L2', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
+    'SMBL3': { 'aduid': 'mm_mobile_wat_sec_300x250_L3', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-bottom: 20px' ] },
+    'SMBFT': { 'aduid': 'mm_mobile_wat_sec_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin-bottom: 10px' ] },
+    // SPCHD, SPCR1, SPCR2, SPCR3, SPCR4, SPCFT : position on desktop section page
+    'SPCHD': { 'aduid': 'mm_pc_wat_sec_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto 0' ] },
+    'SPCR1': { 'aduid': 'mm_pc_wat_sec_300x250_R1', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'center', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'SPCR2': { 'aduid': 'mm_pc_wat_sec_300x600_R2', 'dimensions': '300x250,300x600', 'cont-class': [ 'ad-container', 'center', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'SPCR3': { 'aduid': 'mm_pc_wat_sec_300x250_R3', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'center', 'margin-top-0' ], 'cont-style': [ 'margin-bottom: 10px' ] },
+    'SPCR4': { 'aduid': 'mm_pc_wat_sec_300x600_R4', 'dimensions': '300x250,300x600', 'cont-class': [ 'ad-container', 'center', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'SPCFT': { 'aduid': 'mm_pc_wat_sec_970x90_FT', 'dimensions': '970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-bottom: 35px' ] },
+
     // MBHD, MBAR1, MBAR2, MBE1, MBFT : position on mobile article page
     'MBHD': { 'aduid': 'mm_mobile_other_ap_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'MBAR1': { 'aduid': 'mm_mobile_other_ap_300x250_AT1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
