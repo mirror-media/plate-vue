@@ -13,7 +13,7 @@
             <more v-if="hasMore" v-on:loadMore="loadMore" />
           </section>
           <loading :show="loading" />
-          <div><vue-dfp v-if="hasDFP && (viewport > 1200)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
+          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"/></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"/></div>
