@@ -105,7 +105,7 @@ export default {
       return _.get(this.articleData, [ 'content', 'apiData' ], [])
     },
     credit () {
-      const { cameraMan, designers, engineers, extendByline, photographers, writers } = this.articleData
+      const { cameraMan = [], designers = [], engineers = [], extendByline = '', photographers = [], writers = [] } = this.articleData
       const creditWriterStr = (writers.length > 0) ? '文｜' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
