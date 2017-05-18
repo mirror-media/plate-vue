@@ -138,11 +138,12 @@ export default {
     },
     sliderOption () {
       return {
+        initialSlide: 0,
+        lazyLoadingInPrevNextAmount: 2,
         paginationable: false,
         paginationClickable: true,
         paginationHide: false,
-        setNavBtn: true,
-        lazyLoadingInPrevNextAmount: 2
+        setNavBtn: true
       }
     },
     subtitle () {
