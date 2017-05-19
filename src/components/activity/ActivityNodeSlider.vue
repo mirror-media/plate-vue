@@ -98,6 +98,7 @@ export default {
   flex-direction column
   width 100%
   height calc(100vh - 70px)
+  overflow hidden
   &__slideshow
     position relative
     width 100%
@@ -112,7 +113,7 @@ export default {
       left 4.5px
       bottom 5px
       color #fff
-      font-size 8px
+      font-size 12px
       font-weight 300
     &--sliderImage
       position relative

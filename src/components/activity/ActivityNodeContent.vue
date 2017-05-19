@@ -51,27 +51,34 @@ export default {
   padding .5em 0 25px 15px
   border-left 1px solid #666
   h2, h3
-    margin .5em 0
+    margin 5px 0
   h2
-    font-size 12.5px
+    font-size 20px
+    line-height 23px
   h2.activityNodeContent__date
     position relative
     font-weight bold
     color #bf272d
+    font-weight bold
   h2.activityNodeContent__date:before
     content ''
     position absolute
-    top 4px
-    left -18px
-    width 5px
-    height 5px
+    top 6px
+    left -20px
+    width 10px
+    height 10px
     background-color #bf272d
-    border-radius 2.5px
+    border-radius 50%
   h3
-    font-size 10px
+    font-size 14px
+    line-height 16px
   p
-    flex-grow 1
+    // flex-grow 1
+    height 105px
     overflow-y scroll
+    margin 5px 0
+    line-height 24px
+    font-size 14px
   &__sliderNav
     display flex
     justify-content center
@@ -79,8 +86,8 @@ export default {
     margin-left -30px
     margin-bottom .5em
     &--block
-      width 5px
-      height 5px
+      width 10px
+      height 10px
       margin 0 2.5px
       border 1px solid #666
       &.active
@@ -89,5 +96,13 @@ export default {
     width 100%
     height 30px
     box-shadow 0.6px 0.8px 2.5px 0.1px #000
-
+    border-radius 15px
+@media screen and (min-width: 375px)
+  .activityNodeContent
+    p
+      height 170px
+@media screen and (min-width: 414px)
+  .activityNodeContent
+    p
+      height 220px
 </style>
