@@ -169,4 +169,9 @@ export default {
   .share
     display block
 
+@media only screen and (max-width: 736px) and (orientation: landscape)
+  .activity
+    &__share
+      display none
+
 </style>

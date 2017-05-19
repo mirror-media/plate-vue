@@ -99,7 +99,8 @@ export default {
     },
     sliderOption () {
       return {
-        initialSlide: 1,
+        autoplay: 3000,
+        initialSlide: 0,
         paginationable: true,
         paginationClickable: true,
         paginationHide: false,
@@ -287,9 +288,10 @@ video
       &.open
         transform translateX(0)
       &.noSliderContent
-        width 100%
+        width 75%
         height 100%
-        padding 0 10%
+        margin-right 25%
+        padding 0 0 0 10%
         background-color transparent
         transform translateX(0)
     &__landscapeNav
@@ -307,6 +309,8 @@ video
         display none
       > img
         height 100%
+  .swiper-container
+    background-color #000
 
 .swiper-container
   position absolute
