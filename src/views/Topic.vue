@@ -550,9 +550,6 @@ export default {
   border-bottom 30px solid #4d4d4d
   border-right 1.5em solid #4d4d4d
   border-left 1.5em solid #4d4d4d
-  // display flex
-  // justify-content center
-  // align-items center
   h1
     text-align center
     background-color #4d4d4d
@@ -581,9 +578,6 @@ export default {
     border-bottom 100px solid #4d4d4d
     border-right 20vw solid #4d4d4d
     border-left 20vw solid #4d4d4d
-    // display flex
-    // justify-content center
-    // align-items center
     h1
       text-align center
       background-color #4d4d4d
