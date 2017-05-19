@@ -1,6 +1,6 @@
 <template>
   <section class="activityNode">
-    <div class="activityNode-nodeContainer">
+    <div class="activityNode-nodeContainer" :style="nodeContainerStyle">
       <activity-nodeSlider :id="`node-${index}`" :node="item" :viewport="viewport" v-for="(item, index) in nodes" />
     </div>
   </section>
@@ -32,6 +32,13 @@ export default {
   computed: {
     nodeAmount () {
       return _.get(this.nodes, [ 'length' ])
+    },
+    nodeContainerStyle () {
+      if (this.viewport > 899) {
+        return `width: ${(this.nodes.length * 100)}vw;`
+      } else {
+        return ''
+      }
     }
   },
   methods: {
@@ -127,4 +134,5 @@ export default {
     left 0
     width 100%
     height 100%
+
 </style>

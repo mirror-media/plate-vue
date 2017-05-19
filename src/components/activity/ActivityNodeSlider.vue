@@ -265,6 +265,8 @@ video
     position relative
     height: calc(100vh - 40px)
     background-color #000
+    display inline-block
+    width 100vw
     &__slideshow
       padding-top 0
       height 100%

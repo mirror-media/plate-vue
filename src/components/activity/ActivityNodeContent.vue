@@ -8,7 +8,7 @@
     <h3 v-html="node.activity.name"></h3>
     <h2 class="activityNodeContent__date" v-html="node.subtitle"></h2>
     <h2 v-html="node.name"></h2>
-    <p v-html="getNodeText(node)" />
+    <p class="activityNodeContent__content"  v-html="getNodeText(node)" />
     <div class="activityNodeContent__share" @click="shareFacebook()">
       <img src="/public/icon/sharefb.png"/>
     </div>
