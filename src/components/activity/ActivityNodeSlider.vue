@@ -60,6 +60,7 @@ export default {
         setNavBtn: false,
         onSlideChangeEnd: (swiper) => {
           this.activeIndex = swiper.activeIndex
+          console.log('asdasd')
         }
       }
     },

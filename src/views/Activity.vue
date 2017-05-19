@@ -1,5 +1,9 @@
 <template>
   <div class="activity">
+    <a href="/" class="activity__logo">
+      <img src="/public/icon/logo_black@3x.png"/>
+    </a>
+    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" style="display: block; z-index: 999;"/>
     <section class="activity-currentNode">
       <nav class="activity-currentNode__nav" @click="toggleNav()">
         <div class="activity-currentNode__nav--menu">
@@ -269,7 +273,7 @@ export default {
     // height 100%
     &__nav
       position fixed
-      z-index 999
+      z-index 998
       top 0
       left 0
       width 100%
@@ -288,6 +292,16 @@ export default {
         padding 5px
         background-color #bf272d
         border-radius 50%
+
+  &__logo
+    position fixed
+    z-index 999
+    top 5px
+    left 5px
+    width 40px
+    height 40px
+    > img
+      width 100%
 
 .hamburgerBar
   display block

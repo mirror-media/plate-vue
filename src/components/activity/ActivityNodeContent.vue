@@ -9,12 +9,15 @@
     <h2 class="activityNodeContent__date" v-html="node.subtitle"></h2>
     <h2 v-html="node.name"></h2>
     <p v-html="getNodeText(node)" />
-    <div class="activityNodeContent__share"></div>
+    <div class="activityNodeContent__share" @click="shareFacebook()">
+      <img src="/public/icon/sharefb.png"/>
+    </div>
   </div>
 </template>
 
 <script>
 
+import { shareFacebook } from '../../utils/comm'
 import _ from 'lodash'
 
 export default {
@@ -35,6 +38,9 @@ export default {
     },
     getNodeText (node) {
       return _.get(node, [ 'content', 'apiData', '0', 'content', '0' ])
+    },
+    shareFacebook () {
+      shareFacebook({ route: this.$route.path })
     }
   }
 }
@@ -93,16 +99,23 @@ export default {
       &.active
         background-color #666
   &__share
+    display flex
+    justify-content center
     width 100%
     height 30px
     box-shadow 0.6px 0.8px 2.5px 0.1px #000
     border-radius 15px
+    > img
+      height 100%
 @media screen and (min-width: 375px)
   .activityNodeContent
     p
       height 170px
+      > img
+        height 100%
 @media screen and (min-width: 414px)
   .activityNodeContent
     p
       height 220px
+
 </style>
