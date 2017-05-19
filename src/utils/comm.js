@@ -25,12 +25,12 @@ export function getAuthorHref (author = {}) {
   return '/author/' + author.id
 }
 
-export function getBrief (article, count = 30) {
+export function getBrief (article, count = 30, allowed_tags = '') {
   let brief
   if (_.split(_.get(article, [ 'href' ]), '/')[1] === 'topic') {
     brief = _.get(article, [ 'ogDescription' ])
   } else {
-    brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], ''), { allowedTags: [] })
+    brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], ''), { allowedTags: [ allowed_tags ] })
   }
   return truncate(brief, count)
 }

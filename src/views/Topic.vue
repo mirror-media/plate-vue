@@ -20,8 +20,13 @@
             <img src="/public/icon/logo_black@3x.png"/>
           </a>
           <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
-          <timeline-headline />
-          <timeline-body :highlightNodes="highlightNodes" :viewport="viewport" />
+          <timeline-headline :timeline="timeline" :viewport="viewport"/>
+          <timeline-body :timeline="timeline" :highlightNodes="highlightNodes" :viewport="viewport" />
+          <div class="project-list-wrapper">
+            <h1>更多專題文章</h1>
+            <ProjectList :projects="projects" :viewport="viewport" />
+          </div>
+          <div class="article_fb_comment" style="margin: 1.5em 1.5em; @media (min-width: 900px) { margin: 1.5em 20vw; }" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
         </template>
 
         <template v-else>
@@ -67,6 +72,7 @@ import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
+import ProjectList from '../components/article/ProjectList.vue'
 import Share from '../components/Share.vue'
 import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
@@ -92,6 +98,10 @@ const fetchData = (store) => {
       }
     })
   }
+}
+
+const fetchCommonData = (store) => {
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] })
 }
 
 const fetchTimeline = (store, id) => {
@@ -170,12 +180,14 @@ export default {
     'share': Share,
     'timeline-body': TimelineBody,
     'timeline-headline': TimelineHeadline,
-    'vue-dfp-provider': VueDfpProvider
+    'vue-dfp-provider': VueDfpProvider,
+    ProjectList
   },
   preFetch: fetchData,
   data () {
     return {
-      commonData: this.$store.state.commonData,
+      // commonData: this.$store.state.commonData,
+      timeline: this.$store.state.timeline,
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
@@ -191,11 +203,20 @@ export default {
     articles () {
       return _.get(this.$store.state, [ 'articlesByUUID' ])
     },
+    articleUrl () {
+      return `${SITE_URL}/topic/${this.currArticleSlug}/`
+    },
     customCSS () {
       return _.get(this.topic, [ 'style' ], null)
     },
     customJS () {
       return _.get(this.topic, [ 'javascript' ], null)
+    },
+    currArticleSlug () {
+      return this.$store.state.route.params.topicId
+    },
+    commonData () {
+      return this.$store.state.commonData
     },
     dfp () {
       return _.get(this.topic, [ 'dfp' ], null)
@@ -216,6 +237,12 @@ export default {
         },
         setCentering: true
       }
+    },
+    fbCommentDiv () {
+      return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
+    },
+    fbAppId () {
+      return _.get(this.$store, [ 'state', 'fbAppId' ])
     },
     hasDFP () {
       return this.dfp !== '' || this.mobileDfp !== ''
@@ -247,6 +274,9 @@ export default {
         default:
           return 'feature'
       }
+    },
+    projects () {
+      return _.get(this.commonData, [ 'projects', 'items' ])
     },
     sectionId () {
       return 'other'
@@ -311,6 +341,31 @@ export default {
         document.querySelector('#custJS').innerHTML = this.customJS
       }
     },
+    insertFbSdkScript () {
+      if (!window.FB) {
+        const fbSdkScript = document.createElement('script')
+        fbSdkScript.setAttribute('id', 'fbsdk')
+        fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + this.fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
+        fbSdkScript.async = true
+        fbSdkScript.type = 'text/javascript'
+        document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
+      } else {
+        window.FB && window.FB.init({
+          appId: this.fbAppId,
+          xfbml: true,
+          version: 'v2.0'
+        })
+        window.FB && window.FB.XFBML.parse()
+      }
+    },
+    insertMediafarmersScript () {
+      const mediafarmersScript = document.createElement('script')
+      mediafarmersScript.setAttribute('id', 'mediafarmersJS')
+      mediafarmersScript.setAttribute('src', 'https://mediafarmers.org/api/api.js')
+      if (!document.getElementById('mediafarmersJS')) {
+        document.querySelector('body').appendChild(mediafarmersScript)
+      }
+    },
     loadMore () {
       let currentPage = this.page
       currentPage += 1
@@ -337,6 +392,11 @@ export default {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.querySelector('body').offsetWidth
       }
+    },
+    updateMediafarmersScript () {
+      const mediafarmersScript = document.querySelector('#mediafarmersJS')
+      document.querySelector('body').removeChild(mediafarmersScript)
+      this.insertMediafarmersScript()
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -370,13 +430,15 @@ export default {
   beforeMount () {
     const uuid = _.split(this.$route.path, '/')[2]
     if (uuid === TOPIC_PROTEST_ID) {
-
+      fetchCommonData(this.$store)
     } else {
       fetchArticlesByUuid(this.$store, uuid, false)
       fetchTopicImages(this.$store, uuid)
     }
   },
   mounted () {
+    this.insertFbSdkScript()
+    this.insertMediafarmersScript()
     this.updateViewport()
     window.addEventListener('resize', () => {
       this.updateViewport()
@@ -396,6 +458,17 @@ export default {
     },
     customCSS: function () {
       this.updateCustomizedMarkup()
+    },
+    articleUrl: function () {
+      window.FB && window.FB.init({
+        appId: this.fbAppId,
+        xfbml: true,
+        version: 'v2.0'
+      })
+      window.FB && window.FB.XFBML.parse()
+      // this.checkIfLockJS()
+      this.updateMediafarmersScript()
+      // this.sendGA(this.articleData)
     }
   },
   metaInfo () {
@@ -437,7 +510,7 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 
 .topic
   position relative
@@ -472,6 +545,27 @@ export default {
   > img
     width 100%
 
+.project-list-wrapper
+  border-top 30px solid #4d4d4d
+  border-bottom 30px solid #4d4d4d
+  border-right 1.5em solid #4d4d4d
+  border-left 1.5em solid #4d4d4d
+  // display flex
+  // justify-content center
+  // align-items center
+  h1
+    text-align center
+    background-color #4d4d4d
+    color white
+    margin 0
+    padding-bottom 10px
+    font-weight 200
+
+
+  .project-container
+    .proj_title
+      display none
+
 @media (min-width: 900px)
   .topic
     height 600px
@@ -482,5 +576,27 @@ export default {
       color #fff
       background-size contain
       background-position center center
+  .project-list-wrapper
+    border-top 50px solid #4d4d4d
+    border-bottom 100px solid #4d4d4d
+    border-right 20vw solid #4d4d4d
+    border-left 20vw solid #4d4d4d
+    // display flex
+    // justify-content center
+    // align-items center
+    h1
+      text-align center
+      background-color #4d4d4d
+      color white
+      margin 0
+      padding-bottom 10px
+      font-weight 200
+
+
+    .project-container
+      .proj_title
+        display none
+
+
 
 </style>
