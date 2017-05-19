@@ -200,7 +200,7 @@ function loadTag (slug = '') {
 }
 
 function loadTimeline (slug = '') {
-  const url = `http://35.189.161.83:8080/timeline/${slug}`
+  const url = `${_host}/api/timeline/${slug}`
   return _doFetch(url)
 }
 

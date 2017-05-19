@@ -191,6 +191,7 @@ export default {
         cursor pointer
     &.noSliderContent
       justify-content flex-end
+      padding-bottom 30px
       h2, h3, p
         color #fff
       h2.activityNodeContent__date

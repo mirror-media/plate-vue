@@ -7,7 +7,7 @@
     <div class="timelineMenu-activityBox" v-for="(item, index) in highlightNodes" 
       :class="[index%2 === 0 ? 'right' : 'left']" :style="[viewport > 600 ? { top: `calc(${index* 112}px + 1em)` } : {} ]">
       <h2 v-html="item.subtitle"></h2>
-      <a :href="`/activity/${item.id}`" class="timelineMenu-activityBox__imgBox">
+      <a :href="`/activity/${item.activity.id}`" class="timelineMenu-activityBox__imgBox">
         <div class="timelineMenu-activityBox__imgBox--title" v-html="item.activity.name" />
         <div class="timelineMenu-activityBox__imgBox--img" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }"/>
       </a>
