@@ -193,7 +193,8 @@ export default {
   },
   mounted () {
     this.updateViewport()
-
+    this.currentIndex = _.findIndex(this.nodes, this.featureNode)
+    this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
@@ -276,6 +277,8 @@ export default {
       this.currentIndex = _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
     },
     currentIndex: function () {
+      const _ele = this.doc.querySelector(`#node-${this.currentIndex}`)
+      if (!_ele) { return }
       const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
       // console.log('currentIndex', this.currentIndex)
       // console.log('currentNodeTop', currentNodeTop)
