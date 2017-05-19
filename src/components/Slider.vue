@@ -122,7 +122,7 @@
         height 15px
 
         &.swiper-pagination-bullet-active
-          background #b3b3b3
+          background #4d4d4d
           border none
         
       
