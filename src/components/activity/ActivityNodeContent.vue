@@ -10,12 +10,12 @@
     <h2 v-html="node.name"></h2>
     <p class="activityNodeContent__content"  v-html="getNodeText(node)" />
     <div class="activityNodeContent__share" @click="shareFacebook()">
-      <img src="/public/icon/sharefb.png"/>
+      <img src="/public/icon/facebook@2x.png"/>
     </div>
     <div class="activityNodeContent__desktopSliderNav">
       <template v-for="(item, index) in sliderContent">
         <div class="activityNodeContent__desktopSliderNav--block" :style="{ backgroundImage: 'url(' + getNodeSliderImage(item) + ')' }"
-          @click="changeSlideTo(index)" />
+          @click="changeSlideTo(index + 1)" />
         
       </template>
     </div>
@@ -171,6 +171,7 @@ export default {
       padding-bottom 5px
       border-bottom 1px solid #666
     p
+      height auto
       flex-grow 0
       overflow hidden
     &__sliderNav
@@ -189,6 +190,7 @@ export default {
         background-size cover
         cursor pointer
     &.noSliderContent
+      justify-content flex-end
       h2, h3, p
         color #fff
       h2.activityNodeContent__date

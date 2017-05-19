@@ -17,13 +17,14 @@
       <activity-node :currentIndex="currentIndex" :nodes="nodes" :viewport="viewport" />
       <activity-nodeNav :node="nextNode" :position="`next`" v-on:goToNext="goToNext" />
       <activity-desktopNodesNav :currentIndex="currentIndex" :nodes="nodes" :nodesAmount="nodesAmount"
-        v-on:goToPrev="goToPrev" v-on:goToNext="goToNext" />
+        v-on:goToPrev="goToPrev" v-on:goToNext="goToNext" v-on:goToIndex="goToIndex"/>
     </section>
   </div>
 </template>
 
 <script>
 
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE } from '../constants/index'
 import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
 import { disableScroll, enableScroll } from '../utils/comm.js'
 import _ from 'lodash'
@@ -50,7 +51,6 @@ const fetchTimeline = (store, id) => {
 }
 
 const fetchActivities = (store, id) => {
-  console.log('id', id)
   return store.dispatch('FETCH_ACTIVITIES', {
     'params': {
       where: {
@@ -61,7 +61,6 @@ const fetchActivities = (store, id) => {
 }
 
 const fetchNodes = (store, uuid, page) => {
-  console.log('id', uuid)
   return store.dispatch('FETCH_NODES', {
     'params': {
       page: page,
@@ -139,6 +138,9 @@ export default {
     timelineNodes () {
       return _.get(this.$store.state, [ 'timeline', 'nodes' ])
     },
+    title () {
+      return _.get(this.$store.state, [ 'activities', 'items', '0', 'name' ])
+    },
     topicId () {
       return _.get(this.$store.state, [ 'activities', 'items', '0', 'topics', 'id' ])
     }
@@ -170,6 +172,9 @@ export default {
         this.currentIndex = goTo
       }
     },
+    goToIndex (goTo) {
+      this.currentIndex = goTo
+    },
     smoothScroll,
     toggleNav () {
       this.openNav = !this.openNav
@@ -192,6 +197,9 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
+
+    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+
     this.disableScroll()
     this.doc = document
     window.addEventListener('wheel', (e) => {
@@ -269,19 +277,48 @@ export default {
     },
     currentIndex: function () {
       const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
-      console.log('currentIndex', this.currentIndex)
+      // console.log('currentIndex', this.currentIndex)
       // console.log('currentNodeTop', currentNodeTop)
       // window.scrollTo(0, currentNodeTop - 50)
       // this.smoothScroll(`#node-${this.currentIndex}`)
+      const windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       let _top
       if (this.viewport > 899) {
         _top = (currentNodeTop <= 0) ? 1 : currentNodeTop
         this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
         return
+      } else if (windowHeight < this.viewport) {
+        _top = (currentNodeTop - 30 <= 0) ? 1 : currentNodeTop - 30
       } else {
         _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
       }
       this.smoothScroll(null, _top)
+    }
+  },
+  metaInfo () {
+    const url = this.$route.path
+    const title = this.title + ` - ${SITE_TITLE}`
+    const image = _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])
+    const description = SITE_DESCRIPTION
+    return {
+      title,
+      meta: [
+          { name: 'keywords', content: SITE_KEYWORDS },
+          { name: 'description', content: description },
+          { name: 'twitter:card', content: 'summary_large_image' },
+          { name: 'twitter:title', content: title },
+          { name: 'twitter:description', content: description },
+          { name: 'twitter:image', content: image },
+          { property: 'fb:app_id', content: FB_APP_ID },
+          { property: 'fb:pages', content: FB_PAGE_ID },
+          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
+          { property: 'og:locale', content: 'zh_TW' },
+          { property: 'og:type', content: 'article' },
+          { property: 'og:title', content: title },
+          { property: 'og:description', content: description },
+          { property: 'og:url', content: url },
+          { property: 'og:image', content: image }
+      ]
     }
   }
 }
@@ -355,7 +392,8 @@ export default {
         height 40px
         background-color transparent
         &--menu
-          right 10px
+          z-index 1001
+          right 20px
           width 40px
           height 40px
           border-radius 50%

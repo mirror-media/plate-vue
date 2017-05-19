@@ -5,7 +5,7 @@
     </div>
     <div class="activityDesktopNodesNav__nav">
       <template v-for="(item, index) in navNode">
-        <div class="activityDesktopNodesNav__nav--block" v-html="`${item.subtitle} <br> ${item.name}`" :class="navStyle(index)">
+        <div class="activityDesktopNodesNav__nav--block" v-html="`${item.subtitle} <br> ${item.name}`" :class="navStyle(index)" @click="goToIndex(index)">
         </div>
       </template>
     </div>
@@ -40,6 +40,10 @@ export default {
         return ''
         // return 'hidden'
       }
+    },
+    goToIndex (index) {
+      const goTo = this.currentIndex + (index - 2)
+      this.$emit('goToIndex', goTo)
     },
     goToNext () {
       this.$emit('goToNext')
