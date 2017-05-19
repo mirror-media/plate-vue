@@ -153,7 +153,7 @@ const store = new Vuex.Store({
       }
       return fetchNodes(params).then(nodes => {
         nodes[ 'items' ] = _.sortBy(_.concat(orig, _.get(nodes, [ 'items' ])), [ function (o) {
-          return -moment(new Date(o.nodeDate))
+          return moment(new Date(o.nodeDate))
         } ])
         commit('SET_NODES', { nodes })
       })
