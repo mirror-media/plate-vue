@@ -3,7 +3,7 @@
     <a href="/" class="activity__logo">
       <img src="/public/icon/logo_black@3x.png"/>
     </a>
-    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" style="display: block; z-index: 999;"/>
+    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" class="activity__share" />
     <section class="activity-currentNode">
       <nav class="activity-currentNode__nav" @click="toggleNav()">
         <div class="activity-currentNode__nav--menu">
@@ -256,10 +256,17 @@ export default {
     },
     currentIndex: function () {
       const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
+      console.log('currentIndex', this.currentIndex)
       // console.log('currentNodeTop', currentNodeTop)
       // window.scrollTo(0, currentNodeTop - 50)
       // this.smoothScroll(`#node-${this.currentIndex}`)
-      const _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
+      let _top
+      if (this.viewport > 900) {
+        _top = (currentNodeTop <= 0) ? 1 : currentNodeTop
+      } else {
+        _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
+      }
+
       this.smoothScroll(null, _top)
     }
   }
@@ -310,12 +317,21 @@ export default {
       width 100%
   &__desktopNodesNav
     display none
+  &__share
+    display block
+    z-index 999
 
 @media only screen and (max-width: 736px) and (orientation: landscape)
   .activity
+    &__logo
+      display none
     &-currentNode
        &__nav
         display none
+    &__share
+      display none
+    
+
 
 @media only screen and (min-width: 900px)
   .activity
@@ -325,9 +341,9 @@ export default {
         background-color transparent
         &--menu
           right 10px
-          width 30px
-          height 30px
-          border-radius 15px
+          width 40px
+          height 40px
+          border-radius 50%
 
 .hamburgerBar
   display block

@@ -19,7 +19,7 @@
             </div>
           </template>
         </template>
-        <template v-else>
+        <template v-if="nodeSliderContentAmount > 1">
           <app-slider :option="sliderOption" >
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in nodeSliderContent">
@@ -43,9 +43,17 @@
           </app-slider>
         </template>
     </div>
-    <div class="activityNodeSlider__content" :class="{ open: openContent, noSliderContent: !hasSliderContent }">
+    <div class="activityNodeSlider__content" :class="{ open: openContent, noSliderContent: !hasSliderContent, hidden: !openLandscapeContent}">
       <activity-nodeContent :node="node" :activeIndex="activeIndex" :viewport="viewport" :hasSliderContent="hasSliderContent"
         v-on:changeSlideTo="changeSlideTo"/>
+    </div>
+    <div class="activityNodeSlider__landscapeNav">
+      <div class="activityNodeSlider__landscapeNav--text" @click="toggleLandscapeContent()">
+        <img src="/public/icon/text.png" />
+      </div>
+      <div class="activityNodeSlider__landscapeNav--fb" @click="shareFacebook()">
+        <img src="/public/icon/sharefb.png" />
+      </div>
     </div>
     <div class="activityNodeSlider__desktopArrow" :class="{ hidden: openContent }" @click="openConent()" v-show="hasSliderContent">
       <img src="/public/icon/left-2017.png" />
@@ -55,6 +63,7 @@
 
 <script>
 
+import { shareFacebook } from '../../utils/comm'
 import _ from 'lodash'
 import ActivityNodeContent from './ActivityNodeContent.vue'
 import Slider from '../Slider.vue'
@@ -67,6 +76,7 @@ export default {
   props: [ 'node', 'viewport' ],
   data () {
     return {
+      openLandscapeContent: false,
       openContent: true,
       activeIndex: 1
     }
@@ -83,14 +93,18 @@ export default {
         return o.type !== 'unstyled'
       })
     },
+    openSlideBtn () {
+      return this.viewport < 900
+    },
     sliderOption () {
       return {
         initialSlide: 1,
         paginationable: true,
         paginationClickable: true,
         paginationHide: false,
-        setNavBtn: false,
+        setNavBtn: this.openSlideBtn,
         onSlideChangeEnd: (swiper) => {
+          console.log('asdasd')
           this.activeIndex = swiper.activeIndex
           console.log('asdasd')
         }
@@ -137,6 +151,12 @@ export default {
     },
     closeConent () {
       this.openContent = false
+    },
+    shareFacebook () {
+      shareFacebook({ route: this.$route.path })
+    },
+    toggleLandscapeContent () {
+      this.openLandscapeContent = !this.openLandscapeContent
     }
   },
   mounted () {
@@ -153,6 +173,7 @@ export default {
 video
   width 100%
   height 100%
+  background-color #000
 
 .activityNodeSlider
   display flex
@@ -169,8 +190,7 @@ video
     background-repeat no-repeat
     background-size cover
     overflow hidden
-    &.onlyone
-      filter brightness(40%)
+    
     &--imageDescr
       position absolute
       left 4.5px
@@ -204,7 +224,7 @@ video
 @media only screen and (max-width: 736px) and (orientation: landscape)
   .activityNodeSlider
     position relative
-    height calc(100vh - 40px)
+    height calc(100vh - 60px)
     &__slideshow
       padding-top 0
       height 100%
@@ -213,12 +233,33 @@ video
         bottom 24.5px
     &__content
       position absolute
-      z-index 500
+      z-index 490
       top 0
       left 0
       width 100%
       height 100%
-
+      padding 0
+      background-color rgba(0,0,0,.6)
+      &.hidden
+        display none
+    &__landscapeNav
+      position absolute
+      z-index 490
+      left 0
+      bottom 0
+      width 100%
+      height 40px
+      &--text, &--fb
+        position absolute
+        bottom 5px
+        width 20px
+        height 20px
+        > img
+          width 100%
+      &--text
+        right 40px
+      &--fb
+        right 10px
 @media only screen and (min-width: 900px)
   .activityNodeSlider
     position relative
@@ -228,6 +269,8 @@ video
       padding-top 0
       height 100%
       background-size contain
+      &.onlyone
+        filter brightness(40%)
       &--sliderImage
         background-size contain
     &__content
@@ -248,6 +291,8 @@ video
         height 100%
         background-color transparent
         transform translateX(0)
+    &__landscapeNav
+      display none
     &__desktopArrow
       display block
       position absolute

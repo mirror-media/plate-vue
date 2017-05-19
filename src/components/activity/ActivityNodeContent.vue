@@ -151,8 +151,11 @@ export default {
   .activityNodeContent
     padding 20px 0 20px 15px
     border-left: 1px solid #fff
+    border none
     h2, h3, p
       color #fff
+    h2.activityNodeContent__date:before
+      display none
     &__sliderNav
       display none
     &__share
