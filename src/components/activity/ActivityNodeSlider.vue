@@ -20,7 +20,7 @@
           </template>
         </template>
         <template v-if="nodeSliderContentAmount > 1">
-          <app-slider :option="sliderOption" >
+          <app-slider :option="sliderOption" :slideId="slideId">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in nodeSliderContent">
                 <template v-if="o.type === `video`">
@@ -73,12 +73,13 @@ export default {
     'activity-nodeContent': ActivityNodeContent,
     'app-slider': Slider
   },
-  props: [ 'node', 'viewport' ],
+  props: [ 'index', 'node', 'viewport' ],
   data () {
     return {
       openLandscapeContent: false,
       openContent: true,
-      activeIndex: 1
+      activeIndex: 1,
+      slideId: `thisslider-${this.index}`
     }
   },
   computed: {
@@ -104,9 +105,7 @@ export default {
         paginationHide: false,
         setNavBtn: this.openSlideBtn,
         onSlideChangeEnd: (swiper) => {
-          console.log('asdasd')
           this.activeIndex = swiper.activeIndex
-          console.log('asdasd')
         }
       }
     },
@@ -122,8 +121,7 @@ export default {
   },
   methods: {
     changeSlideTo (index) {
-      console.log('index', index + 1)
-      console.log('swiper', this)
+      window.refs[`thisslider-${this.index}`].slideTo(index)
     },
     getActivityImage () {
       return _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', this.viewportTarget, 'url' ])
@@ -291,6 +289,7 @@ video
       &.noSliderContent
         width 100%
         height 100%
+        padding 0 10%
         background-color transparent
         transform translateX(0)
     &__landscapeNav
@@ -298,7 +297,7 @@ video
     &__desktopArrow
       display block
       position absolute
-      z-index 999
+      z-index 500
       top 50%
       right 10px
       height 45px

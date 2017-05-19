@@ -4,7 +4,7 @@
     <div class="activityTimelineNav__activities">
       <div class="activityTimelineNav__activity" v-for="(item, index) in timelineNodes">
         <h2 v-html="item.subtitle"></h2>
-        <a :href="`/activity/${item.id}`" class="activityTimelineNav__activityImgBox">
+        <a :href="`/activity/${item.activity.id}`" class="activityTimelineNav__activityImgBox">
           <div class="activityTimelineNav__activityImgBox--title" v-html="item.activity.name" />
           <div class="activityTimelineNav__activityImgBox--img" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }" />
         </a>
@@ -29,6 +29,12 @@ export default {
       } else {
         viewportTarget = 'desktop'
       }
+      // let ttt = _.get(node, [ 'content', 'apiData' ])
+      // let tt = _.filter(ttt, [ 'type', 'image' ])
+      // console.log('tt', tt)
+      // return _.get(_.filter(_.get(node, [ 'content', 'apiData' ]), function (o) {
+      //   return o.type !== 'unstyled'
+      // }), [ 'content', '0', viewportTarget, 'url' ])
       return _.get(node, [ 'activity', 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])
     }
   }
@@ -43,7 +49,7 @@ export default {
   top 0
   z-index 550
   width 100vw
-  padding-top 35px
+  padding-top 50px
   background-color #f0f0f0
   transform translate3d(100vw,0,0)
   transition .5s ease
@@ -101,4 +107,13 @@ export default {
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
+
+@media only screen and (min-width: 900px)
+  .activityTimelineNav
+    z-index 501
+    left 0
+    width 25vw
+    transform translate3d(100vw,0,0)
+    &.open
+      transform translate3d(75vw,0,0)
 </style>

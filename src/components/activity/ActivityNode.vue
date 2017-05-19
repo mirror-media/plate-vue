@@ -1,7 +1,7 @@
 <template>
   <section class="activityNode">
     <div class="activityNode-nodeContainer" :style="nodeContainerStyle">
-      <activity-nodeSlider :id="`node-${index}`" :node="item" :viewport="viewport" v-for="(item, index) in nodes" />
+      <activity-nodeSlider :id="`node-${index}`" :index="index" :node="item" :viewport="viewport" v-for="(item, index) in nodes" />
     </div>
   </section>
 </template>
@@ -126,13 +126,16 @@ export default {
     width 100%
     height calc(100% - (100vw / 16 * 9))
     padding 0 15px
-  
 
-  .swiper-container
-    position absolute
-    top 0
-    left 0
-    width 100%
-    height 100%
+@media only screen and (max-width: 736px) and (orientation: landscape)
+  .activityNode
+    padding 0
+
+.swiper-container
+  position absolute
+  top 0
+  left 0
+  width 100%
+  height 100%
 
 </style>
