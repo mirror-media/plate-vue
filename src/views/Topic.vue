@@ -12,12 +12,16 @@
           <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
           <loading :show="loading" />
           <footer-full :commonData='commonData' :sectionName='sectionName' />
-          <share />
+          <share :right="`20px`" :bottom="`20px`" />
         </template>
 
         <template v-if="isTimeline">
+          <a href="/" class="topicTimeline__logo">
+            <img src="/public/icon/logo_black@3x.png"/>
+          </a>
+          <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
           <timeline-headline />
-          <timeline-body :customJS="customJS" :highlightNodes="highlightNodes" :viewport="viewport" />
+          <timeline-body :highlightNodes="highlightNodes" :viewport="viewport" />
         </template>
 
         <template v-else>
@@ -38,7 +42,7 @@
           <section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
           </section>
-          <share />
+          <share :right="`20px`" :bottom="`20px`" />
         </template>
         
       </div>
@@ -259,6 +263,9 @@ export default {
       if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
         return '錶展特區'
       }
+      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_PROTEST_ID) {
+        return '謙卑謙卑再謙卑'
+      }
       return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])
     },
     topic () {
@@ -375,9 +382,7 @@ export default {
       this.updateViewport()
     })
 
-    if (this.uuid !== TOPIC_PROTEST_ID) {
-      this.insertCustomizedMarkup()
-    }
+    this.insertCustomizedMarkup()
     this.checkIfLockJS()
     this.updateViewport()
 
@@ -390,9 +395,7 @@ export default {
       window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
     },
     customCSS: function () {
-      if (this.uuid !== TOPIC_PROTEST_ID) {
-        this.updateCustomizedMarkup()
-      }
+      this.updateCustomizedMarkup()
     }
   },
   metaInfo () {
@@ -458,6 +461,16 @@ export default {
     background-repeat no-repeat
     h1
       margin 0
+
+.topicTimeline__logo
+  position fixed
+  z-index 999
+  top 5px
+  left 5px
+  width 40px
+  height 40px
+  > img
+    width 100%
 
 @media (min-width: 900px)
   .topic

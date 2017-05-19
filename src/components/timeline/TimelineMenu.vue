@@ -7,10 +7,10 @@
     <div class="timelineMenu-activityBox" v-for="(item, index) in highlightNodes" 
       :class="[index%2 === 0 ? 'right' : 'left']" :style="[viewport > 600 ? { top: `calc(${index* 112}px + 1em)` } : {} ]">
       <h2 v-html="item.subtitle"></h2>
-      <div class="timelineMenu-activityBox__imgBox">
+      <a :href="`/activity/${item.id}`" class="timelineMenu-activityBox__imgBox">
         <div class="timelineMenu-activityBox__imgBox--title" v-html="item.activity.name" />
         <div class="timelineMenu-activityBox__imgBox--img" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }"/>
-      </div>
+      </a>
     </div>
   </section>
 </template>
@@ -21,10 +21,6 @@ import _ from 'lodash'
 
 export default {
   props: {
-    customJS: {
-      type: String,
-      default: ''
-    },
     highlightNodes: {
       type: Array,
       default: []
@@ -32,7 +28,6 @@ export default {
   },
   data () {
     return {
-      hasColorFilter: false,
       viewport: 0
     }
   },
@@ -42,22 +37,6 @@ export default {
     }
   },
   methods: {
-    detectColorFilter () {
-      this.hasColorFilter = document.querySelector('.timelineBody').classList.contains('grayFilter')
-    },
-    insertColorFilter () {
-      const timelineScript = document.createElement('script')
-      timelineScript.setAttribute('id', 'timelineJS')
-
-      if (this.customJS) {
-        timelineScript.appendChild(document.createTextNode(this.customJS))
-      }
-      if (!document.getElementById('timelineJS')) {
-        document.querySelector('body').appendChild(timelineScript)
-      } else {
-        document.querySelector('#timelineJS').innerHTML = this.customJS
-      }
-    },
     getImage (node) {
       let viewportTarget
       if (this.viewport < 600) {
@@ -69,14 +48,6 @@ export default {
       }
       return _.get(node, [ 'activity', 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])
     },
-    updateColorFilter () {
-      const timelineScript = document.querySelector('#timelineJS')
-      timelineScript.innerHTML = ''
-
-      if (this.customJS) {
-        timelineScript.innerHTML = this.customJS
-      }
-    },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.querySelector('body').offsetWidth
@@ -84,13 +55,11 @@ export default {
     }
   },
   mounted () {
-    this.insertColorFilter()
     this.updateViewport()
 
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
-    this.detectColorFilter()
   }
 }
 
@@ -134,6 +103,7 @@ export default {
     padding-left calc(1em + 20px)
     padding-right 1em
     &__imgBox
+      display block
       position relative
       width 100%
       padding-top 56.25%
@@ -235,11 +205,11 @@ export default {
 
 // CSS Color Filter
 
-.timelineBody
-  &.grayFilter
-    .timelineMenu-activityBox__imgBox--img
-      filter grayscale(100%)
-    .timelineMenu-activityBox__imgBox--img:hover
-      filter none
+// .timelineBody
+//   &.grayFilter
+//     .timelineMenu-activityBox__imgBox--img
+//       filter grayscale(100%)
+//     .timelineMenu-activityBox__imgBox--img:hover
+//       filter none
 
 </style>

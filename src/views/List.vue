@@ -60,7 +60,7 @@
           <app-footer />
         </section>
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-        <share />
+        <share :right="`20px`" :bottom="`20px`" />
       </div>
 
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
