@@ -16,6 +16,8 @@
       <activity-nodeNav :node="prevNode" :position="`prev`" v-on:goToPrev="goToPrev" />
       <activity-node :currentIndex="currentIndex" :nodes="nodes" :viewport="viewport" />
       <activity-nodeNav :node="nextNode" :position="`next`" v-on:goToNext="goToNext" />
+      <activity-desktopNodesNav :currentIndex="currentIndex" :nodes="nodes" :nodesAmount="nodesAmount"
+        v-on:goToPrev="goToPrev" v-on:goToNext="goToNext" />
     </section>
   </div>
 </template>
@@ -25,6 +27,7 @@
 import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
 import { disableScroll, enableScroll } from '../utils/comm.js'
 import _ from 'lodash'
+import ActivityDesktopNodesNav from '../components/activity/ActivityDesktopNodesNav.vue'
 import ActivityNode from '../components/activity/ActivityNode.vue'
 import ActivityNodeNav from '../components/activity/ActivityNodeNav.vue'
 import ActivityTimelineNav from '../components/activity/ActivityTimelineNav.vue'
@@ -47,6 +50,7 @@ const fetchTimeline = (store, id) => {
 }
 
 const fetchActivities = (store, id) => {
+  console.log('id', id)
   return store.dispatch('FETCH_ACTIVITIES', {
     'params': {
       where: {
@@ -57,6 +61,7 @@ const fetchActivities = (store, id) => {
 }
 
 const fetchNodes = (store, uuid, page) => {
+  console.log('id', uuid)
   return store.dispatch('FETCH_NODES', {
     'params': {
       page: page,
@@ -87,6 +92,7 @@ export default {
   name: 'activity-view',
   preFetch: fetchData,
   components: {
+    'activity-desktopNodesNav': ActivityDesktopNodesNav,
     'activity-node': ActivityNode,
     'activity-nodeNav': ActivityNodeNav,
     'activity-timelineNav': ActivityTimelineNav,
@@ -302,6 +308,26 @@ export default {
     height 40px
     > img
       width 100%
+  &__desktopNodesNav
+    display none
+
+@media only screen and (max-width: 736px) and (orientation: landscape)
+  .activity
+    &-currentNode
+       &__nav
+        display none
+
+@media only screen and (min-width: 900px)
+  .activity
+    &-currentNode
+       &__nav
+        height 40px
+        background-color transparent
+        &--menu
+          right 10px
+          width 30px
+          height 30px
+          border-radius 15px
 
 .hamburgerBar
   display block
