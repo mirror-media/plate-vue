@@ -19,6 +19,7 @@
 <script>
 
 import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
+import { disableScroll, enableScroll } from '../utils/comm.js'
 import _ from 'lodash'
 import ActivityNode from '../components/activity/ActivityNode.vue'
 import ActivityNodeNav from '../components/activity/ActivityNodeNav.vue'
@@ -91,7 +92,10 @@ export default {
     return {
       currentIndex: _.findIndex(this.nodes, this.featureNode),
       openNav: false,
-      viewport: 0
+      viewport: 0,
+      scrollingFlag: false,
+      deviceHeight: 0,
+      doc: {}
     }
   },
   computed: {
@@ -132,9 +136,17 @@ export default {
   },
   methods: {
     changeCurrentIndex (index) {
-      this.currentIndex = index
+      if (index < this.nodesAmount && index > -1) {
+        this.currentIndex = index
+      } else if (index >= this.nodesAmount) {
+        this.currentIndex = this.nodesAmount - 1
+      } else if (index < 0) {
+        this.currentIndex = 0
+      }
     },
     currentYPosition,
+    enableScroll,
+    disableScroll,
     elmYPosition,
     goToNext () {
       const goTo = this.currentIndex + 1
@@ -170,33 +182,63 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
-    // const nodeHeight = document.querySelector('.activityNodeSlider').offsetHeight
-    // const nodesContainer = document.querySelector(".activityNode-nodeContainer")
 
-    // window.addEventListener('scroll', (e) => {
-    //   let goToIndex = Math.round(this.currentYPosition() / nodeHeight)
-    //   if (goToIndex !== this.currentIndex) {
-    //     this.changeCurrentIndex(goToIndex)
-    //   }
-    //   console.log('window', window)
-    // })
+    this.disableScroll()
+    this.doc = document
+    this.deviceHeight = this.doc.documentElement.clientHeight || this.doc.body.clientHeight
+    window.addEventListener('wheel', (e) => {
+      const _derection = e.wheelDelta
+      const currTopY = this.currentYPosition()
+      if (_derection > 0 && this.scrollingFlag !== true) {
+        this.scrollingFlag = true
+        this.changeCurrentIndex(this.currentIndex - 1)
+      } else if (_derection < 0 && this.scrollingFlag !== true) {
+        this.scrollingFlag = true
+        this.changeCurrentIndex(this.currentIndex + 1)
+      }
+      if (this.scrollingFlag === true) {
+        const targElel = this.elmYPosition(`#node-${this.currentIndex}`)
+        if (((_derection > 0 && currTopY <= (targElel - 50)) || (_derection < 0 && currTopY >= (targElel - 50))) && Math.abs(_derection) <= 3 && (Math.abs(_derection) < Math.abs(window.tmpWheel))) {
+          setTimeout(() => {
+            const lastTopY = window.lastTopY || this.currentYPosition()
+            this.scrollingFlag = !(lastTopY === currTopY && Math.abs(_derection) <= 3)
+          }, 250)
+        }
+      }
+      window.tmpWheel = _derection
+    })
 
-    // let currentClientY
-    // window.addEventListener('touchstart', (e) => {
-    //   currentClientY = e.touches[0].clientY
-    // })
+    window.addEventListener('scroll', (e) => {
+      const currTop = this.currentYPosition()
+      window.lastTopY = currTop
+    })
 
-    // window.addEventListener('touchend', (e) => {
-    //   let windowDeltaY
-    //   windowDeltaY = e.changedTouches[0].clientY - currentClientY
+    window.addEventListener('touchstart', (e) => {
+      const _currTouchClientY = e.pageY
+      window.touchClientY = _currTouchClientY
+      if (this.scrollingFlag === true) {
+        const _currY = this.currentYPosition()
+        const _lastTopY = window.lastTopY || this.currentYPosition()
+        this.scrollingFlag = !(_lastTopY === _currY)
+      }
+      if (this.scrollingFlag !== true) {
+        this.enableScroll()
+      }
+    })
 
-    //   if (windowDeltaY > 20) {
-    //     this.goToPrev()
-    //   }
-    //   if (windowDeltaY < -20) {
-    //     this.goToNext()
-    //   }
-    // })
+    window.addEventListener('touchend', (e) => {
+      this.disableScroll()
+      const _currTouchClientY = e.pageY
+      const _lastTouchClientY = window.touchClientY || _currTouchClientY
+      if (this.scrollingFlag !== true && _currTouchClientY > _lastTouchClientY) {
+        this.scrollingFlag = true
+        this.changeCurrentIndex(this.currentIndex - 1)
+      } else if (this.scrollingFlag !== true && _currTouchClientY < _lastTouchClientY) {
+        this.scrollingFlag = true
+        this.changeCurrentIndex(this.currentIndex + 1)
+      }
+      window.touchClientY = undefined
+    })
   },
   watch: {
     defaultNodeIndex: function () {
@@ -204,10 +246,11 @@ export default {
     },
     currentIndex: function () {
       const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
-      console.log('this.currentIndex', this.currentIndex)
-      console.log('currentNodeTop', currentNodeTop)
-      window.scrollTo(0, currentNodeTop - 50)
-      // this.smoothScroll(null, currentNodeTop - 50)
+      // console.log('currentNodeTop', currentNodeTop)
+      // window.scrollTo(0, currentNodeTop - 50)
+      // this.smoothScroll(`#node-${this.currentIndex}`)
+      const _top = (currentNodeTop - 50 <= 0) ? 1 : currentNodeTop - 50
+      this.smoothScroll(null, _top)
     }
   }
 }
