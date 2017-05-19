@@ -171,6 +171,13 @@ function loadLatestArticle (params = {}) {
   return _doFetch(url)
 }
 
+function loadNodes (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/nodes`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadQuestionnaire (id) {
   const apiHost = `${_host}/api/questionnaire?file=${id}/${id}.json`
   return _doFetch(apiHost)
@@ -189,6 +196,11 @@ function loadSectionList () {
 
 function loadTag (slug = '') {
   const url = `${_host}/api/tags/${slug}`
+  return _doFetch(url)
+}
+
+function loadTimeline (slug = '') {
+  const url = `http://35.189.161.83:8080/timeline/${slug}`
   return _doFetch(url)
 }
 
@@ -266,6 +278,10 @@ export function fetchLatestArticle (params = {}) {
   return loadLatestArticle(params)
 }
 
+export function fetchNodes (params = {}) {
+  return loadNodes(params)
+}
+
 export function fetchQuestionnaire (id) {
   return loadQuestionnaire(id)
 }
@@ -280,6 +296,10 @@ export function fetchSectionList () {
 
 export function fetchTag (slug = '') {
   return loadTag(slug)
+}
+
+export function fetchTimeline (slug = '') {
+  return loadTimeline(slug)
 }
 
 export function fetchTopic (params = {}) {

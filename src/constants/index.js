@@ -367,6 +367,8 @@ export const MARKETING_ID = '57fca2f5c9b7a70e004e6df9'
 
 export const VIDEOHUB_ID = '5800999c9a51540d009e0447'
 
+export const TOPIC_PROTEST_ID = '59151f0ff2179c0d0089b7d5'
+
 export const TOPIC_WATCH_ID = '586cd15c3c1f950d00ce2e78'
 
 export const SITE_DESCRIPTION = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
