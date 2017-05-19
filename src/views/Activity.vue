@@ -198,7 +198,7 @@ export default {
       }
       if (this.scrollingFlag === true) {
         const targElel = this.elmYPosition(`#node-${this.currentIndex}`)
-        if (((_derection > 0 && currTopY <= (targElel - 50)) || (_derection < 0 && currTopY >= (targElel - 50))) && Math.abs(_derection) <= 3 && (Math.abs(_derection) < Math.abs(window.tmpWheel))) {
+        if (((_derection > 0 && currTopY <= (targElel - 80)) || (_derection < 0 && currTopY >= (targElel - 80))) && Math.abs(_derection) <= 3 && (Math.abs(_derection) < Math.abs(window.tmpWheel))) {
           setTimeout(() => {
             const lastTopY = window.lastTopY || this.currentYPosition()
             this.scrollingFlag = !(lastTopY === currTopY && Math.abs(_derection) <= 3)
@@ -249,7 +249,7 @@ export default {
       // console.log('currentNodeTop', currentNodeTop)
       // window.scrollTo(0, currentNodeTop - 50)
       // this.smoothScroll(`#node-${this.currentIndex}`)
-      const _top = (currentNodeTop - 50 <= 0) ? 1 : currentNodeTop - 50
+      const _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
       this.smoothScroll(null, _top)
     }
   }
@@ -273,7 +273,7 @@ export default {
       top 0
       left 0
       width 100%
-      height 30px
+      height 50px
       background-color #fff
       &--menu
         display flex
@@ -283,11 +283,11 @@ export default {
         position absolute
         top 5px
         right 5px
-        width 20px
-        height 20px
+        width 40px
+        height 40px
         padding 5px
         background-color #bf272d
-        border-radius 10px
+        border-radius 50%
 
 .hamburgerBar
   display block
@@ -295,11 +295,11 @@ export default {
   top 50%
   left 50%
   transform translate(-50%, -50%)
-  width 10px
-  height 1px
+  width 20px
+  height 1.5px
   background-color #fff
   &-1
-    top calc(50% - 4px)
+    top calc(50% - 6px)
   &-3
-    top calc(50% + 4px)
+    top calc(50% + 6px)
 </style>

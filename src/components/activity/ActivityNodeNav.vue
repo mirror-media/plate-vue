@@ -42,29 +42,29 @@ export default {
   z-index 500
   left 0
   width 100%
-  height 20px
+  height 30px
   padding-left 13px
   background-color #666
   &.prev
-    top 30px
+    top 50px
   &.next
     bottom 0
   p
     margin 0
     padding-left 20px
     color #fff
-    font-size 8px
+    font-size 12px
     font-weight 300
-    line-height 20px
+    line-height 30px
   p:before
     content ''
     position absolute
-    top 7px
-    left 13px
-    width 5px
-    height 5px
+    top 10px
+    left 10px
+    width 10px
+    height 10px
     background-color #fff
-    border-radius 2.5px
+    border-radius 50%
   p.noNode:before
     width 0
     height 0
@@ -74,7 +74,7 @@ export default {
     top 0
     left 15px
     width 1px
-    height 20px
+    height 30px
     background-color #fff
   p.noNode:after
     width 0
