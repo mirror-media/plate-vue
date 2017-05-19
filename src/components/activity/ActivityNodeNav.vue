@@ -29,7 +29,7 @@ export default {
       if (this.hasNode) {
         this.$emit('goToPrev')
       }
-    }    
+    }
   }
 }
 

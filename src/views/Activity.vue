@@ -26,7 +26,6 @@ import ActivityTimelineNav from '../components/activity/ActivityTimelineNav.vue'
 import Share from '../components/Share.vue'
 // import moment from 'moment'
 
-
 const PAGE = 1
 
 const fetchData = (store) => {
@@ -86,7 +85,7 @@ export default {
     'activity-node': ActivityNode,
     'activity-nodeNav': ActivityNodeNav,
     'activity-timelineNav': ActivityTimelineNav,
-    'share': Share,
+    'share': Share
   },
   data () {
     return {
@@ -132,25 +131,25 @@ export default {
 
   },
   methods: {
-    changeCurrentIndex(index) {
+    changeCurrentIndex (index) {
       this.currentIndex = index
     },
     currentYPosition,
     elmYPosition,
     goToNext () {
-      let goTo = this.currentIndex + 1
+      const goTo = this.currentIndex + 1
       if (goTo < this.nodesAmount) {
         this.currentIndex = goTo
       }
     },
     goToPrev () {
-      let goTo = this.currentIndex - 1
+      const goTo = this.currentIndex - 1
       if (goTo > -1) {
         this.currentIndex = goTo
       }
     },
     smoothScroll,
-    toggleNav() {
+    toggleNav () {
       this.openNav = !this.openNav
     },
     updateViewport () {
@@ -171,33 +170,33 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
-    const nodeHeight = document.querySelector('.activityNodeSlider').offsetHeight
-    const nodesContainer = document.querySelector(".activityNode-nodeContainer")
-    
-    window.addEventListener('scroll', (e) => {
-      // let goToIndex = Math.round(this.currentYPosition() / nodeHeight)
-      // if (goToIndex !== this.currentIndex) {
-      //   this.changeCurrentIndex(goToIndex)
-      // }
-      // console.log('window', window)
-    })
+    // const nodeHeight = document.querySelector('.activityNodeSlider').offsetHeight
+    // const nodesContainer = document.querySelector(".activityNode-nodeContainer")
 
-    let currentClientY
-    window.addEventListener('touchstart', (e) => {
-      currentClientY = e.touches[0].clientY
-    })
+    // window.addEventListener('scroll', (e) => {
+    //   let goToIndex = Math.round(this.currentYPosition() / nodeHeight)
+    //   if (goToIndex !== this.currentIndex) {
+    //     this.changeCurrentIndex(goToIndex)
+    //   }
+    //   console.log('window', window)
+    // })
 
-    window.addEventListener('touchend', (e) => {
-      let windowDeltaY
-      windowDeltaY = e.changedTouches[0].clientY - currentClientY
+    // let currentClientY
+    // window.addEventListener('touchstart', (e) => {
+    //   currentClientY = e.touches[0].clientY
+    // })
 
-      // if (windowDeltaY > 20) {
-      //   this.goToPrev()
-      // }
-      // if (windowDeltaY < -20) {
-      //   this.goToNext()
-      // }
-    })
+    // window.addEventListener('touchend', (e) => {
+    //   let windowDeltaY
+    //   windowDeltaY = e.changedTouches[0].clientY - currentClientY
+
+    //   if (windowDeltaY > 20) {
+    //     this.goToPrev()
+    //   }
+    //   if (windowDeltaY < -20) {
+    //     this.goToNext()
+    //   }
+    // })
   },
   watch: {
     defaultNodeIndex: function () {

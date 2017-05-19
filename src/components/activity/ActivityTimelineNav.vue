@@ -15,6 +15,8 @@
 
 <script>
 
+import _ from 'lodash'
+
 export default {
   props: [ 'openNav', 'timelineNodes', 'viewport' ],
   methods: {
@@ -28,8 +30,8 @@ export default {
         viewportTarget = 'desktop'
       }
       return _.get(node, [ 'activity', 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])
-    },
-  },
+    }
+  }
 }
 
 </script>

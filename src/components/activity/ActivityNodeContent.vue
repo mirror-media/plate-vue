@@ -21,7 +21,7 @@ export default {
   props: [ 'activeIndex', 'node' ],
   computed: {
     currentSlideshowIndex () {
-      return this.activeIndex%this.sliderContentAmount === 0 ? this.sliderContentAmount : this.activeIndex%this.sliderContentAmount
+      return this.activeIndex % this.sliderContentAmount === 0 ? this.sliderContentAmount : this.activeIndex % this.sliderContentAmount
     },
     sliderContentAmount () {
       return _.get(this.getNodeSliderContent(this.node), [ 'length' ])
@@ -35,7 +35,7 @@ export default {
     },
     getNodeText (node) {
       return _.get(node, [ 'content', 'apiData', '0', 'content', '0' ])
-    },
+    }
   }
 }
 

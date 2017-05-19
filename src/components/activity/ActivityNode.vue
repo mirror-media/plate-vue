@@ -8,7 +8,7 @@
 
 <script>
 
-import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
+import { elmYPosition, smoothScroll } from 'kc-scroll'
 import _ from 'lodash'
 import ActivityNodeContent from './ActivityNodeContent.vue'
 import ActivityNodeSlider from './ActivityNodeSlider.vue'
@@ -32,7 +32,7 @@ export default {
   computed: {
     nodeAmount () {
       return _.get(this.nodes, [ 'length' ])
-    },
+    }
   },
   methods: {
     elmYPosition,
@@ -69,10 +69,9 @@ export default {
     smoothScroll
   },
   mounted () {
-    
+
   },
   watch: {
-    
   }
 }
 
