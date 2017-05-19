@@ -8,10 +8,9 @@
 
 <script>
 import { getValue, getImage } from '../../utils/comm'
-import _ from 'lodash'
 
 export default {
-  props:[ 'timeline', 'viewport' ],
+  props: [ 'timeline', 'viewport' ],
   methods: {
     getValue,
     getImage,
@@ -24,7 +23,7 @@ export default {
         return 'desktop'
       }
     }
-  },
+  }
 }
 </script>
 
