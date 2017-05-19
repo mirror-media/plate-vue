@@ -1,5 +1,9 @@
 <template>
   <div class="activity">
+    <a href="/" class="activity__logo">
+      <img src="/public/icon/logo_black@3x.png"/>
+    </a>
+    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" class="activity__share" />
     <section class="activity-currentNode">
       <nav class="activity-currentNode__nav" @click="toggleNav()">
         <div class="activity-currentNode__nav--menu">
@@ -12,6 +16,8 @@
       <activity-nodeNav :node="prevNode" :position="`prev`" v-on:goToPrev="goToPrev" />
       <activity-node :currentIndex="currentIndex" :nodes="nodes" :viewport="viewport" />
       <activity-nodeNav :node="nextNode" :position="`next`" v-on:goToNext="goToNext" />
+      <activity-desktopNodesNav :currentIndex="currentIndex" :nodes="nodes" :nodesAmount="nodesAmount"
+        v-on:goToPrev="goToPrev" v-on:goToNext="goToNext" />
     </section>
   </div>
 </template>
@@ -21,6 +27,7 @@
 import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
 import { disableScroll, enableScroll } from '../utils/comm.js'
 import _ from 'lodash'
+import ActivityDesktopNodesNav from '../components/activity/ActivityDesktopNodesNav.vue'
 import ActivityNode from '../components/activity/ActivityNode.vue'
 import ActivityNodeNav from '../components/activity/ActivityNodeNav.vue'
 import ActivityTimelineNav from '../components/activity/ActivityTimelineNav.vue'
@@ -43,6 +50,7 @@ const fetchTimeline = (store, id) => {
 }
 
 const fetchActivities = (store, id) => {
+  console.log('id', id)
   return store.dispatch('FETCH_ACTIVITIES', {
     'params': {
       where: {
@@ -53,6 +61,7 @@ const fetchActivities = (store, id) => {
 }
 
 const fetchNodes = (store, uuid, page) => {
+  console.log('id', uuid)
   return store.dispatch('FETCH_NODES', {
     'params': {
       page: page,
@@ -83,6 +92,7 @@ export default {
   name: 'activity-view',
   preFetch: fetchData,
   components: {
+    'activity-desktopNodesNav': ActivityDesktopNodesNav,
     'activity-node': ActivityNode,
     'activity-nodeNav': ActivityNodeNav,
     'activity-timelineNav': ActivityTimelineNav,
@@ -246,10 +256,17 @@ export default {
     },
     currentIndex: function () {
       const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
+      console.log('currentIndex', this.currentIndex)
       // console.log('currentNodeTop', currentNodeTop)
       // window.scrollTo(0, currentNodeTop - 50)
       // this.smoothScroll(`#node-${this.currentIndex}`)
-      const _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
+      let _top
+      if (this.viewport > 900) {
+        _top = (currentNodeTop <= 0) ? 1 : currentNodeTop
+      } else {
+        _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
+      }
+
       this.smoothScroll(null, _top)
     }
   }
@@ -269,7 +286,7 @@ export default {
     // height 100%
     &__nav
       position fixed
-      z-index 999
+      z-index 998
       top 0
       left 0
       width 100%
@@ -288,6 +305,45 @@ export default {
         padding 5px
         background-color #bf272d
         border-radius 50%
+
+  &__logo
+    position fixed
+    z-index 999
+    top 5px
+    left 5px
+    width 40px
+    height 40px
+    > img
+      width 100%
+  &__desktopNodesNav
+    display none
+  &__share
+    display block
+    z-index 999
+
+@media only screen and (max-width: 736px) and (orientation: landscape)
+  .activity
+    &__logo
+      display none
+    &-currentNode
+       &__nav
+        display none
+    &__share
+      display none
+    
+
+
+@media only screen and (min-width: 900px)
+  .activity
+    &-currentNode
+       &__nav
+        height 40px
+        background-color transparent
+        &--menu
+          right 10px
+          width 40px
+          height 40px
+          border-radius 50%
 
 .hamburgerBar
   display block

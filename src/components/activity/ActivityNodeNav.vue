@@ -20,12 +20,12 @@ export default {
     }
   },
   methods: {
-    goToNext (position) {
+    goToNext () {
       if (this.hasNode) {
         this.$emit('goToNext')
       }
     },
-    goToPrev (position) {
+    goToPrev () {
       if (this.hasNode) {
         this.$emit('goToPrev')
       }
@@ -79,4 +79,12 @@ export default {
   p.noNode:after
     width 0
     height 0
+
+@media only screen and (max-width: 736px) and (orientation: landscape)
+  .activityNodeNav
+    &.prev
+      top 0
+@media only screen and (min-width: 900px)
+  .activityNodeNav
+    display none
 </style>

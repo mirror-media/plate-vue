@@ -43,7 +43,6 @@ export default {
   top 0
   z-index 550
   width 100vw
-  height 100vh
   padding-top 35px
   background-color #f0f0f0
   transform translate3d(100vw,0,0)
@@ -57,8 +56,11 @@ export default {
     border-right 1px solid #000
   &__activities
     flex-grow 1
+    width 100%
+    height calc(100vh - 35px)
     padding-left 10px
     padding-right 15px
+    overflow-y scroll
     h2
       position relative
       margin 0
@@ -69,7 +71,7 @@ export default {
       content ''
       position absolute
       top 8.5px
-      left -20px
+      left -16px
       width 10px
       height 10px
       background-color #000

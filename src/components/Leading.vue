@@ -48,6 +48,7 @@ export default {
   computed: {
     sliderOption () {
       return {
+        autoplay: 3000,
         paginationable: false,
         paginationClickable: true,
         paginationHide: false,
