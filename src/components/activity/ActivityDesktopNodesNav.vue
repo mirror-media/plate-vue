@@ -4,8 +4,8 @@
       <img src="/public/icon/arrow1-2017.png" />
     </div>
     <div class="activityDesktopNodesNav__nav">
-      <template v-for="item in navNode">
-        <div class="activityDesktopNodesNav__nav--block" v-html="`${item.subtitle} <br> ${item.name}`">
+      <template v-for="(item, index) in navNode">
+        <div class="activityDesktopNodesNav__nav--block" v-html="`${item.subtitle} <br> ${item.name}`" :class="navStyle(index)">
         </div>
       </template>
     </div>
@@ -23,18 +23,22 @@ export default {
   props: [ 'currentIndex', 'nodes', 'nodesAmount' ],
   computed: {
     navNode () {
-      return _.slice(this.nodes, this.currentIndex - 2, this.currentIndex + 3)
+      const _currI = this.currentIndex > 1 ? this.currentIndex - 2 : 0
+      const _moreI = this.currentIndex + 3 < 5 ? 5 : this.currentIndex + 3
+      return _.slice(this.nodes, _currI, _moreI)
     }
   },
   methods: {
     detectAtFirst () {
-      if (this.currentIndex < 2) {
-        return 'hidden'
+      if (this.currentIndex <= 0) {
+        return ''
+        // return 'hidden'
       }
     },
     detectAtEnd () {
-      if (this.currentIndex > this.nodesAmount - 3) {
-        return 'hidden'
+      if (this.currentIndex === this.nodesAmount) {
+        return ''
+        // return 'hidden'
       }
     },
     goToNext () {
@@ -42,6 +46,13 @@ export default {
     },
     goToPrev () {
       this.$emit('goToPrev')
+    },
+    navStyle (i) {
+      let _index = this.currentIndex < 2 ? this.currentIndex : 2
+      _index = (this.currentIndex > this.nodesAmount - 3) ? this.nodesAmount + 1 - this.currentIndex : _index
+      return {
+        active: i === _index
+      }
     }
   }
 }
@@ -79,7 +90,8 @@ export default {
       display flex
       width calc(100% - 100px)
       height 100%
-      > div:nth-child(3)
+      justify-content center
+      > div.active
         color #bf272d
       &--block
         display flex

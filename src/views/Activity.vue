@@ -1,5 +1,5 @@
 <template>
-  <div class="activity">
+  <div class="activity" :style="activityStyle">
     <a href="/" class="activity__logo">
       <img src="/public/icon/logo_black@3x.png"/>
     </a>
@@ -104,8 +104,8 @@ export default {
       openNav: false,
       viewport: 0,
       scrollingFlag: false,
-      deviceHeight: 0,
-      doc: {}
+      doc: {},
+      activityStyle: `left: -${(this.currentIndex * 100)}vw;`
     }
   },
   computed: {
@@ -192,13 +192,12 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
-
     this.disableScroll()
     this.doc = document
-    this.deviceHeight = this.doc.documentElement.clientHeight || this.doc.body.clientHeight
     window.addEventListener('wheel', (e) => {
       const _derection = e.wheelDelta
       const currTopY = this.currentYPosition()
+      if (this.viewport > 899) { return }
       if (_derection > 0 && this.scrollingFlag !== true) {
         this.scrollingFlag = true
         this.changeCurrentIndex(this.currentIndex - 1)
@@ -225,6 +224,10 @@ export default {
 
     window.addEventListener('touchstart', (e) => {
       const _currTouchClientY = e.pageY
+      const _targ = e.target
+      const _targClass = _targ.getAttribute('class') || ''
+      const _ifActivityContent = _targClass.indexOf('activityNodeContent__content') > -1
+      window.touchStartP = _ifActivityContent
       window.touchClientY = _currTouchClientY
       if (this.scrollingFlag === true) {
         const _currY = this.currentYPosition()
@@ -238,6 +241,16 @@ export default {
 
     window.addEventListener('touchend', (e) => {
       this.disableScroll()
+      const _targ = e.target
+      const _targClass = _targ.getAttribute('class') || ''
+      const _ifActivityContent = _targClass.indexOf('activityNodeContent__content') > -1
+      if (_ifActivityContent === true && window.touchStartP === true) {
+        window.touchStartP = false
+        window.touchClientY = undefined
+        this.scrollingFlag = false
+        this.disableScroll()
+        return
+      }
       const _currTouchClientY = e.pageY
       const _lastTouchClientY = window.touchClientY || _currTouchClientY
       if (this.scrollingFlag !== true && _currTouchClientY > _lastTouchClientY) {
@@ -261,12 +274,13 @@ export default {
       // window.scrollTo(0, currentNodeTop - 50)
       // this.smoothScroll(`#node-${this.currentIndex}`)
       let _top
-      if (this.viewport > 900) {
+      if (this.viewport > 899) {
         _top = (currentNodeTop <= 0) ? 1 : currentNodeTop
+        this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
+        return
       } else {
         _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
       }
-
       this.smoothScroll(null, _top)
     }
   }
@@ -280,6 +294,7 @@ export default {
   // width 100vw
   // height 100vh
   padding-top 30px
+  transition left 1s ease
   &-currentNode
     position relative
     // width 100%
