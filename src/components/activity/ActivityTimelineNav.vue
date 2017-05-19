@@ -114,6 +114,10 @@ export default {
     left 0
     width 25vw
     transform translate3d(100vw,0,0)
+    &__activities
+      height calc(100vh - 90px)
+      padding-bottom 20px
     &.open
       transform translate3d(75vw,0,0)
+    
 </style>
