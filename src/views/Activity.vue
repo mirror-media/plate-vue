@@ -312,7 +312,7 @@ export default {
       // console.log('currentNodeTop', currentNodeTop)
       // window.scrollTo(0, currentNodeTop - 50)
       // this.smoothScroll(`#node-${this.currentIndex}`)
-      this.smoothScroll(null, this.topOffset)
+      this.smoothScroll(null, this.topOffset, 50)
     }
   },
   metaInfo () {
