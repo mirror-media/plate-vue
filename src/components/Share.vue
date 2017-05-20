@@ -13,6 +13,7 @@
 import { TOPIC_PROTEST_ID } from '../constants/index'
 import { shareGooglePlus, shareLine, shareFacebook } from '../utils/comm'
 import _ from 'lodash'
+import store from '../store'
 
 export default {
   name: 'share',
@@ -35,6 +36,9 @@ export default {
     },
     color: {
       default: '#356d9c'
+    },
+    sharePath: {
+      type: String
     }
   },
   data () {
@@ -45,20 +49,23 @@ export default {
   computed: {
     isTimeline () {
       return _.get(this.$store.state, [ 'route', 'params', 'topicId' ]) === TOPIC_PROTEST_ID
+    },
+    link () {
+      return _.get(this, [ 'sharePath' ], store.state.route.path)
     }
   },
   methods: {
     shareGooglePlus () {
-      shareGooglePlus({ route: this.$route.path })
+      shareGooglePlus({ route: this.link })
     },
     shareLine () {
       shareLine({
-        route: this.$route.path,
+        route: this.link,
         title: document.querySelector('meta[property="og:title"]').getAttribute('content')
       })
     },
     shareFacebook () {
-      shareFacebook({ route: this.$route.path })
+      shareFacebook({ route: this.link })
     },
     toggleShare () {
       this.isOpen = !this.isOpen
@@ -123,6 +130,10 @@ export default {
     > img
       width 20px
       height auto
+.activity
+    &__share
+      display block
+      z-index 999
 
 .share
   &.top

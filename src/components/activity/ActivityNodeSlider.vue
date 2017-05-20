@@ -6,7 +6,7 @@
         :style="[ nodeSliderContentAmount !== 0 ? { display: `none` } : {} ]" />
         <template v-if="nodeSliderContentAmount === 1">
           <template v-if="nodeSliderContent[0]['type'] === `video`">
-            <video autoplay controls muted playsinline>
+            <video controls>
               <source :src="getNodeSlideshowVideoSrc(nodeSliderContent[0])" :type="getNodeSlideshowVideoType(nodeSliderContent[0])">
             </video>
           </template>
@@ -24,13 +24,13 @@
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in nodeSliderContent">
                 <template v-if="o.type === `video`">
-                  <video autoplay controls muted playsinline>
+                  <video controls>
                     <source :src="getNodeSlideshowVideoSrc(o)" :type="getNodeSlideshowVideoType(o)">
                   </video>
                 </template>
                 <template v-if="o.type === `youtube`">
                   <video autoplay controls muted>
-                    <source :src="getYoutubeSrc(o)" >
+                    <iframe width="100%" height="100%" :src="getYoutubeSrc(o)" frameborder="0" allowfullscreen />
                   </video>
                 </template>
                 <template v-else>
