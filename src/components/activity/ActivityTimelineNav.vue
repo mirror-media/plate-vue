@@ -110,6 +110,7 @@ export default {
 
 @media only screen and (min-width: 900px)
   .activityTimelineNav
+    display none
     z-index 501
     left 0
     width 25vw

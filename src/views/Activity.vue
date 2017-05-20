@@ -1,5 +1,5 @@
 <template>
-  <div class="activity" :style="activityStyle">
+  <div class="activity" :style="[ viewport > 899 ? { left: `-${activityStyle}vw`  } : {} ]">
     <a href="/" class="activity__logo">
       <img src="/public/icon/logo_black@3x.png"/>
     </a>
@@ -103,11 +103,14 @@ export default {
       openNav: false,
       viewport: 0,
       scrollingFlag: false,
-      doc: {},
-      activityStyle: `left: -${(this.currentIndex * 100)}vw;`
+      doc: {}
+      // activityStyle: `left: -${(this.currentIndex * 100)}vw;`
     }
   },
   computed: {
+    activityStyle () {
+      return this.currentIndex * 100
+    },
     currentNode () {
       return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ]) || _.get(this.$store.state, [ 'nodes', 'items', this.defaultNodeIndex ])
     },
@@ -177,7 +180,11 @@ export default {
     },
     smoothScroll,
     toggleNav () {
-      this.openNav = !this.openNav
+      if (this.viewport > 899) {
+        this.$router.push('/topic/59151f0ff2179c0d0089b7d5')
+      } else {
+        this.openNav = !this.openNav
+      }
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
@@ -360,6 +367,7 @@ export default {
         padding 5px
         background-color #bf272d
         border-radius 50%
+        cursor pointer
 
   &__logo
     position fixed
@@ -390,6 +398,7 @@ export default {
 
 @media only screen and (min-width: 900px)
   .activity
+    padding 0
     &-currentNode
        &__nav
         height 40px
