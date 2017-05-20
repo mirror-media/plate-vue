@@ -6,7 +6,7 @@
         :style="[ nodeSliderContentAmount !== 0 ? { display: `none` } : {} ]" />
         <template v-if="nodeSliderContentAmount === 1">
           <template v-if="nodeSliderContent[0]['type'] === `video`">
-            <video controls>
+            <video :id="`video-${index}-0`" controls>
               <source :src="getNodeSlideshowVideoSrc(nodeSliderContent[0])" :type="getNodeSlideshowVideoType(nodeSliderContent[0])">
             </video>
           </template>
@@ -24,7 +24,7 @@
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in nodeSliderContent">
                 <template v-if="o.type === `video`">
-                  <video controls>
+                  <video :id="`video-${index}-${i}`" controls>
                     <source :src="getNodeSlideshowVideoSrc(o)" :type="getNodeSlideshowVideoType(o)">
                   </video>
                 </template>
@@ -73,7 +73,7 @@ export default {
     'activity-nodeContent': ActivityNodeContent,
     'app-slider': Slider
   },
-  props: [ 'index', 'node', 'viewport' ],
+  props: [ 'currentIndex', 'index', 'node', 'viewport' ],
   data () {
     return {
       openLandscapeContent: false,
@@ -83,6 +83,9 @@ export default {
     }
   },
   computed: {
+    isFirstVideo () {
+      return _.get(this.nodeSliderContent, [ '0', 'type' ]) === 'video'
+    },
     hasSliderContent () {
       return _.get(this.nodeSliderContent, [ 'length' ]) !== 0
     },
@@ -99,16 +102,41 @@ export default {
     },
     sliderOption () {
       return {
-        autoplay: 3000,
+        autoplay: this.toggleAutoPlay,
         initialSlide: 0,
         paginationable: true,
         paginationClickable: true,
         paginationHide: false,
         setNavBtn: this.openSlideBtn,
+        onSlideNextStart: (swiper) => {  // 向右
+          const needStopindex = (swiper.activeIndex - 1) % this.nodeSliderContentAmount === 0 ? this.nodeSliderContentAmount : (swiper.activeIndex - 1) % this.nodeSliderContentAmount
+          const video = document.getElementById(`video-${this.currentIndex}-${needStopindex - 1}`)
+          video.pause()
+        },
+        onSlidePrevStart: (swiper) => { // 向左
+          const needStopindex = (swiper.activeIndex + 1) % this.nodeSliderContentAmount === 0 ? this.nodeSliderContentAmount : (swiper.activeIndex + 1) % this.nodeSliderContentAmount
+          const video = document.getElementById(`video-${this.currentIndex}-${needStopindex - 1}`)
+          video.pause()
+        },
         onSlideChangeEnd: (swiper) => {
           this.activeIndex = swiper.activeIndex
+          const currentSliderContentIndex = swiper.activeIndex % this.nodeSliderContentAmount === 0 ? this.nodeSliderContentAmount : swiper.activeIndex % this.nodeSliderContentAmount
+          const video = document.getElementById(`video-${this.currentIndex}-${currentSliderContentIndex - 1}`)
+          video.play()
         }
       }
+    },
+    toggleAutoPlay () {
+      if (this.index === this.currentIndex && this.videoAmount === 0) {
+        return 3000
+      } else {
+        return 0
+      }
+    },
+    videoAmount () {
+      return _.get(_.filter(_.slice(_.get(this.node, [ 'content', 'apiData' ]), 1, _.get(this.node, [ 'content', 'apiData', 'length' ])), function (o) {
+        return o.type !== 'video'
+      }), [ 'length' ])
     },
     viewportTarget () {
       if (this.viewport < 600) {
@@ -162,6 +190,14 @@ export default {
     setTimeout(() => {
       this.openContent = false
     }, 2000)
+  },
+  watch: {
+    currentIndex: function () {
+      if (this.index === this.currentIndex && this.isFirstVideo) {
+        const video = document.getElementById(`video-${this.currentIndex}-${0}`)
+        video.play()
+      }
+    }
   }
 }
 
