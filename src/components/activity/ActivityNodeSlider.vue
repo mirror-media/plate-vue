@@ -77,6 +77,7 @@ export default {
   data () {
     return {
       openContent: true,
+      openLandscapeContent: false,
       activeIndex: 1,
       slideId: `thisslider-${this.index}`
     }
@@ -95,9 +96,6 @@ export default {
       return _.filter(_.slice(_.get(this.node, [ 'content', 'apiData' ]), 1, _.get(this.node, [ 'content', 'apiData', 'length' ])), function (o) {
         return o.type !== 'unstyled'
       })
-    },
-    openLandscapeContent () {
-      return !this.hasSliderContent
     },
     openSlideBtn () {
       return this.viewport < 900
@@ -198,6 +196,10 @@ export default {
     setTimeout(() => {
       this.openContent = false
     }, 2000)
+
+    if (!this.hasSliderContent) {
+      this.openLandscapeContent = true
+    }
   },
   watch: {
     currentIndex: function () {

@@ -344,14 +344,10 @@ export default {
 <style lang="stylus" scoped>
 
 .activity
-  // width 100vw
-  // height 100vh
   padding-top 30px
   transition left 1s ease
   &-currentNode
     position relative
-    // width 100%
-    // height 100%
     &__nav
       position fixed
       z-index 998
@@ -395,7 +391,7 @@ export default {
     &__logo
       display none
     &-currentNode
-       &__nav
+      &__nav
         display none
     &__share
       display none
