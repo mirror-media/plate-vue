@@ -1,7 +1,7 @@
 <template>
   <section class="activityNode">
     <div class="activityNode-nodeContainer" :style="nodeContainerStyle">
-      <activity-nodeSlider :id="`node-${index}`" :currentIndex="currentIndex" :index="index" :node="item" :viewport="viewport" v-for="(item, index) in nodes" />
+      <activity-nodeSlider :id="`node-${index}`" :currentIndex="currentIndex" :index="index" :node="item" :viewport="viewport" v-for="(item, index) in nodes" :windowHeight="windowHeight" />
     </div>
   </section>
 </template>
@@ -79,7 +79,8 @@ export default {
     smoothScroll,
     updateWindowHeight () {
       if (process.env.VUE_ENV === 'client') {
-        this.windowHeight = document.querySelector('body').offsetHeight
+        // this.windowHeight = document.querySelector('body').offsetHeight
+        this.windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       }
     }
   },

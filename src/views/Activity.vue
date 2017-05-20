@@ -103,8 +103,9 @@ export default {
       openNav: false,
       viewport: 0,
       scrollingFlag: false,
-      doc: {}
+      doc: {},
       // activityStyle: `left: -${(this.currentIndex * 100)}vw;`
+      windowHeight: 0
     }
   },
   computed: {
@@ -146,6 +147,20 @@ export default {
     },
     topicId () {
       return _.get(this.$store.state, [ 'activities', 'items', '0', 'topics', 'id' ])
+    },
+    topOffset () {
+      let _top = 80
+      const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
+      if (this.viewport > 899) {
+        _top = (currentNodeTop <= 0) ? 1 : currentNodeTop
+        // this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
+        // return
+      } else if (this.windowHeight < this.viewport) {
+        _top = (currentNodeTop - 30 <= 0) ? 1 : currentNodeTop - 30
+      } else {
+        _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
+      }
+      return _top
     }
 
   },
@@ -189,6 +204,7 @@ export default {
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.querySelector('body').offsetWidth
+        this.windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       }
     }
   },
@@ -205,7 +221,7 @@ export default {
   mounted () {
     this.updateViewport()
     this.currentIndex = _.findIndex(this.nodes, this.featureNode)
-    this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
+    // this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
@@ -247,7 +263,7 @@ export default {
       const _targ = e.target
       const _targClass = _targ.getAttribute('class') || ''
       const _ifActivityContent = _targClass.indexOf('activityNodeContent__content') > -1
-      window.touchStartP = _ifActivityContent
+      window.touchStartP = this.windowHeight > this.viewport ? _ifActivityContent : false
       window.touchClientY = _currTouchClientY
       if (this.scrollingFlag === true) {
         const _currY = this.currentYPosition()
@@ -269,6 +285,7 @@ export default {
         window.touchClientY = undefined
         this.scrollingFlag = false
         this.disableScroll()
+        this.smoothScroll(null, this.topOffset)
         return
       }
       const _currTouchClientY = e.pageY
@@ -290,23 +307,12 @@ export default {
     currentIndex: function () {
       const _ele = this.doc.querySelector(`#node-${this.currentIndex}`)
       if (!_ele) { return }
-      const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
       // console.log('currentIndex', this.currentIndex)
+      // const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
       // console.log('currentNodeTop', currentNodeTop)
       // window.scrollTo(0, currentNodeTop - 50)
       // this.smoothScroll(`#node-${this.currentIndex}`)
-      const windowHeight = document.documentElement.clientHeight || document.body.clientHeight
-      let _top
-      if (this.viewport > 899) {
-        _top = (currentNodeTop <= 0) ? 1 : currentNodeTop
-        this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
-        return
-      } else if (windowHeight < this.viewport) {
-        _top = (currentNodeTop - 30 <= 0) ? 1 : currentNodeTop - 30
-      } else {
-        _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
-      }
-      this.smoothScroll(null, _top)
+      this.smoothScroll(null, this.topOffset)
     }
   },
   metaInfo () {

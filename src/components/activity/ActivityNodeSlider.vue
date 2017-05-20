@@ -22,7 +22,7 @@
         <template v-if="nodeSliderContentAmount > 1">
           <app-slider :option="sliderOption" :slideId="slideId">
             <template scope="props">
-              <swiper-slide :is="props.slide" v-for="(o, i) in nodeSliderContent">
+              <swiper-slide :is="props.slide" v-for="(o, i) in nodeSliderContent" :class="ifNoSwiping">
                 <template v-if="o.type === `video`">
                   <video :id="`video-${index}-${i}`" controls>
                     <source :src="getNodeSlideshowVideoSrc(o)" :type="getNodeSlideshowVideoType(o)">
@@ -73,7 +73,7 @@ export default {
     'activity-nodeContent': ActivityNodeContent,
     'app-slider': Slider
   },
-  props: [ 'currentIndex', 'index', 'node', 'viewport' ],
+  props: [ 'currentIndex', 'index', 'node', 'viewport', 'windowHeight' ],
   data () {
     return {
       openContent: true,
@@ -83,6 +83,11 @@ export default {
     }
   },
   computed: {
+    ifNoSwiping () {
+      return {
+        'swiper-no-swiping': (this.windowHeight < this.viewport || this.viewport < 900)
+      }
+    },
     isFirstVideo () {
       return _.get(this.nodeSliderContent, [ '0', 'type' ]) === 'video'
     },
