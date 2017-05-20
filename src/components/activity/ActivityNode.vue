@@ -26,7 +26,8 @@ export default {
       hasToFeature: false,
       isScrolling: false,
       sliderId: 'a' + Date.now(),
-      slideIndex: 0
+      slideIndex: 0,
+      windowHeight: 0
     }
   },
   computed: {
@@ -36,6 +37,8 @@ export default {
     nodeContainerStyle () {
       if (this.viewport > 899) {
         return `width: ${(this.nodes.length * 100)}vw;`
+      } else if (this.windowHeight < this.viewport) {
+        return `height: calc((100vh - 60px) * ${this.nodeAmount} + 30px);`
       } else {
         return ''
       }
@@ -73,10 +76,18 @@ export default {
         return o.type !== 'unstyled'
       })
     },
-    smoothScroll
+    smoothScroll,
+    updateWindowHeight () {
+      if (process.env.VUE_ENV === 'client') {
+        this.windowHeight = document.querySelector('body').offsetHeight
+      }
+    }
   },
   mounted () {
-
+    this.updateWindowHeight()
+    window.addEventListener('resize', () => {
+      this.updateWindowHeight()
+    })
   },
   watch: {
   }
