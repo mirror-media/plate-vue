@@ -16,7 +16,6 @@
       <template v-for="(item, index) in sliderContent">
         <div class="activityNodeContent__desktopSliderNav--block" :style="{ backgroundImage: 'url(' + getNodeSliderImage(item) + ')' }"
           @click="changeSlideTo(index + 1)" />
-        
       </template>
     </div>
   </div>
