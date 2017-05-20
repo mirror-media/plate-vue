@@ -76,7 +76,6 @@ export default {
   props: [ 'currentIndex', 'index', 'node', 'viewport' ],
   data () {
     return {
-      openLandscapeContent: false,
       openContent: true,
       activeIndex: 1,
       slideId: `thisslider-${this.index}`
@@ -97,6 +96,9 @@ export default {
         return o.type !== 'unstyled'
       })
     },
+    openLandscapeContent () {
+      return !this.hasSliderContent
+    },
     openSlideBtn () {
       return this.viewport < 900
     },
@@ -111,18 +113,24 @@ export default {
         onSlideNextStart: (swiper) => {  // 向右
           const needStopindex = (swiper.activeIndex - 1) % this.nodeSliderContentAmount === 0 ? this.nodeSliderContentAmount : (swiper.activeIndex - 1) % this.nodeSliderContentAmount
           const video = document.getElementById(`video-${this.currentIndex}-${needStopindex - 1}`)
-          video.pause()
+          if (video) {
+            video.pause()
+          }
         },
         onSlidePrevStart: (swiper) => { // 向左
           const needStopindex = (swiper.activeIndex + 1) % this.nodeSliderContentAmount === 0 ? this.nodeSliderContentAmount : (swiper.activeIndex + 1) % this.nodeSliderContentAmount
           const video = document.getElementById(`video-${this.currentIndex}-${needStopindex - 1}`)
-          video.pause()
+          if (video) {
+            video.pause()
+          }
         },
         onSlideChangeEnd: (swiper) => {
           this.activeIndex = swiper.activeIndex
           const currentSliderContentIndex = swiper.activeIndex % this.nodeSliderContentAmount === 0 ? this.nodeSliderContentAmount : swiper.activeIndex % this.nodeSliderContentAmount
           const video = document.getElementById(`video-${this.currentIndex}-${currentSliderContentIndex - 1}`)
-          video.play()
+          if (video) {
+            video.play()
+          }
         }
       }
     },
@@ -195,7 +203,9 @@ export default {
     currentIndex: function () {
       if (this.index === this.currentIndex && this.isFirstVideo) {
         const video = document.getElementById(`video-${this.currentIndex}-${0}`)
-        video.play()
+        if (video) {
+          video.play()
+        }
       }
     }
   }
