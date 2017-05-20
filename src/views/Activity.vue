@@ -3,10 +3,10 @@
     <a href="/" class="activity__logo">
       <img src="/public/icon/logo_black@3x.png"/>
     </a>
-    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" class="activity__share" />
+    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" :sharePath="`/topic/59151f0ff2179c0d0089b7d5`" class="activity__share" />
     <section class="activity-currentNode">
-      <nav class="activity-currentNode__nav" @click="toggleNav()">
-        <div class="activity-currentNode__nav--menu">
+      <nav class="activity-currentNode__nav">
+        <div class="activity-currentNode__nav--menu" @click="toggleNav()">
           <span class="hamburgerBar hamburgerBar-1" />
           <span class="hamburgerBar hamburgerBar-2" />
           <span class="hamburgerBar hamburgerBar-3" />
