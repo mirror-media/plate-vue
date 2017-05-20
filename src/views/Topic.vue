@@ -294,7 +294,7 @@ export default {
         return '錶展特區'
       }
       if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_PROTEST_ID) {
-        return '謙卑謙卑再謙卑'
+        return _.get(this.$store.state, [ 'timeline', 'topic', 'ogTitle' ])
       }
       return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])
     },
