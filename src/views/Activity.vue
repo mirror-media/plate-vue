@@ -192,6 +192,10 @@ export default {
       }
     }
   },
+  beforeRouteLeave (to, from, next) {
+    this.enableScroll()
+    next()
+  },
   beforeMount () {
     fetchTimeline(this.$store, this.topicId)
     if (!this.hasAllNodes) {

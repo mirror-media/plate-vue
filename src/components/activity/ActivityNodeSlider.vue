@@ -6,7 +6,7 @@
         :style="[ nodeSliderContentAmount !== 0 ? { display: `none` } : {} ]" />
         <template v-if="nodeSliderContentAmount === 1">
           <template v-if="nodeSliderContent[0]['type'] === `video`">
-            <video autoplay controls muted>
+            <video autoplay controls muted playsinline>
               <source :src="getNodeSlideshowVideoSrc(nodeSliderContent[0])" :type="getNodeSlideshowVideoType(nodeSliderContent[0])">
             </video>
           </template>
@@ -24,7 +24,7 @@
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in nodeSliderContent">
                 <template v-if="o.type === `video`">
-                  <video autoplay controls muted>
+                  <video autoplay controls muted playsinline>
                     <source :src="getNodeSlideshowVideoSrc(o)" :type="getNodeSlideshowVideoType(o)">
                   </video>
                 </template>
@@ -189,6 +189,10 @@ video
     background-repeat no-repeat
     background-size cover
     overflow hidden
+    > video
+      position absolute
+      top 0
+      left 0
     
     &--imageDescr
       position absolute
