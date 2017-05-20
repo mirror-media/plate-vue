@@ -312,8 +312,10 @@ export default {
   metaInfo () {
     const url = this.$route.path
     const title = this.title + ` - ${SITE_TITLE}`
-    const image = _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])
-    const description = SITE_DESCRIPTION
+    const ogImage = _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
+    const image = ogImage || '/public/notImage.png'
+    const ogDescription = _.get(this.$store.state, [ 'timeline', 'topic', 'ogDescription' ], null)
+    const description = ogDescription || SITE_DESCRIPTION
     return {
       title,
       meta: [
