@@ -131,6 +131,10 @@ export default {
   .activityNode
     padding 0
 
+@media only screen and (min-width: 900px)
+  .activityNode
+    padding 0
+
 .swiper-container
   position absolute
   top 0
