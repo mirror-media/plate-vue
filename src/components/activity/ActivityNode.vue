@@ -1,7 +1,7 @@
 <template>
   <section class="activityNode">
     <div class="activityNode-nodeContainer" :style="nodeContainerStyle">
-      <activity-nodeSlider :id="`node-${index}`" :index="index" :node="item" :viewport="viewport" v-for="(item, index) in nodes" />
+      <activity-nodeSlider :id="`node-${index}`" :currentIndex="currentIndex" :index="index" :node="item" :viewport="viewport" v-for="(item, index) in nodes" />
     </div>
   </section>
 </template>
