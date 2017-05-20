@@ -70,6 +70,21 @@ export function getImage (article, size) {
   }
 }
 
+export function getImageCertain (image, size) {
+  switch (size) {
+    case 'desktop':
+      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+    case 'mobile':
+      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
+    case 'tablet':
+      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
+    case 'tiny':
+      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
+    default:
+      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+  }
+}
+
 export function getName (article) {
   return _.get(article, [ 'name' ])
 }

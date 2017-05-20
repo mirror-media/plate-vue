@@ -34,7 +34,10 @@
                   </video>
                 </template>
                 <template v-else>
-                  <div class="activityNodeSlider__slideshow--sliderImage" :style="{ backgroundImage: 'url(' + getNodeSlideshowImage(o) + ')' }">
+                  <div class="activityNodeSlider__slideshow--sliderImage">
+                    <img :src="getNodeSlideshowImage(o)" :srcset="`${getImageCertain(o.content[0], 'mobile')} 800w,
+                                                                  ${getImageCertain(o.content[0], 'tablet')} 1200w,
+                                                                  ${getImageCertain(o.content[0], 'desktop')} 2000w`" />
                     <div class="activityNodeSlider__slideshow--imageDescr" v-html="getNodeSlideshowImageDescr(o)" />
                   </div>
                 </template>
@@ -63,7 +66,7 @@
 
 <script>
 
-import { shareFacebook } from '../../utils/comm'
+import { getImageCertain, shareFacebook } from '../../utils/comm'
 import _ from 'lodash'
 import ActivityNodeContent from './ActivityNodeContent.vue'
 import Slider from '../Slider.vue'
@@ -169,6 +172,7 @@ export default {
     getActivityImageDescr () {
       return _.get(this.$store.state, [ 'activities', 'items', '0', 'heroCaption' ])
     },
+    getImageCertain,
     getNodeSlideshowImage (item) {
       return _.get(item, [ 'content', '0', this.viewportTarget, 'url' ])
     },
@@ -261,6 +265,10 @@ video
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
+      > img
+        object-fit cover
+        width 100%
+        height 100%
     &--OnlyOneImage
       position absolute
       top 0
@@ -331,6 +339,10 @@ video
         filter brightness(40%)
       &--sliderImage
         background-size contain
+        > img
+          object-fit contain
+          width 100%
+          height 100%
     &__content
       position absolute
       z-index 1000
