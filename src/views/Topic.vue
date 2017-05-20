@@ -400,8 +400,11 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    if (from.matched.length !== 0) {
+    const uuid = _.split(to.path, '/')[2]
+    if (from.matched.length !== 0 && uuid !== TOPIC_PROTEST_ID) {
       fetchTopicByUuid(store, to.params.topicId)
+    } else {
+      fetchTimeline(store, TOPIC_PROTEST_ID)
     }
     next()
   },
