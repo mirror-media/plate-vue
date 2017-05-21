@@ -214,6 +214,9 @@ export default {
         this.viewport = document.querySelector('body').offsetWidth
         this.windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       }
+    },
+    updateTargNodeTopY (_targNodeTopY) {
+      this.targNodeTopY = (process.env.VUE_ENV === 'client') ? _targNodeTopY : 0
     }
   },
   beforeRouteLeave (to, from, next) {
@@ -322,11 +325,12 @@ export default {
         _offset = this.windowHeight < this.viewport ? 30 : 0
       }
 
-      // console.log('currentIndex', this.currentIndex)
       const containerTop = (process.env.VUE_ENV === 'client') ? this.elmYPosition('.activityNode-nodeContainer') : 0
-      const _targNodeTopY = isNaN(containerTop) !== true ? containerTop - this.currNodeTopOffset(_offset) : 0 - this.currNodeTopOffset(_offset)
-
-      this.targNodeTopY = (process.env.VUE_ENV === 'client') ? _targNodeTopY : 0
+      setTimeout(() => {
+        const _currNodeTopOffset = this.currNodeTopOffset(_offset)
+        const _targNodeTopY = isNaN(containerTop) !== true ? containerTop - _currNodeTopOffset : 0 - _currNodeTopOffset
+        this.updateTargNodeTopY(_targNodeTopY)
+      }, 10)
     }
   },
   metaInfo () {
