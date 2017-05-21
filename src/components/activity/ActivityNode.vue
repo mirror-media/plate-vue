@@ -1,7 +1,10 @@
 <template>
   <section class="activityNode">
     <div class="activityNode-nodeContainer" :style="nodeContainerStyle">
-      <activity-nodeSlider :id="`node-${index}`" :currentIndex="currentIndex" :index="index" :node="item" :viewport="viewport" v-for="(item, index) in nodes" :windowHeight="windowHeight" />
+      <activity-nodeSlider :id="`node-${index}`" :currentIndex="currentIndex" 
+                :index="index" :node="item" :viewport="viewport" v-for="(item, index) in nodes" 
+                :windowHeight="windowHeight"
+                :style="nodeSliderStyle" />
     </div>
   </section>
 </template>
@@ -20,17 +23,21 @@ export default {
     'activity-nodeSlider': ActivityNodeSlider,
     'app-slider': Slider
   },
-  props: [ 'currentIndex', 'nodes', 'viewport' ],
+  props: [ 'currentIndex', 'nodes', 'targNodeTopY', 'viewport' ],
   data () {
     return {
       hasToFeature: false,
       isScrolling: false,
       sliderId: 'a' + Date.now(),
       slideIndex: 0,
-      windowHeight: 0
+      windowHeight: 0,
+      nodeSliderStyle: ''
     }
   },
   computed: {
+    activityCurrNodeStyle () {
+      return this.currentIndex * 100
+    },
     nodeAmount () {
       return _.get(this.nodes, [ 'length' ])
     },
@@ -38,9 +45,10 @@ export default {
       if (this.viewport > 899) {
         return `width: ${(this.nodes.length * 100)}vw;`
       } else if (this.windowHeight < this.viewport) {
-        return `height: calc((100vh - 60px) * ${this.nodeAmount} + 30px);`
+        // return `height: calc((100vh - 60px) * ${this.nodeAmount} + 30px); `
+        return `top: ${this.targNodeTopY}px;`
       } else {
-        return ''
+        return `top: ${this.targNodeTopY}px;`
       }
     }
   },
@@ -82,6 +90,17 @@ export default {
         // this.windowHeight = document.querySelector('body').offsetHeight
         this.windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       }
+    },
+    updateNodeSliderStyle () {
+      if (this.viewport > 899) {
+        this.nodeSliderStyle = ''
+      } else {
+        if (this.windowHeight < this.viewport) {
+          this.nodeSliderStyle = `height: calc(${this.windowHeight}px - 50px);`
+        } else {
+          this.nodeSliderStyle = ''
+        }
+      }
     }
   },
   mounted () {
@@ -91,6 +110,9 @@ export default {
     })
   },
   watch: {
+    windowHeight: function () {
+      this.updateNodeSliderStyle()
+    }
   }
 }
 
@@ -101,12 +123,16 @@ export default {
 .activityNode
   // width 100%
   // height 100%
-  padding 20px 0
+  padding 30px 0
   // overflow hidden
   &-nodeContainer
     // width 100%
     // height 100%
     // overflow scroll
+    position relative
+    transition top 1s ease   
+    display flex
+    flex-direction  column
   &__node
     display flex
     flex-direction column
@@ -146,6 +172,9 @@ export default {
 @media only screen and (min-width: 900px)
   .activityNode
     padding 0
+    &-nodeContainer
+      position static
+      display block
 
 .swiper-container
   position absolute
