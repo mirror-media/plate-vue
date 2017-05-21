@@ -1,5 +1,5 @@
 <template>
-  <div class="activity" :style="[ viewport > 899 ? { left: `-${activityStyle}vw`  } : {} ]">
+  <div class="activity" :style="[ viewport > 899 ? { left: `-${activityStyle}vw` } : {} ]">
     <a href="/" class="activity__logo">
       <img src="/public/icon/logo_black@3x.png"/>
     </a>
@@ -14,7 +14,7 @@
       </nav>
       <activity-timelineNav :openNav="openNav" :timelineNodes="timelineNodes" :viewport="viewport" />
       <activity-nodeNav :node="prevNode" :position="`prev`" v-on:goToPrev="goToPrev" />
-      <activity-node :currentIndex="currentIndex" :nodes="nodes" :viewport="viewport" />
+      <activity-node :currentIndex="currentIndex" :nodes="nodes" :viewport="viewport" :targNodeTopY="targNodeTopY" />
       <activity-nodeNav :node="nextNode" :position="`next`" v-on:goToNext="goToNext" />
       <activity-desktopNodesNav :currentIndex="currentIndex" :nodes="nodes" :nodesAmount="nodesAmount"
         v-on:goToPrev="goToPrev" v-on:goToNext="goToNext" v-on:goToIndex="goToIndex"/>
@@ -105,11 +105,15 @@ export default {
       scrollingFlag: false,
       doc: {},
       // activityStyle: `left: -${(this.currentIndex * 100)}vw;`
+      targNodeTopY: 0,
       windowHeight: 0
     }
   },
   computed: {
     activityStyle () {
+      return this.currentIndex * 100
+    },
+    activityCurrNodeStyle () {
       return this.currentIndex * 100
     },
     currentNode () {
@@ -152,17 +156,16 @@ export default {
       let _top = 80
       const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
       if (this.viewport > 899) {
-        _top = (currentNodeTop <= 0) ? 1 : currentNodeTop
+        _top = (currentNodeTop <= 0) ? 0 : currentNodeTop
         // this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
         // return
       } else if (this.windowHeight < this.viewport) {
-        _top = (currentNodeTop - 30 <= 0) ? 1 : currentNodeTop - 30
+        _top = (currentNodeTop - 30 <= 0) ? 0 : currentNodeTop - 30
       } else {
-        _top = (currentNodeTop - 80 <= 0) ? 1 : currentNodeTop - 80
+        _top = (currentNodeTop - 80 <= 0) ? 0 : currentNodeTop - 80
       }
       return _top
     }
-
   },
   methods: {
     changeCurrentIndex (index) {
@@ -173,6 +176,11 @@ export default {
       } else if (index < 0) {
         this.currentIndex = 0
       }
+    },
+    currNodeTopOffset (offset = 0) {
+      const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
+      const _top = currentNodeTop + offset
+      return _top
     },
     currentYPosition,
     enableScroll,
@@ -256,6 +264,10 @@ export default {
     window.addEventListener('scroll', (e) => {
       const currTop = this.currentYPosition()
       window.lastTopY = currTop
+      // if (this.scrollingFlag === true && this.targNodeTopY === currTop) {
+        // window.scrollTo(0, this.targNodeTopY)
+      // }
+      window.scrollTo(0, 0)
     })
 
     window.addEventListener('touchstart', (e) => {
@@ -305,14 +317,16 @@ export default {
       this.currentIndex = _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
     },
     currentIndex: function () {
-      const _ele = this.doc.querySelector(`#node-${this.currentIndex}`)
-      if (!_ele) { return }
+      let _offset = 0
+      if (this.viewport < 900) {
+        _offset = this.windowHeight < this.viewport ? 30 : 0
+      }
+
       // console.log('currentIndex', this.currentIndex)
-      // const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
-      // console.log('currentNodeTop', currentNodeTop)
-      // window.scrollTo(0, currentNodeTop - 50)
-      // this.smoothScroll(`#node-${this.currentIndex}`)
-      this.smoothScroll(null, this.topOffset, 50)
+      const containerTop = (process.env.VUE_ENV === 'client') ? this.elmYPosition('.activityNode-nodeContainer') : 0
+      const _targNodeTopY = isNaN(containerTop) !== true ? containerTop - this.currNodeTopOffset(_offset) : 0 - this.currNodeTopOffset(_offset)
+
+      this.targNodeTopY = (process.env.VUE_ENV === 'client') ? _targNodeTopY : 0
     }
   },
   metaInfo () {
@@ -350,7 +364,7 @@ export default {
 <style lang="stylus" scoped>
 
 .activity
-  padding-top 30px
+  padding-top 50px
   transition left 1s ease
   &-currentNode
     position relative
