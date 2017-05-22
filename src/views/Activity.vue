@@ -270,7 +270,7 @@ export default {
       // if (this.scrollingFlag === true && this.targNodeTopY === currTop) {
         // window.scrollTo(0, this.targNodeTopY)
       // }
-      window.scrollTo(0, 0)
+      // window.scrollTo(0, 0)
     })
 
     window.addEventListener('touchstart', (e) => {
@@ -302,6 +302,8 @@ export default {
         this.disableScroll()
         this.smoothScroll(null, this.topOffset)
         return
+      } else {
+        window.scrollTo(0, 0)
       }
       const _currTouchClientY = e.pageY
       const _lastTouchClientY = window.touchClientY || _currTouchClientY
