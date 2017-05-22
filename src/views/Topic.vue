@@ -84,24 +84,19 @@ const MAXRESULT = 12
 const PAGE = 1
 
 const fetchData = (store) => {
-  if (store.state.route.params.topicId === TOPIC_PROTEST_ID) {
-    return fetchTimeline(store, TOPIC_PROTEST_ID)
-    // return fetchActivities(store)
-    // .then(() => {
-    //   return fetchNodes(store, {}, true)
-    // })
-  } else {
-    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
-    .then(() => {
-      if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': store.state.route.params.topicId }))) {
-        return fetchTopicByUuid(store, store.state.route.params.topicId)
-      }
-    })
-  }
-}
-
-const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] })
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'projects', 'topics' ] })
+  .then(() => {
+    if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': store.state.route.params.topicId }))) {
+      return fetchTopicByUuid(store, store.state.route.params.topicId)
+    }
+  })
+  .then(() => {
+    const topicType = _.get(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': store.state.route.params.topicId }), [ 'type' ]) ||
+      _.get(store.getters.topic, [ 'items', '0', 'type' ])
+    if (topicType === 'timeline') {
+      return fetchTimeline(store, store.state.route.params.topicId)
+    }
+  })
 }
 
 const fetchTimeline = (store, id) => {
@@ -109,27 +104,6 @@ const fetchTimeline = (store, id) => {
     'id': id
   })
 }
-
-// const fetchActivities = (store, params = {}) => {
-//   return store.dispatch('FETCH_ACTIVITIES', {
-//     'params': params
-//   })
-// }
-
-// const fetchNodes = (store, params = {}, isHighlight = false) => {
-//   if (isHighlight) {
-//     return store.dispatch('FETCH_NODES', {
-//       'params': {
-//         'where': {
-//           isFeatured: true,
-//         }
-//       }
-//     })
-//   }
-//   return store.dispatch('FETCH_NODES', {
-//     'params': params
-//   })
-// }
 
 const fetchTopicByUuid = (store, uuid) => {
   return store.dispatch('FETCH_TOPIC_BY_UUID', {
@@ -186,8 +160,7 @@ export default {
   preFetch: fetchData,
   data () {
     return {
-      // commonData: this.$store.state.commonData,
-      timeline: this.$store.state.timeline,
+      commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
@@ -197,9 +170,6 @@ export default {
     }
   },
   computed: {
-    activities () {
-      return _.get(this.$store.state, [ 'activities', 'items' ])
-    },
     articles () {
       return _.get(this.$store.state, [ 'articlesByUUID' ])
     },
@@ -214,9 +184,6 @@ export default {
     },
     currArticleSlug () {
       return this.$store.state.route.params.topicId
-    },
-    commonData () {
-      return this.$store.state.commonData
     },
     dfp () {
       return _.get(this.topic, [ 'dfp' ], null)
@@ -289,14 +256,15 @@ export default {
           return 'other'
       }
     },
+    timeline () {
+      return _.get(this.$store.state, [ 'timeline' ])
+    },
     title () {
-      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
-        return '錶展特區'
-      }
-      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_PROTEST_ID) {
-        return _.get(this.$store.state, [ 'timeline', 'topic', 'ogTitle' ])
-      }
-      return _.get(_.find(_.get(this.commonData, [ 'topics', 'items' ]), { 'id': this.$route.params.topicId }), [ 'name' ])
+      // if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
+      //   return '錶展特區'
+      // }
+
+      return _.get(this.topic, [ 'ogTitle' ]) !== '' ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'name' ])
     },
     topic () {
       if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_PROTEST_ID) {
@@ -306,6 +274,9 @@ export default {
       } else {
         return _.get(this.$store.state, [ 'topic', 'items', '0' ])
       }
+    },
+    topicType () {
+      return _.get(this.topic, [ 'type' ])
     },
     mediaData () {
       return {
@@ -400,15 +371,20 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    const uuid = _.split(to.path, '/')[2]
-    if (from.matched.length !== 0 && uuid !== TOPIC_PROTEST_ID) {
+    if (from.matched.length !== 0) {
       fetchTopicByUuid(store, to.params.topicId)
-    } else {
-      fetchTimeline(store, TOPIC_PROTEST_ID)
+      .then(() => {
+        const topicType = _.get(_.find(_.get(store.state.topics, [ 'items' ]), { 'id': to.params.topicId }), [ 'type' ]) ||
+          _.get(store.state.topic, [ 'items', '0', 'type' ])
+        if (topicType === 'timeline') {
+          return fetchTimeline(store, to.params.topicId)
+        }
+      })
     }
     next()
   },
   beforeRouteUpdate (to, from, next) {
+    let topicType
     const uuid = _.split(to.path, '/')[2]
     const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
     this.page = PAGE
@@ -419,6 +395,17 @@ export default {
       .then(() => {
         if (!topic) {
           fetchTopicByUuid(this.$store, uuid)
+          .then(() => {
+            topicType = _.get(this.$store.state.topic, [ 'items', '0', 'type' ])
+            if (topicType === 'timeline') {
+              fetchTimeline(this.$store, uuid)
+            }
+          })
+        } else {
+          topicType = _.get(topic, [ 'type' ])
+          if (topicType === 'timeline') {
+            fetchTimeline(this.$store, uuid)
+          }
         }
       }).then(() => next())
     })
@@ -432,9 +419,7 @@ export default {
   },
   beforeMount () {
     const uuid = _.split(this.$route.path, '/')[2]
-    if (uuid === TOPIC_PROTEST_ID) {
-      fetchCommonData(this.$store)
-    } else {
+    if (this.topicType !== 'timeline') {
       fetchArticlesByUuid(this.$store, uuid, false)
       fetchTopicImages(this.$store, uuid)
     }
