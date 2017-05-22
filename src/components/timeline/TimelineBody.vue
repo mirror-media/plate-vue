@@ -1,7 +1,7 @@
 <template>
   <section class="timelineBody">
     <article>
-      <div v-html="getBrief(timeline.topic, 5000, 'p')" class="timelineBody__brief"></div>
+      <div v-html="getBrief()" class="timelineBody__brief" />
       <timeline-menu :highlightNodes="highlightNodes" />
     </article>
   </section>
@@ -9,8 +9,8 @@
 
 <script>
 
+import _ from 'lodash'
 import TimelineMenu from '../../components/timeline/TimelineMenu.vue'
-import { getBrief } from '../../utils/comm'
 
 export default {
   components: {
@@ -18,16 +18,18 @@ export default {
   },
   props: [ 'timeline', 'highlightNodes' ],
   methods: {
-    getBrief
+    getBrief () {
+      return _.get(this.timeline, [ 'topic', 'brief', 'html' ])
+    }
   }
 }
 
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped>
 
 article
-  padding 1em 0
+  padding-top 1em
   text-align justify
   > p
     padding 0 1em
@@ -35,16 +37,18 @@ article
 .timelineBody
   z-index 10
   padding-top 100vh
-  background-color #fff
+  background-color transparent
   &__brief
-    margin 30px 30px
-    color black
+    width calc(100% - 2em)
+    margin 0 auto
+    color #000
+    line-height 1.5
     letter-spacing 2px
-    line-height 26px
-    font-size 16px
-    p:nth-child(1), p:nth-child(2)
+    > p:nth-of-type(1):nth-of-type(2)
       color grey
       margin 0
+  > article
+    background-color #fff
 
 @media (min-width 600px)
   article
@@ -54,8 +58,8 @@ article
       margin 1em auto
   .timelineBody
     &__brief
-      margin 30px 20%
-      p:nth-child(1), p:nth-child(2)
+      width 70%
+      p:nth-child(1)
         color grey
         margin 0
 

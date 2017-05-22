@@ -20,13 +20,13 @@
             <img src="/public/icon/logo_black@3x.png"/>
           </a>
           <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
-          <timeline-headline :timeline="timeline" :viewport="viewport"/>
+          <timeline-headline :timeline="timeline" :viewport="viewport" :viewportTarget="viewportTarget" />
           <timeline-body :timeline="timeline" :highlightNodes="highlightNodes" :viewport="viewport" />
-          <div class="project-list-wrapper">
+          <div class="topicTimeline__projects">
             <h1>更多專題文章</h1>
             <ProjectList :projects="projects" :viewport="viewport" />
           </div>
-          <div class="article_fb_comment" style="margin: 1.5em 1.5em; @media (min-width: 900px) { margin: 1.5em 20vw; }" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+          <div class="topicTimeline__fbComment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
         </template>
 
         <template v-else>
@@ -58,7 +58,7 @@
 <script>
 
 import { DFP_ID, DFP_UNITS } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { getValue, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
@@ -77,7 +77,6 @@ import Share from '../components/Share.vue'
 import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import moment from 'moment'
 import store from '../store'
 
 const MAXRESULT = 12
@@ -221,12 +220,7 @@ export default {
       return _.get(this.topic, [ 'mobileDfp' ], null)
     },
     highlightNodes () {
-      return _.sortBy(_.get(this.$store.state, [ 'timeline', 'nodes' ]), [ function (o) {
-        if (true) { // 判斷升降序
-          return -moment(new Date(o.nodeDate))
-        }
-        return moment(new Date(o.nodeDate))
-      } ])
+      return _.get(this.$store.state, [ 'timeline', 'nodes' ])
     },
     isTimeline () {
       return this.$route.params.topicId === TOPIC_PROTEST_ID
@@ -285,6 +279,15 @@ export default {
     },
     uuid () {
       return this.$route.params.topicId
+    },
+    viewportTarget () {
+      if (this.viewport < 600) {
+        return 'mobile'
+      } else if (this.viewport > 600 && this.viewport < 1200) {
+        return 'tablet'
+      } else {
+        return 'desktop'
+      }
     }
   },
   methods: {
@@ -460,10 +463,9 @@ export default {
     }
   },
   metaInfo () {
-    const description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
     const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : '/public/notImage.png'
     const ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
-    const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? _.get(this.topic, [ 'ogDescription' ]) : description
+    const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? _.get(this.topic, [ 'ogDescription' ]) : SITE_DESCRIPTION
     const title = ogTitle + ` - ${SITE_TITLE}`
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
 
@@ -523,33 +525,40 @@ export default {
     h1
       margin 0
 
-.topicTimeline__logo
-  position fixed
-  z-index 999
-  top 5px
-  left 5px
-  width 40px
-  height 40px
-  > img
+.topicTimeline
+  &__logo
+    position fixed
+    z-index 999
+    top 5px
+    left 5px
+    width 40px
+    height 40px
+    > img
+      width 100%
+  &__projects
     width 100%
-
-.project-list-wrapper
-  border-top 30px solid #4d4d4d
-  border-bottom 30px solid #4d4d4d
-  border-right 1.5em solid #4d4d4d
-  border-left 1.5em solid #4d4d4d
-  h1
-    text-align center
+    padding 1em
     background-color #4d4d4d
-    color white
-    margin 0
-    padding-bottom 10px
-    font-weight 200
+    > h1
+      margin 0
+      color #fff
+      text-align center
+      font-weight 200
+  &__fbComment
+    width 100%
+    padding 0 5%
+    background-color #fff
 
+.project-container
+  margin 1em 0
+  background-color #fff
+  .proj_title
+    display none
 
-  .project-container
-    .proj_title
-      display none
+@media (min-width: 600px)
+  .topicTimeline
+    &__projects
+      padding 5% 10%
 
 @media (min-width: 900px)
   .topic
@@ -561,24 +570,5 @@ export default {
       color #fff
       background-size contain
       background-position center center
-  .project-list-wrapper
-    border-top 50px solid #4d4d4d
-    border-bottom 100px solid #4d4d4d
-    border-right 20vw solid #4d4d4d
-    border-left 20vw solid #4d4d4d
-    h1
-      text-align center
-      background-color #4d4d4d
-      color white
-      margin 0
-      padding-bottom 10px
-      font-weight 200
-
-
-    .project-container
-      .proj_title
-        display none
-
-
 
 </style>
