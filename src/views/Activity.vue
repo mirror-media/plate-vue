@@ -275,11 +275,13 @@ export default {
 
     window.addEventListener('touchstart', (e) => {
       const _currTouchClientY = e.pageY
+      const _activityNode = this.doc.querySelector('.activityNode')
       const _targ = e.target
       const _targClass = _targ.getAttribute('class') || ''
       const _ifActivityContent = _targClass.indexOf('activityNodeContent__content') > -1
       window.touchStartP = this.windowHeight > this.viewport ? _ifActivityContent : false
       window.touchClientY = _currTouchClientY
+      _activityNode.setAttribute('style', `overfow: hidden; height: calc(100vh - ${this.topOffset}px);`)
       if (this.scrollingFlag === true) {
         const _currY = this.currentYPosition()
         const _lastTopY = window.lastTopY || this.currentYPosition()
@@ -292,7 +294,10 @@ export default {
 
     window.addEventListener('touchend', (e) => {
       this.disableScroll()
+      window.scrollTo(0, 0)
+      const _activityNode = this.doc.querySelector('.activityNode')
       const _targ = e.target
+      _activityNode.removeAttribute('style')
       const _targClass = _targ.getAttribute('class') || ''
       const _ifActivityContent = _targClass.indexOf('activityNodeContent__content') > -1
       if (_ifActivityContent === true && window.touchStartP === true) {
@@ -302,11 +307,10 @@ export default {
         this.disableScroll()
         this.smoothScroll(null, this.topOffset)
         return
-      } else {
-        window.scrollTo(0, 0)
       }
       const _currTouchClientY = e.pageY
       const _lastTouchClientY = window.touchClientY || _currTouchClientY
+
       if (this.scrollingFlag !== true && _currTouchClientY > _lastTouchClientY) {
         this.scrollingFlag = true
         this.changeCurrentIndex(this.currentIndex - 1)
