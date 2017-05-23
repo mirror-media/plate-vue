@@ -45,10 +45,11 @@ export default {
       if (this.viewport > 899) {
         return `width: ${(this.nodes.length * 100)}vw;`
       } else if (this.windowHeight < this.viewport) {
-        // return `height: calc((100vh - 60px) * ${this.nodeAmount} + 30px); `
-        return `top: ${this.targNodeTopY}px;`
+        return `height: calc((100vh - 60px) * ${this.nodeAmount} + 30px); `
+        // return `top: ${this.targNodeTopY}px;`
       } else {
-        return `top: ${this.targNodeTopY}px;`
+        // return `top: ${this.targNodeTopY}px;`
+        return ''
       }
     }
   },
@@ -96,7 +97,9 @@ export default {
         this.nodeSliderStyle = ''
       } else {
         if (this.windowHeight < this.viewport) {
-          this.nodeSliderStyle = `height: calc(${this.windowHeight}px - 50px);`
+          // this.nodeSliderStyle = `height: calc(${this.windowHeight}px - 50px);`
+          this.nodeSliderStyle = `height: ${(this.windowHeight)}px;`
+          // this.nodeSliderStyle = `height: calc(${this.windowHeight}px - 30px);`
         } else {
           this.nodeSliderStyle = ''
         }
@@ -130,7 +133,7 @@ export default {
     // height 100%
     // overflow scroll
     position relative
-    transition top 1s ease   
+    // transition top 1s ease   
     display flex
     flex-direction  column
   &__node
