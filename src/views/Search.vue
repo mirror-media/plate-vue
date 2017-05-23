@@ -21,7 +21,7 @@
 <script>
 
 import _ from 'lodash'
-import { SITE_TITLE } from '../constants'
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { unLockJS } from '../utils/comm'
 import ArticleList from '../components/ArticleList.vue'
 import Footer from '../components/Footer.vue'
@@ -113,10 +113,27 @@ export default {
     }
   },
   metaInfo () {
-    let title = SITE_TITLE
-    title = (this.title) ? this.title + ' - ' + title : title
+    const title = (this.title) ? `${this.title} - ${SITE_TITLE}` : SITE_TITLE
+    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
     return {
-      title
+      title,
+      meta: [
+        { name: 'keywords', content: SITE_KEYWORDS },
+        { name: 'description', content: SITE_DESCRIPTION },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: SITE_DESCRIPTION },
+        { name: 'twitter:image', content: SITE_OGIMAGE },
+        { property: 'fb:app_id', content: FB_APP_ID },
+        { property: 'fb:pages', content: FB_PAGE_ID },
+        { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
+        { property: 'og:locale', content: 'zh_TW' },
+        { property: 'og:type', content: 'article' },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: SITE_DESCRIPTION },
+        { property: 'og:url', content: ogUrl },
+        { property: 'og:image', content: SITE_OGIMAGE }
+      ]
     }
   },
   mounted () {

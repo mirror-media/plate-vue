@@ -47,7 +47,7 @@
 
 <script>
 
-import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../constants'
+import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currEnv, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
@@ -215,26 +215,24 @@ export default {
   },
   metaInfo () {
     const title = SITE_TITLE
-    const description = SITE_DESCRIPTION
-
     return {
       title,
       meta: [
-          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
-          { name: 'description', content: description },
+          { name: 'keywords', content: SITE_KEYWORDS },
+          { name: 'description', content: SITE_DESCRIPTION },
           { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: title },
-          { name: 'twitter:description', content: description },
-          { name: 'twitter:image', content: '/public/notImage.png' },
+          { name: 'twitter:title', content: SITE_TITLE },
+          { name: 'twitter:description', content: SITE_DESCRIPTION },
+          { name: 'twitter:image', content: SITE_OGIMAGE },
           { property: 'fb:app_id', content: FB_APP_ID },
           { property: 'fb:pages', content: FB_PAGE_ID },
           { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: title },
-          { property: 'og:description', content: description },
+          { property: 'og:title', content: SITE_TITLE },
+          { property: 'og:description', content: SITE_DESCRIPTION },
           { property: 'og:url', content: SITE_URL },
-          { property: 'og:image', content: '/public/notImage.png' }
+          { property: 'og:image', content: SITE_OGIMAGE }
       ]
     }
   },

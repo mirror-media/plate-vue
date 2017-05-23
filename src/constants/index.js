@@ -374,7 +374,9 @@ export const TOPIC_WATCH_ID = '586cd15c3c1f950d00ce2e78'
 
 export const SITE_DESCRIPTION = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
 
-export const SITE_KEYWORDS = '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說'
+export const SITE_KEYWORDS = '鏡週刊,mirror media,新聞人物,娛樂焦點,美食旅遊,瑪法達'
+
+export const SITE_OGIMAGE = 'https://www.mirrormedia.mg/public/notImage.png'
 
 export const SITE_TITLE = '鏡週刊 Mirror Media'
 

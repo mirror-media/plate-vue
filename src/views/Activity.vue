@@ -26,7 +26,7 @@
 
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants/index'
 import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-import { disableScroll, enableScroll } from '../utils/comm.js'
+import { disableScroll, enableScroll, getTruncatedVal } from '../utils/comm.js'
 import _ from 'lodash'
 import ActivityDesktopNodesNav from '../components/activity/ActivityDesktopNodesNav.vue'
 import ActivityNode from '../components/activity/ActivityNode.vue'
@@ -187,6 +187,7 @@ export default {
     enableScroll,
     disableScroll,
     elmYPosition,
+    getTruncatedVal,
     goToNext () {
       const goTo = this.currentIndex + 1
       if (goTo < this.nodesAmount) {
@@ -348,11 +349,11 @@ export default {
   },
   metaInfo () {
     const url = `${SITE_URL}${this.$route.path}`
-    const title = this.title + ` - ${SITE_TITLE}`
+    const title = this.getTruncatedVal(this.title, 11) + ` - ${SITE_TITLE}`
     const ogImage = _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
     const image = ogImage || '/public/notImage.png'
     const ogDescription = _.get(this.$store.state, [ 'timeline', 'topic', 'ogDescription' ], null)
-    const description = ogDescription || SITE_DESCRIPTION
+    const description = this.getTruncatedVal(ogDescription, 197) || SITE_DESCRIPTION
     return {
       title,
       meta: [

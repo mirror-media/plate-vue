@@ -58,8 +58,8 @@
 <script>
 
 import { DFP_ID, DFP_UNITS } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
-import { getValue, unLockJS } from '../utils/comm'
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { getTruncatedVal, getValue, unLockJS } from '../utils/comm'
 import { currentYPosition } from 'kc-scroll'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
@@ -296,6 +296,7 @@ export default {
       unLockJS()
     },
     currentYPosition,
+    getTruncatedVal,
     getValue,
     insertCustomizedMarkup () {
       const custCss = document.createElement('style')
@@ -484,18 +485,18 @@ export default {
     }
   },
   metaInfo () {
-    const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : '/public/notImage.png'
+    const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : SITE_OGIMAGE
     const ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
-    const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? _.get(this.topic, [ 'ogDescription' ]) : SITE_DESCRIPTION
+    const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.topic, [ 'ogDescription' ]), 197) : SITE_DESCRIPTION
     const title = ogTitle + ` - ${SITE_TITLE}`
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
 
-    // if (!ogTitle && process.env.VUE_ENV === 'server') {
-    //   const e = new Error()
-    //   e.massage = 'Page Not Found'
-    //   e.code = '404'
-    //   throw e
-    // }
+    if (!ogTitle && process.env.VUE_ENV === 'server') {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    }
 
     return {
       title,
