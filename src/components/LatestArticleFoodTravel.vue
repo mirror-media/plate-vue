@@ -161,7 +161,8 @@
                         height 100%
                         margin 0
                         background-repeat no-repeat
-                        background-size 100% 100%  
+                        background-size cover
+                        background-position center   
 
     .latestArticle-foodtravel-container
         .header-rect
@@ -215,11 +216,12 @@
                         height 100%
                         margin 0
                         background-repeat no-repeat
-                        background-size 100% 100%  
+                        background-size cover
+                        background-position center  
 
 
-// Tablet
-@media (min-width: 600px)
+// Tablet, or landscape of mobile
+@media (min-width: 600px), (min-aspect-ratio: 13/9)
     .latestArticle-foodtravel
         align-items center
         .topicsArticle-foodtravel-container

@@ -11,7 +11,7 @@
         <router-link class="headerFoodTravel__menu--item desktop-only" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title" :id="'header-' + item.name"></router-link>
       </div>
       <div class="headerFoodTravel__social-and-search">
-        <a :href="socialLink.FACEBOOK" target="_blank" id="header-facebook">
+        <a :href="socialLink.FACEBOOK_FOODTRAVEL" target="_blank" id="header-facebook">
           <img class="headerFoodTravel__link--icon desktop-only" src="/public/icon/facebook@2x.png">
         </a>
         <a :href="socialLink.LINE" target="_blank" id="header-line">
