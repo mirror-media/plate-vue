@@ -80,7 +80,7 @@ export default {
   flex-direction column
   width 100%
   height 100%
-  padding .5em 0 25px 15px
+  padding .5em 0 .5em 15px
   border-left 1px solid #666
   h2, h3
     margin 5px 0
@@ -105,10 +105,9 @@ export default {
     font-size 14px
     line-height 16px
   p
-    // flex-grow 1
     height 105px
     overflow-y scroll
-    margin 5px 0
+    margin 1em 0
     line-height 24px
     font-size 14px
   &__sliderNav
@@ -131,6 +130,7 @@ export default {
     justify-content center
     width 100%
     height 30px
+    margin-top 1em
     box-shadow 0.6px 0.8px 2.5px 0.1px #000
     border-radius 15px
     > img
