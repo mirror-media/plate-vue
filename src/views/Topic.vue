@@ -60,6 +60,7 @@
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { getValue, unLockJS } from '../utils/comm'
+import { currentYPosition } from 'kc-scroll'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
@@ -294,6 +295,7 @@ export default {
     checkIfLockJS () {
       unLockJS()
     },
+    currentYPosition,
     getValue,
     insertCustomizedMarkup () {
       const custCss = document.createElement('style')
@@ -441,6 +443,25 @@ export default {
 
     window.ga('set', 'contentGroup1', '')
     window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+
+    if (this.topicType === 'timeline') {
+      window.addEventListener('scroll', (e) => {
+        const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+        const timelineBodyBriefHeight = document.querySelector('.timelineBody__brief').offsetHeight
+        const activityBoxHeight = document.querySelector('.timelineMenu-activityBox').offsetHeight
+        const cutHeight = (windowHeight / 2) + timelineBodyBriefHeight + 20
+
+        if (this.currentYPosition() - cutHeight > 0) {
+          const timelineMenuStartTop = this.currentYPosition() - cutHeight
+          const onCenterIndex = Math.floor(timelineMenuStartTop / activityBoxHeight)
+          const activityBoxs = document.querySelectorAll('.timelineMenu-activityBox')
+          for (let i = 0; i < activityBoxs.length; i += 1) {
+            activityBoxs[i].classList.remove('onCenter')
+          }
+          activityBoxs[onCenterIndex].classList.add('onCenter')
+        }
+      })
+    }
   },
   watch: {
     uuid: function () {

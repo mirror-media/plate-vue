@@ -69,7 +69,7 @@ export default {
 
 .timelineMenu
   position relative
-  padding 1em 0
+  padding 20px 0
   background-color #f0f0f0
   h2
     position relative

@@ -31,8 +31,6 @@ export default {
 article
   padding-top 1em
   text-align justify
-  > p
-    padding 0 1em
 
 .timelineBody
   z-index 10
@@ -41,12 +39,10 @@ article
   &__brief
     width calc(100% - 2em)
     margin 0 auto
+    padding-bottom 1em
     color #000
     line-height 1.5
     letter-spacing 2px
-    > p:nth-of-type(1):nth-of-type(2)
-      color grey
-      margin 0
   > article
     background-color #fff
 
