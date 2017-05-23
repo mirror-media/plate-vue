@@ -150,7 +150,7 @@ export default {
     },
     videoAmount () {
       return _.get(_.filter(_.slice(_.get(this.node, [ 'content', 'apiData' ]), 1, _.get(this.node, [ 'content', 'apiData', 'length' ])), function (o) {
-        return o.type !== 'video'
+        return o.type === 'video'
       }), [ 'length' ])
     },
     viewportTarget () {
@@ -279,6 +279,8 @@ video
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
+  &__landscapeNav
+    display none
   &__content
     width 100%
     height calc(100% - (100vw / 16 * 9))
@@ -308,6 +310,7 @@ video
       &.hidden
         display none
     &__landscapeNav
+      display block
       position absolute
       z-index 490
       left 0

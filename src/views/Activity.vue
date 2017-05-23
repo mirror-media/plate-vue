@@ -24,7 +24,7 @@
 
 <script>
 
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE } from '../constants/index'
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants/index'
 import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
 import { disableScroll, enableScroll } from '../utils/comm.js'
 import _ from 'lodash'
@@ -347,7 +347,7 @@ export default {
     }
   },
   metaInfo () {
-    const url = this.$route.path
+    const url = `${SITE_URL}${this.$route.path}`
     const title = this.title + ` - ${SITE_TITLE}`
     const ogImage = _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
     const image = ogImage || '/public/notImage.png'
