@@ -88,7 +88,8 @@ export default {
   computed: {
     ifNoSwiping () {
       return {
-        'swiper-no-swiping': (this.windowHeight < this.viewport || this.viewport < 900)
+        // 'swiper-no-swiping': (this.windowHeight < this.viewport || this.viewport < 900)
+        'swiper-no-swiping': false
       }
     },
     isFirstVideo () {
