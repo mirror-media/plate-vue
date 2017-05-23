@@ -75,10 +75,10 @@
 </template>
 <script>
 
-import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
+import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, unLockJS } from '../utils/comm'
+import { currEnv, getTruncatedVal, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
@@ -564,6 +564,7 @@ export default {
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
+    getTruncatedVal,
     handleScroll () {
       window.onscroll = (e) => {
         if (document.querySelector('#articleList')) {
@@ -719,8 +720,6 @@ export default {
   },
   metaInfo () {
     const type = this.type
-
-    const description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
     let ogImage
     let ogTitle
@@ -730,20 +729,21 @@ export default {
       case SECTION:
         sectionName = this.sectionName
         const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
-        ogImage = imageURL || '/public/notImage.png'
-        ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? _.get(this.section, [ 'ogTitle' ]) : _.get(this.section, [ 'title' ], this.title)
-        ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? _.get(this.section, [ 'ogDescription' ]) : _.get(this.section, [ 'description' ])
+        ogImage = imageURL || SITE_OGIMAGE
+        ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogTitle' ]), 11) : this.getTruncatedVal(_.get(this.section, [ 'title' ], this.title), 11)
+        ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogDescription' ]), 197) : _.get(this.section, [ 'description' ])
+        ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
         break
       case CATEGORY:
         sectionName = this.sectionName
-        ogTitle = this.title
-        ogImage = '/public/notImage.png'
-        ogDescription = description
+        ogTitle = this.getTruncatedVal(this.title, 11)
+        ogImage = SITE_OGIMAGE
+        ogDescription = SITE_DESCRIPTION
         break
       default:
-        ogTitle = this.title || ''
-        ogImage = '/public/notImage.png'
-        ogDescription = description
+        ogTitle = this.getTruncatedVal(this.title, 11) || ''
+        ogImage = SITE_OGIMAGE
+        ogDescription = SITE_DESCRIPTION
     }
 
     if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
@@ -753,7 +753,7 @@ export default {
       throw e
     }
 
-    const title = ogTitle + ` - ${SITE_TITLE}`
+    const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
     return {
       title: title,
       meta: [

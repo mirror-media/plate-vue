@@ -80,7 +80,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_TITLE, SITE_URL } from '../constants'
   import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
@@ -474,30 +474,30 @@
       const categorieName = _.get(categories, [ 0, 'name' ], '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 200)
+      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
 
       return {
-        title: title + ` － ${SITE_TITLE}`,
+        title: truncate(title, 21) + ` － 鏡週刊`,
         meta: [
-          { name: 'keywords', content: SITE_KEYWORDS + ',' + pureTags.toString() },
+          { name: 'keywords', content: _.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString() },
           { name: 'description', content: pureBrief },
           { name: 'section-name', content: sectionName },
           { name: 'category-name', content: categorieName },
           { name: 'topic-id', content: topicId },
           { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: (ogTitle.length > 0) ? ogTitle + ' － 鏡週刊 Mirror Media' : title + ' － 鏡週刊 Mirror Media' },
-          { name: 'twitter:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
+          { name: 'twitter:title', content: (ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊' },
+          { name: 'twitter:description', content: (ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief },
           { name: 'twitter:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
           { property: 'fb:app_id', content: FB_APP_ID },
           { property: 'fb:pages', content: FB_PAGE_ID },
           { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: (ogTitle.length > 0) ? ogTitle + ' － 鏡週刊 Mirror Media' : title + ' － 鏡週刊 Mirror Media' },
-          { property: 'og:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
+          { property: 'og:title', content: (ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊' },
+          { property: 'og:description', content: (ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief },
           { property: 'og:url', content: SITE_URL + '/story/' + slug + '/' },
           { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') }
         ]
