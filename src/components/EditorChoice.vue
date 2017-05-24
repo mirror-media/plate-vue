@@ -6,12 +6,12 @@
           <template>
             <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'">
               <div :id="'slide-' + index" class="editorChoice-image"
-              :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }">
+              :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
             </router-link>
             <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'">
               <div :id="'slide-' + index" class="editorChoice-image"
-              :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }">
+              :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
             </a>
           </template>
@@ -39,11 +39,11 @@
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice-list-post">
         <template>
           <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style !== 'projects'">
-            <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure>
+            <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="item.title"></figure>
             <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </router-link>
           <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style === 'projects'">
-            <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure>
+            <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="item.title"></figure>
             <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </a>
         </template>

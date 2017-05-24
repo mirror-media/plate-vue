@@ -2,7 +2,7 @@
   <div class="liveStream" v-show="showLiveStream">
     <div class="liveStream__curtain" v-show="!hasZoomIn" @click="toggleZoomIn()"></div>
     <div class="liveStream-container" :class="{ zoomIn: hasZoomIn }" v-html="mediaDataEmbed" @click="toggleZoomIn()"></div>
-    <img class="liveStream__close" src="/public/icon/close-btn.png" v-show="!hasZoomIn" @click="closeLiveStream()">
+    <img class="liveStream__close" src="/public/icon/close-btn.png" alt="關閉" v-show="!hasZoomIn" @click="closeLiveStream()">
     <span class="liveStream__prompt" v-show="!hasZoomIn">LIVE</span>
   </div>
 </template>

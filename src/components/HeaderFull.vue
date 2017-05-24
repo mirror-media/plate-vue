@@ -2,51 +2,51 @@
   <header>
     <nav class="headerFull" :style="{opacity: opacity}" v-show="defaultNav">
       <div class="headerFull__menu">
-        <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png"></a>
+        <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png" alt="開啟側邊欄"></a>
       </div>
       <div class="headerFull__logo">
         <router-link :to=" '/section/' + sectionName "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
         <router-link to="/">
-          <img class="headerFull__link--icon desktop-only" src="/public/icon/logo_black@3x.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media">
         </router-link>
         <a :href="socialLink.FACEBOOK" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="/public/icon/facebook_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/facebook_white.png" alt="Facebook">
         </a>
         <a :href="socialLink.LINE" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="/public/icon/line_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/line_white.png" alt="Line">
         </a>
         <a :href="socialLink.WEIBO" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="/public/icon/weibo_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/weibo_white.png" alt="微博">
         </a>
         <a @click="openSearchBar()">
-          <img class="headerFull__link--icon" src="/public/icon/search_white.png">
+          <img class="headerFull__link--icon" src="/public/icon/search_white.png" alt="開啟搜尋列">
         </a>
       </div>
     </nav>
     <nav class="headerFull headerFull--black" :style="{opacity: 1-opacity}" v-show="blackNav">
       <div class="headerFull__menu">
-        <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png"></a>
+        <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png" alt="開啟側邊欄"></a>
       </div>
       <div class="headerFull__logo">
         <router-link :to=" '/section/' + sectionName "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
         <router-link to="/">
-          <img class="headerFull__link--icon desktop-only" src="/public/icon/logo_black@3x.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media">
         </router-link>
         <a :href="socialLink.FACEBOOK" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="/public/icon/facebook_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/facebook_white.png" alt="Facebook">
         </a>
         <a :href="socialLink.LINE" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="/public/icon/line_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/line_white.png" alt="Line">
         </a>
         <a :href="socialLink.WEIBO" target="_blank">
-          <img class="headerFull__link--icon desktop-only" src="/public/icon/weibo_white.png">
+          <img class="headerFull__link--icon desktop-only" src="/public/icon/weibo_white.png" alt="微博">
         </a>
         <a @click="openSearchBar()">
-          <img class="headerFull__link--icon" src="/public/icon/search_white.png">
+          <img class="headerFull__link--icon" src="/public/icon/search_white.png" alt="開啟搜尋列">
         </a>
       </div>
     </nav>
@@ -54,7 +54,7 @@
       <div class="sidebarFull-container" :class="{ open: openSide }">
         <div class="sidebarFull__close">
           <a class="sidebarFull__close--icon" @click="closeSideBar()">
-            <img src="~public/icon/close.png">
+            <img src="~public/icon/close.png" alt="關閉側邊欄">
           </a>
           <a class="sidebarFull__close--text" @click="closeSideBar()">CLOSE THE MENU</a>
         </div>
@@ -70,7 +70,7 @@
       <div class="searchFull-container">
         <input type="search" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()">
         <a @click="closeSearchBar()">
-          <img src="/public/icon/close.png">
+          <img src="/public/icon/close.png" alt="關閉搜尋列">
         </a>
       </div>
       <div class="searchFull-curtain" @click="closeSearchBar()"></div>
@@ -81,6 +81,7 @@
 
 import { SECTION_WATCH_ID, SOCIAL_LINK, TOPIC_WATCH_ID } from '../constants/index'
 import { currentYPosition } from 'kc-scroll'
+import { getValue } from '../utils/comm'
 import _ from 'lodash'
 
 export default {
@@ -115,6 +116,7 @@ export default {
         return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
       }
     },
+    getValue,
     openSearchBar () {
       this.openSearch = true
     },
