@@ -203,7 +203,7 @@ export default {
         case 'header-two':
           return `<h2>${item.content.toString()}</h2>`
         case 'image':
-          return `<div class=\"innerImg ${_.get(item.content, [ 0, 'alignment' ], '')}\"><img src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div></div>`
+          return `<div class=\"innerImg ${_.get(item.content, [ 0, 'alignment' ], '')}\"><img alt="${_.get(item.content, [ 0, 'description' ], '')}" src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div></div>`
         case 'infobox':
           return `<div class="info-box-container ${_.get(item, [ 'alignment' ], '')}">
                     <span class="info-box-icon"></span>
@@ -231,7 +231,7 @@ export default {
                   </blockquote>`
         case 'slideshow':
           return `<div class=\"slideshowImg\">
-                    <img src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
+                    <img alt="${_.get(item.content, [ 0, 'description' ], '')}" src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
                          srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
                                        ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
                                        ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\" />

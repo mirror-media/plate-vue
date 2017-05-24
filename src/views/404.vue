@@ -1,7 +1,7 @@
 <template>
   <div class="notFound-view">
     <div class="notFound__img">
-      <img src="/public/404.jpg">
+      <img src="/public/404.jpg" alt="404 Not Found">
     </div>
   </div>
 </template>

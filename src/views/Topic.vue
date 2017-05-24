@@ -17,7 +17,7 @@
 
         <template v-if="isTimeline">
           <a href="/" class="topicTimeline__logo">
-            <img src="/public/icon/logo_black@3x.png"/>
+            <img src="/public/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media" />
           </a>
           <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
           <timeline-headline :timeline="timeline" :viewport="viewport" :viewportTarget="viewportTarget" />

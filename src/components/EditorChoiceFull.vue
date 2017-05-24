@@ -4,12 +4,12 @@
     <div class="editorChoice-full-post-container">
       <template v-for="article in highlightArticle">
         <div class="editorChoice-full-post">
-          <router-link :to="getHref(article)" :id="'choice-' + article.id" class="editorChoice-full-post__img">
-            <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
+          <router-link :to="getHref(article)" :id="`choice-${article.id}-img`" class="editorChoice-full-post__img">
+            <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }" :title="getValue(article, [ 'title' ])"></figure>
           </router-link>
           <div class="editorChoice-full-post__content">
-            <router-link :to="getHref(article)" :id="'choice-' + article.id"><h2 v-text="article.title"></h2></router-link>
-            <router-link :to="getHref(article)" :id="'choice-' + article.id"><p v-html="getBrief(article, 100)"></p></router-link>
+            <h2><router-link :to="getHref(article)" :id="`choice-${article.id}-title`" v-text="article.title"></router-link></h2>
+            <p><router-link :to="getHref(article)" :id="`choice-${article.id}-brief`" v-html="getBrief(article, 100)"></router-link></p>
           </div>
           <div class="editorChoice-full-post__meta">
             <span class="editorChoice-full-post__meta--author" v-show="getAuthor(article, 'writers')" v-html="getAuthor(article, 'writers')"></span>
@@ -22,7 +22,7 @@
 </template>
 <script>
 
-import { getAuthor, getBrief, getHref, getImage, getTruncatedVal } from '../utils/comm'
+import { getAuthor, getBrief, getHref, getImage, getTruncatedVal, getValue } from '../utils/comm'
 import _ from 'lodash'
 import moment from 'moment'
 
@@ -37,6 +37,7 @@ export default {
     getHref,
     getImage,
     getTruncatedVal,
+    getValue,
     moment
   },
   computed: {

@@ -7,12 +7,12 @@
       <div><span><a id="footer-download" href="http://hyperurl.co/mmfooter" target="_blank">下載ＡＰＰ</a></span></div>
     </div>
     <div class="follow mobile-hide">
-      <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" target="_blank"><img src="/public/icon/line@2x.png" class="footer-icon line" /></a>
-      <a class="item" id="footer-weibo" :href="SOCIAL_LINK.WEIBO" target="_blank"><img src="/public/icon/weibo@2x.png" class="footer-icon weibo" /></a>
-      <a class="item" id="footer-fb" :href="SOCIAL_LINK.FACEBOOK" target="_blank"><img src="/public/icon/facebook@2x.png" class="footer-icon facebook" /></a>
-      <a class="item" id="footer-ig" :href="SOCIAL_LINK.INSTAGRAM" target="_blank"><img src="/public/icon/instagram@2x.png" class="footer-icon instagram" /></a>
-      <a class="item" id="footer-feed" :href="SOCIAL_LINK.FEED" target="_blank"><img src="/public/icon/feed@2x.png" class="footer-icon feed" /></a>
-      <a class="item" id="footer-email" :href="SOCIAL_LINK.EMAIL" target="_blank"><img src="/public/icon/mail@2x.png" class="footer-icon mail" /></a>
+      <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" target="_blank"><img src="/public/icon/line@2x.png" alt="Line" class="footer-icon line" /></a>
+      <a class="item" id="footer-weibo" :href="SOCIAL_LINK.WEIBO" target="_blank"><img src="/public/icon/weibo@2x.png" alt="微博" class="footer-icon weibo" /></a>
+      <a class="item" id="footer-fb" :href="SOCIAL_LINK.FACEBOOK" target="_blank"><img src="/public/icon/facebook@2x.png" alt="Facebook" class="footer-icon facebook" /></a>
+      <a class="item" id="footer-ig" :href="SOCIAL_LINK.INSTAGRAM" target="_blank"><img src="/public/icon/instagram@2x.png" alt="Instagram" class="footer-icon instagram" /></a>
+      <a class="item" id="footer-feed" :href="SOCIAL_LINK.FEED" target="_blank"><img src="/public/icon/feed@2x.png" alt="RSS" class="footer-icon feed" /></a>
+      <a class="item" id="footer-email" :href="SOCIAL_LINK.EMAIL" target="_blank"><img src="/public/icon/mail@2x.png" alt="聯絡我們" class="footer-icon mail" /></a>
     </div>
     <div class="mobile-follow mobile-only">
       <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a> - 

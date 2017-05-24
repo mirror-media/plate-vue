@@ -1,7 +1,7 @@
 <template>
   <div class="activity" :style="[ viewport > 899 ? { left: `-${activityStyle}vw` } : {} ]">
     <a href="/" class="activity__logo">
-      <img src="/public/icon/logo_black@3x.png"/>
+      <img src="/public/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media" />
     </a>
     <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" :sharePath="`/topic/59151f0ff2179c0d0089b7d5`" class="activity__share" />
     <section class="activity-currentNode">

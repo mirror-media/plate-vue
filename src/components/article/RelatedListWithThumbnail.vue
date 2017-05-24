@@ -5,7 +5,7 @@
       <div class="related_item" v-for="(o, i) in relatedList">
         <div>
           <a :href="getHref(o)" >
-            <div class="related_item_img"
+            <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
                   :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
             </div>
           </a>

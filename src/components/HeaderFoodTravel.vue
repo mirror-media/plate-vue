@@ -3,22 +3,22 @@
     <nav class="headerFoodTravel">
       <div class="headerFoodTravel__logo">
         <router-link to="/" id="header-home">
-          <img class="headerFoodTravel__link--icon" src="/public/icon/logo_black@3x.png">
+          <img class="headerFoodTravel__link--icon" src="/public/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media">
         </router-link>
       </div>
       <div class="headerFoodTravel__menu">
-        <a class="headerFoodTravel__menu--ham mobile-only" @click="openSideBar()"><img src="/public/icon/hamburger@2x.png"></a>
+        <a class="headerFoodTravel__menu--ham mobile-only" @click="openSideBar()"><img src="/public/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
         <router-link class="headerFoodTravel__menu--item desktop-only" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title" :id="'header-' + item.name"></router-link>
       </div>
       <div class="headerFoodTravel__social-and-search">
         <a :href="socialLink.FACEBOOK_FOODTRAVEL" target="_blank" id="header-facebook">
-          <img class="headerFoodTravel__link--icon desktop-only" src="/public/icon/facebook@2x.png">
+          <img class="headerFoodTravel__link--icon desktop-only" src="/public/icon/facebook@2x.png" alt="Facebook">
         </a>
         <a :href="socialLink.LINE" target="_blank" id="header-line">
-          <img class="headerFoodTravel__link--icon desktop-only" src="/public/icon/line@2x.png">
+          <img class="headerFoodTravel__link--icon desktop-only" src="/public/icon/line@2x.png" alt="Line">
         </a>
         <a @click="openSearchBar()">
-          <img class="headerFoodTravel__link--icon" src="/public/icon/search@2x.png">
+          <img class="headerFoodTravel__link--icon" src="/public/icon/search@2x.png" alt="開啟搜尋列">
         </a>
       </div>
     </nav>
@@ -26,7 +26,7 @@
       <div class="sidebarFull-container" :class="{ open: openSide }">
         <div class="sidebarFull__close">
           <a class="sidebarFull__close--icon" @click="closeSideBar()">
-            <img src="~public/icon/close.png">
+            <img src="~public/icon/close.png" alt="關閉側邊欄">
           </a>
           <a class="sidebarFull__close--text" @click="closeSideBar()"></a>
         </div>
@@ -40,7 +40,7 @@
       <div class="searchFull-container">
         <input type="text" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)">
         <a @click="closeSearchBar()">
-          <img src="/public/icon/close.png">
+          <img src="/public/icon/close.png" alt="關閉搜尋列">
         </a>
       </div>
       <div class="searchFull-curtain" @click="closeSearchBar()"></div>
