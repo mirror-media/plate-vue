@@ -103,7 +103,6 @@ export default {
       openNav: false,
       viewport: 0,
       scrollingFlag: false,
-      doc: {},
       // activityStyle: `left: -${(this.currentIndex * 100)}vw;`
       targNodeTopY: 0,
       windowHeight: 0
@@ -151,21 +150,6 @@ export default {
     },
     topicId () {
       return _.get(this.$store.state, [ 'activities', 'items', '0', 'topics', 'id' ])
-    },
-    topOffset () {
-      let _top = 80
-      const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
-      if (this.viewport > 899) {
-        _top = (currentNodeTop <= 0) ? 0 : currentNodeTop
-        // this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
-        // return
-      } else if (this.windowHeight < this.viewport) {
-        // _top = (currentNodeTop - 30 <= 0) ? 0 : currentNodeTop - 30
-        _top = (currentNodeTop - 30 <= 0) ? 0 : currentNodeTop
-      } else {
-        _top = (currentNodeTop - 80 <= 0) ? 0 : currentNodeTop - 80
-      }
-      return _top
     }
   },
   methods: {
@@ -177,11 +161,6 @@ export default {
       } else if (index < 0) {
         this.currentIndex = 0
       }
-    },
-    currNodeTopOffset (offset = 0) {
-      const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
-      const _top = currentNodeTop + offset
-      return _top
     },
     currentYPosition,
     enableScroll,
@@ -233,119 +212,16 @@ export default {
   },
   mounted () {
     this.updateViewport()
-    this.currentIndex = _.findIndex(this.nodes, this.featureNode)
-    // this.activityStyle = `left: -${(this.currentIndex * 100)}vw;`
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
-
     window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
-
-    // this.disableScroll()
-    this.doc = document
-    // window.addEventListener('wheel', (e) => {
-    //   const _derection = e.wheelDelta
-    //   const currTopY = this.currentYPosition()
-    //   if (this.viewport > 899) { return }
-    //   if (_derection > 0 && this.scrollingFlag !== true) {
-    //     this.scrollingFlag = true
-    //     this.changeCurrentIndex(this.currentIndex - 1)
-    //   } else if (_derection < 0 && this.scrollingFlag !== true) {
-    //     this.scrollingFlag = true
-    //     this.changeCurrentIndex(this.currentIndex + 1)
-    //   }
-    //   if (this.scrollingFlag === true) {
-    //     const targElel = this.elmYPosition(`#node-${this.currentIndex}`)
-    //     if (((_derection > 0 && currTopY <= (targElel - 80)) || (_derection < 0 && currTopY >= (targElel - 80))) && Math.abs(_derection) <= 3 && (Math.abs(_derection) < Math.abs(window.tmpWheel))) {
-    //       setTimeout(() => {
-    //         const lastTopY = window.lastTopY || this.currentYPosition()
-    //         this.scrollingFlag = !(lastTopY === currTopY && Math.abs(_derection) <= 3)
-    //       }, 250)
-    //     }
-    //   }
-    //   window.tmpWheel = _derection
-    // })
-
-    // window.addEventListener('scroll', (e) => {
-    //   const currTop = this.currentYPosition()
-    //   window.lastTopY = currTop
-    //   // if (this.scrollingFlag === true && this.targNodeTopY === currTop) {
-    //     // window.scrollTo(0, this.targNodeTopY)
-    //   // }
-    //   // window.scrollTo(0, 0)
-    // })
-
-    // window.addEventListener('touchstart', (e) => {
-    //   const _currTouchClientY = e.pageY
-    //   const _activityNode = this.doc.querySelector('.activityNode')
-    //   const _targ = e.target
-    //   const _targClass = _targ.getAttribute('class') || ''
-    //   const _ifActivityContent = _targClass.indexOf('activityNodeContent__content') > -1
-    //   window.touchStartP = this.windowHeight > this.viewport ? _ifActivityContent : false
-    //   window.touchClientY = _currTouchClientY
-    //   _activityNode.setAttribute('style', `overfow: hidden; height: calc(100vh - ${this.topOffset}px);`)
-    //   if (this.scrollingFlag === true) {
-    //     const _currY = this.currentYPosition()
-    //     const _lastTopY = window.lastTopY || this.currentYPosition()
-    //     this.scrollingFlag = !(_lastTopY === _currY)
-    //   }
-    //   if (this.scrollingFlag !== true) {
-    //     this.enableScroll()
-    //   }
-    // })
-
-    // window.addEventListener('touchend', (e) => {
-    //   this.disableScroll()
-    //   window.scrollTo(0, 0)
-    //   const _activityNode = this.doc.querySelector('.activityNode')
-    //   const _targ = e.target
-    //   _activityNode.removeAttribute('style')
-    //   const _targClass = _targ.getAttribute('class') || ''
-    //   const _ifActivityContent = _targClass.indexOf('activityNodeContent__content') > -1
-    //   if (_ifActivityContent === true && window.touchStartP === true) {
-    //     window.touchStartP = false
-    //     window.touchClientY = undefined
-    //     this.scrollingFlag = false
-    //     this.disableScroll()
-    //     this.smoothScroll(null, this.topOffset)
-    //     return
-    //   }
-    //   const _currTouchClientY = e.pageY
-    //   const _lastTouchClientY = window.touchClientY || _currTouchClientY
-
-    //   if (this.scrollingFlag !== true && _currTouchClientY > _lastTouchClientY) {
-    //     this.scrollingFlag = true
-    //     this.changeCurrentIndex(this.currentIndex - 1)
-    //   } else if (this.scrollingFlag !== true && _currTouchClientY < _lastTouchClientY) {
-    //     this.scrollingFlag = true
-    //     this.changeCurrentIndex(this.currentIndex + 1)
-    //   }
-    //   window.touchClientY = undefined
-    // })
   },
   watch: {
     defaultNodeIndex: function () {
       this.currentIndex = _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
     },
-    currentIndex: function () {
-      // let _offset = 0
-      // if (this.viewport < 900) {
-      //   _offset = this.windowHeight < this.viewport ? 30 : 0
-      // }
-
-      // console.log('this.topOffset', this.topOffset)
-      // this.smoothScroll(null, this.topOffset)
-
-      // const containerTop = (process.env.VUE_ENV === 'client') ? this.elmYPosition('.activityNode-nodeContainer') : 0
-      setTimeout(() => {
-        // const _currNodeTopOffset = this.currNodeTopOffset(_offset)
-        // const _targNodeTopY = isNaN(containerTop) !== true ? containerTop - _currNodeTopOffset : 0 - _currNodeTopOffset
-        // this.updateTargNodeTopY(_targNodeTopY)
-
-        // console.log('this.topOffset', this.topOffset)
-        this.smoothScroll(null, this.topOffset)
-      }, 10)
-    }
+    currentIndex: function () {}
   },
   metaInfo () {
     const url = `${SITE_URL}${this.$route.path}`
@@ -383,7 +259,7 @@ export default {
 <style lang="stylus" scoped>
 
 .activity
-  padding-top 50px
+  // padding-top 50px
   transition left 1s ease
   &-currentNode
     position relative
