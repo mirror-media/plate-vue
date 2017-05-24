@@ -33,7 +33,7 @@ import ActivityNode from '../components/activity/ActivityNode.vue'
 import ActivityNodeNav from '../components/activity/ActivityNodeNav.vue'
 import ActivityTimelineNav from '../components/activity/ActivityTimelineNav.vue'
 import Share from '../components/Share.vue'
-// import moment from 'moment'
+import sanitizeHtml from 'sanitize-html'
 
 const PAGE = 1
 
@@ -352,8 +352,9 @@ export default {
     const title = this.getTruncatedVal(this.title, 11) + ` - ${SITE_TITLE}`
     const ogImage = _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
     const image = ogImage || '/public/notImage.png'
-    const ogDescription = _.get(this.$store.state, [ 'timeline', 'topic', 'ogDescription' ], null)
-    const description = this.getTruncatedVal(ogDescription, 197) || SITE_DESCRIPTION
+    const ogDescription = sanitizeHtml(_.get(this.$store.state, [ 'activities', 'items', '0', 'brief', 'html' ]), { allowedTags: [] })
+    const description = ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
+
     return {
       title,
       meta: [
