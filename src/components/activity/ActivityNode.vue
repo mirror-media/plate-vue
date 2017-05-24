@@ -55,6 +55,9 @@ export default {
     }
   },
   methods: {
+    changeCurrentIndex (index) {
+      this.$emit('changeCurrIdx', index)
+    },
     elmYPosition,
     getActivityImage () {
       let viewportTarget
@@ -102,14 +105,19 @@ export default {
     window.addEventListener('load', () => {
       this.onePageScroll.init('.activityNode', {
         pageContainer: '.activityNodeSlider',
-        defaultInitialPage: this.currentIndex > -1 ? (this.currentIndex + 1) : 0
+        defaultInitialPage: this.currentIndex > -1 ? (this.currentIndex + 1) : 0,
+        afterMove: (index, next_el) => {
+          if (this.onePageScroll.initializedFlag === true) {
+            this.changeCurrentIndex(index)
+          }
+        }
       })
     })
   },
   watch: {
     currentIndex: function () {
       if (process.env.VUE_ENV === 'client' && this.onePageScroll.initializedFlag === true) {
-        this.onePageScroll.moveTo((this.currentIndex + 1))
+        this.onePageScroll.moveTo(this.currentIndex)
       }
     }
   }

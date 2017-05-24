@@ -14,7 +14,7 @@
       </nav>
       <activity-timelineNav :openNav="openNav" :timelineNodes="timelineNodes" :viewport="viewport" />
       <activity-nodeNav :node="prevNode" :position="`prev`" v-on:goToPrev="goToPrev" />
-      <activity-node :currentIndex="currentIndex" :nodes="nodes" :viewport="viewport" :targNodeTopY="targNodeTopY" />
+      <activity-node :currentIndex="currentIndex" :nodes="nodes" :viewport="viewport" :targNodeTopY="targNodeTopY" v-on:changeCurrIdx="changeCurrentIndex" />
       <activity-nodeNav :node="nextNode" :position="`next`" v-on:goToNext="goToNext" />
       <activity-desktopNodesNav :currentIndex="currentIndex" :nodes="nodes" :nodesAmount="nodesAmount"
         v-on:goToPrev="goToPrev" v-on:goToNext="goToNext" v-on:goToIndex="goToIndex"/>
