@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     nodesAmount () {
-      return this.highlightNodes.length
+      return _.get(this.highlightNodes, [ 'length' ])
     }
   },
   methods: {

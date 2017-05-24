@@ -385,9 +385,10 @@ export default {
         if (topicType === 'timeline') {
           return fetchTimeline(store, to.params.topicId)
         }
-      })
+      }).then(() => next())
+    } else {
+      next()
     }
-    next()
   },
   beforeRouteUpdate (to, from, next) {
     let topicType

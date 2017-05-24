@@ -28,7 +28,7 @@
         </div>        
       </div>
       <div class="split-line"></div>
-      <div class="content">
+      <article class="content">
         <div v-for="(p, index) in contArr">
           <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
@@ -45,7 +45,7 @@
           <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
         </div>
-      </div>
+      </article>
       <div class="article_main_tags" v-if="tags.length > 0">
         <i class="tags_icon"></i>
         <div class="tags" v-html="tags"></div>
