@@ -2,7 +2,7 @@
   <header id="header" class="header">
     <section class="header-logoSearch">
       <a @click="openSideBar()" id="menubar" class="mobile-only"><img src="/public/icon/hamburger@2x.png" alt="選單" class="header-icon"></a>
-      <router-link :to="'/'" id="header-logo"><img src="/public/logo.svg" class="header-logoSearch--logo" alt="鏡週刊 Mirror Media">鏡週刊 Mirror Media</router-link>
+      <router-link :to="'/'" id="header-logo"><img :src="logoImage" class="header-logoSearch--logo" alt="鏡週刊 Mirror Media"></router-link>
       <div class="header-logoSearch__search desktop-only">
         <input type="search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()" placeholder="">
         <button @click="search(searchVal)">
@@ -80,7 +80,7 @@ import _ from 'lodash'
 
 export default {
   name: 'app-header',
-  props: [ 'commonData' ],
+  props: [ 'commonData', 'eventLogo', 'viewport' ],
   data () {
     return {
       isChanged: false,
@@ -88,6 +88,48 @@ export default {
       openSearch: false,
       openSide: false,
       searchVal: _.get(this.$route, [ 'params', 'keyword' ])
+    }
+  },
+  computed: {
+    headerItem () {
+      const headerItem = {}
+      headerItem.section = []
+      headerItem.category = []
+      headerItem.topic = []
+      _.forEach(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
+        s.href = '/section/' + s.name
+        s.isFeatured ? headerItem.section.push(s) : ''
+        _.forEach(s.categories, (c) => {
+          c.href = '/category/' + c.name
+          c.section = s.name
+          c.isFeatured ? headerItem.category.push(c) : ''
+        })
+      })
+      _.forEach(_.get(this.commonData, [ 'topics', 'items' ]), (t) => {
+        t.href = '/topic/' + t.id
+        t.title = t.name
+        t.isFeatured && headerItem.topic.length < 7 ? headerItem.topic.push(t) : ''
+      })
+      return headerItem
+    },
+    headerAmount () {
+      return this.headerItem.section.length + this.headerItem.category.length
+    },
+    logoImage () {
+      const eventLogo = _.get(this.eventLogo, [ 'image', 'image', 'resizedTargets', this.viewportTarget, 'url' ], null)
+      return eventLogo || '/public/logo.svg'
+    },
+    socialLink () {
+      return SOCIAL_LINK
+    },
+    viewportTarget () {
+      if (this.viewport < 600) {
+        return 'mobile'
+      } else if (this.viewport > 600 && this.viewport < 1200) {
+        return 'tablet'
+      } else {
+        return 'desktop'
+      }
     }
   },
   methods: {
@@ -116,35 +158,6 @@ export default {
         this.$router.push('/search/' + this.searchVal)
         this.openSearch = false
       }
-    }
-  },
-  computed: {
-    headerItem () {
-      const headerItem = {}
-      headerItem.section = []
-      headerItem.category = []
-      headerItem.topic = []
-      _.forEach(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
-        s.href = '/section/' + s.name
-        s.isFeatured ? headerItem.section.push(s) : ''
-        _.forEach(s.categories, (c) => {
-          c.href = '/category/' + c.name
-          c.section = s.name
-          c.isFeatured ? headerItem.category.push(c) : ''
-        })
-      })
-      _.forEach(_.get(this.commonData, [ 'topics', 'items' ]), (t) => {
-        t.href = '/topic/' + t.id
-        t.title = t.name
-        t.isFeatured && headerItem.topic.length < 7 ? headerItem.topic.push(t) : ''
-      })
-      return headerItem
-    },
-    headerAmount () {
-      return this.headerItem.section.length + this.headerItem.category.length
-    },
-    socialLink () {
-      return SOCIAL_LINK
     }
   },
   mounted () {

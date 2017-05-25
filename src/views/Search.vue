@@ -1,7 +1,7 @@
 <template>
   <div class="search-view">
     <section style="width: 100%;">
-      <app-header :commonData= 'commonData' />
+      <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
     </section>
     <div class="search-title container">
       <span class="search-title__text" v-text="title"></span>
@@ -52,6 +52,18 @@ const fetchData = (store) => {
   })
 }
 
+const fetchEvent = (store, eventType = 'embedded') => {
+  return store.dispatch('FETCH_EVENT', {
+    params: {
+      'max_results': 1,
+      'where': {
+        isFeatured: true,
+        eventType: eventType
+      }
+    }
+  })
+}
+
 export default {
   name: 'search-view',
   components: {
@@ -83,12 +95,16 @@ export default {
     return {
       commonData: this.$store.state.commonData,
       loading: false,
-      page: PAGE
+      page: PAGE,
+      viewport: undefined
     }
   },
   computed: {
     articles () {
       return this.$store.state.searchResult
+    },
+    eventLogo () {
+      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
     },
     hasMore () {
       return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'nbHits' ], 0)
@@ -110,6 +126,11 @@ export default {
       }).then(() => {
         this.loading = false
       })
+    },
+    updateViewport () {
+      if (process.env.VUE_ENV === 'client') {
+        this.viewport = document.querySelector('body').offsetWidth
+      }
     }
   },
   metaInfo () {
@@ -136,8 +157,15 @@ export default {
       ]
     }
   },
+  beforeMount () {
+    fetchEvent(this.$store, 'logo')
+  },
   mounted () {
     this.checkIfLockJS()
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
 
     window.ga('set', 'contentGroup1', '')
     window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
