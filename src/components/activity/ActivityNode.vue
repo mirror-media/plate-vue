@@ -103,20 +103,22 @@ export default {
       this.updateWindowHeight()
     })
     window.addEventListener('load', () => {
-      this.onePageScroll.init('.activityNode', {
-        pageContainer: '.activityNodeSlider',
-        defaultInitialPage: this.currentIndex > -1 ? (this.currentIndex + 1) : 0,
-        afterMove: (index, next_el) => {
-          if (this.onePageScroll.initializedFlag === true) {
-            this.changeCurrentIndex(index)
+      if (this.viewport < 900) {
+        this.onePageScroll.init('.activityNode', {
+          pageContainer: '.activityNodeSlider',
+          defaultInitialPage: this.currentIndex > -1 ? (this.currentIndex + 1) : 0,
+          afterMove: (index, next_el) => {
+            if (this.onePageScroll.initializedFlag === true) {
+              this.changeCurrentIndex(index)
+            }
           }
-        }
-      })
+        })
+      }
     })
   },
   watch: {
     currentIndex: function () {
-      if (process.env.VUE_ENV === 'client' && this.onePageScroll.initializedFlag === true) {
+      if (process.env.VUE_ENV === 'client' && this.onePageScroll.initializedFlag === true && this.viewport < 900) {
         this.onePageScroll.moveTo(this.currentIndex)
       }
     }
