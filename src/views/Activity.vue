@@ -128,7 +128,7 @@ export default {
       return _.get(this.$store.state, [ 'nodes', 'items', 'length' ]) >= _.get(this.$store.state, [ 'nodes', 'meta', 'total' ])
     },
     nextNode () {
-      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex + 1 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.defaultNodeIndex + 1 ])
+      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ])
     },
     nodes () {
       return _.get(this.$store.state, [ 'nodes', 'items' ])
@@ -140,7 +140,7 @@ export default {
       return _.get(this.$store.state, [ 'nodes', 'meta', 'page' ])
     },
     prevNode () {
-      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.defaultNodeIndex - 1 ])
+      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 2 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ])
     },
     timelineNodes () {
       return _.get(this.$store.state, [ 'timeline', 'nodes' ])
@@ -154,9 +154,9 @@ export default {
   },
   methods: {
     changeCurrentIndex (index) {
-      if (index < this.nodesAmount && index > -1) {
+      if (index <= this.nodesAmount && index > -1) {
         this.currentIndex = index
-      } else if (index >= this.nodesAmount) {
+      } else if (index > this.nodesAmount) {
         this.currentIndex = this.nodesAmount - 1
       } else if (index < 0) {
         this.currentIndex = 0

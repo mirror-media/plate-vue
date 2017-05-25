@@ -110,7 +110,7 @@ export default {
           afterMove: (index, next_el) => {
             const _index = document.querySelector('.activityNodeSlider.active').dataset.index
             if (this.onePageScroll.initializedFlag === true) {
-              this.changeCurrentIndex(_index)
+              this.changeCurrentIndex(parseInt(_index))
             }
           }
         })
