@@ -3,7 +3,7 @@
     <template scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <app-Header v-if="true" :commonData= 'commonData' />
+          <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>

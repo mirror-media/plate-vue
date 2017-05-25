@@ -30,7 +30,7 @@
         </template>
 
         <template v-else>
-          <app-header :commonData= 'commonData' />
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"/>
@@ -95,6 +95,18 @@ const fetchData = (store) => {
       _.get(store.getters.topic, [ 'items', '0', 'type' ])
     if (topicType === 'timeline') {
       return fetchTimeline(store, store.state.route.params.topicId)
+    }
+  })
+}
+
+const fetchEvent = (store, eventType = 'embedded') => {
+  return store.dispatch('FETCH_EVENT', {
+    params: {
+      'max_results': 1,
+      'where': {
+        isFeatured: true,
+        eventType: eventType
+      }
     }
   })
 }
@@ -204,6 +216,9 @@ export default {
         },
         setCentering: true
       }
+    },
+    eventLogo () {
+      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
     },
     fbCommentDiv () {
       return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
@@ -426,6 +441,7 @@ export default {
   },
   beforeMount () {
     const uuid = _.split(this.$route.path, '/')[2]
+    fetchEvent(this.$store, 'logo')
     if (this.topicType !== 'timeline') {
       fetchArticlesByUuid(this.$store, uuid, false)
       fetchTopicImages(this.$store, uuid)
