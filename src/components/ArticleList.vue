@@ -5,7 +5,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </router-link>
@@ -13,7 +13,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </a>
@@ -26,7 +26,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </router-link>
@@ -34,7 +34,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </a>
@@ -47,7 +47,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </router-link>
@@ -55,7 +55,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </a>
@@ -70,7 +70,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </router-link>
@@ -78,7 +78,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </a>
@@ -91,7 +91,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </router-link>
@@ -99,7 +99,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </a>
@@ -110,7 +110,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </router-link>
@@ -118,7 +118,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.name, 20)"></h2>
+          <h2 v-text="getTitle(item.name)"></h2>
           <p v-text="getTruncatedVal(item.ogDescription, 45)"></p>
         </div>
       </router-link>
@@ -126,7 +126,7 @@
         <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
         </div>
         <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTruncatedVal(item.title, 20)"></h2>
+          <h2 v-text="getTitle(item.title)"></h2>
           <p v-text="getBrief(item, 45)"></p>
         </div>
       </a>
@@ -140,6 +140,8 @@
 import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../utils/comm'
 import _ from 'lodash'
 import moment from 'moment'
+
+const MAXTITLEAMOUNT = 28
 
 export default {
   name: 'articleList',
@@ -181,6 +183,9 @@ export default {
     getSection,
     getTopicHref (item) {
       return `/topic/${_.get(item, [ 'id' ])}`
+    },
+    getTitle (title) {
+      return this.getTruncatedVal(title, MAXTITLEAMOUNT)
     },
     getTruncatedVal,
     moment

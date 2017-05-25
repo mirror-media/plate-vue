@@ -15,11 +15,11 @@
           <div class="latest-list_item_title">
             <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)" :class="labelClass(o)"></div>
             <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`"  v-if="o.style !== 'projects'">
-              <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
+              <h3 v-text="getTruncatedVal(o.title, 28)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
             </router-link>
             <a :href="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`"  v-if="o.style === 'projects'">
-              <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
+              <h3 v-text="getTruncatedVal(o.title, 28)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
             </a>
           </div>
