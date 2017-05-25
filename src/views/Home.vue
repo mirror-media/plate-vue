@@ -206,7 +206,7 @@ export default {
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.querySelector('body').offsetWidth
+        this.viewport = document.documentElement.clientWidth || document.body.clientWidth
       }
     },
     updateSysStage () {
