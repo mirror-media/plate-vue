@@ -236,8 +236,10 @@ video
   display flex
   flex-direction column
   width 100%
-  height calc(100vh - 60px)
+  // height calc(100vh - 60px)
+  height 100vh
   overflow hidden
+  padding 80px 0 30px
   &__slideshow
     position relative
     width 100%
@@ -291,7 +293,9 @@ video
 @media only screen and (max-width: 736px) and (orientation: landscape)
   .activityNodeSlider
     position relative
-    height calc(100vh - 60px)
+    // height calc(100vh - 60px)
+    height 100vh
+    padding 30px 0
     &__slideshow
       padding-top 0
       height 100%
@@ -305,7 +309,7 @@ video
       left 0
       width 100%
       height 100%
-      padding 0
+      padding 30px 0
       background-color rgba(0,0,0,.6)
       &.hidden
         display none
@@ -314,9 +318,10 @@ video
       position absolute
       z-index 490
       left 0
-      bottom 0
+      top 30px
       width 100%
       height 40px
+      display block
       &--text, &--fb
         position absolute
         bottom 5px

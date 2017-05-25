@@ -1,17 +1,16 @@
 <template>
   <section class="activityNode">
     <div class="activityNode-nodeContainer" :style="nodeContainerStyle">
-      <activity-nodeSlider :id="`node-${index}`" :currentIndex="currentIndex" 
+      <activity-nodeSlider :id="`node-${index}`" :currentIndex="currentIndex"
                 :index="index" :node="item" :viewport="viewport" v-for="(item, index) in nodes" 
-                :windowHeight="windowHeight"
-                :style="nodeSliderStyle" />
+                :windowHeight="windowHeight" />
     </div>
   </section>
 </template>
 
 <script>
 
-import { elmYPosition, smoothScroll } from 'kc-scroll'
+import { elmYPosition, smoothScroll, OnePageScroller } from 'kc-scroll'
 import _ from 'lodash'
 import ActivityNodeContent from './ActivityNodeContent.vue'
 import ActivityNodeSlider from './ActivityNodeSlider.vue'
@@ -31,7 +30,8 @@ export default {
       sliderId: 'a' + Date.now(),
       slideIndex: 0,
       windowHeight: 0,
-      nodeSliderStyle: ''
+      nodeSliderStyle: '',
+      onePageScroll: (new OnePageScroller())
     }
   },
   computed: {
@@ -45,8 +45,9 @@ export default {
       if (this.viewport > 899) {
         return `width: ${(this.nodes.length * 100)}vw;`
       } else if (this.windowHeight < this.viewport) {
-        return `height: calc((100vh - 60px) * ${this.nodeAmount} + 30px); `
+        // return `height: calc((100vh - 60px) * ${this.nodeAmount} + 30px); `
         // return `top: ${this.targNodeTopY}px;`
+        return ''
       } else {
         // return `top: ${this.targNodeTopY}px;`
         return ''
@@ -54,6 +55,9 @@ export default {
     }
   },
   methods: {
+    changeCurrentIndex (index) {
+      this.$emit('changeCurrIdx', index)
+    },
     elmYPosition,
     getActivityImage () {
       let viewportTarget
@@ -91,19 +95,6 @@ export default {
         // this.windowHeight = document.querySelector('body').offsetHeight
         this.windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       }
-    },
-    updateNodeSliderStyle () {
-      if (this.viewport > 899) {
-        this.nodeSliderStyle = ''
-      } else {
-        if (this.windowHeight < this.viewport) {
-          // this.nodeSliderStyle = `height: calc(${this.windowHeight}px - 50px);`
-          this.nodeSliderStyle = `height: ${(this.windowHeight)}px;`
-          // this.nodeSliderStyle = `height: calc(${this.windowHeight}px - 30px);`
-        } else {
-          this.nodeSliderStyle = ''
-        }
-      }
     }
   },
   mounted () {
@@ -111,10 +102,23 @@ export default {
     window.addEventListener('resize', () => {
       this.updateWindowHeight()
     })
+    window.addEventListener('load', () => {
+      this.onePageScroll.init('.activityNode', {
+        pageContainer: '.activityNodeSlider',
+        defaultInitialPage: this.currentIndex > -1 ? (this.currentIndex + 1) : 0,
+        afterMove: (index, next_el) => {
+          if (this.onePageScroll.initializedFlag === true) {
+            this.changeCurrentIndex(index)
+          }
+        }
+      })
+    })
   },
   watch: {
-    windowHeight: function () {
-      this.updateNodeSliderStyle()
+    currentIndex: function () {
+      if (process.env.VUE_ENV === 'client' && this.onePageScroll.initializedFlag === true) {
+        this.onePageScroll.moveTo(this.currentIndex)
+      }
     }
   }
 }
@@ -125,8 +129,8 @@ export default {
 
 .activityNode
   // width 100%
-  // height 100%
-  padding 30px 0
+  height 100vh
+  // padding 30px 0
   // overflow hidden
   &-nodeContainer
     // width 100%
