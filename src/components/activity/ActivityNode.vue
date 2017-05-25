@@ -108,8 +108,9 @@ export default {
           pageContainer: '.activityNodeSlider',
           defaultInitialPage: this.currentIndex > -1 ? (this.currentIndex + 1) : 0,
           afterMove: (index, next_el) => {
+            const _index = document.querySelector('.activityNodeSlider.active').dataset.index
             if (this.onePageScroll.initializedFlag === true) {
-              this.changeCurrentIndex(index)
+              this.changeCurrentIndex(_index)
             }
           }
         })
