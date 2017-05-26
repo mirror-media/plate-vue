@@ -189,7 +189,9 @@
     },
     beforeRouteLeave (to, from, next) {
       const mediafarmersScript = document.querySelector('#mediafarmersJS')
-      document.querySelector('body').removeChild(mediafarmersScript)
+      if (mediafarmersScript) {
+        document.querySelector('body').removeChild(mediafarmersScript)
+      }
       next()
     },
     beforeMount () {

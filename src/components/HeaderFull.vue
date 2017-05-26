@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav class="headerFull" :style="{opacity: opacity}" v-show="defaultNav">
+    <nav class="headerFull" :style="{ opacity: opacity }" v-show="defaultNav">
       <div class="headerFull__menu">
         <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png" alt="開啟側邊欄"></a>
       </div>
@@ -98,6 +98,17 @@ export default {
       searchVal: ''
     }
   },
+  computed: {
+    menuItem () {
+      return _.get(_.find(_.get(this.sections, [ 'items' ]), { name: this.sectionName }), [ 'categories' ])
+    },
+    sectionLogo () {
+      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
+    },
+    socialLink () {
+      return SOCIAL_LINK
+    }
+  },
   methods: {
     closeSearchBar () {
       this.openSearch = false
@@ -105,6 +116,7 @@ export default {
     closeSideBar () {
       this.openSide = false
     },
+    currentYPosition,
     getHeaderDFPHeight () {
       this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
     },
@@ -131,24 +143,13 @@ export default {
     },
     handleScroll () {
       window.onscroll = (e) => {
-        this.opacity = 1 - currentYPosition() / 300
+        this.opacity = 1 - this.currentYPosition() / 300
         this.opacity < 0 ? this.defaultNav = false : this.defaultNav = true
         this.opacity < 1 ? this.blackNav = true : this.blackNav = false
       }
     },
     hasChanged () {
       this.isChanged = true
-    }
-  },
-  computed: {
-    menuItem () {
-      return _.get(_.find(_.get(this.sections, [ 'items' ]), { name: this.sectionName }), [ 'categories' ])
-    },
-    sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
-    },
-    socialLink () {
-      return SOCIAL_LINK
     }
   },
   mounted () {
@@ -158,6 +159,9 @@ export default {
 
 </script>
 <style lang="stylus" scoped>
+
+header
+  position relative
 
 .headerFull
   display flex
