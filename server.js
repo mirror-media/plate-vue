@@ -70,6 +70,9 @@ app.get('*', (req, res, next) => {
   if (req.url.indexOf('/api/') === 0) {
     next()
     return
+  } else if (req.url.indexOf('/404') === 0) {
+    res.status(404).render('404')
+    return
   }
   if (!renderer) {
     return res.end('waiting for compilation... refresh in a moment.')
