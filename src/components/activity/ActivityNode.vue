@@ -31,7 +31,8 @@ export default {
       slideIndex: 0,
       windowHeight: 0,
       nodeSliderStyle: '',
-      onePageScroll: (new OnePageScroller())
+      onePageScroll: (new OnePageScroller()),
+      timestamp: 0
     }
   },
   computed: {
@@ -103,25 +104,32 @@ export default {
       this.updateWindowHeight()
     })
     window.addEventListener('load', () => {
-      if (this.viewport < 900) {
-        this.onePageScroll.init('.activityNode', {
-          pageContainer: '.activityNodeSlider',
-          defaultInitialPage: this.currentIndex > -1 ? (this.currentIndex + 1) : 0,
-          afterMove: (index, next_el) => {
-            const _index = document.querySelector('.activityNodeSlider.active').dataset.index
-            if (this.onePageScroll.initializedFlag === true) {
-              this.changeCurrentIndex(parseInt(_index))
-            }
-          }
-        })
-      }
+
+      // if (this.viewport < 900) {
+      //   this.onePageScroll.init('.activityNode', {
+      //     pageContainer: '.activityNodeSlider',
+      //     defaultInitialPage: this.currentIndex > -1 ? (this.currentIndex + 1) : 0,
+      //     animationTime: 500,
+      //     beforeMove: () => {
+      //       this.timestamp = Date.now()
+      //     },
+      //     afterMove: (index, next_el) => {
+      //       const _index = document.querySelector('.activityNodeSlider.active').dataset.index
+      //       console.log(_index, index, this.currentIndex)
+      //       console.log(`${Date.now() - this.timestamp}ms`)
+      //       if (this.onePageScroll.initializedFlag === true) {
+      //         this.changeCurrentIndex(parseInt(_index))
+      //       }
+      //     }
+      //   })
+      // }
     })
   },
   watch: {
     currentIndex: function () {
-      if (process.env.VUE_ENV === 'client' && this.onePageScroll.initializedFlag === true && this.viewport < 900) {
-        this.onePageScroll.moveTo(this.currentIndex)
-      }
+      // if (process.env.VUE_ENV === 'client' && this.onePageScroll.initializedFlag === true && this.viewport < 900) {
+      //   this.onePageScroll.moveTo(this.currentIndex)
+      // }
     }
   }
 }
@@ -132,7 +140,7 @@ export default {
 
 .activityNode
   // width 100%
-  height 100vh
+  // height 100vh
   // padding 30px 0
   // overflow hidden
   &-nodeContainer

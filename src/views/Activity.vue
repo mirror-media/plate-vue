@@ -99,7 +99,8 @@ export default {
   },
   data () {
     return {
-      currentIndex: _.findIndex(this.nodes, this.featureNode),
+      currentIndex: 0,
+      // currentIndex: _.findIndex(this.nodes, this.featureNode),
       openNav: false,
       viewport: 0,
       scrollingFlag: false,
@@ -119,7 +120,12 @@ export default {
       return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ]) || _.get(this.$store.state, [ 'nodes', 'items', this.defaultNodeIndex ])
     },
     defaultNodeIndex () {
-      return _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
+      const _defaultIndex = _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
+      // if (process.env.VUE_ENV === 'client') {
+      //   const currentNodeTop = this.elmYPosition(`#node-${_defaultIndex}`)
+      //   window.scrollTo(0, currentNodeTop)
+      // }
+      return _defaultIndex
     },
     featureNode () {
       return _.find(_.get(this.$store.state, [ 'nodes', 'items' ]), { 'isFeatured': true })
@@ -128,7 +134,8 @@ export default {
       return _.get(this.$store.state, [ 'nodes', 'items', 'length' ]) >= _.get(this.$store.state, [ 'nodes', 'meta', 'total' ])
     },
     nextNode () {
-      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ])
+      // return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ])
+      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex + 1 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ])
     },
     nodes () {
       return _.get(this.$store.state, [ 'nodes', 'items' ])
@@ -140,7 +147,8 @@ export default {
       return _.get(this.$store.state, [ 'nodes', 'meta', 'page' ])
     },
     prevNode () {
-      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 2 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ])
+      // return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 2 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ])
+      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ])
     },
     timelineNodes () {
       return _.get(this.$store.state, [ 'timeline', 'nodes' ])
@@ -169,12 +177,18 @@ export default {
     getTruncatedVal,
     goToNext () {
       const goTo = this.currentIndex + 1
+      if (this.viewport < 900) {
+        return
+      }
       if (goTo < this.nodesAmount) {
         this.currentIndex = goTo
       }
     },
     goToPrev () {
       const goTo = this.currentIndex - 1
+      if (this.viewport < 900) {
+        return
+      }
       if (goTo > -1) {
         this.currentIndex = goTo
       }
@@ -192,7 +206,7 @@ export default {
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.querySelector('body').offsetWidth
+        this.viewport = document.documentElement.clientWidth || document.body.clientWidth
         this.windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       }
     },
@@ -216,12 +230,36 @@ export default {
       this.updateViewport()
     })
     window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+    const nodeHeight = document.querySelector('.activityNodeSlider').offsetHeight
+    window.addEventListener('scroll', () => {
+      const goToIndex = Math.round(this.currentYPosition() / nodeHeight)
+      if (goToIndex !== this.currentIndex) {
+        this.changeCurrentIndex(goToIndex)
+      }
+    })
   },
   watch: {
     defaultNodeIndex: function () {
-      this.currentIndex = _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
+      // this.currentIndex = _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
+      // console.log('this.currentIndex', this.currentIndex)
+      // const currentNodeTop = this.elmYPosition(`#node-${this.defaultNodeIndex}`)
+      // setTimeout(() => {
+      //   window.scrollTo(0, currentNodeTop)
+      // }, 10)
     },
-    currentIndex: function () {}
+    currentIndex: function () {
+      // console.log('this.currentIndex', this.currentIndex)
+      // const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
+      // window.scrollTo(0, currentNodeTop - 50)
+      // setTimeout(() => {
+        // const _currNodeTopOffset = this.currNodeTopOffset(_offset)
+        // const _targNodeTopY = isNaN(containerTop) !== true ? containerTop - _currNodeTopOffset : 0 - _currNodeTopOffset
+        // this.updateTargNodeTopY(_targNodeTopY)
+
+        // console.log('this.topOffset', this.topOffset)
+        // this.smoothScroll(null, currentNodeTop)
+      // }, 10)
+    }
   },
   metaInfo () {
     const url = `${SITE_URL}${this.$route.path}`
