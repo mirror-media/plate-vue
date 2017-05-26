@@ -31,8 +31,6 @@ function _doFetch (url) {
     // .query('')
     .end(function (err, res) {
       if (err) {
-        console.log(url)
-        console.log(err)
         reject(err)
       } else {
         resolve(camelizeKeys(res.body))
@@ -54,6 +52,13 @@ function _setupWhereInParam (key, value, params = {}) {
   }
   params.where = where
   return params
+}
+
+function loadActivities (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/activities`
+  url = `${url}?${query}`
+  return _doFetch(url)
 }
 
 function loadArticles (params = {}) {
@@ -116,6 +121,13 @@ function loadCommonData (endpoints = []) {
   return _doFetch(url)
 }
 
+function loadContacts (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/contacts`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadEditorChoice () {
   const url = `${_host}/api/combo?endpoint=choices`
   return _doFetch(url)
@@ -159,6 +171,13 @@ function loadLatestArticle (params = {}) {
   return _doFetch(url)
 }
 
+function loadNodes (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/nodes`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadQuestionnaire (id) {
   const apiHost = `${_host}/api/questionnaire?file=${id}/${id}.json`
   return _doFetch(apiHost)
@@ -180,6 +199,11 @@ function loadTag (slug = '') {
   return _doFetch(url)
 }
 
+function loadTimeline (slug = '') {
+  const url = `${_host}/api/timeline/${slug}`
+  return _doFetch(url)
+}
+
 function loadTopic (params = {}) {
   const query = _buildQuery(params)
   let url = `${_host}/api/topics`
@@ -190,6 +214,10 @@ function loadTopic (params = {}) {
 function loadYoutubePlaylist (limit = 12, pageToken = '') {
   const url = `${_host}/api/playlist?maxResults=${limit}&pageToken=${pageToken}`
   return _doFetch(url)
+}
+
+export function fetchActivities (params = {}) {
+  return loadActivities(params)
 }
 
 export function fetchArticles (params = {}) {
@@ -230,6 +258,10 @@ export function fetchCommonData (endpoints = []) {
   })
 }
 
+export function fetchContacts (params = {}) {
+  return loadContacts(params)
+}
+
 export function fetchEditorChoice () {
   return loadEditorChoice()
 }
@@ -246,6 +278,10 @@ export function fetchLatestArticle (params = {}) {
   return loadLatestArticle(params)
 }
 
+export function fetchNodes (params = {}) {
+  return loadNodes(params)
+}
+
 export function fetchQuestionnaire (id) {
   return loadQuestionnaire(id)
 }
@@ -260,6 +296,10 @@ export function fetchSectionList () {
 
 export function fetchTag (slug = '') {
   return loadTag(slug)
+}
+
+export function fetchTimeline (slug = '') {
+  return loadTimeline(slug)
 }
 
 export function fetchTopic (params = {}) {

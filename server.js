@@ -70,6 +70,9 @@ app.get('*', (req, res, next) => {
   if (req.url.indexOf('/api/') === 0) {
     next()
     return
+  } else if (req.url.indexOf('/404') === 0) {
+    res.status(404).render('404')
+    return
   }
   if (!renderer) {
     return res.end('waiting for compilation... refresh in a moment.')
@@ -81,53 +84,34 @@ app.get('*', (req, res, next) => {
 
   const context = { url: req.url }
   const renderStream = renderer.renderToStream(context)
+  let ifPageNotFound = false
+  let ifErrorOccured = false
 
   renderStream.once('data', () => {
     // res.write(indexHTML.head)
-    try {
-      const { title, meta } = context.meta.inject()
-      let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
-      _indexHead = _indexHead.replace(/<meta.*?name="description".*?>/g, meta.text()) 
-      res.write(_indexHead)
-    } catch (e) {
-      res.status(500).end('Internal Error 500')
-      console.error(`error during renderStream.once : ${req.url}`)
-      console.error(e)
-      process.exit(1)
-    }
+    const { title, meta } = context.meta.inject()
+    let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
+    _indexHead = _indexHead.replace(/<meta.*?name="description".*?>/g, meta.text()) 
+    res.write(_indexHead)
   })
 
   renderStream.on('data', chunk => {
-    try {
-      res.write(chunk)
-    } catch (e) {
-      res.status(500).end('Internal Error 500')
-      console.error(`error during renderStream.on data : ${req.url}`)
-      console.error(e)
-      process.exit(1)
-    }
+    res.write(chunk)
   })
 
   renderStream.on('end', () => {
-    try {
-      // embed initial store state
-      if (context.initialState) {
-        res.write(
-          `<script>window.__INITIAL_STATE__=${
-          serialize(context.initialState, { isJSON: true })
-          }</script>`
-        )
-      }
-      res.end(indexHTML.tail)
-    } catch (e) {
-      res.status(500).end('Internal Error 500')
-      console.error(`error during renderStream.on end : ${req.url}`)
-      console.error(e)
-      process.exit(1)
+    // embed initial store state
+    if (context.initialState) {
+      res.write(
+        `<script>window.__INITIAL_STATE__=${
+        serialize(context.initialState, { isJSON: true })
+        }</script>`
+      )
     }
+    res.end(indexHTML.tail)
   })
 
-  let ifPageNotFound = false
+  
   renderStream.on('error', err => {
     if (err && err.code === '404') {
       ifPageNotFound = true
@@ -140,13 +124,14 @@ app.get('*', (req, res, next) => {
       return
     }
     // Render Error Page or Redirect
-    res.status(500).end('Internal Error 500')
+    // res.status(500).end('Internal Error 500')
+    res.status(500).render('500')
     console.error(`error during renderStream.on error : ${req.url}`)
     console.error(err)
-    process.exit(1)
+    ifErrorOccured = true
   })
   res.on('finish', function () {
-    if (ifPageNotFound) {
+    if (ifPageNotFound || ifErrorOccured) {
       process.exit(1)
     }
   })

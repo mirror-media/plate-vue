@@ -2,7 +2,7 @@
   <div class="poplist-container" v-if="(popList.length > 0)">
     <div class="pop_title"><h3>熱門文章</h3></div>
     <div class="pop_list">
-      <div class="pop_item" v-for="(o, i) in popList">
+      <div class="pop_item" v-for="(o, i) in popList" v-if="i < 10">
         <div class="pop_item_label" v-text="getValue(o, [ 'sections', 0, 'title' ], '')" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))"></div>
         <div class="pop_item_title">
           <!--router-link :to="o.slug" v-text="getTruncatedVal(o.title, 40)"  :id="`popular-${Date.now()}`" v-if="o.style !== 'projects'"></router-link-->

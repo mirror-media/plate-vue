@@ -1,17 +1,17 @@
-import { SITE_URL } from '../constants'
+import { SITE_DOMAIN, SITE_URL } from '../constants'
 import _ from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 
-export function getAuthor (article, option = '') {
+export function getAuthor (article, option = '', delimiter = '｜') {
   const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
-    ? '文｜' + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, [ 'name' ], null) + '</a>' }).join('、') : ''
+    ? `文${delimiter}` + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, [ 'name' ], null) + '</a>' }).join('、') : ''
   const photographers = (_.get(article, [ 'photographers', 'length' ], 0) > 0)
-    ? '<br>攝影｜' + _.map(article.photographers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
+    ? `<br>攝影${delimiter}` + _.map(article.photographers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
   const designers = (_.get(article, [ 'designers', 'length' ], 0) > 0)
-    ? '<br>設計｜' + _.map(article.designers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
+    ? `<br>設計${delimiter}` + _.map(article.designers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
   const engineers = (_.get(article, [ 'engineers', 'length' ], 0) > 0)
-    ? '<br>工程｜' + _.map(article.engineers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
+    ? `<br>工程${delimiter}` + _.map(article.engineers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
   const external = '<br>' + _.get(article, 'extendByline', '')
   switch (option) {
     case 'writers':
@@ -25,12 +25,12 @@ export function getAuthorHref (author = {}) {
   return '/author/' + author.id
 }
 
-export function getBrief (article, count = 30) {
+export function getBrief (article, count = 30, allowed_tags = '') {
   let brief
   if (_.split(_.get(article, [ 'href' ]), '/')[1] === 'topic') {
     brief = _.get(article, [ 'ogDescription' ])
   } else {
-    brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], ''), { allowedTags: [] })
+    brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], ''), { allowedTags: [ allowed_tags ] })
   }
   return truncate(brief, count)
 }
@@ -67,6 +67,21 @@ export function getImage (article, size) {
       return _.get(image, [ 'image', 'resizedTargets', 'tiny', 'url' ], '/public/notImage.png')
     default:
       return _.get(image, [ 'image', 'resizedTargets', 'desktop', 'url' ], '/public/notImage.png')
+  }
+}
+
+export function getImageCertain (image, size) {
+  switch (size) {
+    case 'desktop':
+      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+    case 'mobile':
+      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
+    case 'tablet':
+      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
+    case 'tiny':
+      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
+    default:
+      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
   }
 }
 
@@ -138,5 +153,52 @@ export function unLockJS () {
     document.onkeydown = function (event) { if (event.keyCode === 67) { return true } }
     document.ondragstart = function () { return true }
     document.onselectstart = function () { return true }
+  }
+}
+
+export function currEnv () {
+  if (process.env.VUE_ENV === 'client') {
+    if (location.host.indexOf(SITE_DOMAIN) === 0 || location.host.indexOf(`www.${SITE_DOMAIN}`) === 0) {
+      return 'prod'
+    } else {
+      return 'dev'
+    }
+  }
+}
+
+export function disableScroll () {
+  if (window.addEventListener) { // older FF
+    window.addEventListener('DOMMouseScroll', preventDefault, false)
+  }
+  window.onwheel = preventDefault // modern standard
+  window.onmousewheel = preventDefault // older browsers, IE
+  document.onmousewheel = preventDefault // older browsers, IE
+  window.ontouchmove = preventDefault // mobile
+  document.onkeydown = preventDefaultForScrollKeys
+}
+export function enableScroll () {
+  if (window.removeEventListener) {
+    window.removeEventListener('DOMMouseScroll', preventDefault, false)
+  }
+  window.onmousewheel = document.onmousewheel = null
+  window.onwheel = null
+  window.ontouchmove = null
+  document.onkeydown = null
+}
+function keys () {
+  return { 37: 1, 38: 1, 39: 1, 40: 1 }
+}
+function preventDefault (e) {
+  e = e || window.event
+  if (e.preventDefault) {
+    e.preventDefault()
+  }
+  e.returnValue = false
+}
+function preventDefaultForScrollKeys (e) {
+  // doesn't work
+  if (keys[e.keyCode]) {
+    preventDefault(e)
+    return false
   }
 }

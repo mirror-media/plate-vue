@@ -6,7 +6,7 @@
         <div>
           <router-link :to="o.slug" :id="'popular-' + i">
             <div class="pop_item_img"
-                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
+                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }" :title="getValue(o, [ 'title' ])">
             </div>
           </router-link>
         </div>
@@ -19,7 +19,7 @@
         <div>
           <router-link :to="o.slug" >
             <div class="pop_item_img"
-                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
+                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }" :title="getValue(o, [ 'title' ])">
             </div>
           </router-link>
         </div>
@@ -32,7 +32,7 @@
         <div>
           <router-link :to="o.slug" :id="'popular-' + i">
             <div class="pop_item_img"
-                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
+                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }" :title="getValue(o, [ 'title' ])">
             </div>
           </router-link>
         </div>
@@ -45,7 +45,7 @@
         <div>
           <router-link :to="o.slug" :id="'popular-' + i">
             <div class="pop_item_img"
-                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
+                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }" :title="getValue(o, [ 'title' ])">
             </div>
           </router-link>
         </div>
@@ -120,7 +120,7 @@
           font-size 1.1rem
           display flex
           justify-content center
-          align-items center
+          align-items flex-start
         
           a 
             width 95%

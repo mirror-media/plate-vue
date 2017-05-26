@@ -1,22 +1,22 @@
 <template>
   <section class="latestArticle-full">
-    <vue-dfp :is="props.vueDfp" pos="LMBL3" extClass="center mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" 
+    <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="SMBL3" extClass="center" :dfpUnits="props.dfpUnits" :section="props.section" 
         :dfpId="props.dfpId" />
     <div class="latestArticle-full-post-container">
       <h2>最新新聞 Latest Stories</h2>
       <div class="latestArticle-full-posts">
         <template v-for="article in latestArticle">
           <div class="latestArticle-full-post">
-            <a :href="getHref(article)" :id="'latest-' + article.id" class="latestArticle-full-post__img">
-              <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
+            <a :href="getHref(article)" :id="`latest-${article.id}-img`" class="latestArticle-full-post__img">
+              <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }" :title="getValue(article, [ 'title' ])"></figure>
             </a>
             <div class="latestArticle-full-post__content">
-              <a :href="getHref(article)" :id="'latest-' + article.id"><h2 v-text="article.title"></h2></a>
+              <a :href="getHref(article)" :id="`latest-${article.id}-title`"><h2 v-text="article.title"></h2></a>
               <div class="latestArticle-full-post__meta">
                 <span class="latestArticle-full-post__meta--author" v-show="getAuthor(article, 'writers')" v-html="getAuthor(article, 'writers') + ' ｜ '"></span>
                 <span class="latestArticle-full-post__meta--date" v-text="moment(new Date(article.publishedDate)).format('Y.MM.DD')"></span>
               </div>
-              <a :href="getHref(article)" :id="'latest-' + article.id"><p v-html="getBrief(article, 70)"></p></a>
+              <a :href="getHref(article)" :id="`latest-${article.id}-content`"><p v-html="getBrief(article, 70)"></p></a>
             </div>
           </div>
         </template>
@@ -24,28 +24,29 @@
       
     </div>
     <div class="latestArticle-full-dfp dfp-R desktop-only">
-      <vue-dfp :is="props.vueDfp" pos="LPCR3" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
+      <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCR3" :dfpUnits="props.dfpUnits" :section="props.section" 
         :dfpId="props.dfpId" />
-      <vue-dfp :is="props.vueDfp" pos="LPCR4" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
+      <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCR4" :dfpUnits="props.dfpUnits" :section="props.section" 
         :dfpId="props.dfpId" />
     </div>
   </section>
 </template>
 <script>
 
-import { getAuthor, getBrief, getHref, getImage, getTruncatedVal } from '../utils/comm'
+import { getAuthor, getBrief, getHref, getImage, getTruncatedVal, getValue } from '../utils/comm'
 import _ from 'lodash'
 import moment from 'moment'
 
 export default {
   name: 'latestArticle-full',
-  props: [ 'articles', 'props' ],
+  props: [ 'articles', 'isMobile', 'props' ],
   methods: {
     getAuthor,
     getBrief,
     getHref,
     getImage,
     getTruncatedVal,
+    getValue,
     moment
   },
   computed: {

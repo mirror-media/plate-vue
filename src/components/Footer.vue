@@ -1,23 +1,23 @@
 <template>
   <footer class="left">
     <div class="left mobile-hide">
-      <div><span><a id="footer-subscribe" href="https://docs.google.com/a/mirrormedia.mg/forms/d/e/1FAIpQLSfrEEGd5Qv160mquHj6H0flpbgliARY0kiLY9WjTYwnV8pBkA/viewform?c=0&w=1">訂閱鏡週刊</a></span></div>
-      <div><span><a id="footer-ad" href="https://www.mirrormedia.mg/story/ad1018001/index.html?utm_source=mm&utm_medium=footer&utm_campaign=salesteam">廣告合作</a></span></div>
-      <div><span><a id="footer-activity" href="https://www.mirrormedia.mg/category/campaign">活動專區</a></span></div>
-      <div><span><a id="footer-download" href="http://hyperurl.co/mmfooter">下載ＡＰＰ</a></span></div>
+      <div><span><a id="footer-subscribe" :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></span></div>
+      <div><span><a id="footer-ad" :href="SOCIAL_LINK.AD" target="_blank">廣告合作</a></span></div>
+      <div><span><a id="footer-activity" href="https://www.mirrormedia.mg/category/campaign" target="_blank">活動專區</a></span></div>
+      <div><span><a id="footer-download" href="http://hyperurl.co/mmfooter" target="_blank">下載ＡＰＰ</a></span></div>
     </div>
     <div class="follow mobile-hide">
-      <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" ><img src="/public/icon/line@2x.png" class="footer-icon line" /></a>
-      <a class="item" id="footer-weibo" :href="SOCIAL_LINK.WEIBO" ><img src="/public/icon/weibo@2x.png" class="footer-icon weibo" /></a>
-      <a class="item" id="footer-fb" :href="SOCIAL_LINK.FACEBOOK" ><img src="/public/icon/facebook@2x.png" class="footer-icon facebook" /></a>
-      <a class="item" id="footer-ig" :href="SOCIAL_LINK.INSTAGRAM" ><img src="/public/icon/instagram@2x.png" class="footer-icon instagram" /></a>
-      <a class="item" id="footer-feed" :href="SOCIAL_LINK.FEED" ><img src="/public/icon/feed@2x.png" class="footer-icon feed" /></a>
-      <a class="item" id="footer-email" :href="SOCIAL_LINK.EMAIL" ><img src="/public/icon/mail@2x.png" class="footer-icon mail" /></a>
+      <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" target="_blank"><img src="/public/icon/line@2x.png" alt="Line" class="footer-icon line" /></a>
+      <a class="item" id="footer-weibo" :href="SOCIAL_LINK.WEIBO" target="_blank"><img src="/public/icon/weibo@2x.png" alt="微博" class="footer-icon weibo" /></a>
+      <a class="item" id="footer-fb" :href="SOCIAL_LINK.FACEBOOK" target="_blank"><img src="/public/icon/facebook@2x.png" alt="Facebook" class="footer-icon facebook" /></a>
+      <a class="item" id="footer-ig" :href="SOCIAL_LINK.INSTAGRAM" target="_blank"><img src="/public/icon/instagram@2x.png" alt="Instagram" class="footer-icon instagram" /></a>
+      <a class="item" id="footer-feed" :href="SOCIAL_LINK.FEED" target="_blank"><img src="/public/icon/feed@2x.png" alt="RSS" class="footer-icon feed" /></a>
+      <a class="item" id="footer-email" :href="SOCIAL_LINK.EMAIL" target="_blank"><img src="/public/icon/mail@2x.png" alt="聯絡我們" class="footer-icon mail" /></a>
     </div>
     <div class="mobile-follow mobile-only">
-      <a href="https://docs.google.com/a/mirrormedia.mg/forms/d/e/1FAIpQLSfrEEGd5Qv160mquHj6H0flpbgliARY0kiLY9WjTYwnV8pBkA/viewform?c=0&w=1">訂閱鏡週刊</a> - 
-      <router-link to="/story/ad1018001">廣告合作</router-link> - 
-      <router-link to="/category/campaign">活動專區</router-link>
+      <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a> - 
+      <router-link to="/story/ad1018001" target="_blank">廣告合作</router-link> - 
+      <router-link to="/category/campaign" target="_blank">活動專區</router-link>
     </div>
     <div class="share-mobile" :class="ifShowShareBottom" v-if="ifShare">
       <a class="share-mobile_btn" id="share-line"><i class="icon line" @click="shareLine"></i></a>
@@ -120,6 +120,8 @@
   @media (min-width 0px) and (max-width 767px)
     footer
       width 100%
+      padding 1rem 2rem 0
+      margin-bottom 40px
       
       .share-mobile
         display flex

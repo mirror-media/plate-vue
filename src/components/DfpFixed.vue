@@ -1,7 +1,7 @@
 <template>
   <div class="dfp-fixed ">
     <slot name="dfpFF"></slot>
-    <img src="/public/icon/close-btn.png" @click="closeDfpFixed()">
+    <img src="/public/icon/close-btn.png" @click="closeDfpFixed()" alt="關閉">
   </div>
 </template>
 

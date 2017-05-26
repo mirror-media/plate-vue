@@ -1,7 +1,7 @@
 <template>
   <div class="search-view">
     <section style="width: 100%;">
-      <app-header :commonData= 'commonData' />
+      <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
     </section>
     <div class="search-title container">
       <span class="search-title__text" v-text="title"></span>
@@ -21,7 +21,7 @@
 <script>
 
 import _ from 'lodash'
-import { SITE_TITLE } from '../constants'
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { unLockJS } from '../utils/comm'
 import ArticleList from '../components/ArticleList.vue'
 import Footer from '../components/Footer.vue'
@@ -49,6 +49,18 @@ const fetchData = (store) => {
       page: PAGE,
       max_results: MAXRESULT
     })
+  })
+}
+
+const fetchEvent = (store, eventType = 'embedded') => {
+  return store.dispatch('FETCH_EVENT', {
+    params: {
+      'max_results': 1,
+      'where': {
+        isFeatured: true,
+        eventType: eventType
+      }
+    }
   })
 }
 
@@ -83,12 +95,16 @@ export default {
     return {
       commonData: this.$store.state.commonData,
       loading: false,
-      page: PAGE
+      page: PAGE,
+      viewport: undefined
     }
   },
   computed: {
     articles () {
       return this.$store.state.searchResult
+    },
+    eventLogo () {
+      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
     },
     hasMore () {
       return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'nbHits' ], 0)
@@ -110,17 +126,55 @@ export default {
       }).then(() => {
         this.loading = false
       })
+    },
+    updateViewport () {
+      if (process.env.VUE_ENV === 'client') {
+        this.viewport = document.querySelector('body').offsetWidth
+      }
     }
   },
   metaInfo () {
-    let title = SITE_TITLE
-    title = (this.title) ? this.title + ' - ' + title : title
+    const title = (this.title) ? `${this.title} - ${SITE_TITLE}` : SITE_TITLE
+    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
     return {
-      title
+      title,
+      meta: [
+        { name: 'keywords', content: SITE_KEYWORDS },
+        { name: 'description', content: SITE_DESCRIPTION },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: title },
+        { name: 'twitter:description', content: SITE_DESCRIPTION },
+        { name: 'twitter:image', content: SITE_OGIMAGE },
+        { property: 'fb:app_id', content: FB_APP_ID },
+        { property: 'fb:pages', content: FB_PAGE_ID },
+        { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
+        { property: 'og:locale', content: 'zh_TW' },
+        { property: 'og:type', content: 'article' },
+        { property: 'og:title', content: title },
+        { property: 'og:description', content: SITE_DESCRIPTION },
+        { property: 'og:url', content: ogUrl },
+        { property: 'og:image', content: SITE_OGIMAGE }
+      ]
     }
+  },
+  beforeMount () {
+    fetchEvent(this.$store, 'logo')
   },
   mounted () {
     this.checkIfLockJS()
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
+
+    window.ga('set', 'contentGroup1', '')
+    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+  },
+  watch: {
+    title: function () {
+      window.ga('set', 'contentGroup1', '')
+      window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+    }
   }
 }
 </script>

@@ -138,6 +138,7 @@ export default {
   },
   mounted () {
     this.checkIfLockJS()
+    window.ga('send', 'pageview', this.$route.path, { title: `Timeline :: ${_.upperCase(this.$route.params.title)}` })
   },
   preFetch: fetchData,
   beforeMount () {

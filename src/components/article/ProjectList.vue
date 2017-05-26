@@ -8,7 +8,7 @@
             <div class="proj_item">
               <div>
                 <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-1'">
-                  <div class="proj_item_img"
+                  <div class="proj_item_img" :title="getValue(o, [ 'title' ])"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
@@ -52,6 +52,7 @@
       },
       sliderOption () {
         return {
+          initialSlide: 0,
           paginationable: true,
           paginationClickable: true,
           paginationHide: false,

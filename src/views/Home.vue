@@ -1,14 +1,14 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <app-Header v-if="true" :commonData= 'commonData' />
+          <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
         </section>
-        <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <leading v-if="hasEvent" :type="eventType" :mediaData="eventData" :style="{ margin: '30px auto 0' }" class="event" />
+        <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
+        <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
         <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" />
+        <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550)" :config="props.config"/>
         <section class="container list">
           <aside>
             <div class="aside-title mobile-only"><h2>最新文章</h2></div>
@@ -16,12 +16,12 @@
           </aside>
           <main>
             <LatestArticleMain :latestList="latestArticle" :viewport="viewport">
-              <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
-              <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
-              <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
-              <vue-dfp :is="props.vueDfp" pos="LMBNA3" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA3" />
-              <vue-dfp :is="props.vueDfp" pos="LMBNA5" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA5" />
-              <vue-dfp :is="props.vueDfp" pos="LMBNA9" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" slot="dfpNA9" />
+              <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA3" v-if="(viewport < 600)" slot="dfpNA3" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
             </LatestArticleMain>
             <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />
             <PopularArticles :popList="popularlist" />
@@ -29,13 +29,14 @@
         </section>
         <loading :show="loading" />
         <section class="container footer">
-          <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1199)" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <app-footer :ifShare="false" style="padding: 0 2rem;"/>
+          <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1000)"  :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" pos="LMBFT" v-else-if="(viewport < 550)":config="props.config"/>
+          <app-footer :ifShare="false" />
         </section>
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <div class="ad">
-            <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+            <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config"/>
             <div class="close" @click="closeCoverAd"></div>
           </div>
         </div>
@@ -46,8 +47,8 @@
 
 <script>
 
-import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../constants'
-import { unLockJS } from '../utils/comm'
+import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { currEnv, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import EditorChoice from '../components/EditorChoice.vue'
@@ -55,7 +56,7 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
-import Leading from '../components/Leading.vue'
+import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import PopularArticles from '../components/PopularArticles.vue'
 import ProjectList from '../components/article/ProjectList.vue'
@@ -73,12 +74,13 @@ const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] })
 }
 
-const fetchEvent = (store) => {
+const fetchEvent = (store, eventType = 'embedded') => {
   return store.dispatch('FETCH_EVENT', {
     params: {
       'max_results': 1,
       'where': {
-        isFeatured: true
+        isFeatured: true,
+        eventType: eventType
       }
     }
   })
@@ -98,7 +100,7 @@ export default {
     'app-footer': Footer,
     'app-Header': Header,
     'editor-choice': EditorChoice,
-    'leading': Leading,
+    'live-stream': LiveStream,
     'loading': Loading,
     LatestArticleAside,
     LatestArticleMain,
@@ -123,6 +125,7 @@ export default {
   data () {
     return {
       dfpid: DFP_ID,
+      dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       loading: false,
       showDfpCoverAdFlag: false,
@@ -156,22 +159,22 @@ export default {
     editorChoice () {
       return _.get(this.articlesGroupedList, [ 'choices' ])
     },
-    event () {
-      return this.$store.state.event
+    eventEmbedded () {
+      return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
     },
-    eventData () {
-      return _.get(this.event, [ 'items', '0' ])
-    },
-    eventType () {
-      return this.is404 ? 'image' : _.get(this.event, [ 'items', '0', 'eventType' ])
+    eventLogo () {
+      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
     },
     groupedArticle () {
       return _.slice(_.get(this.articlesGroupedList, [ 'grouped' ]))
     },
-    hasEvent () {
-      const _eventStartTime = moment(new Date(_.get(this.event, [ 'items', 0, 'startDate' ])))
-      const _eventEndTime = moment(new Date(_.get(this.event, [ 'items', 0, 'endDate' ])))
+    hasEventEmbedded () {
       const _now = moment()
+      const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
+      let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
+      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+        _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+      }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     latestArticle () {
@@ -203,39 +206,41 @@ export default {
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.querySelector('body').offsetWidth
+        this.viewport = document.documentElement.clientWidth || document.body.clientWidth
       }
+    },
+    updateSysStage () {
+      this.dfpMode = currEnv()
     }
   },
   metaInfo () {
     const title = SITE_TITLE
-    const description = SITE_DESCRIPTION
-
     return {
       title,
       meta: [
-          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
-          { name: 'description', content: description },
+          { name: 'keywords', content: SITE_KEYWORDS },
+          { name: 'description', content: SITE_DESCRIPTION },
           { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: title },
-          { name: 'twitter:description', content: description },
-          { name: 'twitter:image', content: '/public/notImage.png' },
+          { name: 'twitter:title', content: SITE_TITLE },
+          { name: 'twitter:description', content: SITE_DESCRIPTION },
+          { name: 'twitter:image', content: SITE_OGIMAGE },
           { property: 'fb:app_id', content: FB_APP_ID },
           { property: 'fb:pages', content: FB_PAGE_ID },
           { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: title },
-          { property: 'og:description', content: description },
+          { property: 'og:title', content: SITE_TITLE },
+          { property: 'og:description', content: SITE_DESCRIPTION },
           { property: 'og:url', content: SITE_URL },
-          { property: 'og:image', content: '/public/notImage.png' }
+          { property: 'og:image', content: SITE_OGIMAGE }
       ]
     }
   },
   beforeMount () {
     fetchCommonData(this.$store)
     fetchPop(this.$store)
-    fetchEvent(this.$store)
+    fetchEvent(this.$store, 'embedded')
+    fetchEvent(this.$store, 'logo')
     fetchArticlesGroupedList(this.$store)
   },
   mounted () {
@@ -245,6 +250,11 @@ export default {
     })
     // this.updateCookie()
     this.checkIfLockJS()
+    this.updateSysStage()
+    window.ga('send', 'pageview', this.$route.path, { title: SITE_TITLE })
+  },
+  updated () {
+    this.updateSysStage()
   }
 }
 

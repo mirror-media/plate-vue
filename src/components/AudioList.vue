@@ -1,11 +1,11 @@
 <template>
   <section class="audioList container">
-    <audio-box :sources="getAudioSource(item)" :id="'latest-'+ item.id" :item="item"  v-for="item in audios" />
+    <audio-box :sources="getAudioSource(item)" preload="false" :id="'latest-'+ item.id" :item="item"  v-for="item in audios" />
   </section>
 </template>
 
 <script>
-
+import { SITE_URL } from '../constants'
 import _ from 'lodash'
 import AudioBox from '../components/AudioBox.vue'
 
@@ -18,7 +18,7 @@ export default {
   methods: {
     getAudioSource (item) {
       const audioURL = []
-      audioURL.push(_.get(item, [ 'audio', 'url' ]))
+      audioURL.push(`${SITE_URL}/${_.get(item, [ 'audio', 'gcsDir' ])}${_.get(item, [ 'audio', 'filename' ])}`)
       return audioURL
     }
   }

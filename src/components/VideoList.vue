@@ -1,7 +1,7 @@
 <template>
   <section class="videoList container">
     <a :href="getLink(item)" :id="'latest-'+ item.id" v-for="item in playlist" class="videoList-block" target="_bank">
-      <div class="videoList-block__img" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }"></div>
+      <div class="videoList-block__img" :title="getValue(item, [ 'snippet', 'title' ])" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }"></div>
       <div class="videoList-block__content">
         <h2 v-text="getTitle(item)"></h2>
         <p v-text="getBrief(item)"></p>
@@ -12,7 +12,7 @@
 
 <script>
 
-import { getTruncatedVal } from '../utils/comm'
+import { getTruncatedVal, getValue } from '../utils/comm'
 import _ from 'lodash'
 
 export default {
@@ -30,7 +30,8 @@ export default {
     },
     getTitle (item) {
       return getTruncatedVal(_.get(item, [ 'snippet', 'title' ], ''), 20)
-    }
+    },
+    getValue
   }
 }
 

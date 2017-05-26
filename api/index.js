@@ -98,7 +98,7 @@ router.use('/questionnaire', function(req, res, next) {
         res.send('empty file')
     } else {
         superagent
-            .get(`${QUESTIONNAIRE_PROTOCOL}://${QUESTIONNAIRE_HOST}/questionnaire/${query.file}`)
+            .get(`${SERVER_PROTOCOL}://${SERVER_HOST}/questionnaire/${query.file}`)
             .end((err, response) => {
                 if (!err && response) {
                     res.json(JSON.parse(response.text))
@@ -166,6 +166,23 @@ router.get('*', (req, res) => {
         try {
             if (!err && data) {
                 // have data
+                console.log('##########', 'GOT DATA FROM REDIS', '##########')
+                console.log(decodeURIComponent(req.url))
+                console.log('##########', 'GOT DATA FROM REDIS', '##########')
+                redisPoolRead.ttl(decodeURIComponent(req.url), (_err, _data) => {
+                  if (!_err && _data) {
+                    if (_data === -1) {
+                      redisPoolWrite.del(decodeURIComponent(req.url), (_e, _d) => {
+                        if (_e) {
+                          console.log('deleting key ', decodeURIComponent(req.url), 'from redis in fail ', _err)
+                        }
+                      })
+                    }
+                  } else {
+                    console.log('fetching ttl in fail ', _err)
+                  }
+                })
+                
                 res.json(JSON.parse(data))
             } else {
                 // no data then http request
@@ -179,6 +196,9 @@ router.get('*', (req, res) => {
                     )
                     .end((err, response) => {
                         if (!err && response) {
+                            console.log('##########', 'GOT DATA FROM API', '##########')
+                            console.log(decodeURIComponent(req.url))
+                            console.log('##########', 'GOT DATA FROM API', '##########')                          
                             const res_data = JSON.parse(response.text)
                             const res_num = _.get(res_data, [ '_meta', 'total' ])
                             if (res_num && res_num > 0) {

@@ -7,6 +7,7 @@ Vue.use(Router)
 Vue.use(Meta)
 
 import NotFound from '../views/404.vue'
+import Activity from '../views/Activity.vue'
 import Article from '../views/Article.vue'
 import Home from '../views/Home.vue'
 import HomeB from '../views/HomeB.vue'
@@ -20,6 +21,7 @@ const router = new Router({
   mode: 'history',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
+    { path: '/activity/:activityId/', component: Activity },
     { path: '/author/:authorId/', component: List },
     { path: '/category/:title', component: List },
     {
@@ -30,7 +32,7 @@ const router = new Router({
         component: Article
       } ]
     },
-    { path: '/homeb', component: HomeB },
+    // { path: '/homeb', component: Home },
     { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
     { path: '/search/:keyword', component: Search },
     { path: '/section/:title', component: List },
@@ -46,11 +48,5 @@ const router = new Router({
 if (process.env.VUE_ENV === 'client') {
   window.ga('create', GA_ID, 'auto')
 }
-
-router.afterEach(route => {
-  if (process.env.VUE_ENV === 'client') {
-    setTimeout(() => window.ga('send', 'pageview', route.path), 500)
-  }
-})
 
 export default router

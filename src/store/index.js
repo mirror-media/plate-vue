@@ -2,13 +2,15 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import { fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchEditorChoice, fetchEvent, fetchLatestArticle, fetchImages, fetchQuestionnaire, fetchSearch, fetchTag, fetchTopic, fetchYoutubePlaylist } from './api'
+import moment from 'moment'
+import { fetchActivities, fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchContacts, fetchEditorChoice, fetchEvent, fetchImages, fetchLatestArticle, fetchNodes, fetchQuestionnaire, fetchSearch, fetchTag, fetchTimeline, fetchTopic, fetchYoutubePlaylist } from './api'
 
 Vue.use(Vuex)
 
 const { DFPID, FB_APP_ID, FB_PAGES_ID } = config
 const store = new Vuex.Store({
   state: {
+    activities: {},
     articles: {},
     articlesByUUID: {},
     articlesPopList: {},
@@ -16,23 +18,34 @@ const store = new Vuex.Store({
     audios: {},
     authors: [],
     commonData: {},
+    contact: {},
     dfpId: DFPID,
     editorChoice: {},
-    event: {},
+    eventEmbedded: {},
+    eventLogo: {},
     fbAppId: FB_APP_ID,
     fbPagesId: FB_PAGES_ID,
+    highlightNodes: {},
     images: {},
     latestArticle: {},
     latestArticles: {},
+    nodes: {},
     playlist: {},
     searchResult: {},
     tag: {},
     tags: [],
+    timeline: {},
     topic: {},
+    topics: {},
     questionnaire: {}
   },
 
   actions: {
+    FETCH_ACTIVITIES: ({ commit, state }, { params }) => {
+      return fetchActivities(params).then(activities => {
+        commit('SET_ACTIVITIES', { activities })
+      })
+    },
     FETCH_ARTICLES: ({ commit, state }, { params }) => {
       const orig = _.values(state.articles[ 'items' ])
       return fetchArticles(params).then(articles => {
@@ -89,6 +102,10 @@ const store = new Vuex.Store({
       })
     },
 
+    FETCH_CONTACT: ({ commit, state }, { params }) => {
+      return fetchContacts(params).then(contact => commit('SET_CONTACT', { contact }))
+    },
+
     FETCH_EDITORCHOICE: ({ commit, state }, { params }) => {
       return state.editorChoice.items
         ? Promise.resolve(state.editorChoice)
@@ -127,6 +144,21 @@ const store = new Vuex.Store({
         })
     },
 
+    FETCH_NODES: ({ commit, state }, { params }) => {
+      const orig = _.values(state.nodes[ 'items' ])
+      if (_.get(params, [ 'where', 'isFeatured' ])) {
+        return fetchNodes(params).then(nodes => {
+          commit('SET_HIGHLIGHTNODES', { nodes })
+        })
+      }
+      return fetchNodes(params).then(nodes => {
+        nodes[ 'items' ] = _.sortBy(_.concat(orig, _.get(nodes, [ 'items' ])), [ function (o) {
+          return moment(new Date(o.nodeDate))
+        } ])
+        commit('SET_NODES', { nodes })
+      })
+    },
+
     FETCH_QUESTIONNAIRE: ({ commit, state }, { id }) => {
       return state.questionnaire[ id ]
         ? Promise.resolve(state.questionnaire[ id ])
@@ -151,9 +183,23 @@ const store = new Vuex.Store({
       })
     },
 
+    FETCH_TIMELINE: ({ commit, state }, { id }) => {
+      return fetchTimeline(id).then(timeline => {
+        commit('SET_TIMELINE', { timeline })
+      })
+    },
+
     FETCH_TOPIC_BY_UUID: ({ commit, state }, { params }) => {
       return fetchTopic(params).then(topic => {
         commit('SET_TOPIC_BY_UUID', { topic })
+      })
+    },
+
+    FETCH_TOPICS: ({ commit, state }, { params }) => {
+      const orig = _.values(state.topics.items)
+      return fetchTopic(params).then(topics => {
+        topics[ 'items' ] = _.concat(orig, _.get(topics, [ 'items' ]))
+        commit('SET_TOPICS', { topics })
       })
     },
 
@@ -168,6 +214,10 @@ const store = new Vuex.Store({
   },
 
   mutations: {
+
+    SET_ACTIVITIES: (state, { activities }) => {
+      Vue.set(state, 'activities', activities)
+    },
 
     SET_ARTICLES: (state, { articles }) => {
       Vue.set(state, 'articles', articles)
@@ -206,7 +256,12 @@ const store = new Vuex.Store({
 
     SET_COMMONDATA: (state, { commonData }) => {
       Vue.set(state, 'commonData', commonData)
+      Vue.set(state, 'topics', commonData.topics)
       _.get(commonData, [ 'choices' ], false) ? Vue.set(state, 'editorChoice', _.get(commonData, [ 'choices' ])) : ''
+    },
+
+    SET_CONTACT: (state, { contact }) => {
+      Vue.set(state, 'contact', contact)
     },
 
     SET_EDITORCHOICE: (state, { editorChoice }) => {
@@ -214,7 +269,19 @@ const store = new Vuex.Store({
     },
 
     SET_EVENT: (state, { event }) => {
-      Vue.set(state, 'event', event)
+      const eventType = _.get(event, [ 'items', '0', 'eventType' ])
+      switch (eventType) {
+        case 'embedded':
+          Vue.set(state, 'eventEmbedded', event)
+          break
+        case 'logo':
+          Vue.set(state, 'eventLogo', event)
+          break
+      }
+    },
+
+    SET_HIGHLIGHTNODES: (state, { nodes }) => {
+      Vue.set(state, 'highlightNodes', nodes)
     },
 
     SET_IMAGES: (state, { images }) => {
@@ -227,6 +294,10 @@ const store = new Vuex.Store({
 
     SET_LATESTARTICLES: (state, { latestArticles }) => {
       Vue.set(state, 'latestArticles', latestArticles)
+    },
+
+    SET_NODES: (state, { nodes }) => {
+      Vue.set(state, 'nodes', nodes)
     },
 
     SET_POSTVUE: (state, { commonData }) => {
@@ -260,8 +331,16 @@ const store = new Vuex.Store({
       Vue.set(state, 'tags', _.uniqBy(_tags, 'id'))
     },
 
+    SET_TIMELINE: (state, { timeline }) => {
+      Vue.set(state, 'timeline', timeline)
+    },
+
     SET_TOPIC_BY_UUID: (state, { topic }) => {
       Vue.set(state, 'topic', topic)
+    },
+
+    SET_TOPICS: (state, { topics }) => {
+      Vue.set(state, 'topics', topics)
     },
 
     SET_USER: (state, { user }) => {
@@ -275,7 +354,9 @@ const store = new Vuex.Store({
   },
 
   getters: {
-
+    topics: state => {
+      return state.topics
+    }
   }
 })
 
