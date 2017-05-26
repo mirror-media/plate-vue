@@ -53,7 +53,7 @@ export default {
     },
     navStyle (i) {
       let _index = this.currentIndex < 2 ? this.currentIndex : 2
-      _index = (this.currentIndex > this.nodesAmount - 3) ? this.nodesAmount + 1 - this.currentIndex : _index
+      _index = (this.currentIndex > this.nodesAmount - 2) ? this.nodesAmount + 1 - this.currentIndex : _index
       return {
         active: i === _index
       }
