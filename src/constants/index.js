@@ -254,13 +254,13 @@ export const DFP_UNITS = {
   '57dfe3b0ee85930e00cad4d7': { // watch
     // -- Section Page
     // SMBHD, SMBL1, SMBL2, SMBL3, SMBFT : position on mobile section page
-    'SMBHD': { 'aduid': 'mm_mobile_wat_sec_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
+    'SMBHD': { 'aduid': 'mm_mobile_wat_sec_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0 auto', 'padding: 20px 0' ] },
     'SMBL1': { 'aduid': 'mm_mobile_wat_sec_300x250_L1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'SMBL2': { 'aduid': 'mm_mobile_wat_sec_300x250_L2', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'SMBL3': { 'aduid': 'mm_mobile_wat_sec_300x250_L3', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-bottom: 20px' ] },
     'SMBFT': { 'aduid': 'mm_mobile_wat_sec_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin-bottom: 10px' ] },
     // SPCHD, SPCR1, SPCR2, SPCR3, SPCR4, SPCFT : position on desktop section page
-    'SPCHD': { 'aduid': 'mm_pc_wat_sec_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto 0' ] },
+    'SPCHD': { 'aduid': 'mm_pc_wat_sec_970x250_HD', 'dimensions': '970x250,970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'width: 970px', 'margin: 0 auto', 'padding: 20px 0' ] },
     'SPCR1': { 'aduid': 'mm_pc_wat_sec_300x250_R1', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'center', 'margin-top-0' ], 'cont-style': [ '' ] },
     'SPCR2': { 'aduid': 'mm_pc_wat_sec_300x600_R2', 'dimensions': '300x250,300x600', 'cont-class': [ 'ad-container', 'center', 'margin-top-0' ], 'cont-style': [ '' ] },
     'SPCR3': { 'aduid': 'mm_pc_wat_sec_300x250_R3', 'dimensions': '300x250', 'cont-class': [ 'ad-container', 'center', 'margin-top-0' ], 'cont-style': [ 'margin-bottom: 10px' ] },

@@ -116,7 +116,7 @@ export default {
       return this.headerItem.section.length + this.headerItem.category.length
     },
     logoImage () {
-      const eventLogo = _.get(this.eventLogo, [ 'image', 'image', 'resizedTargets', this.viewportTarget, 'url' ], null)
+      const eventLogo = _.get(this.eventLogo, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ], null)
       return eventLogo || '/public/logo.svg'
     },
     socialLink () {

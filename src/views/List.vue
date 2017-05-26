@@ -18,6 +18,8 @@
       </div>
 
       <div class="listFull-view" v-else-if="pageStyle === 'full'">
+        <div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCHD" :config="props.config" /></div>
+        <div v-if="isMobile"><vue-dfp :is="props.vueDfp" pos="SMBHD" :config="props.config" /></div>
         <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
         <article-leading :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'"/>
         <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
@@ -26,8 +28,8 @@
         <article-list-full :articles='articles' v-if="type === 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
-        <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCFT" :config="props.config" />
-        <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="SMBFT" :config="props.config" />
+        <div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCFT" :config="props.config" /></div>
+        <div v-if="isMobile"><vue-dfp :is="props.vueDfp" pos="SMBFT" :config="props.config" /></div>
         <footer-full :commonData='commonData' :sectionName='sectionName' />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
