@@ -106,7 +106,7 @@ import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import vStore from '../store'
+import store from '../store'
 import moment from 'moment'
 
 const MAXRESULT = 12
@@ -335,12 +335,12 @@ export default {
     articles () {
       switch (this.type) {
         case AUTHOR:
-          return this.$store.state.articles.items
+          return _.get(this.$store.state, [ 'articles', 'items' ])
         default:
           if (this.$route.params.title === 'topic') {
-            return this.$store.state.topics.items
+            return _.get(this.$store.state, [ 'topics', 'items' ])
           }
-          return _.uniqBy(this.$store.state.articlesByUUID.items, 'slug')
+          return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
       }
     },
     audios () {
@@ -533,7 +533,7 @@ export default {
       }
     },
     type () {
-      return _.toUpper(_.split(vStore.state.route.path, '/')[1])
+      return _.toUpper(_.split(store.state.route.path, '/')[1])
     },
     uuid () {
       switch (this.type) {
@@ -673,11 +673,8 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    const type = _.toUpper(_.split(to.path, '/')[1])
-    const pageStyle = _.get(_.find(_.get(vStore.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ], 'feature')
-
     if (from.matched.length !== 0) { // check whether first time
-      fetchListData(vStore, type, pageStyle, getUUID(vStore, type, to), false, false)
+      return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
       .then(() => next())
     } else {
       next()
@@ -699,8 +696,7 @@ export default {
   },
   beforeMount () {
     // only fetch at first time after preFetch
-    this.$store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
-    fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, true)
+    fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
     fetchEvent(this.$store, 'embedded')
     fetchEvent(this.$store, 'logo')
   },
