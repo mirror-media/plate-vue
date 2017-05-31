@@ -3,7 +3,7 @@
     <div class="title"><h4>最新文章</h4></div>
     <div class="list">
       <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
-        <div class="thumbnail" :style="{ backgroundImage: 'url(' + getImage(o, 'tiny') + ')' }">
+        <div class="thumbnail" :style="{ backgroundImage: 'url(' + getImage(o, 'tiny') + ')' }" :title="getValue(o, [ 'title' ])">
           <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'"></router-link>
           <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style === 'projects'"></a>
         </div>

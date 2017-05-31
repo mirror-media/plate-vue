@@ -5,7 +5,7 @@
       <div class="related_item" v-for="(o, i) in relatedList">
         <div>
           <a :href="getHref(o)" >
-            <div class="related_item_img"
+            <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
                   :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
             </div>
           </a>
@@ -43,12 +43,13 @@
       display flex
       align-content flex-start
       flex-wrap wrap
-      justify-content space-between
+
       .related_item
         width 31%
         vertical-align top
         margin-bottom 30px
         box-shadow 3px 4px 15px rgba(0, 0, 0, 0.72)
+        margin-right 2%
         .related_item_img
           background-repeat no-repeat
           background-size cover
@@ -85,10 +86,16 @@
         width 100%
 
         .related_item
-          width 280px
+          width 320px
           margin 30px auto
 
           .related_item_title
             font-size 1rem
+
+  @media (max-width 320px) and (min-width 0px)            
+    .related-container
+      .related_list
+        .related_item
+          width 280px
   
 </style>

@@ -6,15 +6,15 @@
         <template v-for="item in articles">
           <div class="articleListFull-post">
             <a :href="getHref(item)" class="articleListFull-post__img">
-              <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure>
+              <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="getValue(item, [ 'title' ])"></figure>
             </a>
             <div class="articleListFull-post__content">
-              <a :href="getHref(item)"><h2 v-text="item.title"></h2></a>
+              <h2><a :href="getHref(item)" v-text="item.title"></a></h2>
               <div class="articleListFull-post__meta">
                 <span class="articleListFull-post__meta--author" v-show="getAuthor(item, 'writers')" v-html="getAuthor(item, 'writers') + ' ｜ '"></span>
                 <span class="articleListFull-post__meta--date" v-text="moment(new Date(item.publishedDate)).format('Y.MM.DD')"></span>
               </div>
-              <a :href="getHref(item)" class="desktop-only"><p v-text="getBrief(item, 70)"></p></a>
+              <p class="articleListFull-post__brief"><a :href="getHref(item)" v-text="getBrief(item, 70)"></a></p>
             </div>
           </div>
         </template>
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { getAuthor, getBrief, getHref, getImage, getSection, getTruncatedVal } from '../utils/comm'
+import { getAuthor, getBrief, getHref, getImage, getSection, getTruncatedVal, getValue } from '../utils/comm'
 import moment from 'moment'
 
 export default {
@@ -39,6 +39,7 @@ export default {
     getImage,
     getSection,
     getTruncatedVal,
+    getValue,
     moment
   }
 }
@@ -47,9 +48,6 @@ export default {
 
 .articleListFull
   padding 35px 0
-
-  a
-    display block
 
   &-post-container
     padding 0 32px
@@ -112,6 +110,8 @@ export default {
       &--date
         font-size 13px
         color #999
+    &__brief
+      display none
 
 @media (min-width: 1200px)
   .articleListFull
@@ -139,4 +139,6 @@ export default {
           height 100%
           margin 0
           padding 0
+      &__brief
+        display block
 </style>

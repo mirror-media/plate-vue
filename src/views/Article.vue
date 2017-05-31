@@ -2,7 +2,7 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
       <section style="width: 100%;">
-        <app-header :commonData="commonData" v-if="(articleStyle !== 'photography')"></app-header>
+        <app-header :commonData="commonData" :eventLogo="eventLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')"></app-header>
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
@@ -18,7 +18,7 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article-heromedia" v-else-if="heroImage">
-          <img v-if="heroImage && heroImage.image" class="heroimg" :src="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" :src="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
           :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
@@ -59,8 +59,13 @@
       <div v-else-if="(articleStyle === 'photography')">
         <article-body-photography :articleData="articleData" :viewport="viewport">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+          <div slot="slot_dfpFT">
+            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 767" />
+          </div>
         </article-body-photography>
       </div>
+      <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
         <div class="ad">
           <vue-dfp :is="props.vueDfp" pos="MBCVR" extClass="mobile-only" :config="props.config"/>
@@ -75,7 +80,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_TITLE, SITE_URL } from '../constants'
   import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../utils/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
@@ -84,11 +89,13 @@
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
+  import LiveStream from '../components/LiveStream.vue'
   import PopList from '../components/article/PopList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
+  import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
   import store from '../store'
   import truncate from 'truncate'
@@ -104,6 +111,18 @@
               slug
             ]
           }
+        }
+      }
+    })
+  }
+
+  const fetchEvent = (store, eventType = 'embedded') => {
+    return store.dispatch('FETCH_EVENT', {
+      params: {
+        'max_results': 1,
+        'where': {
+          isFeatured: true,
+          eventType: eventType
         }
       }
     })
@@ -170,7 +189,9 @@
     },
     beforeRouteLeave (to, from, next) {
       const mediafarmersScript = document.querySelector('#mediafarmersJS')
-      document.querySelector('body').removeChild(mediafarmersScript)
+      if (mediafarmersScript) {
+        document.querySelector('body').removeChild(mediafarmersScript)
+      }
       next()
     },
     beforeMount () {
@@ -183,6 +204,8 @@
       })
       fetchPop(store)
       fetchCommonData(store)
+      fetchEvent(store, 'embedded')
+      fetchEvent(store, 'logo')
     },
     components: {
       'article-body': ArticleBody,
@@ -191,6 +214,7 @@
       'app-header': Header,
       'dfp-fixed': DfpFixed,
       'latest-list': LatestList,
+      'live-stream': LiveStream,
       'pop-list': PopList,
       'related-list': RelatedList,
       'related-list-one-col': RelatedListOneCol,
@@ -252,6 +276,12 @@
           sizeMapping: DFP_SIZE_MAPPING
         }
       },
+      eventEmbedded () {
+        return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
+      },
+      eventLogo () {
+        return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+      },
       fbAppId () {
         return _.get(this.$store, [ 'state', 'fbAppId' ])
       },
@@ -260,6 +290,15 @@
       },
       hasDfpFixed () {
         return this.sectionId === SECTION_WATCH_ID
+      },
+      hasEventEmbedded () {
+        const _now = moment()
+        const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
+        let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
+        if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+          _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+        }
+        return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
       },
       heroCaption () {
         return _.get(this.articleData, [ 'heroCaption' ], '')
@@ -367,6 +406,16 @@
           document.querySelector('body').appendChild(mediafarmersScript)
         }
       },
+      sendGA (articleData) {
+        if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
+          window.ga('set', 'contentGroup1', '')
+          window.ga('set', 'contentGroup2', '')
+        } else {
+          window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
+          window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
+        }
+        window.ga('send', 'pageview', this.$route.path, { title: `${_.get(articleData, [ 'title' ])} - ${SITE_TITLE}` })
+      },
       updateCookie () {
         const cookie = Cookie.get('visited')
         if (!cookie) {
@@ -401,6 +450,8 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
+
+      this.sendGA(this.articleData)
     },
     metaInfo () {
       if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
@@ -425,30 +476,30 @@
       const categorieName = _.get(categories, [ 0, 'name' ], '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [ 'em' ] }), 200)
+      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
 
       return {
-        title: title + ` － ${SITE_TITLE}`,
+        title: truncate(title, 21) + ` － 鏡週刊`,
         meta: [
-          { name: 'keywords', content: SITE_KEYWORDS + ',' + pureTags.toString() },
+          { name: 'keywords', content: _.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString() },
           { name: 'description', content: pureBrief },
           { name: 'section-name', content: sectionName },
           { name: 'category-name', content: categorieName },
           { name: 'topic-id', content: topicId },
           { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: (ogTitle.length > 0) ? ogTitle + ' － 鏡週刊 Mirror Media' : title + ' － 鏡週刊 Mirror Media' },
-          { name: 'twitter:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
+          { name: 'twitter:title', content: (ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊' },
+          { name: 'twitter:description', content: (ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief },
           { name: 'twitter:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
           { property: 'fb:app_id', content: FB_APP_ID },
           { property: 'fb:pages', content: FB_PAGE_ID },
           { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
           { property: 'og:locale', content: 'zh_TW' },
           { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: (ogTitle.length > 0) ? ogTitle + ' － 鏡週刊 Mirror Media' : title + ' － 鏡週刊 Mirror Media' },
-          { property: 'og:description', content: (ogDescription.length > 0) ? ogDescription : pureBrief },
+          { property: 'og:title', content: (ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊' },
+          { property: 'og:description', content: (ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief },
           { property: 'og:url', content: SITE_URL + '/story/' + slug + '/' },
           { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') }
         ]
@@ -467,6 +518,7 @@
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
         this.updateMediafarmersScript()
+        this.sendGA(this.articleData)
       }
     }
   }

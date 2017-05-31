@@ -28,7 +28,7 @@
         </div>        
       </div>
       <div class="split-line"></div>
-      <div class="content">
+      <article class="content">
         <div v-for="(p, index) in contArr">
           <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
@@ -45,7 +45,7 @@
           <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
         </div>
-      </div>
+      </article>
       <div class="article_main_tags" v-if="tags.length > 0">
         <i class="tags_icon"></i>
         <div class="tags" v-html="tags"></div>
@@ -105,7 +105,7 @@ export default {
       return _.get(this.articleData, [ 'content', 'apiData' ], [])
     },
     credit () {
-      const { cameraMan, designers, engineers, extendByline, photographers, writers } = this.articleData
+      const { cameraMan = [], designers = [], engineers = [], extendByline = '', photographers = [], writers = [] } = this.articleData
       const creditWriterStr = (writers.length > 0) ? '文｜' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
       const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
@@ -138,11 +138,12 @@ export default {
     },
     sliderOption () {
       return {
+        initialSlide: 0,
+        lazyLoadingInPrevNextAmount: 2,
         paginationable: false,
         paginationClickable: true,
         paginationHide: false,
-        setNavBtn: true,
-        lazyLoadingInPrevNextAmount: 2
+        setNavBtn: true
       }
     },
     subtitle () {
@@ -202,7 +203,7 @@ export default {
         case 'header-two':
           return `<h2>${item.content.toString()}</h2>`
         case 'image':
-          return `<div class=\"innerImg ${_.get(item.content, [ 0, 'alignment' ], '')}\"><img src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div></div>`
+          return `<div class=\"innerImg ${_.get(item.content, [ 0, 'alignment' ], '')}\"><img alt="${_.get(item.content, [ 0, 'description' ], '')}" src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div></div>`
         case 'infobox':
           return `<div class="info-box-container ${_.get(item, [ 'alignment' ], '')}">
                     <span class="info-box-icon"></span>
@@ -230,7 +231,7 @@ export default {
                   </blockquote>`
         case 'slideshow':
           return `<div class=\"slideshowImg\">
-                    <img src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
+                    <img alt="${_.get(item.content, [ 0, 'description' ], '')}" src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
                          srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
                                        ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
                                        ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\" />
@@ -308,6 +309,10 @@ export default {
 }
 </script>
 <style lang="stylus">
+  .ad-container
+    > div
+      width 100%
+      
   .article_body 
     width 100%
 
@@ -448,9 +453,12 @@ export default {
         p 
           strong 
             color rgba(65, 65, 65, 0.61)
-            font-weight normal
+            font-weight bold
+
+          em
+            font-weight bold
           
-          i, cite, em, var, address, dfn 
+          i, cite, var, address, dfn 
             font-style normal        
       
       > .content 

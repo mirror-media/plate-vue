@@ -1,11 +1,43 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
+      <div class="foodtravel-redesign" v-if="pageStyle === 'video'">
+        <section>
+          <header-foodtravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+        </section>
+        <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
+        <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
+        <latestArticle-foodtravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" id="articleList" :showLatestOnly="false"/>
+        <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
+        <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" :className="'moreFoodTravel'" />
+        <loading :show="loading" />
+        <vue-dfp :is="props.vueDfp" pos="LPCSFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LMBSFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <footer-foodtravel :commonData='commonData' :sectionName='sectionName' />
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+      </div>
 
-      <div class="list-view" v-if="pageStyle === 'feature'">
-        <app-header :commonData= 'commonData' />
-        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCHD" extClass="desktop-only" :config="props.config" />
-        <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBHD" extClass="mobile-only" :config="props.config" />
+      <div class="listFull-view" v-else-if="pageStyle === 'full'">
+        <div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCHD" :config="props.config" /></div>
+        <div v-if="isMobile"><vue-dfp :is="props.vueDfp" pos="SMBHD" :config="props.config" /></div>
+        <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+        <article-leading :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'"/>
+        <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
+        <latestArticle-full :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'" />
+        <leading-watch v-if="type == 'TAG'" :tag='tag' :type='type'/>
+        <article-list-full :articles='articles' v-if="type === 'TAG'" />
+        <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
+        <loading :show="loading" />
+        <div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCFT" :config="props.config" /></div>
+        <div v-if="isMobile"><vue-dfp :is="props.vueDfp" pos="SMBFT" :config="props.config" /></div>
+        <footer-full :commonData='commonData' :sectionName='sectionName' />
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+      </div>
+
+      <div class="list-view" v-else>
+        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
+        <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
+        <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
           <div class="list-title__colorBlock" :class="sectionName"></div>
@@ -14,36 +46,23 @@
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
+          <vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
         </article-list>
         <audio-list :audios="audios.items" v-if="categoryName === 'audio'" />
         <video-list :playlist="playlist.items" v-if="categoryName === 'videohub'"/>
         <section class="container">
           <more v-if="hasMore && (categoryName === 'audio' || categoryName === 'videohub')" v-on:loadMore="loadMore" />
         </section>
-        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :config="props.config" />
-        <vue-dfp v-if="title !== 'Topic'" :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :config="props.config" />
+        <div><vue-dfp v-if="title !== 'Topic' && !isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" /></div>
+        <div><vue-dfp v-if="title !== 'Topic' && isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" /></div>
         <article-list id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
           v-if="categoryName !== 'audio' && categoryName !== 'videohub'" v-show="hasAutoScroll"/>
         <loading :show="loading" />
         <section class="footer container">
           <app-footer />
         </section>
-        <share />
-      </div>
-
-      <div class="listFull-view" v-if="pageStyle === 'full'">
-        <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-        <article-leading :articles='articles.items' :props="props" v-if="type === 'SECTION'"/>
-        <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
-        <latestArticle-full :articles='articles.items' :props="props" v-if="type === 'SECTION'" />
-        <leading-watch v-if="type == 'TAG'" :tag='tag' :type='type'/>
-        <article-list-full :articles='articles.items' v-if="type === 'TAG'" />
-        <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
-        <loading :show="loading" />
-        <vue-dfp :is="props.vueDfp" pos="LPCFT" extClass="desktop-only" :config="props.config" />
-        <vue-dfp :is="props.vueDfp" pos="LMBFT" extClass="mobile-only" :config="props.config" />
-        <footer-full :commonData='commonData' :sectionName='sectionName' />
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+        <share :right="`20px`" :bottom="`20px`" />
       </div>
 
       <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
@@ -58,10 +77,10 @@
 </template>
 <script>
 
-import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
+import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, unLockJS } from '../utils/comm'
+import { currEnv, getTruncatedVal, unLockJS } from '../utils/comm'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
@@ -69,19 +88,26 @@ import ArticleListFull from '../components/ArticleListFull.vue'
 import AudioList from '../components/AudioList.vue'
 import Cookie from 'vue-cookie'
 import EditorChoiceFull from '../components/EditorChoiceFull.vue'
+import FeaturedStoryFoodTravel from '../components/FeaturedStoryFoodTravel.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
+import FooterFoodTravel from '../components/FooterFoodTravel.vue'
 import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
+import HeaderFoodTravel from '../components/HeaderFoodTravel.vue'
+import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
 import LatestArticleFull from '../components/LatestArticleFull.vue'
+import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
+import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import vStore from '../store'
+import store from '../store'
+import moment from 'moment'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -90,21 +116,32 @@ const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
     .then(() => {
       if (_.toUpper(_.split(store.state.route.path, '/')[1]) === TAG) {
-        return store.dispatch('FETCH_TAG', {
-          'id': store.state.route.params.tagId
-        })
+        return fetchTag(store, store.state.route.params.tagId)
+      }
+      if (_.toUpper(_.split(store.state.route.path, '/')[1]) === AUTHOR) {
+        return fetchAuthor(store, store.state.route.params.authorId)
       }
     })
 }
 
-const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, pageToken = '') => {
+const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = false, pageToken = '') => {
   const page = isLoadMore || PAGE
   switch (type) {
     case AUTHOR:
-      return fetchArticlesByAuthor(store, uuid, {
-        page: page,
-        max_results: MAXRESULT
-      })
+      if (!hasPrefetch) {
+        return fetchAuthor(store, uuid).then(() => {
+          return fetchArticlesByAuthor(store, uuid, {
+            page: page,
+            max_results: MAXRESULT
+          })
+        })
+      } else {
+        return fetchArticlesByAuthor(store, uuid, {
+          page: page,
+          max_results: MAXRESULT
+        })
+      }
+
     case CATEGORY:
       switch (uuid) {
         case AUDIO_ID:
@@ -123,6 +160,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
     case SECTION:
       switch (pageStyle) {
         case 'full':
+        case 'video':
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
             max_results: MAXRESULT,
@@ -141,7 +179,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, needFetchTag, p
           })
       }
     case TAG:
-      if (needFetchTag) {
+      if (!hasPrefetch) {
         return fetchTag(store, uuid).then(() => {
           return fetchArticlesByUuid(store, uuid, TAG, {
             page: page,
@@ -187,6 +225,28 @@ const fetchArticlesByUuid = (store, uuid, type, params) => {
 const fetchAudios = (store, params = {}) => {
   return store.dispatch('FETCH_AUDIOS', {
     'params': params
+  })
+}
+
+const fetchAuthor = (store, uuid) => {
+  return store.dispatch('FETCH_CONTACT', {
+    params: {
+      where: {
+        _id: uuid
+      }
+    }
+  })
+}
+
+const fetchEvent = (store, eventType = 'embedded') => {
+  return store.dispatch('FETCH_EVENT', {
+    params: {
+      'max_results': 1,
+      'where': {
+        isFeatured: true,
+        eventType: eventType
+      }
+    }
   })
 }
 
@@ -241,10 +301,16 @@ export default {
     'article-list-full': ArticleListFull,
     'audio-list': AudioList,
     'editorChoice-full': EditorChoiceFull,
+    'featuredStory-foodtravel': FeaturedStoryFoodTravel,
     'footer-full': FooterFull,
+    'footer-foodtravel': FooterFoodTravel,
     'header-full': HeaderFull,
+    'header-foodtravel': HeaderFoodTravel,
+    'heroImage-foodtravel': HeroImageFoodTravel,
     'latestArticle-full': LatestArticleFull,
+    'latestArticle-foodtravel': LatestArticleFoodTravel,
     'leading-watch': LeadingWatch,
+    'live-stream': LiveStream,
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
@@ -269,21 +335,27 @@ export default {
     articles () {
       switch (this.type) {
         case AUTHOR:
-          return this.$store.state.articles.items
+          return _.get(this.$store.state, [ 'articles', 'items' ])
         default:
           if (this.$route.params.title === 'topic') {
-            return this.$store.state.topics.items
+            return _.get(this.$store.state, [ 'topics', 'items' ])
           }
-          return _.uniqBy(this.$store.state.articlesByUUID.items, 'slug')
+          return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
       }
     },
     audios () {
       return this.$store.state.audios
     },
     autoScrollArticles () {
+      if (this.uuid === SECTION_FOODTRAVEL_ID) {
+        return _.take(this.articles, 8)
+      }
       return _.take(this.articles, 12)
     },
     autoScrollArticlesLoadMore () {
+      if (this.uuid === SECTION_FOODTRAVEL_ID) {
+        return _.slice(this.articles, 8)
+      }
       return _.slice(this.articles, 12)
     },
     categoryName () {
@@ -329,6 +401,12 @@ export default {
         setCentering: true
       }
     },
+    eventEmbedded () {
+      return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
+    },
+    eventLogo () {
+      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+    },
     hasAutoScroll () {
       switch (this.type) {
         case AUTHOR:
@@ -342,6 +420,15 @@ export default {
     },
     hasDFP () {
       return !(this.$route.params.title === 'topic')
+    },
+    hasEventEmbedded () {
+      const _now = moment()
+      const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
+      let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
+      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+        _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+      }
+      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     hasMore () {
       switch (this.$route.params.title) {
@@ -357,6 +444,9 @@ export default {
           }
           return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'total' ], 0)
       }
+    },
+    isMobile () {
+      return this.viewport < 1200
     },
     page () {
       switch (this.type) {
@@ -422,7 +512,7 @@ export default {
     title () {
       switch (this.type) {
         case AUTHOR:
-          return _.get(this.$store.state, [ 'authors', '0', 'name' ])
+          return _.get(this.$store.state, [ 'contact', 'items', '0', 'name' ])
         case CATEGORY:
           switch (this.$route.params.title) {
             case 'marketing':
@@ -443,7 +533,7 @@ export default {
       }
     },
     type () {
-      return _.toUpper(_.split(vStore.state.route.path, '/')[1])
+      return _.toUpper(_.split(store.state.route.path, '/')[1])
     },
     uuid () {
       switch (this.type) {
@@ -476,6 +566,7 @@ export default {
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
+    getTruncatedVal,
     handleScroll () {
       window.onscroll = (e) => {
         if (document.querySelector('#articleList')) {
@@ -560,7 +651,12 @@ export default {
   },
   watch: {
     articleListAutoScrollHeight: function () {
-      this.canScrollLoadMord = true
+      if (this.uuid === SECTION_FOODTRAVEL_ID && this.page >= 2) {
+        this.canScrollLoadMord = false
+      } else {
+        this.canScrollLoadMord = true
+      }
+      // this.canScrollLoadMord = true
     },
     customCSS: function () {
       this.updateCustomizedMarkup()
@@ -568,14 +664,17 @@ export default {
     uuid: function () {
       this.page = PAGE
       this.articleListAutoScrollHeight = 0
+      if (this.sectionName === 'other') {
+        window.ga('set', 'contentGroup1', '')
+      } else {
+        window.ga('set', 'contentGroup1', this.sectionName)
+      }
+      window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
     }
   },
   beforeRouteEnter (to, from, next) {
-    const type = _.toUpper(_.split(to.path, '/')[1])
-    const pageStyle = _.get(_.find(_.get(vStore.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ], 'feature')
-
     if (from.matched.length !== 0) { // check whether first time
-      fetchListData(vStore, type, pageStyle, getUUID(vStore, type, to), false, true)
+      return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
       .then(() => next())
     } else {
       next()
@@ -585,7 +684,7 @@ export default {
     const type = _.toUpper(_.split(to.path, '/')[1])
     const pageStyle = _.get(_.find(_.get(this.$store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ], 'feature')
 
-    fetchListData(this.$store, type, pageStyle, getUUID(this.$store, type, to), false, true)
+    fetchListData(this.$store, type, pageStyle, getUUID(this.$store, type, to), false, false)
     .then(() => next())
   },
   beforeRouteLeave (to, from, next) {
@@ -596,9 +695,10 @@ export default {
     next()
   },
   beforeMount () {
-    // only fetch at first time
-    this.$store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured' ] })
+    // only fetch at first time after preFetch
     fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
+    fetchEvent(this.$store, 'embedded')
+    fetchEvent(this.$store, 'logo')
   },
   mounted () {
     this.updateViewport()
@@ -609,11 +709,15 @@ export default {
     this.insertCustomizedMarkup()
     this.handleScroll()
     this.updateSysStage()
+    if (this.sectionName === 'other') {
+      window.ga('set', 'contentGroup1', '')
+    } else {
+      window.ga('set', 'contentGroup1', this.sectionName)
+    }
+    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
   },
   metaInfo () {
     const type = this.type
-
-    const description = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
     let ogImage
     let ogTitle
@@ -623,20 +727,21 @@ export default {
       case SECTION:
         sectionName = this.sectionName
         const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
-        ogImage = imageURL || '/public/notImage.png'
-        ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? _.get(this.section, [ 'ogTitle' ]) : _.get(this.section, [ 'title' ], this.title)
-        ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? _.get(this.section, [ 'ogDescription' ]) : _.get(this.section, [ 'description' ])
+        ogImage = imageURL || SITE_OGIMAGE
+        ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogTitle' ]), 11) : this.getTruncatedVal(_.get(this.section, [ 'title' ], this.title), 11)
+        ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogDescription' ]), 197) : _.get(this.section, [ 'description' ])
+        ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
         break
       case CATEGORY:
         sectionName = this.sectionName
-        ogTitle = this.title
-        ogImage = '/public/notImage.png'
-        ogDescription = description
+        ogTitle = this.getTruncatedVal(this.title, 11)
+        ogImage = SITE_OGIMAGE
+        ogDescription = SITE_DESCRIPTION
         break
       default:
-        ogTitle = this.title || ''
-        ogImage = '/public/notImage.png'
-        ogDescription = description
+        ogTitle = this.getTruncatedVal(this.title, 11) || ''
+        ogImage = SITE_OGIMAGE
+        ogDescription = SITE_DESCRIPTION
     }
 
     if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
@@ -646,7 +751,7 @@ export default {
       throw e
     }
 
-    const title = ogTitle + ` - ${SITE_TITLE}`
+    const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
     return {
       title: title,
       meta: [
@@ -726,6 +831,9 @@ $color-other = #bcbcbc
 .listFull
   &-view
     background-color #f5f5f5
+
+.foodtravel-redesign
+  background-image url("/public/foodtravelbg.jpg")
 
 @media (min-width: 600px)
   .list
