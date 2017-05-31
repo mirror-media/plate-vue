@@ -27,6 +27,8 @@
             return store.dispatch('LOG_CLIENT', { params: {
               clientInfo: log
             }})
+          }).catch((err) => {
+            console.log(err)
           })
         })
       }

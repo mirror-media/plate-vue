@@ -172,7 +172,7 @@ router.use('/tracking', function(req, res, next) {
   })
   .catch((err) => {
     console.error('Client info logging error occurred:', err)
-    res.send(err)
+    res.status(500).send(err)
   }) 
 })
 
