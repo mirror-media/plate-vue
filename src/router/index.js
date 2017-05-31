@@ -27,11 +27,11 @@ const router = new Router({
     { path: '/category/:title', component: List },
     {
       path: '/story/:slug',
-      component: Article,
-      children: [ {
-        path: 'index.html',
-        component: Article
-      } ]
+      component: Article
+      // children: [ {
+      //   path: 'index.html',
+      //   component: Article
+      // } ]
     },
     // { path: '/homeb', component: Home },
     { path: '/project-list', component: Project },
