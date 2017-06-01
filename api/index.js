@@ -1,5 +1,6 @@
 const _ = require('lodash')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, REDIS_AUTH, REDIS_MAX_CLIENT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_TIMEOUT, TWITTER_API } = require('./config')
+const { GCP_KEYFILE, GCP_PROJECT_ID, GCP_STACKDRIVER_LOG_NAME } = require('./config')
 const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } = require('./config')
 const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT } = require('./config')
 const { YOUTUBE_PROTOCOL, YOUTUBE_HOST, YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY, YOUTUBE_API_TIMEOUT } = require('./config')
@@ -10,6 +11,12 @@ const RedisConnectionPool = require('redis-connection-pool')
 const router = express.Router()
 const superagent = require('superagent')
 const Twitter = require('twitter')
+
+const Logging = require('@google-cloud/logging');
+const loggingClient = Logging({
+  projectId: GCP_PROJECT_ID,
+  keyFilename: GCP_KEYFILE
+});
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
@@ -136,25 +143,38 @@ router.use('/search', function(req, res, next) {
 });
 
 router.use('/twitter', function(req, res, next) {
-
-    const query = req.query
-    let client = new Twitter(TWITTER_API)
-    if (!('screen_name' in query) || query.screen_name === '') {
-        res.send('empty screen_name')
-    } else {
-        client.get('statuses/user_timeline', query, function(err, data) {
-            if (err) {
-                res.send(err)
-                // res.status(500).end('Internal Error 500')
-                console.error(`error during fetch data from twitter : ${req.url}`)
-                console.error(err) 
-                process.exit(1)               
-            } else {
-                res.json(data)
-            }
-        })
-    }
+  const query = req.query
+  let client = new Twitter(TWITTER_API)
+  if (!('screen_name' in query) || query.screen_name === '') {
+      res.send('empty screen_name')
+  } else {
+      client.get('statuses/user_timeline', query, function(err, data) {
+          if (err) {
+              res.send(err)
+              // res.status(500).end('Internal Error 500')
+              console.error(`error during fetch data from twitter : ${req.url}`)
+              console.error(err) 
+              process.exit(1)               
+          } else {
+              res.json(data)
+          }
+      })
+  }
 });
+
+router.use('/tracking', function(req, res, next) {
+  const query = req.query
+  const log = loggingClient.log(GCP_STACKDRIVER_LOG_NAME)
+  const metadata = { resource: { type: 'global' } }
+  const entry = log.entry(metadata, query)
+  log.write(entry).then(() => {
+    res.send({ msg: 'Logging successfully.' })
+  })
+  .catch((err) => {
+    console.error('Client info logging error occurred:', err)
+    res.status(500).send(err)
+  }) 
+})
 
 router.get('*', (req, res) => {
     res.header('Cache-Control', 'public, max-age=300');

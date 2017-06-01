@@ -1,5 +1,6 @@
 import { SITE_DOMAIN, SITE_URL } from '../constants'
 import _ from 'lodash'
+import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 
@@ -166,16 +167,6 @@ export function currEnv () {
   }
 }
 
-export function disableScroll () {
-  if (window.addEventListener) { // older FF
-    window.addEventListener('DOMMouseScroll', preventDefault, false)
-  }
-  window.onwheel = preventDefault // modern standard
-  window.onmousewheel = preventDefault // older browsers, IE
-  document.onmousewheel = preventDefault // older browsers, IE
-  window.ontouchmove = preventDefault // mobile
-  document.onkeydown = preventDefaultForScrollKeys
-}
 export function enableScroll () {
   if (window.removeEventListener) {
     window.removeEventListener('DOMMouseScroll', preventDefault, false)
@@ -185,9 +176,6 @@ export function enableScroll () {
   window.ontouchmove = null
   document.onkeydown = null
 }
-function keys () {
-  return { 37: 1, 38: 1, 39: 1, 40: 1 }
-}
 function preventDefault (e) {
   e = e || window.event
   if (e.preventDefault) {
@@ -195,10 +183,136 @@ function preventDefault (e) {
   }
   e.returnValue = false
 }
-function preventDefaultForScrollKeys (e) {
-  // doesn't work
-  if (keys[e.keyCode]) {
-    preventDefault(e)
-    return false
+
+/*
+ *  constructing and sending req to api to log client's behaviors through following functions:
+ *    getClientOS()
+ *    mmLog()
+ *    _getUserIP()
+ *    _isAlinkDescendant()
+ *    _normalizeLog()
+ */
+
+export function getClientOS () {
+  const userAgent = window.navigator.userAgent
+  const platform = window.navigator.platform
+  const macosPlatforms = [ 'Macintosh', 'MacIntel', 'MacPPC', 'Mac68K' ]
+  const windowsPlatforms = [ 'Win32', 'Win64', 'Windows', 'WinCE' ]
+  const iosPlatforms = [ 'iPhone', 'iPad', 'iPod' ]
+  let os = null
+
+  if (macosPlatforms.indexOf(platform) !== -1) {
+    os = 'Mac OS'
+  } else if (iosPlatforms.indexOf(platform) !== -1) {
+    os = 'iOS'
+  } else if (windowsPlatforms.indexOf(platform) !== -1) {
+    os = 'Windows'
+  } else if (/Android/.test(userAgent)) {
+    os = 'Android'
+  } else if (!os && /Linux/.test(platform)) {
+    os = 'Linux'
   }
+  return os
+}
+
+export function mmLog ({ category, eventType, target, description }) {
+  return _normalizeLog({ category, eventType, target, description })
+}
+
+function _getUserIP () {
+  return new Promise((resolve) => {
+    // compatibility for firefox and chrome
+    const MyPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
+    const pc = new MyPeerConnection({
+      iceServers: []
+    })
+    const noop = () => {}
+    const localIPs = {}
+    const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g
+
+    const iterateIP = (ip) => {
+      if (!localIPs[ip]) {
+        resolve(ip)
+        // return ip
+      }
+      localIPs[ip] = true
+    }
+
+    // create a bogus data channel
+    pc.createDataChannel('')
+
+    // create offer and set local description
+    pc.createOffer().then(function (sdp) {
+      sdp.sdp.split('\n').forEach(function (line) {
+        if (line.indexOf('candidate') < 0) {
+          return
+        }
+        line.match(ipRegex).forEach(iterateIP)
+      })
+      pc.setLocalDescription(sdp, noop, noop)
+    }).catch(function (reason) {
+          // An error occurred, so handle the failure to connect
+
+    })
+
+    // listen for candidate events
+    pc.onicecandidate = (ice) => {
+      if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) {
+        return
+      }
+      ice.candidate.candidate.match(ipRegex).forEach(iterateIP)
+    }
+  })
+}
+
+function _isAlinkDescendant (child) {
+  let node = child.parentNode
+  while (node !== null && node !== undefined) {
+    if (node.tagName === 'A') {
+      return { isAlink: true, href: node.href }
+    }
+    node = node.parentNode
+  }
+  return { isAlink: false, href: '' }
+}
+
+function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer }) {
+  return new Promise((resolve) => {
+    const targ = target
+
+    const clientOs = getClientOS()
+    const innerText = targ.innerText ? sanitizeHtml(targ.innerText, { allowedTags: [ '' ] }) : ''
+    const isAlinkCheck = targ.tagName === 'A' ? { isAlink: true, href: targ.href } : _isAlinkDescendant(targ)
+
+    const log = {
+      'category': category,
+      'client-id': '',
+      'client-os': clientOs,
+      'curr-url': window.location.href,
+      'datetime': moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),
+      'description': description,
+      'event-type': eventType,
+      'redirect-to': isAlinkCheck.href,
+      'target-tag-name': targ.tagName,
+      'target-tag-class': targ.className,
+      'target-tag-id': targ.id,
+      'target-text': truncate(innerText, 100),
+      'target-window-size': {
+        width: document.documentElement.clientWidth || document.body.clientWidth,
+        height: document.documentElement.clientWidth || document.body.clientWidth
+      }
+    }
+    if (window.mmClientId) {
+      log['client-id'] = window.mmClientId
+      log['referrer'] = referrer
+      resolve(log)
+    } else {
+      return _getUserIP().then((ip) => {
+        log['client-id'] = `mm-client-${Date.now()}-${ip}`
+        log['referrer'] = document.referrer
+        window.mmClientId = log['client-id']
+        resolve(log)
+      })
+    }
+  })
 }
