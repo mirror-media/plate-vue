@@ -287,7 +287,7 @@ function _normalizeLog ({ eventType = 'click', target = {}, description = '', re
     const log = {
       'client-id': '',
       'client-os': clientOs,
-      'curr-url': targ.baseURI,
+      'curr-url': window.location.href,
       'datetime': moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),
       'description': description,
       'event-type': eventType,
