@@ -578,11 +578,6 @@ export default {
     width 100%
     padding 1em
     background-color #4d4d4d
-    .project-container
-      margin 1em 0
-      background-color #fff
-      .proj_title
-        display none
     > h1
       margin 0
       color #fff
@@ -592,6 +587,12 @@ export default {
     width 100%
     padding 0 5%
     background-color #fff
+    
+.project-container
+  margin 1em 0
+  background-color #fff
+  .proj_title
+    display none
 
 @media (min-width: 600px)
   .topicTimeline

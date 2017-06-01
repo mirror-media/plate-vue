@@ -183,13 +183,6 @@ function preventDefault (e) {
   }
   e.returnValue = false
 }
-function preventDefaultForScrollKeys (e) {
-  // doesn't work
-  if (keys[e.keyCode]) {
-    preventDefault(e)
-    return false
-  }
-}
 
 /*
  *  constructing and sending req to api to log client's behaviors through following functions:
