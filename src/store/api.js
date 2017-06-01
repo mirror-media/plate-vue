@@ -10,7 +10,7 @@ const _host = getHost()
 
 function _buildQuery (params = {}) {
   let query = {}
-  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean' ]
+  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo' ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where' || ele === 'embedded') {
@@ -37,6 +37,13 @@ function _doFetch (url) {
       }
     })
   })
+}
+
+function _logClient (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/tracking`
+  url = `${url}?${query}`
+  return _doFetch(url)
 }
 
 function _setupWhereInParam (key, value, params = {}) {
@@ -214,6 +221,10 @@ function loadTopic (params = {}) {
 function loadYoutubePlaylist (limit = 12, pageToken = '') {
   const url = `${_host}/api/playlist?maxResults=${limit}&pageToken=${pageToken}`
   return _doFetch(url)
+}
+
+export function logClient (params = {}) {
+  return _logClient(params)
 }
 
 export function fetchActivities (params = {}) {

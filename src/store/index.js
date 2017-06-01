@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import config from '../../api/config'
 import moment from 'moment'
 import { fetchActivities, fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchContacts, fetchEditorChoice, fetchEvent, fetchImages, fetchLatestArticle, fetchNodes, fetchQuestionnaire, fetchSearch, fetchTag, fetchTimeline, fetchTopic, fetchYoutubePlaylist } from './api'
+import { logClient } from './api'
 
 Vue.use(Vuex)
 
@@ -41,6 +42,9 @@ const store = new Vuex.Store({
   },
 
   actions: {
+    LOG_CLIENT: ({ commit, state }, { params }) => {
+      return logClient(params)
+    },
     FETCH_ACTIVITIES: ({ commit, state }, { params }) => {
       return fetchActivities(params).then(activities => {
         commit('SET_ACTIVITIES', { activities })

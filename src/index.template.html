@@ -3,7 +3,7 @@
 
 <head>
   <!-- Google Analytics Content Experiment code -->
-  <!--<script>function utmx_section(){}function utmx(){}(function(){var
+  <script>function utmx_section(){}function utmx(){}(function(){var
     k='129051472-11',d=document,l=d.location,c=d.cookie;
     if(l.search.indexOf('utm_expid='+k)>0)return;
     function f(n){if(c){var i=c.indexOf(n+'=');if(i>-1){var j=c.
@@ -14,7 +14,7 @@
     '&utmx='+(x?x:'')+'&utmxx='+(xx?xx:'')+'&utmxtime='+new Date().
     valueOf()+(h?'&utmxhash='+escape(h.substr(1)):'')+
     '" type="text/javascript" charset="utf-8"><\/sc'+'ript>')})();
-  </script>-->
+  </script>
   <!-- End of Google Analytics Content Experiment code -->
   <meta charset="utf-8">
   <title>MirrorMedia</title>
@@ -59,6 +59,10 @@
   </noscript>
   <!-- End comScore Tag -->
   <style>
+    .header img {
+      image-rendering:-webkit-optimize-contrast;
+      image-rendering:optimize-contrast;
+    }
     .header {
         width: 100%;
         background-color: #f5f5f5;

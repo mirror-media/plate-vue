@@ -276,7 +276,7 @@
       })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
       ga('create', 'UA-83609754-1', 'auto');
-      ga('send', 'pageview');
+      ga('send', 'pageview', '/404');
     </script>
     <script>
       function getHost () {
@@ -302,14 +302,14 @@
       .then(function(data) {
         popList = _.take(_.get(data, [ 'report' ]), 3)
         let listContent = ''
-        _.forEach(popList, function(item) {
+        _.forEach(popList, function(item, index) {
           listContent += `<div class="notFound-popListContainer__post">
             <figure class="notFound-popListContainer__post--img">
-              <a href="${item.slug}"><img src="${_.get(item, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])}" /></a>
+              <a id="notfound-${index}-img" href="${item.slug}"><img src="${_.get(item, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])}" /></a>
               <div class="notFound-popListContainer__post--category ${_.get(item, [ 'sections', '0', 'name' ])}">${_.get(item, [ 'sections', '0', 'title' ])}</div>
             </figure>
             <div class="notFound-popListContainer__post--title">
-              <a href="${item.slug}">${item.title}</a>
+              <a id="notfound-${index}-title" href="${item.slug}">${item.title}</a>
             </div></div>`
         })
         document.querySelector('.notFound-popListContainer').innerHTML =listContent
@@ -325,7 +325,7 @@
         <div class="notFound__img--textBox">
           <h1>404</h1>
           <h2>抱歉！<br>找不到這個網址</h2>
-          <a href="/">| 回首頁 |</a>
+          <a id="notfound-backHome" href="/">| 回首頁 |</a>
         </div>
       </figure>
       <div class="notFound__popList">

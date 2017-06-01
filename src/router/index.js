@@ -12,6 +12,7 @@ import Article from '../views/Article.vue'
 import Home from '../views/Home.vue'
 import HomeB from '../views/HomeB.vue'
 import List from '../views/List.vue'
+import Project from '../views/Project.vue'
 import Questionnaire from '../views/Questionnaire.vue'
 import Search from '../views/Search.vue'
 import TimelineView from '../views/TimelineView.vue'
@@ -26,13 +27,14 @@ const router = new Router({
     { path: '/category/:title', component: List },
     {
       path: '/story/:slug',
-      component: Article,
-      children: [ {
-        path: 'index.html',
-        component: Article
-      } ]
+      component: Article
+      // children: [ {
+      //   path: 'index.html',
+      //   component: Article
+      // } ]
     },
-    // { path: '/homeb', component: Home },
+    { path: '/project-list', component: Project },
+    { path: '/homeb', component: HomeB },
     { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
     { path: '/search/:keyword', component: Search },
     { path: '/section/:title', component: List },

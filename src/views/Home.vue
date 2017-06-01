@@ -244,6 +244,7 @@ export default {
     fetchArticlesGroupedList(this.$store)
   },
   mounted () {
+    window.utmx('url', 'A/B')
     this.updateViewport()
     window.addEventListener('resize', () => {
       this.updateViewport()
