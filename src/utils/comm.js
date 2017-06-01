@@ -215,8 +215,8 @@ export function getClientOS () {
   return os
 }
 
-export function mmLog ({ eventType, target, description }) {
-  return _normalizeLog({ eventType, target, description })
+export function mmLog ({ category, eventType, target, description }) {
+  return _normalizeLog({ category, eventType, target, description })
 }
 
 function _getUserIP () {
@@ -276,7 +276,7 @@ function _isAlinkDescendant (child) {
   return { isAlink: false, href: '' }
 }
 
-function _normalizeLog ({ eventType = 'click', target = {}, description = '', referrer }) {
+function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer }) {
   return new Promise((resolve) => {
     const targ = target
 
@@ -285,6 +285,7 @@ function _normalizeLog ({ eventType = 'click', target = {}, description = '', re
     const isAlinkCheck = targ.tagName === 'A' ? { isAlink: true, href: targ.href } : _isAlinkDescendant(targ)
 
     const log = {
+      'category': category,
       'client-id': '',
       'client-os': clientOs,
       'curr-url': window.location.href,

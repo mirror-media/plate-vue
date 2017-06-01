@@ -20,9 +20,10 @@
       launchLogger () {
         this.doc.addEventListener('click', (event) => {
           mmLog({
+            category: 'whole-site',
+            description: '',
             eventType: 'click',
-            target: event.target,
-            description: ''
+            target: event.target
           }).then((log) => {
             return store.dispatch('LOG_CLIENT', { params: {
               clientInfo: log
