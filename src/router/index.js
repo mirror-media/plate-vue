@@ -10,7 +10,7 @@ import NotFound from '../views/404.vue'
 import Activity from '../views/Activity.vue'
 import Article from '../views/Article.vue'
 import Home from '../views/Home.vue'
-// import HomeB from '../views/HomeB.vue'
+import HomeB from '../views/HomeB.vue'
 import List from '../views/List.vue'
 import Project from '../views/Project.vue'
 import Questionnaire from '../views/Questionnaire.vue'
@@ -33,8 +33,8 @@ const router = new Router({
       //   component: Article
       // } ]
     },
-    // { path: '/homeb', component: Home },
     { path: '/project-list', component: Project },
+    { path: '/homeb', component: HomeB },
     { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
     { path: '/search/:keyword', component: Search },
     { path: '/section/:title', component: List },
