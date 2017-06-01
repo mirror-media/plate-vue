@@ -48,7 +48,7 @@
         return (browser && this.viewport)
       },
       slidesPerView () {
-        return (this.viewport < 768) ? 1 : 3
+        return (this.viewport < 600) ? 1 : 3
       },
       sliderOption () {
         return {
@@ -62,7 +62,7 @@
         }
       },
       sliderId () {
-        return `proj`
+        return `proj-${Date.now()}`
       }
     },
     data () {
