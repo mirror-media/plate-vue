@@ -587,7 +587,6 @@ export default {
     width 100%
     padding 0 5%
     background-color #fff
-
 .project-container
   margin 1em 0
   background-color #fff

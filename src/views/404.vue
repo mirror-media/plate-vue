@@ -6,19 +6,19 @@
       <div class="notFound__img--textBox">
         <h1>404</h1>
         <h2>抱歉！<br>找不到這個網址</h2>
-        <a href="/">| 回首頁 |</a>
+        <a id="notfound-backHome" href="/">| 回首頁 |</a>
       </div>
     </figure>
     <div class="notFound__popList">
       <h2>熱門文章</h2>
       <div class="notFound-popListContainer">
-        <div class="notFound-popListContainer__post" v-for="item in popArticles">
+        <div class="notFound-popListContainer__post" v-for="(item, index) in popArticles">
           <figure class="notFound-popListContainer__post--img">
-            <a :href="getValue(item, [ 'slug' ])"><img :src="getValue(item, [ 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])" :alt="getValue(item, [ 'title' ])"/></a>
+            <a :id="`notfound-${index}-img`" :href="getValue(item, [ 'slug' ])"><img :src="getValue(item, [ 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])" :alt="getValue(item, [ 'title' ])"/></a>
             <div class="notFound-popListContainer__post--category" :style="getSectionStyle(item)" v-text="getValue(item, [ 'sections', '0', 'title' ])" />
           </figure>
           <div class="notFound-popListContainer__post--title">
-            <a :href="getValue(item, [ 'slug' ])" v-text="getValue(item, [ 'title' ])"></a>
+            <a :id="`notfound-${index}-title`" :href="getValue(item, [ 'slug' ])" v-text="getValue(item, [ 'title' ])"></a>
           </div>
         </div>
       </div>
