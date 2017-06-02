@@ -87,25 +87,25 @@ export default {
   name: 'latestArticle-foodtravel',
   props: [ 'articles', 'props', 'commonData', 'showLatestOnly' ],
   components: {
-  'items-title-rect': ItemsTitleRect
+    'items-title-rect': ItemsTitleRect
   },
   methods: {
-  getAuthor,
-  getBrief,
-  getHref,
-  getImage,
-  getTruncatedVal,
-  moment
+    getAuthor,
+    getBrief,
+    getHref,
+    getImage,
+    getTruncatedVal,
+    moment
   },
   computed: {
-  latestArticle () {
-    return this.articles
-  },
-  topics () {
-    return this.commonData.topics.items.filter((o) => {
-    if (o.hasOwnProperty('sections')) return o.sections[0] === SECTION_FOODTRAVEL_ID // foodtravel
-    })
-  }
+    latestArticle () {
+      return this.articles
+    },
+    topics () {
+      return this.commonData.topics.items.filter((o) => {
+        if (o.hasOwnProperty('sections')) return o.sections[0] === SECTION_FOODTRAVEL_ID // foodtravel
+      })
+    }
   }
 }
 </script>

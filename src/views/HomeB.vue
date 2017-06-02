@@ -221,7 +221,7 @@ export default {
       // )
       const latestFirstPage = _.dropRight(_.get(this.articlesGroupedList, [ 'latest' ]), 3)
       if (this.notFirstPage) {
-        return  latestFirstPage
+        return latestFirstPage
                 .concat(
                   _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]),
                           _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
