@@ -167,8 +167,8 @@
             width 50px
             height 50px
             position absolute
-            top 45%
-            left 45%
+            top calc(50% - 25px)
+            left calc(50% - 25px)
 
       
       .featured_item_title, .featured_item_desc
@@ -231,7 +231,7 @@
                 p
                     display none
                 .play-btn
-                  top 45%
+                  top calc(50% - 25px)
                   left 25%
         // center
         .swiper-slide-next
@@ -269,7 +269,7 @@
                     p
                         display none
                     .play-btn
-                      top 45%
+                      top calc(50% - 25px)
                       left 35%
   .slide-nav-btn
     background-size contain
@@ -291,7 +291,7 @@
       background-image url(/public/icon/arrowr-foodtravel.png)
 
 // Tablet
-@media (min-width 600px) and (max-width 1199px)
+@media (min-width 752px) and (max-width 1199px)
   .featured-container 
     .featured_list
         .featured_item
@@ -328,7 +328,7 @@
                             display none        
                 // center
                 .swiper-slide-next
-                    height initial
+                    height 40vw
                     .featured_item
                         border-left none
                         // width 200%
@@ -367,7 +367,7 @@
                         .play-btn
                             display none 
 // Mobile
-@media (min-width 0px) and (max-width 599px)
+@media (min-width 0px) and (max-width 751px)
   .featured-container
     margin-top 50px
     margin-left 5%
@@ -393,8 +393,8 @@
                             p
                                 display none
                             .play-btn
-                              top 40%
-                              left 43%
+                              top calc(50% - 25px)
+                              left calc(50% - 25px)
                 // left
                 .swiper-slide-next
                     .featured_item
@@ -412,8 +412,8 @@
                             p
                                 display none
                             .play-btn
-                              top 40%
-                              left 43%
+                              top calc(50% - 25px)
+                              left calc(50% - 25px)
                 // center
                 .swiper-slide-active
                     .featured_item
@@ -441,8 +441,8 @@
                                 margin 0 20px
                                 margin-bottom 20px
                             .play-btn
-                              top 40%
-                              left 43%
+                              top calc(50% - 25px)
+                              left calc(50% - 25px)
                 // right
                 .swiper-slide-next + .swiper-slide
                     .featured_item
@@ -458,8 +458,8 @@
                             p
                                 display none
                             .play-btn
-                              top 40%
-                              left 43%
+                              top calc(50% - 25px)
+                              left calc(50% - 25px)
     .slide-nav-btn
       background-size contain
       background-repeat no-repeat
