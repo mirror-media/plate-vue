@@ -195,7 +195,7 @@ export const DFP_UNITS = {
     // MBHD, MBL1, MBFT : position on listing page
     'LMBHD': { 'aduid': 'mm_mobile_fnt_300x250_HD', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mm_mobile_fnt_300x250_L1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
-    'LMBSL1': { 'aduid': 'mm_mobile_fnt_sec_300x250_L1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
+    'LMBSL1': { 'aduid': 'mm_mobile_fnt_sec_300x250_L1', 'dimensions': '300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 20px 0' ] },
     'LMBFT': { 'aduid': 'mm_mobile_fnt_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'LMBSFT': { 'aduid': 'mm_mobile_fnt_sec_320x100_FT', 'dimensions': '300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'LMBCVR': { 'aduid': 'mm_mobile_hp_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },

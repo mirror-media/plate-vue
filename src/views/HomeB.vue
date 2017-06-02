@@ -219,14 +219,15 @@ export default {
       //   unionBy,
       //   'title'
       // )
+      const latestFirstPage = _.dropRight(_.get(this.articlesGroupedList, [ 'latest' ]), 3)
       if (this.notFirstPage) {
-        return _.get(this.articlesGroupedList, [ 'latest' ])
+        return  latestFirstPage
                 .concat(
                   _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]),
                           _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
                 )
       } else {
-        return _.get(this.articlesGroupedList, [ 'latest' ])
+        return latestFirstPage
       }
     },
     // latestArticleLoadMore () {
