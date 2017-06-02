@@ -578,6 +578,11 @@ export default {
     width 100%
     padding 1em
     background-color #4d4d4d
+    .project-container
+      margin 1em 0
+      background-color #fff
+      .proj_title
+        display none
     > h1
       margin 0
       color #fff
