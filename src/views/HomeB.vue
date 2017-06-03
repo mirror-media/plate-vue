@@ -208,21 +208,22 @@ export default {
     // },
     latestArticle () {
       const latestFirstPage = _.dropRight(_.get(this.articlesGroupedList, [ 'latest' ]), 3)
-      const choices = _.get(this.articlesGroupedList, [ 'choices' ])
-      const groupedTitle = _.get(this.articlesGroupedList, [ 'grouped' ])
-      const groupedRelateds = _.flatten(_.map(_.get(this.articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
-      const grouped = _.union(groupedTitle, groupedRelateds)
+      // const choices = _.get(this.articlesGroupedList, [ 'choices' ])
+      // const groupedTitle = _.get(this.articlesGroupedList, [ 'grouped' ])
+      // const groupedRelateds = _.flatten(_.map(_.get(this.articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
+      // const grouped = _.union(groupedTitle, groupedRelateds)
+      // const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
 
       const latest = _.uniqBy(
-          latestFirstPage.concat(
-            _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]), _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
-          ),
-          'slug'
-        )
-      const latestXor = _.xorBy(latest, choices, grouped, 'slug')
+        latestFirstPage.concat(
+          _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]), _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
+        ),
+        'slug'
+      )
+      // const latestXor = _.xorBy(latest, choicesAndGrouped, 'slug')
 
       if (this.notFirstPageNow) {
-        return latestXor
+        return latest
       } else {
         return latestFirstPage
       }
