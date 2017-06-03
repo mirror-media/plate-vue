@@ -207,25 +207,22 @@ export default {
     //   return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticles, [ 'meta', 'total' ], 0)
     // },
     latestArticle () {
-      // const unionBy = _.unionBy(
-      //   _.get(this.articlesGroupedList, [ 'choices' ]),
-      //   _.get(this.articlesGroupedList, [ 'grouped' ]),
-      //   _.get(this.articlesGroupedList, [ 'grouped', 'relateds' ]),
-      //   _.get(this.articlesGroupedList, [ 'latest' ]),
-      //   'slug'
-      // )
-      // let xorBy = _.xorBy(
-      //   _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]), _.get(this.articlesGroupedList, [ 'latestEndIndex' ])),
-      //   unionBy,
-      //   'title'
-      // )
       const latestFirstPage = _.dropRight(_.get(this.articlesGroupedList, [ 'latest' ]), 3)
-      if (this.notFirstPage) {
-        return latestFirstPage
-                .concat(
-                  _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]),
-                          _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
-                )
+      const choices = _.get(this.articlesGroupedList, [ 'choices' ])
+      const groupedTitle = _.get(this.articlesGroupedList, [ 'grouped' ])
+      const groupedRelateds = _.flatten(_.map(_.get(this.articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
+      const grouped = _.union(groupedTitle, groupedRelateds)
+
+      const latest = _.uniqBy(
+          latestFirstPage.concat(
+            _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]), _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
+          ),
+          'slug'
+        )
+      const latestXor = _.xorBy(latest, choices, grouped, 'slug')
+
+      if (this.notFirstPageNow) {
+        return latestXor
       } else {
         return latestFirstPage
       }
@@ -241,7 +238,7 @@ export default {
     //   const latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state, [ 'articlesGroupedList', 'choices', 'length' ])))
     //   return latestArticle
     // },
-    notFirstPage () {
+    notFirstPageNow () {
       return _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], 1) !== 1
     },
     popularlist () {
