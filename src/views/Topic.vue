@@ -30,7 +30,7 @@
         </template>
 
         <template v-else>
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"/>
@@ -59,7 +59,7 @@
 
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
-import { getTruncatedVal, getValue, unLockJS } from '../utils/comm'
+import { getTruncatedVal, getValue, unLockJS, currEnv } from '../utils/comm'
 import { currentYPosition } from 'kc-scroll'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
@@ -389,6 +389,9 @@ export default {
       const mediafarmersScript = document.querySelector('#mediafarmersJS')
       document.querySelector('body').removeChild(mediafarmersScript)
       this.insertMediafarmersScript()
+    },
+    updateSysStage () {
+      this.dfpMode = currEnv()
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -458,6 +461,7 @@ export default {
     this.insertCustomizedMarkup()
     this.checkIfLockJS()
     this.updateViewport()
+    this.updateSysStage()
 
     window.ga('set', 'contentGroup1', '')
     window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
@@ -480,6 +484,9 @@ export default {
         }
       })
     }
+  },
+  updated () {
+    this.updateSysStage()
   },
   watch: {
     uuid: function () {
