@@ -2,7 +2,10 @@
   <header id="header" class="header">
     <section class="header-logoSearch">
       <a @click="openSideBar()" id="menubar" class="mobile-only"><img src="/public/icon/hamburger@2x.png" alt="選單" class="header-icon"></a>
-      <router-link :to="'/'" id="header-logo"><img :src="logoImage" class="header-logoSearch--logo" alt="鏡週刊 Mirror Media"></router-link>
+      <div class="header-logoSearch__logoAd">
+        <router-link :to="'/'" id="header-logo"><img :src="logoImage" class="header-logoSearch__logoAd--logo" alt="鏡週刊 Mirror Media"></router-link>
+        <vue-dfp class="header-logoSearch__logoAd--ad" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
+      </div>
       <div class="header-logoSearch__search desktop-only">
         <input type="search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()" placeholder="">
         <button @click="search(searchVal)">
@@ -80,7 +83,7 @@ import _ from 'lodash'
 
 export default {
   name: 'app-header',
-  props: [ 'commonData', 'eventLogo', 'viewport' ],
+  props: [ 'commonData', 'eventLogo', 'viewport', 'props' ],
   data () {
     return {
       isChanged: false,
@@ -166,3 +169,19 @@ export default {
 }
 
 </script>
+
+<style lang="stylus">
+.header-logoSearch__logoAd
+  display flex
+  align-items flex-end
+  &--ad
+    display flex
+    align-items flex-end
+    &:before
+      content "｜"
+      margin-bottom 5px
+
+@media (max-width: 350px)
+  .header-logoSearch
+    padding 10px 8px
+</style>

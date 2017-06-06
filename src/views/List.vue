@@ -35,7 +35,7 @@
       </div>
 
       <div class="list-view" v-else>
-        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
+        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
         <div class="list-title container" :class="sectionName">
