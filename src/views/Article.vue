@@ -198,7 +198,7 @@
           <meta name="twitter:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
           <meta property="fb:app_id" content="${FB_APP_ID}">
           <meta property="fb:pages" content="${FB_PAGE_ID}">
-          <meta property="og:site_name" content="鏡週刊 Mirror Media">
+          <meta property="og:site_name" content="${SITE_TITLE}">
           <meta property="og:locale" content="zh_TW">
           <meta property="og:type" content="article">
           <meta property="og:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊'}">
@@ -511,58 +511,6 @@
       this.updateSysStage()
 
       this.sendGA(this.articleData)
-    },
-    metaInfo () {
-      if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
-        const e = new Error()
-        e.massage = 'Page Not Found'
-        e.code = '404'
-        throw e
-      }
-      const {
-        brief = {},
-        categories = {},
-        heroImage = {},
-        ogDescription = '',
-        ogImage = {},
-        ogTitle = '',
-        sections = {},
-        slug = '',
-        tags = {},
-        title = '',
-        topics = {}
-      } = this.articleData
-      const categorieName = _.get(categories, [ 0, 'name' ], '')
-      const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
-      const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
-      const sectionName = _.get(sections, [ 0, 'name' ], '')
-      const topicId = _.get(topics, [ '_id' ], '')
-
-      return {
-        title: truncate(title, 21) + ` － 鏡週刊`,
-        meta: [
-          { name: 'keywords', content: _.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString() },
-          { name: 'description', content: pureBrief },
-          { name: 'section-name', content: sectionName },
-          { name: 'category-name', content: categorieName },
-          { name: 'topic-id', content: topicId },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: (ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊' },
-          { name: 'twitter:description', content: (ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief },
-          { name: 'twitter:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
-          { property: 'fb:app_id', content: FB_APP_ID },
-          { property: 'fb:pages', content: FB_PAGE_ID },
-          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-          { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: (ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊' },
-          { property: 'og:description', content: (ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief },
-          { property: 'og:url', content: SITE_URL + '/story/' + slug + '/' },
-          { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') }
-        ]
-      }
     },
     updated () {
       this.updateSysStage()

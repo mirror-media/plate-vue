@@ -240,15 +240,15 @@
           <meta name="keywords" content="${SITE_KEYWORDS}">
           <meta name="description" content="${_description}">
           <meta name="twitter:card" content="summary_large_image">
-          <meta name="twitter:title" content="${_title + ' - 鏡週刊 Mirror Media'}">
+          <meta name="twitter:title" content="${_title + ' - ' + SITE_TITLE}">
           <meta name="twitter:description" content="${_description}">
           <meta name="twitter:image" content="${_image}">
           <meta property="fb:app_id" content="${FB_APP_ID}">
           <meta property="fb:pages" content="${FB_PAGE_ID}">
-          <meta property="og:site_name" content="鏡週刊 Mirror Media">
+          <meta property="og:site_name" content="${SITE_TITLE}">
           <meta property="og:locale" content="zh_TW">
           <meta property="og:type" content="article">
-          <meta property="og:title" content="${_title + ' - 鏡週刊 Mirror Media'}">
+          <meta property="og:title" content="${_title + ' - ' + SITE_TITLE}">
           <meta property="og:description" content="${_description}">
           <meta property="og:url" content="${SITE_URL + '/q/' + this.questionnaireId}">
           <meta property="og:image" content="${_image}">

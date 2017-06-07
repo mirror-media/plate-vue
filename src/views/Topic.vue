@@ -17,7 +17,7 @@
 
         <template v-if="isTimeline">
           <a href="/" class="topicTimeline__logo">
-            <img src="/public/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media" />
+            <img src="/public/icon/logo_black@3x.png" :alt="siteTitle" />
           </a>
           <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
           <timeline-headline :timeline="timeline" :viewport="viewport" :viewportTarget="viewportTarget" />
@@ -199,7 +199,7 @@ export default {
         <meta name="twitter:image" content="${ogImage}">
         <meta property="fb:app_id" content="${FB_APP_ID}">
         <meta property="fb:pages" content="${FB_PAGE_ID}">
-        <meta property="og:site_name" content="鏡週刊 Mirror Media">
+        <meta property="og:site_name" content="${SITE_TITLE}">
         <meta property="og:locale" content="zh_TW">
         <meta property="og:type" content="article">
         <meta property="og:title" content="${title}">
@@ -217,6 +217,7 @@ export default {
       dfpUnits: DFP_UNITS,
       loading: false,
       showDfpCoverAdFlag: false,
+      siteTitle: SITE_TITLE,
       viewport: 0
     }
   },
@@ -546,41 +547,6 @@ export default {
       }
       // this.checkIfLockJS()
       // this.sendGA(this.articleData)
-    }
-  },
-  metaInfo () {
-    const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : SITE_OGIMAGE
-    const ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
-    const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.topic, [ 'ogDescription' ]), 197) : SITE_DESCRIPTION
-    const title = ogTitle + ` - ${SITE_TITLE}`
-    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-
-    if (!ogTitle && process.env.VUE_ENV === 'server') {
-      const e = new Error()
-      e.massage = 'Page Not Found'
-      e.code = '404'
-      throw e
-    }
-
-    return {
-      title,
-      meta: [
-          { name: 'keywords', content: SITE_KEYWORDS },
-          { name: 'description', content: ogDescription },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: title },
-          { name: 'twitter:description', content: ogDescription },
-          { name: 'twitter:image', content: ogImage },
-          { property: 'fb:app_id', content: FB_APP_ID },
-          { property: 'fb:pages', content: FB_PAGE_ID },
-          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-          { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: title },
-          { property: 'og:description', content: ogDescription },
-          { property: 'og:url', content: ogUrl },
-          { property: 'og:image', content: ogImage }
-      ]
     }
   }
 }

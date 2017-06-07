@@ -149,7 +149,7 @@ export default {
         <meta name="twitter:image" content="${SITE_OGIMAGE}">
         <meta property="fb:app_id" content="${FB_APP_ID}">
         <meta property="fb:pages" content="${FB_PAGE_ID}">
-        <meta property="og:site_name" content="鏡週刊 Mirror Media">
+        <meta property="og:site_name" content="${SITE_TITLE}">
         <meta property="og:locale" content="zh_TW">
         <meta property="og:type" content="article">
         <meta property="og:title" content="${SITE_TITLE}">
