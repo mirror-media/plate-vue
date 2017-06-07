@@ -12,7 +12,7 @@
 
 <script>
 
-import { getTruncatedVal, getValue } from '../utils/comm'
+import { getTruncatedVal, getValue } from '../util/comm'
 import _ from 'lodash'
 
 export default {

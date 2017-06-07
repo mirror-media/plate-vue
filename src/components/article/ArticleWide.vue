@@ -16,7 +16,7 @@
 </template>
 <script>
 
-import { getBrief, getHref, getImage, getName } from '../../utils/comm'
+import { getBrief, getHref, getImage, getName } from '../../util/comm'
 import _ from 'lodash'
 import truncate from 'truncate'
 

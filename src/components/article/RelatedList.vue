@@ -11,7 +11,7 @@
 </template>
 <script>
   import { SECTION_MAP } from '../../constants'
-  import { getHref, getValue } from '../../utils/comm'
+  import { getHref, getValue } from '../../util/comm'
   import { currentYPosition, elmYPosition } from 'kc-scroll'
   import _ from 'lodash'
   import sanitizeHtml from 'sanitize-html'

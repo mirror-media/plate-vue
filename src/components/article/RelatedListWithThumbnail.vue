@@ -18,7 +18,7 @@
   </div>
 </template>
 <script>
-  import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
+  import { getHref, getTruncatedVal, getValue } from '../../util/comm'
   export default {
     name: 'related-list-thumbnail',
     methods: {

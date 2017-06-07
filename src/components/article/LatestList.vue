@@ -23,7 +23,7 @@
 </template>
 <script>
   import { SITE_URL } from '../../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
+  import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import _ from 'lodash'
 
   export default {

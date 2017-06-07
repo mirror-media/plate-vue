@@ -29,7 +29,7 @@
 <script>
   import { SOCIAL_LINK } from '../constants'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-  import { shareGooglePlus, shareLine, shareFacebook } from '../utils/comm'
+  import { shareGooglePlus, shareLine, shareFacebook } from '../util/comm'
 
   export default {
     name: 'footer',

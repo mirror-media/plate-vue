@@ -4,7 +4,7 @@
     <div class="proj_list">
       <app-slider :option="sliderOption" v-if="ifShowProjects" :slideId="sliderId">
         <template scope="props">
-          <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10">
+          <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10" :key="`${i}-${Date.now()}`">
             <div class="proj_item">
               <div>
                 <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-1'">
@@ -34,7 +34,7 @@
 </template>
 <script>
   import { SECTION_MAP, SITE_URL } from '../../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
+  import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import Slider from '../Slider.vue'
   import sanitizeHtml from 'sanitize-html'
 

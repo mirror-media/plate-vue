@@ -32,7 +32,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../constants'
-import { getHref, getTruncatedVal, getValue } from '../utils/comm'
+import { getHref, getTruncatedVal, getValue } from '../util/comm'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
