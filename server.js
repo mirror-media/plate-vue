@@ -96,7 +96,7 @@ function render (req, res, next) {
   res.setHeader("Server", serverInfo)
 
   const handleError = err => {
-    if (err && err.code === 404) {
+    if (err && err.code == 404) {
       ifPageNotFound = true
       res.status(404).render('404')
       console.log('##########REQUEST URL(404)############')
@@ -109,7 +109,8 @@ function render (req, res, next) {
       res.status(500).render('500')
       console.error(`error during renderToString() error : ${req.url}`)
       console.error(err)
-      ifErrorOccured = true    
+      ifErrorOccured = true   
+      return 
     } 
   }
 
