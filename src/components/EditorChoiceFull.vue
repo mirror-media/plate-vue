@@ -22,7 +22,7 @@
 </template>
 <script>
 
-import { getAuthor, getBrief, getHref, getImage, getTruncatedVal, getValue } from '../utils/comm'
+import { getAuthor, getBrief, getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
 import _ from 'lodash'
 import moment from 'moment'
 

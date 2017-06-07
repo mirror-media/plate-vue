@@ -58,7 +58,7 @@
 </template>
 <script>
   import { SECTION_MAP } from '../../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../../utils/comm'
+  import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import _ from 'lodash'
   export default {
     name: 'pop-list',

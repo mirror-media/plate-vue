@@ -10,7 +10,7 @@
 </template>
 <script>
   import { SECTION_MAP } from '../../constants'
-  import { getHref, getValue } from '../../utils/comm'
+  import { getHref, getValue } from '../../util/comm'
   import _ from 'lodash'
 
   export default {

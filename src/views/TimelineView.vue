@@ -40,13 +40,14 @@
 </template>
 
 <script>
-import { getValue, unLockJS } from '../utils/comm'
+import { getValue, unLockJS } from '../util/comm'
 import _ from 'lodash'
 import FooterFull from '../components/FooterFull.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import More from '../components/More.vue'
 import Spinner from '../components/Spinner.vue'
 import moment from 'moment'
+import titleMetaMixin from '../util/mixinTitleMeta'
 import twitter from 'twitter-text'
 
 const fetchCommonData = (store) => {
@@ -96,11 +97,13 @@ export default {
       return _.get(_.last(this.rep), 'id', 0)
     }
   },
-  metaInfo () {
-    const title = 'Timeline :: ' + _.upperCase(this.$route.params.title)
+  mixins: [ titleMetaMixin ],
+  metaSet () {
     return {
-      title,
-      meta: [ { vmid: 'description', name: 'description', content: title } ]
+      title: 'Timeline :: ' + _.upperCase(this.$route.params.title),
+      meta: `
+        <meta name="description" content="${'Timeline :: ' + _.upperCase(this.$route.params.title)}">
+      `
     }
   },
   methods: {
@@ -140,7 +143,9 @@ export default {
     this.checkIfLockJS()
     window.ga('send', 'pageview', this.$route.path, { title: `Timeline :: ${_.upperCase(this.$route.params.title)}` })
   },
-  preFetch: fetchData,
+  asyncData ({ store }) {
+    return fetchData(store)
+  },
   beforeMount () {
     fetchTwitter(`/twitter?screen_name=MirrorWatchTW&count=10`).then(
       response => {

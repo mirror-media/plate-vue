@@ -22,7 +22,7 @@
         <template v-if="nodeSliderContentAmount > 1">
           <app-slider :option="sliderOption" :slideId="slideId">
             <template scope="props">
-              <swiper-slide :is="props.slide" v-for="(o, i) in nodeSliderContent" :class="ifNoSwiping">
+              <swiper-slide :is="props.slide" v-for="(o, i) in nodeSliderContent" :class="ifNoSwiping" :key="`${i}-${Date.now()}`">
                 <template v-if="o.type === `video`">
                   <video :id="`video-${index}-${i}`" controls>
                     <source :src="getNodeSlideshowVideoSrc(o)" :type="getNodeSlideshowVideoType(o)">
@@ -66,7 +66,7 @@
 
 <script>
 
-import { getImageCertain, shareFacebook } from '../../utils/comm'
+import { getImageCertain, shareFacebook } from '../../util/comm'
 import _ from 'lodash'
 import ActivityNodeContent from './ActivityNodeContent.vue'
 import Slider from '../Slider.vue'

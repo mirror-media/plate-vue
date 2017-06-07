@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { getValue } from '../utils/comm'
+import { getValue } from '../util/comm'
 import _ from 'lodash'
 
 export default {

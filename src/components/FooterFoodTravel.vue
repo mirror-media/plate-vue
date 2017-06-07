@@ -7,8 +7,8 @@
     </div>
 
     <div class="footer-foodtravel__menu">
-      <router-link :to="item.href" v-for="item in menuItem.section" v-text="item.title" :id="'footer-' + item.href"></router-link>
-      <router-link :to="item.href" v-for="item in menuItem.category" v-text="item.title" :id="'footer-' + item.href"></router-link>
+      <router-link :to="item.href" v-for="(item, i) in menuItem.section" v-text="item.title" :id="'footer-' + item.href" :key="`${i}-${Date.now()}`"></router-link>
+      <router-link :to="item.href" v-for="(item, i) in menuItem.category" v-text="item.title" :id="'footer-' + item.href" :key="`${i}-${Date.now()}`"></router-link>
     </div>
 
     <div class="footer-foodtravel__vertDivider"></div>
