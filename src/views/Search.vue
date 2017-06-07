@@ -1,33 +1,39 @@
 <template>
-  <div class="search-view">
-    <section style="width: 100%;">
-      <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
-    </section>
-    <div class="search-title container">
-      <span class="search-title__text" v-text="title"></span>
-      <div class="search-title__colorBlock"></div>
-    </div>
-    <article-list :articles='articles.items' />
-    <loading :show="loading" />
-    <section class="container">
-      <more v-if="hasMore" v-on:loadMore="loadMore" />
-    </section>
-    <section class="footer container">
-      <app-footer />
-    </section>
-  </div>
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
+    <template scope="props" slot="dfpPos">
+      <div class="search-view">
+        <section style="width: 100%;">
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
+        </section>
+        <div class="search-title container">
+          <span class="search-title__text" v-text="title"></span>
+          <div class="search-title__colorBlock"></div>
+        </div>
+        <article-list :articles='articles.items' />
+        <loading :show="loading" />
+        <section class="container">
+          <more v-if="hasMore" v-on:loadMore="loadMore" />
+        </section>
+        <section class="footer container">
+          <app-footer />
+        </section>
+      </div>
+    </template>
+  </vue-dfp-provider>
 </template>
 
 <script>
 
 import _ from 'lodash'
+import { DFP_ID, DFP_UNITS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
-import { unLockJS } from '../util/comm'
+import { unLockJS, currEnv } from '../util/comm'
 import ArticleList from '../components/ArticleList.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
+import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
@@ -72,7 +78,8 @@ export default {
     'app-header': Header,
     'article-list': ArticleList,
     'loading': Loading,
-    'more': More
+    'more': More,
+    'vue-dfp-provider': VueDfpProvider
   },
   asyncData ({ store }) {
     return fetchData(store)
@@ -124,7 +131,10 @@ export default {
       commonData: this.$store.state.commonData,
       loading: false,
       page: PAGE,
-      viewport: undefined
+      viewport: undefined,
+      dfpid: DFP_ID,
+      dfpMode: 'prod',
+      dfpUnits: DFP_UNITS
     }
   },
   computed: {
@@ -139,6 +149,23 @@ export default {
     },
     title () {
       return this.$route.params.keyword
+    },
+    dfpOptions () {
+      return {
+        afterEachAdLoaded: (event) => {
+          const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
+          const position = dfpCover.getAttribute('pos')
+          if (position === 'LMBCVR' || position === 'MBCVR') {
+            const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
+            if (adDisplayStatus === 'none') {
+              this.showDfpCoverAdFlag = false
+            } else {
+              this.updateCookie()
+            }
+          }
+        },
+        setCentering: true
+      }
     }
   },
   methods: {
@@ -159,6 +186,9 @@ export default {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.querySelector('body').offsetWidth
       }
+    },
+    updateSysStage () {
+      this.dfpMode = currEnv()
     }
   },
   beforeMount () {
@@ -170,9 +200,13 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
+    this.updateSysStage()
 
     window.ga('set', 'contentGroup1', '')
     window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+  },
+  updated () {
+    this.updateSysStage()
   },
   watch: {
     title: function () {

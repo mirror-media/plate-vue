@@ -180,7 +180,7 @@ button:focus {
   .container
     width 768px
 
-@media (max-width 1024px)
+@media (max-width 1199px)
   .mobile-hide
     display none !important
 
