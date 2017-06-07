@@ -7,7 +7,7 @@
 </template>
 
 <script>
-  import { mmLog } from './utils/comm.js'
+  import { mmLog } from './util/comm.js'
   import store from './store'
 
   export default {

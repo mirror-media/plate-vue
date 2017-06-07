@@ -137,7 +137,7 @@
 
 <script>
 
-import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../utils/comm'
+import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../util/comm'
 import _ from 'lodash'
 import moment from 'moment'
 

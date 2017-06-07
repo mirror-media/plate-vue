@@ -3,8 +3,26 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
 import moment from 'moment'
-import { fetchActivities, fetchArticles, fetchArticlesByUuid, fetchArticlesGroupedList, fetchArticlesPopList, fetchAudios, fetchCommonData, fetchContacts, fetchEditorChoice, fetchEvent, fetchImages, fetchLatestArticle, fetchNodes, fetchQuestionnaire, fetchSearch, fetchTag, fetchTimeline, fetchTopic, fetchYoutubePlaylist } from './api'
-import { logClient } from './api'
+import { fetchActivities,
+  fetchArticles,
+  fetchArticlesByUuid,
+  fetchArticlesGroupedList,
+  fetchArticlesPopList,
+  fetchAudios,
+  fetchCommonData,
+  fetchContacts,
+  fetchEditorChoice,
+  fetchEvent,
+  fetchImages,
+  fetchLatestArticle,
+  fetchNodes,
+  fetchQuestionnaire,
+  fetchSearch,
+  fetchTag,
+  fetchTimeline,
+  fetchTopic,
+  fetchYoutubePlaylist,
+  logClient } from './api'
 
 Vue.use(Vuex)
 

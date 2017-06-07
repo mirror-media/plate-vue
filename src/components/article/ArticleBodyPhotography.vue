@@ -61,8 +61,8 @@
 </template>
 <script>
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-  import { getValue } from '../../utils/comm'
-  import { shareGooglePlus, shareLine, shareFacebook } from '../../utils/comm'
+  import { getValue } from '../../util/comm'
+  import { shareGooglePlus, shareLine, shareFacebook } from '../../util/comm'
   import _ from 'lodash'
   import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
 

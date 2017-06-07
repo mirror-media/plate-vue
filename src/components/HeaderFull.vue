@@ -61,7 +61,7 @@
         <nav class="sidebarFull__menu">
           <router-link :to="'/section/' + sectionName" class="sidebarFull__menu--main">主頁</router-link>
           <div class="sidebarFull__menu--horizDivider"></div>
-          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title"></router-link>
+          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :key="`${i}-${Date.now()}`"></router-link>
         </nav>
       </div>
       <div class="sidebarFull-curtain" @click="closeSideBar()" v-show="openSide"></div>
@@ -81,7 +81,7 @@
 
 import { SECTION_WATCH_ID, SOCIAL_LINK, TOPIC_WATCH_ID } from '../constants/index'
 import { currentYPosition } from 'kc-scroll'
-import { getValue } from '../utils/comm'
+import { getValue } from '../util/comm'
 import _ from 'lodash'
 
 export default {

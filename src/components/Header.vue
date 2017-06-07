@@ -18,17 +18,17 @@
         <div v-for="item in headerItem.section" class="dropdown" :class="item.name" :style="{ width: 'calc( 100% /' + headerAmount + ')'}">
           <router-link :id="`header-${item.name}-menu`" :to="item.href" v-text="item.title"></router-link>
           <div class="dropdown-content">
-            <router-link :to="c.href" :id="`header-${c.name}-menu`" v-for="c in item.categories" v-text="c.title"/>
+            <router-link :to="c.href" :id="`header-${c.name}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${i}-${Date.now()}`"/>
           </div>
         </div>
-        <router-link :to="item.href" :id="`header-${item.name}-menu`" v-for="item in headerItem.category" v-text="item.title" :class="item.section" :style="{ width: 'calc( 100% /' + headerAmount + ')'}" />
+        <router-link :to="item.href" :id="`header-${item.name}-menu`" v-for="(item, i) in headerItem.category" v-text="item.title" :class="item.section" :style="{ width: 'calc( 100% /' + headerAmount + ')'}" :key="`${i}-${Date.now()}`" />
       </div>
       <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header--mirrorfiction" target="_blank">鏡文學</a>
     </nav>
     <nav class="header-menu--topic">
       <div>
         <div class="header-menu">
-          <router-link :to="item.href" :id="`header-${item.name}-menu`" v-for="item in headerItem.topic" v-text="item.title"/>
+          <router-link :to="item.href" :id="`header-${item.name}-menu`" v-for="(item, i) in headerItem.topic" v-text="item.title" :key="`${i}-${Date.now()}`" />
         </div>
         <router-link to="/section/topic">更多</router-link>
       </div>

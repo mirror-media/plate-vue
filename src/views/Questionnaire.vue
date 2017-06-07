@@ -51,14 +51,15 @@
   </div>
 </template>
 <script>
-  import { FB_APP_ID, FB_PAGE_ID, SITE_KEYWORDS, SITE_TITLE } from '../constants'
+  import { FB_APP_ID, FB_PAGE_ID, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
   import { smoothScroll } from 'kc-scroll'
-  import { getValue, unLockJS } from '../utils/comm'
+  import { getValue, unLockJS } from '../util/comm'
   import _ from 'lodash'
   import AsideTab from '../components/questionnaire/AsideTab.vue'
   import Option from '../components/questionnaire/Option.vue'
   import Question from '../components/questionnaire/Question.vue'
   import ShareToolbox from '../components/questionnaire/ShareToolbox.vue'
+  import titleMetaMixin from '../util/mixinTitleMeta'
 
   const fetchQuestionnaire = (store) => {
     return store.dispatch('FETCH_QUESTIONNAIRE', {
@@ -217,41 +218,43 @@
     mounted () {
       this.checkIfLockJS()
     },
-    metaInfo () {
+    name: 'questionnaire-view',
+    asyncData ({ store }) {
+      return fetchQuestionnaire(store)
+    },
+    mixins: [ titleMetaMixin ],
+    metaSet () {
       if (!this.questionnaireData && process.env.VUE_ENV === 'server') {
         const e = new Error()
         e.massage = 'Page Not Found'
         e.code = '404'
         throw e
       }
-
       const _specificResult = _.find(this.results, { id: this.resultId })
-
       const _description = _.get(_specificResult, [ 'title' ], this.questionnaireDesc)
       const _image = _.get(_specificResult, [ 'image', 'url' ], this.questionnaireImg)
       const _title = this.questionnaireTitle
-
       return {
         title: this.questionnaireTitle + ` - ${SITE_TITLE}`,
-        meta: [
-          { name: 'description', content: _description },
-          { name: 'keywords', content: SITE_KEYWORDS },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: _title + ' - 鏡週刊 Mirror Media' },
-          { name: 'twitter:description', content: _description },
-          { name: 'twitter:image', content: _image },
-          { property: 'fb:app_id', content: FB_APP_ID },
-          { property: 'fb:pages', content: FB_PAGE_ID },
-          { property: 'og:description', content: _description },
-          { property: 'og:image', content: _image },
-          { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-          { property: 'og:title', content: _title }
-        ]
+        meta: `
+          <meta name="keywords" content="${SITE_KEYWORDS}">
+          <meta name="description" content="${_description}">
+          <meta name="twitter:card" content="summary_large_image">
+          <meta name="twitter:title" content="${_title + ' - 鏡週刊 Mirror Media'}">
+          <meta name="twitter:description" content="${_description}">
+          <meta name="twitter:image" content="${_image}">
+          <meta property="fb:app_id" content="${FB_APP_ID}">
+          <meta property="fb:pages" content="${FB_PAGE_ID}">
+          <meta property="og:site_name" content="鏡週刊 Mirror Media">
+          <meta property="og:locale" content="zh_TW">
+          <meta property="og:type" content="article">
+          <meta property="og:title" content="${_title + ' - 鏡週刊 Mirror Media'}">
+          <meta property="og:description" content="${_description}">
+          <meta property="og:url" content="${SITE_URL + '/q/' + this.questionnaireId}">
+          <meta property="og:image" content="${_image}">
+        `
       }
-    },
-    name: 'questionnaire-view',
-    preFetch: fetchQuestionnaire
+    }
   }
 </script>
 <style lang="stylus" scoped>

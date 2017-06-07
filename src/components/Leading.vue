@@ -4,7 +4,7 @@
       <div class="leading-slideshow" v-if="type === 'slideshow' && slideshowImgs.length > 0">
         <app-slider :option="sliderOption">
           <template scope="props">
-            <swiper-slide :is="props.slide" v-for="(o, i) in slideshowImgs">
+            <swiper-slide :is="props.slide" v-for="(o, i) in slideshowImgs" :key="`${i}-${Date.now()}`">
               <img :src="getValue(o, [ 'image', 'url' ])"
                    :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
                               ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { getValue } from '../utils/comm'
+import { getValue } from '../util/comm'
 import _ from 'lodash'
 import Slider from './Slider.vue'
 

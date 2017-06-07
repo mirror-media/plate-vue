@@ -6,8 +6,8 @@
       </router-link>
     </div>
     <div class="footerFull__menu">
-      <router-link :to="item.href" v-for="item in menuItem.section" v-text="item.title"></router-link>
-      <router-link :to="item.href" v-for="item in menuItem.category" v-text="item.title"></router-link>
+      <router-link :to="item.href" v-for="(item, i) in menuItem.section" v-text="item.title" :key="`${i}-${Date.now()}`"></router-link>
+      <router-link :to="item.href" v-for="(item, i) in menuItem.category" v-text="item.title" :key="`${i}-${Date.now()}`"></router-link>
     </div>
     <div class="footerFull__vertDivider"></div>
     <div class="footerFull__link">
@@ -31,7 +31,9 @@ import _ from 'lodash'
 export default {
   name: 'footer-full',
   props: {
-    commonData: {},
+    commonData: {
+      default: () => { return {} }
+    },
     sectionName: ''
   },
   data () {
@@ -44,6 +46,9 @@ export default {
       const menuItem = {}
       menuItem.section = []
       menuItem.category = []
+      if (!this.commonData.sections) {
+        return menuItem
+      }
       _.forEach(this.commonData.sections.items, (s) => {
         s.href = '/section/' + s.name
         s.isFeatured ? menuItem.section.push(s) : ''

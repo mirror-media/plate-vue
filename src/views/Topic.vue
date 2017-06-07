@@ -59,7 +59,7 @@
 
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
-import { getTruncatedVal, getValue, unLockJS } from '../utils/comm'
+import { getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition } from 'kc-scroll'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
@@ -79,6 +79,7 @@ import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import store from '../store'
+import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -169,7 +170,45 @@ export default {
     'vue-dfp-provider': VueDfpProvider,
     ProjectList
   },
-  preFetch: fetchData,
+  asyncData ({ store }) {
+    return fetchData(store)
+  },
+  mixins: [ titleMetaMixin ],
+  metaSet () {
+    const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : SITE_OGIMAGE
+    const ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
+    const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.topic, [ 'ogDescription' ]), 197) : SITE_DESCRIPTION
+    const title = ogTitle + ` - ${SITE_TITLE}`
+    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+
+    if (!ogTitle && process.env.VUE_ENV === 'server') {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    }
+
+    return {
+      title: title,
+      meta: `
+        <meta name="keywords" content="${SITE_KEYWORDS}">
+        <meta name="description" content="${ogDescription}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:description" content="${ogDescription}">
+        <meta name="twitter:image" content="${ogImage}">
+        <meta property="fb:app_id" content="${FB_APP_ID}">
+        <meta property="fb:pages" content="${FB_PAGE_ID}">
+        <meta property="og:site_name" content="鏡週刊 Mirror Media">
+        <meta property="og:locale" content="zh_TW">
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="${title}">
+        <meta property="og:description" content="${ogDescription}">
+        <meta property="og:url" content="${ogUrl}">
+        <meta property="og:image" content="${ogImage}">
+      `
+    }
+  },
   data () {
     return {
       commonData: this.$store.state.commonData,
@@ -433,10 +472,12 @@ export default {
     })
   },
   beforeRouteLeave (to, from, next) {
-    const custCss = document.querySelector('#custCSS')
-    const custScript = document.querySelector('#custJS')
-    custCss.innerHTML = ''
-    custScript.innerHTML = ''
+    if (process.env.VUE_ENV === 'client') {
+      const custCss = document.querySelector('#custCSS')
+      const custScript = document.querySelector('#custJS')
+      custCss.innerHTML = ''
+      custScript.innerHTML = ''
+    }
     next()
   },
   beforeMount () {
@@ -483,21 +524,27 @@ export default {
   },
   watch: {
     uuid: function () {
-      window.ga('set', 'contentGroup1', '')
-      window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+      if (process.env.VUE_ENV === 'client') {
+        window.ga('set', 'contentGroup1', '')
+        window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+      }
     },
     customCSS: function () {
-      this.updateCustomizedMarkup()
+      if (process.env.VUE_ENV === 'client') {
+        this.updateCustomizedMarkup()
+      }
     },
     articleUrl: function () {
-      window.FB && window.FB.init({
-        appId: this.fbAppId,
-        xfbml: true,
-        version: 'v2.0'
-      })
-      window.FB && window.FB.XFBML.parse()
+      if (process.env.VUE_ENV === 'client') {
+        window.FB && window.FB.init({
+          appId: this.fbAppId,
+          xfbml: true,
+          version: 'v2.0'
+        })
+        window.FB && window.FB.XFBML.parse()
+        this.updateMediafarmersScript()
+      }
       // this.checkIfLockJS()
-      this.updateMediafarmersScript()
       // this.sendGA(this.articleData)
     }
   },

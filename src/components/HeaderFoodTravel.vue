@@ -8,7 +8,7 @@
       </div>
       <div class="headerFoodTravel__menu">
         <a class="headerFoodTravel__menu--ham mobile-only" @click="openSideBar()"><img src="/public/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
-        <router-link class="headerFoodTravel__menu--item desktop-only" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title" :id="'header-' + item.name"></router-link>
+        <router-link class="headerFoodTravel__menu--item desktop-only" :to="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :id="'header-' + item.name" :key="`${i}-${Date.now()}`"></router-link>
       </div>
       <div class="headerFoodTravel__social-and-search">
         <a :href="socialLink.FACEBOOK_FOODTRAVEL" target="_blank" id="header-facebook">
@@ -31,7 +31,7 @@
           <a class="sidebarFull__close--text" @click="closeSideBar()"></a>
         </div>
         <nav class="sidebarFull__menu">
-          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="item in menuItem" v-text="item.title" :id="'header-' + item.name"></router-link>
+          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :id="'header-' + item.name" :key="`${i}-${Date.now()}`"></router-link>
         </nav>
       </div>
       <div class="sidebarFull-curtain" @click="closeSideBar()" v-show="openSide"></div>
