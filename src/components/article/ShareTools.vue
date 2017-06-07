@@ -8,7 +8,7 @@
 </template>
 <script>
   import { currentYPosition, elmYPosition } from 'kc-scroll'
-  import { shareGooglePlus, shareLine, shareFacebook } from '../../utils/comm'
+  import { shareGooglePlus, shareLine, shareFacebook } from '../../util/comm'
   export default {
     methods: {
       fixToolBox () {

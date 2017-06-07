@@ -81,7 +81,7 @@ import {
   getHref,
   getImage,
   getTruncatedVal
-} from '../utils/comm'
+} from '../util/comm'
 import moment from 'moment'
 export default {
   name: 'latestArticle-foodtravel',

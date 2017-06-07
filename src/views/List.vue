@@ -80,7 +80,7 @@
 import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, getTruncatedVal, unLockJS } from '../utils/comm'
+import { currEnv, getTruncatedVal, unLockJS } from '../util/comm'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
@@ -106,8 +106,9 @@ import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import store from '../store'
 import moment from 'moment'
+import store from '../store'
+import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -318,7 +319,69 @@ export default {
     'video-list': VideoList,
     'vue-dfp-provider': VueDfpProvider
   },
-  preFetch: fetchCommonData,
+  asyncData ({ store }) {
+    return fetchCommonData(store)
+  },
+  mixins: [ titleMetaMixin ],
+  metaSet () {
+    const type = this.type
+    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    let ogImage
+    let ogTitle
+    let ogDescription
+    let sectionName
+    switch (type) {
+      case SECTION:
+        sectionName = this.sectionName
+        const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
+        ogImage = imageURL || SITE_OGIMAGE
+        ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogTitle' ]), 11) : this.getTruncatedVal(_.get(this.section, [ 'title' ], this.title), 11)
+        ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogDescription' ]), 197) : _.get(this.section, [ 'description' ])
+        ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
+        break
+      case CATEGORY:
+        sectionName = this.sectionName
+        ogTitle = this.getTruncatedVal(this.title, 11)
+        ogImage = SITE_OGIMAGE
+        ogDescription = SITE_DESCRIPTION
+        break
+      default:
+        ogTitle = this.getTruncatedVal(this.title, 11) || ''
+        ogImage = SITE_OGIMAGE
+        ogDescription = SITE_DESCRIPTION
+    }
+
+    if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    }
+
+    const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
+    this.titleBase = title
+    return {
+      title: title,
+      meta: `
+        <meta name="keywords" content="${SITE_KEYWORDS}">
+        <meta name="description" content="${ogDescription}">
+        <meta name="section-name" content="${sectionName}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:description" content="${ogDescription}">
+        <meta name="twitter:image" content="${ogImage}">
+        <meta property="fb:app_id" content="${FB_APP_ID}">
+        <meta property="fb:pages" content="${FB_PAGE_ID}">
+        <meta property="og:site_name" content="${SITE_TITLE}">
+        <meta property="og:locale" content="zh_TW">
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="${title}">
+        <meta property="og:description" content="${ogDescription}">
+        <meta property="og:url" content="${ogUrl}">
+        <meta property="og:image" content="${ogImage}">
+      `
+    }
+  },
   data () {
     return {
       articleListAutoScrollHeight: 0,
@@ -629,15 +692,17 @@ export default {
       }
     },
     updateCustomizedMarkup () {
-      const custCss = document.querySelector('#custCSS')
-      const custScript = document.querySelector('#custJS')
-      custCss.innerHTML = ''
-      custScript.innerHTML = ''
-      if (this.customCSS) {
-        custCss.innerHTML = this.customCSS
-      }
-      if (this.customJS) {
-        custScript.innerHTML = this.customJS
+      if (process.env.VUE_ENV === 'client') {
+        const custCss = document.querySelector('#custCSS')
+        const custScript = document.querySelector('#custJS')
+        custCss.innerHTML = ''
+        custScript.innerHTML = ''
+        if (this.customCSS) {
+          custCss.innerHTML = this.customCSS
+        }
+        if (this.customJS) {
+          custScript.innerHTML = this.customJS
+        }
       }
     },
     updateViewport () {
@@ -664,12 +729,14 @@ export default {
     uuid: function () {
       this.page = PAGE
       this.articleListAutoScrollHeight = 0
-      if (this.sectionName === 'other') {
-        window.ga('set', 'contentGroup1', '')
-      } else {
-        window.ga('set', 'contentGroup1', this.sectionName)
+      if (process.env.VUE_ENV === 'client') {
+        if (this.sectionName === 'other') {
+          window.ga('set', 'contentGroup1', '')
+        } else {
+          window.ga('set', 'contentGroup1', this.sectionName)
+        }
+        window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
       }
-      window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -688,10 +755,12 @@ export default {
     .then(() => next())
   },
   beforeRouteLeave (to, from, next) {
-    const custCss = document.querySelector('#custCSS')
-    const custScript = document.querySelector('#custJS')
-    custCss.innerHTML = ''
-    custScript.innerHTML = ''
+    if (process.env.VUE_ENV === 'client') {
+      const custCss = document.querySelector('#custCSS')
+      const custScript = document.querySelector('#custJS')
+      custCss.innerHTML = ''
+      custScript.innerHTML = ''
+    }
     next()
   },
   beforeMount () {
@@ -715,64 +784,6 @@ export default {
       window.ga('set', 'contentGroup1', this.sectionName)
     }
     window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
-  },
-  metaInfo () {
-    const type = this.type
-    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-    let ogImage
-    let ogTitle
-    let ogDescription
-    let sectionName
-    switch (type) {
-      case SECTION:
-        sectionName = this.sectionName
-        const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
-        ogImage = imageURL || SITE_OGIMAGE
-        ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogTitle' ]), 11) : this.getTruncatedVal(_.get(this.section, [ 'title' ], this.title), 11)
-        ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogDescription' ]), 197) : _.get(this.section, [ 'description' ])
-        ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
-        break
-      case CATEGORY:
-        sectionName = this.sectionName
-        ogTitle = this.getTruncatedVal(this.title, 11)
-        ogImage = SITE_OGIMAGE
-        ogDescription = SITE_DESCRIPTION
-        break
-      default:
-        ogTitle = this.getTruncatedVal(this.title, 11) || ''
-        ogImage = SITE_OGIMAGE
-        ogDescription = SITE_DESCRIPTION
-    }
-
-    if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
-      const e = new Error()
-      e.massage = 'Page Not Found'
-      e.code = '404'
-      throw e
-    }
-
-    const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
-    return {
-      title: title,
-      meta: [
-        { name: 'keywords', content: SITE_KEYWORDS },
-        { name: 'description', content: ogDescription },
-        { name: 'section-name', content: sectionName },
-        { name: 'twitter:card', content: 'summary_large_image' },
-        { name: 'twitter:title', content: title },
-        { name: 'twitter:description', content: ogDescription },
-        { name: 'twitter:image', content: ogImage },
-        { property: 'fb:app_id', content: FB_APP_ID },
-        { property: 'fb:pages', content: FB_PAGE_ID },
-        { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-        { property: 'og:locale', content: 'zh_TW' },
-        { property: 'og:type', content: 'article' },
-        { property: 'og:title', content: title },
-        { property: 'og:description', content: ogDescription },
-        { property: 'og:url', content: ogUrl },
-        { property: 'og:image', content: ogImage }
-      ]
-    }
   },
   updated () {
     this.updateSysStage()

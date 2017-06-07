@@ -23,7 +23,7 @@
 
 <script>
 
-import { shareFacebook } from '../../utils/comm'
+import { shareFacebook } from '../../util/comm'
 import _ from 'lodash'
 
 export default {

@@ -8,7 +8,7 @@
 
 <script>
 
-import { getImage } from '../../utils/comm'
+import { getImage } from '../../util/comm'
 import _ from 'lodash'
 
 export default {

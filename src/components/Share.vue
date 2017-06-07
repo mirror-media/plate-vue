@@ -11,7 +11,7 @@
 <script>
 
 import { TOPIC_PROTEST_ID } from '../constants/index'
-import { shareGooglePlus, shareLine, shareFacebook } from '../utils/comm'
+import { shareGooglePlus, shareLine, shareFacebook } from '../util/comm'
 import _ from 'lodash'
 import store from '../store'
 
