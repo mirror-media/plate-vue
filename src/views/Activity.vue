@@ -81,9 +81,9 @@ const fetchAllNodes = (store) => {
       }
     }
   }).then(() => {
-    if (_.get(store.state, [ 'nodes', 'items', 'length' ]) < _.get(store.state, [ 'nodes', 'meta', 'total' ])) {
-      fetchAllNodes(store)
-    }
+    // if (_.get(store.state, [ 'nodes', 'items', 'length' ]) < _.get(store.state, [ 'nodes', 'meta', 'total' ])) {
+    //   fetchAllNodes(store)
+    // }
   })
 }
 
