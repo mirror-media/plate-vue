@@ -1,6 +1,6 @@
 <template>
   <section class="timelineHeadline">
-    <div class="timelineHeadline__heroImage" :style="{ backgroundImage: 'url(' + getImage(this.topic, this.viewportTarget) + ')' }">
+    <div class="timelineHeadline__heroImage" :style="{ backgroundImage: `url(${topicImage})` }">
       <div class="timelineHeadline__heroImage--title"></div>
     </div>
   </section>
@@ -12,10 +12,13 @@ import { getImage } from '../../util/comm'
 import _ from 'lodash'
 
 export default {
-  props: [ 'timeline', 'viewport', 'viewportTarget' ],
-  data () {
-    return {
-      topic: _.get(this.timeline, [ 'topic' ])
+  props: [ 'initialTimeline', 'viewport', 'viewportTarget' ],
+  computed: {
+    topic () {
+      return _.get(this.initialTimeline, [ 'topic' ])
+    },
+    topicImage () {
+      return _.get(this.topic, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])
     }
   },
   methods: {

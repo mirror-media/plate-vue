@@ -20,18 +20,16 @@
 import _ from 'lodash'
 
 export default {
-  props: {
-    highlightNodes: {
-      type: Array,
-      default: []
-    }
-  },
+  props: [ 'initialHighlightNodes' ],
   data () {
     return {
       viewport: 0
     }
   },
   computed: {
+    highlightNodes () {
+      return this.initialHighlightNodes
+    },
     topicId () {
       return _.get(this.$route.params, [ 'topicId' ])
     },

@@ -54,7 +54,7 @@ export function getImage (article, size) {
   let image
   if (article.heroImage && article.heroImage.image) {
     image = article.heroImage
-  } else {
+  } else if (article.ogImage) {
     image = article.ogImage
   }
   switch (size) {
