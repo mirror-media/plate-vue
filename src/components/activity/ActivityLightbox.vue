@@ -4,7 +4,7 @@
     <figure class="ActivityLightbox__close" @click="closeLightbox()">
       <img v-lazy="`/public/icon/timelineClose@2x.png`" />
     </figure>
-    <div class="ActivityLightbox__slider" v-if="currentContentStyle !== 'text'">
+    <div class="ActivityLightbox__slider" v-if="currentContentStyle !== 'text'" v-on:touchstart="touchstart" v-on:touchend="touchend">
       <div class="ActivityLightbox__slider--arrow left" v-show="nodeContentMoreThanOne" @click="goToPrev()" />
       <template v-for="(item, index) in currentNodeContents">
         <activity-lightboxSlider :initialContent="item" :class="[ index === currentContentIndex ? 'active' : 'unactive' ]" :viewport="viewport" />
@@ -48,7 +48,8 @@ export default {
     return {
       activity: this.initialActivity,
       currentContentIndex: 0,
-      isLightboxMenuOpen: false
+      isLightboxMenuOpen: false,
+      touchStartValueX: 0
     }
   },
   computed: {
@@ -85,6 +86,10 @@ export default {
   },
   methods: {
     closeLightbox () {
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      if (currentVideo && currentVideo.querySelector('video')) {
+        currentVideo.querySelector('video').pause()
+      }
       this.$emit('closeLightbox')
     },
     getValue,
@@ -93,9 +98,9 @@ export default {
       this.isLightboxMenuOpen = false
     },
     goToNext () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ].querySelector('video')
-      if (currentVideo) {
-        currentVideo.pause()
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      if (currentVideo && currentVideo.querySelector('video')) {
+        currentVideo.querySelector('video').pause()
       }
       const nextContentIndex = this.currentContentIndex + 1
       if (nextContentIndex > _.get(this.currentNodeContents, [ 'length' ]) - 1) {
@@ -105,9 +110,9 @@ export default {
       }
     },
     goToPrev () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ].querySelector('video')
-      if (currentVideo) {
-        currentVideo.pause()
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      if (currentVideo && currentVideo.querySelector('video')) {
+        currentVideo.querySelector('video').pause()
       }
       const prevContentIndex = this.currentContentIndex - 1
       if (prevContentIndex < 0) {
@@ -117,6 +122,10 @@ export default {
       }
     },
     openLightboxMenu () {
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      if (currentVideo && currentVideo.querySelector('video')) {
+        currentVideo.querySelector('video').pause()
+      }
       this.isLightboxMenuOpen = true
     },
     share () {
@@ -136,6 +145,19 @@ export default {
           picture: imageUrl,
           description: _.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])
         }, function (response) {})
+    },
+    touchend (e) {
+      const deltaX = e.changedTouches[0].pageX - this.touchStartValueX
+      if (deltaX > 10) {
+        this.goToPrev()
+      }
+
+      if (deltaX < -10) {
+        this.goToNext()
+      }
+    },
+    touchstart (e) {
+      this.touchStartValueX = e.touches[0].pageX
     }
   },
   watch: {
@@ -177,12 +199,14 @@ export default {
     display flex
     align-items center
     justify-content center
-    position absolute
-    top 10px
+    position fixed
+    bottom 10px
     right 10px
     width 40px
     height 40px
     margin 0
+    background-color #000
+    border-radius 50%
     cursor pointer
     img
       width 20px
@@ -275,6 +299,11 @@ export default {
   .ActivityLightbox
     z-index 980
     padding 0 15%
+    &__close
+      position absolute
+      top 10px
+      bottom auto
+      background-color transparent
     &__slider
       &--arrow
         &.left

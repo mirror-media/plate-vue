@@ -15,7 +15,7 @@
             <img v-lazy="getNodeImage(item)" v-show="getNodeImage(item)" />
           </figure>
           <div class="activityTimeline__imageBlock--text" >
-            <h2 v-text="getValue(item, [ 'name' ])" />
+            <h2 v-text="getTruncatedVal(getValue(item, [ 'name' ]), 16)" />
             <div class="activityTimeline__imageBlock--textIcon" />
           </div>
         </div>
@@ -144,11 +144,11 @@ export default {
     },
     touchend (e) {
       const deltaX = e.changedTouches[0].pageX - this.touchStartValueX
-      if (deltaX > 0) {
+      if (deltaX > 10) {
         this.goToPrev()
       }
 
-      if (deltaX < 0) {
+      if (deltaX < -10) {
         this.goToNext()
       }
     },
@@ -164,40 +164,6 @@ export default {
     window.addEventListener('resize', () => {
       this.initialTransformValue()
     })
-    // const timeline = document.querySelector('.activityTimeline')
-    // const timelineTime = this.$el.querySelector('.activityTimeline__time')
-    // const timelineImages = this.$el.querySelector('.activityTimeline__images')
-    // console.log(this.$el.querySelector('.activityTimeline__time'))
-    // this.$el.addEventListener('touchmove', function (e) {
-    //   // console.log('sadas', e.changedTouches[0].clientX)
-    //   e.preventDefault()
-    //   console.log('asdas', vm )
-    // }, false)
-
-    // document.addEventListener('touchmove', (e) => {
-    //   e.preventDefault()
-    // })
-    // console.log('mounted')
-    // const preventTouchmove = function(eVT) {
-    //   console.log('touch move')
-    //   return eVT.preventDefault()
-    // }
-    // document.addEventListener('touchstart', function (EVENT) {
-    //   console.log('touch start')
-    //   document.addEventListener('touchmove', preventTouchmove, false)
-    // })
-    // document.addEventListener('touchend', () => {
-    //   console.log('end')
-    //   // document.removeEventListener('touchmove', preventTouchmove, false)
-    // })
-  },
-  watch: {
-    // windowViewport: function() {
-    //   console.log('windowViewport', this.windowViewport)
-    // },
-    // viewport: function() {
-    //   this.windowViewport = this.viewport
-    // }
   }
 }
 
@@ -325,7 +291,6 @@ export default {
       &:hover
         h2
           color #fff
-          font-size 1.4rem
     &.image
       .activityTimeline__imageBlock--textIcon
         background-image url("/public/icon/camera@2x.png")
@@ -335,6 +300,9 @@ export default {
     &.video
       .activityTimeline__imageBlock--textIcon
         background-image url("/public/icon/video_gray@2x.png")
+      &:hover
+        .activityTimeline__imageBlock--text
+          display none
   &__imageBlock:hover
     figure
       img
