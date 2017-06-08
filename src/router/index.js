@@ -12,8 +12,8 @@ Vue.use(VueLazyload, {
 })
 
 import NotFound from '../views/404.vue'
-// import Activity from '../views/Activity.vue'
-import ActivityB from '../views/ActivityB.vue'
+import Activity from '../views/Activity.vue'
+// import ActivityB from '../views/ActivityB.vue'
 import Article from '../views/Article.vue'
 import Home from '../views/Home.vue'
 import HomeB from '../views/HomeB.vue'
@@ -32,8 +32,8 @@ export function createRouter () {
     mode: 'history',
     scrollBehavior: () => ({ y: 0 }),
     routes: [
-      { path: '/activity/:activityId/', component: ActivityB },
-      { path: '/activity/:activityId/:topicId', component: ActivityB },
+      { path: '/activity/:activityId/', component: Activity },
+      { path: '/activity/:activityId/:topicId', component: Activity },
       { path: '/author/:authorId/', component: List },
       { path: '/category/:title', component: List },
       {
