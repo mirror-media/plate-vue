@@ -1,11 +1,19 @@
 import { GA_ID } from '../constants/index'
 import Vue from 'vue'
 import Router from 'vue-router'
+import VueLazyload from 'vue-lazyload'
 
 Vue.use(Router)
+Vue.use(VueLazyload)
+
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+  attempt: 1
+})
 
 import NotFound from '../views/404.vue'
-import Activity from '../views/Activity.vue'
+// import Activity from '../views/Activity.vue'
+import ActivityB from '../views/ActivityB.vue'
 import Article from '../views/Article.vue'
 import Home from '../views/Home.vue'
 import HomeB from '../views/HomeB.vue'
@@ -24,7 +32,8 @@ export function createRouter () {
     mode: 'history',
     scrollBehavior: () => ({ y: 0 }),
     routes: [
-      { path: '/activity/:activityId/', component: Activity },
+      { path: '/activity/:activityId/', component: ActivityB },
+      { path: '/activity/:activityId/:topicId', component: ActivityB },
       { path: '/author/:authorId/', component: List },
       { path: '/category/:title', component: List },
       {
