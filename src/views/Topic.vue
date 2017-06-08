@@ -78,7 +78,6 @@ import Share from '../components/Share.vue'
 import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import store from '../store'
 import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
@@ -436,14 +435,15 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     if (from.matched.length !== 0) {
-      fetchTopicByUuid(store, to.params.topicId)
-      .then(() => {
-        const topicType = _.get(_.find(_.get(store.state.topics, [ 'items' ]), { 'id': to.params.topicId }), [ 'type' ]) ||
-          _.get(store.state.topic, [ 'items', '0', 'type' ])
-        if (topicType === 'timeline') {
-          return fetchTimeline(store, to.params.topicId)
-        }
-      }).then(() => next())
+      next(vm => {
+        return fetchTopicByUuid(vm.$store, to.params.topicId).then(() => {
+          const topicType = _.get(_.find(_.get(vm.$store.state.topics, [ 'items' ]), { 'id': to.params.topicId }), [ 'type' ]) ||
+            _.get(vm.$store.state.topic, [ 'items', '0', 'type' ])
+          if (topicType === 'timeline') {
+            return fetchTimeline(vm.$store, to.params.topicId)
+          }
+        })
+      })
     } else {
       next()
     }

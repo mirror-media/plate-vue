@@ -8,7 +8,6 @@
 
 <script>
   import { mmLog } from './util/comm.js'
-  import store from './store'
 
   export default {
     data () {
@@ -25,7 +24,7 @@
             eventType: 'click',
             target: event.target
           }).then((log) => {
-            return store.dispatch('LOG_CLIENT', { params: {
+            return this.$store.dispatch('LOG_CLIENT', { params: {
               clientInfo: log
             }})
           }).catch((err) => {

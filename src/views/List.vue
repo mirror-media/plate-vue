@@ -107,7 +107,6 @@ import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
-import store from '../store'
 import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
@@ -596,7 +595,7 @@ export default {
       }
     },
     type () {
-      return _.toUpper(_.split(store.state.route.path, '/')[1])
+      return _.toUpper(_.split(this.$store.state.route.path, '/')[1])
     },
     uuid () {
       switch (this.type) {
@@ -741,8 +740,12 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     if (from.matched.length !== 0) { // check whether first time
-      return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
-      .then(() => next())
+      next(vm => {
+        return Promise.all([
+          vm.$store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
+          fetchListData(vm.$store, vm.type, vm.pageStyle, getUUID(vm.$store, vm.type, to), false, false)
+        ])
+      })
     } else {
       next()
     }
