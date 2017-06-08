@@ -1,6 +1,6 @@
 import { createApp } from './app'
 
-// const isDev = process.env.NODE_ENV !== 'production'
+const isDev = process.env.NODE_ENV !== 'production'
 
 // This exported function will be called by `bundleRenderer`.
 // This is where we perform data-prefetching to determine the
@@ -9,7 +9,7 @@ import { createApp } from './app'
 // return a Promise that resolves to the app instance.
 export default context => {
   return new Promise((resolve, reject) => {
-    // const s = isDev && Date.now()
+    const s = isDev && Date.now()
     const { app, router, store } = createApp()
 
     router.push(context.url)
@@ -31,7 +31,7 @@ export default context => {
           route: router.currentRoute
         })
       })).then(() => {
-        // isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
+        isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
         // After all preFetch hooks are resolved, our store is now
         // filled with the state needed to render the app.
         // Expose the state on the render context, and let the request handler
