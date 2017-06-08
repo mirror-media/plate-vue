@@ -147,7 +147,7 @@ export default {
       }
     },
     subtitle () {
-      const { subtitle } = this.articleData
+      const { subtitle = [] } = this.articleData
       return subtitle
     },
     title () {
@@ -155,7 +155,7 @@ export default {
       return title
     },
     tags () {
-      const { tags } = this.articleData
+      const { tags = [] } = this.articleData
       return tags.map((o) => {
         return `<a href=\"/tag/${_.get(o, [ 'id' ], '')}\" id=\"tag-${_.get(o, [ 'id' ], '')}\">${_.get(o, [ 'name' ], '')}</a>`
       }).join('、')

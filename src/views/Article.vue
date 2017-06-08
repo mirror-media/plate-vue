@@ -97,7 +97,6 @@
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
-  import store from '../store'
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
 
@@ -210,31 +209,29 @@
     },
     beforeRouteEnter (to, from, next) {
       if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
-        const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
-        if (!_targetArticle) {
-          fetchArticles(store, to.params.slug).then(() => {
-            const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-            return fetchLatestArticle(store, {
-              sort: '-publishedDate',
-              where: {
-                'sections': _.get(sections, [ 0, 'id' ])
-              }
-            }).then(() => {
-              next(vm => {})
+        next(vm => {
+          const _targetArticle = _.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
+          if (!_targetArticle) {
+            fetchArticles(vm.$store, to.params.slug).then(() => {
+              const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
+              return fetchLatestArticle(vm.$store, {
+                sort: '-publishedDate',
+                where: {
+                  'sections': _.get(sections, [ 0, 'id' ])
+                }
+              })
             })
-          })
-          fetchPop(store)
-        } else {
-          next()
-        }
+            fetchPop(vm.$store)
+          }
+        })
       } else {
         next()
       }
     },
     beforeRouteUpdate (to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
-        const sections = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
-        return fetchLatestArticle(store, {
+        const sections = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
+        return fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: {
             'sections': _.get(sections, [ 0, 'id' ])
@@ -254,17 +251,17 @@
       next()
     },
     beforeMount () {
-      const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-      fetchLatestArticle(store, {
+      const { sections } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
+      fetchLatestArticle(this.$store, {
         sort: '-publishedDate',
         where: {
           'sections': _.get(sections, [ 0, 'id' ])
         }
       })
-      fetchPop(store)
-      fetchCommonData(store)
-      fetchEvent(store, 'embedded')
-      fetchEvent(store, 'logo')
+      fetchPop(this.$store)
+      fetchCommonData(this.$store)
+      fetchEvent(this.$store, 'embedded')
+      fetchEvent(this.$store, 'logo')
     },
     components: {
       'article-body': ArticleBody,
@@ -396,7 +393,7 @@
         return items
       },
       relateds () {
-        return _.get(this.articleData, [ 'relateds' ])
+        return _.get(this.articleData, [ 'relateds' ], [])
       },
       sectionId () {
         return _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'

@@ -4,25 +4,15 @@ const base = require('./webpack.base.config')
 const nodeExternals = require('webpack-node-externals')
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 
-// module.exports = Object.assign({}, base, {
 module.exports = merge(base, {
   target: 'node',
-  // devtool: false,
   devtool: '#source-map',
-  // entry: './src/server-entry.js',
   entry: './src/entry-server.js',
-  // output: Object.assign({}, base.output, {
-  //   filename: 'server-bundle.js',
-  //   libraryTarget: 'commonjs2'
-  // }),
   output: {
     filename: 'server-bundle.js',
     libraryTarget: 'commonjs2'
   },
   resolve: {
-    // alias: Object.assign({}, base.resolve.alias, {
-    //   'create-api': './create-api-server.js'
-    // })
     // alias: {
     //   'create-api': './create-api-server.js'
     // }
