@@ -20,8 +20,8 @@
             <img src="/public/icon/logo_black@3x.png" :alt="siteTitle" />
           </a>
           <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
-          <timeline-headline :timeline="timeline" :viewport="viewport" :viewportTarget="viewportTarget" />
-          <timeline-body :timeline="timeline" :highlightNodes="highlightNodes" :viewport="viewport" />
+          <timeline-headline :initialTimeline="timeline" :viewport="viewport" :viewportTarget="viewportTarget" />
+          <timeline-body :initialTimeline="timeline" :initialHighlightNodes="highlightNodes" :viewport="viewport" />
           <div class="topicTimeline__projects">
             <h1>更多專題文章</h1>
             <ProjectList :projects="projects" :viewport="viewport" />
