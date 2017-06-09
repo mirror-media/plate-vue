@@ -44,6 +44,8 @@ export default {
     align-items center
     &--title
       position absolute
+      left 50%
+      transform translateX(-50%)
       background-repeat no-repeat
       background-size contain
 

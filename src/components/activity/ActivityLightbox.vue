@@ -137,13 +137,13 @@ export default {
       } else {
         imageUrl = _.get(this.activity, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ])
       }
-
+      const description = `${_.get(this.nodes, [ this.currentNodeIndex, 'subtitle' ])} ${_.get(this.nodes, [ this.currentNodeIndex, 'name' ])}： ${_.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])}`
       window.FB.ui(
         {
           method: 'feed',
           link: `https://www.mirrormedia.mg/activity/${_.get(this.$route, [ 'params', 'activityId' ])}/`,
           picture: imageUrl,
-          description: _.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])
+          description
         }, function (response) {})
     },
     touchend (e) {
