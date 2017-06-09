@@ -20,7 +20,7 @@
             <img src="/public/icon/logo_black@3x.png" :alt="siteTitle" />
           </a>
           <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
-          <timeline-headline :initialTimeline="timeline" :viewport="viewport" :viewportTarget="viewportTarget" />
+          <timeline-headline :initialTimeline="timeline" />
           <timeline-body :initialTimeline="timeline" :initialHighlightNodes="highlightNodes" :viewport="viewport" />
           <div class="topicTimeline__projects">
             <h1>更多專題文章</h1>
@@ -49,7 +49,7 @@
           </section>
           <share :right="`20px`" :bottom="`20px`" />
         </template>
-        
+
       </div>
     </template>
   </vue-dfp-provider>
@@ -174,13 +174,20 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : SITE_OGIMAGE
-    const ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
-    const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.topic, [ 'ogDescription' ]), 197) : SITE_DESCRIPTION
-    const title = ogTitle + ` - ${SITE_TITLE}`
+    const {
+      heroImage = {},
+      ogDescription = '',
+      ogImage = {},
+      ogTitle = '',
+      title = ''
+    } = this.topic
+
+    const metaTitle = ogTitle || title
+    const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
+    const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
 
-    if (!ogTitle && process.env.VUE_ENV === 'server') {
+    if (!metaTitle && process.env.VUE_ENV === 'server') {
       const e = new Error()
       e.massage = 'Page Not Found'
       e.code = '404'
@@ -188,23 +195,23 @@ export default {
     }
 
     return {
-      title: title,
+      title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
         <meta name="keywords" content="${SITE_KEYWORDS}">
-        <meta name="description" content="${ogDescription}">
+        <meta name="description" content="${metaDescription}">
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:title" content="${title}">
-        <meta name="twitter:description" content="${ogDescription}">
-        <meta name="twitter:image" content="${ogImage}">
+        <meta name="twitter:description" content="${metaDescription}">
+        <meta name="twitter:image" content="${metaImage}">
         <meta property="fb:app_id" content="${FB_APP_ID}">
         <meta property="fb:pages" content="${FB_PAGE_ID}">
         <meta property="og:site_name" content="${SITE_TITLE}">
         <meta property="og:locale" content="zh_TW">
         <meta property="og:type" content="article">
         <meta property="og:title" content="${title}">
-        <meta property="og:description" content="${ogDescription}">
+        <meta property="og:description" content="${metaDescription}">
         <meta property="og:url" content="${ogUrl}">
-        <meta property="og:image" content="${ogImage}">
+        <meta property="og:image" content="${metaImage}">
       `
     }
   },
@@ -313,12 +320,10 @@ export default {
       //   return '錶展特區'
       // }
 
-      return _.get(this.topic, [ 'ogTitle' ]) !== '' ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'name' ])
+      return _.get(this.topic, [ 'ogTitle' ]) && _.get(this.topic, [ 'ogTitle' ]) !== '' ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'name' ])
     },
     topic () {
-      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_PROTEST_ID) {
-        return _.get(this.$store.state, [ 'timeline', 'topic' ])
-      } else if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
+      if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
         return _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })
       } else {
         return _.get(this.$store.state, [ 'topic', 'items', '0' ])
@@ -421,7 +426,7 @@ export default {
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.querySelector('body').offsetWidth
+        this.viewport = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
       }
     },
     updateMediafarmersScript () {
@@ -493,8 +498,8 @@ export default {
     }
   },
   mounted () {
-    this.insertFbSdkScript()
-    this.insertMediafarmersScript()
+    // this.insertFbSdkScript()
+    // this.insertMediafarmersScript()
     this.updateViewport()
     window.addEventListener('resize', () => {
       this.updateViewport()
@@ -532,6 +537,7 @@ export default {
   },
   watch: {
     uuid: function () {
+      this.$forceUpdate()
       if (process.env.VUE_ENV === 'client') {
         window.ga('set', 'contentGroup1', '')
         window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
@@ -550,7 +556,7 @@ export default {
           version: 'v2.0'
         })
         window.FB && window.FB.XFBML.parse()
-        this.updateMediafarmersScript()
+        // this.updateMediafarmersScript()
       }
       // this.checkIfLockJS()
       // this.sendGA(this.articleData)
