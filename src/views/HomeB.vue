@@ -13,7 +13,7 @@
           <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" />
           <aside>
             <div class="aside-title mobile-only" ref="aside_title"><h2>最新文章</h2></div>
-            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-${Date.now()}`" />
+            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`"/>
           </aside>
           <main>
             <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />
@@ -234,11 +234,12 @@ export default {
     // },
     latestArticle () {
       const latestFirstPage = _.dropRight(_.get(this.articlesGroupedList, [ 'latest' ]), 3)
-      // const choices = _.get(this.articlesGroupedList, [ 'choices' ])
-      // const groupedTitle = _.get(this.articlesGroupedList, [ 'grouped' ])
-      // const groupedRelateds = _.flatten(_.map(_.get(this.articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
-      // const grouped = _.union(groupedTitle, groupedRelateds)
-      // const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
+      const choices = _.get(this.articlesGroupedList, [ 'choices' ])
+      const groupedTitle = _.get(this.articlesGroupedList, [ 'grouped' ])
+      const groupedRelateds = _.flatten(_.map(_.get(this.articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
+      const grouped = _.union(groupedTitle, groupedRelateds)
+      const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
+      const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
 
       const latest = _.uniqBy(
         latestFirstPage.concat(
@@ -247,6 +248,9 @@ export default {
         'slug'
       )
       // const latestXor = _.xorBy(latest, choicesAndGrouped, 'slug')
+      _.remove(latest, (o) => {
+        return _.includes(choicesAndGrouped_slugs, o.slug)
+      })
 
       if (this.notFirstPageNow) {
         return latest
@@ -315,7 +319,7 @@ export default {
         const firstPageArticleHeight = _latestArticleDiv.offsetHeight
         const firstPageArticleBottom = elmYPosition('#latestArticle') + (firstPageArticleHeight)
         const currentBottom = currentYPosition() + window.innerHeight
-        if ((currentBottom > firstPageArticleBottom) && !this.hasScrollLoadMore) {
+        if ((currentBottom > (firstPageArticleBottom - 300)) && !this.hasScrollLoadMore) {
           // this.hasScrollLoadMore = true
           this.loadMore()
         }
