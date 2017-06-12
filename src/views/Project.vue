@@ -21,7 +21,9 @@ export default {
       viewport: undefined
     }
   },
-  preFetch: fetchProjects,
+  asyncData ({ store }) {
+    return fetchProjects(store)
+  },
   computed: {
     projects () {
       return _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
