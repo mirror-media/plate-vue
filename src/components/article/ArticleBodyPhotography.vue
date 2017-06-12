@@ -180,6 +180,7 @@
         const targIndex = Number(e.target.getAttribute('index')) + 1
         let loopCount = this.currIndex
         this.onePageScroll.moveTo(targIndex)
+        this.onePageScroll.cancelPause()
         while (loopCount !== targIndex) {
           if (this.currIndex < targIndex) {
             this.sideProgressHandler('pass', loopCount)
