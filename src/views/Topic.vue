@@ -17,11 +17,11 @@
 
         <template v-if="isTimeline">
           <a href="/" class="topicTimeline__logo">
-            <img src="/public/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media" />
+            <img src="/public/icon/logo_black@3x.png" :alt="siteTitle" />
           </a>
           <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
-          <timeline-headline :timeline="timeline" :viewport="viewport" :viewportTarget="viewportTarget" />
-          <timeline-body :timeline="timeline" :highlightNodes="highlightNodes" :viewport="viewport" />
+          <timeline-headline :initialTimeline="timeline" />
+          <timeline-body :initialTimeline="timeline" :initialHighlightNodes="highlightNodes" :viewport="viewport" />
           <div class="topicTimeline__projects">
             <h1>更多專題文章</h1>
             <ProjectList :projects="projects" :viewport="viewport" />
@@ -30,7 +30,7 @@
         </template>
 
         <template v-else>
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"/>
@@ -49,7 +49,7 @@
           </section>
           <share :right="`20px`" :bottom="`20px`" />
         </template>
-        
+
       </div>
     </template>
   </vue-dfp-provider>
@@ -59,7 +59,7 @@
 
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
-import { getTruncatedVal, getValue, unLockJS } from '../utils/comm'
+import { getTruncatedVal, getValue, unLockJS, currEnv } from '../util/comm'
 import { currentYPosition } from 'kc-scroll'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
@@ -78,7 +78,7 @@ import Share from '../components/Share.vue'
 import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import store from '../store'
+import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -169,7 +169,52 @@ export default {
     'vue-dfp-provider': VueDfpProvider,
     ProjectList
   },
-  preFetch: fetchData,
+  asyncData ({ store }) {
+    return fetchData(store)
+  },
+  mixins: [ titleMetaMixin ],
+  metaSet () {
+    const {
+      heroImage = {},
+      ogDescription = '',
+      ogImage = {},
+      ogTitle = '',
+      title = ''
+    } = this.topic
+
+    const metaTitle = ogTitle || title
+    const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
+    const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
+    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+
+    if (!metaTitle && process.env.VUE_ENV === 'server') {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    }
+
+    return {
+      title: `${metaTitle} - ${SITE_TITLE}`,
+      meta: `
+        <meta name="keywords" content="${SITE_KEYWORDS}">
+        <meta name="description" content="${metaDescription}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:description" content="${metaDescription}">
+        <meta name="twitter:image" content="${metaImage}">
+        <meta property="fb:app_id" content="${FB_APP_ID}">
+        <meta property="fb:pages" content="${FB_PAGE_ID}">
+        <meta property="og:site_name" content="${SITE_TITLE}">
+        <meta property="og:locale" content="zh_TW">
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="${title}">
+        <meta property="og:description" content="${metaDescription}">
+        <meta property="og:url" content="${ogUrl}">
+        <meta property="og:image" content="${metaImage}">
+      `
+    }
+  },
   data () {
     return {
       commonData: this.$store.state.commonData,
@@ -178,6 +223,7 @@ export default {
       dfpUnits: DFP_UNITS,
       loading: false,
       showDfpCoverAdFlag: false,
+      siteTitle: SITE_TITLE,
       viewport: 0
     }
   },
@@ -274,12 +320,10 @@ export default {
       //   return '錶展特區'
       // }
 
-      return _.get(this.topic, [ 'ogTitle' ]) !== '' ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'name' ])
+      return _.get(this.topic, [ 'ogTitle' ]) && _.get(this.topic, [ 'ogTitle' ]) !== '' ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'name' ])
     },
     topic () {
-      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_PROTEST_ID) {
-        return _.get(this.$store.state, [ 'timeline', 'topic' ])
-      } else if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
+      if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
         return _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })
       } else {
         return _.get(this.$store.state, [ 'topic', 'items', '0' ])
@@ -382,25 +426,29 @@ export default {
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.querySelector('body').offsetWidth
+        this.viewport = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
       }
     },
     updateMediafarmersScript () {
       const mediafarmersScript = document.querySelector('#mediafarmersJS')
       document.querySelector('body').removeChild(mediafarmersScript)
       this.insertMediafarmersScript()
+    },
+    updateSysStage () {
+      this.dfpMode = currEnv()
     }
   },
   beforeRouteEnter (to, from, next) {
     if (from.matched.length !== 0) {
-      fetchTopicByUuid(store, to.params.topicId)
-      .then(() => {
-        const topicType = _.get(_.find(_.get(store.state.topics, [ 'items' ]), { 'id': to.params.topicId }), [ 'type' ]) ||
-          _.get(store.state.topic, [ 'items', '0', 'type' ])
-        if (topicType === 'timeline') {
-          return fetchTimeline(store, to.params.topicId)
-        }
-      }).then(() => next())
+      next(vm => {
+        return fetchTopicByUuid(vm.$store, to.params.topicId).then(() => {
+          const topicType = _.get(_.find(_.get(vm.$store.state.topics, [ 'items' ]), { 'id': to.params.topicId }), [ 'type' ]) ||
+            _.get(vm.$store.state.topic, [ 'items', '0', 'type' ])
+          if (topicType === 'timeline') {
+            return fetchTimeline(vm.$store, to.params.topicId)
+          }
+        })
+      })
     } else {
       next()
     }
@@ -433,10 +481,12 @@ export default {
     })
   },
   beforeRouteLeave (to, from, next) {
-    const custCss = document.querySelector('#custCSS')
-    const custScript = document.querySelector('#custJS')
-    custCss.innerHTML = ''
-    custScript.innerHTML = ''
+    if (process.env.VUE_ENV === 'client') {
+      const custCss = document.querySelector('#custCSS')
+      const custScript = document.querySelector('#custJS')
+      custCss.innerHTML = ''
+      custScript.innerHTML = ''
+    }
     next()
   },
   beforeMount () {
@@ -448,8 +498,8 @@ export default {
     }
   },
   mounted () {
-    this.insertFbSdkScript()
-    this.insertMediafarmersScript()
+    // this.insertFbSdkScript()
+    // this.insertMediafarmersScript()
     this.updateViewport()
     window.addEventListener('resize', () => {
       this.updateViewport()
@@ -458,6 +508,7 @@ export default {
     this.insertCustomizedMarkup()
     this.checkIfLockJS()
     this.updateViewport()
+    this.updateSysStage()
 
     window.ga('set', 'contentGroup1', '')
     window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
@@ -481,59 +532,34 @@ export default {
       })
     }
   },
+  updated () {
+    this.updateSysStage()
+  },
   watch: {
     uuid: function () {
-      window.ga('set', 'contentGroup1', '')
-      window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+      this.$forceUpdate()
+      if (process.env.VUE_ENV === 'client') {
+        window.ga('set', 'contentGroup1', '')
+        window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+      }
     },
     customCSS: function () {
-      this.updateCustomizedMarkup()
+      if (process.env.VUE_ENV === 'client') {
+        this.updateCustomizedMarkup()
+      }
     },
     articleUrl: function () {
-      window.FB && window.FB.init({
-        appId: this.fbAppId,
-        xfbml: true,
-        version: 'v2.0'
-      })
-      window.FB && window.FB.XFBML.parse()
+      if (process.env.VUE_ENV === 'client') {
+        window.FB && window.FB.init({
+          appId: this.fbAppId,
+          xfbml: true,
+          version: 'v2.0'
+        })
+        window.FB && window.FB.XFBML.parse()
+        // this.updateMediafarmersScript()
+      }
       // this.checkIfLockJS()
-      this.updateMediafarmersScript()
       // this.sendGA(this.articleData)
-    }
-  },
-  metaInfo () {
-    const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : SITE_OGIMAGE
-    const ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
-    const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.topic, [ 'ogDescription' ]), 197) : SITE_DESCRIPTION
-    const title = ogTitle + ` - ${SITE_TITLE}`
-    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-
-    if (!ogTitle && process.env.VUE_ENV === 'server') {
-      const e = new Error()
-      e.massage = 'Page Not Found'
-      e.code = '404'
-      throw e
-    }
-
-    return {
-      title,
-      meta: [
-          { name: 'keywords', content: SITE_KEYWORDS },
-          { name: 'description', content: ogDescription },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: title },
-          { name: 'twitter:description', content: ogDescription },
-          { name: 'twitter:image', content: ogImage },
-          { property: 'fb:app_id', content: FB_APP_ID },
-          { property: 'fb:pages', content: FB_PAGE_ID },
-          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-          { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: title },
-          { property: 'og:description', content: ogDescription },
-          { property: 'og:url', content: ogUrl },
-          { property: 'og:image', content: ogImage }
-      ]
     }
   }
 }
@@ -578,6 +604,11 @@ export default {
     width 100%
     padding 1em
     background-color #4d4d4d
+    .project-container
+      margin 1em 0
+      background-color #fff
+      .proj_title
+        display none
     > h1
       margin 0
       color #fff
@@ -587,12 +618,6 @@ export default {
     width 100%
     padding 0 5%
     background-color #fff
-    
-.project-container
-  margin 1em 0
-  background-color #fff
-  .proj_title
-    display none
 
 @media (min-width: 600px)
   .topicTimeline

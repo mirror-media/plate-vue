@@ -19,7 +19,7 @@
                   :item="getValue(p, [ 'content', 0], {})"></div>
           <div v-else is="app-slider" class="per-slide" :option="sliderOption">
             <template scope="props">
-              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])">
+              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
                 <div class="swiper-lazy-preloader"></div>
               </swiper-slide>
@@ -37,7 +37,7 @@
                   :item="getValue(p, [ 'content', 0], {})"></div>
           <div v-else is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template scope="props">
-              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])">
+              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
               </swiper-slide>
             </template>
@@ -75,7 +75,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../../constants'
-import { getHref, getTruncatedVal, getValue } from '../../utils/comm'
+import { getHref, getTruncatedVal, getValue } from '../../util/comm'
 import AudioBox from '../../components/AudioBox.vue'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
@@ -147,7 +147,7 @@ export default {
       }
     },
     subtitle () {
-      const { subtitle } = this.articleData
+      const { subtitle = [] } = this.articleData
       return subtitle
     },
     title () {
@@ -155,7 +155,7 @@ export default {
       return title
     },
     tags () {
-      const { tags } = this.articleData
+      const { tags = [] } = this.articleData
       return tags.map((o) => {
         return `<a href=\"/tag/${_.get(o, [ 'id' ], '')}\" id=\"tag-${_.get(o, [ 'id' ], '')}\">${_.get(o, [ 'name' ], '')}</a>`
       }).join('、')

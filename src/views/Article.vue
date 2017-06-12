@@ -2,7 +2,7 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
       <section style="width: 100%;">
-        <app-header :commonData="commonData" :eventLogo="eventLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')"></app-header>
+        <app-header :commonData="commonData" :eventLogo="eventLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header>
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
@@ -81,7 +81,7 @@
 <script>
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_TITLE, SITE_URL } from '../constants'
-  import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../utils/comm'
+  import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import Cookie from 'vue-cookie'
@@ -97,7 +97,7 @@
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
-  import store from '../store'
+  import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
 
   const fetchArticles = (store, slug) => {
@@ -151,33 +151,87 @@
   export default {
     name: 'article-view',
     preFetch: fetchData,
+    asyncData ({ store, route: { params: { id }}}) {
+      return fetchData(store)
+    },
+    mixins: [ titleMetaMixin ],
+    metaSet () {
+      if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
+        const e = new Error()
+        e.massage = 'Page Not Found'
+        e.code = '404'
+        throw e
+      }
+      const {
+        brief = {},
+        categories = {},
+        heroImage = {},
+        ogDescription = '',
+        ogImage = {},
+        ogTitle = '',
+        sections = {},
+        slug = '',
+        tags = {},
+        title = '',
+        topics = {}
+      } = this.articleData
+      const categorieName = _.get(categories, [ 0, 'name' ], '')
+      const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
+      const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
+      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
+      const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
+      const sectionName = _.get(sections, [ 0, 'name' ], '')
+      const topicId = _.get(topics, [ '_id' ], '')
+
+      return {
+        title: truncate(title, 21) + ` － 鏡週刊`,
+        meta: `
+          <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
+          <meta name="description" content="${pureBrief}">
+          <meta name="section-name" content="${sectionName}">
+          <meta name="category-name" content="${categorieName}">
+          <meta name="topic-id" content="${topicId}">
+          <meta name="twitter:card" content="summary_large_image">
+          <meta name="twitter:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊'}">
+          <meta name="twitter:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
+          <meta name="twitter:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
+          <meta property="fb:app_id" content="${FB_APP_ID}">
+          <meta property="fb:pages" content="${FB_PAGE_ID}">
+          <meta property="og:site_name" content="${SITE_TITLE}">
+          <meta property="og:locale" content="zh_TW">
+          <meta property="og:type" content="article">
+          <meta property="og:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊'}">
+          <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
+          <meta property="og:url" content="${SITE_URL + '/story/' + slug + '/'}">
+          <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
+        `
+      }
+    },
     beforeRouteEnter (to, from, next) {
       if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
-        const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
-        if (!_targetArticle) {
-          fetchArticles(store, to.params.slug).then(() => {
-            const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-            return fetchLatestArticle(store, {
-              sort: '-publishedDate',
-              where: {
-                'sections': _.get(sections, [ 0, 'id' ])
-              }
-            }).then(() => {
-              next(vm => {})
+        next(vm => {
+          const _targetArticle = _.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
+          if (!_targetArticle) {
+            fetchArticles(vm.$store, to.params.slug).then(() => {
+              const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
+              return fetchLatestArticle(vm.$store, {
+                sort: '-publishedDate',
+                where: {
+                  'sections': _.get(sections, [ 0, 'id' ])
+                }
+              })
             })
-          })
-          fetchPop(store)
-        } else {
-          next()
-        }
+            fetchPop(vm.$store)
+          }
+        })
       } else {
         next()
       }
     },
     beforeRouteUpdate (to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
-        const sections = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
-        return fetchLatestArticle(store, {
+        const sections = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
+        return fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: {
             'sections': _.get(sections, [ 0, 'id' ])
@@ -188,24 +242,26 @@
       })
     },
     beforeRouteLeave (to, from, next) {
-      const mediafarmersScript = document.querySelector('#mediafarmersJS')
-      if (mediafarmersScript) {
-        document.querySelector('body').removeChild(mediafarmersScript)
+      if (process.env.VUE_ENV === 'client') {
+        const mediafarmersScript = document.querySelector('#mediafarmersJS')
+        if (mediafarmersScript) {
+          document.querySelector('body').removeChild(mediafarmersScript)
+        }
       }
       next()
     },
     beforeMount () {
-      const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-      fetchLatestArticle(store, {
+      const { sections } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
+      fetchLatestArticle(this.$store, {
         sort: '-publishedDate',
         where: {
           'sections': _.get(sections, [ 0, 'id' ])
         }
       })
-      fetchPop(store)
-      fetchCommonData(store)
-      fetchEvent(store, 'embedded')
-      fetchEvent(store, 'logo')
+      fetchPop(this.$store)
+      fetchCommonData(this.$store)
+      fetchEvent(this.$store, 'embedded')
+      fetchEvent(this.$store, 'logo')
     },
     components: {
       'article-body': ArticleBody,
@@ -337,7 +393,7 @@
         return items
       },
       relateds () {
-        return _.get(this.articleData, [ 'relateds' ])
+        return _.get(this.articleData, [ 'relateds' ], [])
       },
       sectionId () {
         return _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
@@ -452,58 +508,6 @@
       this.updateSysStage()
 
       this.sendGA(this.articleData)
-    },
-    metaInfo () {
-      if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
-        const e = new Error()
-        e.massage = 'Page Not Found'
-        e.code = '404'
-        throw e
-      }
-      const {
-        brief = {},
-        categories = {},
-        heroImage = {},
-        ogDescription = '',
-        ogImage = {},
-        ogTitle = '',
-        sections = {},
-        slug = '',
-        tags = {},
-        title = '',
-        topics = {}
-      } = this.articleData
-      const categorieName = _.get(categories, [ 0, 'name' ], '')
-      const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
-      const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
-      const sectionName = _.get(sections, [ 0, 'name' ], '')
-      const topicId = _.get(topics, [ '_id' ], '')
-
-      return {
-        title: truncate(title, 21) + ` － 鏡週刊`,
-        meta: [
-          { name: 'keywords', content: _.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString() },
-          { name: 'description', content: pureBrief },
-          { name: 'section-name', content: sectionName },
-          { name: 'category-name', content: categorieName },
-          { name: 'topic-id', content: topicId },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: (ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊' },
-          { name: 'twitter:description', content: (ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief },
-          { name: 'twitter:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') },
-          { property: 'fb:app_id', content: FB_APP_ID },
-          { property: 'fb:pages', content: FB_PAGE_ID },
-          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-          { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: (ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊' },
-          { property: 'og:description', content: (ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief },
-          { property: 'og:url', content: SITE_URL + '/story/' + slug + '/' },
-          { property: 'og:image', content: (ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png') }
-        ]
-      }
     },
     updated () {
       this.updateSysStage()

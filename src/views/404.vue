@@ -29,7 +29,7 @@
 <script>
 
 import { SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
-import { getValue } from '../utils/comm'
+import { getValue } from '../util/comm'
 import _ from 'lodash'
 
 const fetchPop = (store) => {
@@ -75,9 +75,11 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    const googleFonts = document.querySelector('#googleFonts')
-    if (googleFonts) {
-      document.querySelector('head').removeChild(googleFonts)
+    if (process.env.VUE_ENV === 'client') {
+      const googleFonts = document.querySelector('#googleFonts')
+      if (googleFonts) {
+        document.querySelector('head').removeChild(googleFonts)
+      }
     }
   },
   beforeMount () {
@@ -95,7 +97,7 @@ export default {
   metaInfo () {
     const title = SITE_TITLE
     const description = SITE_DESCRIPTION
-
+    console.log('404 vue')
     return {
       title,
       meta: [

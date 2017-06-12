@@ -1,7 +1,7 @@
 // this is aliased in webpack config based on server/client build
 import { CATEGORY, SECTION, TAG, TOPIC } from '../constants/index'
 import { camelizeKeys } from 'humps'
-import { getHost } from '../utils/comm'
+import { getHost } from '../util/comm'
 import _ from 'lodash'
 import qs from 'qs'
 

@@ -3,7 +3,7 @@
     <template scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <app-Header v-if="true" :commonData= 'commonData' />
+          <app-Header v-if="true" :commonData="commonData" :props="props"/>
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
@@ -13,7 +13,7 @@
           <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" />
           <aside>
             <div class="aside-title mobile-only" ref="aside_title"><h2>最新文章</h2></div>
-            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}"/>
+            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`"/>
           </aside>
           <main>
             <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />
@@ -57,8 +57,8 @@
 
 <script>
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from '../constants'
-import { currEnv, unLockJS } from '../utils/comm'
+import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { currEnv, unLockJS } from '../util/comm'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import EditorChoice from '../components/EditorChoice.vue'
@@ -73,6 +73,7 @@ import PopularArticles from '../components/PopularArticles.vue'
 import ProjectList from '../components/article/ProjectList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
+import titleMetaMixin from '../util/mixinTitleMeta'
 
 // const MAXRESULT = 20
 // const PAGE = 1
@@ -132,7 +133,32 @@ export default {
     ProjectList,
     VueDfpProvider
   },
-  preFetch: fetchSSRData,
+  asyncData ({ store }) {
+    return fetchSSRData(store)
+  },
+  mixins: [ titleMetaMixin ],
+  metaSet () {
+    return {
+      title: SITE_TITLE,
+      meta: `
+        <meta name="keywords" content="${SITE_KEYWORDS}">
+        <meta name="description" content="${SITE_DESCRIPTION}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${SITE_TITLE}">
+        <meta name="twitter:description" content="${SITE_DESCRIPTION}">
+        <meta name="twitter:image" content="${SITE_OGIMAGE}">
+        <meta property="fb:app_id" content="${FB_APP_ID}">
+        <meta property="fb:pages" content="${FB_PAGE_ID}">
+        <meta property="og:site_name" content="${SITE_TITLE}">
+        <meta property="og:locale" content="zh_TW">
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="${SITE_TITLE}">
+        <meta property="og:description" content="${SITE_DESCRIPTION}">
+        <meta property="og:url" content="${SITE_URL}">
+        <meta property="og:image" content="${SITE_OGIMAGE}">
+      `
+    }
+  },
   beforeRouteEnter (to, from, next) {
     if (process.env.VUE_ENV === 'client' && to.path !== from.path) {
       next(vm => {
@@ -207,26 +233,29 @@ export default {
     //   return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticles, [ 'meta', 'total' ], 0)
     // },
     latestArticle () {
-      // const unionBy = _.unionBy(
-      //   _.get(this.articlesGroupedList, [ 'choices' ]),
-      //   _.get(this.articlesGroupedList, [ 'grouped' ]),
-      //   _.get(this.articlesGroupedList, [ 'grouped', 'relateds' ]),
-      //   _.get(this.articlesGroupedList, [ 'latest' ]),
-      //   'slug'
-      // )
-      // let xorBy = _.xorBy(
-      //   _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]), _.get(this.articlesGroupedList, [ 'latestEndIndex' ])),
-      //   unionBy,
-      //   'title'
-      // )
-      if (this.notFirstPage) {
-        return _.get(this.articlesGroupedList, [ 'latest' ])
-                .concat(
-                  _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]),
-                          _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
-                )
+      const latestFirstPage = _.dropRight(_.get(this.articlesGroupedList, [ 'latest' ]), 3)
+      const choices = _.get(this.articlesGroupedList, [ 'choices' ])
+      const groupedTitle = _.get(this.articlesGroupedList, [ 'grouped' ])
+      const groupedRelateds = _.flatten(_.map(_.get(this.articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
+      const grouped = _.union(groupedTitle, groupedRelateds)
+      const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
+      const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
+
+      const latest = _.uniqBy(
+        latestFirstPage.concat(
+          _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]), _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
+        ),
+        'slug'
+      )
+      // const latestXor = _.xorBy(latest, choicesAndGrouped, 'slug')
+      _.remove(latest, (o) => {
+        return _.includes(choicesAndGrouped_slugs, o.slug)
+      })
+
+      if (this.notFirstPageNow) {
+        return latest
       } else {
-        return _.get(this.articlesGroupedList, [ 'latest' ])
+        return latestFirstPage
       }
     },
     // latestArticleLoadMore () {
@@ -240,7 +269,7 @@ export default {
     //   const latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state, [ 'articlesGroupedList', 'choices', 'length' ])))
     //   return latestArticle
     // },
-    notFirstPage () {
+    notFirstPageNow () {
       return _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], 1) !== 1
     },
     popularlist () {
@@ -269,7 +298,7 @@ export default {
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.querySelector('body').offsetWidth
+        this.viewport = document.documentElement.clientWidth || document.body.clientWidth
       }
     },
     updateSysStage () {
@@ -290,36 +319,11 @@ export default {
         const firstPageArticleHeight = _latestArticleDiv.offsetHeight
         const firstPageArticleBottom = elmYPosition('#latestArticle') + (firstPageArticleHeight)
         const currentBottom = currentYPosition() + window.innerHeight
-        if ((currentBottom > firstPageArticleBottom) && !this.hasScrollLoadMore) {
+        if ((currentBottom > (firstPageArticleBottom - 300)) && !this.hasScrollLoadMore) {
           // this.hasScrollLoadMore = true
           this.loadMore()
         }
       }
-    }
-  },
-  metaInfo () {
-    const title = SITE_TITLE
-    const description = SITE_DESCRIPTION
-
-    return {
-      title,
-      meta: [
-          { name: 'keywords', content: '鏡週刊,mirror media,新聞,人物,調查報導,娛樂,美食,旅遊,精品,動漫,網路趨勢,趨勢,國際,兩岸,政治,明星,文學,劇本,新詩,散文,小說' },
-          { name: 'description', content: description },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: title },
-          { name: 'twitter:description', content: description },
-          { name: 'twitter:image', content: '/public/notImage.png' },
-          { property: 'fb:app_id', content: FB_APP_ID },
-          { property: 'fb:pages', content: FB_PAGE_ID },
-          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-          { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: title },
-          { property: 'og:description', content: description },
-          { property: 'og:url', content: SITE_URL },
-          { property: 'og:image', content: '/public/notImage.png' }
-      ]
     }
   },
   beforeMount () {

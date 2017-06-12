@@ -2,7 +2,7 @@
   <section id="editorChoice" class="editorChoice container">
     <app-slider class="editorChoice-slides grid grid-4-fifth" slideId="editorChoiceSlider" :option="sliderOption" v-if="viewport > 1199">
       <template scope="props">
-        <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice">
+        <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
           <template>
             <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'">
               <div :id="'slide-' + index" class="editorChoice-image"
@@ -60,7 +60,7 @@
 <script>
 
 import { SECTION_MAP } from '../constants'
-import { getHref, getImage, getSection, getTitle, getTruncatedVal, getValue } from '../utils/comm'
+import { getHref, getImage, getSection, getTitle, getTruncatedVal, getValue } from '../util/comm'
 import Slider from './Slider.vue'
 import _ from 'lodash'
 
