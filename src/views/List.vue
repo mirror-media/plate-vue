@@ -38,9 +38,9 @@
         <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
+        <list-choice v-if="type === `SECTION` && sectionfeatured" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
-          <div class="list-title__colorBlock" :class="sectionName"></div>
         </div>
         <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' v-if="categoryName !== 'audio' && categoryName !== 'videohub' ">
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
@@ -79,6 +79,7 @@
 
 import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
+import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, getTruncatedVal, unLockJS } from '../util/comm'
 import _ from 'lodash'
@@ -99,6 +100,7 @@ import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
 import LatestArticleFull from '../components/LatestArticleFull.vue'
 import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
+import ListChoice from '../components/ListChoice.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
@@ -310,6 +312,7 @@ export default {
     'latestArticle-full': LatestArticleFull,
     'latestArticle-foodtravel': LatestArticleFoodTravel,
     'leading-watch': LeadingWatch,
+    'list-choice': ListChoice,
     'live-stream': LiveStream,
     'loading': Loading,
     'more': More,
@@ -401,6 +404,9 @@ export default {
         default:
           if (this.$route.params.title === 'topic') {
             return _.get(this.$store.state, [ 'topics', 'items' ])
+          }
+          if (this.$route.params.title === 'news-people' || this.$route.params.title === 'entertainment') {
+            return _.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this.sectionfeatured), 'id')
           }
           return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
       }
@@ -536,7 +542,7 @@ export default {
       return _.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title })
     },
     sectionfeatured () {
-      return _.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.sectionName), [ this.sectionName ])
+      return _.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.camelize(this.sectionName)), [ this.camelize(this.sectionName) ])
     },
     sectionId () {
       switch (this.type) {
@@ -622,6 +628,7 @@ export default {
     }
   },
   methods: {
+    camelize,
     checkIfLockJS () {
       unLockJS()
     },
@@ -809,13 +816,14 @@ $color-other = #bcbcbc
   &-title
     &.container
       position relative
+      justify-content flex-start
       align-items center
       flex-direction row
-      margin-top 40px
+      margin-top .5em
       padding 0 2em
 
     &__text
-      font-size 3rem
+      font-size 1.5rem
 
     &__colorBlock
       flex-grow 1

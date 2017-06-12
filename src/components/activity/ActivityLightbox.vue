@@ -22,7 +22,7 @@
       <h3 v-text="getValue(nodes, [ currentNodeIndex, 'subtitle' ])" />
       <h2 v-text="getValue(nodes, [ currentNodeIndex, 'name' ])" />
       <p v-text="getValue(nodes, [ currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])" />
-      <figure @click="share()">
+      <figure @click="share()" id="activity-share">
         <img v-lazy="`/public/icon/facebook_white.png`" />
       </figure>
     </div>
