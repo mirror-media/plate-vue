@@ -4,7 +4,7 @@
         <img :src="contentImageUrl" />
     </template>
     <template v-if="contentStyle === 'video'">
-      <video controls="true" controlsList="nodownload" preload="metadata">
+      <video :poster="contentVideoCover" controls="true" controlsList="nodownload" preload="metadata" playsinline>
         <source :src="contentVideoUrl" :type="contentVideoType">
       </video>
     </template>
@@ -30,6 +30,9 @@ export default {
       } else {
         return _.get(this.content, [ 'content', '0', 'desktop', 'url' ])
       }
+    },
+    contentVideoCover () {
+      return _.get(this.content, [ 'content', '0', 'coverPhoto', 'desktop', 'url' ])
     },
     contentVideoType () {
       return _.get(this.content, [ 'content', '0', 'filetype' ])

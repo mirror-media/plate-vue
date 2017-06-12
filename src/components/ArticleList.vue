@@ -205,7 +205,7 @@ $color-other = #bcbcbc
   &.container
     flex-direction column
     flex-wrap wrap
-    margin-top 30px
+    margin-top .5em
   &-block
     width 100%
     margin-bottom 40px
@@ -260,7 +260,7 @@ $color-other = #bcbcbc
     &.container
       flex-direction row
       justify-content flex-start
-      width 100%
+      width calc(100% - 30px)
     &-block
       width calc( (100% - 40px) / 2 )
       margin 0 10px 40px

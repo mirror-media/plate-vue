@@ -58,37 +58,4 @@ export function createRouter () {
     ]
   })
 }
-// const router = new Router({
-//   mode: 'history',
-//   scrollBehavior: () => ({ y: 0 }),
-//   routes: [
-//     { path: '/activity/:activityId/', component: Activity },
-//     { path: '/author/:authorId/', component: List },
-//     { path: '/category/:title', component: List },
-//     {
-//       path: '/story/:slug',
-//       component: Article
-//       // children: [ {
-//       //   path: 'index.html',
-//       //   component: Article
-//       // } ]
-//     },
-//     { path: '/project-list', component: Project },
-//     { path: '/homeb', component: HomeB },
-//     { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
-//     { path: '/search/:keyword', component: Search },
-//     { path: '/section/:title', component: List },
-//     { path: '/timeline/:title', component: TimelineView },
-//     { path: '/tag/:tagId', component: List },
-//     { path: '/topic/:topicId', component: Topic },
-//     { path: '/404', component: NotFound },
-//     { path: '/', component: Home },
-//     { path: '*', redirect: '/404' }
-//   ]
-// })
 
-// if (process.env.VUE_ENV === 'client') {
-//   window.ga('create', GA_ID, 'auto')
-// }
-
-// export default router

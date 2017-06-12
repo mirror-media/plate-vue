@@ -1,6 +1,6 @@
 <template>
   <main class="activity">
-    <a href="/" class="activity__logo">
+    <a href="/" class="activity__logo" id="home">
       <img src="/public/icon/logo_black.png" srcset="/public/icon/logo_black@2x.png 2x" alt="鏡週刊 Mirror Media" />
     </a>
     <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" :sharePath="`/activity/${getValue(activity, [ 'id' ])}`" class="activity__share" />
@@ -133,6 +133,7 @@ export default {
       this.updateViewport()
     })
     this.loadind = false
+    window.ga('send', 'pageview', `/activity/${this.$route.params.activityId}`, { title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}` })
   },
   metaSet () {
     const url = `${SITE_URL}/activity/${this.$route.params.activityId}`

@@ -10,7 +10,7 @@
     </div>
     <div class="activityTimeline__images" :style="{ width: imagesWidth, transform: `translate3d(${imagesTransform}px,0,0)` }">
       <template v-for="(item, index) in nodes">
-        <div class="activityTimeline__imageBlock" :class="[ index % 2 === 0 ? '' : 'deeper', getNodeStyle(item) ]" @click="openLightbox(index)">
+        <div class="activityTimeline__imageBlock" :class="[ index % 2 === 0 ? '' : 'deeper', getNodeStyle(item) ]" @click="openLightbox(index)" :id="`activity-${item.id}`" >
           <figure>
             <img v-lazy="getNodeImage(item)" v-show="getNodeImage(item)" />
           </figure>
