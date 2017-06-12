@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-  import { shareGooglePlus, shareLine, shareFacebook } from '../../utils/comm'
+  import { shareGooglePlus, shareLine, shareFacebook } from '../../util/comm'
   import _ from 'lodash'
 
   export default {

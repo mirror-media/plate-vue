@@ -32,7 +32,7 @@
 </template>
 <script>
 
-import { getImage } from '../utils/comm'
+import { getImage } from '../util/comm'
 
 export default {
   name: 'leadingWatch',

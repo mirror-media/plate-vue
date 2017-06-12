@@ -3,7 +3,7 @@
     <div class="activityNode-nodeContainer" :style="nodeContainerStyle">
       <activity-nodeSlider :id="`node-${index}`" :currentIndex="currentIndex"
                 :index="index" :node="item" :viewport="viewport" v-for="(item, index) in nodes" 
-                :windowHeight="windowHeight" />
+                :windowHeight="windowHeight" :key="`${index}-${Date.now()}`" />
     </div>
   </section>
 </template>

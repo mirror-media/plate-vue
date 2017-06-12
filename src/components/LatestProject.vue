@@ -13,7 +13,7 @@
 </template>
 <script>
 
-import { getBrief, getImage, getSection, getHref, getTruncatedVal } from '../utils/comm'
+import { getBrief, getImage, getSection, getHref, getTruncatedVal } from '../util/comm'
 import _ from 'lodash'
 
 export default {

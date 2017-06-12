@@ -7,8 +7,7 @@
 </template>
 
 <script>
-  import { mmLog } from './utils/comm.js'
-  import store from './store'
+  import { mmLog } from './util/comm.js'
 
   export default {
     data () {
@@ -25,7 +24,7 @@
             eventType: 'click',
             target: event.target
           }).then((log) => {
-            return store.dispatch('LOG_CLIENT', { params: {
+            return this.$store.dispatch('LOG_CLIENT', { params: {
               clientInfo: log
             }})
           }).catch((err) => {
@@ -180,7 +179,7 @@ button:focus {
   .container
     width 768px
 
-@media (max-width 1024px)
+@media (max-width 1199px)
   .mobile-hide
     display none !important
 

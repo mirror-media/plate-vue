@@ -137,7 +137,7 @@
 
 <script>
 
-import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../utils/comm'
+import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../util/comm'
 import _ from 'lodash'
 import moment from 'moment'
 
@@ -162,7 +162,7 @@ export default {
       return _.slice(this.sortedArticles, 4, 6)
     },
     articlesAfterDFPNA9 () {
-      return _.slice(this.sortedArticles, 6)
+      return _.slice(this.sortedArticles, 6, 12)
     },
     isSectionTopic () {
       return (_.get(this.$route, [ 'params', 'title' ]) === 'topic')

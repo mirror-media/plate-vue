@@ -1,13 +1,13 @@
 <template>
   <section class="timelineMenu">
-    <div class="timelineMenu-line" :style="[viewport > 600 ? { height: nodesAmount * 125 + 'px' } : {} ]">
+    <div class="timelineMenu-line" :style="[windowViewport > 600 ? { height: nodesAmount * 125 + 'px' } : {} ]">
       <div class="timelineMenu-line__colorLine" />
       <div class="timelineMenu-line__bottomLine" />
     </div>
     <div class="timelineMenu-activityBox" v-for="(item, index) in highlightNodes" 
-      :class="[index%2 === 0 ? 'right' : 'left']" :style="[viewport > 600 ? { top: `calc(${index* 112}px + 1em)` } : {} ]">
+      :class="[index%2 === 0 ? 'right' : 'left']" :style="[windowViewport > 600 ? { top: `calc(${index* 112}px + 1em)` } : {} ]">
       <h2 v-html="item.subtitle"></h2>
-      <a :href="`/activity/${item.activity.id}`" class="timelineMenu-activityBox__imgBox">
+      <a :href="`/activity/${item.activity.id}/${topicId}`" class="timelineMenu-activityBox__imgBox">
         <div class="timelineMenu-activityBox__imgBox--title" v-html="item.activity.name" />
         <div class="timelineMenu-activityBox__imgBox--img" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }"/>
       </a>
@@ -20,46 +20,33 @@
 import _ from 'lodash'
 
 export default {
-  props: {
-    highlightNodes: {
-      type: Array,
-      default: []
-    }
-  },
-  data () {
-    return {
-      viewport: 0
-    }
-  },
+  props: [ 'initialHighlightNodes', 'viewport' ],
   computed: {
+    highlightNodes () {
+      return this.initialHighlightNodes
+    },
+    topicId () {
+      return _.get(this.$route.params, [ 'topicId' ])
+    },
     nodesAmount () {
       return _.get(this.highlightNodes, [ 'length' ])
+    },
+    windowViewport () {
+      return this.viewport
     }
   },
   methods: {
     getImage (node) {
       let viewportTarget
-      if (this.viewport < 600) {
+      if (this.windowViewport < 600) {
         viewportTarget = 'mobile'
-      } else if (this.viewport > 600 && this.viewport < 1200) {
+      } else if (this.windowViewport > 600 && this.windowViewport < 1200) {
         viewportTarget = 'tablet'
       } else {
         viewportTarget = 'desktop'
       }
       return _.get(node, [ 'activity', 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])
-    },
-    updateViewport () {
-      if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.querySelector('body').offsetWidth
-      }
     }
-  },
-  mounted () {
-    this.updateViewport()
-
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
   }
 }
 

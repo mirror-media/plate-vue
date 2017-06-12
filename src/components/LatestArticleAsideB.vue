@@ -28,7 +28,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../constants'
-import { getHref, getTruncatedVal, getValue } from '../utils/comm'
+import { getHref, getTruncatedVal, getValue } from '../util/comm'
 
 export default {
   name: 'latest-list-aside',

@@ -11,9 +11,8 @@
 <script>
 
 import { TOPIC_PROTEST_ID } from '../constants/index'
-import { shareGooglePlus, shareLine, shareFacebook } from '../utils/comm'
+import { shareGooglePlus, shareLine, shareFacebook } from '../util/comm'
 import _ from 'lodash'
-import store from '../store'
 
 export default {
   name: 'share',
@@ -51,7 +50,7 @@ export default {
       return _.get(this.$store.state, [ 'route', 'params', 'topicId' ]) === TOPIC_PROTEST_ID
     },
     link () {
-      return _.get(this, [ 'sharePath' ], store.state.route.path)
+      return _.get(this, [ 'sharePath' ], this.$store.state.route.path)
     }
   },
   methods: {
