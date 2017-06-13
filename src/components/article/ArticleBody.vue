@@ -97,9 +97,10 @@ export default {
     category () {
       const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ])
       const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ])
+      const shouldShow = !_.get(this.articleData, [ 'isAdvertised' ], false) ? {} : { display: 'none;' }
       const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
       const style = { borderLeft: _.get(SECTION_MAP, [ sectionId, 'borderLeft' ], '7px solid #bcbcbc;') }
-      return { categoryId, categoryTitle, style }
+      return { categoryId, categoryTitle, style: Object.assign(style, shouldShow) }
     },
     contArr () {
       return _.get(this.articleData, [ 'content', 'apiData' ], [])
