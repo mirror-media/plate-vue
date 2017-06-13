@@ -97,7 +97,7 @@ export default {
   metaInfo () {
     const title = SITE_TITLE
     const description = SITE_DESCRIPTION
-
+    console.log('404 vue')
     return {
       title,
       meta: [

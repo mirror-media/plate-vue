@@ -83,9 +83,11 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
 
 function render (req, res, next) {
   if (req.url.indexOf('/api/') === 0) {
+    console.log('api endpoint')
     next()
     return
   } else if (req.url.indexOf('/404') === 0) {
+    console.log('404 endpoint')
     res.status(404).render('404')
     return
   }
@@ -95,9 +97,43 @@ function render (req, res, next) {
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 
-  const handleError = err => {
-    if (err && err.code == 404) {
+  const context = { url: req.url }
+  const renderStream = renderer.renderToStream(context)
+  let ifPageNotFound = false
+  let ifErrorOccured = false
+  console.log('step 1')
+  renderStream.once('data', () => {
+    // res.write(indexHTML.head)
+    console.log('step 2')
+    const { title, meta } = context.meta.inject()
+    let _indexHead = indexHTML.head.replace(/<title.*?<\/title>/g, title.text())
+    _indexHead = _indexHead.replace(/<meta.*?name="description".*?>/g, meta.text()) 
+    res.write(_indexHead)
+  })
+
+  renderStream.on('data', chunk => {
+    console.log('step 2')
+    res.write(chunk)
+  })
+
+  renderStream.on('end', () => {
+    // embed initial store state
+    console.log('step 3')
+    if (context.initialState) {
+      res.write(
+        `<script>window.__INITIAL_STATE__=${
+        serialize(context.initialState, { isJSON: true })
+        }</script>`
+      )
+    }
+    res.end(indexHTML.tail)
+  })
+
+  
+  renderStream.on('error', err => {
+    if (err && err.code === '404') {
       ifPageNotFound = true
+      console.log('ejs')
       res.status(404).render('404')
       console.log('##########REQUEST URL(404)############')
       console.log('REQUEST URL:', req.url)
