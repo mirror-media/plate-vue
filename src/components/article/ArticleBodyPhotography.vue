@@ -151,7 +151,7 @@
         currIndex: 1,
         creditCommentShow: false,
         descHide: false,
-        descSwitch: false,
+        descSwitch: _.get(this.articleData, [ 'isAdvertised' ], false),
         lastAnimation: 0,
         ifLandscape: false,
         goNextPageHide: false,
@@ -295,6 +295,7 @@
       },
       toggleDesc () {
         this.descSwitch = !this.descSwitch
+        this.descShowDefault = false
       },
       updateProgressbar (percentage) {
         return new Promise((resolve) => {
