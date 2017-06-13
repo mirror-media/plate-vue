@@ -90,7 +90,8 @@ node {
 
             // Upload dist files to cloud storage
             // def pod_name = kubectl get pod | grep vue | grep Running | awk '{print $1}'
-            sh('kubectl cp $(kubectl get pod | grep vue | grep Running | awk \'{print $1}\'):/usr/src/dist /root/dist')
+            sh('kubectl cp $(kubectl get pod | grep vue | grep Running | awk \'{print $1}\'):/usr/src/dist /dist')
+            sh("gsutil -m -h 'Cache-Control:max-age=2592000,public' cp -z gzip -a public-read /dist/** gs://mirrormedia-files/dist")
         } catch(e) {
             slackSend (color: '#FF0000', message: "Huston, we got an *Upload* problem.")
             currentBuild.result = 'FAILURE'
