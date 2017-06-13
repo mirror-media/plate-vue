@@ -44,7 +44,7 @@ export function createRouter () {
         //   component: Article
         // } ]
       },
-      { path: '/project-list', component: Project },
+      { path: '/project-list/:style?', component: Project },
       { path: '/homeb', component: HomeB },
       { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
       { path: '/search/:keyword', component: Search },
