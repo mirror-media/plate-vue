@@ -191,6 +191,73 @@
           }
         }
       },
+      initOnepage () {
+        this.onePageScroll.init('.article_body', {
+          afterMove: (index, next_el) => {
+            this.currIndex = parseInt(index)
+            this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
+            if (this.currIndex === this.imgArr.length + 1) {
+              this.creditCommentShow = true
+              setTimeout(() => {
+                document.addEventListener('mousewheel', this.mouseWheelHandler)
+                document.addEventListener('DOMMouseScroll', this.mouseWheelHandler)
+              }, 1000)
+            } else {
+              this.creditCommentShow = false
+              document.removeEventListener('mousewheel', this.mouseWheelHandler)
+              document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
+            }
+          },
+          animationTime: 500,
+          beforeMove: (index, next_el) => {
+            this.smoothScroll('.article_body')
+            if (parseInt(index) > this.currIndex) {
+              this.sideProgressHandler('pass', parseInt(index - 1))
+            } else {
+              this.sideProgressHandler('back', parseInt(index))
+            }
+          },
+          defaultInitialPage: 0,
+          easing: 'ease-in',
+          pageContainer: '.pic-section',
+          quietPeriod: 700
+        })
+      },
+      mouseWheelHandler (evt) {
+        const delta = evt.wheelDelta || -evt.detail
+        const targ = evt.target
+        const timeNow = new Date().getTime()
+
+        const shouldDo = this.onePageScroll._isDescendant(document.querySelector('.article_body'), targ)
+
+        const creditCommentTopY = this.elmYPosition('.credit-comment')
+        const currTop = this.currentYPosition()
+
+        if (delta < 0 && this.currIndex === this.imgArr.length + 1 && shouldDo && creditCommentTopY > currTop) {
+          if (timeNow - this.lastAnimation < this.quietPeriod + 500) {
+            evt.preventDefault()
+            return
+          } else {
+            this.smoothScroll('.credit-comment')
+            this.onePageScroll.pauseToggle()
+          }
+        } else if (delta > 0 && this.currIndex === this.imgArr.length + 1 && !shouldDo) {
+          if (creditCommentTopY > currTop) {
+            if (this.scrollingFlag === true) {
+              evt.preventDefault()
+              return
+            } else {
+              this.smoothScroll('.article_body')
+              this.scrollingFlag = true
+              setTimeout(() => {
+                this.scrollingFlag = false
+                this.onePageScroll.pauseToggle()
+              }, 1000)
+            }
+          }
+        }
+        this.lastAnimation = timeNow
+      },
       smoothScroll,
       shareGooglePlus () {
         shareGooglePlus({ route: this.$route.path })
@@ -246,41 +313,6 @@
         this.updateIfLandscape()
       })
 
-      const _mouseWheelHandler = (evt) => {
-        const delta = evt.wheelDelta || -evt.detail
-        const targ = evt.target
-        const timeNow = new Date().getTime()
-
-        const shouldDo = this.onePageScroll._isDescendant(document.querySelector('.article_body'), targ)
-
-        const creditCommentTopY = this.elmYPosition('.credit-comment')
-        const currTop = this.currentYPosition()
-
-        if (delta < 0 && this.currIndex === this.imgArr.length + 1 && shouldDo && creditCommentTopY > currTop) {
-          if (timeNow - this.lastAnimation < this.quietPeriod + 500) {
-            evt.preventDefault()
-            return
-          } else {
-            this.smoothScroll('.credit-comment')
-            this.onePageScroll.pauseToggle()
-          }
-        } else if (delta > 0 && this.currIndex === this.imgArr.length + 1 && !shouldDo) {
-          if (creditCommentTopY > currTop) {
-            if (this.scrollingFlag === true) {
-              evt.preventDefault()
-              return
-            } else {
-              this.smoothScroll('.article_body')
-              this.scrollingFlag = true
-              setTimeout(() => {
-                this.scrollingFlag = false
-                this.onePageScroll.pauseToggle()
-              }, 1000)
-            }
-          }
-        }
-        this.lastAnimation = timeNow
-      }
       window.addEventListener('scroll', () => {
         const currTop = this.currentYPosition()
         const creditCommentTopY = this.elmYPosition('.credit-comment')
@@ -293,38 +325,20 @@
           this.descHide = false
         }
       })
-      window.addEventListener('load', () => {
-        this.onePageScroll.init('.article_body', {
-          afterMove: (index, next_el) => {
-            this.currIndex = parseInt(index)
-            this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
-            if (this.currIndex === this.imgArr.length + 1) {
-              this.creditCommentShow = true
-              setTimeout(() => {
-                document.addEventListener('mousewheel', _mouseWheelHandler)
-                document.addEventListener('DOMMouseScroll', _mouseWheelHandler)
-              }, 1000)
-            } else {
-              this.creditCommentShow = false
-              document.removeEventListener('mousewheel', _mouseWheelHandler)
-              document.removeEventListener('DOMMouseScroll', _mouseWheelHandler)
-            }
-          },
-          animationTime: 500,
-          beforeMove: (index, next_el) => {
-            this.smoothScroll('.article_body')
-            if (parseInt(index) > this.currIndex) {
-              this.sideProgressHandler('pass', parseInt(index - 1))
-            } else {
-              this.sideProgressHandler('back', parseInt(index))
-            }
-          },
-          defaultInitialPage: 0,
-          easing: 'ease-in',
-          pageContainer: '.pic-section',
-          quietPeriod: 700
+      if (window === undefined) {
+        window.addEventListener('load', () => {
+          this.initOnepage()
         })
-      })
+      } else {
+        this.initOnepage()
+      }
+    },
+    beforeRouteLeave (to, from, next) {
+      if (process.env.VUE_ENV === 'client') {
+        this.creditCommentShow = false
+        document.removeEventListener('mousewheel', this.mouseWheelHandler)
+        document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
+      }
     },
     name: 'ariticle-body-photo',
     props: {
