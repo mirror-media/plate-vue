@@ -1,5 +1,5 @@
 <template>
-  <ProjectList :projects="projects" :viewport="viewport" :class="projectClass" />
+  <ProjectList :projects="projects" :viewport="viewport" :class="projectClass" target="_blank" />
 </template>
 
 <script>

@@ -7,19 +7,19 @@
           <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10" :key="`${i}-${Date.now()}`">
             <div class="proj_item">
               <div>
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-1'">
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-1'" :target="target">
                   <div class="proj_item_img" :title="getValue(o, [ 'title' ])"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
               </div>
               <div class="proj_item_title">
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-2'">
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-2'" :target="target">
                   {{ getTruncatedVal(o.title, 20) }}
                 </a>
               </div>
               <div class="proj_item_desc">
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-3'">
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-3'" :target="target">
                   {{ getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20) }}
                 </a>
               </div>
@@ -95,6 +95,9 @@
       },
       viewport: {
         default: () => { return undefined }
+      },
+      target: {
+        default: () => ('_self')
       }
     }
   }
