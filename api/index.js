@@ -180,8 +180,8 @@ router.get('*', (req, res) => {
     res.header('Cache-Control', 'public, max-age=300');
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "X-Requested-With")
-    // console.log(apiHost)
-    // console.log(decodeURIComponent(req.url))
+    console.log(apiHost)
+    console.log(decodeURIComponent(req.url))
     redisPoolRead.get(decodeURIComponent(req.url), function (err, data) {
         try {
             if (!err && data) {
