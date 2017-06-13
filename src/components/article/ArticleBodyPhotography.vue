@@ -199,6 +199,7 @@
             this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
             if (this.currIndex === this.imgArr.length + 1) {
               this.creditCommentShow = true
+              this.initFBComment()
               setTimeout(() => {
                 document.addEventListener('mousewheel', this.mouseWheelHandler)
                 document.addEventListener('DOMMouseScroll', this.mouseWheelHandler)
@@ -349,6 +350,13 @@
       },
       viewport: {
         default: () => { return {} }
+      },
+      initFBComment: {
+        default: () => {
+          return () => {
+            console.log('init fb comment')
+          }
+        }
       }
     }
   }

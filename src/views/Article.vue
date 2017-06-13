@@ -57,7 +57,7 @@
         <share-tools v-if="viewport > 767" />
       </div>
       <div v-else-if="(articleStyle === 'photography')">
-        <article-body-photography :articleData="articleData" :viewport="viewport">
+        <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <div slot="slot_dfpFT">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
@@ -437,15 +437,8 @@
       getValue (o = {}, p = [], d = '') {
         return _.get(o, p, d)
       },
-      insertFbSdkScript () {
-        if (!window.FB) {
-          const fbSdkScript = document.createElement('script')
-          fbSdkScript.setAttribute('id', 'fbsdk')
-          fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + this.fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
-          fbSdkScript.async = true
-          fbSdkScript.type = 'text/javascript'
-          document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
-        } else {
+      initializeFBComments () {
+        if (window.FB) {
           window.FB && window.FB.init({
             appId: this.fbAppId,
             xfbml: true,
@@ -497,7 +490,7 @@
       }
     },
     mounted () {
-      this.insertFbSdkScript()
+      this.initializeFBComments()
       this.insertMediafarmersScript()
       this.updateViewport()
       this.clientSideFlag = process.env.VUE_ENV === 'client'
