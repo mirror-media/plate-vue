@@ -46,6 +46,9 @@
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
         </div>
       </article>
+      <div class="article_main_related_bottom">
+        <slot name="relatedlistBottom"></slot>
+      </div>
       <div class="article_main_tags" v-if="tags.length > 0">
         <i class="tags_icon"></i>
         <div class="tags" v-html="tags"></div>
@@ -57,9 +60,6 @@
       </div>
       <div class="dfpad-set" style="display: flex; justify-content: space-around;">
         <slot name="dfpad-set"></slot>
-      </div>
-      <div class="article_main_related_bottom">
-        <slot name="relatedlistBottom"></slot>
       </div>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
