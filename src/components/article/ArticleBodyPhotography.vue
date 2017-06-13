@@ -221,7 +221,7 @@
           defaultInitialPage: 1,
           easing: 'ease-in',
           pageContainer: '.pic-section',
-          quietPeriod: 700
+          quietPeriod: 750
         })
       },
       mouseWheelHandler (evt) {
