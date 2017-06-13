@@ -208,6 +208,8 @@
               document.removeEventListener('mousewheel', this.mouseWheelHandler)
               document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
             }
+            this.scrollingFlag = false
+            this.onePageScroll.cancelPause()
           },
           animationTime: 500,
           beforeMove: (index, next_el) => {
@@ -250,10 +252,10 @@
             } else {
               this.smoothScroll('.article_body')
               this.scrollingFlag = true
-              setTimeout(() => {
-                this.scrollingFlag = false
-                this.onePageScroll.pauseToggle()
-              }, 1000)
+              // setTimeout(() => {
+              //   this.scrollingFlag = false
+              //   this.onePageScroll.pauseToggle()
+              // }, 1275)
             }
           }
         }
