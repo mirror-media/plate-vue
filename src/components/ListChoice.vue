@@ -117,7 +117,7 @@ export default {
       margin 1em 0
       figure
         width 50%
-        padding-top calc(50% * 0.6666)
+        padding-top calc((100vw - 50px) * 0.5 * 0.6666)
       &.right
         flex-direction row-reverse
         figure
@@ -152,7 +152,7 @@ export default {
     &__block
       figure
         width 33.33%
-        padding-top calc(33.33% * 0.6666)
+        padding-top calc(1024px * 0.3333 * 0.6667)
       &.right
         figure
           width 33.33%
