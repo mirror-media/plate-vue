@@ -208,8 +208,6 @@
               document.removeEventListener('mousewheel', this.mouseWheelHandler)
               document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
             }
-            this.scrollingFlag = false
-            this.onePageScroll.cancelPause()
           },
           animationTime: 500,
           beforeMove: (index, next_el) => {
@@ -223,7 +221,7 @@
           defaultInitialPage: 1,
           easing: 'ease-in',
           pageContainer: '.pic-section',
-          quietPeriod: 700
+          quietPeriod: 750
         })
       },
       mouseWheelHandler (evt) {
@@ -252,10 +250,10 @@
             } else {
               this.smoothScroll('.article_body')
               this.scrollingFlag = true
-              // setTimeout(() => {
-              //   this.scrollingFlag = false
-              //   this.onePageScroll.pauseToggle()
-              // }, 1275)
+              setTimeout(() => {
+                this.scrollingFlag = false
+                this.onePageScroll.pauseToggle()
+              }, 1000)
             }
           }
         }
