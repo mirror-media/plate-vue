@@ -145,6 +145,7 @@ export default {
           picture: imageUrl,
           description
         }, function (response) {})
+      window.ga('send', 'event', 'activity', 'click', 'share-node')
     },
     touchend (e) {
       const deltaX = e.changedTouches[0].pageX - this.touchStartValueX
