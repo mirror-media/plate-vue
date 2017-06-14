@@ -383,7 +383,7 @@ export default {
       right 10px
       width 20px
       height 20px
-      z-index 100001
+      z-index 100002
       // filter brightness(100%)
       // transition filter 1s cubic-bezier(.23, 1, .32, 1)
 
