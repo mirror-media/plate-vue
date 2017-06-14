@@ -4,14 +4,14 @@
     <div class="listChoice__block" v-for="(item, index) in sectionfeatured" :class="[ index%2 !== 0 ? 'right' : '' ]">
       <figure>
         <template>
-          <router-link :to="getHref(item)">
+          <router-link :to="getHref(item)" :id="`listing_choice-${item.name}-img`">
             <img :src="getImage(item, viewportTarget)" />
           </router-link>
         </template>
       </figure>
       <div class="listChoice__block--content" :style="{ borderColor: sectionColor }">
-        <h2><router-link :to="getHref(item)" v-text="getTruncatedVal(getValue(item, [ 'title' ]), 30)" /></h2>
-        <p><router-link :to="getHref(item)" v-text="getBrief(item, 45)" /></p>
+        <h2><router-link :to="getHref(item)" :id="`listing_choice-${item.name}-title`" v-text="getTruncatedVal(getValue(item, [ 'title' ]), 30)" /></h2>
+        <p><router-link :to="getHref(item)" :id="`listing_choice-${item.name}-descr`" v-text="getBrief(item, 45)" /></p>
       </div>
     </div>
   </section>
