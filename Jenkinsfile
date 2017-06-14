@@ -14,12 +14,12 @@ node {
             checkout scm
             
             git_author_mail = sh(
-                script: "git show -s --pretty=%aE",
+                script: "git log --skip 1 -n 1 --pretty=%aE",
                 returnStdout: true
             ).trim()
             
             git_author_name = sh(
-                script: "git show -s --pretty=%an",
+                script: "git log --skip 1 -n 1 --pretty=%an",
                 returnStdout: true
             ).trim()
 
