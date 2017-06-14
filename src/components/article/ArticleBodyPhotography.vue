@@ -158,7 +158,8 @@
         onePageScroll: (new OnePageScroller()),
         quietPeriod: 700,
         scrollingFlag: false,
-        stickflag: []
+        stickflag: [],
+        touchStartY: 0
       }
     },
     methods: {
@@ -201,11 +202,16 @@
               this.creditCommentShow = true
               this.initFBComment()
               setTimeout(() => {
+                document.addEventListener('touchstart', this.touchStartHandler)
+                document.addEventListener('touchend', this.touchEndHandler)
                 document.addEventListener('mousewheel', this.mouseWheelHandler)
                 document.addEventListener('DOMMouseScroll', this.mouseWheelHandler)
               }, 1000)
             } else {
               this.creditCommentShow = false
+              document.removeEventListener('touchstart', this.touchStartHandler)
+              document.removeEventListener('touchmove', this.touchMoveHandler)
+              document.removeEventListener('touchend', this.touchEndHandler)
               document.removeEventListener('mousewheel', this.mouseWheelHandler)
               document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
             }
@@ -297,6 +303,41 @@
       toggleDesc () {
         this.descSwitch = !this.descSwitch
         this.descShowDefault = false
+      },
+      touchEndHandler () {
+        document.removeEventListener('touchmove', this.touchMoveHandler)
+      },
+      touchStartHandler (event) {
+        const touches = event.touches
+
+        if (touches && touches.length) {
+          this.touchStartY = touches[0].pageY
+          document.addEventListener('touchmove', this.touchMoveHandler)
+        }
+      },
+      touchMoveHandler (event) {
+        const targ = event.target
+        const touches = event.touches
+
+        const creditCommentTopY = this.elmYPosition('.credit-comment')
+        const currTop = this.currentYPosition()
+        const shouldDo = this.onePageScroll._isDescendant(document.querySelector('.article_body'), targ)
+        const timeNow = new Date().getTime()
+
+        if (touches && touches.length) {
+          const deltaY = this.touchStartY - touches[0].pageY
+          if (deltaY >= 50 && shouldDo && creditCommentTopY > currTop) {
+            if (timeNow - this.lastAnimation < this.quietPeriod + 500) {
+              event.preventDefault()
+              return
+            } else {
+              this.smoothScroll('.credit-comment')
+              this.onePageScroll.pauseToggle()
+              this.lastAnimation = timeNow
+            }
+          } else if (deltaY <= -50 && !shouldDo) {
+          }
+        }
       },
       updateProgressbar (percentage) {
         return new Promise((resolve) => {
