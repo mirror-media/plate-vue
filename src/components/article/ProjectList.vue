@@ -1,10 +1,10 @@
 <template>
-  <div class="project-container" v-if="(projects.length > 0)">
+  <div class="project-container" v-if="(filteredProjects.length > 0)">
     <div class="proj_title"><h3>聚焦鏡</h3></div>
     <div class="proj_list">
       <app-slider :option="sliderOption" v-if="ifShowProjects" :slideId="sliderId">
         <template scope="props">
-          <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10" :key="`${i}-${Date.now()}`">
+          <swiper-slide :is="props.slide" v-for="(o, i) in filteredProjects" v-if="i < 10" :key="`${i}-${Date.now()}`">
             <div class="proj_item">
               <div>
                 <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-1'" :target="target">
@@ -33,6 +33,7 @@
   </div>
 </template>
 <script>
+  import _ from 'lodash'
   import { SECTION_MAP, SITE_URL } from '../../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import Slider from '../Slider.vue'
@@ -46,6 +47,11 @@
       ifShowProjects () {
         const browser = typeof window !== 'undefined'
         return (browser && this.viewport)
+      },
+      filteredProjects () {
+        return _.filter(this.projects, (o) => {
+          return !_.includes(this.excludingProjects, o.slug)
+        })
       },
       slidesPerView () {
         return (this.viewport < 600) ? 1 : 3
@@ -90,6 +96,9 @@
     },
     name: 'project-list',
     props: {
+      excludingProjects: {
+        default: () => { return [] }
+      },
       projects: {
         default: () => { return [] }
       },
@@ -131,6 +140,7 @@
     border 1px solid rgba(0, 0, 0, 0.29)
 
     .swiper-container
+      left -1px
       .swiper-wrapper
         .swiper-slide-active
           .proj_item

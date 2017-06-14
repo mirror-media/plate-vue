@@ -1,5 +1,5 @@
 <template>
-  <ProjectList :projects="projects" :viewport="viewport" :class="projectClass" target="_blank" />
+  <ProjectList :projects="projects" :viewport="viewport" :class="projectClass" target="_blank" :excludingProjects="excludingProjects" />
 </template>
 
 <script>
@@ -25,6 +25,9 @@ export default {
     return fetchProjects(store)
   },
   computed: {
+    excludingProjects () {
+      return _.get(this.$store, [ 'state', 'route', 'query', 'excluding' ], '').split(',')
+    },
     projects () {
       return _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
     },
@@ -54,13 +57,15 @@ export default {
 </script>
 
 <style lang="stylus">
+body
+  background-color transparent
 .project-container
   > .proj_title
     display none
   &.dark
     background-color #000
     > .proj_list
-      border 1px solid rgba(255, 255, 255, 0.49)
+      border none
       > .swiper-container
         > .swiper-wrapper
           > .swiper-slide
