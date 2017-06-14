@@ -204,7 +204,10 @@ export default {
         case 'header-two':
           return `<h2>${item.content.toString()}</h2>`
         case 'image':
-          return `<div class=\"innerImg ${_.get(item.content, [ 0, 'alignment' ], '')}\"><img alt="${_.get(item.content, [ 0, 'description' ], '')}" src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div></div>`
+          return `<div class=\"innerImg ${_.get(item.content, [ 0, 'alignment' ], '')}\">
+                    <img class="thumbnail" alt="${_.get(item.content, [ 0, 'description' ], '')}" src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/>
+                    <div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div>
+                  </div>`
         case 'infobox':
           return `<div class="info-box-container ${_.get(item, [ 'alignment' ], '')}">
                     <span class="info-box-icon"></span>
@@ -284,6 +287,45 @@ export default {
         })
       })
     },
+    setUpLightbox () {
+      if (!document.querySelector('.lightbox')) {
+        const lightbox = document.createElement('div')
+        const overlay = document.createElement('div')
+        const img = document.createElement('img')
+        const close_btn = document.createElement('a')
+
+        lightbox.classList.add('lightbox')
+        overlay.classList.add('lightbox-overlay')
+        img.classList.add('lightbox-img')
+        close_btn.classList.add('lightbox-close')
+
+        lightbox.appendChild(overlay)
+        lightbox.appendChild(img)
+        lightbox.appendChild(close_btn)
+
+        document.querySelector('body').appendChild(lightbox)
+      }
+
+      const thumbnails = document.querySelectorAll('.innerImg .thumbnail')
+      thumbnails.forEach((e) => {
+        e.onclick = () => {
+          const src = e.getAttribute('src')
+          const lightbox = document.querySelector('.lightbox')
+          const lightbox_overlay = lightbox.querySelector('.lightbox-overlay')
+          const lightbox_img = lightbox.querySelector('.lightbox-img')
+          const close_btn = lightbox.querySelector('.lightbox-close')
+          lightbox_img.setAttribute('src', src)
+          lightbox.style.display = 'flex'
+
+          lightbox_overlay.onclick = () => {
+            lightbox.style.display = 'none'
+          }
+          close_btn.onclick = () => {
+            lightbox.style.display = 'none'
+          }
+        }
+      })
+    },
     videoPausedHandler (e) {
       const targ = e.target
       const source = document.querySelector(`.playpause[target="${targ.getAttribute('id')}"]`)
@@ -294,6 +336,10 @@ export default {
   },
   mounted () {
     this.setUpPlayBtnsAbility()
+    this.setUpLightbox()
+  },
+  updated () {
+    this.setUpLightbox()
   },
   name: 'article-body',
   props: {
@@ -310,6 +356,50 @@ export default {
 }
 </script>
 <style lang="stylus">
+  .lightbox
+    display none
+    justify-content center
+    align-items center
+    width 100%
+    height 100%
+    background-color rgba(0,0,0,.7)
+    position fixed
+    top 0
+    left 0
+    z-index 99999
+    box-sizing border-box
+
+    &-img
+      max-height 90vh
+      max-width 90vw
+      z-index 100002
+
+    &-close
+      background-image url(/public/icon/close.png)
+      background-size contain
+      // display block
+      position absolute
+      top 10px
+      right 10px
+      width 20px
+      height 20px
+      z-index 100001
+      // filter brightness(100%)
+      // transition filter 1s cubic-bezier(.23, 1, .32, 1)
+
+      &:hover
+        filter brightness(200%)
+      //   transition filter 1s cubic-bezier(.23, 1, .32, 1)
+    
+    &-overlay
+      position absolute
+      top 0
+      width 100%
+      height 100%
+      // background-color red
+      z-index 100001
+
+
   .ad-container
     > div
       width 100%
@@ -383,6 +473,9 @@ export default {
 
         img 
           width 100%
+
+        .thumbnail
+          cursor pointer
         
         .caption 
           font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
@@ -412,8 +505,8 @@ export default {
         &.center 
           margin-top 20px
           width 100%
+
         
-      
       .article_main_pop 
         clear both
         margin-top 40px
