@@ -307,9 +307,9 @@ export default {
       }
 
       const thumbnails = document.querySelectorAll('.innerImg .thumbnail')
-      thumbnails.forEach((e) => {
-        e.onclick = () => {
-          const src = e.getAttribute('src')
+      thumbnails.forEach((ele) => {
+        ele.onclick = () => {
+          const src = ele.getAttribute('src')
           const lightbox = document.querySelector('.lightbox')
           const lightbox_overlay = lightbox.querySelector('.lightbox-overlay')
           const lightbox_img = lightbox.querySelector('.lightbox-img')
