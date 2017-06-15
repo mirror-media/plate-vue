@@ -482,7 +482,7 @@
       updateViewport () {
         const browser = typeof window !== 'undefined'
         if (browser) {
-          this.viewport = document.querySelector('body').offsetWidth
+          this.viewport = document.documentElement.clientWidth || document.body.clientWidth
         }
       },
       updateSysStage () {
