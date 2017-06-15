@@ -52,22 +52,24 @@ export function getHref (relAritlcle = {}) {
 
 export function getImage (article, size) {
   let image
-  if (article.heroImage && article.heroImage.image) {
-    image = article.heroImage
+  if (article.heroVideo && article.heroVideo.coverPhoto) {
+    image = _.get(article, [ 'heroVideo', 'coverPhoto' ])
+  } else if (article.heroImage && article.heroImage.image) {
+    image = _.get(article, [ 'heroImage', 'image', 'resizedTargets' ])
   } else if (article.ogImage) {
-    image = article.ogImage
+    image = _.get(article, [ 'ogImage', 'image', 'resizedTargets' ])
   }
   switch (size) {
     case 'desktop':
-      return _.get(image, [ 'image', 'resizedTargets', 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
     case 'mobile':
-      return _.get(image, [ 'image', 'resizedTargets', 'mobile', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
     case 'tablet':
-      return _.get(image, [ 'image', 'resizedTargets', 'tablet', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
     case 'tiny':
-      return _.get(image, [ 'image', 'resizedTargets', 'tiny', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
     default:
-      return _.get(image, [ 'image', 'resizedTargets', 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
   }
 }
 
