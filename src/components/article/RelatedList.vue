@@ -5,7 +5,7 @@
       <div class="item" v-for="(o, i) in relateds" v-if="o">
         <div class="title">
           <router-link :to="getHref(o)" v-text="getValue(o, [ 'title' ], '')" :id="'related' + abIndicator + '-' + o.name" v-if="o.style !== 'projects'"></router-link>
-          <a :href="getHref(o)" v-text="getValue(o, [ 'title' ], '')" :id="'related' + abIndicator + '-' + o.namr" v-if="o.style === 'projects'"></a>
+          <a :href="getHref(o)" v-text="getValue(o, [ 'title' ], '')" :id="'related' + abIndicator + '-' + o.name" v-if="o.style === 'projects'"></a>
         </div>
       </div>
     </div>
