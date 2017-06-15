@@ -8,6 +8,7 @@
 
 <script>
   import { mmLog } from './util/comm.js'
+  import Cookie from 'vue-cookie'
 
   export default {
     data () {
@@ -31,11 +32,25 @@
             console.log(err)
           })
         })
+      },
+      setABCookie () {
+        const cookie = Cookie.get('mmab')
+        if (!cookie) {
+          switch (Date.now() % 2) {
+            case 0:
+              Cookie.set('mmab', 'a', { expires: (10 * 365 * 24) + 'h' })
+              break
+            case 1:
+              Cookie.set('mmab', 'b', { expires: (10 * 365 * 24) + 'h' })
+              break
+          }
+        }
       }
     },
     mounted () {
       this.doc = document
       this.launchLogger()
+      this.setABCookie()
     }
   }
 </script>

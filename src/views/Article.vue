@@ -30,7 +30,7 @@
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderAside" />
+              <related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderRelatedAside" :abIndicator="abIndicator" />
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
@@ -43,7 +43,7 @@
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpId="props.dfpId" slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
             </pop-list>
-            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'wide')" slot="relatedlistBottom" />
+            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderRelatedAside || articleStyle === 'wide')" slot="relatedlistBottom" :abIndicator="abIndicator" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
@@ -279,6 +279,7 @@
     },
     data () {
       return {
+        abIndicator: '',
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpMode: 'prod',
@@ -373,6 +374,22 @@
         return _.get(this.articleData, [ 'lockJS' ])
       },
       ifRenderAside () {
+        return this.viewport >= 1200
+      },
+      ifRenderRelatedAside () {
+        if (process.env.VUE_ENV === 'client') {
+          const mmab = Cookie.get('mmab')
+          if (mmab === 'a' && this.viewport >= 1200) {
+            window.ga('send', 'event', 'mm-opt', 'visible', 'articleA')
+            this.abIndicator = '-a'
+          } else if (mmab === 'b' && this.viewport >= 1200) {
+            window.ga('send', 'event', 'mm-opt', 'visible', 'articleB')
+            this.abIndicator = '-b'
+          } else {
+            this.abIndicator = ''
+          }
+          return this.viewport >= 1200 && mmab === 'a'
+        }
         return this.viewport >= 1200
       },
       ifShowPoplist () {
