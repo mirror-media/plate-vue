@@ -1,5 +1,6 @@
 import { SITE_DOMAIN, SITE_URL } from '../constants'
 import _ from 'lodash'
+import Cookie from 'vue-cookie'
 import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
@@ -280,6 +281,7 @@ function _isAlinkDescendant (child) {
 
 function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer }) {
   return new Promise((resolve) => {
+    const cookieId = Cookie.get('mmid')
     const targ = target
 
     const clientOs = getClientOS()
@@ -304,15 +306,32 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
         height: document.documentElement.clientWidth || document.body.clientWidth
       }
     }
-    if (window.mmClientId) {
-      log['client-id'] = window.mmClientId
-      log['referrer'] = referrer
-      resolve(log)
-    } else {
-      return _getUserIP().then((ip) => {
-        log['client-id'] = `mm-client-${Date.now()}-${ip}`
+    if (!cookieId) {
+      _getUserIP().then((ip) => {
+        const dt = Date.now()
+        const thisId = `mm-client-${dt}-${ip}`
+        Cookie.set('mmid', thisId, { expires: (10 * 365 * 24) + 'h' })
+        log['client-id'] = thisId
+        log['current-runtime-id'] = thisId
+        log['current-runtime-start'] = moment(dt).format('YYYY.MM.DD HH:mm:ss')
         log['referrer'] = document.referrer
-        window.mmClientId = log['client-id']
+        log['ip'] = ip
+        window.mmThisRuntimeClientId = thisId
+        window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
+        resolve(log)
+      })
+    } else {
+      _getUserIP().then((ip) => {
+        const dt = Date.now()
+        log['client-id'] = cookieId
+        log['referrer'] = referrer
+        log['ip'] = ip
+        if (!window.mmThisRuntimeClientId) {
+          window.mmThisRuntimeClientId = `mm-client-${dt}-${ip}`
+          window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
+        }
+        log['current-runtime-id'] = window.mmThisRuntimeClientId
+        log['current-runtime-start'] = window.mmThisRuntimeDatetimeStart
         resolve(log)
       })
     }
