@@ -54,6 +54,7 @@
   .related-list-container-bottom
     width 100%
     margin 0 auto
+    clear both
 
     .list
       margin-top 20px
