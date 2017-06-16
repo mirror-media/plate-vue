@@ -4,12 +4,12 @@
       <template scope="props">
         <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
           <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'">
+            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target">
               <div :id="'slide-' + index" class="editorChoice-image"
               :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
             </router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'">
+            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target">
               <div :id="'slide-' + index" class="editorChoice-image"
               :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
@@ -23,13 +23,13 @@
         <router-link :to="getHref(item)" :id="'choices-' + item.name"
               :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
               :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
-              @click="jumpToSlideForParent" v-if="item.style !== 'projects'">
+              @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
           <span v-text="getTitle(item, 24)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
         </router-link>
         <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name"
               :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
               :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
-              @click="jumpToSlideForParent" v-if="item.style === 'projects'">
+              @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
           <span v-text="getTitle(item, 24)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
         </a>
       </template>
@@ -38,19 +38,19 @@
     <div class="editorChoice-list mobile-only">
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice-list-post">
         <template>
-          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style !== 'projects'">
+          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style !== 'projects'" :target="target">
             <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="item.title"></figure>
             <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </router-link>
-          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style === 'projects'">
+          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style === 'projects'" :target="target">
             <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="item.title"></figure>
             <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </a>
         </template>
         <div class="editorChoice-list-post__title" :class="getSection(item)">
           <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'"><h2 v-text="getTitle(item, 24)"></h2></router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'"><h2 v-text="getTitle(item, 24)"></h2></a>
+            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></router-link>
+            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></a>
           </template>
         </div>
       </div>
@@ -90,6 +90,9 @@ export default {
   props: {
     editorChoice: {
       default: () => { return this.editorChoice }
+    },
+    target: {
+      default: () => ('_self')
     },
     viewport: {
       default: () => { return undefined }
