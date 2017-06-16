@@ -294,8 +294,7 @@ export default {
         const firstPageArticleHeight = _latestArticleDiv.offsetHeight
         const firstPageArticleBottom = elmYPosition('#latestArticle') + (firstPageArticleHeight)
         const currentBottom = currentYPosition() + window.innerHeight
-        if ((currentBottom > (firstPageArticleBottom - 300)) && !this.hasScrollLoadMore) {
-          // this.hasScrollLoadMore = true
+        if ((currentBottom > (firstPageArticleBottom - 300))) {
           this.loadMore()
         }
       }
@@ -321,6 +320,7 @@ export default {
     window.ga('send', 'pageview', this.$route.path, { title: SITE_TITLE })
   },
   updated () {
+    this.handleScroll()
     this.updateSysStage()
   }
 }

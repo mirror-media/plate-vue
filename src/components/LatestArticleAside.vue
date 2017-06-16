@@ -91,21 +91,39 @@ export default {
         node.style['margin-top'] = '0px'
       }
     },
+    resize () {
+      // Recalculate node static style and determine stick to the top or not
+      this.fetchNodeStaticStyle(this.$el)
+      this.sticky()
+
+      // Remove and register scroll event again, prevent inconsistently position of node
+      window.removeEventListener('scroll', this.sticky, false)
+      window.addEventListener('scroll', this.sticky)
+    },
     handleScroll () {
       this.fetchNodeStaticStyle(this.$el)
       this.sticky()
+      window.removeEventListener('scroll', this.sticky, false)
       window.addEventListener('scroll', this.sticky)
     },
     handleResize () {
-      window.addEventListener('resize', () => {
-        // Recalculate node static style and determine stick to the top or not
-        this.fetchNodeStaticStyle(this.$el)
-        this.sticky()
-
-        // Remove and register scroll event again, prevent inconsistently position of node
-        window.removeEventListener('scroll', this.sticky, false)
-        window.addEventListener('scroll', this.sticky)
-      })
+      window.removeEventListener('resize', this.resize, false)
+      window.addEventListener('resize', this.resize)
+    },
+    setUpEventHandler () {
+      if (this.viewport > 1199) {
+        if (this.$el.className.includes('last')) {
+          // Wait for the ad container of LPCHD show up
+          // while(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id")) {
+          //   console.log(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id"))
+          //   // this.handleScroll()
+          //   // this.handleResize()
+          //   break
+          // }
+          setTimeout(this.handleScroll, 3000)
+          setTimeout(this.handleResize, 3000)
+        }
+      }
     }
   },
   props: {
@@ -120,22 +138,10 @@ export default {
     }
   },
   mounted () {
-    if (this.viewport > 1199) {
-      if (this.$el.className.includes('last')) {
-        // Wait for the ad container of LPCHD show up
-        // while(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id")) {
-        //   console.log(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id"))
-        //   // this.handleScroll()
-        //   // this.handleResize()
-        //   break
-        // }
-        setTimeout(this.handleScroll, 3000)
-        setTimeout(this.handleResize, 3000)
-      }
-    }
+    this.setUpEventHandler()
   },
   updated () {
-
+    this.setUpEventHandler()
   }
 }
 </script>
