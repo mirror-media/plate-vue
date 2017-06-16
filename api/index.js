@@ -8,6 +8,7 @@ const express = require('express')
 const isProd = process.env.NODE_ENV === 'production'
 // const redis = require('redis')
 const RedisConnectionPool = require('redis-connection-pool')
+const requestIp = require('request-ip')
 const router = express.Router()
 const superagent = require('superagent')
 const Twitter = require('twitter')
@@ -166,7 +167,12 @@ router.use('/tracking', function(req, res, next) {
   const query = req.query
   const log = loggingClient.log(GCP_STACKDRIVER_LOG_NAME)
   const metadata = { resource: { type: 'global' } }
+
+  const clientIp = requestIp.getClientIp(req)
+  query['ip'] = clientIp
+
   const entry = log.entry(metadata, query)
+
   log.write(entry).then(() => {
     res.send({ msg: 'Logging successfully.' })
   })
