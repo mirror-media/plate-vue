@@ -9,28 +9,34 @@
 <script>
   import { mmLog } from './util/comm.js'
   import Cookie from 'vue-cookie'
+  import Tap from 'tap.js'
 
   export default {
     data () {
       return {
-        doc: {}
+        doc: {},
+        globalTapevent: {}
       }
     },
     methods: {
+      doLog (event) {
+        mmLog({
+          category: 'whole-site',
+          description: '',
+          eventType: 'click',
+          target: event.target
+        }).then((log) => {
+          return this.$store.dispatch('LOG_CLIENT', { params: {
+            clientInfo: log
+          }})
+        }).catch((err) => {
+          console.log(err)
+        })
+      },
       launchLogger () {
-        this.doc.addEventListener('click', (event) => {
-          mmLog({
-            category: 'whole-site',
-            description: '',
-            eventType: 'click',
-            target: event.target
-          }).then((log) => {
-            return this.$store.dispatch('LOG_CLIENT', { params: {
-              clientInfo: log
-            }})
-          }).catch((err) => {
-            console.log(err)
-          })
+        this.globalTapevent = new Tap(this.doc)
+        this.doc.addEventListener('tap', (event) => {
+          this.doLog(event)
         })
       },
       setABCookie () {

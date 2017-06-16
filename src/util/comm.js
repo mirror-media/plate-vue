@@ -1,5 +1,6 @@
 import { SITE_DOMAIN, SITE_URL } from '../constants'
 import _ from 'lodash'
+import Browser from 'bowser'
 import Cookie from 'vue-cookie'
 import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
@@ -191,7 +192,6 @@ function preventDefault (e) {
  *  constructing and sending req to api to log client's behaviors through following functions:
  *    getClientOS()
  *    mmLog()
- *    _getUserIP()
  *    _isAlinkDescendant()
  *    _normalizeLog()
  */
@@ -222,52 +222,6 @@ export function mmLog ({ category, eventType, target, description }) {
   return _normalizeLog({ category, eventType, target, description })
 }
 
-function _getUserIP () {
-  return new Promise((resolve) => {
-    // compatibility for firefox and chrome
-    const MyPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
-    const pc = new MyPeerConnection({
-      iceServers: []
-    })
-    const noop = () => {}
-    const localIPs = {}
-    const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g
-
-    const iterateIP = (ip) => {
-      if (!localIPs[ip]) {
-        resolve(ip)
-        // return ip
-      }
-      localIPs[ip] = true
-    }
-
-    // create a bogus data channel
-    pc.createDataChannel('')
-
-    // create offer and set local description
-    pc.createOffer().then(function (sdp) {
-      sdp.sdp.split('\n').forEach(function (line) {
-        if (line.indexOf('candidate') < 0) {
-          return
-        }
-        line.match(ipRegex).forEach(iterateIP)
-      })
-      pc.setLocalDescription(sdp, noop, noop)
-    }).catch(function (reason) {
-          // An error occurred, so handle the failure to connect
-
-    })
-
-    // listen for candidate events
-    pc.onicecandidate = (ice) => {
-      if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) {
-        return
-      }
-      ice.candidate.candidate.match(ipRegex).forEach(iterateIP)
-    }
-  })
-}
-
 function _isAlinkDescendant (child) {
   let node = child.parentNode
   while (node !== null && node !== undefined) {
@@ -289,9 +243,16 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
     const isAlinkCheck = targ.tagName === 'A' ? { isAlink: true, href: targ.href } : _isAlinkDescendant(targ)
 
     const log = {
+      'browser': {
+        name: Browser.name,
+        version: Browser.version
+      },
       'category': category,
       'client-id': '',
-      'client-os': clientOs,
+      'client-os': {
+        name: clientOs,
+        version: Browser.osversion
+      },
       'curr-url': window.location.href,
       'datetime': moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),
       'description': description,
@@ -307,33 +268,31 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       }
     }
     if (!cookieId) {
-      _getUserIP().then((ip) => {
-        const dt = Date.now()
-        const thisId = `mm-client-${dt}-${ip}`
-        Cookie.set('mmid', thisId, { expires: (10 * 365 * 24) + 'h' })
-        log['client-id'] = thisId
-        log['current-runtime-id'] = thisId
-        log['current-runtime-start'] = moment(dt).format('YYYY.MM.DD HH:mm:ss')
-        log['referrer'] = document.referrer
-        log['ip'] = ip
-        window.mmThisRuntimeClientId = thisId
-        window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
-        resolve(log)
-      })
+      const dt = Date.now()
+      const max = Math.pow(10, 10)
+      const min = Math.pow(10, 9)
+      const thisId = `mm-client-${dt}-${Math.floor(Math.random() * (max - min) + min)}`
+      Cookie.set('mmid', thisId, { expires: (10 * 365 * 24) + 'h' })
+      log['client-id'] = thisId
+      log['current-runtime-id'] = thisId
+      log['current-runtime-start'] = moment(dt).format('YYYY.MM.DD HH:mm:ss')
+      log['referrer'] = document.referrer
+      window.mmThisRuntimeClientId = thisId
+      window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
+      resolve(log)
     } else {
-      _getUserIP().then((ip) => {
-        const dt = Date.now()
-        log['client-id'] = cookieId
-        log['referrer'] = referrer
-        log['ip'] = ip
-        if (!window.mmThisRuntimeClientId) {
-          window.mmThisRuntimeClientId = `mm-client-${dt}-${ip}`
-          window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
-        }
-        log['current-runtime-id'] = window.mmThisRuntimeClientId
-        log['current-runtime-start'] = window.mmThisRuntimeDatetimeStart
-        resolve(log)
-      })
+      const dt = Date.now()
+      const max = Math.pow(10, 10)
+      const min = Math.pow(10, 9)
+      log['client-id'] = cookieId
+      log['referrer'] = referrer
+      if (!window.mmThisRuntimeClientId) {
+        window.mmThisRuntimeClientId = `mm-client-${dt}-${Math.floor(Math.random() * (max - min) + min)}`
+        window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
+      }
+      log['current-runtime-id'] = window.mmThisRuntimeClientId
+      log['current-runtime-start'] = window.mmThisRuntimeDatetimeStart
+      resolve(log)
     }
   })
 }
