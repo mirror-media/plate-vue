@@ -378,16 +378,7 @@
       },
       ifRenderRelatedAside () {
         if (process.env.VUE_ENV === 'client') {
-          const mmab = Cookie.get('mmab')
-          if (mmab === 'a' && this.viewport >= 1200) {
-            window.ga('send', 'event', 'mm-opt', 'visible', 'articleA')
-            this.abIndicator = '-a'
-          } else if (mmab === 'b' && this.viewport >= 1200) {
-            window.ga('send', 'event', 'mm-opt', 'visible', 'articleB')
-            this.abIndicator = '-b'
-          } else {
-            this.abIndicator = ''
-          }
+          const mmab = this.getMmab()
           return this.viewport >= 1200 && mmab === 'a'
         }
         return this.viewport >= 1200
@@ -449,6 +440,19 @@
         const sourceClass = source.getAttribute('class')
         const ifPlay = sourceClass.indexOf(' play') > -1
         source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
+      },
+      getMmab () {
+        const mmab = Cookie.get('mmab')
+        if (mmab === 'a' && this.viewport >= 1200) {
+          window.ga('send', 'event', 'mm-opt', 'visible', 'articleA')
+          this.abIndicator = '-a'
+        } else if (mmab === 'b' && this.viewport >= 1200) {
+          window.ga('send', 'event', 'mm-opt', 'visible', 'articleB')
+          this.abIndicator = '-b'
+        } else {
+          this.abIndicator = ''
+        }
+        return mmab
       },
       getTruncatedVal,
       getValue (o = {}, p = [], d = '') {
@@ -533,6 +537,10 @@
         this.checkIfLockJS()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
+
+        // call getMmab to send related ab test ga
+        // and will remove it after ab test got finished
+        this.getMmab()
       }
     }
   }
