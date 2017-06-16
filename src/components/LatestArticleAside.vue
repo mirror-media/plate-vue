@@ -91,21 +91,24 @@ export default {
         node.style['margin-top'] = '0px'
       }
     },
+    resize () {
+      // Recalculate node static style and determine stick to the top or not
+      this.fetchNodeStaticStyle(this.$el)
+      this.sticky()
+
+      // Remove and register scroll event again, prevent inconsistently position of node
+      window.removeEventListener('scroll', this.sticky, false)
+      window.addEventListener('scroll', this.sticky)
+    },
     handleScroll () {
       this.fetchNodeStaticStyle(this.$el)
       this.sticky()
+      window.removeEventListener('scroll', this.sticky, false)
       window.addEventListener('scroll', this.sticky)
     },
     handleResize () {
-      window.addEventListener('resize', () => {
-        // Recalculate node static style and determine stick to the top or not
-        this.fetchNodeStaticStyle(this.$el)
-        this.sticky()
-
-        // Remove and register scroll event again, prevent inconsistently position of node
-        window.removeEventListener('scroll', this.sticky, false)
-        window.addEventListener('scroll', this.sticky)
-      })
+      window.removeEventListener('resize', this.resize, false)
+      window.addEventListener('resize', this.resize)
     },
     setUpEventHandler () {
       if (this.viewport > 1199) {
