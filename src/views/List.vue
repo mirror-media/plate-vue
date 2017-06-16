@@ -516,6 +516,9 @@ export default {
     isMobile () {
       return this.viewport < 1200
     },
+    isCategoryBusinessMoney () {
+      return this.categoryName === 'business' || this.categoryName === 'money'
+    },
     page () {
       switch (this.type) {
         case AUTHOR:
@@ -547,9 +550,13 @@ export default {
     sectionId () {
       switch (this.type) {
         case CATEGORY:
-          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
-            return _.find(s.categories, { 'id': this.uuid })
-          }), [ 'id' ], 'other')
+          if (this.isCategoryBusinessMoney) {
+            return 'category-business-money'
+          } else {
+            return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
+              return _.find(s.categories, { 'id': this.uuid })
+            }), [ 'id' ], 'other')
+          }
         case SECTION:
           return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'id' ], 'other')
         default:
