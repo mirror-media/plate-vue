@@ -1,64 +1,19 @@
 <template>
   <section class="articleList container">
     <template v-for="item in articlesBeforeDFPNA3" v-if="hasDFP">
-      <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </router-link>
-      <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style === 'projects'">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </a>
+      <articleList-block :initialArticle="item" />
     </template>
 
     <slot name="dfpNA3"/>
 
     <template v-for="item in articlesBeforeDFPNA5" v-if="hasDFP">
-      <router-link :to="getHref(item)" :id="'latest-'+ item.name"  class="articleList-block" v-if="item.style !== 'projects'">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </router-link>
-      <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style === 'projects'">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </a>
+      <articleList-block :initialArticle="item" />
     </template>
 
     <slot name="dfpNA5"/>
 
     <template v-for="item in articlesBeforeDFPNA9BeforeL1" v-if="hasDFP">
-      <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects'">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </router-link>
-      <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style === 'projects'">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </a>
+      <articleList-block :initialArticle="item" />
     </template>
 
     <div class="articleList__dfp--l1 mobile-only" v-if="hasDFP">
@@ -66,70 +21,17 @@
     </div>
 
     <template v-for="item in articlesBeforeDFPNA9AfterL1" v-if="hasDFP">
-      <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects'">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </router-link>
-      <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style === 'projects'">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </a>
+      <articleList-block :initialArticle="item" />
     </template>
 
     <slot name="dfpNA9"/>
 
     <template v-for="item in articlesAfterDFPNA9" v-if="hasDFP">
-      <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects'">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </router-link>
-      <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style === 'projects'">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </a>
+      <articleList-block :initialArticle="item" />
     </template>
 
     <template v-for="item in sortedArticles" v-if="!hasDFP">
-      <router-link :to="getHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style !== 'projects' && !isSectionTopic">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </router-link>
-      <router-link :to="getTopicHref(item)" :id="'latest-'+ item.name" class="articleList-block" v-if="isSectionTopic">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.name)"></h2>
-          <p v-text="getTruncatedVal(item.ogDescription, 45)"></p>
-        </div>
-      </router-link>
-      <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'latest-'+ item.name" class="articleList-block" v-if="item.style === 'projects' && !isSectionTopic">
-        <div class="articleList__img" :title="item.title" :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }">
-        </div>
-        <div class="articleList__content" :class="getSection(item)">
-          <h2 v-text="getTitle(item.title)"></h2>
-          <p v-text="getBrief(item, 45)"></p>
-        </div>
-      </a>
+      <articleList-block :initialArticle="item" />
     </template>
 
   </section>
@@ -139,6 +41,7 @@
 
 import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../util/comm'
 import _ from 'lodash'
+import ArticleListBlock from './article/ArticleListBlock.vue'
 import moment from 'moment'
 
 const MAXTITLEAMOUNT = 28
@@ -146,6 +49,7 @@ const MAXTITLEAMOUNT = 28
 export default {
   name: 'articleList',
   components: {
+    'articleList-block': ArticleListBlock
   },
   props: [ 'articles', 'hasDFP' ],
   computed: {
@@ -168,7 +72,7 @@ export default {
       return (_.get(this.$route, [ 'params', 'title' ]) === 'topic')
     },
     sortedArticles () {
-      if (_.get(this.$route, [ 'params', 'title' ]) === 'topic') {
+      if (_.get(this.$route, [ 'params', 'title' ]) === 'topic' || _.get(this.$route, [ 'params', 'title' ]) === 'videohub') {
         return this.articles
       }
       return _.sortBy(_.filter(this.articles, 'title'), [ function (a) {
