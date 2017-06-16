@@ -106,6 +106,21 @@ export default {
         window.removeEventListener('scroll', this.sticky, false)
         window.addEventListener('scroll', this.sticky)
       })
+    },
+    setUpEventHandler () {
+      if (this.viewport > 1199) {
+        if (this.$el.className.includes('last')) {
+          // Wait for the ad container of LPCHD show up
+          // while(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id")) {
+          //   console.log(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id"))
+          //   // this.handleScroll()
+          //   // this.handleResize()
+          //   break
+          // }
+          setTimeout(this.handleScroll, 3000)
+          setTimeout(this.handleResize, 3000)
+        }
+      }
     }
   },
   props: {
@@ -120,22 +135,10 @@ export default {
     }
   },
   mounted () {
-    if (this.viewport > 1199) {
-      if (this.$el.className.includes('last')) {
-        // Wait for the ad container of LPCHD show up
-        // while(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id")) {
-        //   console.log(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id"))
-        //   // this.handleScroll()
-        //   // this.handleResize()
-        //   break
-        // }
-        setTimeout(this.handleScroll, 3000)
-        setTimeout(this.handleResize, 3000)
-      }
-    }
+    this.setUpEventHandler()
   },
   updated () {
-
+    this.setUpEventHandler()
   }
 }
 </script>
