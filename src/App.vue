@@ -38,10 +38,10 @@
         if (!cookie) {
           switch (Date.now() % 2) {
             case 0:
-              Cookie.set('mmab', 'a', { expires: (10 * 365 * 24) + 'h' })
+              Cookie.set('mmab', 'a', '24h')
               break
             case 1:
-              Cookie.set('mmab', 'b', { expires: (10 * 365 * 24) + 'h' })
+              Cookie.set('mmab', 'b', '24h')
               break
           }
         }
