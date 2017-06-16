@@ -389,6 +389,10 @@
       ifSingleCol () {
         return (this.articleStyle === 'wide' || !this.ifRenderAside)
       },
+      isCategoryBusinessMoney () {
+        const categories = _.flatten(_.map(_.get(this.articleData, [ 'categories' ]), (o) => o.name))
+        return _.includes(categories, 'business') || _.includes(categories, 'money')
+      },
       latestList () {
         return _.get(this.$store.state.latestArticle, [ 'items' ], [])
       },
@@ -404,7 +408,12 @@
         return _.get(this.articleData, [ 'relateds' ], [])
       },
       sectionId () {
-        return _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
+        const sectionName = _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
+        if (this.isCategoryBusinessMoney) {
+          return 'category-business-money'
+        } else {
+          return sectionName
+        }
       },
       styleDfpAd () {
         return (this.viewport < 321) ? 'ad-fit' : ''
