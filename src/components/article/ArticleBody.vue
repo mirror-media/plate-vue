@@ -964,6 +964,14 @@ export default {
       
   @media (min-width 0px) and (max-width 499px)
     .article_body
+      > div:not([class="main"])
+        padding-right 25px
+        padding-left 25px
+      > .article_main
+        > div:not([class="dfpad-set"]), article
+          padding-left 25px
+          padding-right 25px
+
       .article_basic-info
         .category
           font-size 1.3rem
@@ -1023,6 +1031,15 @@ export default {
               font-size 3rem
               top 15px
               left 10px
+  @media (min-width 321px) and (max-width 499px)
+    .article_body
+      > div:not([class="main"])
+        padding-right 0
+        padding-left 0
+      > .article_main
+        > div:not([class="dfpad-set"]), article
+          padding-left 0
+          padding-right 0
 
   @media (min-width 0px) and (max-width 767px)
     .article_body

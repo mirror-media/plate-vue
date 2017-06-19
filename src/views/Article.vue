@@ -641,8 +641,13 @@
           line-height 1.3rem
       
       .article
-        padding 30px 25px 0
+        padding 30px 0 0
 
+  @media (min-width 321px) and (max-width 499px)
+    .article-container
+      .article
+        padding 30px 25px 0
+  
   @media (min-width 0px) and (max-width 767px)  
     .article-container
       .article-heromedia, .article
