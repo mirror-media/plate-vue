@@ -29,7 +29,9 @@ function visitTargets () {
 
 function isVisible (targ, currY) {
   return new Promise((resolve) => {
-    const targPoY = elmYPosition(targ)
+    const targPoY = elmYPosition(targ, () => {
+      return resolve(false)
+    })
     if (targPoY >= currY.top && targPoY <= currY.bottom) {
       resolve(true)
     } else {
