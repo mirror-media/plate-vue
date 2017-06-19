@@ -11,7 +11,7 @@
             <div class="pop_item--colorBlock" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])" />
           </figure>
           <div class="pop_item_title">
-            <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)" />
+            <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 21)" />
           </div>
         </div>
         <slot :name="getSlotName(i)" v-if="i === 1 || i === 2 || i === 3" />
@@ -116,6 +116,7 @@
             width 100%
             max-height 100%
             margin 10px 0
+            padding 0 0 0 10px
         
             &:hover, &:link, &:visited
               color rgba(0, 0, 0, 0.49)
@@ -149,12 +150,6 @@
       .pop_list 
         .pop_item
           width 45%
-  @media (min-width 768px)
-    .poplist-container
-      .pop_list
-        .pop_item
-          .pop_item_title
-            height 97px
-
+  
           
 </style>
