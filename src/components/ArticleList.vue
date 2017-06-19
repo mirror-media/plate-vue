@@ -1,37 +1,37 @@
 <template>
   <section class="articleList container">
-    <template v-for="item in articlesBeforeDFPNA3" v-if="hasDFP">
-      <articleList-block :initialArticle="item" />
+    <template v-for="(item, index) in articlesBeforeDFPNA3" v-if="hasDFP">
+      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
     </template>
 
     <slot name="dfpNA3"/>
 
-    <template v-for="item in articlesBeforeDFPNA5" v-if="hasDFP">
-      <articleList-block :initialArticle="item" />
+    <template v-for="(item, index) in articlesBeforeDFPNA5" v-if="hasDFP">
+      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
     </template>
 
     <slot name="dfpNA5"/>
 
-    <template v-for="item in articlesBeforeDFPNA9BeforeL1" v-if="hasDFP">
-      <articleList-block :initialArticle="item" />
+    <template v-for="(item, index) in articlesBeforeDFPNA9BeforeL1" v-if="hasDFP">
+      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
     </template>
 
     <div class="articleList__dfp--l1 mobile-only" v-if="hasDFP">
       <slot name="dfpL1"/>
     </div>
 
-    <template v-for="item in articlesBeforeDFPNA9AfterL1" v-if="hasDFP">
-      <articleList-block :initialArticle="item" />
+    <template v-for="(item, index) in articlesBeforeDFPNA9AfterL1" v-if="hasDFP">
+      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
     </template>
 
     <slot name="dfpNA9"/>
 
-    <template v-for="item in articlesAfterDFPNA9" v-if="hasDFP">
-      <articleList-block :initialArticle="item" />
+    <template v-for="(item, index) in articlesAfterDFPNA9" v-if="hasDFP">
+      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
     </template>
 
-    <template v-for="item in sortedArticles" v-if="!hasDFP">
-      <articleList-block :initialArticle="item" />
+    <template v-for="(item, index) in sortedArticles" v-if="!hasDFP">
+      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
     </template>
 
   </section>
@@ -41,7 +41,7 @@
 
 import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../util/comm'
 import _ from 'lodash'
-import ArticleListBlock from './article/ArticleListBlock.vue'
+import ListArticleBlock from './list/ListArticleBlock.vue'
 import moment from 'moment'
 
 const MAXTITLEAMOUNT = 28
@@ -49,9 +49,14 @@ const MAXTITLEAMOUNT = 28
 export default {
   name: 'articleList',
   components: {
-    'articleList-block': ArticleListBlock
+    'listArticle-block': ListArticleBlock
   },
   props: [ 'articles', 'hasDFP' ],
+  data () {
+    return {
+      togglePause: undefined
+    }
+  },
   computed: {
     articlesBeforeDFPNA3 () {
       return _.take(this.sortedArticles, 2)
@@ -92,7 +97,10 @@ export default {
       return this.getTruncatedVal(title, MAXTITLEAMOUNT)
     },
     getTruncatedVal,
-    moment
+    moment,
+    pauseAllAudio (index) {
+      this.togglePause = index
+    }
   }
 }
 </script>
@@ -159,6 +167,13 @@ $color-other = #bcbcbc
       width calc( 100% - 20px )
       margin 0 10px 40px
 
+.nativeDFP
+  width 100%
+  margin-bottom 40px
+  background-color #f4f1e9
+  box-shadow 5px 5px 5px #bcbcbc
+  transition all .3s ease-in-out
+
 @media (min-width: 600px)
   .articleList
     &.container
@@ -172,6 +187,12 @@ $color-other = #bcbcbc
       height auto
       p
         display block
+  .nativeDFP
+    width calc( (100% - 40px) / 2 )
+    margin 0 10px 40px
+    &:hover
+      transform translateY(-20px)
+      box-shadow 5px 15px 5px #bcbcbc
 
 @media (min-width: 1200px)
   .articleList
@@ -179,6 +200,8 @@ $color-other = #bcbcbc
       width 1044px
     &-block
       width calc( (100% - 60px) / 3 )
+  .nativeDFP
+    width calc( (100% - 60px) / 3 )
 
 .news-people
   h2:before
