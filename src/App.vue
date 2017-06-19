@@ -8,10 +8,16 @@
 
 <script>
   import { mmLog } from './util/comm.js'
+  import { visibleTracking } from './util/visibleTracking'
   import Cookie from 'vue-cookie'
   import Tap from 'tap.js'
 
   export default {
+    computed: {
+      currPath () {
+        return this.$route.fullPath
+      }
+    },
     data () {
       return {
         doc: {},
@@ -51,12 +57,27 @@
               break
           }
         }
-      }
+      },
+      setUpVisibleTracking () {
+        this.visibleTracking(
+          [
+            { target: '.article_body > .article_main .poplist-container', seenFlag: false, desc: 'popular' },
+            { target: '.article_body > .article_main .tags', seenFlag: false, desc: 'tag' }
+          ]
+        )
+      },
+      visibleTracking
     },
     mounted () {
       this.doc = document
       this.launchLogger()
       this.setABCookie()
+      this.setUpVisibleTracking()
+    },
+    watch: {
+      currPath: function () {
+        this.setUpVisibleTracking()
+      }
     }
   }
 </script>
