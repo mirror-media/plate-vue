@@ -219,8 +219,15 @@ export default {
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
+    latestArticlesList () {
+      return _.get(this.$store.state, [ 'latestArticles', 'items' ])
+    },
+    latestEndIndex () {
+      return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
+    },
     latestArticle () {
       const latestFirstPage = _.dropRight(_.get(this.articlesGroupedList, [ 'latest' ]), 3)
+      const latestAfterFirstPage = _.drop(this.latestArticlesList, this.latestEndIndex)
       const choices = _.get(this.articlesGroupedList, [ 'choices' ])
       const groupedTitle = _.get(this.articlesGroupedList, [ 'grouped' ])
       const groupedRelateds = _.flatten(_.map(_.get(this.articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
@@ -229,11 +236,10 @@ export default {
       const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
 
       const latest = _.uniqBy(
-        latestFirstPage.concat(
-          _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]), _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
-        ),
+        _.concat(latestFirstPage, latestAfterFirstPage),
         'slug'
       )
+
       _.remove(latest, (o) => {
         return _.includes(choicesAndGrouped_slugs, o.slug)
       })
