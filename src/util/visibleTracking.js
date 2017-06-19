@@ -20,7 +20,7 @@ function visitTargets () {
       isVisible(o.target, { top: currTopY, bottom: currTopY + (winHeight / 2) }).then((isSeen) => {
         TRCKING_TARGET[i].seenFlag = isSeen
         if (isSeen) {
-          window.ga && window.ga('send', 'event', 'article', 'visible', TRCKING_TARGET.desc)
+          window.ga && window.ga('send', 'event', 'article', 'visible', TRCKING_TARGET[i].desc)
         }
       })
     }
