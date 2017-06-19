@@ -42,21 +42,16 @@
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
         </div>
-        <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' v-if="categoryName !== 'audio' && categoryName !== 'videohub' ">
+        <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP'>
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
           <vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
         </article-list>
-        <audio-list :audios="audios.items" v-if="categoryName === 'audio'" />
-        <video-list :playlist="playlist.items" v-if="categoryName === 'videohub'"/>
-        <section class="container">
-          <more v-if="hasMore && (categoryName === 'audio' || categoryName === 'videohub')" v-on:loadMore="loadMore" />
-        </section>
         <div><vue-dfp v-if="title !== 'Topic' && !isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" /></div>
         <div><vue-dfp v-if="title !== 'Topic' && isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" /></div>
-        <article-list id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
-          v-if="categoryName !== 'audio' && categoryName !== 'videohub'" v-show="hasAutoScroll"/>
+        <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
+          v-show="hasAutoScroll"/>
         <loading :show="loading" />
         <section class="footer container">
           <app-footer />
@@ -405,6 +400,12 @@ export default {
           if (this.$route.params.title === 'topic') {
             return _.get(this.$store.state, [ 'topics', 'items' ])
           }
+          if (this.$route.params.title === 'audio') {
+            return _.get(this.$store.state, [ 'audios', 'items' ])
+          }
+          if (this.$route.params.title === 'videohub') {
+            return _.get(this.$store.state, [ 'playlist', 'items' ])
+          }
           if (this.$route.params.title === 'news-people' || this.$route.params.title === 'entertainment') {
             return _.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this.sectionfeatured), 'id')
           }
@@ -483,11 +484,17 @@ export default {
           if (this.$route.params.title === 'topic') {
             return _.get(this.$store.state, [ 'topics', 'meta', 'page' ], PAGE) !== 1
           }
+          if (this.$route.params.title === 'audio') {
+            return _.get(this.$store.state, [ 'audios', 'meta', 'page' ], PAGE) !== 1
+          }
+          if (this.$route.params.title === 'videohub') {
+            return _.get(this.$store.state, [ 'playlist', 'items', 'length' ], 0) > MAXRESULT
+          }
           return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE) !== 1
       }
     },
     hasDFP () {
-      return !(this.$route.params.title === 'topic')
+      return !(this.$route.params.title === 'topic' || this.$route.params.title === 'audio' || this.$route.params.title === 'videohub')
     },
     hasEventEmbedded () {
       const _now = moment()
@@ -501,7 +508,7 @@ export default {
     hasMore () {
       switch (this.$route.params.title) {
         case 'audio':
-          return _.get(this.audios, [ 'length' ], 0) < _.get(this.$store.state, [ 'audios', 'meta', 'total' ], 0)
+          return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'audios', 'meta', 'total' ], 0)
         case 'videohub':
           return _.get(this.playlist, [ 'length' ], 0) < _.get(this.$store.state, [ 'playlist', 'pageInfo', 'totalResults' ], 0)
         case 'topic':
@@ -526,6 +533,12 @@ export default {
         default:
           if (this.$route.params.title === 'topic') {
             return _.get(this.$store.state, [ 'topics', 'meta', 'page' ], PAGE)
+          }
+          if (this.$route.params.title === 'audio') {
+            return _.get(this.$store.state, [ 'audios', 'meta', 'page' ], PAGE)
+          }
+          if (this.$route.params.title === 'videohub') {
+            return Math.floor(_.get(this.$store.state, [ 'playlist', 'items', 'length' ], 0) / MAXRESULT)
           }
           return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE)
       }
@@ -635,6 +648,7 @@ export default {
     }
   },
   methods: {
+    currentYPosition,
     camelize,
     checkIfLockJS () {
       unLockJS()
@@ -642,15 +656,16 @@ export default {
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
+    elmYPosition,
     getTruncatedVal,
     handleScroll () {
       window.onscroll = (e) => {
         if (document.querySelector('#articleList')) {
-          const currentBottom = currentYPosition() + window.innerHeight
+          const currentBottom = this.currentYPosition() + window.innerHeight
           const articleListHeight = document.querySelector('#articleList').offsetHeight
-          const articleListBottom = elmYPosition('#articleList') + articleListHeight
+          const articleListBottom = this.elmYPosition('#articleList') + articleListHeight
           this.articleListAutoScrollHeight = document.querySelector('#articleListAutoScroll').offsetHeight
-          const articleListAutoScrollBottom = elmYPosition('#articleListAutoScroll') + this.articleListAutoScrollHeight
+          const articleListAutoScrollBottom = this.elmYPosition('#articleListAutoScroll') + this.articleListAutoScrollHeight
           if (currentBottom > (articleListBottom - 300) && this.canScrollLoadMord && (this.page === 1) && this.hasMore) {
             this.canScrollLoadMord = false
             this.loadMore()
