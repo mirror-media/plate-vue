@@ -2,57 +2,20 @@
   <div class="poplist-container" v-if="(pop.length > 0)">
     <div class="pop_title"><h3>熱門文章</h3></div>
     <div class="pop_list">
-      <div class="pop_item" v-for="(o, i) in popBeforeDFPNA3">
-        <div>
-          <router-link :to="o.slug" :id="'popular-' + i">
-            <div class="pop_item_img"
-                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }" :title="getValue(o, [ 'title' ])">
-            </div>
-          </router-link>
+      <template v-for="(o, i) in popArticles">
+        <div class="pop_item">
+          <figure>
+            <router-link :to="o.slug" :id="'popular-' + i">
+              <img v-lazy="getImage(o, 'mobile')" :alt="getValue(o, [ 'title' ])" />
+            </router-link>
+            <div class="pop_item--colorBlock" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])" />
+          </figure>
+          <div class="pop_item_title">
+            <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)" />
+          </div>
         </div>
-        <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)"></router-link>
-        </div>
-      </div>
-      <slot name="dfpNA3"></slot>
-      <div class="pop_item" v-for="(o, i) in popBeforeDFPNA5">
-        <div>
-          <router-link :to="o.slug" >
-            <div class="pop_item_img"
-                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }" :title="getValue(o, [ 'title' ])">
-            </div>
-          </router-link>
-        </div>
-        <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)"></router-link>
-        </div>
-      </div>
-      <slot name="dfpNA5"></slot>
-      <div class="pop_item" v-for="(o, i) in popBeforeDFPNA7">
-        <div>
-          <router-link :to="o.slug" :id="'popular-' + i">
-            <div class="pop_item_img"
-                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }" :title="getValue(o, [ 'title' ])">
-            </div>
-          </router-link>
-        </div>
-        <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)"></router-link>
-        </div>
-      </div>
-      <slot name="dfpNA7"></slot>
-      <div class="pop_item" v-for="(o, i) in popAfterDFPNA7">
-        <div>
-          <router-link :to="o.slug" :id="'popular-' + i">
-            <div class="pop_item_img"
-                  :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }" :title="getValue(o, [ 'title' ])">
-            </div>
-          </router-link>
-        </div>
-        <div class="pop_item_title" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 22)"></router-link>
-        </div>
-      </div>
+        <slot :name="getSlotName(i)" v-if="i === 1 || i === 2 || i === 3" />
+      </template>
     </div>
   </div>
 </template>
@@ -64,17 +27,8 @@
     name: 'pop-list',
     props: [ 'pop' ],
     computed: {
-      popBeforeDFPNA3 () {
-        return _.take(this.pop, 2)
-      },
-      popBeforeDFPNA5 () {
-        return _.slice(this.pop, 2, 3)
-      },
-      popBeforeDFPNA7 () {
-        return _.slice(this.pop, 3, 4)
-      },
-      popAfterDFPNA7 () {
-        return _.slice(this.pop, 4, 6)
+      popArticles () {
+        return _.take(this.pop, 6)
       }
     },
     methods: {
@@ -84,8 +38,19 @@
       getValue,
       getSectionStyle (sect) {
         const sectionId = _.get(sect, [ 'id' ])
-        const style = { borderLeft: _.get(SECTION_MAP, [ sectionId, 'borderLeft' ], '7px solid rgba(140, 140, 140, 0.18);') }
+        const style = { backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc') }
         return style
+      },
+      getSlotName (index) {
+        if (index === 1) {
+          return 'dfpNA3'
+        }
+        if (index === 2) {
+          return 'dfpNA5'
+        }
+        if (index === 3) {
+          return 'dfpNA7'
+        }
       }
     }
   }
@@ -106,6 +71,31 @@
         vertical-align top
         margin-bottom 30px
 
+        figure
+          position relative
+          width 100%
+          padding-top 66.66%
+          margin 0
+          overflow hidden
+          img
+            position absolute
+            top 0
+            left 0
+            bottom 0
+            right 0
+            width 100%
+            height 100%
+            object-fit cover
+            object-position 50% 50%
+
+        &--colorBlock
+          position absolute
+          left 0
+          bottom 0
+          padding .5em
+          color #fff
+          letter-spacing 1px
+
         .pop_item_img 
           width 100%
           height 150px
@@ -123,9 +113,9 @@
           align-items flex-start
         
           a 
-            width 95%
+            width 100%
             max-height 100%
-            margin 10px 20px
+            margin 10px 0
         
             &:hover, &:link, &:visited
               color rgba(0, 0, 0, 0.49)
