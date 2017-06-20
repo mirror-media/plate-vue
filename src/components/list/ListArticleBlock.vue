@@ -160,7 +160,7 @@ export default {
       this.audioDuration = this.$refs.audio.duration
     },
     getAudioTime (duration) {
-      return moment.duration(duration, 'seconds').format('h:mm:ss', { trim: 'right', forceLength: true })
+      return moment.utc(duration * 1000).format('HH:mm:ss')
     },
     getTruncatedVal,
     getValue
