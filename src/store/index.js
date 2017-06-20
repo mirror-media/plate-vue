@@ -378,6 +378,9 @@ export function createStore () {
     },
 
     getters: {
+      topic: state => {
+        return state.topic
+      },
       topics: state => {
         return state.topics
       }

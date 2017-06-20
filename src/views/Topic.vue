@@ -3,7 +3,7 @@
     <template scope="props" slot="dfpPos">
       <div :class="{ 'topic-view': !isTimeline }">
 
-        <template v-if="pageStyle === 'full'">
+        <template v-if="pageStyle === 'wide'">
           <section>
             <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
           </section>
@@ -15,7 +15,7 @@
           <share :right="`20px`" :bottom="`20px`" />
         </template>
 
-        <template v-if="isTimeline">
+        <template v-else-if="topicType === 'timeline'">
           <a href="/" class="topicTimeline__logo">
             <img src="/public/icon/logo_black@3x.png" :alt="siteTitle" />
           </a>
@@ -27,6 +27,15 @@
             <ProjectList :projects="projects" :viewport="viewport" />
           </div>
           <div class="topicTimeline__fbComment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+        </template>
+
+        <template v-else-if="topicType === 'portraitWall'">
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
+          <div class="topic">
+            <div class="topic-title"><h1></h1></div>
+            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData" />
+          </div>
+          <portraitWall-list :initialMediaData="mediaData" />
         </template>
 
         <template v-else>
@@ -59,7 +68,8 @@
 
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
-import { getTruncatedVal, getValue, unLockJS, currEnv } from '../util/comm'
+import { camelize } from 'humps'
+import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition } from 'kc-scroll'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
@@ -73,6 +83,7 @@ import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
+import PortraitWallList from '../components/PortraitWallList.vue'
 import ProjectList from '../components/article/ProjectList.vue'
 import Share from '../components/Share.vue'
 import TimelineBody from '../components/timeline/TimelineBody.vue'
@@ -163,6 +174,7 @@ export default {
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
+    'portraitWall-list': PortraitWallList,
     'share': Share,
     'timeline-body': TimelineBody,
     'timeline-headline': TimelineHeadline,
@@ -179,10 +191,10 @@ export default {
       ogDescription = '',
       ogImage = {},
       ogTitle = '',
-      title = ''
+      name = ''
     } = this.topic
 
-    const metaTitle = ogTitle || title
+    const metaTitle = ogTitle || name
     const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
     const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
@@ -200,7 +212,7 @@ export default {
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${metaDescription}">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:title" content="${metaTitle}">
         <meta name="twitter:description" content="${metaDescription}">
         <meta name="twitter:image" content="${metaImage}">
         <meta property="fb:app_id" content="${FB_APP_ID}">
@@ -208,7 +220,7 @@ export default {
         <meta property="og:site_name" content="${SITE_TITLE}">
         <meta property="og:locale" content="zh_TW">
         <meta property="og:type" content="article">
-        <meta property="og:title" content="${title}">
+        <meta property="og:title" content="${metaTitle}">
         <meta property="og:description" content="${metaDescription}">
         <meta property="og:url" content="${ogUrl}">
         <meta property="og:image" content="${metaImage}">
@@ -291,12 +303,7 @@ export default {
       return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE)
     },
     pageStyle () {
-      switch (this.$route.params.topicId) {
-        case TOPIC_WATCH_ID:
-          return 'full'
-        default:
-          return 'feature'
-      }
+      return _.get(this.topic, [ 'pageStyle' ])
     },
     projects () {
       return _.get(this.commonData, [ 'projects', 'items' ])
@@ -315,13 +322,6 @@ export default {
     timeline () {
       return _.get(this.$store.state, [ 'timeline' ])
     },
-    title () {
-      // if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
-      //   return '錶展特區'
-      // }
-
-      return _.get(this.topic, [ 'ogTitle' ]) && _.get(this.topic, [ 'ogTitle' ]) !== '' ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'name' ])
-    },
     topic () {
       if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
         return _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })
@@ -330,7 +330,7 @@ export default {
       }
     },
     topicType () {
-      return _.get(this.topic, [ 'type' ])
+      return this.camelize(_.get(this.topic, [ 'type' ]))
     },
     mediaData () {
       return {
@@ -351,6 +351,7 @@ export default {
     }
   },
   methods: {
+    camelize,
     checkIfLockJS () {
       unLockJS()
     },
