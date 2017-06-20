@@ -219,21 +219,29 @@ export default {
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
+    latestArticlesList () {
+      return _.get(this.$store.state, [ 'latestArticles', 'items' ])
+    },
+    latestEndIndex () {
+      return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
+    },
     latestArticle () {
-      const latestFirstPage = _.dropRight(_.get(this.articlesGroupedList, [ 'latest' ]), 3)
-      const choices = _.get(this.articlesGroupedList, [ 'choices' ])
-      const groupedTitle = _.get(this.articlesGroupedList, [ 'grouped' ])
-      const groupedRelateds = _.flatten(_.map(_.get(this.articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
+      const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
+
+      const latestFirstPage = _.dropRight(_.get(articlesGroupedList, [ 'latest' ]), 3)
+      const latestAfterFirstPage = _.drop(latestArticlesList, latestEndIndex)
+      const choices = _.get(articlesGroupedList, [ 'choices' ])
+      const groupedTitle = _.get(articlesGroupedList, [ 'grouped' ])
+      const groupedRelateds = _.flatten(_.map(_.get(articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
       const grouped = _.union(groupedTitle, groupedRelateds)
       const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
       const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
 
       const latest = _.uniqBy(
-        latestFirstPage.concat(
-          _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]), _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
-        ),
+        _.concat(latestFirstPage, latestAfterFirstPage),
         'slug'
       )
+
       _.remove(latest, (o) => {
         return _.includes(choicesAndGrouped_slugs, o.slug)
       })
@@ -284,6 +292,7 @@ export default {
       this.loading = true
 
       fetchLatestArticle(this.$store, this.page).then(() => {
+        this.hasScrollLoadMore = false
         this.loading = false
       })
     },
@@ -294,8 +303,8 @@ export default {
         const firstPageArticleHeight = _latestArticleDiv.offsetHeight
         const firstPageArticleBottom = elmYPosition('#latestArticle') + (firstPageArticleHeight)
         const currentBottom = currentYPosition() + window.innerHeight
-        if ((currentBottom > (firstPageArticleBottom - 300)) && !this.hasScrollLoadMore) {
-          // this.hasScrollLoadMore = true
+        if ((currentBottom > (firstPageArticleBottom - 0)) && !this.hasScrollLoadMore) {
+          this.hasScrollLoadMore = true
           this.loadMore()
         }
       }
