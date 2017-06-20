@@ -43,7 +43,6 @@ import { getBrief, getHref, getImage, getSection, getTruncatedVal } from '../uti
 import _ from 'lodash'
 import ListArticleBlock from './list/ListArticleBlock.vue'
 import moment from 'moment'
-import momentDurationFormat from 'moment-duration-format'
 
 const MAXTITLEAMOUNT = 28
 
@@ -99,7 +98,6 @@ export default {
     },
     getTruncatedVal,
     moment,
-    momentDurationFormat,
     pauseAllAudio (index) {
       this.togglePause = index
     }
