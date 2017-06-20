@@ -453,10 +453,14 @@
       getMmab () {
         const mmab = Cookie.get('mmab')
         if (mmab === 'a' && this.viewport >= 1200) {
-          window.ga('send', 'event', 'mm-opt', 'visible', 'articleA')
+          window.ga('send', 'event', 'mm-opt', 'visible', 'articleA', {
+            nonInteraction: true
+          })
           this.abIndicator = '-a'
         } else if (mmab === 'b' && this.viewport >= 1200) {
-          window.ga('send', 'event', 'mm-opt', 'visible', 'articleB')
+          window.ga('send', 'event', 'mm-opt', 'visible', 'articleB', {
+            nonInteraction: true
+          })
           this.abIndicator = '-b'
         } else {
           this.abIndicator = ''
@@ -529,7 +533,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-
+      console.log('title:', `${truncate(_.get(this.articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}`)
       this.sendGA(this.articleData)
     },
     updated () {
@@ -545,6 +549,7 @@
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
         this.updateMediafarmersScript()
+        console.log('title(client):', `${truncate(_.get(this.articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}`)
         this.sendGA(this.articleData)
 
         // call getMmab to send related ab test ga
