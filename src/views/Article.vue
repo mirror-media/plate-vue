@@ -184,7 +184,7 @@
       const topicId = _.get(topics, [ '_id' ], '')
 
       return {
-        title: truncate(title, 21) + ` － ${SITE_TITLE_SHORT}`,
+        title: truncate(title, 21) + ` - ${SITE_TITLE_SHORT}`,
         meta: `
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
@@ -192,7 +192,7 @@
           <meta name="category-name" content="${categorieName}">
           <meta name="topic-id" content="${topicId}">
           <meta name="twitter:card" content="summary_large_image">
-          <meta name="twitter:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － ' + SITE_TITLE_SHORT : truncate(title, 21) + ' － ' + SITE_TITLE_SHORT}">
+          <meta name="twitter:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' - ' + SITE_TITLE_SHORT : truncate(title, 21) + ' - ' + SITE_TITLE_SHORT}">
           <meta name="twitter:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta name="twitter:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
           <meta property="fb:app_id" content="${FB_APP_ID}">
@@ -200,7 +200,7 @@
           <meta property="og:site_name" content="${SITE_TITLE}">
           <meta property="og:locale" content="zh_TW">
           <meta property="og:type" content="article">
-          <meta property="og:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － ' + SITE_TITLE_SHORT : truncate(title, 21) + ' － ' + SITE_TITLE_SHORT}">
+          <meta property="og:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' - ' + SITE_TITLE_SHORT : truncate(title, 21) + ' - ' + SITE_TITLE_SHORT}">
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL + '/story/' + slug + '/'}">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
