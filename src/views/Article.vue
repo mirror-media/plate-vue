@@ -533,7 +533,6 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      console.log('title:', `${truncate(_.get(this.articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}`)
       this.sendGA(this.articleData)
     },
     updated () {
@@ -549,7 +548,6 @@
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
         this.updateMediafarmersScript()
-        console.log('title(client):', `${truncate(_.get(this.articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}`)
         this.sendGA(this.articleData)
 
         // call getMmab to send related ab test ga
