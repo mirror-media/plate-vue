@@ -38,7 +38,7 @@
       getValue,
       getSectionStyle (sect) {
         const sectionId = _.get(sect, [ 'id' ])
-        const style = { backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc') }
+        const style = { backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc'), width: _.get(SECTION_MAP, [ sectionId, 'label-width' ]) }
         return style
       },
       getSlotName (index) {
@@ -89,11 +89,16 @@
             object-position 50% 50%
 
         &--colorBlock
+          display flex
+          justify-content center
+          align-items center
           position absolute
           left 0
           bottom 0
-          padding .5em
+          height 25px
+          padding 0
           color #fff
+          font-size 0.9rem
           letter-spacing 1px
 
         .pop_item_img 
