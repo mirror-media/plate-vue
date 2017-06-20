@@ -453,10 +453,14 @@
       getMmab () {
         const mmab = Cookie.get('mmab')
         if (mmab === 'a' && this.viewport >= 1200) {
-          window.ga('send', 'event', 'mm-opt', 'visible', 'articleA')
+          window.ga('send', 'event', 'mm-opt', 'visible', 'articleA', {
+            nonInteraction: true
+          })
           this.abIndicator = '-a'
         } else if (mmab === 'b' && this.viewport >= 1200) {
-          window.ga('send', 'event', 'mm-opt', 'visible', 'articleB')
+          window.ga('send', 'event', 'mm-opt', 'visible', 'articleB', {
+            nonInteraction: true
+          })
           this.abIndicator = '-b'
         } else {
           this.abIndicator = ''
@@ -529,7 +533,6 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-
       this.sendGA(this.articleData)
     },
     updated () {
