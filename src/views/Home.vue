@@ -290,6 +290,7 @@ export default {
       this.loading = true
 
       fetchLatestArticle(this.$store, this.page).then(() => {
+        this.hasScrollLoadMore = false
         this.loading = false
       })
     },
@@ -300,7 +301,8 @@ export default {
         const firstPageArticleHeight = _latestArticleDiv.offsetHeight
         const firstPageArticleBottom = elmYPosition('#latestArticle') + (firstPageArticleHeight)
         const currentBottom = currentYPosition() + window.innerHeight
-        if ((currentBottom > (firstPageArticleBottom - 300))) {
+        if ((currentBottom > (firstPageArticleBottom - 0)) && !this.hasScrollLoadMore) {
+          this.hasScrollLoadMore = true
           this.loadMore()
         }
       }
