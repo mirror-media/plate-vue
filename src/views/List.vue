@@ -144,14 +144,18 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
         case AUDIO_ID:
           return fetchAudios(store, {
             page: page,
-            max_results: MAXRESULT
+            max_results: MAXRESULT,
+            sort: '-createTime'
           })
         case VIDEOHUB_ID:
           return fetchYoutubePlaylist(store, MAXRESULT, pageToken)
         default:
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: page,
-            max_results: MAXRESULT
+            max_results: MAXRESULT,
+            embedded: {
+              'heroVideo.coverPhoto': 1
+            }
           })
       }
     case SECTION:
@@ -161,7 +165,10 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
             max_results: MAXRESULT,
-            related: 'full'
+            related: 'full',
+            embedded: {
+              'heroVideo.coverPhoto': 1
+            }
           })
         default:
           if (uuid === 'topic' && isLoadMore) {
@@ -172,7 +179,10 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
           }
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
-            max_results: MAXRESULT
+            max_results: MAXRESULT,
+            embedded: {
+              'heroVideo.coverPhoto': 1
+            }
           })
       }
     case TAG:
@@ -180,13 +190,19 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
         return fetchTag(store, uuid).then(() => {
           return fetchArticlesByUuid(store, uuid, TAG, {
             page: page,
-            max_results: MAXRESULT
+            max_results: MAXRESULT,
+            embedded: {
+              'heroVideo.coverPhoto': 1
+            }
           })
         })
       } else {
         return fetchArticlesByUuid(store, uuid, TAG, {
           page: page,
-          max_results: MAXRESULT
+          max_results: MAXRESULT,
+          embedded: {
+            'heroVideo.coverPhoto': 1
+          }
         })
       }
   }
