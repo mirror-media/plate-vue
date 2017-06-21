@@ -14,9 +14,8 @@
         <div v-for="p in briefArr">
           <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-                  :sources="getAudioSource(getValue(p, [ 'content', 0], {}))" 
                   :id="'latest-'+ p.id" 
-                  :item="getValue(p, [ 'content', 0], {})"></div>
+                  :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else is="app-slider" class="per-slide" :option="sliderOption">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
@@ -32,9 +31,8 @@
         <div v-for="(p, index) in contArr">
           <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-                  :sources="getAudioSource(getValue(p, [ 'content', 0], {}))" 
                   :id="'latest-'+ p.id" 
-                  :item="getValue(p, [ 'content', 0], {})"></div>
+                  :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
@@ -184,11 +182,6 @@ export default {
     }
   },
   methods: {
-    getAudioSource (item) {
-      const audioURL = []
-      audioURL.push(_.get(item, [ 'url' ]))
-      return audioURL
-    },
     getHref,
     getTruncatedVal,
     getValue,

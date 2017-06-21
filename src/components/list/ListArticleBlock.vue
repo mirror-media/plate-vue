@@ -101,7 +101,7 @@ export default {
       }
     },
     duration () {
-      return this.$refs.audio.duration
+      return _.get(this.$refs, [ 'audio', 'duration' ])
     },
     togglePause () {
       return this.initialTogglePause

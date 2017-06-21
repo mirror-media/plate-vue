@@ -54,8 +54,8 @@ export function getHref (relAritlcle = {}) {
 
 export function getImage (article, size) {
   let image
-  if (article.heroVideo && article.heroVideo.coverPhoto) {
-    image = _.get(article, [ 'heroVideo', 'coverPhoto' ])
+  if (article.heroVideo && article.heroVideo.coverPhoto.image) {
+    image = _.get(article, [ 'heroVideo', 'coverPhoto', 'image', 'resizedTargets' ])
   } else if (article.heroImage && article.heroImage.image) {
     image = _.get(article, [ 'heroImage', 'image', 'resizedTargets' ])
   } else if (article.ogImage) {
