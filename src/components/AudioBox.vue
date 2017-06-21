@@ -1,57 +1,111 @@
 <template>
   <div class="audioBox">
-    <span> {{ toMMSS(seek) }} / {{ toMMSS(duration) }} </span>
-    <div class="audioBox-progress">
-      <input type="range" min="0" :value="seek" :max="duration" step="1" @change="handleChange"/>
-      <div class="audioBox-progress__bar" :style="{ width: progressWidth + '%' }">
-        
+    <figure class="audioBox__figure">
+      <img v-lazy="getValue(audio, [ 'coverPhoto', 'image', 'resizedTargets', 'mobile', 'url' ], '/public/notImage.png')" :alt="getValue(audio, [ 'title' ])" />
+    </figure>
+    <div class="audioBox__control">
+      <audio ref="audio" preload="none" @loadeddata="audioLoaded" @ended="audioEnded" @timeupdate="renewAudioCurrent" @loadedmetadata="renewAudioDuration" @canplay="audioCanplay">
+        <source :src="getValue(audio, [ 'url' ])" :type="getValue(audio, [ 'filetype' ])">
+      </audio>
+      <h2 v-text="getValue(audio, [ 'title' ])" />
+      <div ref="audioProgress" class="audioBox__control--progress" v-on:click="changeProgress">
+        <div class="audioBox__control--progressCurrent" :style="{ width: `${progress}%` }" />
       </div>
-    </div>
-    <div class="audioBox-content">
-      <div class="audioBox-content__cover" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }" :class="{ 'cover': hasCover }">
-        <div @click="togglePlayback" :class="[playing ? 'pause' : 'play']"></div>
+      <div class="audioBox__control--controlBar">
+        <div class="audioBox__control--controlGroup">
+          <img v-lazy="`/public/icon/play-btn_blue@2x.png`" @click="audioPlay()" v-show="!isPlaying && !isEnded" />
+          <img v-lazy="`/public/icon/pause-btn_blue@2x.png`" @click="audioPause()" v-show="isPlaying && !isEnded" />
+          <img v-lazy="`/public/icon/replay-btn_blue@2x.png`" @click="audioReplay()" v-show="isEnded" />
+        </div>
+        <div class="audioBox__control--info">
+          <p v-show="audioDuration !== 0 && canPlay">{{ getAudioTime(audioCurrent) }} / {{ getAudioTime(audioDuration) }}</p>
+          <p v-show="audioDuration !== 0 && !canPlay" >讀取中...</p>
+        </div>
       </div>
-      <h2 class="audioBox-content__title" v-text="item.title"></h2>
     </div>
   </div>
 </template>
 
 <script>
 
-import _ from 'lodash'
-import VueHowler from 'vue-howler'
+import { getValue } from '../util/comm'
+import moment from 'moment'
 
 export default {
   name: 'audioBox',
-  props: [ 'item' ],
-  mixins: [ VueHowler ],
+  props: [ 'audio' ],
+  data () {
+    return {
+      audioCurrent: 0,
+      audioDuration: 0,
+      isEnded: false,
+      isLoaded: false,
+      isPlaying: false,
+      canPlay: false,
+      progress: 0
+    }
+  },
   computed: {
-    hasCover () {
-      const cover = _.get(this.item, [ 'coverPhoto', 'image', 'resizedTargets', 'tiny', 'url' ])
-      return cover
-    },
-    progressWidth () {
-      return (this.seek / this.duration) * 100 < 1 ? 100 : (this.seek / this.duration) * 100
+    duration () {
+      return this.$refs.audio.duration
     }
   },
   methods: {
-    getImage (item) {
-      return _.get(item, [ 'coverPhoto', 'image', 'resizedTargets', 'tiny', 'url' ], '/public/icon/audio@2x.png')
+    audioCanplay () {
+      this.canPlay = true
     },
-    getCoverCss (item) {
-      const cover = _.get(item, [ 'coverPhoto', 'image', 'resizedTargets', 'tiny', 'url' ])
-      return cover ? 'backgroundImage: url(' + cover + '), background-size: cover, background-position: 50% 50%'
-        : 'backgroundImage: url(/public/icon/audio@2x.png), background-size: 80px 40px, background-position: 50% 50%'
+    audioEnded () {
+      this.isEnded = true
     },
-    handleChange (e) {
-      console.log(e.target.value)
-      this.setSeek(parseInt(e.target.value))
+    audioLoaded () {
+      this.isLoaded = true
     },
-    toMMSS (seconds) {
-      seconds = parseInt(seconds, 10)
-      const minutes = parseInt(seconds / 60) % 60
-      seconds = seconds % 60
-      return (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds)
+    audioPlay () {
+      const audioEle = this.$refs.audio
+      if (audioEle) {
+        this.isPlaying = true
+        audioEle.play()
+      }
+    },
+    audioPause () {
+      const audioEle = this.$refs.audio
+      if (audioEle) {
+        this.isPlaying = false
+        audioEle.pause()
+      }
+    },
+    audioReplay () {
+      const audioEle = this.$refs.audio
+      if (audioEle) {
+        this.isEnded = false
+        this.isPlaying = true
+        this.$refs.audio.currentTime = 0
+        audioEle.play()
+      }
+    },
+    changeProgress (e) {
+      const audioEle = this.$refs.audio
+      if (!this.isLoaded) {
+        audioEle.load()
+      }
+      if (this.isLoaded) {
+        const newTime = e.offsetX / this.$refs.audioProgress.offsetWidth * this.$refs.audio.duration
+        this.$refs.audio.currentTime = newTime
+        this.isEnded = false
+        this.isPlaying = true
+        audioEle.play()
+      }
+    },
+    getValue,
+    getAudioTime (duration) {
+      return moment.utc(duration * 1000).format('HH:mm:ss')
+    },
+    renewAudioCurrent () {
+      this.audioCurrent = this.$refs.audio.currentTime
+      this.progress = this.$refs.audio.currentTime / this.$refs.audio.duration * 100
+    },
+    renewAudioDuration () {
+      this.audioDuration = this.$refs.audio.duration
     }
   }
 }
@@ -65,74 +119,57 @@ export default {
   margin-bottom 20px
   padding 10px 0
   background-color #fff
-  > span
-    margin-right 10px
-    text-align right
-  &-progress
+  &__figure
+    display none
     position relative
     width 100%
-    height 15px
-    margin 10px 0
-    > input[type=range]
+    padding-top 66.66%
+    margin 0
+    overflow hidden
+    img
       position absolute
+      top 0
+      left 0
+      bottom 0
+      right 0
       width 100%
-      height 5px
-      background transparent
-      outline none
-      -webkit-appearance none
-
-    &__bar
-      width 100%
-      height 5px
-      background-color #004ea2
-  &-content
+      height 100%
+      object-fit cover
+      object-position 50% 50%
+  &__control
     display flex
-    &__cover
-      position relative
-      width 80px
-      height 80px
-      margin 10px
-      background-color #004ea2
-      background-position 50% 50%
-      background-repeat no-repeat
-      background-size 80px 40px
-      > div
-        position absolute
-        top 0
-        left 0
-        bottom 0
-        right 0
-        width 45px
-        height 45px
-        margin auto
-        background-position 50% 50%
-        background-repeat no-repeat
-        background-size contain
-        &.pause
-          background-image url(/public/icon/pause-btn@2x.png)
-        &.play
-          background-image url(/public/icon/play-btn@2x.png)
-      &.cover
-        background-size cover
-
-    &__title
-      width calc( 100% - 100px)
-      flex-grow 1
-      margin 10px 0
-      padding 0 10px
-      font-size 1.5rem
-      line-height 2rem
-      font-weight 300
-
-@media (min-width: 600px)
-  .audioBox
     flex-direction column
-    flex-wrap wrap
-    width calc( (100% - 40px)/2 )
-    margin 0 10px 20px
-
-@media (min-width: 1200px)
-  .audioBox
-    width calc( (100% - 60px)/3 )
+    justify-content center
+    width 100%
+    padding 0
+    h2
+      font-size 1.2rem !important
+      margin 0 !important
+    &--progress
+      width 100%
+      height 4px
+      margin-top 1em
+      background-color #bcbcbc
+      cursor pointer
+    &--progressCurrent
+      height 4px
+      background-color #064f77
+    &--controlBar
+      display flex
+      justify-content space-between
+      height 36px
+      margin-top .5em
+      img
+        width 20px
+        height 20px
+        margin-right 1em
+        cursor pointer
+    &--controlGroup
+      display flex
+      align-items center
+    &--info
+      p
+        margin 0 !important
+        font-size 1rem !important
 
 </style>
