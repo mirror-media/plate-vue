@@ -31,7 +31,7 @@ export default {
       return this.initialSection
     },
     sectionfeatured () {
-      return _.take(this.initialSectionfeatured, 3)
+      return this.initialSectionfeatured
     },
     sectionColor () {
       return _.get(SECTION_MAP, [ _.get(this.section, [ 'id' ]), 'bgcolor' ], '#bcbcbc')
