@@ -348,7 +348,7 @@ export default {
         sectionName = this.sectionName
         const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
         ogImage = imageURL || SITE_OGIMAGE
-        ogTitle = _.get(this.section, [ 'ogTitle' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogTitle' ]), 11) : this.getTruncatedVal(_.get(this.section, [ 'title' ], this.title), 11)
+        ogTitle = _.get(this.section, [ 'ogTitle' ]) ? this.getTruncatedVal(_.get(this.section, [ 'ogTitle' ]), 11) : this.getTruncatedVal(_.get(this.section, [ 'title' ], this.title), 11)
         ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogDescription' ]), 197) : _.get(this.section, [ 'description' ])
         ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
         break
@@ -423,7 +423,7 @@ export default {
             return _.uniqBy(_.get(this.$store.state, [ 'playlist', 'items' ]), 'id')
           }
           if (this.$route.params.title === 'news-people' || this.$route.params.title === 'entertainment') {
-            return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this.sectionfeatured), 'id'), 'id')
+            return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this, [ 'sectionfeatured' ]), 'id'), 'id')
           }
           return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
       }
@@ -435,13 +435,13 @@ export default {
       if (this.uuid === SECTION_FOODTRAVEL_ID) {
         return _.take(this.articles, 8)
       }
-      return _.take(this.articles, 12)
+      return _.take(this.articles, 9)
     },
     autoScrollArticlesLoadMore () {
       if (this.uuid === SECTION_FOODTRAVEL_ID) {
         return _.slice(this.articles, 8)
       }
-      return _.slice(this.articles, 12)
+      return _.slice(this.articles, 9)
     },
     categoryName () {
       if (this.type === CATEGORY) {
@@ -574,7 +574,7 @@ export default {
       return _.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title })
     },
     sectionfeatured () {
-      return _.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.camelize(this.sectionName)), [ this.camelize(this.sectionName) ])
+      return _.take(_.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.camelize(this.sectionName)), [ this.camelize(this.sectionName) ]), 3)
     },
     sectionId () {
       switch (this.type) {
