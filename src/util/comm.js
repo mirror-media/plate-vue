@@ -41,6 +41,8 @@ export function getBrief (article, count = 30, allowed_tags = '') {
 export function getHref (relAritlcle = {}) {
   const { href, style = '', slug } = relAritlcle
   switch (style) {
+    case 'campaign':
+      return `/campaigns/${slug}`
     case 'projects':
       return `/projects/${slug}`
     default:

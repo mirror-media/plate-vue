@@ -414,16 +414,16 @@ export default {
           return _.get(this.$store.state, [ 'articles', 'items' ])
         default:
           if (this.$route.params.title === 'topic') {
-            return _.get(this.$store.state, [ 'topics', 'items' ])
+            return _.uniqBy(_.get(this.$store.state, [ 'topics', 'items' ]), 'id')
           }
           if (this.$route.params.title === 'audio') {
-            return _.get(this.$store.state, [ 'audios', 'items' ])
+            return _.uniqBy(_.get(this.$store.state, [ 'audios', 'items' ]), 'id')
           }
           if (this.$route.params.title === 'videohub') {
-            return _.get(this.$store.state, [ 'playlist', 'items' ])
+            return _.uniqBy(_.get(this.$store.state, [ 'playlist', 'items' ]), 'id')
           }
           if (this.$route.params.title === 'news-people' || this.$route.params.title === 'entertainment') {
-            return _.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this.sectionfeatured), 'id')
+            return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this.sectionfeatured), 'id'), 'id')
           }
           return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
       }
