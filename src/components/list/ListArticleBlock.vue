@@ -1,6 +1,6 @@
 <template >
   <div class="listArticleBlock" :class="{ noHoverEffect: removeHoverEffect }" >
-    <template v-if="articleType === 'projects'">
+    <template v-if="articleType === 'campaign' || articleType === 'projects'">
       <figure class="listArticleBlock__figure">
         <a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-img`">
           <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
