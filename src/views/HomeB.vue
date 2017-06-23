@@ -270,6 +270,9 @@ export default {
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
+    initHasScrollLoadMore () {
+      this.hasScrollLoadMore = false
+    },
     updateCookie () {
       const cookie = Cookie.get('visited')
       if (!cookie) {
@@ -329,6 +332,8 @@ export default {
     window.ga('send', 'pageview', this.$route.path, { title: SITE_TITLE })
   },
   updated () {
+    this.initHasScrollLoadMore()
+    this.handleScroll()
     this.updateSysStage()
   }
 }
