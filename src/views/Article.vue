@@ -80,7 +80,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
@@ -393,6 +393,33 @@
         const categories = _.flatten(_.map(_.get(this.articleData, [ 'categories' ]), (o) => o.name))
         return _.includes(categories, 'business') || _.includes(categories, 'money')
       },
+      jsonLDBreadcrumbList () {
+        return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "item": { "@id": "${SITE_URL}", "name": "${SITE_TITLE}" } },
+            { "@type": "ListItem", "position": 2, "item": { "@id": "${SITE_URL + '/section/' + _.get(this.articleData, [ 'sections', '0', 'name' ])}", "name": "${_.get(this.articleData, [ 'sections', '0', 'title' ])}" } },
+            { "@type": "ListItem", "position": 3, "item": { "@id": "${SITE_URL + _.get(this.$route, [ 'path' ])}", "name": "${_.get(this.articleData, [ 'title' ])}" } }
+          ]
+        }`
+      },
+      jsonLDNewsArticle () {
+        return `{ "@context": "http://schema.org", "@type": "NewsArticle", "headline": "${_.get(this.articleData, [ 'title' ])}",
+          "url": "${SITE_URL + _.get(this.$route, [ 'path' ])}", "thumbnailUrl": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}",
+          "articleSection": "${_.get(this.articleData, [ 'sections', '0', 'title' ])}",
+          "keywords": [ ${_.map(_.get(this.articleData, [ 'tags' ]), (t) => { return `"${_.get(t, [ 'name' ])}"` })} ],
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "${SITE_URL + _.get(this.$route, [ 'path' ])}" },
+          "image": { "@type": "ImageObject", "url": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}", "height": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'height' ])}, "width": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'width' ])} },
+          "datePublished": "${_.get(this.articleData, [ 'publishedDate' ])}", "author": { "@type": "Person", "name": "${_.get(this.articleData, [ 'writers', '0', 'name' ])}" },
+          "publisher": { "@type": "Organization", "name": "${SITE_TITLE}", "logo": { "@type": "ImageObject", "url": "https://www.mirrormedia.mg/public/logo.svg" } },
+          "description": "${_.get(this.articleData, [ 'brief', 'apiData', '0', 'content', '0' ])}"
+        }`
+      },
+      jsonLDPerson () {
+        return `{ "@context": "http://schema.org", "@type": "Person", "name": "${_.get(this.articleData, [ 'writers', '0', 'name' ])}",
+          "url": "${_.get(this.articleData, [ 'writers', '0', 'homepage' ])}",
+          "brand": { "@type": "Brand", "name": "${SITE_TITLE}", "url": "${SITE_URL}", "image": "https://www.mirrormedia.mg/public/logo.svg", "logo": "https://www.mirrormedia.mg/public/logo.svg", "description": "${SITE_DESCRIPTION}" }
+        }`
+      },
       latestList () {
         return _.get(this.$store.state.latestArticle, [ 'items' ], [])
       },
@@ -481,6 +508,29 @@
           window.FB && window.FB.XFBML.parse()
         }
       },
+      insertJSONLDScript () {
+        const newsArticleScript = document.createElement('script')
+        const personScript = document.createElement('script')
+        const breadcrumbScript = document.createElement('script')
+        newsArticleScript.setAttribute('id', 'js-newsArticle')
+        newsArticleScript.setAttribute('type', 'application/ld+json')
+        newsArticleScript.innerHTML = this.jsonLDNewsArticle
+        personScript.setAttribute('id', 'js-person')
+        personScript.setAttribute('type', 'application/ld+json')
+        personScript.innerHTML = this.jsonLDPerson
+        breadcrumbScript.setAttribute('id', 'js-breadcrumb')
+        breadcrumbScript.setAttribute('type', 'application/ld+json')
+        breadcrumbScript.innerHTML = this.jsonLDBreadcrumbList
+        if (!document.getElementById('js-newsArticle')) {
+          document.querySelector('head').appendChild(newsArticleScript)
+        }
+        if (!document.getElementById('js-person')) {
+          document.querySelector('head').appendChild(personScript)
+        }
+        if (!document.getElementById('js-breadcrumb')) {
+          document.querySelector('head').appendChild(breadcrumbScript)
+        }
+      },
       insertMediafarmersScript () {
         const mediafarmersScript = document.createElement('script')
         mediafarmersScript.setAttribute('id', 'mediafarmersJS')
@@ -508,6 +558,15 @@
           this.showDfpCoverAdFlag = false
         }
       },
+      updateJSONLDScript () {
+        const newsArticleScript = document.querySelector('#js-newsArticle')
+        const personScript = document.querySelector('#js-person')
+        const breadcrumbScript = document.querySelector('#js-breadcrumb')
+        document.querySelector('head').removeChild(newsArticleScript)
+        document.querySelector('head').removeChild(personScript)
+        document.querySelector('head').removeChild(breadcrumbScript)
+        this.insertJSONLDScript()
+      },
       updateMediafarmersScript () {
         const mediafarmersScript = document.querySelector('#mediafarmersJS')
         document.querySelector('body').removeChild(mediafarmersScript)
@@ -526,6 +585,7 @@
     mounted () {
       this.initializeFBComments()
       this.insertMediafarmersScript()
+      this.insertJSONLDScript()
       this.updateViewport()
       this.clientSideFlag = process.env.VUE_ENV === 'client'
       window.addEventListener('resize', () => {
@@ -547,6 +607,7 @@
         })
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
+        this.updateJSONLDScript()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
 
