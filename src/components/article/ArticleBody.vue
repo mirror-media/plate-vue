@@ -958,7 +958,7 @@ export default {
       
   @media (min-width 0px) and (max-width 499px)
     .article_body
-      > div:not([class="main"])
+      > div:not([class="main"]):not([class="pic-container"])
         padding-right 25px
         padding-left 25px
       > .article_main
