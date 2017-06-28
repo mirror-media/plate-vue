@@ -63,8 +63,8 @@
       </div>
     </nav>
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">
-      <form action=".">
-        <input type="search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()" placeholder="搜尋">
+      <form action="." v-on:submit.prevent="search(searchVal)">
+        <input type="search" v-model="searchVal"  @change="hasChanged()" placeholder="搜尋">
       </form>
       <a @click="closeSearchBar()"><img src="/public/icon/close.png" alt="關閉搜尋列"></a>
     </section>
