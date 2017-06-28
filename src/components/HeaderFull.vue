@@ -68,7 +68,9 @@
     </div>
     <div class="searchFull" v-show="openSearch">
       <div class="searchFull-container">
-        <input type="search" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()">
+        <form action=".">
+          <input type="search" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()">
+        </form>
         <a @click="closeSearchBar()">
           <img src="/public/icon/close.png" alt="關閉搜尋列">
         </a>
@@ -271,12 +273,15 @@ header
     height 55px
     padding 0 22px 0 30px
     background-color #dcdcdc
-    > input
+    form
+      display flex
+      align-items center
       flex-grow 1
-      height 22px
+      height 55px
       padding 0
       font-size 20px
       color #8c8c8c
+    input
       background-color transparent
       border none
       box-shadow none
@@ -307,7 +312,7 @@ header
       top 60px
       justify-content flex-end
       height 52px
-      > input
+      input
         text-align right
       > a
         margin-left 50px
