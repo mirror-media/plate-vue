@@ -9,12 +9,7 @@
         <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
-          <video class="heroimg video" width="100%" height="100%" controls controlsList="nodownload"
-          :poster="heroVideo.poster">
-            <source :src="getValue(heroVideo, [ 'video', 'url' ])" :type="getValue(heroVideo, [ 'video', 'filetype' ])">
-            Your browser does not support the video tag.
-          </video>
-          <div class="playpause play" @click="doPlayVideoByBtn" target=".heroimg.video"></div>
+          <article-video :video="heroVideo" class="heroimg" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article-heromedia" v-else-if="heroImage">
@@ -85,6 +80,7 @@
   import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
+  import ArticleVideo from '../components/article/Video.vue'
   import Cookie from 'vue-cookie'
   import DfpFixed from '../components/DfpFixed.vue'
   import Footer from '../components/Footer.vue'
@@ -276,7 +272,8 @@
       'related-list': RelatedList,
       'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
-      'vue-dfp-provider': VueDfpProvider
+      'vue-dfp-provider': VueDfpProvider,
+      ArticleVideo
     },
     data () {
       return {
@@ -368,8 +365,8 @@
         const { heroImage, heroVideo, ogImage } = this.articleData
         const heroImgUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const poster = ogImgUrl || (heroImgUrl || '/asset/review.png')
-        return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
+        const poster = ogImgUrl || (heroImgUrl || '/public/notImage.png')
+        return (heroVideo && heroVideo.video) ? Object.assign(_.get(heroVideo, [ 'video' ], {}), { id: _.get(heroVideo, [ 'id' ], '') }, { poster }) : heroVideo
       },
       ifLockJS () {
         return _.get(this.articleData, [ 'lockJS' ])
@@ -380,7 +377,8 @@
       ifRenderRelatedAside () {
         if (process.env.VUE_ENV === 'client') {
           // const mmab = this.getMmab()
-          return this.viewport >= 1200 && mmab === 'a'
+          // return this.viewport >= 1200 && mmab === 'a'
+          return this.viewport >= 1200
         }
         return this.viewport >= 1200
       },
@@ -460,23 +458,6 @@
       },
       closeDfpFixed () {
         this.showDfpFixedBtn = false
-      },
-      doPlayVideoByBtn (e) {
-        const source = e.target
-        const targ = source.getAttribute('target')
-        const targDOM = document.querySelector(targ)
-        const sourceClass = source.getAttribute('class')
-        const ifPlay = sourceClass.indexOf(' play') > -1
-        source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
-        targDOM && ifPlay && targDOM.play()
-        targDOM.removeEventListener('pause', this.heroVideoPausedHandler)
-        targDOM.addEventListener('pause', this.heroVideoPausedHandler)
-      },
-      heroVideoPausedHandler (e) {
-        const source = document.querySelector('.article-heromedia > .playpause')
-        const sourceClass = source.getAttribute('class')
-        const ifPlay = sourceClass.indexOf(' play') > -1
-        source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
       },
       getMmab () {
         const mmab = Cookie.get('mmab')
@@ -614,7 +595,7 @@
 
         // call getMmab to send related ab test ga
         // and will remove it after ab test got finished
-        //this.getMmab()
+        // this.getMmab()
       },
       articleData: function () {
         this.updateJSONLDScript()
@@ -640,27 +621,6 @@
       .heroimg-caption
         margin-top 5px
         padding 5px 50px 0
-
-      .playpause
-        background-repeat no-repeat
-        width 60px
-        height 60px
-        position absolute
-        margin auto
-        background-size contain
-        background-position center
-        top 50%
-        left 50%
-        margin-left -30px
-        margin-top -30px
-        cursor pointer
-        background-image url('/public/icon/play-btn@2x.png')
-
-        &.play
-          display block
-          
-        &.pause
-          display none
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
@@ -720,15 +680,6 @@
     .article-container
       .article-heromedia, .article
          max-width 100%
-  
-  @media (min-width 768px)
-    .article-container
-      .article-heromedia
-        .playpause
-          margin-left -50px
-          margin-top -50px
-          width 100px
-          height 100px
 
   @media (max-width 999px)
     .mobile-hide
