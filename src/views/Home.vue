@@ -7,19 +7,19 @@
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
-        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" />
+        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>
         <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550)" :config="props.config"/>
         <section class="container list">
-          <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" />
+          <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" target="_blank"/>
           <aside>
             <div class="aside-title mobile-only" ref="aside_title"><h2>最新文章</h2></div>
-            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`"/>
+            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
           <main>
-            <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />
+            <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" target="_blank"/>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport">
+            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
               <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
@@ -226,11 +226,13 @@ export default {
       return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
     },
     latestArticle () {
-      const latestFirstPage = _.dropRight(_.get(this.articlesGroupedList, [ 'latest' ]), 3)
-      const latestAfterFirstPage = _.drop(this.latestArticlesList, this.latestEndIndex)
-      const choices = _.get(this.articlesGroupedList, [ 'choices' ])
-      const groupedTitle = _.get(this.articlesGroupedList, [ 'grouped' ])
-      const groupedRelateds = _.flatten(_.map(_.get(this.articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
+      const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
+
+      const latestFirstPage = _.dropRight(_.get(articlesGroupedList, [ 'latest' ]), 3)
+      const latestAfterFirstPage = _.drop(latestArticlesList, latestEndIndex)
+      const choices = _.get(articlesGroupedList, [ 'choices' ])
+      const groupedTitle = _.get(articlesGroupedList, [ 'grouped' ])
+      const groupedRelateds = _.flatten(_.map(_.get(articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
       const grouped = _.union(groupedTitle, groupedRelateds)
       const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
       const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
@@ -319,7 +321,6 @@ export default {
     fetchArticlesGroupedList(this.$store)
   },
   mounted () {
-    window.utmx('url', 'A/B')
     this.handleScroll()
     this.updateViewport()
     window.addEventListener('resize', () => {
