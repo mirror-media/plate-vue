@@ -562,9 +562,11 @@
         const newsArticleScript = document.querySelector('#js-newsArticle')
         const personScript = document.querySelector('#js-person')
         const breadcrumbScript = document.querySelector('#js-breadcrumb')
-        document.querySelector('head').removeChild(newsArticleScript)
-        document.querySelector('head').removeChild(personScript)
-        document.querySelector('head').removeChild(breadcrumbScript)
+        if (newsArticleScript) {
+          document.querySelector('head').removeChild(newsArticleScript)
+          document.querySelector('head').removeChild(personScript)
+          document.querySelector('head').removeChild(breadcrumbScript)
+        }
         this.insertJSONLDScript()
       },
       updateMediafarmersScript () {
@@ -585,7 +587,6 @@
     mounted () {
       this.initializeFBComments()
       this.insertMediafarmersScript()
-      this.insertJSONLDScript()
       this.updateViewport()
       this.clientSideFlag = process.env.VUE_ENV === 'client'
       window.addEventListener('resize', () => {
@@ -607,13 +608,15 @@
         })
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
-        this.updateJSONLDScript()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
 
         // call getMmab to send related ab test ga
         // and will remove it after ab test got finished
         this.getMmab()
+      },
+      articleData: function () {
+        this.updateJSONLDScript()
       }
     }
   }
