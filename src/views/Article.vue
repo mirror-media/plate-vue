@@ -30,7 +30,7 @@
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderRelatedAside" :abIndicator="abIndicator" />
+              <!--related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderRelatedAside" :abIndicator="abIndicator" /-->
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
@@ -43,7 +43,8 @@
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpId="props.dfpId" slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
             </pop-list>
-            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderRelatedAside || articleStyle === 'wide')" slot="relatedlistBottom" :abIndicator="abIndicator" />
+            <!--related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderRelatedAside || articleStyle === 'wide')" slot="relatedlistBottom" :abIndicator="abIndicator" /-->
+            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
@@ -378,7 +379,7 @@
       },
       ifRenderRelatedAside () {
         if (process.env.VUE_ENV === 'client') {
-          const mmab = this.getMmab()
+          // const mmab = this.getMmab()
           return this.viewport >= 1200 && mmab === 'a'
         }
         return this.viewport >= 1200
@@ -613,7 +614,7 @@
 
         // call getMmab to send related ab test ga
         // and will remove it after ab test got finished
-        this.getMmab()
+        //this.getMmab()
       },
       articleData: function () {
         this.updateJSONLDScript()
