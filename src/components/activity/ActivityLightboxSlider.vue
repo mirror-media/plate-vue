@@ -69,6 +69,8 @@ export default {
     height 100%
   video::-webkit-media-controls-enclosure
     height 30px
+  video::-webkit-media-controls-panel-background
+    height 30px
   video::-webkit-media-controls-panel
     position absolute
     bottom 0
