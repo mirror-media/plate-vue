@@ -91,6 +91,7 @@
 </script>
 <style lang="stylus" scoped>
   .video-container
+    position relative
     > video
       cursor pointer
       position relative
@@ -124,6 +125,9 @@
       &::-webkit-media-controls-start-playback-button
         display none!important
         -webkit-appearance none
+        /* the followings isfor Android */
+        opacity 0
+        pointer-events none
     > .playpause
       background-repeat no-repeat
       width 60px
