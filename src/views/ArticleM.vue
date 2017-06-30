@@ -68,7 +68,7 @@
   import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleBody from '../components/article/ArticleBodyForApp.vue'
-  import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
+  import ArticleBodyPhotography from '../components/article/ArticleBodyPhotographyForApp.vue'
   import ArticleVideo from '../components/article/Video.vue'
   import Cookie from 'vue-cookie'
   import DfpFixed from '../components/DfpFixed.vue'
