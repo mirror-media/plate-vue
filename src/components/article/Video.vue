@@ -106,6 +106,8 @@
         padding 10px
       &::-webkit-media-controls-enclosure
         height 30px
+      &::-webkit-media-controls-panel-background
+        height 30px
       &::-webkit-media-controls-panel
         position absolute
         bottom 0
