@@ -12,10 +12,13 @@
     <main class="article_main">
       <div class="brief">
         <div v-for="p in briefArr">
-          <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
+          <div v-if="p.type !== 'slideshow' && p.type !== 'audio' && p.type !== 'video'" v-html="paragraphComposer(p)"></div>
+          <div v-else-if="p.type === 'video'" is="article-video" 
+            :id="'latest-'+ p.id" 
+            :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-                  :id="'latest-'+ p.id" 
-                  :audio="getValue(p, [ 'content', 0], {})"></div>
+            :id="'latest-'+ p.id" 
+            :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else is="app-slider" class="per-slide" :option="sliderOption">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
@@ -29,10 +32,13 @@
       <div class="split-line"></div>
       <article class="content">
         <div v-for="(p, index) in contArr">
-          <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
+          <div v-if="p.type !== 'slideshow' && p.type !== 'audio' && p.type !== 'video'" v-html="paragraphComposer(p)"></div>
+          <div v-else-if="p.type === 'video'" is="article-video" 
+            :id="'latest-'+ p.id" 
+            :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-                  :id="'latest-'+ p.id" 
-                  :audio="getValue(p, [ 'content', 0], {})"></div>
+            :id="'latest-'+ p.id" 
+            :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
@@ -74,6 +80,7 @@
 import _ from 'lodash'
 import { SECTION_MAP } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
@@ -83,7 +90,8 @@ export default {
   components: {
     'app-slider': Slider,
     'audio-box': AudioBox,
-    'proj-list': ProjectList
+    'proj-list': ProjectList,
+    ArticleVideo
   },
   computed: {
     articleStyle () {
@@ -245,14 +253,7 @@ export default {
           return `<ul class="${_.get(item, [ 'alignment' ], '')} unordered-list-item">${_liStrUnordered}</ul>`
         case 'unstyled':
           return (item.content.toString().length > 0) ? `<p>${item.content.toString()}</p>` : ''
-        case 'video':
-          return `<div class="video ${_.get(item, [ 'alignment' ], '')}">
-                    <video width="100%" height="100%" controls controlsList="nodownload" id="${_.get(item, [ 'id' ], '')}${_.get(item.content, [ 0, 'id' ], '')}">
-                      <source src="${_.get(item.content, [ 0, 'url' ], '')}" type="${_.get(item.content, [ 0, 'filetype' ], '')}">
-                        Your browser does not support the video tag.
-                    </video>
-                    <div class="playpause play" target="${_.get(item, [ 'id' ], '')}${_.get(item.content, [ 0, 'id' ], '')}"></div>
-                  </div>`
+
         case 'youtube':
           return `<div class=\"youtube\">
                     <div class=\"youtube-container\">
@@ -263,22 +264,6 @@ export default {
         default:
           return
       }
-    },
-    setUpPlayBtnsAbility () {
-      const playBtns = document.querySelectorAll('.article_body .playpause')
-      _.map(playBtns, (btn) => {
-        btn.addEventListener('click', (e) => {
-          const source = e.target
-          const targ = source.getAttribute('target')
-          const targDOM = document.querySelector(`video[id="${targ}"]`)
-          const sourceClass = source.getAttribute('class')
-          const ifPlay = sourceClass.indexOf(' play') > -1
-          source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
-          targDOM && ifPlay && targDOM.play()
-          targDOM.removeEventListener('pause', this.videoPausedHandler)
-          targDOM.addEventListener('pause', this.videoPausedHandler)
-        })
-      })
     },
     setUpLightbox () {
       if (!document.querySelector('.lightbox')) {
@@ -328,7 +313,6 @@ export default {
     }
   },
   mounted () {
-    this.setUpPlayBtnsAbility()
     this.setUpLightbox()
   },
   updated () {
@@ -623,27 +607,6 @@ export default {
           margin 1.5em auto
           clear both
           position relative
-
-          .playpause
-            background-repeat no-repeat
-            width 60px
-            height 60px
-            position absolute
-            margin auto
-            background-size contain
-            background-position center
-            top 50%
-            left 50%
-            margin-left -30px
-            margin-top -30px
-            cursor pointer
-            background-image url('/public/icon/play-btn@2x.png')
-
-            &.play
-              display block
-              
-            &.pause
-              display none
         
       a, a:hover, a:link, a:visited 
         color #3195b3
