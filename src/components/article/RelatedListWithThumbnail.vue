@@ -2,7 +2,19 @@
   <div class="related-container" v-if="(relatedList.length > 0)">
     <div class="related_title"><h3></h3></div>
     <div class="related_list">
-      <div class="related_item" v-for="(o, i) in relatedList">
+      <div class="related_item" v-for="(o, i) in relatedList" v-if="isApp">
+        <div>
+          <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" >
+            <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
+                  :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
+            </div>
+          </a>
+        </div>
+        <div class="related_item_title">
+          <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" v-text="getTruncatedVal(o.title, 22)"></a>
+        </div>
+      </div>
+      <div class="related_item" v-for="(o, i) in relatedList" v-else>
         <div>
           <a :href="getHref(o)" >
             <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
@@ -27,6 +39,9 @@
       getValue
     },
     props: {
+      isApp: {
+        default: () => false
+      },
       relatedList: {
         default: () => { return [] }
       }
