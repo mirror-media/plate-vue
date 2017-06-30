@@ -71,6 +71,7 @@
       <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
         <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/>
       </dfp-fixed>
+      <adult-content-alert v-if="isAdultContent" />
     </template>
   </vue-dfp-provider>
 </template>
@@ -78,6 +79,7 @@
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
+  import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import ArticleVideo from '../components/article/Video.vue'
@@ -261,6 +263,7 @@
       fetchEvent(this.$store, 'logo')
     },
     components: {
+      'adult-content-alert': AdultContentAlert,
       'article-body': ArticleBody,
       'article-body-photography': ArticleBodyPhotography,
       'app-footer': Footer,
@@ -387,6 +390,9 @@
       },
       ifSingleCol () {
         return (this.articleStyle === 'wide' || !this.ifRenderAside)
+      },
+      isAdultContent () {
+        return _.get(this.articleData, [ 'isAdult' ], false)
       },
       isCategoryBusinessMoney () {
         const categories = _.flatten(_.map(_.get(this.articleData, [ 'categories' ]), (o) => _.get(o, [ 'name' ])))
