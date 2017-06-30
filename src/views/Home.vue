@@ -13,7 +13,7 @@
           <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" target="_blank"/>
           <aside>
             <div class="aside-title mobile-only" ref="aside_title"><h2>最新文章</h2></div>
-            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
           <main>
             <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" target="_blank"/>
