@@ -14,6 +14,7 @@ Vue.use(VueLazyload, {
 import NotFound from '../views/404.vue'
 import Activity from '../views/Activity.vue'
 import Article from '../views/Article.vue'
+import ArticleM from '../views/ArticleM.vue'
 import Home from '../views/Home.vue'
 import HomeB from '../views/HomeB.vue'
 import List from '../views/List.vue'
@@ -43,6 +44,7 @@ export function createRouter () {
         //   component: Article
         // } ]
       },
+      { path: '/app/:slug', component: ArticleM },
       { path: '/project-list/:style?', component: Project },
       { path: '/homeb', component: HomeB },
       { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
