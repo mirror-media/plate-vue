@@ -9,6 +9,7 @@
 <script>
   import { mmLog } from './util/comm.js'
   import { visibleTracking } from './util/visibleTracking'
+  import { getRole } from './util/mmABRoleAssign'
   import Cookie from 'vue-cookie'
   import Tap from 'tap.js'
 
@@ -46,16 +47,10 @@
         })
       },
       setABCookie () {
-        const cookie = Cookie.get('mmab')
+        const mmabName = 'mm20170630'
+        const cookie = Cookie.get(mmabName)
         if (!cookie) {
-          switch (Date.now() % 2) {
-            case 0:
-              Cookie.set('mmab', 'a', '24h')
-              break
-            case 1:
-              Cookie.set('mmab', 'b', '24h')
-              break
-          }
+          Cookie.set(mmabName, getRole(), `${365 * 24}h`)
         }
       },
       setUpVisibleTracking () {
