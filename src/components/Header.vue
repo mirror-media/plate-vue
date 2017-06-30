@@ -179,9 +179,6 @@ export default {
   &--ad
     display flex
     align-items flex-end
-    &:before
-      content "｜"
-      margin-bottom 5px
 
 @media (max-width: 350px)
   .header-logoSearch
