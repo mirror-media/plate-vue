@@ -389,7 +389,7 @@
         return (this.articleStyle === 'wide' || !this.ifRenderAside)
       },
       isCategoryBusinessMoney () {
-        const categories = _.flatten(_.map(_.get(this.articleData, [ 'categories' ]), (o) => o.name))
+        const categories = _.flatten(_.map(_.get(this.articleData, [ 'categories' ]), (o) => _.get(o, [ 'name' ])))
         return _.includes(categories, 'business') || _.includes(categories, 'money')
       },
       jsonLDBreadcrumbList () {
