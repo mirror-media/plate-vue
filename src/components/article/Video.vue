@@ -1,7 +1,7 @@
 <template>
   <div class="video-container" @mouseover="mouseoverHandler" @click="videoPlay" >
-    <video width="100%" height="100%" controls controlsList="nodownload" preload="metadata" playsinline
-          poster="/public/transperent.png" :ref="videoId" :style="{ backgroundImage: `url(${getValue(video, ['poster'], '/public/notImage.png')})` }">
+    <video width="100%" height="100%" controls controlsList="nodownload" preload="metadata" playsinline :ref="videoId" :id="videoId"
+          poster="/public/transperent.png" :style="{ backgroundImage: `url(${getValue(video, ['poster'], '/public/notImage.png')})` }">
             <source :src="getValue(video, [ 'url' ])" :type="getValue(video, [ 'filetype' ])">
             Your browser does not support the video tag.
     </video>
@@ -33,7 +33,7 @@
         hoverFlag: false,
         playingFlag: false,
         opacity: 1,
-        videoId: `video-${_.get(this.video, [ 'id' ])}`
+        videoId: `video-${_.get(this.video, [ 'id' ])}-${Math.floor(Math.random() * (10000000000 - 100000) + 100000)}`
       }
     },
     methods: {
@@ -63,12 +63,8 @@
           this.fadeOutPauseBtn()
         }
       },
-      videoPlay () {
+      videoPlay (e) {
         if (!this.playingFlag) {
-          const videosThisPAge = document.querySelectorAll('video')
-          _.map(videosThisPAge, (v) => {
-            v.pause()
-          })
           this.$refs[this.videoId].play()
         } else {
           this.$refs[this.videoId].pause()
@@ -77,6 +73,12 @@
     },
     mounted () {
       this.$refs[this.videoId].addEventListener('play', () => {
+        const videosThisPAge = document.querySelectorAll('video')
+        _.map(videosThisPAge, (v) => {
+          if (v.getAttribute('id') !== this.videoId) {
+            v.pause()
+          }
+        })
         this.playingFlag = true
         this.pausingFlag = false
         this.fadeOutPauseBtn()
