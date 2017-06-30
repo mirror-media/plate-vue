@@ -291,7 +291,7 @@ export default {
       this.dfpMode = currEnv()
     },
     loadMore () {
-      window.ga('send', 'scroll', this.$route.path, { title: SITE_TITLE }, 'loadmore' + this.page)
+      window.ga('send', 'event', 'home', 'visiable', 'loadmore' + this.page)
       this.page += 1
       this.loading = true
 
