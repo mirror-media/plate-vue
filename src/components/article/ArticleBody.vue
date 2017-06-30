@@ -419,6 +419,7 @@ export default {
         font-size 40px
         font-weight 400
         margin 0
+        text-align justify
 
     .article_subtitle  
       width 695px
