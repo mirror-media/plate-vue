@@ -5,6 +5,7 @@ import Cookie from 'vue-cookie'
 import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
+import uuidv1 from 'uuid/v1'
 
 export function getAuthor (article, option = '', delimiter = '｜') {
   const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
@@ -271,10 +272,7 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
     }
     if (!cookieId) {
       const dt = Date.now()
-      const max = Math.pow(10, 10)
-      const min = Math.pow(10, 9)
-      const thisId = `mm-client-${dt}-${Math.floor(Math.random() * (max - min) + min)}`
-      Cookie.set('mmid', thisId, { expires: (10 * 365 * 24) + 'h' })
+      const thisId = setMmCookie()
       log['client-id'] = thisId
       log['current-runtime-id'] = thisId
       log['current-runtime-start'] = moment(dt).format('YYYY.MM.DD HH:mm:ss')
@@ -284,12 +282,10 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       resolve(log)
     } else {
       const dt = Date.now()
-      const max = Math.pow(10, 10)
-      const min = Math.pow(10, 9)
       log['client-id'] = cookieId
       log['referrer'] = referrer
       if (!window.mmThisRuntimeClientId) {
-        window.mmThisRuntimeClientId = `mm-client-${dt}-${Math.floor(Math.random() * (max - min) + min)}`
+        window.mmThisRuntimeClientId = uuidv1()
         window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
       }
       log['current-runtime-id'] = window.mmThisRuntimeClientId
@@ -297,4 +293,10 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       resolve(log)
     }
   })
+}
+
+export function setMmCookie () {
+  const uuid = uuidv1()
+  Cookie.set('mmid', uuid, { expires: (10 * 365 * 24) + 'h' })
+  return uuid
 }

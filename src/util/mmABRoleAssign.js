@@ -1,27 +1,27 @@
 import _ from 'lodash'
+import bigInt from 'big-integer'
 
-const ROLE_LIST = [
+const DEFAULT_DISTRIBUTION = [
   { id: 'A', weight: 80 },
   { id: 'B', weight: 10 },
   { id: 'C', weight: 10 }
 ]
-const MAX = Math.pow(10, 10)
-const MIN = Math.pow(10, 9)
 
-export function getRole () {
+export function getRole ({ mmid, distribution = DEFAULT_DISTRIBUTION }) {
   const sequence = []
-  let sum = 0
-  for (let i = 0; i < ROLE_LIST.length; i += 1) {
+  const len = distribution.length
+  for (let i = 0; i < distribution.length; i += 1) {
     if (sequence.length > 0) {
-      sequence.push(sequence[i - 1] + ROLE_LIST[i].weight)
+      sequence.push(sequence[i - 1] + Math.floor(distribution[i].weight))
     } else {
-      sequence.push(ROLE_LIST[i].weight)
+      sequence.push(Math.floor(distribution[i].weight))
     }
-    sum += ROLE_LIST[i].weight
   }
-  const random = Math.floor(Math.random() * (MAX - MIN) + MIN)
-  const remainder = random % sum
-  const roleInTest = _.get(_.filter(ROLE_LIST, (o, i) => {
+
+  const digit = sequence[len - 1].toString().length
+  const convertedMmid = bigInt(mmid.replace(/\-/g, ''), 128).toString()
+  const remainder = parseInt(convertedMmid.substr(convertedMmid.length - digit)) % sequence[len - 1]
+  const roleInTest = _.get(_.filter(distribution, (o, i) => {
     return remainder < sequence[i]
   }), 0)
   return roleInTest.id
