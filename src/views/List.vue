@@ -38,7 +38,7 @@
         <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
-        <list-choice v-if="type === `SECTION` && sectionfeatured" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />
+        <list-choice v-if="type === `SECTION` && sectionfeatured && title !== 'Topic'" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />
         <div class="list-title container" :class="sectionName">
           <span class="list-title__text" v-text="title"></span>
         </div>
