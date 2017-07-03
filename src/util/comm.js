@@ -5,7 +5,7 @@ import Cookie from 'vue-cookie'
 import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
-import uuidv1 from 'uuid/v1'
+import uuidv4 from 'uuid/v4'
 
 export function getAuthor (article, option = '', delimiter = '｜') {
   const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
@@ -285,7 +285,7 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       log['client-id'] = cookieId
       log['referrer'] = referrer
       if (!window.mmThisRuntimeClientId) {
-        window.mmThisRuntimeClientId = uuidv1()
+        window.mmThisRuntimeClientId = uuidv4()
         window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
       }
       log['current-runtime-id'] = window.mmThisRuntimeClientId
@@ -296,7 +296,7 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
 }
 
 export function setMmCookie () {
-  const uuid = uuidv1()
+  const uuid = uuidv4()
   Cookie.set('mmid', uuid, { expires: (10 * 365 * 24) + 'h' })
   return uuid
 }
