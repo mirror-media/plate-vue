@@ -19,6 +19,7 @@
   "dependencies": {
     "@google-cloud/logging": "^1.0.1",
     "@google-cloud/storage": "^1.1.1",
+    "big-integer": "^1.6.23",
     "bowser": "^1.7.0",
     "compression": "^1.6.2",
     "cross-env": "^4.0.0",
@@ -49,6 +50,7 @@
     "truncate": "^2.0.0",
     "twitter": "^1.7.0",
     "twitter-text": "^1.14.3",
+    "uuid": "^3.1.0",
     "vue": "^2.3.2",
     "vue-awesome-swiper": "^2.3.2",
     "vue-cookie": "^1.1.3",

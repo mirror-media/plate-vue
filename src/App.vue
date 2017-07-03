@@ -7,9 +7,8 @@
 </template>
 
 <script>
-  import { mmLog } from './util/comm.js'
+  import { mmLog, setMmCookie } from './util/comm.js'
   import { visibleTracking } from './util/visibleTracking'
-  import { getRole } from './util/mmABRoleAssign'
   import Cookie from 'vue-cookie'
   import Tap from 'tap.js'
 
@@ -46,11 +45,10 @@
           this.doLog(event)
         })
       },
-      setABCookie () {
-        const mmabName = 'mm20170630'
-        const cookie = Cookie.get(mmabName)
+      setCookie () {
+        let cookie = Cookie.get('mmid')
         if (!cookie) {
-          Cookie.set(mmabName, getRole(), `${365 * 24}h`)
+          cookie = setMmCookie()
         }
       },
       setUpVisibleTracking () {
@@ -66,7 +64,7 @@
     mounted () {
       this.doc = document
       this.launchLogger()
-      this.setABCookie()
+      this.setCookie()
       this.setUpVisibleTracking()
     },
     watch: {
