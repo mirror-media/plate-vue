@@ -152,10 +152,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
         default:
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: page,
-            max_results: MAXRESULT,
-            embedded: {
-              'heroVideo.coverPhoto': 1
-            }
+            max_results: MAXRESULT
           })
       }
     case SECTION:
@@ -165,10 +162,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
             max_results: MAXRESULT,
-            related: 'full',
-            embedded: {
-              'heroVideo.coverPhoto': 1
-            }
+            related: 'full'
           })
         default:
           if (uuid === 'topic' && isLoadMore) {
@@ -179,10 +173,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
           }
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
-            max_results: MAXRESULT,
-            embedded: {
-              'heroVideo.coverPhoto': 1
-            }
+            max_results: MAXRESULT
           })
       }
     case TAG:
@@ -190,19 +181,13 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
         return fetchTag(store, uuid).then(() => {
           return fetchArticlesByUuid(store, uuid, TAG, {
             page: page,
-            max_results: MAXRESULT,
-            embedded: {
-              'heroVideo.coverPhoto': 1
-            }
+            max_results: MAXRESULT
           })
         })
       } else {
         return fetchArticlesByUuid(store, uuid, TAG, {
           page: page,
-          max_results: MAXRESULT,
-          embedded: {
-            'heroVideo.coverPhoto': 1
-          }
+          max_results: MAXRESULT
         })
       }
   }
