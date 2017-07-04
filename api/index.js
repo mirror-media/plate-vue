@@ -47,6 +47,7 @@ router.all('/', function(req, res, next) {
 });
 
 router.use('/grouped', function(req, res, next) {
+    let isErrorOccurred = false
     // const query = req.query
     superagent
         .get(`${SERVER_PROTOCOL}://${SERVER_HOST}/json/grouped.json`)
@@ -58,12 +59,18 @@ router.use('/grouped', function(req, res, next) {
                 // res.status(500).end('Internal Error 500')
                 console.error(`error during fetch data from grouped : ${req.url}`)
                 console.error(err)  
-                process.exit(1)
+                isErrorOccurred = true
             }
         })
+    res.on('finish', function () {
+      if (isErrorOccurred) {
+        process.exit(1);
+      }
+    })
 });
 
 router.use('/playlist', function(req, res, next) {
+    let isErrorOccurred = false
     let query = req.query
     let url = `${YOUTUBE_PROTOCOL}://${YOUTUBE_HOST}?part=snippet&playlistId=${YOUTUBE_PLAYLIST_ID}&key=${YOUTUBE_API_KEY}`
     superagent
@@ -76,14 +83,20 @@ router.use('/playlist', function(req, res, next) {
                 // res.status(500).end('Internal Error 500')
                 console.error(`error during fetch data from playlist : ${req.url}`)
                 console.error(err)    
-                process.exit(1)
+                isErrorOccurred = true
             } else {
                 res.json(response.body)
             }
         })
+    res.on('finish', function () {
+      if (isErrorOccurred) {
+        process.exit(1);
+      }
+    })
 });
 
 router.use('/poplist', function(req, res, next) {
+    let isErrorOccurred = false
     // const query = req.query
     superagent
         .get(`${SERVER_PROTOCOL}://${SERVER_HOST}/json/popularlist.json`)
@@ -95,57 +108,75 @@ router.use('/poplist', function(req, res, next) {
                 // res.status(500).end('Internal Error 500')
                 console.error(`error during fetch data from poplist : ${req.url}`)
                 console.error(err) 
-                process.exit(1)   
+                isErrorOccurred = true  
             }
         })
+    res.on('finish', function () {
+      if (isErrorOccurred) {
+        process.exit(1);
+      }
+    })
 });
 
 router.use('/questionnaire', function(req, res, next) {
-    const query = req.query
-    if (!('file' in query) || query.file === '') {
-        res.send('empty file')
-    } else {
-        superagent
-            .get(`${SERVER_PROTOCOL}://${SERVER_HOST}/questionnaire/${query.file}`)
-            .end((err, response) => {
-                if (!err && response) {
-                    res.json(JSON.parse(response.text))
-                } else {
-                    res.send('{\'error\':' + err + '}')
-                    // res.status(500).end('Internal Error 500')
-                    console.error(`error during fetch data from questionnaire : ${req.url}`)
-                    console.error(err)   
-                    process.exit(1) 
-                }
-            })
+  let isErrorOccurred = false
+  const query = req.query
+  if (!('file' in query) || query.file === '') {
+      res.send('empty file')
+  } else {
+      superagent
+          .get(`${SERVER_PROTOCOL}://${SERVER_HOST}/questionnaire/${query.file}`)
+          .end((err, response) => {
+              if (!err && response) {
+                  res.json(JSON.parse(response.text))
+              } else {
+                  res.send('{\'error\':' + err + '}')
+                  // res.status(500).end('Internal Error 500')
+                  console.error(`error during fetch data from questionnaire : ${req.url}`)
+                  console.error(err)   
+                  isErrorOccurred = true
+              }
+          })
+  }
+  res.on('finish', function () {
+    if (isErrorOccurred) {
+      process.exit(1);
     }
+  })
 });
 
 router.use('/search', function(req, res, next) {
-    let query = req.query
-    let url = `${SEARCH_PROTOCOL}://${SEARCH_HOST}${SEARCH_ENDPOINT}`
-    superagent
-        .get(url)
-        .timeout(SEARCH_API_TIMEOUT)
-        .set('X-Algolia-API-Key', SEARCH_API_KEY)
-        .set('X-Algolia-Application-Id', SEARCH_API_APPID)
-        .query(query)
-        .end(function(err, response) {
-            if (err) {
-                res.send(err)
-                // res.status(500).end('Internal Error 500')
-                console.error(`error during fetch data from search : ${req.url}`)
-                console.error(err)    
-                process.exit(1)
-            } else {
-                res.json(response.body)
-            }
-        })
+  let isErrorOccurred = false
+  let query = req.query
+  let url = `${SEARCH_PROTOCOL}://${SEARCH_HOST}${SEARCH_ENDPOINT}`
+  superagent
+      .get(url)
+      .timeout(SEARCH_API_TIMEOUT)
+      .set('X-Algolia-API-Key', SEARCH_API_KEY)
+      .set('X-Algolia-Application-Id', SEARCH_API_APPID)
+      .query(query)
+      .end(function(err, response) {
+          if (err) {
+              res.send(err)
+              // res.status(500).end('Internal Error 500')
+              console.error(`error during fetch data from search : ${req.url}`)
+              console.error(err)    
+              isErrorOccurred = true
+          } else {
+              res.json(response.body)
+          }
+      })
+  res.on('finish', function () {
+    if (isErrorOccurred) {
+      process.exit(1);
+    }
+  })
 });
 
 router.use('/twitter', function(req, res, next) {
   const query = req.query
   let client = new Twitter(TWITTER_API)
+  let isErrorOccurred = false
   if (!('screen_name' in query) || query.screen_name === '') {
       res.send('empty screen_name')
   } else {
@@ -155,12 +186,17 @@ router.use('/twitter', function(req, res, next) {
               // res.status(500).end('Internal Error 500')
               console.error(`error during fetch data from twitter : ${req.url}`)
               console.error(err) 
-              process.exit(1)               
+              isErrorOccurred = true             
           } else {
               res.json(data)
           }
       })
   }
+  res.on('finish', function () {
+    if (isErrorOccurred) {
+      process.exit(1);
+    }
+  })
 });
 
 router.use('/tracking', function(req, res, next) {
@@ -183,6 +219,7 @@ router.use('/tracking', function(req, res, next) {
 })
 
 router.get('*', (req, res) => {
+    let isErrorOccurred = false;
     res.header('Cache-Control', 'public, max-age=300');
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "X-Requested-With")
@@ -247,19 +284,22 @@ router.get('*', (req, res) => {
                             res.send(err)
                             console.error(`error during fetch data : ${req.url}`)
                             console.error(err)  
-                            process.exit(1)
+                            isErrorOccurred = true
                         }
                     })
             }
         } catch (e) {
             res.send(e)
-            // res.status(500).end('Internal Error 500')
             console.error(`error during fetch data from api : ${req.url}`)
             console.error(e)
-            process.exit(1)
+            isErrorOccurred = true
         }
     });
-
+    res.on('finish', function () {
+      if (isErrorOccurred) {
+        process.exit(1);
+      }
+    })
     
 })
 

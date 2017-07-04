@@ -186,6 +186,9 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
+    if (!this.topic && process.env.VUE_ENV === 'server') {
+      return this.pageNotFoundHandler()
+    }
     const {
       heroImage = {},
       ogDescription = '',
@@ -200,10 +203,7 @@ export default {
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
 
     if (!metaTitle && process.env.VUE_ENV === 'server') {
-      const e = new Error()
-      e.massage = 'Page Not Found'
-      e.code = '404'
-      throw e
+      return this.pageNotFoundHandler()
     }
 
     return {
@@ -412,6 +412,12 @@ export default {
       .then(() => {
         this.loading = false
       })
+    },
+    pageNotFoundHandler () {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
     },
     updateCustomizedMarkup () {
       const custCss = document.querySelector('#custCSS')

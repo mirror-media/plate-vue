@@ -90,6 +90,8 @@ function render (req, res, next) {
     return
   }
   const s = Date.now()
+  let isPageNotFound = false
+  let isErrorOccurred = false  
 
   res.setHeader('Cache-Control', 'public, max-age=3600')
   res.setHeader("Content-Type", "text/html")
@@ -97,7 +99,7 @@ function render (req, res, next) {
 
   const handleError = err => {
     if (err && err.code == 404) {
-      ifPageNotFound = true
+      isPagsNotFound = true
       res.status(404).render('404')
       console.log('##########REQUEST URL(404)############')
       console.log('REQUEST URL:', req.url)
@@ -109,7 +111,7 @@ function render (req, res, next) {
       res.status(500).render('500')
       console.error(`error during renderToString() error : ${req.url}`)
       console.error(err)
-      ifErrorOccured = true   
+      isErrorOccurred = true   
       return 
     } 
   }
@@ -131,10 +133,8 @@ function render (req, res, next) {
     url: req.url
   }
 
-  let ifPageNotFound = false
-  let ifErrorOccured = false
   res.on('finish', function () {
-    if (ifPageNotFound || ifErrorOccured) {
+    if (isPageNotFound || isErrorOccurred) {
       process.exit(1)
     }
   })
