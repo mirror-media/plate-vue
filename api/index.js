@@ -62,11 +62,6 @@ router.use('/grouped', function(req, res, next) {
                 isErrorOccurred = true
             }
         })
-    res.on('finish', function () {
-      if (isErrorOccurred) {
-        process.exit(1);
-      }
-    })
 });
 
 router.use('/playlist', function(req, res, next) {
@@ -88,11 +83,7 @@ router.use('/playlist', function(req, res, next) {
                 res.json(response.body)
             }
         })
-    res.on('finish', function () {
-      if (isErrorOccurred) {
-        process.exit(1);
-      }
-    })
+
 });
 
 router.use('/poplist', function(req, res, next) {
@@ -111,11 +102,7 @@ router.use('/poplist', function(req, res, next) {
                 isErrorOccurred = true  
             }
         })
-    res.on('finish', function () {
-      if (isErrorOccurred) {
-        process.exit(1);
-      }
-    })
+
 });
 
 router.use('/questionnaire', function(req, res, next) {
@@ -138,11 +125,7 @@ router.use('/questionnaire', function(req, res, next) {
               }
           })
   }
-  res.on('finish', function () {
-    if (isErrorOccurred) {
-      process.exit(1);
-    }
-  })
+
 });
 
 router.use('/search', function(req, res, next) {
@@ -166,11 +149,7 @@ router.use('/search', function(req, res, next) {
               res.json(response.body)
           }
       })
-  res.on('finish', function () {
-    if (isErrorOccurred) {
-      process.exit(1);
-    }
-  })
+
 });
 
 router.use('/twitter', function(req, res, next) {
@@ -192,11 +171,7 @@ router.use('/twitter', function(req, res, next) {
           }
       })
   }
-  res.on('finish', function () {
-    if (isErrorOccurred) {
-      process.exit(1);
-    }
-  })
+
 });
 
 router.use('/tracking', function(req, res, next) {
@@ -295,11 +270,7 @@ router.get('*', (req, res) => {
             isErrorOccurred = true
         }
     });
-    res.on('finish', function () {
-      if (isErrorOccurred) {
-        process.exit(1);
-      }
-    })
+
     
 })
 
