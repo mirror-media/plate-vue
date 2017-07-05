@@ -99,7 +99,7 @@ function render (req, res, next) {
 
   const handleError = err => {
     if (err && err.code == 404) {
-      isPagsNotFound = true
+      isPageNotFound = true
       res.status(404).render('404')
       console.log('##########REQUEST URL(404)############')
       console.log('REQUEST URL:', req.url)
