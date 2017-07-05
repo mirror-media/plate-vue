@@ -29,7 +29,7 @@
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
         <div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCFT" :config="props.config" /></div>
-        <div v-if="isMobile"><vue-dfp :is="props.vueDfp" pos="SMBFT" :config="props.config" /></div>
+        <div v-if="isMobile" :style="{ width: '100%' }"><vue-dfp :is="props.vueDfp" pos="SMBFT" :config="props.config" /></div>
         <footer-full :commonData='commonData' :sectionName='sectionName' />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
