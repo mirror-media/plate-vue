@@ -206,6 +206,11 @@ button:focus {
       background-position center center
       cursor pointer
 
+@media (min-width 0px) and (max-width 320px)
+  .dfp-cover
+    > .ad
+      > .close
+        right 0
 @media (min-width 600px)
   .container
     width 90%
