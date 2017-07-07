@@ -519,6 +519,31 @@
           document.querySelector('head').appendChild(breadcrumbScript)
         }
       },
+      insertMatchedContentScript () {
+        const matchedContentStart = document.createElement('script')
+        const matchedContentContent = document.createElement('ins')
+        const matchedContentEnd = document.createElement('script')
+        matchedContentStart.setAttribute('id', 'matchedContentStart')
+        matchedContentStart.setAttribute('async', 'true')
+        matchedContentStart.setAttribute('src', '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js')
+        matchedContentContent.setAttribute('id', 'matchedContentContent')
+        matchedContentContent.setAttribute('class', 'adsbygoogle')
+        matchedContentContent.setAttribute('style', 'display:block')
+        matchedContentContent.setAttribute('data-ad-format', 'autorelaxed')
+        matchedContentContent.setAttribute('data-ad-client', 'ca-pub-7986335951683342')
+        matchedContentContent.setAttribute('data-ad-slot', '3362911316')
+        matchedContentEnd.setAttribute('id', 'matchedContentEnd')
+        matchedContentEnd.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`
+        if (!document.querySelector('#matchedContentStart')) {
+          document.querySelector('#matchedContentContainer').appendChild(matchedContentStart)
+        }
+        if (!document.querySelector('#matchedContentContent')) {
+          document.querySelector('#matchedContentContainer').appendChild(matchedContentContent)
+        }
+        if (!document.querySelector('#matchedContentEnd')) {
+          document.querySelector('#matchedContentContainer').appendChild(matchedContentEnd)
+        }
+      },
       insertMediafarmersScript () {
         const mediafarmersScript = document.createElement('script')
         mediafarmersScript.setAttribute('id', 'mediafarmersJS')
@@ -557,6 +582,17 @@
         }
         this.insertJSONLDScript()
       },
+      updateMatchedContentScript () {
+        const matchedContentStart = document.querySelector('#matchedContentStart')
+        const matchedContentContent = document.querySelector('#matchedContentContent')
+        const matchedContentEnd = document.querySelector('#matchedContentEnd')
+        if (matchedContentStart) {
+          document.querySelector('#matchedContentContainer').removeChild(matchedContentStart)
+          document.querySelector('#matchedContentContainer').removeChild(matchedContentContent)
+          document.querySelector('#matchedContentContainer').removeChild(matchedContentEnd)
+        }
+        this.insertMatchedContentScript()
+      },
       updateMediafarmersScript () {
         const mediafarmersScript = document.querySelector('#mediafarmersJS')
         document.querySelector('body').removeChild(mediafarmersScript)
@@ -574,6 +610,7 @@
     },
     mounted () {
       this.initializeFBComments()
+      this.insertMatchedContentScript()
       this.insertMediafarmersScript()
       this.updateViewport()
       this.clientSideFlag = process.env.VUE_ENV === 'client'
@@ -596,6 +633,7 @@
         })
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
+        this.updateMatchedContentScript()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
 
