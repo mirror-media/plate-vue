@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import bigInt from 'big-integer'
+import { setMmCookie } from './comm'
 
 const DEFAULT_DISTRIBUTION = [
   { id: 'A', weight: 80 },
@@ -19,10 +20,23 @@ export function getRole ({ mmid, distribution = DEFAULT_DISTRIBUTION }) {
   }
 
   const digit = sequence[len - 1].toString().length
-  const convertedMmid = bigInt(mmid.replace(/\-/g, ''), 128).toString()
+  const convertedMmid = getBigInt(mmid)
   const remainder = parseInt(convertedMmid.substr(convertedMmid.length - digit)) % sequence[len - 1]
   const roleInTest = _.get(_.filter(distribution, (o, i) => {
     return remainder < sequence[i]
   }), 0)
   return roleInTest.id
+}
+
+function getBigInt (mmid) {
+  let bigint = '636914313755496407800992414871339676625415737314532832327657211780'
+  try {
+    bigint = bigInt(mmid.replace(/\-/g, ''), 128).toString()
+  } catch (e) {
+    if (e.message.indexOf('. is not a valid character') > -1) {
+      const uuid = setMmCookie()
+      bigint = bigInt(uuid.replace(/\-/g, ''), 128).toString()
+    }
+  }
+  return bigint
 }
