@@ -79,6 +79,7 @@
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
+  import { getRole } from '../util/mmABRoleAssign'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
@@ -482,6 +483,14 @@
         }
         return mmab
       },
+      getMmid () {
+        const mmid = Cookie.get('mmid')
+        const role = getRole({ mmid, distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 } ]
+        })
+        return role
+      },
       getTruncatedVal,
       getValue (o = {}, p = [], d = '') {
         return _.get(o, p, d)
@@ -553,12 +562,14 @@
         }
       },
       sendGA (articleData) {
+        const abIndicator = this.getMmid()
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
         } else {
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
+          window.ga('set', 'contentGroup3', `article${abIndicator}`)
         }
         window.ga('send', 'pageview', this.$route.path, { title: `${truncate(_.get(articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}` })
       },
