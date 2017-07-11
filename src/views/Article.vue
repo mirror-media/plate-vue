@@ -291,7 +291,7 @@
         dfpid: DFP_ID,
         dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
-        hasSentGA: false,
+        hasSentFirstEnterGA: false,
         state: {},
         showDfpCoverAdFlag: false,
         showDfpFixedBtn: false,
@@ -639,7 +639,7 @@
       this.updateSysStage()
       if (!_.isEmpty(this.articleData)) {
         this.sendGA(this.articleData)
-        this.hasSentGA = true
+        this.hasSentFirstEnterGA = true
       }
     },
     updated () {
@@ -656,14 +656,15 @@
         this.checkIfLockJS()
         this.updateMatchedContentScript()
         this.updateMediafarmersScript()
-        this.hasSentGA = false
+        this.sendGA(this.articleData)
         // call getMmab to send related ab test ga
         // and will remove it after ab test got finished
         // this.getMmab()
       },
       articleData: function () {
-        if (!this.hasSentGA) {
+        if (!this.hasSentFirstEnterGA) {
           this.sendGA(this.articleData)
+          this.hasSentFirstEnterGA = true
         }
         this.updateJSONLDScript()
       }
