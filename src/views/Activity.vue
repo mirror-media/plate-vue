@@ -133,7 +133,10 @@ export default {
       this.updateViewport()
     })
     this.loadind = false
-    window.ga('send', 'pageview', `/activity/${this.$route.params.activityId}`, { title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}` })
+    window.ga('set', 'contentGroup1', '')
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    window.ga('send', 'pageview', { title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`, location: `/activity/${this.$route.params.activityId}` })
   },
   metaSet () {
     const url = `${SITE_URL}/activity/${this.$route.params.activityId}`
@@ -144,6 +147,7 @@ export default {
     return {
       title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`,
       meta: `
+        <meta name="mm-opt" content="">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${description}">
         <meta name="twitter:card" content="summary_large_image">

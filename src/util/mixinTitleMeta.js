@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 function getMetaSet (vm) {
   const { metaSet } = vm.$options
   if (metaSet) {
@@ -36,10 +38,16 @@ const clientTitleMetaMixin = {
   updated () {
     const metaSet = getMetaSet(this)
     if (!metaSet) { return }
-    // const meta = metaSet.meta
+    const meta = metaSet.meta
     const title = metaSet.title
     if (title) {
+      const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')
       document.querySelector('title').innerHTML = title
+      _.forEach(dynamicMeta, function (node) {
+        document.head.removeChild(node)
+      })
+      const newMeta = document.head.innerHTML + meta
+      document.head.innerHTML = newMeta
     }
   }
 }

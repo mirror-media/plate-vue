@@ -360,6 +360,7 @@ export default {
     return {
       title: title,
       meta: `
+        <meta name="mm-opt" content="">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${ogDescription}">
         <meta name="section-name" content="${sectionName}">
@@ -763,7 +764,7 @@ export default {
         } else {
           window.ga('set', 'contentGroup1', this.sectionName)
         }
-        window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+        window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: this.$route.path })
       }
     }
   },
@@ -812,10 +813,14 @@ export default {
     this.updateSysStage()
     if (this.sectionName === 'other') {
       window.ga('set', 'contentGroup1', '')
+      window.ga('set', 'contentGroup2', '')
+      window.ga('set', 'contentGroup3', '')
     } else {
       window.ga('set', 'contentGroup1', this.sectionName)
+      window.ga('set', 'contentGroup2', '')
+      window.ga('set', 'contentGroup3', '')
     }
-    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+    window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: this.$route.path })
   },
   updated () {
     this.updateSysStage()
