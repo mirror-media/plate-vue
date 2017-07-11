@@ -16,7 +16,7 @@ import Activity from '../views/Activity.vue'
 import Article from '../views/Article.vue'
 import ArticleM from '../views/ArticleM.vue'
 import Home from '../views/Home.vue'
-import HomeB from '../views/HomeB.vue'
+// import HomeB from '../views/HomeB.vue'
 import List from '../views/List.vue'
 import Project from '../views/Project.vue'
 import Questionnaire from '../views/Questionnaire.vue'
@@ -46,7 +46,7 @@ export function createRouter () {
       },
       { path: '/app/:slug', component: ArticleM },
       { path: '/project-list/:style?', component: Project },
-      { path: '/homeb', component: HomeB },
+      // { path: '/homeb', component: HomeB },
       { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
       { path: '/search/:keyword', component: Search },
       { path: '/section/:title', component: List },

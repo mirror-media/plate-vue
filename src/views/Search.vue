@@ -91,6 +91,7 @@ export default {
     return {
       title: title,
       meta: `
+        <meta name="mm-opt" content="">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
         <meta name="twitter:card" content="summary_large_image">
@@ -203,7 +204,9 @@ export default {
     this.updateSysStage()
 
     window.ga('set', 'contentGroup1', '')
-    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: this.$route.path })
   },
   updated () {
     this.updateSysStage()
@@ -211,8 +214,7 @@ export default {
   watch: {
     title: function () {
       if (process.env.VUE_ENV === 'client') {
-        window.ga('set', 'contentGroup1', '')
-        window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+        window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: this.$route.path })
       }
     }
   }

@@ -209,6 +209,7 @@ export default {
     return {
       title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
+        <meta name="mm-opt" content="">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${metaDescription}">
         <meta name="twitter:card" content="summary_large_image">
@@ -518,7 +519,9 @@ export default {
     this.updateSysStage()
 
     window.ga('set', 'contentGroup1', '')
-    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: this.$route.path })
 
     if (this.topicType === 'timeline') {
       window.addEventListener('scroll', (e) => {
@@ -546,8 +549,7 @@ export default {
     uuid: function () {
       this.$forceUpdate()
       if (process.env.VUE_ENV === 'client') {
-        window.ga('set', 'contentGroup1', '')
-        window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+        window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: this.$route.path })
       }
     },
     customCSS: function () {

@@ -182,10 +182,15 @@
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
+      let abIndicator
+      if (process.env.VUE_ENV === 'client') {
+        abIndicator = this.getMmid()
+      }
 
       return {
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
+          <meta name="mm-opt" content="article${abIndicator}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
           <meta name="section-name" content="${sectionName}">
@@ -286,6 +291,7 @@
         dfpid: DFP_ID,
         dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
+        hasSentGA: false,
         state: {},
         showDfpCoverAdFlag: false,
         showDfpFixedBtn: false,
@@ -566,12 +572,13 @@
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
+          window.ga('set', 'contentGroup3', '')
         } else {
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
           window.ga('set', 'contentGroup3', `article${abIndicator}`)
         }
-        window.ga('send', 'pageview', this.$route.path, { title: `${truncate(_.get(articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}` })
+        window.ga('send', 'pageview', { title: `${truncate(_.get(articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}`, location: this.$route.path })
       },
       updateCookie () {
         const cookie = Cookie.get('visited')
@@ -630,7 +637,10 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      this.sendGA(this.articleData)
+      if (!_.isEmpty(this.articleData)) {
+        this.sendGA(this.articleData)
+        this.hasSentGA = true
+      }
     },
     updated () {
       this.updateSysStage()
@@ -646,13 +656,15 @@
         this.checkIfLockJS()
         this.updateMatchedContentScript()
         this.updateMediafarmersScript()
-        this.sendGA(this.articleData)
-
+        this.hasSentGA = false
         // call getMmab to send related ab test ga
         // and will remove it after ab test got finished
         // this.getMmab()
       },
       articleData: function () {
+        if (!this.hasSentGA) {
+          this.sendGA(this.articleData)
+        }
         this.updateJSONLDScript()
       }
     }
