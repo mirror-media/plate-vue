@@ -166,6 +166,7 @@
         brief = {},
         categories = {},
         heroImage = {},
+        isAdult = false,
         ogDescription = '',
         ogImage = {},
         ogTitle = '',
@@ -177,6 +178,7 @@
       } = this.articleData
       const categorieName = _.get(categories, [ 0, 'name' ], '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
+      const robotsValue = isAdult ? 'noindex' : 'index'
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
@@ -191,6 +193,7 @@
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
           <meta name="mm-opt" content="article${abIndicator}">
+          <meta name="robots" content="${robotsValue}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
           <meta name="section-name" content="${sectionName}">

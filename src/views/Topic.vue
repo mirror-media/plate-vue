@@ -210,6 +210,7 @@ export default {
       title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
         <meta name="mm-opt" content="">
+        <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${metaDescription}">
         <meta name="twitter:card" content="summary_large_image">
