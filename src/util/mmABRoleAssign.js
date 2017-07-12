@@ -29,14 +29,12 @@ export function getRole ({ mmid, distribution = DEFAULT_DISTRIBUTION }) {
 }
 
 function getBigInt (mmid) {
-  let bigint = '636914313755496407800992414871339676625415737314532832327657211780'
+  let bigint
   try {
     bigint = bigInt(mmid.replace(/\-/g, ''), 128).toString()
   } catch (e) {
-    if (e.message.indexOf('. is not a valid character') > -1) {
-      const uuid = setMmCookie()
-      bigint = bigInt(uuid.replace(/\-/g, ''), 128).toString()
-    }
+    const uuid = setMmCookie()
+    bigint = bigInt(uuid.replace(/\-/g, ''), 128).toString()
   }
   return bigint
 }
