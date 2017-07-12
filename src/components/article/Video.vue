@@ -1,7 +1,7 @@
 <template>
   <div class="video-container" @mouseover="mouseoverHandler" @click="videoPlay" >
     <video width="100%" height="100%" controls controlsList="nodownload" preload="metadata" playsinline :ref="videoId" :id="videoId"
-          poster="/public/transperent.png" :style="{ backgroundImage: `url(${getValue(video, ['poster'], '/public/notImage.png')})` }">
+          :poster="poster" :style="{ backgroundImage: `url(${getValue(video, ['poster'], '/public/notImage.png')})` }">
             <source :src="getValue(video, [ 'url' ])" :type="getValue(video, [ 'filetype' ])">
             Your browser does not support the video tag.
     </video>
@@ -19,6 +19,10 @@
         return this.playingFlag ? {
           opacity: this.opacity
         } : {}
+      },
+      poster () {
+        const poster = _.get(this.video, [ 'poster' ])
+        return !poster ? poster : '/public/transperent.png'
       },
       videoClass () {
         return {
