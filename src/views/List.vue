@@ -361,6 +361,7 @@ export default {
       title: title,
       meta: `
         <meta name="mm-opt" content="">
+        <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${ogDescription}">
         <meta name="section-name" content="${sectionName}">

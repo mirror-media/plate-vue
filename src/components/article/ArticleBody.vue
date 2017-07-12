@@ -68,7 +68,7 @@
       <div v-show="abIndicator">
         <h3>推薦文章</h3>
       </div>
-      <div id="matchedContentContainer" class="matchedContentContainer" @click="sendGAEvent" v-show="abIndicator">
+      <div id="matchedContentContainer" class="matchedContentContainer" v-show="abIndicator">
       </div>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
@@ -288,9 +288,6 @@ export default {
         default:
           return
       }
-    },
-    sendGAEvent () {
-      window.ga('send', 'event', 'article', 'click', 'matchedContent')
     },
     setUpLightbox () {
       if (!document.querySelector('.lightbox')) {
