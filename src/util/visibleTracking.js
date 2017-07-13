@@ -20,7 +20,6 @@ function visitTargets () {
       isVisible(o.target, { top: currTopY, bottom: currTopY + (winHeight / 2) }).then((isSeen) => {
         TRACKING_TARGET[i].seenFlag = isSeen
         if (isSeen) {
-          console.log('send ga', TRACKING_TARGET[i].desc)
           window.ga && window.ga('send', 'event', 'article', 'visible', TRACKING_TARGET[i].desc, {
             nonInteraction: false
           })
