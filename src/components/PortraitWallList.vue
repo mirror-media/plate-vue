@@ -2,12 +2,12 @@
   <section class="portraitWallList">
     <div class="portraitWallList__imageGroup" :class="[ index%2 === 0 ? 'color' : '' ]" v-for="(item, index) in images">
       <div class="portraitWallList__block" :class="[ getOrder(image) %2 === 0 ? '' : 'color' ]" v-for="(image, index) in item">
-        <a class="portraitWallList__block--image" :style="{ backgroundImage: `url(${getImage(image)})` }">
-          <p />
-        </a>
+        <router-link :to="getHref(image)" class="portraitWallList__block--image" :style="{ backgroundImage: `url(${getImage(image)})` }">
+          <p></p>
+        </router-link>
         <div class="portraitWallList__block--content">
-          <h2><a v-text="getValue(image, [ 'description' ])" /></h2>
-          <p><a /></p>
+          <h2><router-link :to="getHref(image)" v-text="getValue(image, [ 'description' ])"></router-link></h2>
+          <p><a></a></p>
         </div>
       </div>
     </div>
@@ -34,6 +34,9 @@ export default {
     getOrder (item) {
       return _.split(_.get(item, [ 'keywords' ]), '-')[0]
     },
+    getHref (item) {
+      return `/story/${_.split(_.get(item, [ 'keywords' ]), '-')[1]}`
+    },
     getValue
   }
 }
@@ -46,9 +49,23 @@ export default {
     display flex
     justify-content space-between
     width 100%
-    padding 5% 5%
+    padding 5% 7%
+    .portraitWallList__block--image
+      order 2
+    .portraitWallList__block--content
+      order 1
+      h2
+        a
+          color #d6642e
     &.color
-      background-color orange
+      background-color #d6642e
+      .portraitWallList__block--image
+        order 1
+      .portraitWallList__block--content
+        order 2
+        h2
+          a
+            color #fff
     &--image
       display block
       width calc(50% - 5px)
@@ -83,6 +100,10 @@ export default {
       display flex
       justify-content space-between
       padding 1em 15%
+      .portraitWallList__block--image
+        order 1
+      .portraitWallList__block--content
+        order 1
       &.color
         background-color orange
         h2
@@ -104,6 +125,7 @@ export default {
         justify-content center
         align-items center
         width 100%
+        padding .5em 0
         h2
           margin 0
         p

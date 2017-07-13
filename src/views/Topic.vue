@@ -1,62 +1,70 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
-      <div :class="{ 'topic-view': !isTimeline }">
+      <div :class="[ { 'topic-view': !isTimeline }, topicType ]">
 
         <template v-if="pageStyle === 'wide'">
           <section>
-            <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+            <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections'></header-full>
           </section>
-          <leading-watch :topic='topic' :type='`TOPIC`'/>
-          <article-list-full :articles='articles.items' />
-          <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
-          <loading :show="loading" />
-          <footer-full :commonData='commonData' :sectionName='sectionName' />
-          <share :right="`20px`" :bottom="`20px`" />
+          <leading-watch :topic='topic' :type='`TOPIC`'></leading-watch>
+          <article-list-full :articles='articles.items'></article-list-full>
+          <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore"></more-full>
+          <loading :show="loading"></loading>
+          <footer-full :commonData='commonData' :sectionName='sectionName'></footer-full>
+          <share :right="`20px`" :bottom="`20px`"></share>
         </template>
 
         <template v-else-if="topicType === 'timeline'">
           <a href="/" class="topicTimeline__logo">
-            <img src="/public/icon/logo_black@3x.png" :alt="siteTitle" />
+            <img src="/public/icon/logo_black@3x.png" :alt="siteTitle">
           </a>
-          <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
-          <timeline-headline :initialTimeline="timeline" />
-          <timeline-body :initialTimeline="timeline" :initialHighlightNodes="highlightNodes" :viewport="viewport" />
+          <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`"></share>
+          <timeline-headline :initialTimeline="timeline"></timeline-headline>
+          <timeline-body :initialTimeline="timeline" :initialHighlightNodes="highlightNodes" :viewport="viewport"></timeline-body>
           <div class="topicTimeline__projects">
             <h1>更多專題文章</h1>
-            <ProjectList :projects="projects" :viewport="viewport" />
+            <ProjectList :projects="projects" :viewport="viewport"></ProjectList>
           </div>
           <div class="topicTimeline__fbComment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"></app-header>
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData" />
+            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
-          <portraitWall-list :initialMediaData="mediaData" />
+          <portraitWall-list :initialMediaData="mediaData"></portraitWall-list>
+          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
+            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
+          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
+          <section class="footer container">
+            <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
+          </section>
+          <share :right="`20px`" :bottom="`20px`"></share>
         </template>
 
         <template v-else>
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"></app-header>
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"/>
+            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
-          <article-list :articles='articles.items' :hasDFP='false' />
+          <article-list :articles='articles.items' :hasDFP='false'></article-list>
           <section class="container">
-            <more v-if="hasMore" v-on:loadMore="loadMore" />
+            <more v-if="hasMore" v-on:loadMore="loadMore"></more>
           </section>
-          <loading :show="loading" />
+          <loading :show="loading"></loading>
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"/></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"/></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
           <section class="footer container">
-            <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
+            <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
           </section>
-          <share :right="`20px`" :bottom="`20px`" />
+          <share :right="`20px`" :bottom="`20px`"></share>
         </template>
 
       </div>
@@ -599,6 +607,10 @@ export default {
     background-repeat no-repeat
     h1
       margin 0
+
+.topic-view.portraitWall
+  .topic
+    margin 0
 
 .topicTimeline
   &__logo
