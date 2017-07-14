@@ -24,8 +24,9 @@
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :config="props.config"></vue-dfp>
+              <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
               <!--related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderRelatedAside" :abIndicator="abIndicator" /-->
+              <article-aside-fixed></article-aside-fixed>
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
@@ -81,6 +82,7 @@
   import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
+  import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import ArticleVideo from '../components/article/Video.vue'
@@ -273,6 +275,7 @@
     },
     components: {
       'adult-content-alert': AdultContentAlert,
+      'article-aside-fixed': ArticleAsideFixed,
       'article-body': ArticleBody,
       'article-body-photography': ArticleBodyPhotography,
       'app-footer': Footer,

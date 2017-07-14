@@ -54,18 +54,16 @@ export default {
       order 2
     .portraitWallList__block--content
       order 1
-      h2
-        a
-          color #d6642e
+      a
+        color #d6642e
     &.color
       background-color #d6642e
       .portraitWallList__block--image
         order 1
       .portraitWallList__block--content
         order 2
-        h2
-          a
-            color #fff
+        a
+          color #fff
     &--image
       display block
       width calc(50% - 5px)
@@ -82,7 +80,7 @@ export default {
       width calc(50% - 5px)
       h2
         margin 0 0 .5em
-        font-size 1.5rem
+        font-size 1.2rem
 
 @media (min-width: 600px)
   .portraitWallList
@@ -98,21 +96,25 @@ export default {
   .portraitWallList
     &__imageGroup
       display flex
-      justify-content space-between
-      padding 1em 15%
+      justify-content flex-start
+      padding 1em calc(15% + 25px)
       .portraitWallList__block--image
         order 1
       .portraitWallList__block--content
         order 1
+      a
+        color #d6642e !important
       &.color
         background-color orange
-        h2
-          a
-            color #fff
+        a
+          color #fff !important
     &__block
       flex-direction column
       width 18%
       padding 0
+      margin 0 5px
+      // padding-left 1%
+      // padding-right 1%
       &.color
         background-color transparent
       &--image
