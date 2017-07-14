@@ -58,6 +58,13 @@
         <div class="tags" v-html="tags"></div>
       </div>
       <div class="split-line"></div>
+      <div class="fbPagePlugin">
+        <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="false">
+          <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
+            <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
+          </blockquote>
+        </div>
+      </div>
       <div class="herbsapi">
         <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
         <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
@@ -925,6 +932,11 @@ export default {
       .swiper-pagination
         .swiper-pagination-bullet.swiper-pagination-bullet-active
           background-color rgba(179, 179, 179, 0.61)
+  .fbPagePlugin
+    display none
+    margin-top 15px
+    .fb-page
+      width 100%
   .herbsapi
     display flex
     align-items center
@@ -1089,6 +1101,8 @@ export default {
     .article_body
       .article_main, .article_credit, .article_subtitle
         display block
+    .fbPagePlugin
+      display block
     .herbsapi
       br
         display inline
