@@ -94,7 +94,7 @@ export default {
       }
     },
     runMicroAd () {
-      if (process.env.VUE_ENV === 'client') {
+      if (process.env.VUE_ENV === 'client' && this.currEnv === 'dev') {
         const _lgy_lw = document.createElement('script')
         _lgy_lw.type = 'text/javascript'
         _lgy_lw.charset = 'UTF-8'
