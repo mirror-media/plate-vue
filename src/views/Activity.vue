@@ -136,7 +136,7 @@ export default {
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
     window.ga('set', 'contentGroup3', '')
-    window.ga('send', 'pageview', `/activity/${this.$route.params.activityId}`, { title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}` })
+    window.ga('send', 'pageview', { title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`, location: `${SITE_URL}/activity/${this.$route.params.activityId}` })
   },
   metaSet () {
     const url = `${SITE_URL}/activity/${this.$route.params.activityId}`

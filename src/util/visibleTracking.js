@@ -21,6 +21,7 @@ function visitTargets () {
         TRACKING_TARGET[i].seenFlag = isSeen
         if (isSeen) {
           window.ga && window.ga('send', 'event', 'article', 'visible', TRACKING_TARGET[i].desc, {
+            location: document.location.href,
             nonInteraction: false
           })
         }

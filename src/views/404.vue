@@ -92,7 +92,7 @@ export default {
       this.updateViewport()
     })
 
-    window.ga('send', 'pageview', this.$route.path, { title: '404 - Page Not Found' })
+    window.ga('send', 'pageview', { title: '404 - Page Not Found', location: document.location.href })
   },
   metaInfo () {
     const title = SITE_TITLE
