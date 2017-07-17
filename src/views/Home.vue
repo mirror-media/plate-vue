@@ -293,7 +293,7 @@ export default {
       this.dfpMode = currEnv()
     },
     loadMore () {
-      window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page)
+      window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
       this.page += 1
       this.loading = true
 
