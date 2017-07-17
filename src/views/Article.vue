@@ -584,7 +584,7 @@
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
           window.ga('set', 'contentGroup3', `article${abIndicator}`)
         }
-        window.ga('send', 'pageview', this.$route.path, { title: `${truncate(_.get(articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}` })
+        window.ga('send', 'pageview', { title: `${truncate(_.get(articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       updateCookie () {
         const cookie = Cookie.get('visited')

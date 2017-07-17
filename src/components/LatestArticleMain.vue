@@ -94,7 +94,6 @@ export default {
       }
     },
     runMicroAd () {
-      console.log('here')
       if (process.env.VUE_ENV === 'client') {
         const _lgy_lw = document.createElement('script')
         _lgy_lw.type = 'text/javascript'
