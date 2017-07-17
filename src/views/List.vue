@@ -765,7 +765,7 @@ export default {
         } else {
           window.ga('set', 'contentGroup1', this.sectionName)
         }
-        window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: this.$route.path })
+        window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
       }
     }
   },
@@ -821,7 +821,7 @@ export default {
       window.ga('set', 'contentGroup2', '')
       window.ga('set', 'contentGroup3', '')
     }
-    window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: this.$route.path })
+    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
   },
   updated () {
     this.updateSysStage()

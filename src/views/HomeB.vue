@@ -334,7 +334,7 @@ export default {
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
     window.ga('set', 'contentGroup3', '')
-    window.ga('send', 'pageview', { title: SITE_TITLE, location: this.$route.path })
+    window.ga('send', 'pageview', this.$route.path, { title: SITE_TITLE })
   },
   updated () {
     this.initHasScrollLoadMore()
