@@ -3,7 +3,7 @@
     <div class="latest-main-container_title desktop-only"><h3>最新文章</h3></div>
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
-        <div id="compass-fit-4273899" class="latest-list_item nativeDFP margin-top-0" v-if="index === 0 && currEnv === 'dev'"></div>
+        <div id="compass-fit-4273899" class="latest-list_item nativeDFP margin-top-0" v-if="index === 0 && currEnv === 'dev' && runMicroAd()"></div>
         <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
           <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`"  v-if="o.style !== 'projects' && o.style !== 'campaign'" :target="target">
             <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
@@ -39,9 +39,6 @@ import sanitizeHtml from 'sanitize-html'
 export default {
   name: 'latest-list-main',
   computed: {
-    currEnv () {
-      return currEnv()
-    },
     latestListBeforeDFPNA3 () {
       return _.take(this.latestList, 2)
     },
@@ -61,7 +58,11 @@ export default {
       return [ 'dfpNA3', 'dfpNA5', 'dfpNA9' ]
     }
   },
-  data () { return { } },
+  data () {
+    return {
+      currEnv: 'prod'
+    }
+  },
   methods: {
     getHref,
     getTruncatedVal,
@@ -100,14 +101,18 @@ export default {
         _lgy_lw.charset = 'UTF-8'
         _lgy_lw.async = true
         _lgy_lw.src = ((document.location.protocol === 'https:') ? 'https://' : 'http://') + 'nt.compass-fit.jp/lift_widget.js?adspot_id=4273899'
-        var _lgy_lw_0 = document.getElementsByTagName('script')[0]
+        const _lgy_lw_0 = document.getElementsByTagName('script')[0]
         _lgy_lw_0.parentNode.insertBefore(_lgy_lw, _lgy_lw_0)
+        return true
       }
+    },
+    updateSysStage () {
+      this.currEnv = currEnv()
     },
     sanitizeHtml
   },
   mounted () {
-    this.runMicroAd()
+    this.updateSysStage()
   },
   props: {
     latestList: {
