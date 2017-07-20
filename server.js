@@ -98,7 +98,9 @@ function render (req, res, next) {
   res.setHeader("Server", serverInfo)
 
   const handleError = err => {
-    if (err && err.code == 404) {
+    if (err.url) {
+      res.redirect(err.url)
+    } else if (err && err.code == 404) {
       isPageNotFound = true
       res.status(404).render('404')
       console.log('##########REQUEST URL(404)############')

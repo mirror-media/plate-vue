@@ -5,7 +5,8 @@
     ],
     'rules': { 
       'array-bracket-spacing': [ 2, 'always' ],
-      'camelcase': [0, 'never']
+      'camelcase': [0, ''],
+      'yoda': [0, 'never']
     },
     'globals': {
       'location': true,
