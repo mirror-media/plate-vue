@@ -103,6 +103,10 @@ a
   color #34495e
   text-decoration none
   cursor pointer
+  
+  u
+    text-decoration none
+
   &.white
     &, &:hover, &:link, &:visited
       color #fff
