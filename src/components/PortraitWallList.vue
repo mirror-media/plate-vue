@@ -24,7 +24,9 @@ export default {
   props: [ 'initialMediaData' ],
   computed: {
     images () {
-      return _.chunk(_.sortBy(_.get(this.initialMediaData, [ 'images', 'items' ]), 'keywords'), 5)
+      return _.chunk(_.sortBy(_.get(this.initialMediaData, [ 'images', 'items' ]), [ function (o) {
+        return _.toNumber(_.split(o.keywords, '-')[0])
+      } ]), 5)
     }
   },
   methods: {
