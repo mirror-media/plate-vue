@@ -171,10 +171,13 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
               max_results: MAXRESULT
             })
           }
-          return fetchArticlesByUuid(store, uuid, SECTION, {
-            page: page,
-            max_results: MAXRESULT
-          })
+          if (uuid !== 'topic') {
+            return fetchArticlesByUuid(store, uuid, SECTION, {
+              page: page,
+              max_results: MAXRESULT
+            })
+          }
+          return
       }
     case TAG:
       if (!hasPrefetch) {
