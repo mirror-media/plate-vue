@@ -47,6 +47,17 @@
         </div>
       </div>
     </template>
+    <template v-else-if="articleType === 'topic'">
+      <figure class="listArticleBlock__figure">
+        <router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'id' ])}-img`">
+          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
+        </router-link>
+      </figure>
+      <div class="listArticleBlock__content">
+        <h2><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'id' ])}-title`" v-text="getValue(article, [ 'title' ])" /></h2>
+        <p><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'id' ])}-descr`" v-text="getBrief(article, 45)" /></p>
+      </div>
+    </template>
     <template v-else>
       <figure class="listArticleBlock__figure">
         <router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`">
@@ -85,6 +96,9 @@ export default {
       return this.initialArticle
     },
     articleType () {
+      if (_.get(this.$route, [ 'params', 'title' ]) === 'topic') {
+        return 'topic'
+      }
       if (this.initialArticle.kind) {
         return 'video'
       }
