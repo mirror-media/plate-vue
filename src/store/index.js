@@ -70,9 +70,9 @@ export function createStore () {
           commit('SET_ACTIVITIES', { activities })
         })
       },
-      FETCH_ARTICLES: ({ commit, state }, { params }) => {
+      FETCH_ARTICLES: ({ commit, state }, { params, preview }) => {
         const orig = _.values(state.articles[ 'items' ])
-        return fetchArticles(params).then(articles => {
+        return fetchArticles(params, preview).then(articles => {
           articles[ 'items' ] = _.concat(orig, _.get(articles, [ 'items' ]))
           commit('SET_ARTICLES', { articles })
           commit('SET_AUTHORS', articles)
