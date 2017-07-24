@@ -4,6 +4,7 @@ const LRU = require('lru-cache')
 const express = require('express')
 const favicon = require('serve-favicon')
 const compression = require('compression')
+const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
 const { createBundleRenderer } = require('vue-server-renderer')
 
@@ -33,6 +34,7 @@ function createRenderer (bundle, options) {
   }))
 }
 
+app.use(requestIp.mw())
 app.set('views', path.join(__dirname, 'src/views'))
 app.set('view engine', 'ejs')
 
@@ -110,10 +112,15 @@ function render (req, res, next) {
       console.log('######################')
       return
     } else {
-      res.status(500).render('500')
       console.error(`error during renderToString() error : ${req.url}`)
       console.error(err)
-      isErrorOccurred = true   
+      isErrorOccurred = true
+      
+      if ('403' == err.status) {
+        res.status(403).end('403 | Forbidden')
+        return
+      }
+      res.status(500).render('500')
       return 
     } 
   }

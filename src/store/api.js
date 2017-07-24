@@ -68,11 +68,9 @@ function loadActivities (params = {}) {
   return _doFetch(url)
 }
 
-function loadArticles (params = {}) {
+function loadArticles (params = {}, preview) {
   const query = _buildQuery(params)
-  let url = `${_host}/api/posts`
-      // let slug = typeof params[0] === 'string' ? params[0] : null
-      // url = slug ? `${url}/${slug}` : url
+  let url = !preview ? `${_host}/api/posts` : `${_host}/api/posts-preview`
   url = `${url}?${query}`
   return _doFetch(url)
 }
@@ -231,8 +229,8 @@ export function fetchActivities (params = {}) {
   return loadActivities(params)
 }
 
-export function fetchArticles (params = {}) {
-  return loadArticles(params)
+export function fetchArticles (params = {}, preview) {
+  return loadArticles(params, preview)
 }
 
 export function fetchArticlesByUuid (uuid = '', type = '', params = {}, isOnlyMeta = true) {

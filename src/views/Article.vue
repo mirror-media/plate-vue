@@ -114,7 +114,8 @@
             ]
           }
         }
-      }
+      },
+      preview: _.get(store, [ 'state', 'route', 'query', 'preview' ])
     })
   }
 
