@@ -2,7 +2,7 @@
   <section class="latestArticle-foodtravel">
 
   <div class="topicsArticle-foodtravel-container mobile-only" v-if="!this.showLatestOnly">
-    <!--<vue-dfp :is="props.vueDfp" pos="LMBSL1" extClass="desktop-hide" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId"/>-->
+    <!--<vue-dfp :is="props.vueDfp" pos="LMBSL1" extClass="desktop-hide" :config="props.config" />-->
     <div class="topicsArticle-full-posts">
     <template v-for="(article, index) in topics">
       <div class="topicsArticle-full-post">
@@ -42,14 +42,13 @@
         </div>
       </div>
       </div>
-      <vue-dfp v-if="index === 2" :is="props.vueDfp" pos="LMBSL1" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId"/>
+      <vue-dfp v-if="index === 2" :is="props.vueDfp" pos="LMBSL1" extClass="mobile-only" :config="props.config" />
     </template>
     </div>
   </div>
 
   <div class="topicsArticle-foodtravel-container desktop-only" v-if="!this.showLatestOnly">
-    <vue-dfp :is="props.vueDfp" pos="LPCSR1" extClass="mobile-hide" :dfpUnits="props.dfpUnits" :section="props.section" 
-    :dfpId="props.dfpId"/>
+    <vue-dfp :is="props.vueDfp" pos="LPCSR1" extClass="mobile-hide" :config="props.config" />
     <div class="topicsArticle-full-posts">
     <template v-for="(article, index) in topics">
       <div class="topicsArticle-full-post">
