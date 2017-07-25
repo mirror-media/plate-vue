@@ -4,11 +4,11 @@
       <div class="latest-list_item">
         <router-link :to="getHref(groupedArticle)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style !== 'projects'" :target="target">
           <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
-          <div class="latest-list_item_label" :class="labelClass(groupedArticle)" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
+          <div class="latest-list_item_label" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
         </router-link>
         <a :href="getHref(groupedArticle)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style === 'projects'" :target="target">
           <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
-          <div class="latest-list_item_label" :class="labelClass(groupedArticle)" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
+          <div class="latest-list_item_label" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
         </a>
         <div class="latest-list_item_title" :style="getSectionStyleBorderTop(getValue(groupedArticle, [ 'sections', 0 ], ''))">
           <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style !== 'projects'" :target="target"></router-link>
@@ -46,11 +46,9 @@ export default {
     getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
       const style = (this.viewport > 1199) ? {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);'),
-        width: _.get(SECTION_MAP, [ sectionId, 'label-width' ], '45px')
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);')
       } : {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);'),
-        width: _.get(SECTION_MAP, [ sectionId, 'label-width-tablet' ], '60px')
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);')
       }
       return style
     },
@@ -64,11 +62,6 @@ export default {
         borderTopWidth: '10px'
       }
       return style
-    },
-    labelClass (article) {
-      return {
-        'label-width-auto': (this.viewport < 1200)
-      }
     },
     fetchNodeStaticStyle (node) {
       node.style.position = 'static'
@@ -180,7 +173,8 @@ export default {
         .latest-list_item_label
           position absolute
           height 35px
-          width 60px
+          white-space nowrap
+          padding 0 20px
           color #fff
           font-size 1.2rem
           display flex 
@@ -234,7 +228,6 @@ export default {
         > a
           .latest-list_item_label
             height 35px
-            width 60px
             top auto
             bottom 0
             left 0
@@ -262,7 +255,7 @@ export default {
         > a
           .latest-list_item_label
             height 25px
-            width 45px
+            padding 0 10px
             font-size 0.9rem
             top auto
             bottom 0

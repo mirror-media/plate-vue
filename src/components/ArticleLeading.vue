@@ -16,10 +16,10 @@
           <p><a :href="getHref(article)" :id="`leading-${article.id}-content`" v-text="`${getBrief(article, 200)} <More>`"></a></p>
         </div>
         <div class="article-leading-post__dfp dfp-l1 dfp-l2">
-          <vue-dfp v-if="index === 0 && !isMobile" :is="props.vueDfp" pos="SPCR1" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="index === 1 && !isMobile" :is="props.vueDfp" pos="SPCR2" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="index === 0 && isMobile" :is="props.vueDfp" pos="SMBL1" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="index === 1 && isMobile" :is="props.vueDfp" pos="SMBL2" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp v-if="index === 0 && !isMobile" :is="props.vueDfp" pos="SPCR1" :config="props.config" />
+          <vue-dfp v-if="index === 1 && !isMobile" :is="props.vueDfp" pos="SPCR2" :config="props.config" />
+          <vue-dfp v-if="index === 0 && isMobile" :is="props.vueDfp" pos="SMBL1" :config="props.config" />
+          <vue-dfp v-if="index === 1 && isMobile" :is="props.vueDfp" pos="SMBL2" :config="props.config" />
         </div>
       </div>
       <div class="article-leading-related" v-if="hasRelated(article)">

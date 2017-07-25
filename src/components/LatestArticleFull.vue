@@ -1,7 +1,6 @@
 <template>
   <section class="latestArticle-full">
-    <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="SMBL3" extClass="center" :dfpUnits="props.dfpUnits" :section="props.section" 
-        :dfpId="props.dfpId" />
+    <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="SMBL3" extClass="center" :config="props.config" />
     <div class="latestArticle-full-post-container">
       <h2>最新新聞 Latest Stories</h2>
       <div class="latestArticle-full-posts">
@@ -24,10 +23,8 @@
       
     </div>
     <div class="latestArticle-full-dfp dfp-R desktop-only">
-      <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCR3" :dfpUnits="props.dfpUnits" :section="props.section" 
-        :dfpId="props.dfpId" />
-      <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCR4" :dfpUnits="props.dfpUnits" :section="props.section" 
-        :dfpId="props.dfpId" />
+      <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCR3" :config="props.config" />
+      <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="SPCR4" :config="props.config" />
     </div>
   </section>
 </template>

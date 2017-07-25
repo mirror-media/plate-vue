@@ -11,8 +11,8 @@
         <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" :className="'moreFoodTravel'" />
         <loading :show="loading" />
-        <vue-dfp :is="props.vueDfp" pos="LPCSFT" extClass="desktop-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-        <vue-dfp :is="props.vueDfp" pos="LMBSFT" extClass="mobile-only" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+        <vue-dfp :is="props.vueDfp" pos="LPCSFT" extClass="desktop-only" :config="props.config" />
+        <vue-dfp :is="props.vueDfp" pos="LMBSFT" extClass="mobile-only" :config="props.config" />
         <footer-foodtravel :commonData='commonData' :sectionName='sectionName' />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
