@@ -59,9 +59,9 @@
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
       </div>
-      <div class="article_main_tags" v-if="tags.length > 0">
-        <i class="tags_icon"></i>
-        <div class="tags" v-html="tags"></div>
+      <div class="article_main_tags">
+        <i class="tags_icon" v-if="tags.length > 0"></i>
+        <div class="tags" v-html="tags" v-if="tags.length > 0"></div>
       </div>
       <div class="split-line"></div>
       <div class="fbPagePlugin">

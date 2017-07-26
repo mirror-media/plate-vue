@@ -17,7 +17,7 @@ function visitTargets () {
   const winHeight = document.documentElement.clientHeight || document.body.clientHeight
   _.map(TRACKING_TARGET, (o, i) => {
     if (!o.seenFlag) {
-      isVisible(o.target, { top: currTopY, bottom: currTopY + (winHeight / 2) }).then((isSeen) => {
+      isVisible(o.target, { top: currTopY, bottom: currTopY + ((winHeight * 2) / 3) }).then((isSeen) => {
         TRACKING_TARGET[i].seenFlag = isSeen
         if (isSeen) {
           window.ga && window.ga('send', 'event', 'article', 'visible', TRACKING_TARGET[i].desc, {
