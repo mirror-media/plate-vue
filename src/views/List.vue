@@ -72,7 +72,7 @@
 </template>
 <script>
 
-import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, VIDEOHUB_ID } from '../constants/index'
+import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
@@ -145,7 +145,19 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
           return fetchAudios(store, {
             page: page,
             max_results: MAXRESULT,
-            sort: '-createTime'
+            sort: '-createTime',
+            where: {
+              tags: TAG_ORALREADING_ID
+            }
+          })
+        case CATEGORY＿INTERVIEW_ID:
+          return fetchAudios(store, {
+            page: page,
+            max_results: MAXRESULT,
+            sort: '-createTime',
+            where: {
+              tags: TAG_INTERVIEW_ID
+            }
           })
         case VIDEOHUB_ID:
           return fetchYoutubePlaylist(store, MAXRESULT, pageToken)
