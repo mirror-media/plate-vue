@@ -141,110 +141,6 @@
         display: none;
     }
 
-    .header-sidebar {
-        position:fixed;
-        top:0;
-        left:0;
-        z-index:510;
-        width:100%;
-        padding:20px;
-        background-color:#064f77;
-        overflow-y:auto;
-        -webkit-transform:translate3d(-100%,0,0);
-        transform:translate3d(-100%,0,0);
-        transition:.5s ease;
-        height: 100%;
-    }
-
-    .header-sidebar.open {
-        -webkit-transform:translate3d(0,0,0);
-        transform:translate3d(0,0,0);
-        transition:.5s ease;
-    }
-    .header-sidebar__close {
-        margin-bottom:20px;
-    }
-    .header-sidebar__close > a {
-        float:right;
-    }
-    .header-sidebar__close img {
-        width:24px;
-        height:24px;
-    }
-    .header-sidebar__menu {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-flex-direction: column;
-        flex-direction:column;
-        -webkit-align-items:center;
-        align-items:center;
-    }
-    .header-sidebar__menu > a {
-        margin-bottom:20px;
-        color:#fff;
-        font-size:1rem;
-        font-weight:300;
-    }
-    .header-sidebar__menu--second, .header-sidebar__menu--download {
-        width:100%;
-    }
-
-    .header-sidebar__menu--download {
-        padding:10px;
-        margin-top:20px;
-        text-align:center;
-        border:1px solid #fff;
-    }
-
-    .header-sidebar__menu--download > img {
-        height: 18px;
-        margin-right: 5px;
-        vertical-align: text-bottom;
-    }
-
-    .header-sidebar__menu--second {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-justify-content:space-between;
-        justify-content:space-between;
-    }
-
-    .header-sidebar__menu--second > a {
-        width: calc(50% - 10px);
-        padding: 10px 0;
-        color:#fff;
-        text-align:center;
-        border:1px solid #fff;
-    }
-
-    .header-sidebar__menu--second > a > img {
-        height: 18px;
-    }
-
-    .header-sidebar__socialMedia {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-justify-content: space-between;
-        justify-content: space-between;
-        padding: 15px 20px;
-        margin: 20px -20px -20px;
-        background-color: #fff;
-    }
-
-    .header-sidebar__socialMedia a {
-        font-size: 0;
-    }
-
-    .header-sidebar__socialMedia a > img {
-        height: 18px;
-    }
-
     .header-searchbar {
         display: -webkit-box;
         display: -ms-flexbox;
@@ -318,14 +214,6 @@
         margin-left:10px;
     }
 
-    @media (min-width: 1200px) and (max-width: 1240px) {
-        .header--mirrorfiction {
-            padding: 0 !important;
-            text-align: center !important;
-        }
-
-    }
-
     @media (min-width: 1200px) {
         .header-logoSearch {
             width:1024px;
@@ -371,27 +259,14 @@
             -webkit-justify-content:center;
             justify-content:center;
             width:1024px;
-            margin:0 0 0 auto;
+            margin:0 auto;
         }
         .header-menu > a {
             text-align:center;
             color:#fff;
-            line-height: 46px;
+            line-height: 43px;
             font-size:1rem;
         }
-        .header-menu > a:hover.news-people {
-            background-color: #30bac8;
-        }
-        .header-menu > a:hover.entertainment {
-            background-color: #bf3284;
-        }
-        .header-menu > a:hover.foodtravel {
-            background-color: #eac151; 
-        }
-        .header-menu > a:hover.watch {
-            background-color: #c1d16e;   
-        }
-
         .header-menu--section {
             display: -webkit-box;
             display: -ms-flexbox;
@@ -442,74 +317,6 @@
         .header-menu--topic .header-menu > a:hover {
             background-color:#000;
             color:#fff;
-        }
-        .dropdown {
-            text-align: center;
-        }
-        .dropdown > a {
-            padding:0;
-            font-size:1rem;
-            line-height:43px;
-        }
-        .dropdown-content {
-            display:none;
-            position: absolute;
-            z-index: 10;
-            width:110px;
-            color:#fff;
-            background-color: #333;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        }
-        .dropdown-content a {
-            font-size: 1rem;
-            padding:14.5px 15px;
-        }
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-        .dropdown.news-people {
-            border-top: 3px solid #30bac8;
-        }
-        .dropdown.news-people > .dropdown-content a:hover {
-            color: #30bac8;
-        }
-        .dropdown.news-people:hover {
-            background-color:#30bac8;
-        }
-        .dropdown.entertainment {
-            border-top: 3px solid #bf3284;
-        }
-        .dropdown.entertainment > .dropdown-content a:hover {
-            color: #bf3284;
-        }
-        .dropdown.entertainment:hover {
-            background-color:#bf3284;
-        }
-        .dropdown.foodtravel {
-            border-top: 3px solid #eac151;
-        }
-        .dropdown.foodtravel > .dropdown-content a:hover {
-            color: #eac151;
-        }
-        .dropdown.foodtravel:hover {
-            background-color:#eac151;
-        }
-        .dropdown.watch {
-            border-top: 3px solid #c1d16e;
-        }
-        .dropdown.watch > .dropdown-content a:hover {
-            color: #c1d16e;
-        }
-        .dropdown.watch:hover {
-            background-color:#c1d16e;
-        }
-        .header--mirrorfiction {
-            width: calc((100% - 1024px)/2);
-            padding-left: 30px;
-            font-size: 1rem !important;
-            text-align: left;
-            line-height: 46px;
-            background-color: #433334;
         }
     }
   </style>

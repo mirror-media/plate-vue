@@ -6,8 +6,20 @@ export const SECTION_MAP = {
   '57e1e0e5ee85930e00cad4e9': { 'bgcolor': '#30bac8', 'borderLeft': '7px solid #30bac8', 'border': '2px solid #30bac8', 'ifShowPoplist': true, 'label-width': '45px', 'label-width-tablet': '60px', 'label-width-mobile': '60px' },
   // entertainment
   '57e1e11cee85930e00cad4ea': { 'bgcolor': '#bf3284', 'borderLeft': '7px solid #bf3284', 'border': '2px solid #bf3284', 'ifShowPoplist': true, 'label-width': '45px', 'label-width-tablet': '60px', 'label-width-mobile': '60px' },
+  // businessmoney
+  '596441d04bbe120f002a319a': { 'bgcolor': '#009045' },
+  // people
+  '596441604bbe120f002a3197': { 'bgcolor': '#efa256' },
+  // videohub
+  // '': { },
+  // international
+  '5964400d4bbe120f002a3191': { 'bgcolor': '#911f27' },
   // foodtravel
   '57dfe399ee85930e00cad4d6': { 'bgcolor': '#eac151', 'borderLeft': '7px solid #eac151', 'border': '2px solid #eac151', 'ifShowPoplist': true, 'label-width': '65px', 'label-width-tablet': '60px', 'label-width-mobile': '85px' },
+  // mafalda
+  '5971aa8ce531830d00e32812': { 'bgcolor': '#662d8e' },
+  // culture
+  '5964418a4bbe120f002a3198': { 'bgcolor': '#009245' },
   // watch
   '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e', 'borderLeft': '7px solid #c1d16e', 'border': '2px solid #c1d16e', 'ifShowPoplist': false, 'label-width': '45px', 'label-width-tablet': '60px', 'label-width-mobile': '60px' }
 }
@@ -77,6 +89,8 @@ export const SECTION_WATCH_ID = '57dfe3b0ee85930e00cad4d7'
 
 export const SECTION_FOODTRAVEL_ID = '57dfe399ee85930e00cad4d6'
 
+export const CATEGORY＿INTERVIEW_ID = '5975642de531830d00e32a5b'
+
 export const AUDIO_ID = '58ef372a7bce2b0e0048288c'
 
 export const CAMPAIGN_ID = '5859e7e5c0ff6d0d00246263'
@@ -88,6 +102,10 @@ export const VIDEOHUB_ID = '5800999c9a51540d009e0447'
 export const TOPIC_PROTEST_ID = '59151f0ff2179c0d0089b7d5'
 
 export const TOPIC_WATCH_ID = '586cd15c3c1f950d00ce2e78'
+
+export const TAG_INTERVIEW_ID = '59647e964bbe120f002a3281'
+
+export const TAG_ORALREADING_ID = '59647e964bbe120f002a3281'
 
 export const SITE_DESCRIPTION = '鏡傳媒以台灣為基地，是一跨平台綜合媒體，包含《鏡週刊》以及下設五大分眾內容的《鏡傳媒》網站，刊載時事、財經、人物、國際、文化、娛樂、美食旅遊、精品鐘錶等深入報導及影音內容。我們以「鏡」為名，務求反映事實、時代與人性。'
 
