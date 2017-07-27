@@ -1,7 +1,7 @@
 <template>
   <div class="related-list-container-bottom">
-    <div class="list" :style="containerStyle">
-      <div class="title"><h4 :style="titleStyle">相關文章</h4></div>
+    <div class="list" :style="containerStyle()">
+      <div class="title"><h4 :style="titleStyle()">相關文章</h4></div>
       <div class="item" v-for="(o, i) in relateds" v-if="o">
         <div class="title" v-if="!isApp">
           <router-link :to="getHref(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related${abIndicator}-${o.name}-btm`" v-if="o.style !== 'projects'"></router-link>
@@ -21,26 +21,28 @@
   import _ from 'lodash'
 
   export default {
-    computed: {
+    computed: { },
+    methods: {
+      getHref,
+      getValue,
       containerStyle () {
-        return { border: _.get(SECTION_MAP, [ this.sectionId, 'border' ], '2px solid #414141;') }
+        return { border: `2px solid ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141')}` }
       },
       titleStyle () {
         return { color: _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
-      },
-      sectionId () {
-        return _.get(this.$store, [ 'state', 'articles', 'items', 0, 'sections', 0, 'id' ])
       }
-    },
-    methods: {
-      getHref,
-      getValue
     },
     mounted () {
       const customCSS = `.related-list-container-bottom .list > .title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
       const custCss = document.createElement('style')
+      custCss.setAttribute('class', 'relatedBtmStyle')
       custCss.appendChild(document.createTextNode(customCSS))
       document.querySelector('body').appendChild(custCss)
+    },
+    watch: {
+      sectionId: function () {
+        document.querySelector('.relatedBtmStyle').innerHTML = `.related-list-container-bottom .list > .title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+      }
     },
     name: 'related-list-container-bottom',
     props: {
@@ -51,6 +53,9 @@
         default: () => ([])
       },
       abIndicator: {
+        default: () => ('')
+      },
+      sectionId: {
         default: () => ('')
       }
     }

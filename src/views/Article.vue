@@ -40,7 +40,7 @@
               <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
             </pop-list>
             <!--related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderRelatedAside || articleStyle === 'wide')" slot="relatedlistBottom" :abIndicator="abIndicator" /-->
-            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" />
+            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
@@ -454,11 +454,11 @@
         return _.get(this.articleData, [ 'relateds' ], [])
       },
       sectionId () {
-        const sectionName = _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
+        const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
         if (this.isCategoryBusinessMoney) {
           return 'category-business-money'
         } else {
-          return sectionName
+          return _sectionId
         }
       },
       styleDfpAd () {
