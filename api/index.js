@@ -190,7 +190,7 @@ router.use('/tracking', function(req, res, next) {
   }) 
 })
 
-router.use('/posts-preview', function(req, res, next) {
+router.use('/drafts', function(req, res, next) {
   const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, (i) => (req.clientIp.indexOf(i) > -1)).length > 0
   if (isValidReq) {
     next()

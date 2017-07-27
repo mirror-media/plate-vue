@@ -124,10 +124,11 @@ export default {
       return _.get(this.articleData, [ 'brief', 'apiData' ], [])
     },
     category () {
-      const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ], '')
-      const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ], '')
-      const shouldShow = !_.get(this.articleData, [ 'isAdvertised' ], false) ? {} : { display: 'none;' }
       const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ], '')
+      const sectionTitle = _.get(this.articleData, [ 'sections', 0, 'title' ], '')
+      const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ], '')
+      const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ], sectionTitle)
+      const shouldShow = !_.get(this.articleData, [ 'isAdvertised' ], false) ? {} : { display: 'none;' }
       const style = { borderLeft: `7px solid ${_.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')}` }
       return { categoryId, categoryTitle, style: Object.assign(style, shouldShow) }
     },
