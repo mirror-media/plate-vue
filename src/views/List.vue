@@ -848,7 +848,13 @@ export default {
 
 $color-news = #30bac8
 $color-entertainment = #bf3284
+$color-businessmoney = #009045
+$color-people = #efa256
+$color-videohub = #969696
+$color-international = #911f27
 $color-foodtravel = #eac151
+$color-mafalda = #662d8e
+$color-culture = #009245
 $color-watch = #c1d16e
 $color-projects = #000
 $color-other = #bcbcbc
@@ -867,32 +873,7 @@ $color-other = #bcbcbc
 
     &__text
       font-size 1.5rem
-
-    &__colorBlock
-      flex-grow 1
-      height 10px
-      margin-left: 10px
-      &.news-people
-        background linear-gradient(to right, $color-news 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
-
-      &.entertainment
-        background linear-gradient(to right, $color-entertainment 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
-
-      &.foodtravel
-        background linear-gradient(to right, $color-foodtravel 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
-
-      &.watch
-        background linear-gradient(to right, $color-watch 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
-
-      &.projects
-        background linear-gradient(to right, $color-projects 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
-
-      &.hotvideo
-        background linear-gradient(to right, $color-other 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
-
-      &.other
-        background linear-gradient(to right, $color-other 0%, rgba(242, 242, 242, 1) 70%, rgba(242, 242, 242, 1) 100%)
-
+      
 .listFull
   &-view
     background-color #f5f5f5
@@ -918,21 +899,28 @@ $color-other = #bcbcbc
     flex-direction column
     align-items stretch
 
-.news-people
+.news
   color $color-news
-
 .entertainment
   color $color-entertainment
-
+.businessmoney
+  color $color-businessmoney
+.people
+  color $color-people
+.videohub
+  color $color-videohub
+.international
+  color $color-international
 .foodtravel
   color $color-foodtravel
-
+.mafalda
+  color $color-mafalda
+.culture
+  color $color-culture
 .watch
   color $color-watch
-
 .projects
   color $color-projects
-
 .other
   color $color-other
 </style>

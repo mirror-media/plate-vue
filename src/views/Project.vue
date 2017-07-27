@@ -60,8 +60,6 @@ export default {
 body
   background-color transparent
 .project-container
-  > .proj_title
-    display none
   &.dark
     background-color #000
     > .proj_list

@@ -12,7 +12,7 @@ export const SECTION_MAP = {
   // people
   '596441604bbe120f002a3197': { 'bgcolor': '#efa256' },
   // videohub
-  // '': { },
+  '5975ab2de531830d00e32b2f': { 'bgcolor': '#969696' },
   // international
   '5964400d4bbe120f002a3191': { 'bgcolor': '#911f27' },
   // foodtravel
