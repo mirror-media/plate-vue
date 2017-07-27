@@ -1,6 +1,6 @@
 <template>
   <div class="latest-main-container" v-if="(latestList.length > 0)">
-    <div class="latest-main-container_title desktop-only"><h3>最新文章</h3></div>
+    <div class="latest-main-container_title"><h3>最新文章</h3></div>
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
         <div id="compass-fit-4273899" class="latest-list_item nativeDFP margin-top-0" v-if="index === 0 && currEnv === 'dev' && viewport > 1199 && runMicroAd(4273899)"></div>
@@ -133,9 +133,21 @@ export default {
 
     &_title
       color #356d9c
+      overflow hidden
 
       > h3
-        margin-top 0
+        margin .5em 0 0
+        font-size 1.5rem
+
+        &::after
+          content ""
+          display inline-block
+          height .5em
+          vertical-align middle
+          width 100%
+          margin-right -100%
+          margin-left 10px
+          border-top 5px solid #356d9c
 
     .latest-list
       margin-top 10px
@@ -248,20 +260,10 @@ export default {
       margin 0
 
       &_title
-        overflow hidden
 
         > h3
-          font-size 1.5rem
+          margin .5em 0
 
-          &::after
-            content ""
-            display inline-block
-            height .5em
-            vertical-align middle
-            width 100%
-            margin-right -100%
-            margin-left 10px
-            border-top 5px solid #356d9c
       
       .latest-list
         flex-direction column

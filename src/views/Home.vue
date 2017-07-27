@@ -10,12 +10,16 @@
         <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>
         <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550)" :config="props.config"/>
         <section class="container list">
+          <div class="project-title--mobile">
+            <h2>專題報導</h2>
+          </div>
           <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" target="_blank"/>
           <aside>
-            <div class="aside-title mobile-only" ref="aside_title"><h2>最新文章</h2></div>
+            <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
             <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
           <main>
+            <h2 class="project-title--desktop">專題報導</h2>
             <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" target="_blank"/>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
@@ -366,7 +370,27 @@ export default {
     letter-spacing .5px
     color rgba(0,0,0,.8)
     list-style-type none
-
+    &.project-title--desktop
+      display none
+  .project-title--mobile
+    padding 0 2em
+    margin 10px 0
+    h2
+      font-size 1.5rem
+      color #356d9c
+      font-weight 400
+      overflow hidden
+      &::after
+        content ""
+        display inline-block
+        height 0.5em
+        vertical-align middle
+        width 100%
+        margin-right -100%
+        margin-left 10px
+        border-top 5px solid #356d9c
+    
+    
 .list
   &.container
     width 100%
@@ -451,6 +475,17 @@ section.footer
 
 
 @media (min-width: 1200px)
+  .home-view
+    h2
+      &.project-title--desktop
+        display block
+        margin-bottom 10px
+        color #356d9c
+        font-size 1.3rem
+        font-weight 400
+    .project-title--mobile
+      display none
+        
   .list
     &.container
       width 1024px
@@ -468,7 +503,16 @@ section.footer
         width 25%
         padding 0 30px 0 0
 
+        .aside-title
+          margin-top 0
+          padding 0
+          h2
+            margin-bottom 0
+            font-size 1.3rem
+            &::after
+              display none
 
+  
 
   section.footer
     width 1024px
