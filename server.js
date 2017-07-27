@@ -97,6 +97,7 @@ function render (req, res, next) {
 
   const isPreview = req.url.indexOf('preview=true') > -1
   !isPreview && res.setHeader('Cache-Control', 'public, max-age=3600')
+  console.log('request ip:', req.clientIp)
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 
