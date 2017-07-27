@@ -95,7 +95,8 @@ function render (req, res, next) {
   let isPageNotFound = false
   let isErrorOccurred = false  
 
-  res.setHeader('Cache-Control', 'public, max-age=3600')
+  const isPreview = req.url.indexOf('preview=true') > -1
+  !isPreview && res.setHeader('Cache-Control', 'public, max-age=3600')
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 
