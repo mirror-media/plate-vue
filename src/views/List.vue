@@ -18,8 +18,8 @@
       </div>
 
       <div class="listFull-view" v-else-if="pageStyle === 'full'">
-        <div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCHD" :config="props.config" /></div>
-        <div v-if="isMobile"><vue-dfp :is="props.vueDfp" pos="SMBHD" :config="props.config" /></div>
+        <!--div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCHD" :config="props.config" /></div-->
+        <!--div v-if="isMobile"><vue-dfp :is="props.vueDfp" pos="SMBHD" :config="props.config" /></div-->
         <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
         <article-leading :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'"/>
         <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
