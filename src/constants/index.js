@@ -3,11 +3,12 @@ import dfpUnitId from './dfpUnit.js'
 
 export const SECTION_MAP = {
   // news
-  '57e1e0e5ee85930e00cad4e9': { 'bgcolor': '#30bac8', 'borderLeft': '7px solid #30bac8', 'border': '2px solid #30bac8', 'ifShowPoplist': true, 'label-width': '45px', 'label-width-tablet': '60px', 'label-width-mobile': '60px' },
+  '57e1e0e5ee85930e00cad4e9': { 'bgcolor': '#30bac8' },
   // entertainment
-  '57e1e11cee85930e00cad4ea': { 'bgcolor': '#bf3284', 'borderLeft': '7px solid #bf3284', 'border': '2px solid #bf3284', 'ifShowPoplist': true, 'label-width': '45px', 'label-width-tablet': '60px', 'label-width-mobile': '60px' },
-  // businessmoney
+  '57e1e11cee85930e00cad4ea': { 'bgcolor': '#bf3284' },
+  // businessmoney category-business-money
   '596441d04bbe120f002a319a': { 'bgcolor': '#009045' },
+  'category-business-money': { 'bgcolor': '#009045' },
   // people
   '596441604bbe120f002a3197': { 'bgcolor': '#efa256' },
   // videohub
@@ -15,13 +16,13 @@ export const SECTION_MAP = {
   // international
   '5964400d4bbe120f002a3191': { 'bgcolor': '#911f27' },
   // foodtravel
-  '57dfe399ee85930e00cad4d6': { 'bgcolor': '#eac151', 'borderLeft': '7px solid #eac151', 'border': '2px solid #eac151', 'ifShowPoplist': true, 'label-width': '65px', 'label-width-tablet': '60px', 'label-width-mobile': '85px' },
+  '57dfe399ee85930e00cad4d6': { 'bgcolor': '#eac151' },
   // mafalda
   '5971aa8ce531830d00e32812': { 'bgcolor': '#662d8e' },
   // culture
   '5964418a4bbe120f002a3198': { 'bgcolor': '#009245' },
   // watch
-  '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e', 'borderLeft': '7px solid #c1d16e', 'border': '2px solid #c1d16e', 'ifShowPoplist': false, 'label-width': '45px', 'label-width-tablet': '60px', 'label-width-mobile': '60px' }
+  '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e' }
 }
 
 export const DFP_SIZE_MAPPING = {
