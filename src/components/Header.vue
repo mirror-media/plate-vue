@@ -22,12 +22,12 @@
       <div class="header-menu">
         <template v-for="item in sections">
           <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: getColor(item) }">
-            <router-link :id="`header-${item.id}-menu`" :to="getHref(item)" v-text="item.title"></router-link>
+            <router-link :id="`header-${item.id}-menu`" :to="`/section/${item.name}`" v-text="item.title"></router-link>
             <div class="dropdown-content" :class="item.name">
-              <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="item.id" />
+              <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-menu`" />
             </div>
           </div>
-          <router-link v-if="item.categories.length === 0" :to="getHref(item)" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: getColor(item) }"></router-link>
+          <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: getColor(item) }"></router-link>
         </template>
         <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">鏡文學</a>
       </div>
@@ -36,7 +36,7 @@
     <nav class="header-menu--topic">
       <div>
         <div class="header-menu">
-          <router-link :to="getValue(item, [ 'href' ])" :id="`header-${item.id}-menu`" v-for="(item, i) in topics" v-text="item.name" :key="item.id" />
+          <router-link :to="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-menu`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-menu`" />
         </div>
         <router-link to="/section/topic">更多</router-link>
       </div>
@@ -47,13 +47,13 @@
         <img @click="closeSideBar()" src="/public/icon/close_white@2x.png" alt="關閉側邊欄" >
       </div>
       <div class="header-sidebar__topic">
-        <a :href="getValue(item, [ 'href' ])" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="item.id"></a>
+        <a :href="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-sidebar`"></a>
       </div>
       <div class="header-sidebar__sections">
         <div class="header-sidebar__section" v-for="(item, index) in sections" :style="{ borderLeftColor: getColor(item) }">
-          <a :href="getHref(item)" v-text="item.title"></a>
+          <a :href="`/section/${item.name}`" v-text="item.title"></a>
           <div class="header-sidebar__categories" v-if="item.categories.length !== 0">
-            <a :href="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="item.id"></a>
+            <a :href="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-sidebar`"></a>
           </div>
         </div>
         <div class="header-sidebar__section mirrorfiction">
@@ -148,9 +148,6 @@ export default {
     },
     getColor (item) {
       return _.get(SECTION_MAP, [ _.get(item, [ 'id' ]), 'bgcolor' ])
-    },
-    getHref (item) {
-      return `/section/${_.get(item, [ 'name' ], '')}`
     },
     getValue,
     handleScroll () {

@@ -68,21 +68,23 @@ export default {
           color #fff
     &--image
       display block
-      width calc(50% - 5px)
-      padding-top calc(50% - 5px)
+      width 47%
+      padding-top 47%
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
+      border-radius 3px
       p
         display none
     &--content
       display flex
       flex-direction column
       justify-content center
-      width calc(50% - 5px)
+      width 47%
       h2
         margin 0 0 .5em
         font-size 1.2rem
+        letter-spacing 1px
 
 @media (min-width: 600px)
   .portraitWallList
