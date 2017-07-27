@@ -78,10 +78,10 @@
       <div class="dfpad-set" style="display: flex; justify-content: space-around;">
         <slot name="dfpad-set"></slot>
       </div>
-      <div v-show="abIndicator">
+      <div>
         <h3>推薦文章</h3>
       </div>
-      <div id="matchedContentContainer" class="matchedContentContainer" v-show="abIndicator">
+      <div id="matchedContentContainer" class="matchedContentContainer">
       </div>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
@@ -99,11 +99,11 @@
 import _ from 'lodash'
 import { SECTION_MAP } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../util/comm'
-import { getRole } from '../../util/mmABRoleAssign'
+// import { getRole } from '../../util/mmABRoleAssign'
 import Annotation from './Annotation.vue'
 import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
-import Cookie from 'vue-cookie'
+// import Cookie from 'vue-cookie'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
 import moment from 'moment'
@@ -117,22 +117,6 @@ export default {
     ArticleVideo
   },
   computed: {
-    abIndicator () {
-      if (process.env.VUE_ENV === 'client') {
-        const mmid = Cookie.get('mmid')
-        const role = getRole({ mmid, distribution: [
-          { id: 'A', weight: 50 },
-          { id: 'B', weight: 50 } ]
-        })
-        if (role === 'B') {
-          return true
-        } else {
-          return false
-        }
-      } else {
-        return false
-      }
-    },
     articleStyle () {
       return _.get(this.articleData, [ 'style' ], '')
     },

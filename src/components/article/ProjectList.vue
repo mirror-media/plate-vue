@@ -1,6 +1,5 @@
 <template>
   <div class="project-container" v-if="(filteredProjects.length > 0)">
-    <div class="proj_title"><h3>聚焦鏡</h3></div>
     <div class="proj_list">
       <app-slider :option="sliderOption" v-if="ifShowProjects" :slideId="sliderId">
         <template scope="props">

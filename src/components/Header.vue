@@ -47,14 +47,17 @@
         <img @click="closeSideBar()" src="/public/icon/close_white@2x.png" alt="關閉側邊欄" >
       </div>
       <div class="header-sidebar__topic">
-        <router-link :to="getValue(item, [ 'href' ])" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="item.id" />
+        <a :href="getValue(item, [ 'href' ])" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="item.id"></a>
       </div>
       <div class="header-sidebar__sections">
-        <div class="header-sidebar__section" v-for="(item, index) in sections" :style="[ index === (sections.length - 1) ? { borderBottom : 'none' } : {}, { borderLeftColor: getColor(item) } ]">
-          <router-link :to="getHref(item)" v-text="item.title"></router-link>
+        <div class="header-sidebar__section" v-for="(item, index) in sections" :style="{ borderLeftColor: getColor(item) }">
+          <a :href="getHref(item)" v-text="item.title"></a>
           <div class="header-sidebar__categories" v-if="item.categories.length !== 0">
-            <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="item.id" />
+            <a :href="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="item.id"></a>
           </div>
+        </div>
+        <div class="header-sidebar__section mirrorfiction">
+          <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-sidebar" target="_blank">鏡文學</a>
         </div>
       </div>
       <div class="header-sidebar__other">
@@ -184,6 +187,7 @@ $color-news = #30bac8
 $color-entertainment = #bf3284
 $color-businessmoney = #009045
 $color-people = #efa256
+$color-videohub = #969696
 $color-international = #911f27
 $color-foodtravel = #eac151
 $color-mafalda = #662d8e
@@ -199,7 +203,7 @@ $color-mirrorfiction = #968375
 
 .header-menu
   > a:hover, > div:hover
-    &.news-people
+    &.news
       background-color $color-news
     &.entertainment
       background-color $color-entertainment
@@ -207,6 +211,8 @@ $color-mirrorfiction = #968375
       background-color $color-businessmoney
     &.people
       background-color $color-people
+    &.videohub
+      background-color $color-videohub
     &.international
       background-color $color-international
     &.foodtravel
@@ -244,7 +250,7 @@ $color-mirrorfiction = #968375
   > a
     font-size 1rem
     padding 14.5px 15px
-  &.news-people
+  &.news
     a:hover
       color $color-news
   &.entertainment
@@ -256,6 +262,9 @@ $color-mirrorfiction = #968375
   &.people
     a:hover
       color $color-people
+  &.videohub
+    a:hover
+      color $color-videohub
   &.international
     a:hover
       color $color-international
@@ -323,6 +332,9 @@ $color-mirrorfiction = #968375
       color #fff
       font-size 1.2rem
       font-weight 300
+    &.mirrorfiction
+      border-bottom none
+      border-left-color $color-mirrorfiction
     
   &__categories
     display flex
@@ -388,12 +400,6 @@ $color-mirrorfiction = #968375
     width 20px
     height 20px
     background-position -66px -60px
-
-@media (min-width: 600px)
-  .header-sidebar
-    display flex
-    flex-direction column
-    justify-content space-between
 
 @media (min-width: 1200px)
   .header-sidebar
