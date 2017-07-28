@@ -98,7 +98,7 @@ export const CAMPAIGN_ID = '5859e7e5c0ff6d0d00246263'
 
 export const MARKETING_ID = '57fca2f5c9b7a70e004e6df9'
 
-export const VIDEOHUB_ID = '5800999c9a51540d009e0447'
+export const VIDEOHUB_ID = '5975ab2de531830d00e32b2f'
 
 export const TOPIC_PROTEST_ID = '59151f0ff2179c0d0089b7d5'
 

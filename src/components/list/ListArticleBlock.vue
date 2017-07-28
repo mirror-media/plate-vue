@@ -50,11 +50,11 @@
     <template v-else-if="articleType === 'topic'">
       <figure class="listArticleBlock__figure">
         <router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-img`">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
+          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'name' ])" />
         </router-link>
       </figure>
       <div class="listArticleBlock__content">
-        <h2><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-title`" v-text="getValue(article, [ 'title' ])" /></h2>
+        <h2><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-title`" v-text="getValue(article, [ 'name' ])" /></h2>
         <p><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-descr`" v-text="getBrief(article, 45)" /></p>
       </div>
     </template>
