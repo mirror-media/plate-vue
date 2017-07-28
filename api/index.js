@@ -1,7 +1,7 @@
 const _ = require('lodash')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, REDIS_AUTH, REDIS_MAX_CLIENT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_TIMEOUT, TWITTER_API } = require('./config')
 const { GCP_KEYFILE, GCP_PROJECT_ID, GCP_STACKDRIVER_LOG_NAME } = require('./config')
-const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL, VALID_PREVIEW_IP_ADD } = require('./config')
+const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } = require('./config')
 const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT } = require('./config')
 const { YOUTUBE_PROTOCOL, YOUTUBE_HOST, YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY, YOUTUBE_API_TIMEOUT } = require('./config')
 const express = require('express')
@@ -191,12 +191,7 @@ router.use('/tracking', function(req, res, next) {
 })
 
 router.use('/drafts', function(req, res, next) {
-  const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, (i) => (req.clientIp.indexOf(i) > -1)).length > 0
-  if (isValidReq) {
-    next()
-  } else {
-    res.status(403).end('Forbidden')
-  }
+  next()
 })
 
 router.get('*', (req, res) => {
