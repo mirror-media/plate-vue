@@ -39,7 +39,7 @@
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
         <list-choice v-if="type === `SECTION` && sectionfeatured && title !== 'Topic'" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />
-        <div class="list-title container" :class="sectionName">
+        <div class="list-title container" :style="{ color: sectionColor }">
           <span class="list-title__text" v-text="title"></span>
         </div>
         <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP'>
@@ -72,7 +72,7 @@
 </template>
 <script>
 
-import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants/index'
+import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
@@ -574,6 +574,9 @@ export default {
     section () {
       return _.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title })
     },
+    sectionColor () {
+      return _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#bcbcbc')
+    },
     sectionfeatured () {
       return _.take(_.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.camelize(this.sectionName)), [ this.camelize(this.sectionName) ]), 3)
     },
@@ -772,7 +775,6 @@ export default {
       this.updateCustomizedMarkup()
     },
     uuid: function () {
-      this.page = PAGE
       this.articleListAutoScrollHeight = 0
       if (process.env.VUE_ENV === 'client') {
         if (this.sectionName === 'other') {
@@ -846,19 +848,6 @@ export default {
 </script>
 <style lang="stylus" scoped>
 
-$color-news = #30bac8
-$color-entertainment = #bf3284
-$color-businessmoney = #009045
-$color-people = #efa256
-$color-videohub = #969696
-$color-international = #911f27
-$color-foodtravel = #eac151
-$color-mafalda = #662d8e
-$color-culture = #009245
-$color-watch = #c1d16e
-$color-projects = #000
-$color-other = #bcbcbc
-
 .list
   &-view
     background-color #f2f2f2
@@ -898,29 +887,4 @@ $color-other = #bcbcbc
   &.container
     flex-direction column
     align-items stretch
-
-.news
-  color $color-news
-.entertainment
-  color $color-entertainment
-.businessmoney
-  color $color-businessmoney
-.people
-  color $color-people
-.videohub
-  color $color-videohub
-.international
-  color $color-international
-.foodtravel
-  color $color-foodtravel
-.mafalda
-  color $color-mafalda
-.culture
-  color $color-culture
-.watch
-  color $color-watch
-.projects
-  color $color-projects
-.other
-  color $color-other
 </style>
