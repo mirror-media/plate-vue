@@ -38,7 +38,7 @@
         <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
-        <list-choice v-if="type === `SECTION` && sectionfeatured && title !== 'Topic'" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />
+        <list-choice v-if="type === `SECTION` && sectionfeatured && title !== 'Topic' && title !== '影音'" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />
         <div class="list-title container" :style="{ color: sectionColor }">
           <span class="list-title__text" v-text="title"></span>
         </div>
@@ -159,8 +159,6 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
               tags: TAG_INTERVIEW_ID
             }
           })
-        case VIDEOHUB_ID:
-          return fetchYoutubePlaylist(store, MAXRESULT, pageToken)
         default:
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: page,
@@ -177,6 +175,9 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
             related: 'full'
           })
         default:
+          if (uuid === VIDEOHUB_ID) {
+            return fetchYoutubePlaylist(store, MAXRESULT, pageToken)
+          }
           if (uuid === 'topic' && isLoadMore) {
             return fetchTopics(store, {
               page: page,
@@ -363,12 +364,12 @@ export default {
         ogImage = SITE_OGIMAGE
         ogDescription = SITE_DESCRIPTION
     }
-    if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
-      const e = new Error()
-      e.massage = 'Page Not Found'
-      e.code = '404'
-      throw e
-    }
+    // if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
+    //   const e = new Error()
+    //   e.massage = 'Page Not Found'
+    //   e.code = '404'
+    //   throw e
+    // }
 
     const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
     this.titleBase = title
@@ -417,7 +418,7 @@ export default {
           if (this.$route.params.title === 'topic') {
             return _.uniqBy(_.get(this.$store.state, [ 'topics', 'items' ]), 'id')
           }
-          if (this.$route.params.title === 'audio') {
+          if (this.$route.params.title === 'oralreading' || this.$route.params.title === 'interview') {
             return _.uniqBy(_.get(this.$store.state, [ 'audios', 'items' ]), 'id')
           }
           if (this.$route.params.title === 'videohub') {
