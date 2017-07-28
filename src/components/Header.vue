@@ -192,11 +192,77 @@ $color-culture = #009245
 $color-watch = #c1d16e
 $color-mirrorfiction = #968375
 
-
-.header-menu__item
-  border-top 3px solid #000
-.header-menu__item.mirrorfiction
-  border-color #968375
+.header
+  width 100%
+  background-color #f5f5f5
+  a
+    display block
+    font-size 0
+    vertical-align middle
+  img
+    image-rendering optimize-contrast
+  &-logoSearch
+    display flex
+    align-items center
+    justify-content space-between
+    padding 10px 20px
+    &__logoAd--logo
+      height 50px
+  &-icon
+    width 32px
+  &-menu
+    &--section
+      display none
+    &__item
+      border-top 3px solid #000
+      &.mirrorfiction
+        border-color #968375
+  &-searchbar
+    display flex
+    justify-content space-between
+    align-items center
+    position fixed
+    top 0
+    left 0
+    z-index 510
+    width 100%
+    height 69px
+    padding 20px
+    background-color hsla(0,0%,100%,.9)
+    box-shadow 0 3px 2px 0 rgba(0,0,0,.1), 0 2px 0 0 #fff
+    transform translate3d(0,-75px,0)
+    transition .5s ease
+    form
+      width 100%
+      margin-right 15px
+      font-size 1.5rem
+    input
+      width 100%
+      background-color transparent
+      border none
+    > a
+      width 22px
+    &.open
+      transform translate3d(0,0,0)
+      transition .5s ease
+  &-scrolled
+    display flex
+    justify-content space-between
+    align-items center
+    position fixed
+    top 0
+    left 0
+    z-index 500
+    width 100%
+    padding 5px 20px
+    background-color #fff
+    box-shadow 0 3px 2px 0 rgba(0,0,0,.1), 0 2px 0 0 #fff
+    img
+      height 32px
+    > div
+      display flex
+      > a
+        margin-left 10px
 
 .header-menu
   > a:hover, > div:hover
@@ -399,8 +465,82 @@ $color-mirrorfiction = #968375
     background-position -66px -60px
 
 @media (min-width: 1200px)
-  .header-sidebar
-    display none
+  .header
+    &-logoSearch
+      width 1024px
+      padding 10px 0
+      margin 0 auto
+      &__search
+        &.desktop-only
+          display flex !important
+          align-items center
+          width 250px
+          height 35px
+        input
+          float left
+          width 200px
+          height 35px
+          padding 0 10px
+          text-align right
+          border 1px solid rgb(238, 238, 238)
+          border-radius 2px
+          border-right none
+        button
+          padding 0
+          margin 0
+          background-color #fff
+          border 1px solid rgb(238, 238, 238)
+          border-radius 2px
+          border-left none
+        &--icon
+          float left
+          width 49px
+          height 33px
+    &-menu
+      display flex
+      flex-wrap wrap
+      justify-content center
+      width 1024px
+      margin 0 auto
+      > a
+        text-align center
+        color #fff
+        line-height 43px
+        font-size 1rem
+      &--section
+        display flex
+        background-color #064f77
+        a
+          color #fff
+      &--topic
+        display flex
+        justify-content space-between
+        position relative
+        background-color #fff
+        box-shadow 0 0 5px 0 #ccc
+        a
+          min-width 90px
+          font-size 1rem
+          text-align center
+          color rgba(0,0,0,.5)
+          line-height 46px
+        > div
+          display flex
+          justify-content space-between
+          width 1024px
+          margin 0 auto
+        .header-menu
+          width auto
+          margin 0
+          > a
+            padding 0 .5em
+            color rgba(0,0,0,.5)
+            border-bottom 3px solid #000
+            &:hover
+              background-color #000
+              color #fff
+    &-sidebar
+      display none
     
 @media (max-width: 350px)
   .header-logoSearch

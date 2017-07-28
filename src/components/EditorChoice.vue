@@ -183,13 +183,6 @@ export default {
 </script>
 <style lang="stylus" scoped>
 
-$color-news = #30bac8
-$color-entertainment = #bf3284
-$color-foodtravel = #eac151
-$color-watch = #c1d16e
-$color-projects = #000
-$color-other = #bcbcbc
-
 .editorChoice
   &.container
     display block
