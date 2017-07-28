@@ -159,7 +159,6 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
               tags: TAG_INTERVIEW_ID
             }
           })
-        
         default:
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: page,
