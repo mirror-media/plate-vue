@@ -406,10 +406,6 @@
       isAdultContent () {
         return _.get(this.articleData, [ 'isAdult' ], false)
       },
-      isCategoryBusinessMoney () {
-        const categories = _.flatten(_.map(_.get(this.articleData, [ 'categories' ]), (o) => _.get(o, [ 'name' ])))
-        return _.includes(categories, 'business') || _.includes(categories, 'money')
-      },
       jsonLDBreadcrumbList () {
         return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",
           "itemListElement": [
@@ -453,11 +449,7 @@
       },
       sectionId () {
         const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
-        if (this.isCategoryBusinessMoney) {
-          return 'category-business-money'
-        } else {
-          return _sectionId
-        }
+        return _sectionId
       },
       styleDfpAd () {
         return (this.viewport < 321) ? 'ad-fit' : ''
