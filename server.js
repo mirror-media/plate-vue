@@ -1,3 +1,4 @@
+const _ = require('lodash')
 const fs = require('fs')
 const path = require('path')
 const LRU = require('lru-cache')
@@ -6,7 +7,9 @@ const favicon = require('serve-favicon')
 const compression = require('compression')
 const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
+const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
+
 
 const isProd = process.env.NODE_ENV === 'production'
 // const useMicroCache = process.env.MICRO_CACHE !== 'false'
@@ -96,7 +99,15 @@ function render (req, res, next) {
   let isErrorOccurred = false  
 
   const isPreview = req.url.indexOf('preview=true') > -1
-  !isPreview && res.setHeader('Cache-Control', 'public, max-age=3600')
+  if (!isPreview) {
+    res.setHeader('Cache-Control', 'public, max-age=3600')
+  } else {
+    const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, (i) => (req.clientIp.indexOf(i) > -1)).length > 0
+    if (!isValidReq) {
+      res.status(403).end('Forbidden')
+      console.log('Attempted to access draft in fail: 403 Forbidden')
+    }
+  }
   console.log('request ip:', req.clientIp)
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
