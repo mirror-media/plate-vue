@@ -2,7 +2,7 @@
   <section class="articleList container">
 
     <template v-for="(item, index) in articles">
-      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
+      <listArticle-block :abIndicator="abIndicator" :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
       <slot :name="getNativeDfpSlotName(index)" v-if="(index === 1 || index === 2 || index === 5) && hasDFP" />
     </template>
     
@@ -18,7 +18,7 @@ export default {
   components: {
     'listArticle-block': ListArticleBlock
   },
-  props: [ 'articles', 'hasDFP' ],
+  props: [ 'abIndicator', 'articles', 'hasDFP' ],
   data () {
     return {
       togglePause: undefined

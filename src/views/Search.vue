@@ -9,7 +9,7 @@
           <span class="search-title__text" v-text="title"></span>
           <div class="search-title__colorBlock"></div>
         </div>
-        <article-list :articles='articles.items' />
+        <article-list :abIndicator="abIndicator" :articles='articles.items' />
         <loading :show="loading" />
         <section class="container">
           <more v-if="hasMore" v-on:loadMore="loadMore" />
@@ -27,8 +27,10 @@
 import _ from 'lodash'
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
-import { unLockJS, currEnv } from '../util/comm'
+import { currEnv, unLockJS } from '../util/comm'
+import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
+import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import Loading from '../components/Loading.vue'
@@ -88,10 +90,14 @@ export default {
   metaSet () {
     const title = (this.title) ? `${this.title} - ${SITE_TITLE}` : SITE_TITLE
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    let abIndicator
+    if (process.env.VUE_ENV === 'client') {
+      abIndicator = this.getMmid()
+    }
     return {
       title: title,
       meta: `
-        <meta name="mm-opt" content="">
+        <meta name="mm-opt" content="list${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -130,6 +136,7 @@ export default {
   },
   data () {
     return {
+      abIndicator: '',
       commonData: this.$store.state.commonData,
       loading: false,
       page: PAGE,
@@ -174,6 +181,14 @@ export default {
     checkIfLockJS () {
       unLockJS()
     },
+    getMmid () {
+      const mmid = Cookie.get('mmid')
+      const role = getRole({ mmid, distribution: [
+        { id: 'A', weight: 50 },
+        { id: 'B', weight: 50 } ]
+      })
+      return role
+    },
     loadMore () {
       this.page += 1
       this.loading = true
@@ -203,10 +218,10 @@ export default {
       this.updateViewport()
     })
     this.updateSysStage()
-
+    this.abIndicator = this.getMmid()
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
   },
   updated () {

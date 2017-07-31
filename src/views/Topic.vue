@@ -8,7 +8,7 @@
             <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections'></header-full>
           </section>
           <leading-watch :topic='topic' :type='`TOPIC`'></leading-watch>
-          <article-list-full :articles='articles.items'></article-list-full>
+          <article-list-full :abIndicator="abIndicator" :articles='articles.items'></article-list-full>
           <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore"></more-full>
           <loading :show="loading"></loading>
           <footer-full :commonData='commonData' :sectionName='sectionName'></footer-full>
@@ -35,7 +35,7 @@
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
-          <portraitWall-list :initialMediaData="mediaData"></portraitWall-list>
+          <portraitWall-list :abIndicator="abIndicator" :initialMediaData="mediaData"></portraitWall-list>
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
@@ -52,7 +52,7 @@
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
-          <article-list :articles='articles.items' :hasDFP='false'></article-list>
+          <article-list :abIndicator="abIndicator" :articles='articles.items' :hasDFP='false'></article-list>
           <section class="container">
             <more v-if="hasMore" v-on:loadMore="loadMore"></more>
           </section>
@@ -79,9 +79,11 @@ import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, S
 import { camelize } from 'humps'
 import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition } from 'kc-scroll'
+import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
+import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
 import Header from '../components/Header.vue'
@@ -209,15 +211,18 @@ export default {
     const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
     const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-
+    let abIndicator
     if (!metaTitle && process.env.VUE_ENV === 'server') {
       return this.pageNotFoundHandler()
+    }
+    if (process.env.VUE_ENV === 'client') {
+      abIndicator = this.getMmid()
     }
 
     return {
       title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
-        <meta name="mm-opt" content="">
+        <meta name="mm-opt" content="list${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${metaDescription}">
@@ -239,6 +244,7 @@ export default {
   },
   data () {
     return {
+      abIndicator: '',
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpMode: 'prod',
@@ -366,6 +372,14 @@ export default {
       unLockJS()
     },
     currentYPosition,
+    getMmid () {
+      const mmid = Cookie.get('mmid')
+      const role = getRole({ mmid, distribution: [
+        { id: 'A', weight: 50 },
+        { id: 'B', weight: 50 } ]
+      })
+      return role
+    },
     getTruncatedVal,
     getValue,
     insertCustomizedMarkup () {
@@ -526,10 +540,11 @@ export default {
     this.checkIfLockJS()
     this.updateViewport()
     this.updateSysStage()
+    this.abIndicator = this.getMmid()
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
 
     if (this.topicType === 'timeline') {
