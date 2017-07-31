@@ -3,14 +3,14 @@
     <div class="projectListVert__title">專題報導</div>
     <div class="projectListVert-list">
       <div class="projectListVert-list__item" v-for="item in projects">
-        <a :href="`${siteUrl}/projects/${item.slug}`" class="projectListVert-list__item--img"><img :src="getImage(item, 'mobile')"></a>
+        <a :id="`projects-${item.name}-img`" :href="`${siteUrl}/projects/${item.slug}`" class="projectListVert-list__item--img"><img :src="getImage(item, 'mobile')"></a>
         <div class="projectListVert-list__item--text">
-          <a :href="`${siteUrl}/projects/${item.slug}`"><h2 v-text="getTruncatedVal(item.title, 15)"></h2></a>
-          <a :href="`${siteUrl}/projects/${item.slug}`"><p v-text="getTruncatedVal(sanitizeHtml( getValue(item, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20)"></p></a>
+          <a :id="`projects-${item.name}-title`" :href="`${siteUrl}/projects/${item.slug}`"><h2 v-text="getTruncatedVal(item.title, 15)"></h2></a>
+          <a :id="`projects-${item.name}-descr`" :href="`${siteUrl}/projects/${item.slug}`"><p v-text="getTruncatedVal(sanitizeHtml( getValue(item, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20)"></p></a>
         </div>
       </div>
     </div>
-    <div class="projectListVert__link"><router-link to="/section/topic">看更多</router-link></div>
+    <div class="projectListVert__link"><router-link id="projects-more" to="/section/topic">看更多</router-link></div>
   </section>
 </template>
 <script>

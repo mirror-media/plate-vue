@@ -23,25 +23,28 @@ export default {
   mounted () {
     window.addEventListener('scroll', (e) => {
       const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+      const asideLatestList = document.querySelector('.latest-list-container')
       const dfpR2 = document.querySelector('.dfp-r2')
-      const dfpFt = document.querySelector('.dfp-ft')
       const articleAsideFixed = document.querySelector('.articleAsideFixed')
-      if (dfpR2 && dfpFt) {
-        const dfpR2BottomPosition = elmYPosition('.dfp-r2') + document.querySelector('.dfp-r2').offsetHeight
-        const dfpFtTopPosition = elmYPosition('.dfp-ft')
-        const projectBottomPosition = currentYPosition() + articleAsideFixed.offsetHeight + 44
-        const deltaY = vh - (elmYPosition('.dfp-ft') - currentYPosition())
-        if (currentYPosition() > dfpR2BottomPosition && (projectBottomPosition < dfpFtTopPosition)) {
-          document.querySelector('.articleAsideFixed').classList.add('fixed-top')
-        } else {
-          document.querySelector('.articleAsideFixed').classList.remove('fixed-top')
-        }
-        if (projectBottomPosition > dfpFtTopPosition) {
-          document.querySelector('.articleAsideFixed').style.bottom = `${deltaY + 44}px`
-          document.querySelector('.articleAsideFixed').classList.add('fixed')
-        } else {
-          document.querySelector('.articleAsideFixed').classList.remove('fixed')
-        }
+      const dfpFtTopPosition = elmYPosition('.article_footer')
+      const projectBottomPosition = currentYPosition() + articleAsideFixed.offsetHeight + 44
+      const deltaY = vh - (elmYPosition('.article_footer') - currentYPosition())
+      let dfpR2BottomPosition
+      if (dfpR2.offsetHeight === 0) {
+        dfpR2BottomPosition = elmYPosition('.latest-list-container') + asideLatestList.offsetHeight
+      } else {
+        dfpR2BottomPosition = elmYPosition('.dfp-r2') + dfpR2.offsetHeight
+      }
+      if (currentYPosition() > dfpR2BottomPosition && (projectBottomPosition < dfpFtTopPosition)) {
+        articleAsideFixed.classList.add('fixed-top')
+      } else {
+        articleAsideFixed.classList.remove('fixed-top')
+      }
+      if (projectBottomPosition > dfpFtTopPosition) {
+        articleAsideFixed.style.bottom = `${deltaY + 44}px`
+        articleAsideFixed.classList.add('fixed')
+      } else {
+        articleAsideFixed.classList.remove('fixed')
       }
     })
   }
