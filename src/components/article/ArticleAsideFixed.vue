@@ -20,8 +20,8 @@ export default {
     'project-listVert': ProjectListVert
   },
   props: [ 'abIndicator', 'projects' ],
-  mounted () {
-    window.addEventListener('scroll', (e) => {
+  methods: {
+    detectFixAside: function (e) {
       const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       const asideLatestList = document.querySelector('.latest-list-container')
       const dfpR2 = document.querySelector('.dfp-r2')
@@ -46,7 +46,13 @@ export default {
       } else {
         articleAsideFixed.classList.remove('fixed')
       }
-    })
+    }
+  },
+  created () {
+    window.addEventListener('scroll', this.detectFixAside)
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.detectFixAside)
   }
 }
 
