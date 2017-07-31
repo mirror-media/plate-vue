@@ -44,7 +44,7 @@
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="dfp-ft mobile-hide" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config"/>
             <div style="width: 100%; height: 100%;">
               <app-footer />
