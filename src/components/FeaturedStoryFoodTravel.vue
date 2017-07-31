@@ -7,7 +7,7 @@
           <swiper-slide :is="props.slide" v-for="(o, i) in sectionfeatured" v-if="i < 10" :key="`${i}-${Date.now()}`">
             <div class="featured_item">
               <div>
-                <a :href="`${siteUrl}/story/${o.slug}`" :id="'featured-' + o.name" >
+                <a :href="`${siteUrl}/story/${o.slug}`" :id="'featured-' + o.name" :target="[ abIndicator === 'B' ? '_blank' : '' ]">
                   <div class="featured_item_img"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   <img class="play-btn" src="../../public/icon/play-foodtravel.png" alt="播放">
@@ -91,6 +91,9 @@
     },
     name: 'featuredStory-foodtravel',
     props: {
+      abIndicator: {
+        default: () => { return '' }
+      },
       sectionfeatured: {
         default: () => { return [] }
       },
