@@ -20,13 +20,13 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
+          <article-body :abIndicator="abIndicator" :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
               <!--related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderRelatedAside" :abIndicator="abIndicator" /-->
-              <article-aside-fixed></article-aside-fixed>
+              <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist"></article-aside-fixed>
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
@@ -44,7 +44,7 @@
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="dfp-ft mobile-hide" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config"/>
             <div style="width: 100%; height: 100%;">
               <app-footer />
@@ -187,15 +187,15 @@
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
-      // let abIndicator
-      // if (process.env.VUE_ENV === 'client') {
-      //   abIndicator = this.getMmid()
-      // }
+      let abIndicator
+      if (process.env.VUE_ENV === 'client') {
+        abIndicator = this.getMmid()
+      }
 
       return {
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="">
+          <meta name="mm-opt" content="article${abIndicator}">
           <meta name="robots" content="${robotsValue}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
@@ -548,16 +548,17 @@
         }
       },
       sendGA (articleData) {
-        // const abIndicator = this.getMmid()
+        const abIndicator = this.getMmid()
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
-          window.ga('set', 'contentGroup3', '')
+          // window.ga('set', 'contentGroup3', '')
+          window.ga('set', 'contentGroup3', `article${abIndicator}`)
         } else {
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
-          window.ga('set', 'contentGroup3', '')
-          // window.ga('set', 'contentGroup3', `article${abIndicator}`)
+          // window.ga('set', 'contentGroup3', '')
+          window.ga('set', 'contentGroup3', `article${abIndicator}`)
         }
         window.ga('send', 'pageview', { title: `${truncate(_.get(articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
@@ -618,6 +619,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
+      this.abIndicator = this.getMmid()
       if (!_.isEmpty(this.articleData)) {
         this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
