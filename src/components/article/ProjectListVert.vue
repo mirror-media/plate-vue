@@ -5,8 +5,8 @@
       <div class="projectListVert-list__item" v-for="item in projects">
         <a :id="`projects-${item.name}-img`" :href="`${siteUrl}/projects/${item.slug}`" class="projectListVert-list__item--img"><img :src="getImage(item, 'mobile')"></a>
         <div class="projectListVert-list__item--text">
-          <a :id="`projects-${item.name}-title`" :href="`${siteUrl}/projects/${item.slug}`"><h2 v-text="getTruncatedVal(item.title, 15)"></h2></a>
-          <a :id="`projects-${item.name}-descr`" :href="`${siteUrl}/projects/${item.slug}`"><p v-text="getTruncatedVal(sanitizeHtml( getValue(item, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20)"></p></a>
+          <a :id="`projects-${item.name}-title`" :href="`${siteUrl}/projects/${item.slug}`"><h2 v-text="getTruncatedVal(item.title, 13)"></h2></a>
+          <a :id="`projects-${item.name}-descr`" :href="`${siteUrl}/projects/${item.slug}`"><p v-text="getTruncatedVal(sanitizeHtml( getValue(item, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 19)"></p></a>
         </div>
       </div>
     </div>
