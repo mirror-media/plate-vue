@@ -378,6 +378,8 @@ export default {
     if (process.env.VUE_ENV === 'client') {
       abIndicator = this.abIndicator
     }
+    console.log('meta this: ', process.env.VUE_ENV, this.abIndicator)
+    console.log('meta log: ', process.env.VUE_ENV, abIndicator)
     return {
       title: title,
       meta: `
@@ -677,10 +679,11 @@ export default {
       this.showDfpCoverAdFlag = false
     },
     elmYPosition,
+    getRole,
     getTruncatedVal,
     getMmid () {
       const mmid = Cookie.get('mmid')
-      const role = getRole({ mmid, distribution: [
+      const role = this.getRole({ mmid, distribution: [
         { id: 'A', weight: 50 },
         { id: 'B', weight: 50 } ]
       })
@@ -838,6 +841,8 @@ export default {
     this.handleScroll()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
+    console.log('mounted fun: ', this.getMmid())
+    console.log('mounted this: ', this.abIndicator)
     if (this.sectionName === 'other') {
       window.ga('set', 'contentGroup1', '')
       window.ga('set', 'contentGroup2', '')
