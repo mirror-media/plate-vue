@@ -10,7 +10,7 @@
         </div>
       </div>
     </div>
-    <div class="projectListVert__link"><router-link id="projects-more" to="/section/topic">看更多</router-link></div>
+    <div class="projectListVert__link"><router-link id="more-projcets" to="/topic/58f067697bce2b0e0048299e">看更多</router-link></div>
   </section>
 </template>
 <script>
