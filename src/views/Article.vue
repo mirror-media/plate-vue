@@ -189,7 +189,7 @@
       const topicId = _.get(topics, [ '_id' ], '')
       let abIndicator
       if (process.env.VUE_ENV === 'client') {
-        abIndicator = this.getMmid()
+        abIndicator = this.abIndicator
       }
 
       return {

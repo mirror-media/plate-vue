@@ -376,7 +376,7 @@ export default {
     this.titleBase = title
     let abIndicator
     if (process.env.VUE_ENV === 'client') {
-      abIndicator = this.getMmid()
+      abIndicator = this.abIndicator
     }
     return {
       title: title,

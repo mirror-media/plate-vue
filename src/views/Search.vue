@@ -92,7 +92,7 @@ export default {
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
     let abIndicator
     if (process.env.VUE_ENV === 'client') {
-      abIndicator = this.getMmid()
+      abIndicator = this.abIndicator
     }
     return {
       title: title,
