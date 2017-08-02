@@ -119,9 +119,7 @@ export default {
       return eventLogo || '/public/logo.svg'
     },
     sections () {
-      return _.filter(_.get(this.commonData, [ 'sections', 'items' ]), function (o) {
-        return o.name !== 'hotvideo'
-      })
+      return _.filter(_.get(this.commonData, [ 'sections', 'items' ]), 'isFeatured')
     },
     socialLink () {
       return SOCIAL_LINK
