@@ -47,6 +47,9 @@
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
           <vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
+          <div v-for="(a, i) in adIds" :id="`compass-fit-${a.id}`"
+                  class="listArticleBlock nativeDFP margin-top-0"
+                  v-if="dfpMode === 'dev' && runMicroAd(i)" slot="microAd"></div>
         </article-list>
         <div><vue-dfp v-if="title !== 'Topic' && !isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" /></div>
         <div><vue-dfp v-if="title !== 'Topic' && isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" /></div>
@@ -76,7 +79,7 @@ import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, FB_AP
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, getTruncatedVal, unLockJS } from '../util/comm'
+import { currEnv, getTruncatedVal, unLockJS, insertMicroAd } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
@@ -407,6 +410,11 @@ export default {
   data () {
     return {
       abIndicator: '',
+      adIds: [
+        { id: '4273368', loaded: false },
+        { id: '4273369', loaded: false },
+        { id: '4273370', loaded: false }
+      ],
       articleListAutoScrollHeight: 0,
       canScrollLoadMord: true,
       dfpid: DFP_ID,
@@ -740,6 +748,11 @@ export default {
       .then(() => {
         this.loading = false
       })
+    },
+    runMicroAd (index) {
+      insertMicroAd({ adId: this.adIds[index].id, currEnv: this.dfpMode, microAdLoded: this.adIds[index].loaded })
+      this.adIds[index]['loaded'] = true
+      return true
     },
     updateCookie () {
       const cookie = Cookie.get('visited')
