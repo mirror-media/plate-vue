@@ -37,6 +37,9 @@
               <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpId="props.dfpId" slot="dfpNA3" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpId="props.dfpId" slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
+              <div v-for="(a, i) in adIds" :id="`compass-fit-${a.id}`"
+                  class="pop_item margin-top-0"
+                  v-if="dfpMode === 'dev' && runMicroAd(i)" slot="microAd"></div>
             </pop-list>
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
@@ -77,7 +80,7 @@
 <script>
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
-  import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
+  import { currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
@@ -292,6 +295,11 @@
     data () {
       return {
         abIndicator: '',
+        adIds: [
+          { id: '4273371', loaded: false },
+          { id: '4273372', loaded: false },
+          { id: '4273373', loaded: false }
+        ],
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpMode: 'prod',
@@ -550,6 +558,11 @@
         if (!document.getElementById('mediafarmersJS')) {
           document.querySelector('body').appendChild(mediafarmersScript)
         }
+      },
+      runMicroAd (index) {
+        insertMicroAd({ adId: this.adIds[index].id, currEnv: this.dfpMode, microAdLoded: this.adIds[index].loaded })
+        this.adIds[index]['loaded'] = true
+        return true
       },
       sendGA (articleData) {
         const abIndicator = this.getMmid()

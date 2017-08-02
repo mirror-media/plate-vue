@@ -3,6 +3,7 @@
     <div class="pop_title"><h3>熱門文章</h3></div>
     <div class="pop_list">
       <template v-for="(o, i) in popArticles">
+        <slot name="microAd" v-if="i === 0"></slot>
         <div class="pop_item">
           <figure>
             <router-link :to="o.slug" :id="'popular-' + i">

@@ -34,7 +34,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../constants'
-import { currEnv, getHref, getTruncatedVal, getValue } from '../util/comm'
+import { currEnv, getHref, getTruncatedVal, getValue, insertMicroAd } from '../util/comm'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
@@ -89,17 +89,8 @@ export default {
       return (section.length > 0) ? section : category
     },
     runMicroAd (adId) {
-      if (process.env.VUE_ENV === 'client' && this.currEnv === 'dev' && this.microAdLoded === false) {
-        const _lgy_lw = document.createElement('script')
-        _lgy_lw.type = 'text/javascript'
-        _lgy_lw.charset = 'UTF-8'
-        _lgy_lw.async = true
-        _lgy_lw.src = ((document.location.protocol === 'https:') ? 'https://' : 'http://') + `nt.compass-fit.jp/lift_widget.js?adspot_id=${adId}`
-        const _lgy_lw_0 = document.getElementsByTagName('script')[0]
-        _lgy_lw_0.parentNode.insertBefore(_lgy_lw, _lgy_lw_0)
-        console.log('adId', adId)
-        this.microAdLoded = true
-      }
+      insertMicroAd({ adId, currEnv: this.currEnv, microAdLoded: this.microAdLoded })
+      this.microAdLoded = true
       return true
     },
     updateSysStage () {

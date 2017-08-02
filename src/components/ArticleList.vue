@@ -2,6 +2,7 @@
   <section class="articleList container">
 
     <template v-for="(item, index) in articles">
+      <slot name="microAd" v-if="index === 0"></slot>
       <listArticle-block :abIndicator="abIndicator" :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
       <slot :name="getNativeDfpSlotName(index)" v-if="(index === 1 || index === 2 || index === 5) && hasDFP" />
     </template>
