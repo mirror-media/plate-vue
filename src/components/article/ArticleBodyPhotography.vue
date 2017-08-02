@@ -57,7 +57,7 @@
     </div>
     <div class="credit-comment" :class="creditCommentClass">
       <div class="credit" v-html="credit"></div>
-      <related-list-thumbnail :relatedList="relatedList"/>
+      <related-list-thumbnail :relatedList="relatedList" :isApp="isApp" />
       <!--slot name="slot_dfpFT"></slot-->
       <slot name="slot_fb_comment"></slot>      
     </div>
@@ -113,7 +113,7 @@
       },
       heroCaption () {
         const { heroCaption } = this.articleData
-        return heroCaption
+        return heroCaption || ''
       },
       heroImg () {
         const { heroImage } = this.articleData
@@ -397,6 +397,11 @@
           return () => {
             console.log('init fb comment')
           }
+        }
+      },
+      isApp: {
+        default: () => {
+          return false
         }
       }
     }
