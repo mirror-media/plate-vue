@@ -22,7 +22,6 @@
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <!--related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderRelatedAside" :abIndicator="abIndicator" /-->
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
@@ -31,7 +30,7 @@
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
             
-            <related-list-one-col :isApp="true" :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" />
+            <related-list-one-col :isApp="true" :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
@@ -41,7 +40,7 @@
         </div>
       </div>
       <div v-else-if="(articleStyle === 'photography')">
-        <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments">
+        <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments" :isApp="true">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <div slot="slot_dfpFT">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
@@ -428,12 +427,8 @@
         return _.get(this.articleData, [ 'relateds' ], [])
       },
       sectionId () {
-        const sectionName = _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
-        if (this.isCategoryBusinessMoney) {
-          return 'category-business-money'
-        } else {
-          return sectionName
-        }
+        const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
+        return _sectionId
       },
       styleDfpAd () {
         return (this.viewport < 321) ? 'ad-fit' : ''

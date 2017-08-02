@@ -12,14 +12,13 @@
     <main class="article_main">
       <div class="brief">
         <div v-for="p in briefArr">
-          <div v-if="p.type !== 'slideshow' && p.type !== 'audio' && p.type !== 'video'" v-html="paragraphComposer(p)"></div>
-          <div v-else-if="p.type === 'video'" is="article-video" 
+          <div v-if="p.type === 'video'" is="article-video" 
             :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
             :id="'latest-'+ p.id" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
-          <div v-else is="app-slider" class="per-slide" :option="sliderOption">
+          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
@@ -27,25 +26,32 @@
               </swiper-slide>
             </template>
           </div>
-        </div>        
+          <div v-else-if="p.type === 'annotation'">
+            <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
+          </div>
+          <div v-else v-html="paragraphComposer(p)"></div>
+        </div>      
       </div>
       <div class="split-line"></div>
       <article class="content">
         <div v-for="(p, index) in contArr">
-          <div v-if="p.type !== 'slideshow' && p.type !== 'audio' && p.type !== 'video'" v-html="paragraphComposer(p)"></div>
-          <div v-else-if="p.type === 'video'" is="article-video" 
+          <div v-if="p.type === 'video'" is="article-video" 
             :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
             :id="'latest-'+ p.id" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
-          <div v-else is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
+          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
               </swiper-slide>
             </template>
           </div>
+          <div v-else-if="p.type === 'annotation'">
+            <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
+          </div>
+          <div v-else v-html="paragraphComposer(p)"></div>
           <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
         </div>
@@ -76,6 +82,7 @@
 import _ from 'lodash'
 import { SECTION_MAP } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+import Annotation from './Annotation.vue'
 import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
 import ProjectList from './ProjectList.vue'
@@ -87,6 +94,7 @@ export default {
     'app-slider': Slider,
     'audio-box': AudioBox,
     'proj-list': ProjectList,
+    Annotation,
     ArticleVideo
   },
   computed: {
@@ -97,11 +105,12 @@ export default {
       return _.get(this.articleData, [ 'brief', 'apiData' ], [])
     },
     category () {
-      const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ])
-      const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ])
+      const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ], '')
+      const sectionTitle = _.get(this.articleData, [ 'sections', 0, 'title' ], '')
+      const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ], '')
+      const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ], sectionTitle)
       const shouldShow = !_.get(this.articleData, [ 'isAdvertised' ], false) ? {} : { display: 'none;' }
-      const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
-      const style = { borderLeft: _.get(SECTION_MAP, [ sectionId, 'borderLeft' ], '7px solid #bcbcbc;') }
+      const style = { borderLeft: `7px solid ${_.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')}` }
       return { categoryId, categoryTitle, style: Object.assign(style, shouldShow) }
     },
     contArr () {

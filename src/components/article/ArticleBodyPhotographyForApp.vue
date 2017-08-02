@@ -104,7 +104,7 @@
       },
       heroCaption () {
         const { heroCaption } = this.articleData
-        return heroCaption
+        return heroCaption || ''
       },
       heroImg () {
         const { heroImage } = this.articleData

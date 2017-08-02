@@ -25,7 +25,6 @@
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
-              <!--related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderRelatedAside" :abIndicator="abIndicator" /-->
               <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist"></article-aside-fixed>
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
@@ -39,7 +38,6 @@
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpId="props.dfpId" slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
             </pop-list>
-            <!--related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderRelatedAside || articleStyle === 'wide')" slot="relatedlistBottom" :abIndicator="abIndicator" /-->
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
@@ -529,14 +527,20 @@
         matchedContentContent.setAttribute('data-ad-slot', '3362911316')
         matchedContentEnd.setAttribute('id', 'matchedContentEnd')
         matchedContentEnd.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`
+
+        /**/
+        /* photography article may not have this container */
+        const container = document.querySelector('#matchedContentContainer')
+        /**/
+
         if (!document.querySelector('#matchedContentStart')) {
-          document.querySelector('#matchedContentContainer').appendChild(matchedContentStart)
+          container && container.appendChild(matchedContentStart)
         }
         if (!document.querySelector('#matchedContentContent')) {
-          document.querySelector('#matchedContentContainer').appendChild(matchedContentContent)
+          container && container.appendChild(matchedContentContent)
         }
         if (!document.querySelector('#matchedContentEnd')) {
-          document.querySelector('#matchedContentContainer').appendChild(matchedContentEnd)
+          container && container.appendChild(matchedContentEnd)
         }
       },
       insertMediafarmersScript () {
