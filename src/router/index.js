@@ -4,10 +4,11 @@ import Router from 'vue-router'
 import VueLazyload from 'vue-lazyload'
 
 Vue.use(Router)
-Vue.use(VueLazyload)
 
 Vue.use(VueLazyload, {
   preLoad: 1.3,
+  error: '/public/notImage.png',
+  loading: '/public/icon/loading.gif',
   attempt: 1
 })
 

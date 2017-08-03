@@ -91,7 +91,7 @@ html
   font-size 16px
 
 *, *:before, *:after
-  box-sizing inherit;
+  box-sizing inherit
 
 body
   font-family -apple-system, Microsoft JhengHei,"Segoe UI", Roboto, Ubuntu, "Droid Sans", "Helvetica Neue", sans-serif;
@@ -210,6 +210,12 @@ button:focus {
       background-size contain
       background-position center center
       cursor pointer
+
+img[lazy=loading]
+  margin 0 auto
+  object-fit contain
+  object-position center center
+
 
 @media (min-width 0px) and (max-width 320px)
   .dfp-cover
