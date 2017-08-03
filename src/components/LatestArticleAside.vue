@@ -3,10 +3,10 @@
     <div class="latest-list">
       <div class="latest-list_item">
         <router-link :to="getHref(groupedArticle)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style !== 'projects'" :target="target">
-          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
+          <div class="latest-list_item_img" v-lazy:background-image="getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
         </router-link>
         <a :href="getHref(groupedArticle)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style === 'projects'" :target="target">
-          <div class="latest-list_item_img" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
+          <div class="latest-list_item_img" v-lazy:background-image="getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
         </a>
         <div class="latest-list_item_title">
           <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style !== 'projects'" :target="target"></router-link>

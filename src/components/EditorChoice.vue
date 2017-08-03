@@ -5,13 +5,11 @@
         <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
           <template>
             <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice-image"
-              :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
+              <div :id="'slide-' + index" class="editorChoice-image" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
             </router-link>
             <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice-image"
-              :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
+              <div :id="'slide-' + index" class="editorChoice-image" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
             </a>
           </template>
@@ -39,11 +37,11 @@
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice-list-post">
         <template>
           <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style !== 'projects'" :target="target">
-            <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="item.title"></figure>
+            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
             <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </router-link>
           <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style === 'projects'" :target="target">
-            <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="item.title"></figure>
+            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
             <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </a>
         </template>
@@ -128,14 +126,8 @@ export default {
     getValue,
     getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
-      let device = 'label-width'
-      if (this.viewport < 1200) {
-        device = 'label-width-mobile'
-      }
-
       const style = {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc'),
-        width: _.get(SECTION_MAP, [ sectionId, device ], (this.viewport > 599 && this.viewport < 1200) ? '60px' : 'auto')
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
       }
       return style
     },
@@ -280,6 +272,8 @@ export default {
             top auto
             bottom 0
             left 0
+            white-space nowrap
+            padding 0 20px !important
 
         &__img
           > figure
@@ -289,6 +283,8 @@ export default {
             background-position 50% 50%
             background-repeat no-repeat
             background-size cover
+            &[lazy=loading]
+              background-size 40% 40%
                 
         &__title
           padding .5em 0
