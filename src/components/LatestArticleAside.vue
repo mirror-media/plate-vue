@@ -70,7 +70,7 @@ export default {
     sticky () {
       const { nodeTopStatic, nodeLeftStatic, nodeWidthStatic } = this
       const node = this.$el
-      const currentScroll = document.body.scrollTop
+      const currentScroll = document.body.scrollTop || document.documentElement.scrollTop
       if (currentScroll >= nodeTopStatic - 30) {
         node.style.position = 'fixed'
         node.style.top = '0px'
