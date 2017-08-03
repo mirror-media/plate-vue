@@ -38,7 +38,7 @@
         <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
-        <list-choice v-if="type === `SECTION` && sectionfeatured && title !== 'Topic' && title !== '影音'" :abIndicator="abIndicator" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />
+        <!--<list-choice v-if="type === `SECTION` && sectionfeatured && title !== 'Topic' && title !== '影音'" :abIndicator="abIndicator" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />-->
         <div class="list-title container" :style="{ color: sectionColor }">
           <span class="list-title__text" v-text="title"></span>
         </div>
@@ -787,6 +787,9 @@ export default {
     }
   },
   watch: {
+    abIndicator: function () {
+      this.$forceUpdate()
+    },
     articleListAutoScrollHeight: function () {
       if (this.uuid === SECTION_FOODTRAVEL_ID && this.page >= 2) {
         this.canScrollLoadMord = false
@@ -854,8 +857,7 @@ export default {
     this.handleScroll()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
-    console.log('mounted fun: ', this.getMmid())
-    console.log('mounted this: ', this.abIndicator)
+    console.log('mounted: ', this.abIndicator)
     if (this.sectionName === 'other') {
       window.ga('set', 'contentGroup1', '')
       window.ga('set', 'contentGroup2', '')
@@ -869,6 +871,7 @@ export default {
   },
   updated () {
     this.updateSysStage()
+    console.log('updated: ', this.abIndicator)
   }
 }
 
