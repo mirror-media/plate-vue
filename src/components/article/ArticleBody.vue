@@ -12,12 +12,23 @@
     <main class="article_main">
       <div class="brief">
         <div v-for="p in briefArr">
-          <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
+          <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
+            <img class="thumbnail"
+                  :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
+                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '')}`"
+                  :data-srcset="`
+                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '')} 800w,
+                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '')} 1200w,
+                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '')} 2000w`">
+            <div class="caption" v-text="getValue(p.content, [ 0, 'description' ], '')"></div>
+          </div>
+          <div v-else-if="p.type === 'video'" is="article-video" 
+            :id="'latest-'+ p.id" 
+            :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-                  :sources="getAudioSource(getValue(p, [ 'content', 0], {}))" 
-                  :id="'latest-'+ p.id" 
-                  :item="getValue(p, [ 'content', 0], {})"></div>
-          <div v-else is="app-slider" class="per-slide" :option="sliderOption">
+            :id="'latest-'+ p.id" 
+            :audio="getValue(p, [ 'content', 0], {})"></div>
+          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
@@ -25,32 +36,70 @@
               </swiper-slide>
             </template>
           </div>
+          <div v-else-if="p.type === 'annotation'">
+            <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
+          </div>
+          <div v-else v-html="paragraphComposer(p)"></div>
         </div>        
       </div>
       <div class="split-line"></div>
       <article class="content">
         <div v-for="(p, index) in contArr">
-          <div v-if="p.type !== 'slideshow' && p.type !== 'audio'" v-html="paragraphComposer(p)"></div>
+          <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
+            <img class="thumbnail"
+                  :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
+                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '')}`"
+                  :data-srcset="`
+                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '')} 800w,
+                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '')} 1200w,
+                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '')} 2000w`">
+            <div class="caption" v-text="getValue(p.content, [ 0, 'description' ], '')"></div>
+          </div>
+          <div v-else-if="p.type === 'video'" is="article-video" 
+            :id="'latest-'+ p.id" 
+            :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-                  :sources="getAudioSource(getValue(p, [ 'content', 0], {}))" 
-                  :id="'latest-'+ p.id" 
-                  :item="getValue(p, [ 'content', 0], {})"></div>
-          <div v-else is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
+            :id="'latest-'+ p.id" 
+            :audio="getValue(p, [ 'content', 0], {})"></div>
+          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
-                <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
+                <div>
+                  <div class="slideshowImg">
+                    <img :alt="getValue(o, [ 'description' ], '')" 
+                          :src="getValue(o, [ 'url' ], '')"
+                          :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
+                                      ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
+                                      ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
+                    <div class="img-caption" v-text="getValue(o, [ 'description' ], '')"></div>
+                  </div>
+                </div>
               </swiper-slide>
             </template>
           </div>
+          <div v-else-if="p.type === 'annotation'">
+            <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
+          </div>
+          <div v-else v-html="paragraphComposer(p)"></div>
           <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
         </div>
       </article>
-      <div class="article_main_tags" v-if="tags.length > 0">
-        <i class="tags_icon"></i>
-        <div class="tags" v-html="tags"></div>
+      <div class="article_main_related_bottom">
+        <slot name="relatedlistBottom"></slot>
+      </div>
+      <div class="article_main_tags">
+        <i class="tags_icon" v-if="tags.length > 0"></i>
+        <div class="tags" v-html="tags" v-if="tags.length > 0"></div>
       </div>
       <div class="split-line"></div>
+      <div class="fbPagePlugin">
+        <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="false">
+          <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
+            <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
+          </blockquote>
+        </div>
+      </div>
       <div class="herbsapi">
         <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
         <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
@@ -58,13 +107,16 @@
       <div class="dfpad-set" style="display: flex; justify-content: space-around;">
         <slot name="dfpad-set"></slot>
       </div>
-      <div class="article_main_related_bottom">
-        <slot name="relatedlistBottom"></slot>
+      <div>
+        <h3>推薦文章</h3>
+      </div>
+      <div id="matchedContentContainer" class="matchedContentContainer">
       </div>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
       </div>
-      <div class="article_main_proj">
+      <div class="article_main_proj" v-show="!(abIndicator === 'B' && viewport > 1200)">
+        <h3 style="margin-top: 0;">專題報導</h3>
         <proj-list :projects="projlistData" :viewport="viewport" />
       </div>
       <slot name="slot_fb_comment"></slot>
@@ -76,7 +128,11 @@
 import _ from 'lodash'
 import { SECTION_MAP } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+// import { getRole } from '../../util/mmABRoleAssign'
+import Annotation from './Annotation.vue'
+import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
+// import Cookie from 'vue-cookie'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
 import moment from 'moment'
@@ -85,7 +141,9 @@ export default {
   components: {
     'app-slider': Slider,
     'audio-box': AudioBox,
-    'proj-list': ProjectList
+    'proj-list': ProjectList,
+    Annotation,
+    ArticleVideo
   },
   computed: {
     articleStyle () {
@@ -95,11 +153,13 @@ export default {
       return _.get(this.articleData, [ 'brief', 'apiData' ], [])
     },
     category () {
-      const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ])
-      const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ])
-      const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
-      const style = { borderLeft: _.get(SECTION_MAP, [ sectionId, 'borderLeft' ], '7px solid #bcbcbc;') }
-      return { categoryId, categoryTitle, style }
+      const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ], '')
+      const sectionTitle = _.get(this.articleData, [ 'sections', 0, 'title' ], '')
+      const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ], '')
+      const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ], sectionTitle)
+      const shouldShow = !_.get(this.articleData, [ 'isAdvertised' ], false) ? {} : { display: 'none;' }
+      const style = { borderLeft: `7px solid ${_.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')}` }
+      return { categoryId, categoryTitle, style: Object.assign(style, shouldShow) }
     },
     contArr () {
       return _.get(this.articleData, [ 'content', 'apiData' ], [])
@@ -147,7 +207,7 @@ export default {
       }
     },
     subtitle () {
-      const { subtitle } = this.articleData
+      const { subtitle = [] } = this.articleData
       return subtitle
     },
     title () {
@@ -155,7 +215,7 @@ export default {
       return title
     },
     tags () {
-      const { tags } = this.articleData
+      const { tags = [] } = this.articleData
       return tags.map((o) => {
         return `<a href=\"/tag/${_.get(o, [ 'id' ], '')}\" id=\"tag-${_.get(o, [ 'id' ], '')}\">${_.get(o, [ 'name' ], '')}</a>`
       }).join('、')
@@ -183,11 +243,6 @@ export default {
     }
   },
   methods: {
-    getAudioSource (item) {
-      const audioURL = []
-      audioURL.push(_.get(item, [ 'url' ]))
-      return audioURL
-    },
     getHref,
     getTruncatedVal,
     getValue,
@@ -202,8 +257,6 @@ export default {
           return `<div class=\"embedded\ ${_.get(item.content, [ 0, 'alignment' ], '')}">${_.get(item.content, [ 0, 'embeddedCode' ], '')}<div class=\"caption\">${_.get(item.content, [ 0, 'caption' ], '')}</div></div>`
         case 'header-two':
           return `<h2>${item.content.toString()}</h2>`
-        case 'image':
-          return `<div class=\"innerImg ${_.get(item.content, [ 0, 'alignment' ], '')}\"><img alt="${_.get(item.content, [ 0, 'description' ], '')}" src=${_.get(item.content, [ 0, 'url' ], '')} width=\"\" srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w, ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w, ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\"/><div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div></div>`
         case 'infobox':
           return `<div class="info-box-container ${_.get(item, [ 'alignment' ], '')}">
                     <span class="info-box-icon"></span>
@@ -248,14 +301,7 @@ export default {
           return `<ul class="${_.get(item, [ 'alignment' ], '')} unordered-list-item">${_liStrUnordered}</ul>`
         case 'unstyled':
           return (item.content.toString().length > 0) ? `<p>${item.content.toString()}</p>` : ''
-        case 'video':
-          return `<div class="video ${_.get(item, [ 'alignment' ], '')}">
-                    <video width="100%" height="100%" controls controlsList="nodownload" id="${_.get(item, [ 'id' ], '')}${_.get(item.content, [ 0, 'id' ], '')}">
-                      <source src="${_.get(item.content, [ 0, 'url' ], '')}" type="${_.get(item.content, [ 0, 'filetype' ], '')}">
-                        Your browser does not support the video tag.
-                    </video>
-                    <div class="playpause play" target="${_.get(item, [ 'id' ], '')}${_.get(item.content, [ 0, 'id' ], '')}"></div>
-                  </div>`
+
         case 'youtube':
           return `<div class=\"youtube\">
                     <div class=\"youtube-container\">
@@ -267,35 +313,57 @@ export default {
           return
       }
     },
-    setUpPlayBtnsAbility () {
-      const playBtns = document.querySelectorAll('.article_body .playpause')
-      _.map(playBtns, (btn) => {
-        btn.addEventListener('click', (e) => {
-          const source = e.target
-          const targ = source.getAttribute('target')
-          const targDOM = document.querySelector(`video[id="${targ}"]`)
-          const sourceClass = source.getAttribute('class')
-          const ifPlay = sourceClass.indexOf(' play') > -1
-          source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
-          targDOM && ifPlay && targDOM.play()
-          targDOM.removeEventListener('pause', this.videoPausedHandler)
-          targDOM.addEventListener('pause', this.videoPausedHandler)
-        })
+    setUpLightbox () {
+      if (!document.querySelector('.lightbox')) {
+        const lightbox = document.createElement('div')
+        const overlay = document.createElement('div')
+        const img = document.createElement('img')
+        const close_btn = document.createElement('a')
+
+        lightbox.classList.add('lightbox')
+        overlay.classList.add('lightbox-overlay')
+        img.classList.add('lightbox-img')
+        close_btn.classList.add('lightbox-close')
+
+        lightbox.appendChild(overlay)
+        lightbox.appendChild(img)
+        lightbox.appendChild(close_btn)
+
+        document.querySelector('body').appendChild(lightbox)
+      }
+
+      const thumbnails = document.querySelectorAll('.innerImg .thumbnail')
+      thumbnails.forEach((ele) => {
+        ele.onclick = () => {
+          const src = ele.getAttribute('src')
+          const lightbox = document.querySelector('.lightbox')
+          const lightbox_overlay = lightbox.querySelector('.lightbox-overlay')
+          const lightbox_img = lightbox.querySelector('.lightbox-img')
+          const close_btn = lightbox.querySelector('.lightbox-close')
+          lightbox_img.setAttribute('src', src)
+          lightbox.style.display = 'flex'
+
+          lightbox_overlay.onclick = () => {
+            lightbox.style.display = 'none'
+          }
+          close_btn.onclick = () => {
+            lightbox.style.display = 'none'
+          }
+        }
       })
-    },
-    videoPausedHandler (e) {
-      const targ = e.target
-      const source = document.querySelector(`.playpause[target="${targ.getAttribute('id')}"]`)
-      const sourceClass = source.getAttribute('class')
-      const ifPlay = sourceClass.indexOf(' play') > -1
-      source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
     }
   },
   mounted () {
-    this.setUpPlayBtnsAbility()
+    this.setUpLightbox()
+  },
+  updated () {
+    this.setUpLightbox()
   },
   name: 'article-body',
   props: {
+    abIndicator: {
+      default: () => { return '' }
+    },
     articleData: {
       default: () => { return undefined }
     },
@@ -309,6 +377,51 @@ export default {
 }
 </script>
 <style lang="stylus">
+  .lightbox
+    display none
+    justify-content center
+    align-items center
+    width 100%
+    height 100%
+    background-color rgba(0,0,0,.7)
+    position fixed
+    top 0
+    left 0
+    z-index 99999
+    box-sizing border-box
+
+    &-img
+      max-height 90vh
+      max-width 90vw
+      z-index 100002
+
+    &-close
+      background-image url(/public/icon/close.png)
+      background-size contain
+      // display block
+      position absolute
+      top 10px
+      right 10px
+      width 20px
+      height 20px
+      z-index 100002
+      // filter brightness(100%)
+      // transition filter 1s cubic-bezier(.23, 1, .32, 1)
+
+      &:hover
+        filter brightness(200%)
+      //   transition filter 1s cubic-bezier(.23, 1, .32, 1)
+    
+    &-overlay
+      position absolute
+      top 0
+      right 0
+      width 100%
+      height 100%
+      // background-color red
+      z-index 100001
+
+
   .ad-container
     > div
       width 100%
@@ -350,6 +463,7 @@ export default {
         font-size 40px
         font-weight 400
         margin 0
+        text-align justify
 
     .article_subtitle  
       width 695px
@@ -382,6 +496,11 @@ export default {
 
         img 
           width 100%
+          &[lazy=loading]
+            height 150px
+
+        .thumbnail
+          cursor pointer
         
         .caption 
           font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
@@ -411,11 +530,11 @@ export default {
         &.center 
           margin-top 20px
           width 100%
+
         
-      
       .article_main_pop 
         clear both
-        margin-top 40px
+        margin-top 20px
       
       .article_main_tags 
         clear both
@@ -535,27 +654,6 @@ export default {
           margin 1.5em auto
           clear both
           position relative
-
-          .playpause
-            background-repeat no-repeat
-            width 60px
-            height 60px
-            position absolute
-            margin auto
-            background-size contain
-            background-position center
-            top 50%
-            left 50%
-            margin-left -30px
-            margin-top -30px
-            cursor pointer
-            background-image url('/public/icon/play-btn@2x.png')
-
-            &.play
-              display block
-              
-            &.pause
-              display none
         
       a, a:hover, a:link, a:visited 
         color #3195b3
@@ -849,6 +947,11 @@ export default {
       .swiper-pagination
         .swiper-pagination-bullet.swiper-pagination-bullet-active
           background-color rgba(179, 179, 179, 0.61)
+  .fbPagePlugin
+    display none
+    margin-top 15px
+    .fb-page
+      width 100%
   .herbsapi
     display flex
     align-items center
@@ -867,9 +970,17 @@ export default {
       padding 0
       font-size 0
       border none
-      
+
   @media (min-width 0px) and (max-width 499px)
     .article_body
+      > div:not([class="main"]):not([class="pic-container"])
+        padding-right 25px
+        padding-left 25px
+      > .article_main
+        > div:not([class="dfpad-set"]), article
+          padding-left 25px
+          padding-right 25px
+
       .article_basic-info
         .category
           font-size 1.3rem
@@ -929,6 +1040,15 @@ export default {
               font-size 3rem
               top 15px
               left 10px
+  @media (min-width 321px) and (max-width 499px)
+    .article_body
+      > div:not([class="main"])
+        padding-right 0
+        padding-left 0
+      > .article_main
+        > div:not([class="dfpad-set"]), article
+          padding-left 0
+          padding-right 0
 
   @media (min-width 0px) and (max-width 767px)
     .article_body
@@ -952,7 +1072,6 @@ export default {
 
     .article_fb_comment
       margin-bottom 60px!important
-
   
   @media (max-width 899px) and (min-width 768px)
     .article_body
@@ -996,6 +1115,8 @@ export default {
     .article_body
       .article_main, .article_credit, .article_subtitle
         display block
+    .fbPagePlugin
+      display block
     .herbsapi
       br
         display inline

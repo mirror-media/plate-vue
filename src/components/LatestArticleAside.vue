@@ -2,24 +2,22 @@
   <div class="latest-aside-container" v-if="groupedArticle">
     <div class="latest-list">
       <div class="latest-list_item">
-        <router-link :to="getHref(groupedArticle)" :id="`group-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style !== 'projects'">
-          <div class="latest-list_item_img" :title="getValue(groupedArticle, [ 'title' ])" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
-          <div class="latest-list_item_label" :class="labelClass(groupedArticle)" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
+        <router-link :to="getHref(groupedArticle)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style !== 'projects'" :target="target">
+          <div class="latest-list_item_img" v-lazy:background-image="getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
         </router-link>
-        <a :href="getHref(groupedArticle)" :id="`group-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style === 'projects'">
-          <div class="latest-list_item_img" :title="getValue(groupedArticle, [ 'title' ])" :style="{ backgroundImage: 'url(' + getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }"></div>
-          <div class="latest-list_item_label" :class="labelClass(groupedArticle)" :style="getSectionStyle(getValue(groupedArticle, [ 'sections', 0 ], ''))" v-text="getValue(groupedArticle, [ 'sections', 0, 'title' ], '')"></div>
+        <a :href="getHref(groupedArticle)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style === 'projects'" :target="target">
+          <div class="latest-list_item_img" v-lazy:background-image="getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
         </a>
-        <div class="latest-list_item_title" :style="getSectionStyleBorderTop(getValue(groupedArticle, [ 'sections', 0 ], ''))">
-          <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style !== 'projects'"></router-link>
-          <a :href="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style === 'projects'"></a>
+        <div class="latest-list_item_title">
+          <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style !== 'projects'" :target="target"></router-link>
+          <a :href="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style === 'projects'" :target="target"></a>
         </div>
       </div>
 
       <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])" v-if="i < 3">
-        <div class="latest-list_item_title" :style="getSectionStyleBorderTop(getValue(o, [ 'sections', 0 ], ''))">
-          <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group-latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style !== 'projects'"></router-link>
-          <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group-latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style === 'projects'"></a>
+        <div class="latest-list_item_title">
+          <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style !== 'projects'" :target="target"></router-link>
+          <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style === 'projects'" :target="target"></a>
         </div>
       </div>
     </div>
@@ -32,6 +30,13 @@ import { getHref, getTruncatedVal, getValue } from '../util/comm'
 
 export default {
   name: 'latest-list-aside',
+  data () {
+    return {
+      nodeTopStatic: 0,
+      nodeLeftStatic: 0,
+      nodeWidthStatic: 0
+    }
+  },
   methods: {
     getHref,
     getTruncatedVal,
@@ -39,11 +44,9 @@ export default {
     getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
       const style = (this.viewport > 1199) ? {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);'),
-        width: _.get(SECTION_MAP, [ sectionId, 'label-width' ], '45px')
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);')
       } : {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);'),
-        width: _.get(SECTION_MAP, [ sectionId, 'label-width-tablet' ], '60px')
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);')
       }
       return style
     },
@@ -58,9 +61,59 @@ export default {
       }
       return style
     },
-    labelClass (article) {
-      return {
-        'label-width-auto': (this.viewport < 1200)
+    fetchNodeStaticStyle (node) {
+      node.style.position = 'static'
+      this.nodeTopStatic = node.offsetTop
+      this.nodeLeftStatic = node.offsetLeft
+      this.nodeWidthStatic = node.clientWidth
+    },
+    sticky () {
+      const { nodeTopStatic, nodeLeftStatic, nodeWidthStatic } = this
+      const node = this.$el
+      const currentScroll = document.body.scrollTop || document.documentElement.scrollTop
+      if (currentScroll >= nodeTopStatic - 30) {
+        node.style.position = 'fixed'
+        node.style.top = '0px'
+        node.style.left = nodeLeftStatic + 'px'
+        node.style.width = nodeWidthStatic + 'px'
+        node.style['margin-top'] = '30px'
+      } else {
+        node.style.position = 'static'
+        node.style['margin-top'] = '0px'
+      }
+    },
+    resize () {
+      // Recalculate node static style and determine stick to the top or not
+      this.fetchNodeStaticStyle(this.$el)
+      this.sticky()
+
+      // Remove and register scroll event again, prevent inconsistently position of node
+      window.removeEventListener('scroll', this.sticky, false)
+      window.addEventListener('scroll', this.sticky)
+    },
+    handleScroll () {
+      this.fetchNodeStaticStyle(this.$el)
+      this.sticky()
+      window.removeEventListener('scroll', this.sticky, false)
+      window.addEventListener('scroll', this.sticky)
+    },
+    handleResize () {
+      window.removeEventListener('resize', this.resize, false)
+      window.addEventListener('resize', this.resize)
+    },
+    setUpEventHandler () {
+      if (this.viewport > 1199) {
+        if (this.$el.className.includes('last')) {
+          // Wait for the ad container of LPCHD show up
+          // while(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id")) {
+          //   console.log(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id"))
+          //   // this.handleScroll()
+          //   // this.handleResize()
+          //   break
+          // }
+          setTimeout(this.handleScroll, 3000)
+          setTimeout(this.handleResize, 3000)
+        }
       }
     }
   },
@@ -68,9 +121,19 @@ export default {
     groupedArticle: {
       default: () => { return undefined }
     },
+    target: {
+      default: () => ('_self')
+    },
     viewport: {
       default: () => { return undefined }
-    }
+    },
+    isLast: null
+  },
+  mounted () {
+    this.setUpEventHandler()
+  },
+  updated () {
+    this.setUpEventHandler()
   }
 }
 </script>
@@ -85,10 +148,7 @@ export default {
 
   .latest-list
     .latest-list_item
-      &:first-child
-        .latest-list_item_title
-          border-top-style solid
-
+    
       &:last-child
         .latest-list_item_title
           &::after
@@ -104,11 +164,14 @@ export default {
           background-position center center
           background-repeat no-repeat
           background-size cover
+          &[lazy=loading]
+            background-size 40%
 
         .latest-list_item_label
           position absolute
           height 35px
-          width 60px
+          white-space nowrap
+          padding 0 20px
           color #fff
           font-size 1.2rem
           display flex 
@@ -162,7 +225,6 @@ export default {
         > a
           .latest-list_item_label
             height 35px
-            width 60px
             top auto
             bottom 0
             left 0
@@ -190,7 +252,7 @@ export default {
         > a
           .latest-list_item_label
             height 25px
-            width 45px
+            padding 0 10px
             font-size 0.9rem
             top auto
             bottom 0

@@ -1,53 +1,41 @@
 <template>
-  <div class="activity" :style="[ viewport > 899 ? { left: `-${activityStyle}vw` } : {} ]">
-    <a href="/" class="activity__logo">
-      <img src="/public/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media" />
+  <main class="activity">
+    <a href="/" class="activity__logo" id="home">
+      <img src="/public/icon/logo_black.png" srcset="/public/icon/logo_black@2x.png 2x" alt="鏡週刊 Mirror Media" />
     </a>
-    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" :sharePath="`/topic/59151f0ff2179c0d0089b7d5`" class="activity__share" />
-    <section class="activity-currentNode">
-      <nav class="activity-currentNode__nav">
-        <div class="activity-currentNode__nav--menu" @click="toggleNav()">
-          <span class="hamburgerBar hamburgerBar-1" />
-          <span class="hamburgerBar hamburgerBar-2" />
-          <span class="hamburgerBar hamburgerBar-3" />
-        </div>
-      </nav>
-      <activity-timelineNav :openNav="openNav" :timelineNodes="timelineNodes" :viewport="viewport" />
-      <activity-nodeNav :node="prevNode" :position="`prev`" v-on:goToPrev="goToPrev" />
-      <activity-node :currentIndex="currentIndex" :nodes="nodes" :viewport="viewport" :targNodeTopY="targNodeTopY" v-on:changeCurrIdx="changeCurrentIndex" />
-      <activity-nodeNav :node="nextNode" :position="`next`" v-on:goToNext="goToNext" />
-      <activity-desktopNodesNav :currentIndex="currentIndex" :nodes="nodes" :nodesAmount="nodesAmount"
-        v-on:goToPrev="goToPrev" v-on:goToNext="goToNext" v-on:goToIndex="goToIndex"/>
-    </section>
-  </div>
+    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" :sharePath="`/activity/${getValue(activity, [ 'id' ])}`" class="activity__share" />
+    <div class="activity__menu" v-if="topicId">
+      <a :href="`/topic/${topicId}`"><img src="/public/icon/home.png" srcset="/public/icon/home@2x.png 2x" /></a>
+    </div>
+    <img :src="getImage(activity, 'desktop')" />
+    <h1 v-text="getValue(activity, [ 'name' ])" />
+    <activity-timeline :initialNodeIndex="initialNodeIndex" :initialNodes="initialNodes" :viewport="viewport" v-on:openLightbox="openLightbox" />
+    <activity-lightbox :initialActivity="activity" :initialNodes="initialNodes" :lightboxIndex="lightboxIndex" :viewport="viewport" v-show="isLightboxOpen" v-on:closeLightbox="closeLightbox" />
+    <div class="activity__landscape">
+      <figure>
+        <img v-lazy="`/public/icon/landscape_white.svg`" />
+        <p>請將您的裝置轉至直向來繼續閱讀</p>
+      </figure>
+    </div>
+    <div class="activity__curtain" v-show="loadind">
+      Loading...
+    </div>
+  </main>
 </template>
 
 <script>
 
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants/index'
-import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-import { enableScroll, getTruncatedVal } from '../util/comm.js'
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_TITLE, SITE_URL } from '../constants'
+import { getImage, getTruncatedVal, getValue } from '../util/comm.js'
 import _ from 'lodash'
-import ActivityDesktopNodesNav from '../components/activity/ActivityDesktopNodesNav.vue'
-import ActivityNode from '../components/activity/ActivityNode.vue'
-import ActivityNodeNav from '../components/activity/ActivityNodeNav.vue'
-import ActivityTimelineNav from '../components/activity/ActivityTimelineNav.vue'
+import ActivityLightbox from '../components/activity/ActivityLightbox.vue'
+import ActivityTimeline from '../components/activity/ActivityTimeline.vue'
 import Share from '../components/Share.vue'
 import sanitizeHtml from 'sanitize-html'
-
-const PAGE = 1
+import titleMetaMixin from '../util/mixinTitleMeta'
 
 const fetchData = (store) => {
   return fetchActivities(store, store.state.route.params.activityId)
-  .then(() => {
-    return fetchNodes(store, store.state.route.params.activityId, PAGE)
-  })
-}
-
-const fetchTimeline = (store, id) => {
-  return store.dispatch('FETCH_TIMELINE', {
-    'id': id
-  })
 }
 
 const fetchActivities = (store, id) => {
@@ -60,19 +48,9 @@ const fetchActivities = (store, id) => {
   })
 }
 
-const fetchNodes = (store, uuid, page) => {
-  return store.dispatch('FETCH_NODES', {
-    'params': {
-      page: page,
-      where: {
-        activity: uuid
-      }
-    }
-  })
-}
-
 const fetchAllNodes = (store) => {
-  const page = _.get(store.state, [ 'nodes', 'meta', 'page' ]) + 1
+  const page = _.get(store.state, [ 'nodes', 'meta', 'page' ], 0) + 1
+
   return store.dispatch('FETCH_NODES', {
     'params': {
       page: page,
@@ -88,44 +66,30 @@ const fetchAllNodes = (store) => {
 }
 
 export default {
-  name: 'activity-view',
-  preFetch: fetchData,
+  name: 'activityB',
   components: {
-    'activity-desktopNodesNav': ActivityDesktopNodesNav,
-    'activity-node': ActivityNode,
-    'activity-nodeNav': ActivityNodeNav,
-    'activity-timelineNav': ActivityTimelineNav,
+    'activity-lightbox': ActivityLightbox,
+    'activity-timeline': ActivityTimeline,
     'share': Share
+  },
+  mixins: [ titleMetaMixin ],
+  asyncData ({ store }) {
+    return fetchData(store)
   },
   data () {
     return {
-      currentIndex: 0,
-      // currentIndex: _.findIndex(this.nodes, this.featureNode),
-      openNav: false,
-      viewport: 0,
-      scrollingFlag: false,
-      // activityStyle: `left: -${(this.currentIndex * 100)}vw;`
-      targNodeTopY: 0,
-      windowHeight: 0
+      isLightboxOpen: false,
+      lightboxIndex: 0,
+      loadind: true,
+      viewport: 0
     }
   },
   computed: {
-    activityStyle () {
-      return this.currentIndex * 100
+    activity () {
+      return _.get(this.$store.state, [ 'activities', 'items', '0' ])
     },
-    activityCurrNodeStyle () {
-      return this.currentIndex * 100
-    },
-    currentNode () {
-      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ]) || _.get(this.$store.state, [ 'nodes', 'items', this.defaultNodeIndex ])
-    },
-    defaultNodeIndex () {
-      const _defaultIndex = _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
-      // if (process.env.VUE_ENV === 'client') {
-      //   const currentNodeTop = this.elmYPosition(`#node-${_defaultIndex}`)
-      //   window.scrollTo(0, currentNodeTop)
-      // }
-      return _defaultIndex
+    initialNodeIndex () {
+      return _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
     },
     featureNode () {
       return _.find(_.get(this.$store.state, [ 'nodes', 'items' ]), { 'isFeatured': true })
@@ -133,92 +97,32 @@ export default {
     hasAllNodes () {
       return _.get(this.$store.state, [ 'nodes', 'items', 'length' ]) >= _.get(this.$store.state, [ 'nodes', 'meta', 'total' ])
     },
-    nextNode () {
-      // return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ])
-      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex + 1 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ])
-    },
-    nodes () {
+    initialNodes () {
       return _.get(this.$store.state, [ 'nodes', 'items' ])
     },
-    nodesAmount () {
-      return _.get(this.$store.state, [ 'nodes', 'items', 'length' ])
-    },
-    page () {
-      return _.get(this.$store.state, [ 'nodes', 'meta', 'page' ])
-    },
-    prevNode () {
-      // return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 2 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ])
-      return _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex - 1 ]) || _.get(this.$store.state, [ 'nodes', 'items', this.currentIndex ])
-    },
-    timelineNodes () {
-      return _.get(this.$store.state, [ 'timeline', 'nodes' ])
-    },
-    title () {
-      return _.get(this.$store.state, [ 'activities', 'items', '0', 'name' ])
-    },
     topicId () {
-      return _.get(this.$store.state, [ 'activities', 'items', '0', 'topics', 'id' ])
+      return _.get(this.$route, [ 'params', 'topicId' ])
     }
   },
   methods: {
-    changeCurrentIndex (index) {
-      if (index <= this.nodesAmount && index > -1) {
-        this.currentIndex = index
-      } else if (index > this.nodesAmount) {
-        this.currentIndex = this.nodesAmount - 1
-      } else if (index < 0) {
-        this.currentIndex = 0
-      }
+    closeLightbox () {
+      this.isLightboxOpen = false
     },
-    currentYPosition,
-    enableScroll,
-    elmYPosition,
+    openLightbox (index) {
+      this.lightboxIndex = index
+      this.isLightboxOpen = true
+    },
+    getImage,
     getTruncatedVal,
-    goToNext () {
-      const goTo = this.currentIndex + 1
-      if (this.viewport < 900) {
-        return
-      }
-      if (goTo < this.nodesAmount) {
-        this.currentIndex = goTo
-      }
-    },
-    goToPrev () {
-      const goTo = this.currentIndex - 1
-      if (this.viewport < 900) {
-        return
-      }
-      if (goTo > -1) {
-        this.currentIndex = goTo
-      }
-    },
-    goToIndex (goTo) {
-      this.currentIndex = goTo
-    },
-    smoothScroll,
-    toggleNav () {
-      if (this.viewport > 899) {
-        this.$router.push('/topic/59151f0ff2179c0d0089b7d5')
-      } else {
-        this.openNav = !this.openNav
-      }
-    },
+    getValue,
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.documentElement.clientWidth || document.body.clientWidth
         this.windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       }
-    },
-    updateTargNodeTopY (_targNodeTopY) {
-      this.targNodeTopY = (process.env.VUE_ENV === 'client') ? _targNodeTopY : 0
     }
   },
-  beforeRouteLeave (to, from, next) {
-    this.enableScroll()
-    next()
-  },
   beforeMount () {
-    fetchTimeline(this.$store, this.topicId)
     if (!this.hasAllNodes) {
       fetchAllNodes(this.$store)
     }
@@ -228,101 +132,53 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
-    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
-    const nodeHeight = document.querySelector('.activityNodeSlider').offsetHeight
-    window.addEventListener('scroll', () => {
-      const goToIndex = Math.round(this.currentYPosition() / nodeHeight)
-      if (goToIndex !== this.currentIndex) {
-        this.changeCurrentIndex(goToIndex)
-      }
-    })
+    this.loadind = false
+    window.ga('set', 'contentGroup1', '')
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    window.ga('send', 'pageview', { title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`, location: `${SITE_URL}/activity/${this.$route.params.activityId}` })
   },
-  watch: {
-    defaultNodeIndex: function () {
-      // this.currentIndex = _.findIndex(_.get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
-      // console.log('this.currentIndex', this.currentIndex)
-      // const currentNodeTop = this.elmYPosition(`#node-${this.defaultNodeIndex}`)
-      // setTimeout(() => {
-      //   window.scrollTo(0, currentNodeTop)
-      // }, 10)
-    },
-    currentIndex: function () {
-      // console.log('this.currentIndex', this.currentIndex)
-      // const currentNodeTop = this.elmYPosition(`#node-${this.currentIndex}`)
-      // window.scrollTo(0, currentNodeTop - 50)
-      // setTimeout(() => {
-        // const _currNodeTopOffset = this.currNodeTopOffset(_offset)
-        // const _targNodeTopY = isNaN(containerTop) !== true ? containerTop - _currNodeTopOffset : 0 - _currNodeTopOffset
-        // this.updateTargNodeTopY(_targNodeTopY)
-
-        // console.log('this.topOffset', this.topOffset)
-        // this.smoothScroll(null, currentNodeTop)
-      // }, 10)
-    }
-  },
-  metaInfo () {
-    const url = `${SITE_URL}${this.$route.path}`
-    const title = this.getTruncatedVal(this.title, 11) + ` - ${SITE_TITLE}`
+  metaSet () {
+    const url = `${SITE_URL}/activity/${this.$route.params.activityId}`
     const ogImage = _.get(this.$store.state, [ 'activities', 'items', '0', 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
     const image = ogImage || '/public/notImage.png'
     const ogDescription = sanitizeHtml(_.get(this.$store.state, [ 'activities', 'items', '0', 'brief', 'html' ]), { allowedTags: [] })
     const description = ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
-
     return {
-      title,
-      meta: [
-          { name: 'keywords', content: SITE_KEYWORDS },
-          { name: 'description', content: description },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: title },
-          { name: 'twitter:description', content: description },
-          { name: 'twitter:image', content: image },
-          { property: 'fb:app_id', content: FB_APP_ID },
-          { property: 'fb:pages', content: FB_PAGE_ID },
-          { property: 'og:site_name', content: '鏡週刊 Mirror Media' },
-          { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: title },
-          { property: 'og:description', content: description },
-          { property: 'og:url', content: url },
-          { property: 'og:image', content: image }
-      ]
+      title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`,
+      meta: `
+        <meta name="mm-opt" content="">
+        <meta name="robots" content="index">
+        <meta name="keywords" content="${SITE_KEYWORDS}">
+        <meta name="description" content="${description}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}">
+        <meta name="twitter:description" content="${description}">
+        <meta name="twitter:image" content="${image}">
+        <meta property="fb:app_id" content="${FB_APP_ID}">
+        <meta property="fb:pages" content="${FB_PAGE_ID}">
+        <meta property="og:site_name" content="${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}">
+        <meta property="og:locale" content="zh_TW">
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}">
+        <meta property="og:description" content="${description}">
+        <meta property="og:url" content="${url}">
+        <meta property="og:image" content="${image}">
+      `
     }
   }
 }
-
 </script>
 
 <style lang="stylus" scoped>
 
 .activity
-  // padding-top 50px
-  transition left 1s ease
-  &-currentNode
-    position relative
-    &__nav
-      position fixed
-      z-index 998
-      top 0
-      left 0
-      width 100%
-      height 50px
-      background-color #fff
-      &--menu
-        display flex
-        flex-direction column
-        align-items center
-        justify-content space-around
-        position absolute
-        top 5px
-        right 5px
-        width 40px
-        height 40px
-        padding 5px
-        background-color #bf272d
-        border-radius 50%
-        cursor pointer
-
+  position relative
+  width 100vw
+  height 100vh
+  padding-bottom calc(30vh + 44px)
+  background-color #000
+  overflow hidden
   &__logo
     position fixed
     z-index 999
@@ -332,37 +188,68 @@ export default {
     height 40px
     > img
       width 100%
-  &__desktopNodesNav
+      image-rendering -webkit-optimize-contrast
+  &__menu
+    display flex
+    flex-direction column
+    align-items center
+    justify-content space-around
+    position fixed
+    z-index 970
+    top 5px
+    right 5px
+    width 40px
+    height 40px
+    background-color #000
+    border-radius 50%
+    cursor pointer
+    a
+      font-size 0
+    img
+      width 100%
+      height 100%
+  &__landscape
     display none
-  &__share
-    display block
-    z-index 999
-
-@media only screen and (max-width: 736px) and (orientation: landscape)
-  .activity
-    &__logo
-      display none
-    &-currentNode
-      &__nav
-        display none
-    &__share
-      display none
-    
-
-
-@media only screen and (min-width: 900px)
-  .activity
-    padding 0
-    &-currentNode
-       &__nav
-        height 40px
-        background-color transparent
-        &--menu
-          z-index 1001
-          right 20px
-          width 40px
-          height 40px
-          border-radius 50%
+    align-items center
+    justify-content center
+    position fixed
+    top 0
+    left 0
+    right 0
+    bottom 0
+    z-index 1000
+    width 100vw
+    height 100vh
+    background-color #1a1a1a
+    background-repeat repeat-x
+    background-size contain
+    figure
+      text-align center
+      color #fff
+      img
+        width 60px
+        animation-name rotate
+        animation-duration 2s
+        animation-iteration-count infinite
+      p
+        margin-top 40px
+  > img
+    width 100%
+    height 100%
+    object-fit cover
+    object-position 50% 50%
+  > h1
+    position absolute
+    top 70px
+    left 50%
+    transform translateX(-50%)
+    width 70%
+    margin 0
+    color #fff
+    text-align center
+    font-size 1.6rem
+    font-weight 300
+    text-shadow 2px 2px 8px #000
 
 .hamburgerBar
   display block
@@ -377,4 +264,29 @@ export default {
     top calc(50% - 6px)
   &-3
     top calc(50% + 6px)
+
+@keyframes rotate
+  from
+    transform rotate(0deg)
+  to
+    transform rotate(90deg)
+
+@media (min-width: 600px) and (orientation: portrait)
+  .activity
+    padding-bottom calc(25vh + 44px)
+    > h1
+      font-size 2rem
+
+@media (min-width: 900px)
+  .activity
+    padding-bottom 25vh
+    > h1
+      top 5px
+      line-height 40px
+
+@media only screen and (max-width: 900px) and (orientation: landscape) 
+  .activity
+    &__landscape
+      display flex
+
 </style>

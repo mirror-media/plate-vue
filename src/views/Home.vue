@@ -3,19 +3,27 @@
     <template scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
+          <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
-        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" />
+        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>
         <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550)" :config="props.config"/>
         <section class="container list">
+          <div class="project-title--mobile">
+            <h2>專題報導</h2>
+          </div>
+          <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" target="_blank"/>
           <aside>
-            <div class="aside-title mobile-only"><h2>最新文章</h2></div>
-            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :key="`${i}-${Date.now()}`" />
+            <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
+            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
           <main>
-            <LatestArticleMain :latestList="latestArticle" :viewport="viewport">
+            <h2 class="project-title--desktop">專題報導</h2>
+            <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" target="_blank"/>
+            <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
+            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
               <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
@@ -23,15 +31,11 @@
               <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
             </LatestArticleMain>
-            <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />
-            <PopularArticles :popList="popularlist" />
           </main>
         </section>
         <loading :show="loading" />
-        <section class="container footer">
-          <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1000)"  :config="props.config"/>
-          <vue-dfp :is="props.vueDfp" pos="LMBFT" v-else-if="(viewport < 550)":config="props.config"/>
-          <app-footer :ifShare="false" />
+        <section class="container">
+          <more v-if="true" v-on:loadMore="loadMore" />
         </section>
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
@@ -46,7 +50,7 @@
 </template>
 
 <script>
-
+import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currEnv, unLockJS } from '../util/comm'
 import _ from 'lodash'
@@ -58,6 +62,7 @@ import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
+import More from '../components/More.vue'
 import PopularArticles from '../components/PopularArticles.vue'
 import ProjectList from '../components/article/ProjectList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -95,6 +100,18 @@ const fetchPop = (store) => {
   return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
 }
 
+const MAXRESULT = 20
+const PAGE = 1
+const fetchLatestArticle = (store, page) => {
+  return store.dispatch('FETCH_LATESTARTICLES', {
+    params: {
+      'max_results': MAXRESULT,
+      'page': page,
+      'sort': '-publishedDate'
+    }
+  })
+}
+
 export default {
   name: 'home-view',
   components: {
@@ -103,6 +120,7 @@ export default {
     'editor-choice': EditorChoice,
     'live-stream': LiveStream,
     'loading': Loading,
+    'more': More,
     LatestArticleAside,
     LatestArticleMain,
     PopularArticles,
@@ -112,24 +130,13 @@ export default {
   asyncData ({ store }) {
     return fetchSSRData(store)
   },
-  beforeRouteEnter (to, from, next) {
-    if (process.env.VUE_ENV === 'client' && to.path !== from.path) {
-      next(vm => {
-        if (_.get(vm.$store, [ 'state', 'commonData', 'sections', 'items' ]) || _.get(vm.$store, [ 'state', 'articlesGroupedList', 'choices' ])) {
-          fetchSSRData(vm.$store)
-          fetchArticlesGroupedList(vm.$store)
-          fetchPop(vm.$store)
-        }
-      })
-    } else {
-      next()
-    }
-  },
   mixins: [ titleMetaMixin ],
   metaSet () {
     return {
       title: SITE_TITLE,
       meta: `
+        <meta name="mm-opt" content="">
+        <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
         <meta name="twitter:card" content="summary_large_image">
@@ -148,12 +155,27 @@ export default {
       `
     }
   },
+  beforeRouteEnter (to, from, next) {
+    if (process.env.VUE_ENV === 'client' && to.path !== from.path) {
+      next(vm => {
+        if (_.get(vm.$store, [ 'state', 'commonData', 'sections', 'items' ]) || _.get(vm.$store, [ 'state', 'articlesGroupedList', 'choices' ])) {
+          fetchSSRData(vm.$store)
+          fetchArticlesGroupedList(vm.$store)
+          fetchPop(vm.$store)
+        }
+      })
+    } else {
+      next()
+    }
+  },
   data () {
     return {
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       loading: false,
+      hasScrollLoadMore: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE) > 1,
+      page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
       showDfpCoverAdFlag: false,
       viewport: undefined
     }
@@ -203,8 +225,41 @@ export default {
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
+    latestArticlesList () {
+      return _.get(this.$store.state, [ 'latestArticles', 'items' ])
+    },
+    latestEndIndex () {
+      return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
+    },
     latestArticle () {
-      return _.get(this.articlesGroupedList, [ 'latest' ])
+      const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
+
+      const latestFirstPage = _.dropRight(_.get(articlesGroupedList, [ 'latest' ]), 3)
+      const latestAfterFirstPage = _.drop(latestArticlesList, latestEndIndex)
+      const choices = _.get(articlesGroupedList, [ 'choices' ])
+      const groupedTitle = _.get(articlesGroupedList, [ 'grouped' ])
+      const groupedRelateds = _.flatten(_.map(_.get(articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
+      const grouped = _.union(groupedTitle, groupedRelateds)
+      const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
+      const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
+
+      const latest = _.uniqBy(
+        _.concat(latestFirstPage, latestAfterFirstPage),
+        'slug'
+      )
+
+      _.remove(latest, (o) => {
+        return _.includes(choicesAndGrouped_slugs, o.slug)
+      })
+
+      if (this.notFirstPageNow) {
+        return latest
+      } else {
+        return latestFirstPage
+      }
+    },
+    notFirstPageNow () {
+      return _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], 1) !== 1
     },
     popularlist () {
       const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
@@ -220,6 +275,9 @@ export default {
     },
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
+    },
+    initHasScrollLoadMore () {
+      this.hasScrollLoadMore = false
     },
     updateCookie () {
       const cookie = Cookie.get('visited')
@@ -237,6 +295,29 @@ export default {
     },
     updateSysStage () {
       this.dfpMode = currEnv()
+    },
+    loadMore () {
+      window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
+      this.page += 1
+      this.loading = true
+
+      fetchLatestArticle(this.$store, this.page).then(() => {
+        this.hasScrollLoadMore = false
+        this.loading = false
+      })
+    },
+    handleScroll () {
+      window.onscroll = (e) => {
+        const _latestArticleDiv = document.querySelector('#latestArticle')
+        if (!_latestArticleDiv) { return }
+        const firstPageArticleHeight = _latestArticleDiv.offsetHeight
+        const firstPageArticleBottom = elmYPosition('#latestArticle') + (firstPageArticleHeight)
+        const currentBottom = currentYPosition() + window.innerHeight
+        if ((currentBottom > (firstPageArticleBottom - 0)) && !this.hasScrollLoadMore) {
+          this.hasScrollLoadMore = true
+          this.loadMore()
+        }
+      }
     }
   },
   beforeMount () {
@@ -247,7 +328,7 @@ export default {
     fetchArticlesGroupedList(this.$store)
   },
   mounted () {
-    window.utmx('url', 'A/B')
+    this.handleScroll()
     this.updateViewport()
     window.addEventListener('resize', () => {
       this.updateViewport()
@@ -255,9 +336,14 @@ export default {
     // this.updateCookie()
     this.checkIfLockJS()
     this.updateSysStage()
-    window.ga('send', 'pageview', this.$route.path, { title: SITE_TITLE })
+    window.ga('set', 'contentGroup1', '')
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {
+    this.initHasScrollLoadMore()
+    this.handleScroll()
     this.updateSysStage()
   }
 }
@@ -284,15 +370,39 @@ export default {
     letter-spacing .5px
     color rgba(0,0,0,.8)
     list-style-type none
-
+    &.project-title--desktop
+      display none
+  .project-title--mobile
+    padding 0 2em
+    margin 10px 0
+    h2
+      font-size 1.5rem
+      color #356d9c
+      font-weight 400
+      overflow hidden
+      &::after
+        content ""
+        display inline-block
+        height 0.5em
+        vertical-align middle
+        width 100%
+        margin-right -100%
+        margin-left 10px
+        border-top 5px solid #356d9c
+    
+    
 .list
   &.container
     width 100%
+
+    .project-container
+      margin 0 20px
 
     aside
       .aside-title
         // overflow hidden
         padding: 0 2rem;
+        margin-top 10px
 
         h2
           font-size 1.5rem
@@ -327,6 +437,9 @@ section.footer
 
       // main
 
+      .project-container
+        margin 0
+
       aside
         display flex
         flex-wrap wrap
@@ -335,6 +448,7 @@ section.footer
         .aside-title
           width 100%
           color #356d9c
+          margin-top 35px
           margin-bottom 10px
           // overflow hidden
 
@@ -361,6 +475,17 @@ section.footer
 
 
 @media (min-width: 1200px)
+  .home-view
+    h2
+      &.project-title--desktop
+        display block
+        margin-bottom 10px
+        color #356d9c
+        font-size 1.3rem
+        font-weight 400
+    .project-title--mobile
+      display none
+        
   .list
     &.container
       width 1024px
@@ -371,10 +496,23 @@ section.footer
 
       main
         width 75%
+        #latestArticle
+          margin-top 30px
 
       aside
         width 25%
         padding 0 30px 0 0
+
+        .aside-title
+          margin-top 0
+          padding 0
+          h2
+            margin-bottom 0
+            font-size 1.3rem
+            &::after
+              display none
+
+  
 
   section.footer
     width 1024px

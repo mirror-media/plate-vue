@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 function getMetaSet (vm) {
   const { metaSet } = vm.$options
   if (metaSet) {
@@ -36,10 +38,25 @@ const clientTitleMetaMixin = {
   updated () {
     const metaSet = getMetaSet(this)
     if (!metaSet) { return }
-    // const meta = metaSet.meta
+    const meta = metaSet.meta
     const title = metaSet.title
     if (title) {
       document.querySelector('title').innerHTML = title
+    }
+    if (meta) {
+      const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')
+      const newMeta = _.split(meta, '>')
+      _.forEach(dynamicMeta, function (node) {
+        document.head.removeChild(node)
+      })
+      _.forEach(newMeta, function (m) {
+        const node = document.createElement('head')
+        node.innerHTML = m + '>'
+        const updateMeta = node.querySelector('meta')
+        if (updateMeta) {
+          document.head.appendChild(updateMeta)
+        }
+      })
     }
   }
 }

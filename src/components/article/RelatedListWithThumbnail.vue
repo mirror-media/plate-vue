@@ -2,18 +2,34 @@
   <div class="related-container" v-if="(relatedList.length > 0)">
     <div class="related_title"><h3></h3></div>
     <div class="related_list">
-      <div class="related_item" v-for="(o, i) in relatedList">
-        <div>
-          <a :href="getHref(o)" >
-            <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
-                  :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
-            </div>
-          </a>
+      <template v-if="isApp">
+        <div class="related_item" v-for="(o, i) in relatedList">
+          <div>
+            <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" >
+              <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
+                    :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
+              </div>
+            </a>
+          </div>
+          <div class="related_item_title">
+            <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" v-text="getTruncatedVal(o.title, 22)"></a>
+          </div>
         </div>
-        <div class="related_item_title">
-          <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)"></a>
+      </template>
+      <template v-else>
+        <div class="related_item" v-for="(o, i) in relatedList">
+          <div>
+            <a :href="getHref(o)" >
+              <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
+                    :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
+              </div>
+            </a>
+          </div>
+          <div class="related_item_title">
+            <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)"></a>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>
@@ -27,6 +43,9 @@
       getValue
     },
     props: {
+      isApp: {
+        default: () => false
+      },
       relatedList: {
         default: () => { return [] }
       }

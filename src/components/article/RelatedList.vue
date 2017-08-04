@@ -3,8 +3,10 @@
     <div class="list" :style="containerStyle">
       <div class="title"><h4 :style="titleStyle">相關文章</h4></div>
       <div class="item" v-for="(o, i) in relateds" v-if="o">
-        <div class="title"><router-link :to="getHref(o)" v-text="getValue(o, [ 'title' ], '')" 
-          :id="'related-' + o.name"></router-link></div>
+        <div class="title">
+          <router-link :to="getHref(o)" v-text="getValue(o, [ 'title' ], '')" :id="'related' + abIndicator + '-' + o.name" v-if="o.style !== 'projects'"></router-link>
+          <a :href="getHref(o)" v-text="getValue(o, [ 'title' ], '')" :id="'related' + abIndicator + '-' + o.name" v-if="o.style === 'projects'"></a>
+        </div>
       </div>
     </div>
   </div>
@@ -123,7 +125,10 @@
     name: 'related-list',
     props: {
       relateds: {
-        default: []
+        default: () => ([])
+      },
+      abIndicator: {
+        default: () => ('')
       }
     }
   }

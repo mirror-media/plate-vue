@@ -4,14 +4,12 @@
       <template scope="props">
         <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
           <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'">
-              <div :id="'slide-' + index" class="editorChoice-image"
-              :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
+            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target">
+              <div :id="'slide-' + index" class="editorChoice-image" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
             </router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'">
-              <div :id="'slide-' + index" class="editorChoice-image"
-              :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
+            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target">
+              <div :id="'slide-' + index" class="editorChoice-image" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
             </a>
           </template>
@@ -23,13 +21,13 @@
         <router-link :to="getHref(item)" :id="'choices-' + item.name"
               :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
               :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
-              @click="jumpToSlideForParent" v-if="item.style !== 'projects'">
+              @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
           <span v-text="getTitle(item, 24)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
         </router-link>
         <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name"
               :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
               :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
-              @click="jumpToSlideForParent" v-if="item.style === 'projects'">
+              @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
           <span v-text="getTitle(item, 24)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
         </a>
       </template>
@@ -38,19 +36,19 @@
     <div class="editorChoice-list mobile-only">
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice-list-post">
         <template>
-          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style !== 'projects'">
-            <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="item.title"></figure>
+          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style !== 'projects'" :target="target">
+            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
             <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </router-link>
-          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style === 'projects'">
-            <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="item.title"></figure>
+          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style === 'projects'" :target="target">
+            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
             <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </a>
         </template>
         <div class="editorChoice-list-post__title" :class="getSection(item)">
           <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'"><h2 v-text="getTitle(item, 24)"></h2></router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'"><h2 v-text="getTitle(item, 24)"></h2></a>
+            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></router-link>
+            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></a>
           </template>
         </div>
       </div>
@@ -91,6 +89,9 @@ export default {
     editorChoice: {
       default: () => { return this.editorChoice }
     },
+    target: {
+      default: () => ('_self')
+    },
     viewport: {
       default: () => { return undefined }
     }
@@ -125,14 +126,8 @@ export default {
     getValue,
     getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
-      let device = 'label-width'
-      if (this.viewport < 1200) {
-        device = 'label-width-mobile'
-      }
-
       const style = {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc'),
-        width: _.get(SECTION_MAP, [ sectionId, device ], (this.viewport > 599 && this.viewport < 1200) ? '60px' : 'auto')
+        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
       }
       return style
     },
@@ -179,13 +174,6 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-
-$color-news = #30bac8
-$color-entertainment = #bf3284
-$color-foodtravel = #eac151
-$color-watch = #c1d16e
-$color-projects = #000
-$color-other = #bcbcbc
 
 .editorChoice
   &.container
@@ -274,7 +262,6 @@ $color-other = #bcbcbc
 
           .section-label
             position absolute
-            width 60px
             height 35px
             background-color #000
             display flex 
@@ -284,6 +271,8 @@ $color-other = #bcbcbc
             top auto
             bottom 0
             left 0
+            white-space nowrap
+            padding 0 20px !important
 
         &__img
           > figure
@@ -293,6 +282,8 @@ $color-other = #bcbcbc
             background-position 50% 50%
             background-repeat no-repeat
             background-size cover
+            &[lazy=loading]
+              background-size 40% 40%
                 
         &__title
           padding .5em 0

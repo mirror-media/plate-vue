@@ -10,16 +10,6 @@ module.exports = {
   devtool: isProd
     ? false
     : '#cheap-module-source-map',
-  // entry: {
-  //   app: './src/client-entry.js',
-    // vendor: [
-    //   'es6-promise',
-    //   'vue',
-    //   'vue-router',
-    //   'vuex',
-    //   'vuex-router-sync'
-    // ]
-  // },
   output: {
     path: path.resolve(__dirname, '../dist'),
     publicPath: '/dist/',
@@ -33,10 +23,6 @@ module.exports = {
   module: {
     noParse: /es6-promise\.js$/, // avoid webpack shimming process
     rules: [
-      // {
-      //   test: /\.css$/,
-      //   loader: 'style-loader!css-loader'
-      // },
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -64,27 +50,12 @@ module.exports = {
             })
           : ['vue-style-loader', 'css-loader']
       },
-      // {
-      //   test: /\.js$/,
-      //   loader: 'buble-loader',
-      //   exclude: /node_modules/,
-      //   options: {
-      //     objectAssign: 'Object.assign'
-      //   }
-      // },
     ]
   },
-  // externals: [
-  //   'canvas'
-  // ],
   performance: {
     maxEntrypointSize: 300000,
     hints: isProd ? 'warning' : false
-    // hints: process.env.NODE_ENV === 'production' ? 'warning' : false
   },
-  // plugins: [
-  //   // new ExtractTextPlugin('styles.[hash].css'),
-  // ]
   plugins: isProd
     ? [
         new webpack.optimize.UglifyJsPlugin({

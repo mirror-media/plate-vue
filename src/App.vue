@@ -7,36 +7,71 @@
 </template>
 
 <script>
-  import { mmLog } from './util/comm.js'
-  import store from './store'
+  import { mmLog, setMmCookie } from './util/comm.js'
+  import { visibleTracking } from './util/visibleTracking'
+  import Cookie from 'vue-cookie'
+  import Tap from 'tap.js'
 
   export default {
+    computed: {
+      currPath () {
+        return this.$route.fullPath
+      }
+    },
     data () {
       return {
-        doc: {}
+        doc: {},
+        globalTapevent: {}
       }
     },
     methods: {
-      launchLogger () {
-        this.doc.addEventListener('click', (event) => {
-          mmLog({
-            category: 'whole-site',
-            description: '',
-            eventType: 'click',
-            target: event.target
-          }).then((log) => {
-            return store.dispatch('LOG_CLIENT', { params: {
-              clientInfo: log
-            }})
-          }).catch((err) => {
-            console.log(err)
-          })
+      doLog (event) {
+        mmLog({
+          category: 'whole-site',
+          description: '',
+          eventType: 'click',
+          target: event.target
+        }).then((log) => {
+          return this.$store.dispatch('LOG_CLIENT', { params: {
+            clientInfo: log
+          }})
+        }).catch((err) => {
+          console.log(err)
         })
-      }
+      },
+      launchLogger () {
+        this.globalTapevent = new Tap(this.doc)
+        this.doc.addEventListener('tap', (event) => {
+          this.doLog(event)
+        })
+      },
+      setCookie () {
+        let cookie = Cookie.get('mmid')
+        if (!cookie) {
+          cookie = setMmCookie()
+        }
+      },
+      setUpVisibleTracking () {
+        this.visibleTracking(
+          [
+            { target: '.article_body > .article_main .poplist-container', seenFlag: false, desc: 'popular' },
+            { target: '.article_body > .article_main .article_main_tags', seenFlag: false, desc: 'tag' },
+            { target: '.article_body > .article_main .article_main_related_bottom', seenFlag: false, desc: 'end' }
+          ]
+        )
+      },
+      visibleTracking
     },
     mounted () {
       this.doc = document
       this.launchLogger()
+      this.setCookie()
+      this.setUpVisibleTracking()
+    },
+    watch: {
+      currPath: function () {
+        this.setUpVisibleTracking()
+      }
     }
   }
 </script>
@@ -56,7 +91,7 @@ html
   font-size 16px
 
 *, *:before, *:after
-  box-sizing inherit;
+  box-sizing inherit
 
 body
   font-family -apple-system, Microsoft JhengHei,"Segoe UI", Roboto, Ubuntu, "Droid Sans", "Helvetica Neue", sans-serif;
@@ -69,6 +104,10 @@ a
   color #34495e
   text-decoration none
   cursor pointer
+  
+  u
+    text-decoration none
+
   &.white
     &, &:hover, &:link, &:visited
       color #fff
@@ -172,6 +211,18 @@ button:focus {
       background-position center center
       cursor pointer
 
+[lazy=loading]
+  margin 0 auto
+  object-fit contain
+  object-position center center
+  background-size 40% 40%
+
+
+@media (min-width 0px) and (max-width 320px)
+  .dfp-cover
+    > .ad
+      > .close
+        right 0
 @media (min-width 600px)
   .container
     width 90%
@@ -180,7 +231,7 @@ button:focus {
   .container
     width 768px
 
-@media (max-width 1024px)
+@media (max-width 1199px)
   .mobile-hide
     display none !important
 

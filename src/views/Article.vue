@@ -2,35 +2,30 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
       <section style="width: 100%;">
-        <app-header :commonData="commonData" :eventLogo="eventLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')"></app-header>
+        <app-header :commonData="commonData" :eventLogo="eventLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header>
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
-          <video class="heroimg video" width="100%" height="100%" controls controlsList="nodownload"
-          :poster="heroVideo.poster">
-            <source :src="getValue(heroVideo, [ 'video', 'url' ])" :type="getValue(heroVideo, [ 'video', 'filetype' ])">
-            Your browser does not support the video tag.
-          </video>
-          <div class="playpause play" @click="doPlayVideoByBtn" target=".heroimg.video"></div>
+          <article-video :video="heroVideo" class="heroimg" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article-heromedia" v-else-if="heroImage">
-          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" :src="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-          :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
+          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+          :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
+          <article-body :abIndicator="abIndicator" :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <related-list :relateds="relateds" v-if="(relateds.length > 0) && ifRenderAside" />
+              <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
+              <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist"></article-aside-fixed>
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
@@ -42,8 +37,11 @@
               <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpId="props.dfpId" slot="dfpNA3" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpId="props.dfpId" slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
+              <div v-for="(a, i) in adIds" :id="`compass-fit-${a.id}`"
+                  class="pop_item margin-top-0"
+                  v-if="dfpMode === 'dev' && runMicroAd(i)" slot="microAd"></div>
             </pop-list>
-            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0) && (!ifRenderAside || articleStyle === 'wide')" slot="relatedlistBottom" />
+            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           </article-body>
           <div class="article_footer">
@@ -57,7 +55,7 @@
         <share-tools v-if="viewport > 767" />
       </div>
       <div v-else-if="(articleStyle === 'photography')">
-        <article-body-photography :articleData="articleData" :viewport="viewport">
+        <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <div slot="slot_dfpFT">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
@@ -75,15 +73,20 @@
       <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
         <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/>
       </dfp-fixed>
+      <adult-content-alert v-if="isAdultContent" />
     </template>
   </vue-dfp-provider>
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_TITLE, SITE_URL } from '../constants'
-  import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
+  import { currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd } from '../util/comm'
+  import { getRole } from '../util/mmABRoleAssign'
+  import AdultContentAlert from '../components/AdultContentAlert.vue'
+  import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
+  import ArticleVideo from '../components/article/Video.vue'
   import Cookie from 'vue-cookie'
   import DfpFixed from '../components/DfpFixed.vue'
   import Footer from '../components/Footer.vue'
@@ -97,7 +100,6 @@
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
-  import store from '../store'
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
 
@@ -113,7 +115,8 @@
             ]
           }
         }
-      }
+      },
+      preview: _.get(store, [ 'state', 'route', 'query', 'preview' ])
     })
   }
 
@@ -167,6 +170,7 @@
         brief = {},
         categories = {},
         heroImage = {},
+        isAdult = false,
         ogDescription = '',
         ogImage = {},
         ogTitle = '',
@@ -178,22 +182,29 @@
       } = this.articleData
       const categorieName = _.get(categories, [ 0, 'name' ], '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
+      const robotsValue = isAdult ? 'noindex' : 'index'
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
+      let abIndicator
+      if (process.env.VUE_ENV === 'client') {
+        abIndicator = this.abIndicator
+      }
 
       return {
-        title: truncate(title, 21) + ` － 鏡週刊`,
+        title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
+          <meta name="mm-opt" content="article${abIndicator}">
+          <meta name="robots" content="${robotsValue}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
           <meta name="section-name" content="${sectionName}">
           <meta name="category-name" content="${categorieName}">
           <meta name="topic-id" content="${topicId}">
           <meta name="twitter:card" content="summary_large_image">
-          <meta name="twitter:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊'}">
+          <meta name="twitter:title" content="${(ogTitle.length > 0) ? ogTitle + ' - ' + SITE_TITLE_SHORT : title + ' - ' + SITE_TITLE_SHORT}">
           <meta name="twitter:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta name="twitter:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
           <meta property="fb:app_id" content="${FB_APP_ID}">
@@ -201,7 +212,7 @@
           <meta property="og:site_name" content="${SITE_TITLE}">
           <meta property="og:locale" content="zh_TW">
           <meta property="og:type" content="article">
-          <meta property="og:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' － 鏡週刊' : truncate(title, 21) + ' － 鏡週刊'}">
+          <meta property="og:title" content="${(ogTitle.length > 0) ? ogTitle + ' - ' + SITE_TITLE_SHORT : title + ' - ' + SITE_TITLE_SHORT}">
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL + '/story/' + slug + '/'}">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
@@ -210,31 +221,29 @@
     },
     beforeRouteEnter (to, from, next) {
       if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
-        const _targetArticle = _.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
-        if (!_targetArticle) {
-          fetchArticles(store, to.params.slug).then(() => {
-            const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-            return fetchLatestArticle(store, {
-              sort: '-publishedDate',
-              where: {
-                'sections': _.get(sections, [ 0, 'id' ])
-              }
-            }).then(() => {
-              next(vm => {})
+        next(vm => {
+          const _targetArticle = _.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
+          if (!_targetArticle) {
+            fetchArticles(vm.$store, to.params.slug).then(() => {
+              const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
+              return fetchLatestArticle(vm.$store, {
+                sort: '-publishedDate',
+                where: {
+                  'sections': _.get(sections, [ 0, 'id' ])
+                }
+              })
             })
-          })
-          fetchPop(store)
-        } else {
-          next()
-        }
+            fetchPop(vm.$store)
+          }
+        })
       } else {
         next()
       }
     },
     beforeRouteUpdate (to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
-        const sections = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
-        return fetchLatestArticle(store, {
+        const sections = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
+        return fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: {
             'sections': _.get(sections, [ 0, 'id' ])
@@ -254,19 +263,21 @@
       next()
     },
     beforeMount () {
-      const { sections } = _.get(store, [ 'state', 'articles', 'items', 0 ], {})
-      fetchLatestArticle(store, {
+      const { sections } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
+      fetchLatestArticle(this.$store, {
         sort: '-publishedDate',
         where: {
           'sections': _.get(sections, [ 0, 'id' ])
         }
       })
-      fetchPop(store)
-      fetchCommonData(store)
-      fetchEvent(store, 'embedded')
-      fetchEvent(store, 'logo')
+      fetchPop(this.$store)
+      fetchCommonData(this.$store)
+      fetchEvent(this.$store, 'embedded')
+      fetchEvent(this.$store, 'logo')
     },
     components: {
+      'adult-content-alert': AdultContentAlert,
+      'article-aside-fixed': ArticleAsideFixed,
       'article-body': ArticleBody,
       'article-body-photography': ArticleBodyPhotography,
       'app-footer': Footer,
@@ -278,14 +289,22 @@
       'related-list': RelatedList,
       'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
-      'vue-dfp-provider': VueDfpProvider
+      'vue-dfp-provider': VueDfpProvider,
+      ArticleVideo
     },
     data () {
       return {
+        abIndicator: '',
+        adIds: [
+          { id: '4273371', loaded: false },
+          { id: '4273372', loaded: false },
+          { id: '4273373', loaded: false }
+        ],
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
+        hasSentFirstEnterGA: false,
         state: {},
         showDfpCoverAdFlag: false,
         showDfpFixedBtn: false,
@@ -369,8 +388,8 @@
         const { heroImage, heroVideo, ogImage } = this.articleData
         const heroImgUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const poster = ogImgUrl || (heroImgUrl || '/asset/review.png')
-        return (heroVideo) ? Object.assign(heroVideo, { poster }) : heroVideo
+        const poster = ogImgUrl || (heroImgUrl || '/public/notImage.png')
+        return (heroVideo && heroVideo.video) ? Object.assign(_.get(heroVideo, [ 'video' ], {}), { id: _.get(heroVideo, [ 'id' ], '') }, { poster }) : heroVideo
       },
       ifLockJS () {
         return _.get(this.articleData, [ 'lockJS' ])
@@ -378,11 +397,47 @@
       ifRenderAside () {
         return this.viewport >= 1200
       },
+      ifRenderRelatedAside () {
+        if (process.env.VUE_ENV === 'client') {
+          return this.viewport >= 1200
+        }
+        return this.viewport >= 1200
+      },
       ifShowPoplist () {
         return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
       },
       ifSingleCol () {
         return (this.articleStyle === 'wide' || !this.ifRenderAside)
+      },
+      isAdultContent () {
+        return _.get(this.articleData, [ 'isAdult' ], false)
+      },
+      jsonLDBreadcrumbList () {
+        return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "item": { "@id": "${SITE_URL}", "name": "${SITE_TITLE}" } },
+            { "@type": "ListItem", "position": 2, "item": { "@id": "${SITE_URL + '/section/' + _.get(this.articleData, [ 'sections', '0', 'name' ])}", "name": "${_.get(this.articleData, [ 'sections', '0', 'title' ])}" } },
+            { "@type": "ListItem", "position": 3, "item": { "@id": "${SITE_URL + _.get(this.$route, [ 'path' ])}", "name": "${_.get(this.articleData, [ 'title' ])}" } }
+          ]
+        }`
+      },
+      jsonLDNewsArticle () {
+        return `{ "@context": "http://schema.org", "@type": "NewsArticle", "headline": "${_.get(this.articleData, [ 'title' ])}",
+          "url": "${SITE_URL + _.get(this.$route, [ 'path' ])}", "thumbnailUrl": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}",
+          "articleSection": "${_.get(this.articleData, [ 'sections', '0', 'title' ])}",
+          "keywords": [ ${_.map(_.get(this.articleData, [ 'tags' ]), (t) => { return `"${_.get(t, [ 'name' ])}"` })} ],
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "${SITE_URL + _.get(this.$route, [ 'path' ])}" },
+          "image": { "@type": "ImageObject", "url": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}", "height": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'height' ])}, "width": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'width' ])} },
+          "datePublished": "${_.get(this.articleData, [ 'publishedDate' ])}", "dateModified": "${_.get(this.articleData, [ 'updatedAt' ])}", "author": { "@type": "Person", "name": "${_.get(this.articleData, [ 'writers', '0', 'name' ])}" },
+          "publisher": { "@type": "Organization", "name": "${SITE_TITLE}", "logo": { "@type": "ImageObject", "url": "https://www.mirrormedia.mg/assets/images/logo.png" } },
+          "description": "${_.get(this.articleData, [ 'brief', 'apiData', '0', 'content', '0' ])}"
+        }`
+      },
+      jsonLDPerson () {
+        return `{ "@context": "http://schema.org", "@type": "Person", "name": "${_.get(this.articleData, [ 'writers', '0', 'name' ])}",
+          "url": "${SITE_URL + '/author/' + _.get(this.articleData, [ 'writers', '0', 'id' ])}",
+          "brand": { "@type": "Brand", "name": "${SITE_TITLE}", "url": "${SITE_URL}", "image": "https://www.mirrormedia.mg/public/logo.svg", "logo": "https://www.mirrormedia.mg/public/logo.svg", "description": "${SITE_DESCRIPTION}" }
+        }`
       },
       latestList () {
         return _.get(this.$store.state.latestArticle, [ 'items' ], [])
@@ -396,10 +451,11 @@
         return items
       },
       relateds () {
-        return _.get(this.articleData, [ 'relateds' ])
+        return _.get(this.articleData, [ 'relateds' ], [])
       },
       sectionId () {
-        return _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
+        const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
+        return _sectionId
       },
       styleDfpAd () {
         return (this.viewport < 321) ? 'ad-fit' : ''
@@ -419,42 +475,80 @@
       closeDfpFixed () {
         this.showDfpFixedBtn = false
       },
-      doPlayVideoByBtn (e) {
-        const source = e.target
-        const targ = source.getAttribute('target')
-        const targDOM = document.querySelector(targ)
-        const sourceClass = source.getAttribute('class')
-        const ifPlay = sourceClass.indexOf(' play') > -1
-        source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
-        targDOM && ifPlay && targDOM.play()
-        targDOM.removeEventListener('pause', this.heroVideoPausedHandler)
-        targDOM.addEventListener('pause', this.heroVideoPausedHandler)
-      },
-      heroVideoPausedHandler (e) {
-        const source = document.querySelector('.article-heromedia > .playpause')
-        const sourceClass = source.getAttribute('class')
-        const ifPlay = sourceClass.indexOf(' play') > -1
-        source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
+      getMmid () {
+        const mmid = Cookie.get('mmid')
+        const role = getRole({ mmid, distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 } ]
+        })
+        return role
       },
       getTruncatedVal,
       getValue (o = {}, p = [], d = '') {
         return _.get(o, p, d)
       },
-      insertFbSdkScript () {
-        if (!window.FB) {
-          const fbSdkScript = document.createElement('script')
-          fbSdkScript.setAttribute('id', 'fbsdk')
-          fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + this.fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
-          fbSdkScript.async = true
-          fbSdkScript.type = 'text/javascript'
-          document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
-        } else {
+      initializeFBComments () {
+        if (window.FB) {
           window.FB && window.FB.init({
             appId: this.fbAppId,
             xfbml: true,
             version: 'v2.0'
           })
           window.FB && window.FB.XFBML.parse()
+        }
+      },
+      insertJSONLDScript () {
+        const newsArticleScript = document.createElement('script')
+        const personScript = document.createElement('script')
+        const breadcrumbScript = document.createElement('script')
+        newsArticleScript.setAttribute('id', 'js-newsArticle')
+        newsArticleScript.setAttribute('type', 'application/ld+json')
+        newsArticleScript.innerHTML = this.jsonLDNewsArticle
+        personScript.setAttribute('id', 'js-person')
+        personScript.setAttribute('type', 'application/ld+json')
+        personScript.innerHTML = this.jsonLDPerson
+        breadcrumbScript.setAttribute('id', 'js-breadcrumb')
+        breadcrumbScript.setAttribute('type', 'application/ld+json')
+        breadcrumbScript.innerHTML = this.jsonLDBreadcrumbList
+        if (!document.getElementById('js-newsArticle')) {
+          document.querySelector('head').appendChild(newsArticleScript)
+        }
+        if (!document.getElementById('js-person')) {
+          document.querySelector('head').appendChild(personScript)
+        }
+        if (!document.getElementById('js-breadcrumb')) {
+          document.querySelector('head').appendChild(breadcrumbScript)
+        }
+      },
+      insertMatchedContentScript () {
+        const matchedContentStart = document.createElement('script')
+        const matchedContentContent = document.createElement('ins')
+        const matchedContentEnd = document.createElement('script')
+        matchedContentStart.setAttribute('id', 'matchedContentStart')
+        matchedContentStart.setAttribute('async', 'true')
+        matchedContentStart.setAttribute('src', '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js')
+        matchedContentContent.setAttribute('id', 'matchedContentContent')
+        matchedContentContent.setAttribute('class', 'adsbygoogle')
+        matchedContentContent.setAttribute('style', 'display:block')
+        matchedContentContent.setAttribute('data-ad-format', 'autorelaxed')
+        matchedContentContent.setAttribute('data-ad-client', 'ca-pub-7986335951683342')
+        matchedContentContent.setAttribute('data-ad-slot', '3362911316')
+        matchedContentEnd.setAttribute('id', 'matchedContentEnd')
+        matchedContentEnd.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`
+
+        /**/
+        /* photography article may not have this container */
+        const container = document.querySelector('#matchedContentContainer')
+        /**/
+
+        if (!document.querySelector('#matchedContentStart')) {
+          container && container.appendChild(matchedContentStart)
+        }
+        if (!document.querySelector('#matchedContentContent')) {
+          container && container.appendChild(matchedContentContent)
+        }
+        if (!document.querySelector('#matchedContentEnd')) {
+          container && container.appendChild(matchedContentEnd)
         }
       },
       insertMediafarmersScript () {
@@ -465,15 +559,25 @@
           document.querySelector('body').appendChild(mediafarmersScript)
         }
       },
+      runMicroAd (index) {
+        insertMicroAd({ adId: this.adIds[index].id, currEnv: this.dfpMode, microAdLoded: this.adIds[index].loaded })
+        this.adIds[index]['loaded'] = true
+        return true
+      },
       sendGA (articleData) {
+        const abIndicator = this.getMmid()
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
+          // window.ga('set', 'contentGroup3', '')
+          window.ga('set', 'contentGroup3', `article${abIndicator}`)
         } else {
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
+          // window.ga('set', 'contentGroup3', '')
+          window.ga('set', 'contentGroup3', `article${abIndicator}`)
         }
-        window.ga('send', 'pageview', this.$route.path, { title: `${_.get(articleData, [ 'title' ])} - ${SITE_TITLE}` })
+        window.ga('send', 'pageview', { title: `${truncate(_.get(articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       updateCookie () {
         const cookie = Cookie.get('visited')
@@ -484,6 +588,28 @@
           this.showDfpCoverAdFlag = false
         }
       },
+      updateJSONLDScript () {
+        const newsArticleScript = document.querySelector('#js-newsArticle')
+        const personScript = document.querySelector('#js-person')
+        const breadcrumbScript = document.querySelector('#js-breadcrumb')
+        if (newsArticleScript) {
+          document.querySelector('head').removeChild(newsArticleScript)
+          document.querySelector('head').removeChild(personScript)
+          document.querySelector('head').removeChild(breadcrumbScript)
+        }
+        this.insertJSONLDScript()
+      },
+      updateMatchedContentScript () {
+        const matchedContentStart = document.querySelector('#matchedContentStart')
+        const matchedContentContent = document.querySelector('#matchedContentContent')
+        const matchedContentEnd = document.querySelector('#matchedContentEnd')
+        if (matchedContentStart) {
+          document.querySelector('#matchedContentContainer').removeChild(matchedContentStart)
+          document.querySelector('#matchedContentContainer').removeChild(matchedContentContent)
+          document.querySelector('#matchedContentContainer').removeChild(matchedContentEnd)
+        }
+        this.insertMatchedContentScript()
+      },
       updateMediafarmersScript () {
         const mediafarmersScript = document.querySelector('#mediafarmersJS')
         document.querySelector('body').removeChild(mediafarmersScript)
@@ -492,7 +618,7 @@
       updateViewport () {
         const browser = typeof window !== 'undefined'
         if (browser) {
-          this.viewport = document.querySelector('body').offsetWidth
+          this.viewport = document.documentElement.clientWidth || document.body.clientWidth
         }
       },
       updateSysStage () {
@@ -500,7 +626,8 @@
       }
     },
     mounted () {
-      this.insertFbSdkScript()
+      this.initializeFBComments()
+      this.insertMatchedContentScript()
       this.insertMediafarmersScript()
       this.updateViewport()
       this.clientSideFlag = process.env.VUE_ENV === 'client'
@@ -509,8 +636,11 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-
-      this.sendGA(this.articleData)
+      this.abIndicator = this.getMmid()
+      if (!_.isEmpty(this.articleData)) {
+        this.sendGA(this.articleData)
+        this.hasSentFirstEnterGA = true
+      }
     },
     updated () {
       this.updateSysStage()
@@ -524,8 +654,16 @@
         })
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
+        this.updateMatchedContentScript()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
+      },
+      articleData: function () {
+        if (!this.hasSentFirstEnterGA) {
+          this.sendGA(this.articleData)
+          this.hasSentFirstEnterGA = true
+        }
+        this.updateJSONLDScript()
       }
     }
   }
@@ -544,31 +682,12 @@
 
       .heroimg
         width 100%
-      
+        &[lazy=loading]
+          object-fit contain
+          height 150px
       .heroimg-caption
         margin-top 5px
         padding 5px 50px 0
-
-      .playpause
-        background-repeat no-repeat
-        width 60px
-        height 60px
-        position absolute
-        margin auto
-        background-size contain
-        background-position center
-        top 50%
-        left 50%
-        margin-left -30px
-        margin-top -30px
-        cursor pointer
-        background-image url('/public/icon/play-btn@2x.png')
-
-        &.play
-          display block
-          
-        &.pause
-          display none
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
@@ -617,21 +736,17 @@
           line-height 1.3rem
       
       .article
-        padding 30px 25px 0
+        padding 30px 0 0
 
+  @media (min-width 321px) and (max-width 499px)
+    .article-container
+      .article
+        padding 30px 25px 0
+  
   @media (min-width 0px) and (max-width 767px)  
     .article-container
       .article-heromedia, .article
          max-width 100%
-  
-  @media (min-width 768px)
-    .article-container
-      .article-heromedia
-        .playpause
-          margin-left -50px
-          margin-top -50px
-          width 100px
-          height 100px
 
   @media (max-width 999px)
     .mobile-hide

@@ -4,12 +4,12 @@
     <div class="editorChoice-full-post-container">
       <template v-for="article in highlightArticle">
         <div class="editorChoice-full-post">
-          <router-link :to="getHref(article)" :id="`choice-${article.id}-img`" class="editorChoice-full-post__img">
+          <router-link :to="getHref(article)" :id="`choice-${article.id}-img`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" class="editorChoice-full-post__img">
             <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }" :title="getValue(article, [ 'title' ])"></figure>
           </router-link>
           <div class="editorChoice-full-post__content">
-            <h2><router-link :to="getHref(article)" :id="`choice-${article.id}-title`" v-text="article.title"></router-link></h2>
-            <p><router-link :to="getHref(article)" :id="`choice-${article.id}-brief`" v-html="getBrief(article, 100)"></router-link></p>
+            <h2><router-link :to="getHref(article)" :id="`choice-${article.id}-title`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="article.title"></router-link></h2>
+            <p><router-link :to="getHref(article)" :id="`choice-${article.id}-brief`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-html="getBrief(article, 100)"></router-link></p>
           </div>
           <div class="editorChoice-full-post__meta">
             <span class="editorChoice-full-post__meta--author" v-show="getAuthor(article, 'writers')" v-html="getAuthor(article, 'writers')"></span>
@@ -29,6 +29,7 @@ import moment from 'moment'
 export default {
   name: 'editorChoice-full',
   props: {
+    abIndicator: '',
     sectionfeatured: {}
   },
   methods: {

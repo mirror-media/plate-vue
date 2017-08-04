@@ -2,7 +2,7 @@
   <section class="article-leading">
     <div v-for="(article, index) in highlightArticle">
       <figure class="article-leading-img">
-        <a :href="getHref(article)" :id="`leading-${article.id}-img`" >
+        <a :href="getHref(article)" :id="`leading-${article.id}-img`" :target="[ abIndicator === 'B' ? '_blank' : '' ]">
           <img :src="getImage(article, 'desktop')" :alt="getValue(article, [ 'title' ])">
         </a>
       </figure>
@@ -12,14 +12,14 @@
           <span class="article-leading-post__meta--date" v-text="moment(new Date(article.publishedDate)).format('Y.MM.DD')"></span>
         </div>
         <div class="article-leading-post__content">
-          <h2><a :href="getHref(article)" :id="`leading-${article.id}-title`" v-text="article.title"></a></h2>
-          <p><a :href="getHref(article)" :id="`leading-${article.id}-content`" v-text="`${getBrief(article, 200)} <More>`"></a></p>
+          <h2><a :href="getHref(article)" :id="`leading-${article.id}-title`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="article.title"></a></h2>
+          <p><a :href="getHref(article)" :id="`leading-${article.id}-content`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="`${getBrief(article, 200)} <More>`"></a></p>
         </div>
         <div class="article-leading-post__dfp dfp-l1 dfp-l2">
-          <vue-dfp v-if="index === 0 && !isMobile" :is="props.vueDfp" pos="SPCR1" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="index === 1 && !isMobile" :is="props.vueDfp" pos="SPCR2" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="index === 0 && isMobile" :is="props.vueDfp" pos="SMBL1" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
-          <vue-dfp v-if="index === 1 && isMobile" :is="props.vueDfp" pos="SMBL2" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" />
+          <vue-dfp v-if="index === 0 && !isMobile" :is="props.vueDfp" pos="SPCR1" :config="props.config" />
+          <vue-dfp v-if="index === 1 && !isMobile" :is="props.vueDfp" pos="SPCR2" :config="props.config" />
+          <vue-dfp v-if="index === 0 && isMobile" :is="props.vueDfp" pos="SMBL1" :config="props.config" />
+          <vue-dfp v-if="index === 1 && isMobile" :is="props.vueDfp" pos="SMBL2" :config="props.config" />
         </div>
       </div>
       <div class="article-leading-related" v-if="hasRelated(article)">
@@ -28,12 +28,12 @@
           <template v-for="related in getRelated(article)">
             <div class="article-leading-related-post">
               <figure class="article-leading-related-post__img" :style="{ backgroundImage: 'url(' + getImage(related, 'mobile') + ')' }" :title="getValue(related, [ 'title' ])">
-                <a :href="getHref(related)" :id="`related-${related.id}-img`" >
+                <a :href="getHref(related)" :id="`related-${related.id}-img`" :target="[ abIndicator === 'B' ? '_blank' : '' ]">
                 </a>
               </figure>
               <div class="article-leading-related-post__content">
-                <h3><a :href="getHref(related)" :id="`related-${related.id}-title`" v-text="related.title"></a></h3>
-                <p><a :href="getHref(related)" :id="`related-${related.id}-content`" v-html="getBrief(related, 55)"></a></p>
+                <h3><a :href="getHref(related)" :id="`related-${related.id}-title`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="related.title"></a></h3>
+                <p><a :href="getHref(related)" :id="`related-${related.id}-content`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-html="getBrief(related, 55)"></a></p>
                 <div class="article-leading-related-post__content--meta">
                   <span class="article-leading-related-post__content--author" 
                         v-html="getAuthor(related, 'writers')"></span>
@@ -57,7 +57,7 @@ import objectFitImages from 'object-fit-images'
 
 export default {
   name: 'article-leading',
-  props: [ 'articles', 'isMobile', 'props' ],
+  props: [ 'abIndicator', 'articles', 'isMobile', 'props' ],
   methods: {
     getAuthor,
     getBrief,

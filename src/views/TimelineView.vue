@@ -141,7 +141,7 @@ export default {
   },
   mounted () {
     this.checkIfLockJS()
-    window.ga('send', 'pageview', this.$route.path, { title: `Timeline :: ${_.upperCase(this.$route.params.title)}` })
+    window.ga('send', 'pageview', { title: `Timeline :: ${_.upperCase(this.$route.params.title)}`, location: document.location.href })
   },
   asyncData ({ store }) {
     return fetchData(store)

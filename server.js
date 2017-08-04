@@ -1,11 +1,15 @@
+const _ = require('lodash')
 const fs = require('fs')
 const path = require('path')
 const LRU = require('lru-cache')
 const express = require('express')
 const favicon = require('serve-favicon')
 const compression = require('compression')
+const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
+const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
+
 
 const isProd = process.env.NODE_ENV === 'production'
 // const useMicroCache = process.env.MICRO_CACHE !== 'false'
@@ -33,6 +37,7 @@ function createRenderer (bundle, options) {
   }))
 }
 
+app.use(requestIp.mw())
 app.set('views', path.join(__dirname, 'src/views'))
 app.set('view engine', 'ejs')
 
@@ -90,14 +95,28 @@ function render (req, res, next) {
     return
   }
   const s = Date.now()
+  let isPageNotFound = false
+  let isErrorOccurred = false  
 
-  res.setHeader('Cache-Control', 'public, max-age=3600')
+  const isPreview = req.url.indexOf('preview=true') > -1
+  if (!isPreview) {
+    res.setHeader('Cache-Control', 'public, max-age=3600')
+  } else {
+    const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, (i) => (req.clientIp.indexOf(i) > -1)).length > 0
+    if (!isValidReq) {
+      res.status(403).end('Forbidden')
+      console.log('Attempted to access draft in fail: 403 Forbidden')
+    }
+  }
+  console.log('request ip:', req.clientIp)
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 
   const handleError = err => {
-    if (err && err.code === 404) {
-      ifPageNotFound = true
+    if (err.url) {
+      res.redirect(err.url)
+    } else if (err && err.code == 404) {
+      isPageNotFound = true
       res.status(404).render('404')
       console.log('##########REQUEST URL(404)############')
       console.log('REQUEST URL:', req.url)
@@ -106,10 +125,16 @@ function render (req, res, next) {
       console.log('######################')
       return
     } else {
-      res.status(500).render('500')
       console.error(`error during renderToString() error : ${req.url}`)
       console.error(err)
-      ifErrorOccured = true    
+      isErrorOccurred = true
+      
+      if ('403' == err.status) {
+        res.status(403).end('403 | Forbidden')
+        return
+      }
+      res.status(500).render('500')
+      return 
     } 
   }
 
@@ -130,10 +155,8 @@ function render (req, res, next) {
     url: req.url
   }
 
-  let ifPageNotFound = false
-  let ifErrorOccured = false
   res.on('finish', function () {
-    if (ifPageNotFound || ifErrorOccured) {
+    if (isPageNotFound || isErrorOccurred) {
       process.exit(1)
     }
   })
@@ -147,7 +170,7 @@ function render (req, res, next) {
     //   microCache.set(req.url, html)
     // }
     if (!isProd) {
-      // console.log(`whole request: ${Date.now() - s}ms`)
+      console.log(`whole request: ${Date.now() - s}ms`)
     }
   })
 }

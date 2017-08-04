@@ -3,23 +3,23 @@
     <template scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <app-Header v-if="true" :commonData= 'commonData' />
+          <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
-        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" />
+        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>
         <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550)" :config="props.config"/>
         <section class="container list">
-          <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" />
+          <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" target="_blank"/>
           <aside>
             <div class="aside-title mobile-only" ref="aside_title"><h2>最新文章</h2></div>
-            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-${Date.now()}`" />
+            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
           <main>
-            <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />
+            <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" target="_blank"/>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport">
+            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
               <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
@@ -27,22 +27,12 @@
               <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
             </LatestArticleMain>
-            <!--<LatestArticleMain id="latestArticle" :latestList="latestArticleLoadMore" :viewport="viewport" v-show="hasAutoScroll"></LatestArticleMain>-->
-            <!--<ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" />-->
-            <!--<PopularArticles :popList="popularlist" />-->
           </main>
         </section>
         <loading :show="loading" />
-
         <section class="container">
           <more v-if="true" v-on:loadMore="loadMore" />
         </section>
-
-        <!--<section class="container footer">
-          <vue-dfp :is="props.vueDfp" pos="LPCFT" v-if="(viewport > 1000)"  :config="props.config"/>
-          <vue-dfp :is="props.vueDfp" pos="LMBFT" v-else-if="(viewport < 550)":config="props.config"/>
-          <app-footer :ifShare="false" />
-        </section>-->
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <div class="ad">
@@ -64,8 +54,8 @@ import Cookie from 'vue-cookie'
 import EditorChoice from '../components/EditorChoice.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
-import LatestArticleAside from '../components/LatestArticleAsideB.vue'
-import LatestArticleMain from '../components/LatestArticleMainB.vue'
+import LatestArticleAside from '../components/LatestArticleAside.vue'
+import LatestArticleMain from '../components/LatestArticleMain.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
@@ -141,6 +131,8 @@ export default {
     return {
       title: SITE_TITLE,
       meta: `
+        <meta name="mm-opt" content="">
+        <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
         <meta name="twitter:card" content="summary_large_image">
@@ -229,44 +221,40 @@ export default {
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
-    // hasMore () {
-    //   return _.get(this.latestArticle, [ 'length' ], 0) < _.get(this.$store.state.latestArticles, [ 'meta', 'total' ], 0)
-    // },
+    latestArticlesList () {
+      return _.get(this.$store.state, [ 'latestArticles', 'items' ])
+    },
+    latestEndIndex () {
+      return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
+    },
     latestArticle () {
-      // const unionBy = _.unionBy(
-      //   _.get(this.articlesGroupedList, [ 'choices' ]),
-      //   _.get(this.articlesGroupedList, [ 'grouped' ]),
-      //   _.get(this.articlesGroupedList, [ 'grouped', 'relateds' ]),
-      //   _.get(this.articlesGroupedList, [ 'latest' ]),
-      //   'slug'
-      // )
-      // let xorBy = _.xorBy(
-      //   _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]), _.get(this.articlesGroupedList, [ 'latestEndIndex' ])),
-      //   unionBy,
-      //   'title'
-      // )
-      if (this.notFirstPage) {
-        return _.get(this.articlesGroupedList, [ 'latest' ])
-                .concat(
-                  _.slice(_.get(this.$store.state, [ 'latestArticles', 'items' ]),
-                          _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ]))
-                )
+      const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
+
+      const latestFirstPage = _.dropRight(_.get(articlesGroupedList, [ 'latest' ]), 3)
+      const latestAfterFirstPage = _.drop(latestArticlesList, latestEndIndex)
+      const choices = _.get(articlesGroupedList, [ 'choices' ])
+      const groupedTitle = _.get(articlesGroupedList, [ 'grouped' ])
+      const groupedRelateds = _.flatten(_.map(_.get(articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
+      const grouped = _.union(groupedTitle, groupedRelateds)
+      const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
+      const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
+
+      const latest = _.uniqBy(
+        _.concat(latestFirstPage, latestAfterFirstPage),
+        'slug'
+      )
+
+      _.remove(latest, (o) => {
+        return _.includes(choicesAndGrouped_slugs, o.slug)
+      })
+
+      if (this.notFirstPageNow) {
+        return latest
       } else {
-        return _.get(this.articlesGroupedList, [ 'latest' ])
+        return latestFirstPage
       }
     },
-    // latestArticleLoadMore () {
-    //   // console.log(_.get(this.$store.state, [ 'latestArticles', 'items' ]))
-    //   // return this.$store.state.latestArticles.items
-
-    //   // return _.get(this.articlesGroupedList, [ 'latest' ])
-
-    //   const unionBy = _.unionBy(_.get(this.$store.state, [ 'articlesGroupedList', 'choices' ]), _.get(this.$store.state, [ 'latestArticles', 'items' ]), 'id')
-    //   const xorBy = _.xorBy(_.get(this.$store.state, [ 'articlesGroupedList', 'choices' ]), unionBy, 'id')
-    //   const latestArticle = _.slice(xorBy, (5 - _.get(this.$store.state, [ 'articlesGroupedList', 'choices', 'length' ])))
-    //   return latestArticle
-    // },
-    notFirstPage () {
+    notFirstPageNow () {
       return _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], 1) !== 1
     },
     popularlist () {
@@ -284,6 +272,9 @@ export default {
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
+    initHasScrollLoadMore () {
+      this.hasScrollLoadMore = false
+    },
     updateCookie () {
       const cookie = Cookie.get('visited')
       if (!cookie) {
@@ -295,7 +286,7 @@ export default {
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.querySelector('body').offsetWidth
+        this.viewport = document.documentElement.clientWidth || document.body.clientWidth
       }
     },
     updateSysStage () {
@@ -306,6 +297,7 @@ export default {
       this.loading = true
 
       fetchLatestArticle(this.$store, this.page).then(() => {
+        this.hasScrollLoadMore = false
         this.loading = false
       })
     },
@@ -316,8 +308,8 @@ export default {
         const firstPageArticleHeight = _latestArticleDiv.offsetHeight
         const firstPageArticleBottom = elmYPosition('#latestArticle') + (firstPageArticleHeight)
         const currentBottom = currentYPosition() + window.innerHeight
-        if ((currentBottom > firstPageArticleBottom) && !this.hasScrollLoadMore) {
-          // this.hasScrollLoadMore = true
+        if ((currentBottom > (firstPageArticleBottom - 0)) && !this.hasScrollLoadMore) {
+          this.hasScrollLoadMore = true
           this.loadMore()
         }
       }
@@ -339,9 +331,14 @@ export default {
     // this.updateCookie()
     this.checkIfLockJS()
     this.updateSysStage()
-    window.ga('send', 'pageview', this.$route.path, { title: SITE_TITLE })
+    window.ga('set', 'contentGroup1', '')
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {
+    this.initHasScrollLoadMore()
+    this.handleScroll()
     this.updateSysStage()
   }
 }

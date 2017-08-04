@@ -1,8 +1,11 @@
 import { SITE_DOMAIN, SITE_URL } from '../constants'
 import _ from 'lodash'
+import Browser from 'bowser'
+import Cookie from 'vue-cookie'
 import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
+import uuidv4 from 'uuid/v4'
 
 export function getAuthor (article, option = '', delimiter = '｜') {
   const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
@@ -31,7 +34,7 @@ export function getBrief (article, count = 30, allowed_tags = '') {
   if (_.split(_.get(article, [ 'href' ]), '/')[1] === 'topic') {
     brief = _.get(article, [ 'ogDescription' ])
   } else {
-    brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], ''), { allowedTags: [ allowed_tags ] })
+    brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], _.get(article, [ 'brief' ])), { allowedTags: [ allowed_tags ] })
   }
   return truncate(brief, count)
 }
@@ -39,6 +42,8 @@ export function getBrief (article, count = 30, allowed_tags = '') {
 export function getHref (relAritlcle = {}) {
   const { href, style = '', slug } = relAritlcle
   switch (style) {
+    case 'campaign':
+      return `/campaigns/${slug}`
     case 'projects':
       return `/projects/${slug}`
     default:
@@ -52,22 +57,24 @@ export function getHref (relAritlcle = {}) {
 
 export function getImage (article, size) {
   let image
-  if (article.heroImage && article.heroImage.image) {
-    image = article.heroImage
-  } else {
-    image = article.ogImage
+  if (article.heroVideo && article.heroVideo.coverPhoto && article.heroVideo.coverPhoto.image) {
+    image = _.get(article, [ 'heroVideo', 'coverPhoto', 'image', 'resizedTargets' ])
+  } else if (article.heroImage && article.heroImage.image) {
+    image = _.get(article, [ 'heroImage', 'image', 'resizedTargets' ])
+  } else if (article.ogImage) {
+    image = _.get(article, [ 'ogImage', 'image', 'resizedTargets' ])
   }
   switch (size) {
     case 'desktop':
-      return _.get(image, [ 'image', 'resizedTargets', 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
     case 'mobile':
-      return _.get(image, [ 'image', 'resizedTargets', 'mobile', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
     case 'tablet':
-      return _.get(image, [ 'image', 'resizedTargets', 'tablet', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
     case 'tiny':
-      return _.get(image, [ 'image', 'resizedTargets', 'tiny', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
     default:
-      return _.get(image, [ 'image', 'resizedTargets', 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
   }
 }
 
@@ -188,7 +195,6 @@ function preventDefault (e) {
  *  constructing and sending req to api to log client's behaviors through following functions:
  *    getClientOS()
  *    mmLog()
- *    _getUserIP()
  *    _isAlinkDescendant()
  *    _normalizeLog()
  */
@@ -219,52 +225,6 @@ export function mmLog ({ category, eventType, target, description }) {
   return _normalizeLog({ category, eventType, target, description })
 }
 
-function _getUserIP () {
-  return new Promise((resolve) => {
-    // compatibility for firefox and chrome
-    const MyPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection
-    const pc = new MyPeerConnection({
-      iceServers: []
-    })
-    const noop = () => {}
-    const localIPs = {}
-    const ipRegex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/g
-
-    const iterateIP = (ip) => {
-      if (!localIPs[ip]) {
-        resolve(ip)
-        // return ip
-      }
-      localIPs[ip] = true
-    }
-
-    // create a bogus data channel
-    pc.createDataChannel('')
-
-    // create offer and set local description
-    pc.createOffer().then(function (sdp) {
-      sdp.sdp.split('\n').forEach(function (line) {
-        if (line.indexOf('candidate') < 0) {
-          return
-        }
-        line.match(ipRegex).forEach(iterateIP)
-      })
-      pc.setLocalDescription(sdp, noop, noop)
-    }).catch(function (reason) {
-          // An error occurred, so handle the failure to connect
-
-    })
-
-    // listen for candidate events
-    pc.onicecandidate = (ice) => {
-      if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) {
-        return
-      }
-      ice.candidate.candidate.match(ipRegex).forEach(iterateIP)
-    }
-  })
-}
-
 function _isAlinkDescendant (child) {
   let node = child.parentNode
   while (node !== null && node !== undefined) {
@@ -278,6 +238,7 @@ function _isAlinkDescendant (child) {
 
 function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer }) {
   return new Promise((resolve) => {
+    const cookieId = Cookie.get('mmid')
     const targ = target
 
     const clientOs = getClientOS()
@@ -285,9 +246,16 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
     const isAlinkCheck = targ.tagName === 'A' ? { isAlink: true, href: targ.href } : _isAlinkDescendant(targ)
 
     const log = {
+      'browser': {
+        name: Browser.name,
+        version: Browser.version
+      },
       'category': category,
       'client-id': '',
-      'client-os': clientOs,
+      'client-os': {
+        name: clientOs,
+        version: Browser.osversion
+      },
       'curr-url': window.location.href,
       'datetime': moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),
       'description': description,
@@ -302,17 +270,47 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
         height: document.documentElement.clientWidth || document.body.clientWidth
       }
     }
-    if (window.mmClientId) {
-      log['client-id'] = window.mmClientId
-      log['referrer'] = referrer
+    if (!cookieId) {
+      const dt = Date.now()
+      const thisId = setMmCookie()
+      log['client-id'] = thisId
+      log['current-runtime-id'] = thisId
+      log['current-runtime-start'] = moment(dt).format('YYYY.MM.DD HH:mm:ss')
+      log['referrer'] = document.referrer
+      window.mmThisRuntimeClientId = thisId
+      window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
       resolve(log)
     } else {
-      return _getUserIP().then((ip) => {
-        log['client-id'] = `mm-client-${Date.now()}-${ip}`
-        log['referrer'] = document.referrer
-        window.mmClientId = log['client-id']
-        resolve(log)
-      })
+      const dt = Date.now()
+      log['client-id'] = cookieId
+      log['referrer'] = referrer
+      if (!window.mmThisRuntimeClientId) {
+        window.mmThisRuntimeClientId = uuidv4()
+        window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
+      }
+      log['current-runtime-id'] = window.mmThisRuntimeClientId
+      log['current-runtime-start'] = window.mmThisRuntimeDatetimeStart
+      resolve(log)
     }
   })
+}
+
+export function setMmCookie () {
+  const uuid = uuidv4()
+  Cookie.set('mmid', uuid, { expires: (10 * 365 * 24) + 'h' })
+  return uuid
+}
+
+export function insertMicroAd ({ adId, currEnv, microAdLoded }) {
+  if (process.env.VUE_ENV === 'client' && currEnv === 'dev' && microAdLoded === false) {
+    const _lgy_lw = document.createElement('script')
+    _lgy_lw.type = 'text/javascript'
+    _lgy_lw.charset = 'UTF-8'
+    _lgy_lw.async = true
+    _lgy_lw.src = ((document.location.protocol === 'https:') ? 'https://' : 'http://') + `nt.compass-fit.jp/lift_widget.js?adspot_id=${adId}`
+    const _lgy_lw_0 = document.getElementsByTagName('script')[0]
+    _lgy_lw_0.parentNode.insertBefore(_lgy_lw, _lgy_lw_0)
+    console.log('adId', adId)
+  }
+  return true
 }

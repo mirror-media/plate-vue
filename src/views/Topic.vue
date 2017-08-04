@@ -1,55 +1,72 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
     <template scope="props" slot="dfpPos">
-      <div :class="{ 'topic-view': !isTimeline }">
+      <div :class="[ { 'topic-view': !isTimeline }, topicType ]">
 
-        <template v-if="pageStyle === 'full'">
+        <template v-if="pageStyle === 'wide'">
           <section>
-            <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+            <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections'></header-full>
           </section>
-          <leading-watch :topic='topic' :type='`TOPIC`'/>
-          <article-list-full :articles='articles.items' />
-          <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
-          <loading :show="loading" />
-          <footer-full :commonData='commonData' :sectionName='sectionName' />
-          <share :right="`20px`" :bottom="`20px`" />
+          <leading-watch :topic='topic' :type='`TOPIC`'></leading-watch>
+          <article-list-full :abIndicator="abIndicator" :articles='articles.items'></article-list-full>
+          <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore"></more-full>
+          <loading :show="loading"></loading>
+          <footer-full :commonData='commonData' :sectionName='sectionName'></footer-full>
+          <share :right="`20px`" :bottom="`20px`"></share>
         </template>
 
-        <template v-if="isTimeline">
+        <template v-else-if="topicType === 'timeline'">
           <a href="/" class="topicTimeline__logo">
-            <img src="/public/icon/logo_black@3x.png" :alt="siteTitle" />
+            <img src="/public/icon/logo_black@3x.png" :alt="siteTitle">
           </a>
-          <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" />
-          <timeline-headline :timeline="timeline" :viewport="viewport" :viewportTarget="viewportTarget" />
-          <timeline-body :timeline="timeline" :highlightNodes="highlightNodes" :viewport="viewport" />
+          <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`"></share>
+          <timeline-headline :initialTimeline="timeline"></timeline-headline>
+          <timeline-body :initialTimeline="timeline" :initialHighlightNodes="highlightNodes" :viewport="viewport"></timeline-body>
           <div class="topicTimeline__projects">
             <h1>更多專題文章</h1>
-            <ProjectList :projects="projects" :viewport="viewport" />
+            <ProjectList :projects="projects" :viewport="viewport"></ProjectList>
           </div>
           <div class="topicTimeline__fbComment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
         </template>
 
-        <template v-else>
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" />
+        <template v-else-if="topicType === 'portraitWall'">
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"></app-header>
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"/>
+            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
-          <article-list :articles='articles.items' :hasDFP='false' />
-          <section class="container">
-            <more v-if="hasMore" v-on:loadMore="loadMore" />
-          </section>
-          <loading :show="loading" />
+          <portraitWall-list :abIndicator="abIndicator" :initialMediaData="mediaData"></portraitWall-list>
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"/></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"/></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
           <section class="footer container">
-            <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
+            <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
           </section>
-          <share :right="`20px`" :bottom="`20px`" />
+          <share :right="`20px`" :bottom="`20px`"></share>
         </template>
-        
+
+        <template v-else>
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"></app-header>
+          <div class="topic">
+            <div class="topic-title"><h1></h1></div>
+            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
+          </div>
+          <article-list :abIndicator="abIndicator" :articles='articles.items' :hasDFP='false'></article-list>
+          <section class="container">
+            <more v-if="hasMore" v-on:loadMore="loadMore"></more>
+          </section>
+          <loading :show="loading"></loading>
+          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
+            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
+          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
+          <section class="footer container">
+            <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
+          </section>
+          <share :right="`20px`" :bottom="`20px`"></share>
+        </template>
+
       </div>
     </template>
   </vue-dfp-provider>
@@ -59,11 +76,14 @@
 
 import { DFP_ID, DFP_UNITS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
-import { getTruncatedVal, getValue, unLockJS } from '../util/comm'
+import { camelize } from 'humps'
+import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition } from 'kc-scroll'
+import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
+import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
 import Header from '../components/Header.vue'
@@ -73,12 +93,12 @@ import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
+import PortraitWallList from '../components/PortraitWallList.vue'
 import ProjectList from '../components/article/ProjectList.vue'
 import Share from '../components/Share.vue'
 import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import store from '../store'
 import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
@@ -164,6 +184,7 @@ export default {
     'loading': Loading,
     'more': More,
     'more-full': MoreFull,
+    'portraitWall-list': PortraitWallList,
     'share': Share,
     'timeline-body': TimelineBody,
     'timeline-headline': TimelineHeadline,
@@ -175,42 +196,55 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    const ogImage = _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.topic, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : SITE_OGIMAGE
-    const ogTitle = _.get(this.topic, [ 'ogTitle' ], null) ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'title' ], this.title)
-    const ogDescription = _.get(this.topic, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.topic, [ 'ogDescription' ]), 197) : SITE_DESCRIPTION
-    const title = ogTitle + ` - ${SITE_TITLE}`
-    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    if (!this.topic && process.env.VUE_ENV === 'server') {
+      return this.pageNotFoundHandler()
+    }
+    const {
+      heroImage = {},
+      ogDescription = '',
+      ogImage = {},
+      ogTitle = '',
+      name = ''
+    } = this.topic
 
-    if (!ogTitle && process.env.VUE_ENV === 'server') {
-      const e = new Error()
-      e.massage = 'Page Not Found'
-      e.code = '404'
-      throw e
+    const metaTitle = ogTitle || name
+    const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
+    const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
+    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    let abIndicator
+    if (!metaTitle && process.env.VUE_ENV === 'server') {
+      return this.pageNotFoundHandler()
+    }
+    if (process.env.VUE_ENV === 'client') {
+      abIndicator = this.abIndicator
     }
 
     return {
-      title: title,
+      title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
+        <meta name="mm-opt" content="list${abIndicator}">
+        <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
-        <meta name="description" content="${ogDescription}">
+        <meta name="description" content="${metaDescription}">
         <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="${title}">
-        <meta name="twitter:description" content="${ogDescription}">
-        <meta name="twitter:image" content="${ogImage}">
+        <meta name="twitter:title" content="${metaTitle}">
+        <meta name="twitter:description" content="${metaDescription}">
+        <meta name="twitter:image" content="${metaImage}">
         <meta property="fb:app_id" content="${FB_APP_ID}">
         <meta property="fb:pages" content="${FB_PAGE_ID}">
         <meta property="og:site_name" content="${SITE_TITLE}">
         <meta property="og:locale" content="zh_TW">
         <meta property="og:type" content="article">
-        <meta property="og:title" content="${title}">
-        <meta property="og:description" content="${ogDescription}">
+        <meta property="og:title" content="${metaTitle}">
+        <meta property="og:description" content="${metaDescription}">
         <meta property="og:url" content="${ogUrl}">
-        <meta property="og:image" content="${ogImage}">
+        <meta property="og:image" content="${metaImage}">
       `
     }
   },
   data () {
     return {
+      abIndicator: '',
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpMode: 'prod',
@@ -285,12 +319,7 @@ export default {
       return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE)
     },
     pageStyle () {
-      switch (this.$route.params.topicId) {
-        case TOPIC_WATCH_ID:
-          return 'full'
-        default:
-          return 'feature'
-      }
+      return _.get(this.topic, [ 'pageStyle' ])
     },
     projects () {
       return _.get(this.commonData, [ 'projects', 'items' ])
@@ -309,24 +338,15 @@ export default {
     timeline () {
       return _.get(this.$store.state, [ 'timeline' ])
     },
-    title () {
-      // if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
-      //   return '錶展特區'
-      // }
-
-      return _.get(this.topic, [ 'ogTitle' ]) !== '' ? _.get(this.topic, [ 'ogTitle' ]) : _.get(this.topic, [ 'name' ])
-    },
     topic () {
-      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_PROTEST_ID) {
-        return _.get(this.$store.state, [ 'timeline', 'topic' ])
-      } else if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
+      if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
         return _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })
       } else {
         return _.get(this.$store.state, [ 'topic', 'items', '0' ])
       }
     },
     topicType () {
-      return _.get(this.topic, [ 'type' ])
+      return this.camelize(_.get(this.topic, [ 'type' ]))
     },
     mediaData () {
       return {
@@ -347,10 +367,19 @@ export default {
     }
   },
   methods: {
+    camelize,
     checkIfLockJS () {
       unLockJS()
     },
     currentYPosition,
+    getMmid () {
+      const mmid = Cookie.get('mmid')
+      const role = getRole({ mmid, distribution: [
+        { id: 'A', weight: 50 },
+        { id: 'B', weight: 50 } ]
+      })
+      return role
+    },
     getTruncatedVal,
     getValue,
     insertCustomizedMarkup () {
@@ -408,6 +437,12 @@ export default {
         this.loading = false
       })
     },
+    pageNotFoundHandler () {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    },
     updateCustomizedMarkup () {
       const custCss = document.querySelector('#custCSS')
       const custScript = document.querySelector('#custJS')
@@ -422,25 +457,29 @@ export default {
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.querySelector('body').offsetWidth
+        this.viewport = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
       }
     },
     updateMediafarmersScript () {
       const mediafarmersScript = document.querySelector('#mediafarmersJS')
       document.querySelector('body').removeChild(mediafarmersScript)
       this.insertMediafarmersScript()
+    },
+    updateSysStage () {
+      this.dfpMode = currEnv()
     }
   },
   beforeRouteEnter (to, from, next) {
     if (from.matched.length !== 0) {
-      fetchTopicByUuid(store, to.params.topicId)
-      .then(() => {
-        const topicType = _.get(_.find(_.get(store.state.topics, [ 'items' ]), { 'id': to.params.topicId }), [ 'type' ]) ||
-          _.get(store.state.topic, [ 'items', '0', 'type' ])
-        if (topicType === 'timeline') {
-          return fetchTimeline(store, to.params.topicId)
-        }
-      }).then(() => next())
+      next(vm => {
+        return fetchTopicByUuid(vm.$store, to.params.topicId).then(() => {
+          const topicType = _.get(_.find(_.get(vm.$store.state.topics, [ 'items' ]), { 'id': to.params.topicId }), [ 'type' ]) ||
+            _.get(vm.$store.state.topic, [ 'items', '0', 'type' ])
+          if (topicType === 'timeline') {
+            return fetchTimeline(vm.$store, to.params.topicId)
+          }
+        })
+      })
     } else {
       next()
     }
@@ -490,8 +529,8 @@ export default {
     }
   },
   mounted () {
-    this.insertFbSdkScript()
-    this.insertMediafarmersScript()
+    // this.insertFbSdkScript()
+    // this.insertMediafarmersScript()
     this.updateViewport()
     window.addEventListener('resize', () => {
       this.updateViewport()
@@ -500,9 +539,13 @@ export default {
     this.insertCustomizedMarkup()
     this.checkIfLockJS()
     this.updateViewport()
+    this.updateSysStage()
+    this.abIndicator = this.getMmid()
 
     window.ga('set', 'contentGroup1', '')
-    window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
 
     if (this.topicType === 'timeline') {
       window.addEventListener('scroll', (e) => {
@@ -523,11 +566,14 @@ export default {
       })
     }
   },
+  updated () {
+    this.updateSysStage()
+  },
   watch: {
     uuid: function () {
+      this.$forceUpdate()
       if (process.env.VUE_ENV === 'client') {
-        window.ga('set', 'contentGroup1', '')
-        window.ga('send', 'pageview', this.$route.path, { title: `${this.title} - ${SITE_TITLE}` })
+        window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
       }
     },
     customCSS: function () {
@@ -543,7 +589,7 @@ export default {
           version: 'v2.0'
         })
         window.FB && window.FB.XFBML.parse()
-        this.updateMediafarmersScript()
+        // this.updateMediafarmersScript()
       }
       // this.checkIfLockJS()
       // this.sendGA(this.articleData)
@@ -577,6 +623,10 @@ export default {
     h1
       margin 0
 
+.topic-view.portraitWall
+  .topic
+    margin 0
+
 .topicTimeline
   &__logo
     position fixed
@@ -591,6 +641,11 @@ export default {
     width 100%
     padding 1em
     background-color #4d4d4d
+    .project-container
+      margin 1em 0
+      background-color #fff
+      .proj_title
+        display none
     > h1
       margin 0
       color #fff
@@ -600,11 +655,6 @@ export default {
     width 100%
     padding 0 5%
     background-color #fff
-.project-container
-  margin 1em 0
-  background-color #fff
-  .proj_title
-    display none
 
 @media (min-width: 600px)
   .topicTimeline

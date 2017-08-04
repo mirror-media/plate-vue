@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import store from './store'
+// import store from './store'
+import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 import titleMetaMixin from './util/mixinTitleMeta'
@@ -18,7 +19,7 @@ Object.keys(filters).forEach(key => {
 // app instances on each call (which is called for each SSR request)
 export function createApp () {
   // create store and router instances
-  // const store = store
+  const store = createStore()
   const router = createRouter()
 
   // sync the router with the vuex store.

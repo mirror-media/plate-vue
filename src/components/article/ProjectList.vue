@@ -1,25 +1,24 @@
 <template>
-  <div class="project-container" v-if="(projects.length > 0)">
-    <div class="proj_title"><h3>聚焦鏡</h3></div>
+  <div class="project-container" v-if="(filteredProjects.length > 0)">
     <div class="proj_list">
       <app-slider :option="sliderOption" v-if="ifShowProjects" :slideId="sliderId">
         <template scope="props">
-          <swiper-slide :is="props.slide" v-for="(o, i) in projects" v-if="i < 10" :key="`${i}-${Date.now()}`">
+          <swiper-slide :is="props.slide" v-for="(o, i) in filteredProjects" v-if="i < 10" :key="`${i}-${Date.now()}`">
             <div class="proj_item">
               <div>
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-1'">
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-1'" :target="target">
                   <div class="proj_item_img" :title="getValue(o, [ 'title' ])"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
               </div>
               <div class="proj_item_title">
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-2'">
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-2'" :target="target">
                   {{ getTruncatedVal(o.title, 20) }}
                 </a>
               </div>
               <div class="proj_item_desc">
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-3'">
+                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-3'" :target="target">
                   {{ getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20) }}
                 </a>
               </div>
@@ -33,6 +32,7 @@
   </div>
 </template>
 <script>
+  import _ from 'lodash'
   import { SECTION_MAP, SITE_URL } from '../../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import Slider from '../Slider.vue'
@@ -46,6 +46,11 @@
       ifShowProjects () {
         const browser = typeof window !== 'undefined'
         return (browser && this.viewport)
+      },
+      filteredProjects () {
+        return _.filter(this.projects, (o) => {
+          return !_.includes(this.excludingProjects, o.slug)
+        })
       },
       slidesPerView () {
         return (this.viewport < 600) ? 1 : 3
@@ -90,11 +95,17 @@
     },
     name: 'project-list',
     props: {
+      excludingProjects: {
+        default: () => { return [] }
+      },
       projects: {
         default: () => { return [] }
       },
       viewport: {
         default: () => { return undefined }
+      },
+      target: {
+        default: () => ('_self')
       }
     }
   }
@@ -128,6 +139,7 @@
     border 1px solid rgba(0, 0, 0, 0.29)
 
     .swiper-container
+      left -1px
       .swiper-wrapper
         .swiper-slide-active
           .proj_item
