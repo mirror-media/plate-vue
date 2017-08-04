@@ -595,16 +595,20 @@ export default {
       return _.take(_.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.camelize(this.sectionName)), [ this.camelize(this.sectionName) ]), 3)
     },
     sectionId () {
+      let _sectionId
       switch (this.type) {
         case CATEGORY:
-          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
+          _sectionId = _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
             return _.find(s.categories, { 'id': this.uuid })
-          }), [ 'id' ], 'other')
+          }), [ 'id' ])
+          break
         case SECTION:
-          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'id' ], 'other')
+          _sectionId = _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'id' ])
+          break
         default:
-          return 'other'
+          _sectionId = 'other'
       }
+      return this.dfpUnits[ _sectionId ] ? _sectionId : 'other'
     },
     sectionName () {
       switch (this.type) {
