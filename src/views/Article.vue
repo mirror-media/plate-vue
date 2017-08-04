@@ -79,7 +79,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
@@ -206,7 +206,7 @@
           <meta name="twitter:card" content="summary_large_image">
           <meta name="twitter:title" content="${(ogTitle.length > 0) ? ogTitle + ' - ' + SITE_TITLE_SHORT : title + ' - ' + SITE_TITLE_SHORT}">
           <meta name="twitter:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
-          <meta name="twitter:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
+          <meta name="twitter:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
           <meta property="fb:app_id" content="${FB_APP_ID}">
           <meta property="fb:pages" content="${FB_PAGE_ID}">
           <meta property="og:site_name" content="${SITE_TITLE}">
@@ -215,7 +215,7 @@
           <meta property="og:title" content="${(ogTitle.length > 0) ? ogTitle + ' - ' + SITE_TITLE_SHORT : title + ' - ' + SITE_TITLE_SHORT}">
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL + '/story/' + slug + '/'}">
-          <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
+          <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
         `
       }
     },
@@ -454,8 +454,8 @@
         return _.get(this.articleData, [ 'relateds' ], [])
       },
       sectionId () {
-        const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
-        return _sectionId
+        const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
+        return this.dfpUnits[ _sectionId ] ? _sectionId : 'other'
       },
       styleDfpAd () {
         return (this.viewport < 321) ? 'ad-fit' : ''
