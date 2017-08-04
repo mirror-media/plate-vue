@@ -454,8 +454,8 @@
         return _.get(this.articleData, [ 'relateds' ], [])
       },
       sectionId () {
-        const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ]) ? _.get(this.articleData, [ 'sections', 0, 'id' ]) : 'other'
-        return _sectionId
+        const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
+        return this.dfpUnits[ _sectionId ] ? _sectionId : 'other'
       },
       styleDfpAd () {
         return (this.viewport < 321) ? 'ad-fit' : ''
