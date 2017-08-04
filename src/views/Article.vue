@@ -13,8 +13,8 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article-heromedia" v-else-if="heroImage">
-          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" :src="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-          :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
+          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+          :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
@@ -682,7 +682,9 @@
 
       .heroimg
         width 100%
-      
+        &[lazy=loading]
+          object-fit contain
+          height 150px
       .heroimg-caption
         margin-top 5px
         padding 5px 50px 0

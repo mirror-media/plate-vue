@@ -164,6 +164,8 @@ export default {
           background-position center center
           background-repeat no-repeat
           background-size cover
+          &[lazy=loading]
+            background-size 40%
 
         .latest-list_item_label
           position absolute

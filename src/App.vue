@@ -211,10 +211,11 @@ button:focus {
       background-position center center
       cursor pointer
 
-img[lazy=loading]
+[lazy=loading]
   margin 0 auto
   object-fit contain
   object-position center center
+  background-size 40% 40%
 
 
 @media (min-width 0px) and (max-width 320px)
