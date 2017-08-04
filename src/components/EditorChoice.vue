@@ -262,7 +262,6 @@ export default {
 
           .section-label
             position absolute
-            width 60px
             height 35px
             background-color #000
             display flex 

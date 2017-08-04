@@ -216,6 +216,9 @@ export default {
       height 100%
       object-fit cover
       object-position 50% 50%
+      &[lazy=loading]
+        object-fit contain
+        width 150px
     &--colorBlock
       position absolute
       left 0
