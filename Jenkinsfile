@@ -15,15 +15,6 @@ node {
         // checkout([$class: 'GitSCM', branches: [[name: '*/dev']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'AuthorInChangelog']], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/ichiaohsu/plate-vue']]])
         try {
             checkout scm
-            
-            // sh("printenv")
-            sh("echo ${env.BRANCH_NAME}")
-            sh("echo where is my branch name?")
-
-            git_branch = sh(
-                script: "git rev-parse --abbrev-ref HEAD",
-                returnStdout: true
-            ).trim()
 
             git_author_mail = sh(
                 script: "git log --skip 1 -n 1 --pretty=%aE",
@@ -35,12 +26,12 @@ node {
                 returnStdout: true
             ).trim()
 
-            sh("echo git pushed by ${git_author_name} ${git_author_mail}${git_branch}")
+            sh("echo git pushed by ${git_author_name} ${git_author_mail}")
 
             slack_user = slackUsers(git_author_mail)
             sh("echo slack target: ${slack_user}")
 
-            sh("git clone https://github.com/mirror-media/plate-vue-docker.git")
+            sh("git clone -b dev https://github.com/ichiaohsu/plate-vue-docker.git")
 
             sh("gcloud source repos clone default --project=mirrormedia-1470651750304")
             sh("cp default/plate-vue/config.js plate-vue-docker/")
@@ -48,101 +39,101 @@ node {
             
         } catch(e) {
             // slackSend (color: '#FF0000', message: "Houston, we have a *pre-build* problem.")
-            // notifySlack("",[
-            //     [
-            //         color: "#FF0000",
-            //         title: "Pre-build FAILED",
-            //         text: "Houston, we have a pre-build problem\n```${e.getMessage()}```",
-        	// 		mrkdwn_in: ["text"]
-    		//     ]
-            // ])
+            notifySlack("",[
+                [
+                    color: "#FF0000",
+                    title: "Pre-build FAILED",
+                    text: "Houston, we have a pre-build problem\n```${e.getMessage()}```",
+        			mrkdwn_in: ["text"]
+    		    ]
+            ])
             currentBuild.result = 'FAILURE'
             throw e
         }
 
         // slackSend (color: '#C5C9CC', message: "*${git_author_name}* gave Github a little push. Let the build begin!")
-        // notifySlack("",[
-        //     [
-        //         color: "#C5C9CC",
-        //         title: "Pre-build success",
-        //         text: "*${git_author_name}* gave *${appName}* a little push. Let the build begin!",
-        //         mrkdwn_in: ["text"]
-        //     ]
-        // ])
+        notifySlack("",[
+            [
+                color: "#C5C9CC",
+                title: "Pre-build success",
+                text: "*${git_author_name}* gave *${appName}* a little push. Let the build begin!",
+                mrkdwn_in: ["text"]
+            ]
+        ])
     }
     
-    // stage('Build'){
-    //     dir("./plate-vue-docker"){
-    //         try {
-    //             build_time = sh(
-    //                 script: "date +%Y-%m-%d_%H%M%S",
-    //                 returnStdout: true
-    //             ).trim()
-    //             // sh("date +%Y-%m-%d_%H%M%S > .finishtime")
-    //             // build_time = readFile '.finishtime'
-    //             sh("docker build --no-cache -t ${imageTag}:${slack_user}_${build_time} .")
-    //             // sh("echo ${build_time}")
+    stage('Build'){
+        dir("./plate-vue-docker"){
+            try {
+                build_time = sh(
+                    script: "date +%Y-%m-%d_%H%M%S",
+                    returnStdout: true
+                ).trim()
+                // sh("date +%Y-%m-%d_%H%M%S > .finishtime")
+                // build_time = readFile '.finishtime'
+                sh("docker build --no-cache -t ${imageTag}:dev_${slack_user}_${build_time} .")
+                // sh("echo ${build_time}")
                 
-    //             sh("gcloud docker -- push ${imageTag}:${slack_user}_${build_time}")
-    //         } catch(e) {
-    //             // slackSend (color: '#FF0000', message: "@${slack_user}, we got a *build* problem.")
-    //             notifySlack("",[
-    //                 [
-    //                     color: "#FF0000",
-    //                     title: "Build FAILED",
-    //                     text: "Houston, we have a build problem\n```${e.getMessage()}```",
-    //         			mrkdwn_in: ["text"]
-    //     		    ]
-    //             ])
-    //             currentBuild.result = 'FAILURE'
-    //             throw e
-    //         }
+                sh("gcloud docker -- push ${imageTag}:dev_${slack_user}_${build_time}")
+            } catch(e) {
+                // slackSend (color: '#FF0000', message: "@${slack_user}, we got a *build* problem.")
+                notifySlack("",[
+                    [
+                        color: "#FF0000",
+                        title: "Build FAILED",
+                        text: "Houston, we have a build problem\n```${e.getMessage()}```",
+            			mrkdwn_in: ["text"]
+        		    ]
+                ])
+                currentBuild.result = 'FAILURE'
+                throw e
+            }
             
-    //         // slackSend (color: '#BDFFC3', message: "Build ${slack_user}_${build_time} *SUCCESS*.\n Make NEWS great again!")
-    //         notifySlack("",[
-    //             [
-    //                 color: "#BDFFC3",
-    //                 title: "Build Success",
-    //                 text: "Build <https://${imageTag}:${slack_user}_${build_time}|${slack_user}_${build_time}>done.\n Make NEWS great again!",
-    //     			mrkdwn_in: ["text"]
-    // 		    ]
-    //         ])
-    //     }
-    // }
+            // slackSend (color: '#BDFFC3', message: "Build ${slack_user}_${build_time} *SUCCESS*.\n Make NEWS great again!")
+            notifySlack("",[
+                [
+                    color: "#BDFFC3",
+                    title: "Build Success",
+                    text: "Build <https://${imageTag}:dev_${slack_user}_${build_time}|dev_${slack_user}_${build_time}>done.\n Make NEWS great again!",
+        			mrkdwn_in: ["text"]
+    		    ]
+            ])
+        }
+    }
 
-    // stage("Deploy") {
-    //     try {
-    //         // Deploy to dev
-    //         sh("kubectl set image deploy/vue-deployment plate-vue=${imageTag}:${slack_user}_${build_time}")
-    //         // Watch until rollout success
-    //         sh("kubectl rollout status deployment/vue-deployment -w")
+    stage("Deploy") {
+        try {
+            // Deploy to dev
+            sh("kubectl set image deploy/vue-deployment plate-vue=${imageTag}:dev_${slack_user}_${build_time}")
+            // Watch until rollout success
+            sh("kubectl rollout status deployment/vue-deployment -w")
 
-    //         sh("sleep 30s")
+            sh("sleep 30s")
 
-    //     } catch(e) {
-    //         // slackSend (color: '#FF0000', message: "Houston, we have a *deploy* problem.")
-    //         notifySlack("",[
-    //             [
-    //                 color: "#FF0000",
-    //                 title: "Deploy FAILED",
-    //                 text: "Houston, we have a *deploy* problem\n```${e.getMessage()}```",
-    //                 mrkdwn_in: ["text"]
-    //             ]
-    //         ])
-    //         currentBuild.result = 'FAILURE'
-    //         throw e
-    //     }
+        } catch(e) {
+            // slackSend (color: '#FF0000', message: "Houston, we have a *deploy* problem.")
+            notifySlack("",[
+                [
+                    color: "#FF0000",
+                    title: "Deploy FAILED",
+                    text: "Houston, we have a *deploy* problem\n```${e.getMessage()}```",
+                    mrkdwn_in: ["text"]
+                ]
+            ])
+            currentBuild.result = 'FAILURE'
+            throw e
+        }
         
     //     // slackSend (color: '#FCE028', message: "@${slack_user}, you've got build. Check out https://dev.mirrormedia.mg")
-    //     notifySlack("",[
-    //         [
-    //             color: "#3A7BD1",
-    //             title: "Deploy Success",
-    //             text: "@${slack_user} @alvinhsu, open up! You have a new <https://dev.mirrormedia.mg|deploy>",
-    //     		mrkdwn_in: ["text"]
-    // 		]
-    //     ])
-    // }
+        notifySlack("",[
+            [
+                color: "#3A7BD1",
+                title: "Deploy Success",
+                text: "@${slack_user} @alvinhsu, open up! You have a new <https://dev.mirrormedia.mg|deploy>",
+        		mrkdwn_in: ["text"]
+    		]
+        ])
+    }
 }
 
 def notifySlack(text, attachments) {
