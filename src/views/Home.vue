@@ -73,7 +73,12 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 // const PAGE = 1
 
 const fetchSSRData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] })
+  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] }).then(() => {
+    return Promise.all([
+      fetchCommonData(store),
+      fetchArticlesGroupedList(store)
+    ])
+  })
 }
 
 const fetchCommonData = (store) => {
@@ -94,10 +99,6 @@ const fetchEvent = (store, eventType = 'embedded') => {
 
 const fetchArticlesGroupedList = (store) => {
   return store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
-}
-
-const fetchPop = (store) => {
-  return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
 }
 
 const MAXRESULT = 20
@@ -161,7 +162,6 @@ export default {
         if (_.get(vm.$store, [ 'state', 'commonData', 'sections', 'items' ]) || _.get(vm.$store, [ 'state', 'articlesGroupedList', 'choices' ])) {
           fetchSSRData(vm.$store)
           fetchArticlesGroupedList(vm.$store)
-          fetchPop(vm.$store)
         }
       })
     } else {
@@ -321,11 +321,10 @@ export default {
     }
   },
   beforeMount () {
-    fetchCommonData(this.$store)
-    fetchPop(this.$store)
-    fetchEvent(this.$store, 'embedded')
-    fetchEvent(this.$store, 'logo')
-    fetchArticlesGroupedList(this.$store)
+    return Promise.all([
+      fetchEvent(this.$store, 'embedded'),
+      fetchEvent(this.$store, 'logo')
+    ])
   },
   mounted () {
     this.handleScroll()
