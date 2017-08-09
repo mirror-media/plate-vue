@@ -2,11 +2,11 @@
   <section class="projectListVert">
     <div class="projectListVert__title">專題報導</div>
     <div class="projectListVert-list">
-      <div class="projectListVert-list__item" v-for="item in projects">
+      <div class="projectListVert-list__item" :class="[isSquareStyle ? 'square' : '' ]" v-for="item in projects">
         <a :id="`projects-${item.name}-img`" :href="`${siteUrl}/projects/${item.slug}`" class="projectListVert-list__item--img"><img v-lazy="getImage(item, 'mobile')"></a>
         <div class="projectListVert-list__item--text">
-          <a :id="`projects-${item.name}-title`" :href="`${siteUrl}/projects/${item.slug}`"><h2 v-text="getTruncatedVal(item.title, 13)"></h2></a>
-          <a :id="`projects-${item.name}-descr`" :href="`${siteUrl}/projects/${item.slug}`"><p v-text="getTruncatedVal(sanitizeHtml( getValue(item, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 19)"></p></a>
+          <a :id="`projects-${item.name}-title`" :href="`${siteUrl}/projects/${item.slug}`"><h2 v-text="truncateTitle(item.title)"></h2></a>
+          <a :id="`projects-${item.name}-descr`" :href="`${siteUrl}/projects/${item.slug}`"><p v-text="truncateBrief(getValue(item, [ 'brief', 'html' ], ''))"></p></a>
         </div>
       </div>
     </div>
@@ -20,7 +20,14 @@
   import sanitizeHtml from 'sanitize-html'
 
   export default {
-    props: [ 'initProjects' ],
+    props: {
+      initProjects: {
+        default: () => { return {} }
+      },
+      isSquareStyle: {
+        default: () => { return false }
+      }
+    },
     data () {
       return {
         siteUrl: SITE_URL
@@ -35,7 +42,21 @@
       getImage,
       getTruncatedVal,
       getValue,
-      sanitizeHtml
+      sanitizeHtml,
+      truncateBrief (text) {
+        if (this.isSquareStyle) {
+          return this.getTruncatedVal(this.sanitizeHtml(text, { allowedTags: [ ] }), 9)
+        } else {
+          return this.getTruncatedVal(this.sanitizeHtml(text, { allowedTags: [ ] }), 19)
+        }
+      },
+      truncateTitle (text) {
+        if (this.isSquareStyle) {
+          return this.getTruncatedVal(text, 9)
+        } else {
+          return this.getTruncatedVal(text, 13)
+        }
+      }
     }
   }
 </script>
@@ -61,6 +82,9 @@
       display flex
       justify-content space-between
       margin 1.3em 0
+      &.square
+        .projectListVert-list__item--img
+          padding-top 48%
       &--img
         position relative
         width 48%

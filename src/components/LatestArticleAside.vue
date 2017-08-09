@@ -2,22 +2,22 @@
   <div class="latest-aside-container" v-if="groupedArticle">
     <div class="latest-list">
       <div class="latest-list_item">
-        <router-link :to="getHref(groupedArticle)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style !== 'projects'" :target="target">
+        <router-link :to="getHref(groupedArticle)" :id="`group${isLast}-latest-${index}-${getValue(groupedArticle, [ 'slug' ], Date.now())}-img`"  v-if="groupedArticle.style !== 'projects'" :target="target">
           <div class="latest-list_item_img" v-lazy:background-image="getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
         </router-link>
-        <a :href="getHref(groupedArticle)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-1`"  v-if="groupedArticle.style === 'projects'" :target="target">
+        <a :href="getHref(groupedArticle)" :id="`group${isLast}--${index}latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-img`"  v-if="groupedArticle.style === 'projects'" :target="target">
           <div class="latest-list_item_img" v-lazy:background-image="getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
         </a>
         <div class="latest-list_item_title">
-          <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style !== 'projects'" :target="target"></router-link>
-          <a :href="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-2`" v-if="groupedArticle.style === 'projects'" :target="target"></a>
+          <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(groupedArticle, [ 'slug' ], Date.now())}`" v-if="groupedArticle.style !== 'projects'" :target="target"></router-link>
+          <a :href="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(groupedArticle, [ 'slug' ], Date.now())}`" v-if="groupedArticle.style === 'projects'" :target="target"></a>
         </div>
       </div>
 
       <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])" v-if="i < 3">
         <div class="latest-list_item_title">
-          <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style !== 'projects'" :target="target"></router-link>
-          <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style === 'projects'" :target="target"></a>
+          <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(o, [ 'slug' ], Date.now())}`" v-if="o.style !== 'projects'" :target="target"></router-link>
+          <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(o, [ 'slug' ], Date.now())}`" v-if="o.style === 'projects'" :target="target"></a>
         </div>
       </div>
     </div>
@@ -121,6 +121,12 @@ export default {
     groupedArticle: {
       default: () => { return undefined }
     },
+    index: {
+      default: () => { return 0 }
+    },
+    needStick: {
+      default: () => { return true }
+    },
     target: {
       default: () => ('_self')
     },
@@ -130,10 +136,10 @@ export default {
     isLast: null
   },
   mounted () {
-    this.setUpEventHandler()
+    this.needStick ? this.setUpEventHandler() : ''
   },
   updated () {
-    this.setUpEventHandler()
+    this.needStick ? this.setUpEventHandler() : ''
   }
 }
 </script>
