@@ -381,8 +381,6 @@ export default {
     if (process.env.VUE_ENV === 'client') {
       abIndicator = this.abIndicator
     }
-    console.log('meta this: ', process.env.VUE_ENV, this.abIndicator)
-    console.log('meta log: ', process.env.VUE_ENV, abIndicator)
     return {
       title: title,
       meta: `
@@ -861,7 +859,6 @@ export default {
     this.handleScroll()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
-    console.log('mounted: ', this.abIndicator)
     if (this.sectionName === 'other') {
       window.ga('set', 'contentGroup1', '')
       window.ga('set', 'contentGroup2', '')
@@ -875,7 +872,6 @@ export default {
   },
   updated () {
     this.updateSysStage()
-    console.log('updated: ', this.abIndicator)
   }
 }
 

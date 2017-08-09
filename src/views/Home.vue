@@ -7,36 +7,63 @@
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
-        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>
-        <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550)" :config="props.config"/>
-        <section class="container list">
-          <div class="project-title--mobile">
-            <h2>專題報導</h2>
-          </div>
-          <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" target="_blank"/>
-          <aside>
-            <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
-            <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
-          </aside>
-          <main>
-            <h2 class="project-title--desktop">專題報導</h2>
-            <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" target="_blank"/>
-            <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
-              <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBNA3" v-if="(viewport < 600)" slot="dfpNA3" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
-            </LatestArticleMain>
-          </main>
-        </section>
+        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" v-if="abIndicator !== 'B'" target="_blank"/>
+        <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550) && (abIndicator !== 'B')" :config="props.config"/>
+        <template v-if="abIndicator === 'B'">
+          <section class="styleB">
+            <main>
+              <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>    
+              <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
+              <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
+              <div class="focusNewsContainer">
+                <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-show="viewport < 1200" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+              </div>
+              <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
+                <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LMBNA3" v-if="(viewport < 600)" slot="dfpNA3" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
+              </LatestArticleMain>
+            </main>
+            <aside v-show="viewport >= 1200">
+              <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
+              <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+              <project-listVert :initProjects="projects" :isSquareStyle="true"></project-listVert>
+            </aside>
+          </section>
+        </template>
+        <template v-if="abIndicator !== 'B'">
+          <section class="container list">
+            <div class="project-title--mobile">
+              <h2>專題報導</h2>
+            </div>
+            <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" target="_blank"/>
+            <aside>
+              <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
+              <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+            </aside>
+            <main>
+              <h2 class="project-title--desktop">專題報導</h2>
+              <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" target="_blank"/>
+              <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
+              <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
+                <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LMBNA3" v-if="(viewport < 600)" slot="dfpNA3" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
+              </LatestArticleMain>
+            </main>
+          </section>
+        </template>
         <loading :show="loading" />
-        <section class="container">
+        <!--<section class="container">
           <more v-if="true" v-on:loadMore="loadMore" />
-        </section>
+        </section>-->
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <div class="ad">
@@ -50,12 +77,14 @@
 </template>
 
 <script>
-import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, unLockJS } from '../util/comm'
+import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import EditorChoice from '../components/EditorChoice.vue'
+import EditorChoiceB from '../components/EditorChoiceB.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
@@ -65,6 +94,7 @@ import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import PopularArticles from '../components/PopularArticles.vue'
 import ProjectList from '../components/article/ProjectList.vue'
+import ProjectListVert from '../components/article/ProjectListVert.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
@@ -119,9 +149,11 @@ export default {
     'app-footer': Footer,
     'app-Header': Header,
     'editor-choice': EditorChoice,
+    'editor-choiceB': EditorChoiceB,
     'live-stream': LiveStream,
     'loading': Loading,
     'more': More,
+    'project-listVert': ProjectListVert,
     LatestArticleAside,
     LatestArticleMain,
     PopularArticles,
@@ -133,10 +165,14 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
+    let abIndicator
+    if (process.env.VUE_ENV === 'client') {
+      abIndicator = this.abIndicator
+    }
     return {
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="">
+        <meta name="mm-opt" content="home${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -170,6 +206,7 @@ export default {
   },
   data () {
     return {
+      abIndicator: 'A',
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
@@ -276,6 +313,25 @@ export default {
     closeCoverAd () {
       this.showDfpCoverAdFlag = false
     },
+    detectFixProject: function (e) {
+      const lastFocusNews = document.querySelector('aside .latest-aside-container.last')
+      const lastFocusNewsBottomPosition = elmYPosition('aside .latest-aside-container.last') + lastFocusNews.offsetHeight
+      const project = document.querySelector('.projectListVert')
+      if (this.viewport >= 1200 && (currentYPosition() > lastFocusNewsBottomPosition)) {
+        project.classList.add('fixed')
+      } else {
+        project.classList.remove('fixed')
+      }
+    },
+    getRole,
+    getMmid () {
+      const mmid = Cookie.get('mmid')
+      const role = this.getRole({ mmid, distribution: [
+        { id: 'A', weight: 50 },
+        { id: 'B', weight: 50 } ]
+      })
+      return role
+    },
     initHasScrollLoadMore () {
       this.hasScrollLoadMore = false
     },
@@ -332,18 +388,24 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
+    window.addEventListener('scroll', this.detectFixProject)
     // this.updateCookie()
     this.checkIfLockJS()
     this.updateSysStage()
+    this.abIndicator = this.getMmid()
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {
     this.initHasScrollLoadMore()
     this.handleScroll()
     this.updateSysStage()
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.detectFixProject)
   }
 }
 
@@ -424,9 +486,41 @@ export default {
       width 90%
       margin 0 auto
 
+.styleB
+  width 100%
+  .latest-main-container
+    width 90%
+    margin 0 auto
+  .aside-title
+    padding 0 2rem
+    margin-top 10px
+
+    h2
+      font-size 1.5rem
+      color #356d9c
+      font-weight 400
+      overflow hidden
+      margin-bottom 10px
+
+      &::after
+        content ""
+        display inline-block
+        height .5em
+        vertical-align middle
+        width 100%
+        margin-right -100%
+        margin-left 10px
+        border-top 5px solid #356d9c
+
 section.footer
   width 100%
-     
+
+.projectListVert
+  &.fixed
+    position fixed
+    top 20px
+    right auto
+    width calc(1024px * 0.25 - 30px)     
       
 @media (min-width: 600px)
   .list
@@ -467,6 +561,17 @@ section.footer
 
       main
         width 100%
+
+  .styleB
+    padding 0 2rem
+    .aside-title
+      padding 0
+    .focusNewsContainer
+      display flex
+      flex-wrap wrap
+      justify-content space-between
+    .latest-main-container
+      width 100%
 
   section.footer
     width 100%
@@ -510,8 +615,28 @@ section.footer
             font-size 1.3rem
             &::after
               display none
-
-  
+  .editorChoice
+    margin-top 0
+  .styleB
+    display flex
+    width 1024px
+    margin 40px auto 0
+    padding 0
+    main
+      width 75%
+    aside
+      width 25%
+      padding-left 30px
+      .aside-title
+        margin-top 0
+        margin-bottom 10px
+        padding 0
+        h2
+          margin-bottom 0
+          font-size 1.3rem
+          line-height 1.15
+          &::after
+            display none
 
   section.footer
     width 1024px
