@@ -520,7 +520,7 @@
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
           window.ga('set', 'contentGroup3', '')
         }
-        window.ga('send', 'pageview', { title: `${truncate(_.get(articleData, [ 'title' ], ''), 21)} - ${SITE_TITLE_SHORT}`, location: document.location.href })
+        window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       updateCookie () {
         const cookie = Cookie.get('visited')
