@@ -3,10 +3,10 @@
     <div class="projectListVert__title">專題報導</div>
     <div class="projectListVert-list">
       <div class="projectListVert-list__item" :class="[isSquareStyle ? 'square' : '' ]" v-for="item in projects">
-        <a :id="`projects-${item.name}-img`" :href="`${siteUrl}/projects/${item.slug}`" class="projectListVert-list__item--img"><img v-lazy="getImage(item, 'mobile')"></a>
+        <a :id="`projects-${item.name}-img`" :href="`${siteUrl}/projects/${item.slug}`" :target="[openInNewWindow ? '_blank' : '']" class="projectListVert-list__item--img"><img v-lazy="getImage(item, 'mobile')"></a>
         <div class="projectListVert-list__item--text">
-          <a :id="`projects-${item.name}-title`" :href="`${siteUrl}/projects/${item.slug}`"><h2 v-text="truncateTitle(item.title)"></h2></a>
-          <a :id="`projects-${item.name}-descr`" :href="`${siteUrl}/projects/${item.slug}`"><p v-text="truncateBrief(getValue(item, [ 'brief', 'html' ], ''))"></p></a>
+          <a :id="`projects-${item.name}-title`" :href="`${siteUrl}/projects/${item.slug}`" :target="[openInNewWindow ? '_blank' : '']"><h2 v-text="truncateTitle(item.title)"></h2></a>
+          <a :id="`projects-${item.name}-descr`" :href="`${siteUrl}/projects/${item.slug}`" :target="[openInNewWindow ? '_blank' : '']"><p v-text="truncateBrief(getValue(item, [ 'brief', 'html' ], ''))"></p></a>
         </div>
       </div>
     </div>
@@ -25,6 +25,9 @@
         default: () => { return {} }
       },
       isSquareStyle: {
+        default: () => { return false }
+      },
+      openInNewWindow: {
         default: () => { return false }
       }
     },

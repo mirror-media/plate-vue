@@ -3,11 +3,11 @@
     <div class="portraitWallList__imageGroup" :class="[ index%2 === 0 ? 'color' : '' ]" v-for="(item, index) in images">
       <div class="portraitWallList__block" :class="[ getOrder(image) %2 === 0 ? '' : 'color' ]" v-for="(image, index) in item">
         <router-link :to="getHref(image)" :target="[ abIndicator === 'B' ? '_blank' : '' ]" class="portraitWallList__block--image" :style="{ backgroundImage: `url(${getImage(image)})` }">
-          <p></p>
+          <p v-text="getTitle(image, false)"></p>
         </router-link>
         <div class="portraitWallList__block--content">
           <h2><router-link :to="getHref(image)" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="getValue(image, [ 'description' ])"></router-link></h2>
-          <p><a :target="[ abIndicator === 'B' ? '_blank' : '' ]"></a></p>
+          <p><a :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="getTitle(image, true)"></a></p>
         </div>
       </div>
     </div>
@@ -16,12 +16,12 @@
 
 <script>
 
-import { getValue } from '../util/comm'
+import { getTruncatedVal, getValue } from '../util/comm'
 import _ from 'lodash'
 
 export default {
   name: 'portraitWallList',
-  props: [ 'abIndicator', 'initialMediaData' ],
+  props: [ 'articles', 'abIndicator', 'initialMediaData' ],
   computed: {
     images () {
       return _.chunk(_.sortBy(_.get(this.initialMediaData, [ 'images', 'items' ]), [ function (o) {
@@ -30,14 +30,21 @@ export default {
     }
   },
   methods: {
+    getHref (item) {
+      return `/story/${_.split(_.get(item, [ 'keywords' ]), '-')[1]}`
+    },
     getImage (item) {
       return _.get(item, [ 'image', 'resizedTargets', 'desktop', 'url' ])
     },
     getOrder (item) {
       return _.split(_.get(item, [ 'keywords' ]), '-')[0]
     },
-    getHref (item) {
-      return `/story/${_.split(_.get(item, [ 'keywords' ]), '-')[1]}`
+    getTitle (item, needComplete) {
+      const slug = _.split(_.get(item, [ 'keywords' ]), '-')[1]
+      if (needComplete) {
+        return _.get(_.find(this.articles.items, { 'slug': slug }), [ 'title' ])
+      }
+      return getTruncatedVal(_.get(_.find(this.articles.items, { 'slug': slug }), [ 'title' ]), 19)
     },
     getValue
   }
@@ -85,6 +92,9 @@ export default {
         margin 0 0 .5em
         font-size 1.2rem
         letter-spacing 1px
+      p
+        margin 0
+        line-height 1.3
 
 @media (min-width: 600px)
   .portraitWallList
@@ -122,10 +132,26 @@ export default {
       &.color
         background-color transparent
       &--image
+        position relative
         width 100%
         padding-top 100%
+        font-size .8rem
         &:hover
-          filter brightness(.5)
+          p
+            display flex
+            justify-content center
+            align-items center
+            position absolute
+            top 0
+            left 0
+            width 100%
+            height 100%
+            margin 0
+            padding 25% 10%
+            color #fff
+            text-align justify
+            line-height 1.3
+            background-color rgba(0, 0, 0, .7)
       &--content
         flex-direction row
         justify-content center
@@ -136,4 +162,10 @@ export default {
           margin 0
         p
           display none
+
+@media (min-width:1200px)
+  .portraitWallList
+    &__block
+      &--image
+        font-size 1rem
 </style>

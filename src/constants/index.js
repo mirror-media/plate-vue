@@ -100,6 +100,8 @@ export const MARKETING_ID = '57fca2f5c9b7a70e004e6df9'
 
 export const VIDEOHUB_ID = '5975ab2de531830d00e32b2f'
 
+export const TOPIC_FINPROJECT_ID = '5948a49fe28c300d0035971a'
+
 export const TOPIC_PROTEST_ID = '59151f0ff2179c0d0089b7d5'
 
 export const TOPIC_WATCH_ID = '586cd15c3c1f950d00ce2e78'

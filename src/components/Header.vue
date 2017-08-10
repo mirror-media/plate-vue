@@ -12,6 +12,15 @@
         <button @click="search(searchVal)">
           <img class="header-logoSearch__search--icon" src="/public/icon/search.svg" alt="搜尋"/>
         </button>
+        <div class="header-logoSearch__more" @click.prevent="openMoreService">
+          <img src="/public/icon/more_grey@2x.png" alt="更多">
+          <div class="header-logoSearch__more--list" ref="moreServiceList">
+            <a class="header-logoSearch__more--listItem" :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>
+            <a class="header-logoSearch__more--listItem" :href="socialLink.AD" target="_blank">廣告合作</a>
+            <a class="header-logoSearch__more--listItem" href="/category/campaign" target="_blank">活動專區</a>
+            <a class="header-logoSearch__more--listItem" :href="socialLink.DOWNLOADAPP" target="_blank">下載APP</a>
+          </div>
+        </div>
       </div>
       <a @click="openSearchBar()" class="header-logoSearch__search mobile-only">
         <img src="/public/icon/search.svg" alt="開啟搜尋列">
@@ -138,11 +147,39 @@ export default {
     }
   },
   methods: {
+    closeMoreServiceList (e) {
+      if (e.target.className === 'header-logoSearch__more--listItem') {
+        window.open(e.target.href)
+      }
+      e.stopPropagation()
+      e.preventDefault()
+      this.$refs.moreServiceList.classList.remove('active')
+      this.enableScroll()
+      window.removeEventListener('click', this.closeMoreServiceList, true)
+    },
     closeSearchBar () {
       this.openSearch = false
     },
     closeSideBar () {
       this.openSide = false
+    },
+    disableScroll () {
+      if (window.addEventListener) {
+        window.addEventListener('DOMMouseScroll', this.preventDefault, false)
+      }
+      window.onwheel = this.preventDefault
+      window.onmousewheel = document.onmousewheel = this.preventDefault
+      window.ontouchmove = this.preventDefault
+      document.onkeydown = this.preventDefaultForScrollKeys
+    },
+    enableScroll () {
+      if (window.removeEventListener) {
+        window.removeEventListener('DOMMouseScroll', this.preventDefault, false)
+      }
+      window.onmousewheel = document.onmousewheel = null
+      window.onwheel = null
+      window.ontouchmove = null
+      document.onkeydown = null
     },
     getColor (item) {
       return _.get(SECTION_MAP, [ _.get(item, [ 'id' ]), 'bgcolor' ])
@@ -156,11 +193,29 @@ export default {
     hasChanged () {
       this.isChanged = true
     },
+    openMoreService () {
+      this.disableScroll()
+      this.$refs.moreServiceList.classList.add('active')
+      window.addEventListener('click', this.closeMoreServiceList, true)
+    },
     openSearchBar () {
       this.openSearch = true
     },
     openSideBar () {
       this.openSide = true
+    },
+    preventDefault (e) {
+      e = e || window.event
+      if (e.preventDefault) {
+        e.preventDefault()
+      }
+      e.returnValue = false
+    },
+    preventDefaultForScrollKeys (e) {
+      if (e.keyCode === 40) {
+        e.preventDefault(e)
+        return false
+      }
     },
     search (searchVal = '') {
       if (this.isChanged && searchVal !== '') {
@@ -206,6 +261,33 @@ $color-mirrorfiction = #968375
     padding 10px 20px
     &__logoAd--logo
       height 50px
+    &__more
+      display flex
+      justify-content center
+      align-items center
+      position relative
+      width 20px
+      height 35px
+      margin-left 10px
+      cursor pointer
+      img
+        height 20px
+      &--list
+        display none
+        flex-direction column
+        position absolute
+        top 0
+        left 0
+        z-index 10
+        width 120px
+        background-color #fff
+        border 1px solid #eee
+        &.active
+          display flex
+        a
+          padding .5em 1em
+          font-size 1rem
+          text-align center
   &-icon
     width 32px
   &-menu
@@ -472,7 +554,7 @@ $color-mirrorfiction = #968375
         &.desktop-only
           display flex !important
           align-items center
-          width 250px
+          width 285px
           height 35px
         input
           float left

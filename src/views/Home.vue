@@ -30,7 +30,7 @@
             <aside v-show="viewport >= 1200">
               <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
               <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
-              <project-listVert :initProjects="projects" :isSquareStyle="true"></project-listVert>
+              <project-listVert :initProjects="projects" :isSquareStyle="true" :openInNewWindow="true"></project-listVert>
             </aside>
           </section>
         </template>
