@@ -5,8 +5,9 @@
     ],
     'rules': { 
       'array-bracket-spacing': [ 2, 'always' ],
-      'camelcase': [0, ''],
-      'yoda': [0, 'never']
+      'no-multiple-empty-lines': [ 2, { "max": 2 } ],
+      'camelcase': [ 0, '' ],
+      'yoda': [ 0, 'never' ]
     },
     'globals': {
       'location': true,

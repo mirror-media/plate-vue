@@ -35,7 +35,7 @@
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
-          <portraitWall-list :abIndicator="abIndicator" :initialMediaData="mediaData"></portraitWall-list>
+          <portraitWall-list :articles="articles" :abIndicator="abIndicator" :initialMediaData="mediaData"></portraitWall-list>
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
@@ -75,7 +75,7 @@
 <script>
 
 import { DFP_ID, DFP_UNITS } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_FINPROJECT_ID, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { camelize } from 'humps'
 import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition } from 'kc-scroll'
@@ -158,14 +158,14 @@ const fetchTopicImages = (store, uuid) => {
   })
 }
 
-const fetchArticlesByUuid = (store, uuid, isLoadMore) => {
+const fetchArticlesByUuid = (store, uuid, isLoadMore, maxResult = MAXRESULT) => {
   const page = isLoadMore || PAGE
   return store.dispatch('FETCH_ARTICLES_BY_UUID', {
     'uuid': uuid,
     'type': TOPIC,
     'params': {
       page: page,
-      max_results: MAXRESULT
+      max_results: maxResult
     }
   })
 }
@@ -486,11 +486,16 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     let topicType
+    let maxResult
     const uuid = _.split(to.path, '/')[2]
     const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
     this.page = PAGE
-
-    fetchArticlesByUuid(this.$store, uuid, false)
+    if (uuid === TOPIC_FINPROJECT_ID) {
+      maxResult = 25
+    } else {
+      maxResult = 12
+    }
+    fetchArticlesByUuid(this.$store, uuid, false, maxResult)
     .then(() => {
       fetchTopicImages(this.$store, uuid)
       .then(() => {
@@ -524,7 +529,11 @@ export default {
     const uuid = _.split(this.$route.path, '/')[2]
     fetchEvent(this.$store, 'logo')
     if (this.topicType !== 'timeline') {
-      fetchArticlesByUuid(this.$store, uuid, false)
+      if (this.topicType === 'portraitWall') {
+        fetchArticlesByUuid(this.$store, uuid, false, 25)
+      } else {
+        fetchArticlesByUuid(this.$store, uuid, false)
+      }
       fetchTopicImages(this.$store, uuid)
     }
   },
