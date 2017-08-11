@@ -388,11 +388,13 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
-    window.addEventListener('scroll', this.detectFixProject)
     // this.updateCookie()
     this.checkIfLockJS()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
+    if (this.abIndicator === 'B') {
+      window.addEventListener('scroll', this.detectFixProject)
+    }
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
     // window.ga('set', 'contentGroup3', '')
@@ -405,7 +407,14 @@ export default {
     this.updateSysStage()
   },
   destroyed () {
-    window.removeEventListener('scroll', this.detectFixProject)
+    if (this.abIndicator === 'B') {
+      window.removeEventListener('scroll', this.detectFixProject)
+    }
+  },
+  watch: {
+    abIndicator: function () {
+      this.$forceUpdate()
+    }
   }
 }
 

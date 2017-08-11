@@ -19,16 +19,12 @@
     </app-slider>
     <div class="editorChoice__menu">
       <template v-for="(item, index) in editorChoice">
-        <router-link :to="getHref(item)" :id="'choices-' + item.name"
-              :class="(index === 0) ? 'editorChoice__menu--item active' : 'editorChoice__menu--item'"
-              :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
-              @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
+        <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
+          @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
           <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
         </router-link>
-        <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name"
-              :class="(index === 0) ? 'editorChoice__menu--item active' : 'editorChoice__menu--item'"
-              :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
-              @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
+        <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
+          @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
           <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
         </a>
       </template>
@@ -64,7 +60,7 @@ import Slider from './Slider.vue'
 import _ from 'lodash'
 
 export default {
-  name: 'editorChoice',
+  name: 'editorChoiceB',
   components: {
     'app-slider': Slider
   },
@@ -288,6 +284,8 @@ export default {
         display flex
         justify-content center
         align-items center
+        flex-grow 1
+        flex-basis 0
         padding .5em 1em
         color #000
         span
