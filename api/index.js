@@ -52,7 +52,7 @@ const redisFetching = (url, callback) => {
     redisPoolRead.ttl(decodeURIComponent(url), (_err, _data) => {
       if (!_err && _data) {
         if (_data === -1) {
-          redisPoolWrite.del(decodeURIComponent(req.url), (_e, _d) => {
+          redisPoolWrite.del(decodeURIComponent(url), (_e, _d) => {
             if (_e) {
               console.log('deleting key ', decodeURIComponent(url), 'from redis in fail ', _e)
             }
