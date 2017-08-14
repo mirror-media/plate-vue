@@ -9,7 +9,7 @@
           <span class="search-title__text" v-text="title"></span>
           <div class="search-title__colorBlock"></div>
         </div>
-        <article-list :abIndicator="abIndicator" :articles='articles.items' />
+        <article-list :articles='articles.items' />
         <loading :show="loading" />
         <section class="container">
           <more v-if="hasMore" v-on:loadMore="loadMore" />
@@ -90,14 +90,10 @@ export default {
   metaSet () {
     const title = (this.title) ? `${this.title} - ${SITE_TITLE}` : SITE_TITLE
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-    let abIndicator
-    if (process.env.VUE_ENV === 'client') {
-      abIndicator = this.abIndicator
-    }
     return {
       title: title,
       meta: `
-        <meta name="mm-opt" content="list${abIndicator}">
+        <meta name="mm-opt" content="">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -136,7 +132,7 @@ export default {
   },
   data () {
     return {
-      abIndicator: '',
+      abIndicator: 'A',
       commonData: this.$store.state.commonData,
       loading: false,
       page: PAGE,
@@ -218,10 +214,11 @@ export default {
       this.updateViewport()
     })
     this.updateSysStage()
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
   },
   updated () {

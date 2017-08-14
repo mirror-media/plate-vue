@@ -5,7 +5,6 @@
         <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
       </blockquote>
     </div>
-    <project-listVert :initProjects="projects" v-if="abIndicator === 'B'"></project-listVert>
   </section>
 </template>
 
@@ -19,7 +18,7 @@ export default {
   components: {
     'project-listVert': ProjectListVert
   },
-  props: [ 'abIndicator', 'projects' ],
+  props: [ 'projects' ],
   methods: {
     detectFixAside: function (e) {
       const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
