@@ -6,9 +6,9 @@
           <header-foodtravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
         </section>
         <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
-        <featuredStory-foodtravel :abIndicator="abIndicator" :sectionfeatured='sectionfeatured' :viewport="viewport"/>
-        <latestArticle-foodtravel :abIndicator="abIndicator" :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" id="articleList" :showLatestOnly="false"/>
-        <latestArticle-foodtravel :abIndicator="abIndicator" :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
+        <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
+        <latestArticle-foodtravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" id="articleList" :showLatestOnly="false"/>
+        <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" :className="'moreFoodTravel'" />
         <loading :show="loading" />
         <vue-dfp :is="props.vueDfp" pos="LPCSFT" extClass="desktop-only" :config="props.config" />
@@ -21,11 +21,11 @@
         <!--div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCHD" :config="props.config" /></div-->
         <!--div v-if="isMobile"><vue-dfp :is="props.vueDfp" pos="SMBHD" :config="props.config" /></div-->
         <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-        <article-leading :abIndicator="abIndicator" :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'"/>
-        <editorChoice-full :abIndicator="abIndicator" :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
-        <latestArticle-full :abIndicator="abIndicator" :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'" />
+        <article-leading :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'"/>
+        <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
+        <latestArticle-full :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'" />
         <leading-watch v-if="type == 'TAG'" :tag='tag' :type='type'/>
-        <article-list-full :abIndicator="abIndicator" :articles='articles' v-if="type === 'TAG'" />
+        <article-list-full :articles='articles' v-if="type === 'TAG'" />
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
         <loading :show="loading" />
         <div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCFT" :config="props.config" /></div>
@@ -42,7 +42,7 @@
         <div class="list-title container" :style="{ color: sectionColor }">
           <span class="list-title__text" v-text="title"></span>
         </div>
-        <article-list id="articleList" :abIndicator="abIndicator" :articles='autoScrollArticles' :hasDFP='hasDFP'>
+        <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP'>
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
@@ -53,7 +53,7 @@
         </article-list>
         <div><vue-dfp v-if="title !== 'Topic' && !isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" /></div>
         <div><vue-dfp v-if="title !== 'Topic' && isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" /></div>
-        <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :abIndicator="abIndicator" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
+        <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
           v-show="hasAutoScroll"/>
         <loading :show="loading" />
         <section class="footer container">
@@ -377,14 +377,10 @@ export default {
 
     const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
     this.titleBase = title
-    let abIndicator
-    if (process.env.VUE_ENV === 'client') {
-      abIndicator = this.abIndicator
-    }
     return {
       title: title,
       meta: `
-        <meta name="mm-opt" content="list${abIndicator}">
+        <meta name="mm-opt" content="">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${ogDescription}">
@@ -407,7 +403,7 @@ export default {
   },
   data () {
     return {
-      abIndicator: '',
+      abIndicator: 'A',
       adIds: [
         { id: '4273368', loaded: false },
         { id: '4273369', loaded: false },
@@ -789,9 +785,9 @@ export default {
     }
   },
   watch: {
-    abIndicator: function () {
-      this.$forceUpdate()
-    },
+    // abIndicator: function () {
+    //   this.$forceUpdate()
+    // },
     articleListAutoScrollHeight: function () {
       if (this.uuid === SECTION_FOODTRAVEL_ID && this.page >= 2) {
         this.canScrollLoadMord = false
@@ -858,15 +854,17 @@ export default {
     this.insertCustomizedMarkup()
     this.handleScroll()
     this.updateSysStage()
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
     if (this.sectionName === 'other') {
       window.ga('set', 'contentGroup1', '')
       window.ga('set', 'contentGroup2', '')
-      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+      window.ga('set', 'contentGroup3', '')
+      // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     } else {
       window.ga('set', 'contentGroup1', this.sectionName)
       window.ga('set', 'contentGroup2', '')
-      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+      window.ga('set', 'contentGroup3', '')
+      // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     }
     window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
   },

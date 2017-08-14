@@ -115,7 +115,7 @@
       <div class="article_main_pop">
         <slot name="poplist"></slot>
       </div>
-      <div class="article_main_proj" v-show="!(abIndicator === 'B' && viewport > 1200)">
+      <div class="article_main_proj">
         <h3 style="margin-top: 0;">專題報導</h3>
         <proj-list :projects="projlistData" :viewport="viewport" />
       </div>
@@ -361,9 +361,6 @@ export default {
   },
   name: 'article-body',
   props: {
-    abIndicator: {
-      default: () => { return '' }
-    },
     articleData: {
       default: () => { return undefined }
     },

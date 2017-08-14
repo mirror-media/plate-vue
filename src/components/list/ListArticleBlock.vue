@@ -2,14 +2,14 @@
   <div class="listArticleBlock" :class="{ noHoverEffect: removeHoverEffect }" >
     <template v-if="articleType === 'campaign' || articleType === 'projects'">
       <figure class="listArticleBlock__figure">
-        <a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-img`" :target="[ abIndicator === 'B' ? '_blank' : '' ]">
+        <a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
           <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
         </a>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
-        <h2><a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-title`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="getValue(article, [ 'title' ])"></a></h2>
-        <p><a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="getBrief(article, 45)"></a></p>
+        <h2><a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></a></h2>
+        <p><a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></a></p>
       </div>
     </template>
     <template v-else-if="articleType === 'video'">
@@ -49,25 +49,25 @@
     </template>
     <template v-else-if="articleType === 'topic'">
       <figure class="listArticleBlock__figure">
-        <router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-img`" :target="[ abIndicator === 'B' ? '_blank' : '' ]">
+        <router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-img`" target="_blank">
           <img v-lazy="getImage(article)" :alt="getValue(article, [ 'name' ])" />
         </router-link>
       </figure>
       <div class="listArticleBlock__content">
-        <h2><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-title`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="getValue(article, [ 'name' ])"></router-link></h2>
-        <p><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-descr`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="getBrief(article, 45)"></router-link></p>
+        <h2><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-title`" target="_blank" v-text="getValue(article, [ 'name' ])"></router-link></h2>
+        <p><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
       </div>
     </template>
     <template v-else>
       <figure class="listArticleBlock__figure">
-        <router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" :target="[ abIndicator === 'B' ? '_blank' : '' ]">
+        <router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
           <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
         </router-link>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
-        <h2><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="getValue(article, [ 'title' ])"></router-link></h2>
-        <p><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="getBrief(article, 45)"></router-link></p>
+        <h2><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></router-link></h2>
+        <p><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
       </div>
     </template>
   </div>
@@ -81,7 +81,7 @@ import _ from 'lodash'
 import moment from 'moment'
 
 export default {
-  props: [ 'abIndicator', 'index', 'initialArticle', 'initialTogglePause' ],
+  props: [ 'index', 'initialArticle', 'initialTogglePause' ],
   data () {
     return {
       audioCurrent: 0,

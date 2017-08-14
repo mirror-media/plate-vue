@@ -5,16 +5,16 @@
       <div class="articleListFull-posts">
         <template v-for="item in articles">
           <div class="articleListFull-post">
-            <a :href="getHref(item)" :target="[ abIndicator === 'B' ? '_blank' : '' ]" class="articleListFull-post__img">
+            <a :href="getHref(item)" target="_blank" class="articleListFull-post__img">
               <figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" :title="getValue(item, [ 'title' ])"></figure>
             </a>
             <div class="articleListFull-post__content">
-              <h2><a :href="getHref(item)" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="item.title"></a></h2>
+              <h2><a :href="getHref(item)" target="_blank" v-text="item.title"></a></h2>
               <div class="articleListFull-post__meta">
                 <span class="articleListFull-post__meta--author" v-show="getAuthor(item, 'writers')" v-html="getAuthor(item, 'writers') + ' ｜ '"></span>
                 <span class="articleListFull-post__meta--date" v-text="moment(new Date(item.publishedDate)).format('Y.MM.DD')"></span>
               </div>
-              <p class="articleListFull-post__brief"><a :href="getHref(item)" :target="[ abIndicator === 'B' ? '_blank' : '' ]" v-text="getBrief(item, 70)"></a></p>
+              <p class="articleListFull-post__brief"><a :href="getHref(item)" target="_blank" v-text="getBrief(item, 70)"></a></p>
             </div>
           </div>
         </template>
@@ -31,7 +31,7 @@ export default {
   name: 'articleList-full',
   components: {
   },
-  props: [ 'abIndicator', 'articles' ],
+  props: [ 'articles' ],
   methods: {
     getAuthor,
     getBrief,

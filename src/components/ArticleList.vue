@@ -3,7 +3,7 @@
 
     <template v-for="(item, index) in articles">
       <slot name="microAd" v-if="index === 0"></slot>
-      <listArticle-block :abIndicator="abIndicator" :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
+      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
       <slot :name="getNativeDfpSlotName(index)" v-if="(index === 1 || index === 2 || index === 5) && hasDFP" />
     </template>
     
@@ -19,7 +19,7 @@ export default {
   components: {
     'listArticle-block': ListArticleBlock
   },
-  props: [ 'abIndicator', 'articles', 'hasDFP' ],
+  props: [ 'articles', 'hasDFP' ],
   data () {
     return {
       togglePause: undefined
