@@ -165,7 +165,10 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    const abIndicator = this.abIndicator
+    let abIndicator
+    if (process.env.VUE_ENV === 'client') {
+      abIndicator = this.getMmid()
+    }
     console.log('metaSet ', abIndicator)
     return {
       title: SITE_TITLE,
@@ -409,13 +412,13 @@ export default {
     if (this.abIndicator === 'B') {
       window.removeEventListener('scroll', this.detectFixProject)
     }
-  },
-  watch: {
-    abIndicator: function () {
-      console.log('watch ', this.abIndicator)
-      this.$forceUpdate()
-    }
   }
+  // watch: {
+  //   abIndicator: function () {
+  //     console.log('watch ', this.abIndicator)
+  //     this.$forceUpdate()
+  //   }
+  // }
 }
 
 </script>
