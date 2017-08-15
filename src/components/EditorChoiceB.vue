@@ -34,11 +34,11 @@
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
         <template>
           <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style !== 'projects'" :target="target">
-            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
+            <figure :style="{ backgroundImage: `url(${getImage(item, 'mobile')})`}" :title="item.title"></figure>
             <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </router-link>
           <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style === 'projects'" :target="target">
-            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
+            <figure :style="{ backgroundImage: `url(${getImage(item, 'mobile')})`}" :title="item.title"></figure>
             <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </a>
         </template>
