@@ -54,7 +54,8 @@ export default {
     'LPCNA5': { 'aduid': 'mirror_pc_hp_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA9': { 'aduid': 'mirror_pc_hp_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     // LOGO : position on header
-    'LOGO': { 'aduid': 'mirror_RWD_ros_110x50_logo', 'dimensions': '110x50', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] }
+    'LOGO': { 'aduid': 'mirror_RWD_ros_110x50_logo', 'dimensions': '110x50', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'OOP': { 'aduid': 'test_mirror_rwd_peo_fluid_na3', 'dimensions': '', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'outOfPage': true }
   },
   'other': { //  topic
 

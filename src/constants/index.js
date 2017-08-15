@@ -43,6 +43,7 @@ export const DFP_OPTIONS = {
   setTargeting: {},
   setCategoryExclusion: '',
   setLocation: '',
+  enableSyncRendering: false,
   enableSingleRequest: true,
   collapseEmptyDivs: 'original',
   refreshExisting: true,
