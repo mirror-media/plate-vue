@@ -165,10 +165,7 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    let abIndicator
-    if (process.env.VUE_ENV === 'client') {
-      abIndicator = this.getMmid()
-    }
+    const abIndicator = this.abIndicator
     console.log('metaSet ', abIndicator)
     return {
       title: SITE_TITLE,
@@ -207,7 +204,7 @@ export default {
   },
   data () {
     return {
-      abIndicator: 'A',
+      abIndicator: '',
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
@@ -412,13 +409,13 @@ export default {
     if (this.abIndicator === 'B') {
       window.removeEventListener('scroll', this.detectFixProject)
     }
+  },
+  watch: {
+    abIndicator: function () {
+      console.log('watch ', this.abIndicator)
+      this.$forceUpdate()
+    }
   }
-  // watch: {
-  //   abIndicator: function () {
-  //     console.log('watch ', this.abIndicator)
-  //     this.$forceUpdate()
-  //   }
-  // }
 }
 
 </script>
