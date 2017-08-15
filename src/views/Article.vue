@@ -79,7 +79,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
@@ -329,7 +329,7 @@
         return this.$store.state.commonData
       },
       dfpOptions () {
-        return {
+        return Object.assign({}, DFP_OPTIONS, {
           afterEachAdLoaded: (event) => {
             const dfpCurrAd = document.querySelector(`#${event.slot.getSlotElementId()}`)
             const position = dfpCurrAd.getAttribute('pos')
@@ -352,7 +352,7 @@
           },
           setCentering: true,
           sizeMapping: DFP_SIZE_MAPPING
-        }
+        })
       },
       eventEmbedded () {
         return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])

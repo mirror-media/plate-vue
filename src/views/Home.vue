@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { DFP_ID, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, unLockJS } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
@@ -226,7 +226,7 @@ export default {
       return this.$store.state.commonData
     },
     dfpOptions () {
-      return {
+      return Object.assign({}, DFP_OPTIONS, {
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
@@ -240,7 +240,7 @@ export default {
           }
         },
         setCentering: true
-      }
+      })
     },
     editorChoice () {
       return _.get(this.articlesGroupedList, [ 'choices' ])

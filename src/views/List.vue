@@ -76,7 +76,7 @@
 <script>
 
 import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants/index'
-import { DFP_ID, DFP_UNITS } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, getTruncatedVal, unLockJS, insertMicroAd } from '../util/comm'
@@ -482,7 +482,7 @@ export default {
       }
     },
     dfpOptions () {
-      return {
+      return Object.assign({}, DFP_OPTIONS, {
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
@@ -496,7 +496,7 @@ export default {
           }
         },
         setCentering: true
-      }
+      })
     },
     eventEmbedded () {
       return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])

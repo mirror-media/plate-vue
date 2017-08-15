@@ -63,7 +63,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { currEnv, getTruncatedVal, lockJS, unLockJS } from '../util/comm'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleBody from '../components/article/ArticleBodyForApp.vue'
@@ -296,7 +296,7 @@
         return this.$store.state.commonData
       },
       dfpOptions () {
-        return {
+        return Object.assign({}, DFP_OPTIONS, {
           afterEachAdLoaded: (event) => {
             const dfpCurrAd = document.querySelector(`#${event.slot.getSlotElementId()}`)
             const position = dfpCurrAd.getAttribute('pos')
@@ -319,7 +319,7 @@
           },
           setCentering: true,
           sizeMapping: DFP_SIZE_MAPPING
-        }
+        })
       },
       eventEmbedded () {
         return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])

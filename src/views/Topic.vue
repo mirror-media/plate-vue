@@ -74,7 +74,7 @@
 
 <script>
 
-import { DFP_ID, DFP_UNITS } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_FINPROJECT_ID, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { camelize } from 'humps'
 import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
@@ -271,7 +271,7 @@ export default {
       return _.get(this.topic, [ 'dfp' ], null)
     },
     dfpOptions () {
-      return {
+      return Object.assign({}, DFP_OPTIONS, {
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
@@ -285,7 +285,7 @@ export default {
           }
         },
         setCentering: true
-      }
+      })
     },
     eventLogo () {
       return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
