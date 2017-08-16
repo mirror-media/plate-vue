@@ -8,8 +8,13 @@
   </swiper>
 </template>
 <script>
-  import Swiper from 'vue-awesome-swiper/swiper.vue'
-  import SwiperSlide from 'vue-awesome-swiper/slide.vue'
+  import Swiper from 'vue-awesome-swiper/src/swiper.vue'
+  import SwiperSlide from 'vue-awesome-swiper/src/slide.vue'
+
+  if (process.env.VUE_ENV === 'client') {
+    require('swiper/dist/css/swiper.css')
+  }
+
   export default {
     components: {
       Swiper,
