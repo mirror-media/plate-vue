@@ -43,20 +43,22 @@ const clientTitleMetaMixin = {
     if (title) {
       document.querySelector('title').innerHTML = title
     }
+    console.log('--- mixin updated', metaSet)
     if (meta) {
       const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')
       const newMeta = _.split(meta, '>')
-      _.forEach(dynamicMeta, function (node) {
+      _.forEach(dynamicMeta, (node) => {
         document.head.removeChild(node)
       })
-      _.forEach(newMeta, function (m) {
-        const node = document.createElement('head')
-        node.innerHTML = m + '>'
+      _.forEach(newMeta, (m) => {
+        const node = document.createElement('div')
+        node.innerHTML = `${m}>`
         const updateMeta = node.querySelector('meta')
         if (updateMeta) {
           document.head.appendChild(updateMeta)
         }
       })
+      console.log('mixin updated meta ---')
     }
   }
 }
