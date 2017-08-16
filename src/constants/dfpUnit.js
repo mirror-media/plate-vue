@@ -6,13 +6,13 @@ export default {
     'MBAR2': { 'aduid': 'mm_mobile_other_ap_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mm_mobile_other_ap_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mm_mobile_other_ap_320x100_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT : position on listing page
     'LMBHD': { 'aduid': 'mm_mobile_other_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mm_mobile_other_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL2': { 'aduid': 'mm_mobile_hp_300x250_L2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-bottom: 35px;' ] },
     'LMBFT': { 'aduid': 'mm_mobile_other_ap_320x100_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'test_pc_np_ap_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCR1': { 'aduid': 'test_pc_np_ap_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -38,7 +38,7 @@ export default {
     'LOGO': { 'aduid': 'mirror_RWD_ros_110x50_logo', 'dimensions': '110x50', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] }
   },
   'home': { //  homepage
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'LMBHD': { 'aduid': 'mirror_m_hp_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'LMBFS': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_hp_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-bottom: 35px;' ] },
@@ -78,12 +78,12 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_oth_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_oth_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_oth_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
 
     'LMBHD': { 'aduid': 'mirror_m_oth_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_oth_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_oth_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_oth_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCR1': { 'aduid': 'mirror_pc_oth_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -112,12 +112,12 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_news_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_news_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_news_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT
     'LMBHD': { 'aduid': 'mirror_m_news_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_news_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_news_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_news_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'size-mapping': 'default' },
     'PCR1': { 'aduid': 'mirror_pc_news_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -146,12 +146,12 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_fin_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_fin_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_fin_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT
     'LMBHD': { 'aduid': 'mirror_m_fin_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_fin_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_fin_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_fin_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'size-mapping': 'default' },
     'PCR1': { 'aduid': 'mirror_pc_fin_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -180,12 +180,12 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_cul_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_cul_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_cul_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT
     'LMBHD': { 'aduid': 'mirror_m_cul_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_cul_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_cul_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_cul_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'size-mapping': 'default' },
     'PCR1': { 'aduid': 'mirror_pc_cul_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -214,12 +214,12 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_mafa_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_mafa_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_mafa_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT
     'LMBHD': { 'aduid': 'mirror_m_mafa_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_mafa_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_mafa_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_mafa_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'size-mapping': 'default' },
     'PCR1': { 'aduid': 'mirror_pc_mafa_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -248,12 +248,12 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_oth_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_oth_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_oth_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT
     'LMBHD': { 'aduid': 'mirror_m_oth_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_oth_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_oth_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_oth_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'size-mapping': 'default' },
     'PCR1': { 'aduid': 'mirror_pc_oth_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -282,12 +282,12 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_int_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_int_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_int_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT
     'LMBHD': { 'aduid': 'mirror_m_int_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_int_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_int_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_int_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'size-mapping': 'default' },
     'PCR1': { 'aduid': 'mirror_pc_int_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -316,12 +316,12 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_peo_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_peo_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_peo_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT
     'LMBHD': { 'aduid': 'mirror_m_peo_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_peo_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_peo_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_peo_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'size-mapping': 'default' },
     'PCR1': { 'aduid': 'mirror_pc_peo_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -350,12 +350,12 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_ent_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_ent_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_ent_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT : position on listing page
     'LMBHD': { 'aduid': 'mirror_m_ent_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_ent_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_ent_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_ent_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCR1': { 'aduid': 'mirror_pc_ent_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -384,14 +384,14 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_tra_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_tra_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_tra_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT : position on listing page
     'LMBHD': { 'aduid': 'mirror_m_tra_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_tra_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0' ] },
     'LMBSL1': { 'aduid': 'mirror_m_tra_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 20px 0' ] },
     'LMBFT': { 'aduid': 'mirror_m_tra_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin: 20px 0' ] },
     'LMBSFT': { 'aduid': 'mirror_m_tra_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_tra_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCR1': { 'aduid': 'mirror_pc_tra_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
@@ -438,14 +438,14 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_wat_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_wat_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_wat_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT : position on listing page
     'LMBHD': { 'aduid': 'mirror_m_wat_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_wat_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL2': { 'aduid': 'mirror_m_wat_300x250_L2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL3': { 'aduid': 'mirror_m_wat_300x250_L3', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-bottom: 20px' ] },
     'LMBFT': { 'aduid': 'mirror_m_wat_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin-bottom: 10px' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_wat_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCR1': { 'aduid': 'mirror_pc_wat_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
