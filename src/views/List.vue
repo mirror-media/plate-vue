@@ -7,8 +7,8 @@
         </section>
         <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
         <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
-        <latestArticle-foodtravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" id="articleList" :showLatestOnly="false"/>
-        <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
+        <latestArticle-foodtravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" ref="articleList" id="articleList" :showLatestOnly="false"/>
+        <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" ref="articleListAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" :className="'moreFoodTravel'" />
         <loading :show="loading" />
         <vue-dfp :is="props.vueDfp" pos="LPCSFT" extClass="desktop-only" :config="props.config" />
@@ -42,7 +42,7 @@
         <div class="list-title container" :style="{ color: sectionColor }">
           <span class="list-title__text" v-text="title"></span>
         </div>
-        <article-list id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP'>
+        <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP'>
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
@@ -75,7 +75,9 @@
 </template>
 <script>
 
-import { AUDIO_ID, AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, FB_APP_ID, FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants/index'
+import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, FB_APP_ID,
+  FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS,
+  SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants/index'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
@@ -145,7 +147,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
 
     case CATEGORY:
       switch (uuid) {
-        case AUDIO_ID:
+        case CATEGORY＿ORALREADING_ID:
           return fetchAudios(store, {
             page: page,
             max_results: MAXRESULT,
@@ -293,12 +295,14 @@ const getUUID = (store, type, to) => {
       return to.params.authorId
     case CATEGORY:
       switch (to.params.title) {
-        case 'audio':
-          return AUDIO_ID
         case 'campaign':
           return CAMPAIGN_ID
+        case 'interview':
+          return CATEGORY＿INTERVIEW_ID
         case 'marketing':
           return MARKETING_ID
+        case 'oralreading':
+          return CATEGORY＿ORALREADING_ID
         case 'videohub':
           return VIDEOHUB_ID
         default:
@@ -435,7 +439,8 @@ export default {
             return _.uniqBy(_.get(this.$store.state, [ 'playlist', 'items' ]), 'id')
           }
           if (this.$route.params.title === 'news-people' || this.$route.params.title === 'entertainment') {
-            return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this, [ 'sectionfeatured' ]), 'id'), 'id')
+            // return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this, [ 'sectionfeatured' ]), 'id'), 'id')
+            return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'id')
           }
           return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
       }
@@ -512,7 +517,7 @@ export default {
           if (this.$route.params.title === 'topic') {
             return _.get(this.$store.state, [ 'topics', 'meta', 'page' ], PAGE) !== 1
           }
-          if (this.$route.params.title === 'audio') {
+          if (this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading') {
             return _.get(this.$store.state, [ 'audios', 'meta', 'page' ], PAGE) !== 1
           }
           if (this.$route.params.title === 'videohub') {
@@ -522,7 +527,7 @@ export default {
       }
     },
     hasDFP () {
-      return !(this.$route.params.title === 'topic' || this.$route.params.title === 'audio' || this.$route.params.title === 'videohub')
+      return !(this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading' || this.$route.params.title === 'topic' || this.$route.params.title === 'videohub')
     },
     hasEventEmbedded () {
       const _now = moment()
@@ -535,7 +540,8 @@ export default {
     },
     hasMore () {
       switch (this.$route.params.title) {
-        case 'audio':
+        case 'interview':
+        case 'oralreading':
           return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'audios', 'meta', 'total' ], 0)
         case 'videohub':
           return _.get(this.playlist, [ 'length' ], 0) < _.get(this.$store.state, [ 'playlist', 'pageInfo', 'totalResults' ], 0)
@@ -559,7 +565,7 @@ export default {
           if (this.$route.params.title === 'topic') {
             return _.get(this.$store.state, [ 'topics', 'meta', 'page' ], PAGE)
           }
-          if (this.$route.params.title === 'audio') {
+          if (this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading') {
             return _.get(this.$store.state, [ 'audios', 'meta', 'page' ], PAGE)
           }
           if (this.$route.params.title === 'videohub') {
@@ -695,26 +701,6 @@ export default {
       })
       return role
     },
-    handleScroll () {
-      window.onscroll = (e) => {
-        if (document.querySelector('#articleList')) {
-          const currentBottom = this.currentYPosition() + window.innerHeight
-          const articleListHeight = document.querySelector('#articleList').offsetHeight
-          const articleListBottom = this.elmYPosition('#articleList') + articleListHeight
-          this.articleListAutoScrollHeight = document.querySelector('#articleListAutoScroll').offsetHeight
-          const articleListAutoScrollBottom = this.elmYPosition('#articleListAutoScroll') + this.articleListAutoScrollHeight
-          if (currentBottom > (articleListBottom - 300) && this.canScrollLoadMord && (this.page === 1) && this.hasMore) {
-            this.canScrollLoadMord = false
-            this.loadMore()
-          }
-
-          if (currentBottom > (articleListAutoScrollBottom - 300) && this.canScrollLoadMord && (this.page > 1) && this.hasMore) {
-            this.canScrollLoadMord = false
-            this.loadMore()
-          }
-        }
-      }
-    },
     insertCustomizedMarkup () {
       const custCss = document.createElement('style')
       const custScript = document.createElement('script')
@@ -751,6 +737,24 @@ export default {
       insertMicroAd({ adId: this.adIds[index].id, currEnv: this.dfpMode, microAdLoded: this.adIds[index].loaded })
       this.adIds[index]['loaded'] = true
       return true
+    },
+    scrollHandler (e) {
+      if (this.$refs.articleList) {
+        const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+        const currentBottom = this.currentYPosition() + vh
+        const articleListBottom = this.elmYPosition('#articleList') + this.$refs.articleList.$el.offsetHeight
+        this.articleListAutoScrollHeight = this.$refs.articleListAutoScroll.$el.offsetHeight
+        const articleListAutoScrollBottom = this.elmYPosition('#articleListAutoScroll') + this.articleListAutoScrollHeight
+
+        if (currentBottom > (articleListBottom - 300) && this.canScrollLoadMord && (this.page === 1) && this.hasMore) {
+          this.canScrollLoadMord = false
+          this.loadMore()
+        }
+        if (currentBottom > (articleListAutoScrollBottom - 300) && this.canScrollLoadMord && (this.page > 1) && this.hasMore) {
+          this.canScrollLoadMord = false
+          this.loadMore()
+        }
+      }
     },
     updateCookie () {
       const cookie = Cookie.get('visited')
@@ -847,12 +851,10 @@ export default {
   },
   mounted () {
     this.updateViewport()
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
+    window.addEventListener('resize', this.updateViewport)
+    window.addEventListener('scroll', this.scrollHandler)
     this.checkIfLockJS()
     this.insertCustomizedMarkup()
-    this.handleScroll()
     this.updateSysStage()
     // this.abIndicator = this.getMmid()
     if (this.sectionName === 'other') {
@@ -870,6 +872,10 @@ export default {
   },
   updated () {
     this.updateSysStage()
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.updateViewport)
+    window.removeEventListener('scroll', this.scrollHandler)
   }
 }
 

@@ -3,7 +3,7 @@
 
     <template v-for="(item, index) in articles">
       <slot name="microAd" v-if="index === 0"></slot>
-      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" />
+      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" :key="getValue(item, [ 'id' ], Date.now())"/>
       <slot :name="getNativeDfpSlotName(index)" v-if="(index === 1 || index === 2 || index === 5) && hasDFP" />
     </template>
     
@@ -12,6 +12,7 @@
 
 <script>
 
+import { getValue } from '../util/comm'
 import ListArticleBlock from './list/ListArticleBlock.vue'
 
 export default {
@@ -37,6 +38,7 @@ export default {
         return 'dfpNA9'
       }
     },
+    getValue,
     pauseAllAudio (index) {
       this.togglePause = index
     }
