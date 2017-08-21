@@ -166,7 +166,6 @@ export default {
   mixins: [ titleMetaMixin ],
   metaSet () {
     const abIndicator = this.abIndicator
-    console.log('metaSet ', abIndicator)
     return {
       title: SITE_TITLE,
       meta: `
@@ -390,7 +389,6 @@ export default {
     this.checkIfLockJS()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
-    console.log('mounted ', this.abIndicator)
     if (this.abIndicator === 'B') {
       window.addEventListener('scroll', this.detectFixProject)
     }
@@ -412,7 +410,6 @@ export default {
   },
   watch: {
     abIndicator: function () {
-      console.log('watch ', this.abIndicator)
       this.$forceUpdate()
     }
   }
