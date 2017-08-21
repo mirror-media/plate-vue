@@ -107,11 +107,12 @@
       <div class="dfpad-set" style="display: flex; justify-content: space-around;">
         <slot name="dfpad-set"></slot>
       </div>
-      <div>
+      <div v-if="abIndicator === 'A'">
         <h3>推薦文章</h3>
       </div>
-      <div id="matchedContentContainer" class="matchedContentContainer">
-      </div>
+      <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A'"></div>
+      <div class="_pvmax_recommend kianGi" data-widget-id="34adabba-78ea-4350-8b24-9fbd9cb210c1" v-if="abIndicator === 'B'"></div>
+      <div id="_popIn_recommend" class="popIn" v-if="abIndicator === 'C'"></div>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
       </div>
@@ -361,6 +362,9 @@ export default {
   },
   name: 'article-body',
   props: {
+    abIndicator: {
+      default: () => { return '' }
+    },
     articleData: {
       default: () => { return undefined }
     },
@@ -949,6 +953,10 @@ export default {
     margin-top 15px
     .fb-page
       width 100%
+  
+  .kianGi, .popIn
+    margin-top 1em
+  
   .herbsapi
     display flex
     align-items center

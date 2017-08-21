@@ -20,7 +20,7 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
+          <article-body :abIndicator="abIndicator" :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
@@ -188,15 +188,15 @@
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
-      // let abIndicator
-      // if (process.env.VUE_ENV === 'client') {
-      //   abIndicator = this.abIndicator
-      // }
+      let abIndicator
+      if (process.env.VUE_ENV === 'client') {
+        abIndicator = this.getMmid()
+      }
 
       return {
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="">
+          <meta name="mm-opt" content="article${abIndicator}">
           <meta name="robots" content="${robotsValue}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
@@ -521,6 +521,16 @@
           document.querySelector('head').appendChild(breadcrumbScript)
         }
       },
+      insertKianGiScript () {
+        const kianGiScript = document.createElement('script')
+        kianGiScript.setAttribute('id', 'kianGiScript')
+        kianGiScript.innerHTML = `var _pvmax = {"siteId": "ad29e713-4619-48da-a44d-4f3ee5906f94"};
+          (function(d, s, id) { var js, pjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id; js.async = true;
+          js.src = "//api.pvmax.net/v1.0/pvmax.js";pjs.parentNode.insertBefore(js, pjs);}(document, 'script', 'pvmax-jssdk'));`
+        if (!document.querySelector('#kianGiScript')) {
+          document.querySelector('head').appendChild(kianGiScript)
+        }
+      },
       insertMatchedContentScript () {
         const matchedContentStart = document.createElement('script')
         const matchedContentContent = document.createElement('ins')
@@ -560,6 +570,14 @@
           document.querySelector('body').appendChild(mediafarmersScript)
         }
       },
+      insertPopInScript () {
+        const popInScript = document.createElement('script')
+        popInScript.setAttribute('id', 'popInScript')
+        popInScript.innerHTML = `var _pop = _pop || [];_pop.push(["_set_read_categoryName","${_.get(this.articleData, [ 'sections', '0', 'name' ])}"]);(function() { var pa = document.createElement("script"); pa.type = "text/javascript"; pa.charset = "utf-8"; pa.async = true;pa.src = window.location.protocol + "//api.popin.cc/searchbox/chinatimes_photo.js";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(pa, s);})();`
+        if (!document.querySelector('#popInScript')) {
+          document.querySelector('body').appendChild(popInScript)
+        }
+      },
       runMicroAd (index) {
         insertMicroAd({ adId: this.adIds[index].id, currEnv: this.dfpMode, microAdLoded: this.adIds[index].loaded })
         this.adIds[index]['loaded'] = true
@@ -570,13 +588,13 @@
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
-          window.ga('set', 'contentGroup3', '')
-          // window.ga('set', 'contentGroup3', `article${abIndicator}`)
+          // window.ga('set', 'contentGroup3', '')
+          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         } else {
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
-          window.ga('set', 'contentGroup3', '')
-          // window.ga('set', 'contentGroup3', `article${abIndicator}`)
+          // window.ga('set', 'contentGroup3', '')
+          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         }
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
@@ -600,6 +618,13 @@
         }
         this.insertJSONLDScript()
       },
+      updateKianGiScript () {
+        const kianGiScript = document.querySelector('#kianGiScript')
+        if (kianGiScript) {
+          document.querySelector('head').removeChild(kianGiScript)
+        }
+        this.insertKianGiScript()
+      },
       updateMatchedContentScript () {
         const matchedContentStart = document.querySelector('#matchedContentStart')
         const matchedContentContent = document.querySelector('#matchedContentContent')
@@ -616,6 +641,13 @@
         document.querySelector('body').removeChild(mediafarmersScript)
         this.insertMediafarmersScript()
       },
+      updatePopInScript () {
+        const popInScript = document.querySelector('#popInScript')
+        if (popInScript) {
+          document.querySelector('body').removeChild(popInScript)
+        }
+        this.insertPopInScript()
+      },
       updateViewport () {
         const browser = typeof window !== 'undefined'
         if (browser) {
@@ -628,7 +660,6 @@
     },
     mounted () {
       this.initializeFBComments()
-      this.insertMatchedContentScript()
       this.insertMediafarmersScript()
       this.updateViewport()
       this.clientSideFlag = process.env.VUE_ENV === 'client'
@@ -638,6 +669,15 @@
       this.checkIfLockJS()
       this.updateSysStage()
       this.abIndicator = this.getMmid()
+
+      if (this.abIndicator === 'A') {
+        this.insertMatchedContentScript()
+      } else if (this.abIndicator === 'B') {
+        this.insertKianGiScript()
+      } else {
+        this.insertPopInScript()
+      }
+
       if (!_.isEmpty(this.articleData)) {
         this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
@@ -655,7 +695,15 @@
         })
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
-        this.updateMatchedContentScript()
+
+        if (this.abIndicator === 'A') {
+          this.updateMatchedContentScript()
+        } else if (this.abIndicator === 'B') {
+          this.updateKianGiScript()
+        } else {
+          this.updatePopInScript()
+        }
+
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
       },
