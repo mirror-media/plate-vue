@@ -82,7 +82,7 @@
       },
       captionStyle () {
         return {
-          show: (this.descSwitch || (this.viewport < 768 && !this.ifLandscape)),
+          show: (this.descSwitch || (this.viewport < 768 && !this.isLandscape)),
           hide: !this.descSwitch
         }
       },
@@ -107,7 +107,7 @@
       },
       goNextPageClass () {
         return {
-          center: (this.viewport < 768 && !this.ifLandscape),
+          center: (this.viewport < 768 && !this.isLandscape),
           hidden: this.goNextPageHide
         }
       },
@@ -124,7 +124,7 @@
       },
       landscapeClass () {
         return {
-          landscape: this.ifLandscape
+          landscape: this.isLandscape
         }
       },
       imgArr () {
@@ -138,7 +138,7 @@
         return {
           on: this.descSwitch,
           off: !this.descSwitch,
-          hide: !this.ifLandscape || this.descHide
+          hide: !this.isLandscape || this.descHide
         }
       },
       title () {
@@ -153,7 +153,7 @@
         descHide: false,
         descSwitch: _.get(this.articleData, [ 'isAdvertised' ], false),
         lastAnimation: 0,
-        ifLandscape: false,
+        isLandscape: false,
         goNextPageHide: false,
         onePageScroll: (new OnePageScroller()),
         quietPeriod: 700,
@@ -345,16 +345,16 @@
           _progressBar.setAttribute('style', `left: ${percentage}%;`)
         })
       },
-      updateIfLandscape () {
+      updateIsLandscape () {
         const browser = typeof window !== 'undefined'
-        this.ifLandscape = browser && window.innerHeight < window.innerWidth
+        this.isLandscape = browser && window.innerHeight < window.innerWidth
       }
     },
     mounted () {
-      this.updateIfLandscape()
+      this.updateIsLandscape()
       this.smoothScroll(null, 0)
       window.addEventListener('resize', () => {
-        this.updateIfLandscape()
+        this.updateIsLandscape()
       })
 
       window.addEventListener('scroll', () => {
@@ -643,11 +643,12 @@
         height 100vh
         overflow hidden
         position relative
-
+        background-color #000
+        
         .img
     
           img
-            object-fit cover
+            object-fit contain
             max-height 100%
             position absolute
             z-index 0
