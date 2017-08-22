@@ -119,7 +119,7 @@ export default {
       a
         color #d6642e !important
       &.color
-        background-color orange
+        background-color #d6642e
         a
           color #fff !important
     &__block
