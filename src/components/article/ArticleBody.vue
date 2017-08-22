@@ -112,7 +112,7 @@
       </div>
       <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A'"></div>
       <div class="_pvmax_recommend kianGi" data-widget-id="34adabba-78ea-4350-8b24-9fbd9cb210c1" v-if="abIndicator === 'B'"></div>
-      <div id="_popIn_recommend" class="popIn" v-if="abIndicator === 'C'"></div>
+      <div id="_popIn_recommend" class="popIn"></div>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
       </div>
@@ -954,7 +954,7 @@ export default {
     .fb-page
       width 100%
   
-  .kianGi, .popIn
+  .kianGi
     margin-top 1em
   
   .herbsapi
