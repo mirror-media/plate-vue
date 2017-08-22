@@ -667,7 +667,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      this.abIndicator = this.getMmid()
+      // this.abIndicator = this.getMmid()
       this.insertMatchedContentScript()
       // if (this.abIndicator === 'A') {
       //   this.insertMatchedContentScript()
