@@ -2,7 +2,8 @@
   <section class="portraitWallList">
     <div class="portraitWallList__imageGroup" :class="[ index%2 === 0 ? 'color' : '' ]" v-for="(item, index) in images">
       <div class="portraitWallList__block" :class="[ getOrder(image) %2 === 0 ? '' : 'color' ]" v-for="(image, index) in item">
-        <router-link :to="getHref(image)" target="_blank" class="portraitWallList__block--image" :style="{ backgroundImage: `url(${getImage(image)})` }">
+        <router-link :to="getHref(image)" target="_blank" class="portraitWallList__block--image">
+          <img :src="getImage(image)">
           <p v-text="getTitle(image, false)"></p>
         </router-link>
         <div class="portraitWallList__block--content">
@@ -74,13 +75,15 @@ export default {
         a
           color #fff
     &--image
-      display block
+      flex 0 1 auto
       width 47%
-      padding-top 47%
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
       border-radius 3px
+      img
+        width 100%
+        height auto        
       p
         display none
     &--content
@@ -102,7 +105,6 @@ export default {
       padding 5% 10%
       &--image
         width calc(50% - 10px)
-        padding-top calc(50% - 10px)
       &--content
         width calc(50% - 10px)
 
@@ -134,7 +136,6 @@ export default {
       &--image
         position relative
         width 100%
-        padding-top 100%
         font-size .8rem
         &:hover
           p
