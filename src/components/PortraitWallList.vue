@@ -43,9 +43,9 @@ export default {
     getTitle (item, needComplete) {
       const slug = _.split(_.get(item, [ 'keywords' ]), '-')[1]
       if (needComplete) {
-        return _.get(_.find(this.articles.items, { 'slug': slug }), [ 'title' ])
+        return _.get(_.find(this.articles, { 'slug': slug }), [ 'title' ])
       }
-      return getTruncatedVal(_.get(_.find(this.articles.items, { 'slug': slug }), [ 'title' ]), 19)
+      return getTruncatedVal(_.get(_.find(this.articles, { 'slug': slug }), [ 'title' ]), 19)
     },
     getValue
   }

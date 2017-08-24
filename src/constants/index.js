@@ -70,6 +70,7 @@ export const SOCIAL_LINK = {
   FEED: 'https://www.mirrormedia.mg/rss/rss.xml',
   INSTAGRAM: 'https://www.instagram.com/mirror_media/',
   LINE: 'https://line.me/R/ti/p/%40cuk1273e',
+  MAGAZINE: 'https://mybook.taiwanmobile.com/ebook/store_front/activities/2017PC/MIR88/',
   SUBSCRIBE: 'https://goo.gl/forms/g2ny8HzAXTAfwH6I2',
   WECHAT: '#',
   WEIBO: 'http://www.weibo.com/u/6030041924?is_all=1'
