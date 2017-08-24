@@ -673,6 +673,7 @@
       } else {
         this.insertKianGiScript()
       }
+      this.insertPopInScript()
 
       if (!_.isEmpty(this.articleData)) {
         this.sendGA(this.articleData)
@@ -697,7 +698,7 @@
         } else {
           this.updateKianGiScript()
         }
-
+        this.updatePopInScript()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
       },

@@ -583,11 +583,13 @@ export default {
       if (process.env.VUE_ENV === 'client') {
         window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
         if (this.topicType === 'list') {
+          window.removeEventListener('scroll', this.scrollHandler)
           window.addEventListener('scroll', this.scrollHandler)
         } else {
           window.removeEventListener('scroll', this.scrollHandler)
         }
         if (this.topicType === 'timeline') {
+          window.removeEventListener('scroll', this.timelineScrollHandler)
           window.addEventListener('scroll', this.timelineScrollHandler)
         } else {
           window.removeEventListener('scroll', this.timelineScrollHandler)
