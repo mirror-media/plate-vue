@@ -874,7 +874,7 @@ export default {
     this.updateSysStage()
   },
   destroyed () {
-    window.removeEventListener('scroll', this.updateViewport)
+    window.removeEventListener('resize', this.updateViewport)
     window.removeEventListener('scroll', this.scrollHandler)
   }
 }

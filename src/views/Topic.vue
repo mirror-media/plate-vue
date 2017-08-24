@@ -8,7 +8,7 @@
             <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections'></header-full>
           </section>
           <leading-watch :topic='topic' :type='`TOPIC`'></leading-watch>
-          <article-list-full :articles='articles.items'></article-list-full>
+          <article-list-full :articles='articles'></article-list-full>
           <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore"></more-full>
           <loading :show="loading"></loading>
           <footer-full :commonData='commonData' :sectionName='sectionName'></footer-full>
@@ -52,18 +52,20 @@
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
-          <article-list :articles='articles.items' :hasDFP='false'></article-list>
-          <section class="container">
+          <article-list ref="articleList" id="articleList" :articles='articles' :hasDFP='false'></article-list>
+          <!--<section class="container">
             <more v-if="hasMore" v-on:loadMore="loadMore"></more>
-          </section>
+          </section>-->
           <loading :show="loading"></loading>
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
-          <section class="footer container">
+          <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
+            v-show="hasAutoScroll"></article-list>
+          <!--<section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
-          </section>
+          </section>-->
           <share :right="`20px`" :bottom="`20px`"></share>
         </template>
 
@@ -78,7 +80,7 @@ import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_FINPROJECT_ID, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { camelize } from 'humps'
 import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
-import { currentYPosition } from 'kc-scroll'
+import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
@@ -241,6 +243,8 @@ export default {
   data () {
     return {
       abIndicator: 'A',
+      articleListAutoScrollHeight: 0,
+      canScrollLoadMord: true,
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
       dfpMode: 'prod',
@@ -253,10 +257,16 @@ export default {
   },
   computed: {
     articles () {
-      return _.get(this.$store.state, [ 'articlesByUUID' ])
+      return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
     },
     articleUrl () {
       return `${SITE_URL}/topic/${this.currArticleSlug}/`
+    },
+    autoScrollArticles () {
+      return _.take(this.articles, 12)
+    },
+    autoScrollArticlesLoadMore () {
+      return _.slice(this.articles, 12)
     },
     customCSS () {
       return _.get(this.topic, [ 'style' ], null)
@@ -296,11 +306,14 @@ export default {
     fbAppId () {
       return _.get(this.$store, [ 'state', 'fbAppId' ])
     },
+    hasAutoScroll () {
+      return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE) !== 1
+    },
     hasDFP () {
       return this.dfp !== '' || this.mobileDfp !== ''
     },
     hasMore () {
-      return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'meta', 'total' ], 0)
+      return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'total' ], 0)
     },
     mobileDfp () {
       return _.get(this.topic, [ 'mobileDfp' ], null)
@@ -368,6 +381,7 @@ export default {
       unLockJS()
     },
     currentYPosition,
+    elmYPosition,
     getMmid () {
       const mmid = Cookie.get('mmid')
       const role = getRole({ mmid, distribution: [
@@ -398,31 +412,6 @@ export default {
         document.querySelector('#custJS').innerHTML = this.customJS
       }
     },
-    insertFbSdkScript () {
-      if (!window.FB) {
-        const fbSdkScript = document.createElement('script')
-        fbSdkScript.setAttribute('id', 'fbsdk')
-        fbSdkScript.innerHTML = '(function(d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) return; js = d.createElement(s); js.id = id; js.src = \"//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.8&appId=' + this.fbAppId + '\"; fjs.parentNode.insertBefore(js, fjs); }(document, \'script\', \'facebook-jssdk\'));'
-        fbSdkScript.async = true
-        fbSdkScript.type = 'text/javascript'
-        document.querySelector('body').insertBefore(fbSdkScript, document.querySelector('body').children[0])
-      } else {
-        window.FB && window.FB.init({
-          appId: this.fbAppId,
-          xfbml: true,
-          version: 'v2.0'
-        })
-        window.FB && window.FB.XFBML.parse()
-      }
-    },
-    insertMediafarmersScript () {
-      const mediafarmersScript = document.createElement('script')
-      mediafarmersScript.setAttribute('id', 'mediafarmersJS')
-      mediafarmersScript.setAttribute('src', 'https://mediafarmers.org/api/api.js')
-      if (!document.getElementById('mediafarmersJS')) {
-        document.querySelector('body').appendChild(mediafarmersScript)
-      }
-    },
     loadMore () {
       let currentPage = this.page
       currentPage += 1
@@ -431,6 +420,7 @@ export default {
       fetchArticlesByUuid(this.$store, this.uuid, currentPage)
       .then(() => {
         this.loading = false
+        this.canScrollLoadMord = true
       })
     },
     pageNotFoundHandler () {
@@ -438,6 +428,40 @@ export default {
       e.massage = 'Page Not Found'
       e.code = '404'
       throw e
+    },
+    scrollHandler (e) {
+      if (this.$refs.articleList) {
+        const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+        const currentBottom = this.currentYPosition() + vh
+        const articleListBottom = this.elmYPosition('#articleList') + this.$refs.articleList.$el.offsetHeight
+        this.articleListAutoScrollHeight = this.$refs.articleListAutoScroll.$el.offsetHeight
+        const articleListAutoScrollBottom = this.elmYPosition('#articleListAutoScroll') + this.articleListAutoScrollHeight
+
+        if (this.hasMore && (this.page === 1) && this.canScrollLoadMord && currentBottom > (articleListBottom - 300)) {
+          this.canScrollLoadMord = false
+          this.loadMore()
+        }
+        if (this.hasMore && (this.page > 1) && this.canScrollLoadMord && currentBottom > (articleListAutoScrollBottom - 300)) {
+          this.canScrollLoadMord = false
+          this.loadMore()
+        }
+      }
+    },
+    timelineScrollHandler (e) {
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+      const timelineBodyBriefHeight = document.querySelector('.timelineBody__brief').offsetHeight
+      const activityBoxHeight = document.querySelector('.timelineMenu-activityBox').offsetHeight
+      const cutHeight = (windowHeight / 2) + timelineBodyBriefHeight + 20
+
+      if (this.currentYPosition() - cutHeight > 0) {
+        const timelineMenuStartTop = this.currentYPosition() - cutHeight
+        const onCenterIndex = Math.floor(timelineMenuStartTop / activityBoxHeight)
+        const activityBoxs = document.querySelectorAll('.timelineMenu-activityBox')
+        for (let i = 0; i < activityBoxs.length; i += 1) {
+          activityBoxs[i].classList.remove('onCenter')
+        }
+        activityBoxs[onCenterIndex].classList.add('onCenter')
+      }
     },
     updateCustomizedMarkup () {
       const custCss = document.querySelector('#custCSS')
@@ -455,11 +479,6 @@ export default {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
       }
-    },
-    updateMediafarmersScript () {
-      const mediafarmersScript = document.querySelector('#mediafarmersJS')
-      document.querySelector('body').removeChild(mediafarmersScript)
-      this.insertMediafarmersScript()
     },
     updateSysStage () {
       this.dfpMode = currEnv()
@@ -485,7 +504,6 @@ export default {
     let maxResult
     const uuid = _.split(to.path, '/')[2]
     const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
-    this.page = PAGE
     if (uuid === TOPIC_FINPROJECT_ID) {
       maxResult = 25
     } else {
@@ -534,13 +552,7 @@ export default {
     }
   },
   mounted () {
-    // this.insertFbSdkScript()
-    // this.insertMediafarmersScript()
     this.updateViewport()
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
-
     this.insertCustomizedMarkup()
     this.checkIfLockJS()
     this.updateViewport()
@@ -553,27 +565,17 @@ export default {
     // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
 
-    if (this.topicType === 'timeline') {
-      window.addEventListener('scroll', (e) => {
-        const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-        const timelineBodyBriefHeight = document.querySelector('.timelineBody__brief').offsetHeight
-        const activityBoxHeight = document.querySelector('.timelineMenu-activityBox').offsetHeight
-        const cutHeight = (windowHeight / 2) + timelineBodyBriefHeight + 20
-
-        if (this.currentYPosition() - cutHeight > 0) {
-          const timelineMenuStartTop = this.currentYPosition() - cutHeight
-          const onCenterIndex = Math.floor(timelineMenuStartTop / activityBoxHeight)
-          const activityBoxs = document.querySelectorAll('.timelineMenu-activityBox')
-          for (let i = 0; i < activityBoxs.length; i += 1) {
-            activityBoxs[i].classList.remove('onCenter')
-          }
-          activityBoxs[onCenterIndex].classList.add('onCenter')
-        }
-      })
-    }
+    window.addEventListener('resize', this.updateViewport)
+    if (this.topicType === 'list') { window.addEventListener('scroll', this.scrollHandler) }
+    if (this.topicType === 'timeline') { window.addEventListener('scroll', this.timelineScrollHandler) }
   },
   updated () {
     this.updateSysStage()
+  },
+  destroyed () {
+    window.removeEventListener('resize', this.updateViewport)
+    if (this.topicType === 'list') { window.removeEventListener('scroll', this.scrollHandler) }
+    if (this.topicType === 'timeline') { window.removeEventListener('scroll', this.timelineScrollHandler) }
   },
   watch: {
     uuid: function () {
@@ -595,10 +597,7 @@ export default {
           version: 'v2.0'
         })
         window.FB && window.FB.XFBML.parse()
-        // this.updateMediafarmersScript()
       }
-      // this.checkIfLockJS()
-      // this.sendGA(this.articleData)
     }
   }
 }

@@ -43,7 +43,6 @@ const clientTitleMetaMixin = {
     if (title) {
       document.querySelector('title').innerHTML = title
     }
-    console.log('--- mixin updated', metaSet)
     if (meta) {
       const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')
       const newMeta = _.split(meta, '>')
@@ -58,7 +57,6 @@ const clientTitleMetaMixin = {
           document.head.appendChild(updateMeta)
         }
       })
-      console.log('mixin updated meta ---')
     }
   }
 }

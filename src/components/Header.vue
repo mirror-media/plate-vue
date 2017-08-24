@@ -16,6 +16,7 @@
           <img src="/public/icon/more_grey@2x.png" alt="更多">
           <div class="header-logoSearch__more--list" ref="moreServiceList">
             <a class="header-logoSearch__more--listItem" :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>
+            <a class="header-logoSearch__more--listItem" :href="socialLink.MAGAZINE" target="_blank">訂閱電子雜誌</a>
             <a class="header-logoSearch__more--listItem" :href="socialLink.AD" target="_blank">廣告合作</a>
             <a class="header-logoSearch__more--listItem" href="/category/campaign" target="_blank">活動專區</a>
             <a class="header-logoSearch__more--listItem" :href="socialLink.DOWNLOADAPP" target="_blank">下載APP</a>
@@ -71,6 +72,7 @@
       </div>
       <div class="header-sidebar__other">
         <a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>
+        <a :href="socialLink.MAGAZINE" target="_blank">訂閱電子雜誌</a>
         <a :href="socialLink.AD" target="_blank">廣告合作</a>
         <a href="/category/campaign" target="_blank">活動專區</a>
         <a :href="socialLink.DOWNLOADAPP" target="_blank">下載APP</a>
@@ -279,7 +281,7 @@ $color-mirrorfiction = #968375
         top 0
         left 0
         z-index 10
-        width 120px
+        width 130px
         background-color #fff
         border 1px solid #eee
         &.active
@@ -502,6 +504,8 @@ $color-mirrorfiction = #968375
       font-weight 300
       text-align center
       border 1px solid #969696
+    a:last-child
+      width 100%
   &__socialMedia
     display flex
     justify-content space-between
