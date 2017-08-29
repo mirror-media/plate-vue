@@ -12,17 +12,35 @@
     <main class="article_main">
       <div class="brief">
         <div v-for="p in briefArr">
-          <div v-if="p.type === 'video'" is="article-video" 
+          <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
+            <img class="thumbnail"
+                  :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
+                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '')}`"
+                  :data-srcset="`
+                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '')} 800w,
+                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '')} 1200w,
+                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '')} 2000w`">
+            <div class="caption" v-text="getValue(p.content, [ 0, 'description' ], '')"></div>
+          </div>
+          <div v-else-if="p.type === 'video'" is="article-video" 
             :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
             :id="'latest-'+ p.id" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
-          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption">
+          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
-                <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
-                <div class="swiper-lazy-preloader"></div>
+                <div>
+                  <div class="slideshowImg">
+                    <img :alt="getValue(o, [ 'description' ], '')" 
+                          :src="getValue(o, [ 'url' ], '')"
+                          :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
+                                      ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
+                                      ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
+                    <div class="img-caption" v-text="getValue(o, [ 'description' ], '')"></div>
+                  </div>
+                </div>
               </swiper-slide>
             </template>
           </div>
