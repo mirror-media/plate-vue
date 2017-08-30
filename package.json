@@ -20,6 +20,7 @@
     "@google-cloud/logging": "^1.0.1",
     "@google-cloud/storage": "^1.1.1",
     "big-integer": "^1.6.23",
+    "body-parser": "^1.17.2",
     "bowser": "^1.7.0",
     "compression": "^1.6.2",
     "cross-env": "^4.0.0",

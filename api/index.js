@@ -1,15 +1,18 @@
 const _ = require('lodash')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, REDIS_AUTH, REDIS_MAX_CLIENT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_TIMEOUT, TWITTER_API } = require('./config')
 const { GCP_KEYFILE, GCP_PROJECT_ID, GCP_STACKDRIVER_LOG_NAME } = require('./config')
-const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } = require('./config')
+const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, NEWSLETTER_PROTOCOL, NEWSLETTER_HOST, NEWSLETTER_PORT, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } = require('./config')
 const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT } = require('./config')
 const { YOUTUBE_PROTOCOL, YOUTUBE_HOST, YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY, YOUTUBE_API_TIMEOUT } = require('./config')
+const bodyParser = require('body-parser')
 const express = require('express')
 const isProd = process.env.NODE_ENV === 'production'
 const RedisConnectionPool = require('redis-connection-pool')
 const router = express.Router()
 const superagent = require('superagent')
 const Twitter = require('twitter')
+
+const jsonParser = bodyParser.json()
 
 const Logging = require('@google-cloud/logging');
 const loggingClient = Logging({
@@ -105,6 +108,49 @@ router.use('/grouped', function(req, res, next) {
     }
   })
 });
+
+router.get('/newsletter/:userEmail', function(req, res, next) {
+  if (req && req.params && req.params.userEmail) {
+    const url = `${NEWSLETTER_PROTOCOL}://${NEWSLETTER_HOST}:${NEWSLETTER_PORT}/user/${req.params.userEmail}`
+    superagent
+    .get(url)
+    .end((err, response) => {
+      if (!err && response) {
+        return res.json(JSON.parse(response.text))
+      } else {
+        if (err.status === 404) {
+          return res.status(404).json({ error: 'Not Found.' })
+        }
+        console.error(`error during fetch data from newsletter GET : ${url}`)
+        console.error(err)  
+        return res.json({ error: 'Error.' })
+      }
+    })
+  } else {
+    return res.status(404).json({ error: 'Not Found.' })
+  }
+})
+
+router.post('/newsletter', jsonParser, function(req, res, next) {
+  if (req && req.body && req.body.user && req.body.item) {
+    const url = `${NEWSLETTER_PROTOCOL}://${NEWSLETTER_HOST}:${NEWSLETTER_PORT}/user`
+    const userEmail = req.body.user
+    superagent
+    .post(url)
+    .send({ user: userEmail, item: req.body.item })
+    .end((err, response) => {
+      if (!err && response) {
+        return res.status(200).json({ user: response.body.user, item: response.body.result })
+      } else {
+        console.error(`error during fetch data from newsletter post : ${url} ${userEmail}`)
+        console.error(err)
+        return res.json({ error: 'Error.' })
+      }
+    })
+  } else {
+    return res.status(404).json({ error: 'Not Found.' })
+  }
+})
 
 router.use('/playlist', function(req, res, next) {
   let query = req.query
