@@ -93,6 +93,7 @@
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
         </div>
       </article>
+      <newsletter></newsletter>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
       </div>
@@ -142,6 +143,7 @@ import Annotation from './Annotation.vue'
 import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
 // import Cookie from 'vue-cookie'
+import Newsletter from '../../components/Newsletter.vue'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
 import moment from 'moment'
@@ -150,6 +152,7 @@ export default {
   components: {
     'app-slider': Slider,
     'audio-box': AudioBox,
+    'newsletter': Newsletter,
     'proj-list': ProjectList,
     Annotation,
     ArticleVideo
