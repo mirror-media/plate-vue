@@ -13,7 +13,7 @@
       <div class="newsletterCategories__line"></div>
       <div ref="foodtravelBlock" class="newsletterCategories__category">
         <input ref="foodtravel" type="checkbox" :disabled="checkboxDisabled" v-on:change="checkboxChanged('foodtravel')">
-        <label>鏡食旅遊</label>
+        <label>鏡食旅</label>
         <p>《鏡週刊》美食旅遊團隊，堅持實地採訪紀錄，帶你發掘全世界好食好旅，偶爾還有好酒情報。</p>
       </div>
     </div>

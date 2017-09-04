@@ -7,9 +7,9 @@
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
-        <editor-choice :editorChoice= 'editorChoice' :viewport="viewport" v-if="abIndicator !== 'B'" target="_blank"/>
-        <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550) && (abIndicator !== 'B')" :config="props.config"/>
-        <template v-if="abIndicator === 'B'">
+        <!--<editor-choice :editorChoice= 'editorChoice' :viewport="viewport" v-if="abIndicator !== 'B'" target="_blank"/>-->
+        <!--<vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550) && (abIndicator !== 'B')" :config="props.config"/>-->
+        <template>
           <section class="styleB">
             <main>
               <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>    
@@ -29,12 +29,12 @@
             </main>
             <aside v-show="viewport >= 1200">
               <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
-              <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
-              <project-listVert :initProjects="projects" :isSquareStyle="true" :openInNewWindow="true"></project-listVert>
+              <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+              <project-listVert :initProjects="projects" :isSquareStyle="true" :openInNewWindow="true" v-if="abIndicator === 'A'"></project-listVert>
             </aside>
           </section>
         </template>
-        <template v-if="abIndicator !== 'B'">
+        <!--<template v-if="abIndicator !== 'B'">
           <section class="container list">
             <div class="project-title--mobile">
               <h2>專題報導</h2>
@@ -59,7 +59,7 @@
               </LatestArticleMain>
             </main>
           </section>
-        </template>
+        </template><-->
         <loading :show="loading" />
         <!--<section class="container">
           <more v-if="true" v-on:loadMore="loadMore" />
@@ -311,13 +311,23 @@ export default {
       this.showDfpCoverAdFlag = false
     },
     detectFixProject: function (e) {
+      const secondLastFocusNews = document.querySelector('aside .latest-aside-container.secondLast')
+      const secondLastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.secondLast') + secondLastFocusNews.offsetHeight
       const lastFocusNews = document.querySelector('aside .latest-aside-container.last')
-      const lastFocusNewsBottomPosition = elmYPosition('aside .latest-aside-container.last') + lastFocusNews.offsetHeight
+      const lastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.last') + lastFocusNews.offsetHeight
       const project = document.querySelector('.projectListVert')
-      if (this.viewport >= 1200 && (currentYPosition() > lastFocusNewsBottomPosition)) {
-        project.classList.add('fixed')
+      if (project) {
+        if (this.viewport >= 1200 && (currentYPosition() > lastFocusNewsBottomPos)) {
+          project.classList.add('fixed')
+        } else {
+          project.classList.remove('fixed')
+        }
       } else {
-        project.classList.remove('fixed')
+        if (this.viewport >= 1200 && (currentYPosition() > secondLastFocusNewsBottomPos)) {
+          lastFocusNews.classList.add('fixed')
+        } else {
+          lastFocusNews.classList.remove('fixed')
+        }
       }
     },
     getRole,
@@ -389,9 +399,9 @@ export default {
     this.checkIfLockJS()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
-    if (this.abIndicator === 'B') {
-      window.addEventListener('scroll', this.detectFixProject)
-    }
+
+    window.addEventListener('scroll', this.detectFixProject)
+
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
     // window.ga('set', 'contentGroup3', '')
@@ -404,9 +414,7 @@ export default {
     this.updateSysStage()
   },
   destroyed () {
-    if (this.abIndicator === 'B') {
-      window.removeEventListener('scroll', this.detectFixProject)
-    }
+    window.removeEventListener('scroll', this.detectFixProject)
   },
   watch: {
     abIndicator: function () {
