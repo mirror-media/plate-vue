@@ -152,6 +152,12 @@ export default {
 .latest-aside-container
   margin-bottom 30px
 
+  &.last.fixed
+    position fixed
+    top 30px
+    right auto
+    width calc(1024px * 0.25 - 30px)
+    
   .latest-list
     .latest-list_item
     
