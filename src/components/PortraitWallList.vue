@@ -64,10 +64,8 @@ export default {
       order 2
     .portraitWallList__block--content
       order 1
-      a
-        color #d6642e
+      
     &.color
-      background-color #d6642e
       .portraitWallList__block--image
         order 1
       .portraitWallList__block--content
@@ -118,12 +116,9 @@ export default {
         order 1
       .portraitWallList__block--content
         order 1
-      a
-        color #d6642e !important
-      &.color
-        background-color #d6642e
-        a
-          color #fff !important
+      &.color 
+        a 
+          color #fff !important 
     &__block
       flex-direction column
       width 18%
@@ -131,8 +126,6 @@ export default {
       margin 0 5px
       // padding-left 1%
       // padding-right 1%
-      &.color
-        background-color transparent
       &--image
         position relative
         width 100%

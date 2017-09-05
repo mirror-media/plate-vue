@@ -123,7 +123,7 @@ router.get('/newsletter/:userEmail', function(req, res, next) {
         }
         console.error(`error during fetch data from newsletter GET : ${url}`)
         console.error(err)  
-        return res.json({ error: 'Error.' })
+        return res.status(500).json({ error: 'Error.' })
       }
     })
   } else {
@@ -144,7 +144,7 @@ router.post('/newsletter', jsonParser, function(req, res, next) {
       } else {
         console.error(`error during fetch data from newsletter post : ${url} ${userEmail}`)
         console.error(err)
-        return res.json({ error: 'Error.' })
+        return res.status(500).json({ error: 'Error.' })
       }
     })
   } else {
