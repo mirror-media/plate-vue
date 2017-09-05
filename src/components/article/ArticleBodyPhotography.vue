@@ -66,7 +66,7 @@
 <script>
   import { OnePageScroller } from 'kc-scroll'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-  import { getValue } from '../../util/comm'
+  import { getValue, addClass, removeClass } from '../../util/comm'
   import { shareGooglePlus, shareLine, shareFacebook } from '../../util/comm'
   import _ from 'lodash'
   import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
@@ -201,6 +201,8 @@
             if (this.currIndex === this.imgArr.length + 1) {
               this.creditCommentShow = true
               this.initFBComment()
+              removeClass(document.body, 'limited-height')
+              removeClass(document.documentElement, 'limited-height')
               setTimeout(() => {
                 document.addEventListener('touchstart', this.touchStartHandler)
                 document.addEventListener('touchend', this.touchEndHandler)
@@ -214,6 +216,8 @@
               document.removeEventListener('touchend', this.touchEndHandler)
               document.removeEventListener('mousewheel', this.mouseWheelHandler)
               document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
+              addClass(document.body, 'limited-height')
+              addClass(document.documentElement, 'limited-height')
             }
           },
           animationTime: 500,
@@ -226,7 +230,7 @@
             }
           },
           defaultInitialPage: 1,
-          easing: 'ease-in',
+          easing: 'ease',
           pageContainer: '.pic-section',
           quietPeriod: 750
         })
@@ -265,6 +269,41 @@
           }
         }
         this.lastAnimation = timeNow
+      },
+      scrollHandler (e) {
+        const currTop = this.currentYPosition()
+        const creditCommentTopY = this.elmYPosition('.credit-comment')
+        const tHtml = document.documentElement
+        if (currTop + (tHtml.clientHeight / 2) > creditCommentTopY && creditCommentTopY !== 0) {
+          this.goNextPageHide = true
+          this.descHide = true
+        } else {
+          this.goNextPageHide = false
+          this.descHide = false
+        }
+      },
+      setUpHtmlHeight () {
+        return new Promise((resolve) => {
+          if (process.env.VUE_ENV === 'client') {
+            addClass(document.body, 'limited-height')
+            addClass(document.documentElement, 'limited-height')
+          }
+          resolve()
+        })
+      },
+      setUpScrollHandler () {
+        return new Promise((resolve) => {
+          window.removeEventListener('scroll', this.scrollHandler)
+          window.addEventListener('scroll', this.scrollHandler)
+          resolve()
+        })
+      },
+      setUpResizeHandler () {
+        return new Promise((resolve) => {
+          window.removeEventListener('resize', this.updateIsLandscape)
+          window.addEventListener('resize', this.updateIsLandscape)
+          resolve()
+        })
       },
       smoothScroll,
       shareGooglePlus () {
@@ -353,22 +392,13 @@
     mounted () {
       this.updateIsLandscape()
       this.smoothScroll(null, 0)
-      window.addEventListener('resize', () => {
-        this.updateIsLandscape()
-      })
 
-      window.addEventListener('scroll', () => {
-        const currTop = this.currentYPosition()
-        const creditCommentTopY = this.elmYPosition('.credit-comment')
-        const tHtml = document.documentElement
-        if (currTop + (tHtml.clientHeight / 2) > creditCommentTopY && creditCommentTopY !== 0) {
-          this.goNextPageHide = true
-          this.descHide = true
-        } else {
-          this.goNextPageHide = false
-          this.descHide = false
-        }
-      })
+      Promise.all([
+        this.setUpHtmlHeight(),
+        this.setUpResizeHandler(),
+        this.setUpScrollHandler()
+      ])
+
       if (window === undefined) {
         window.addEventListener('load', () => {
           this.initOnepage()
@@ -729,6 +759,7 @@
       .credit
         padding 0 20px
         width 100%
+        display block
       
       .related-container
         width 100%
