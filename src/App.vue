@@ -211,6 +211,10 @@ button:focus {
       background-position center center
       cursor pointer
 
+.limited-height
+  height 100%
+  overflow hidden
+
 [lazy=loading]
   margin 0 auto
   object-fit contain
