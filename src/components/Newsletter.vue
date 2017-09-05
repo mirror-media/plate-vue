@@ -43,7 +43,8 @@ export default {
   name: 'newsletter',
   data () {
     return {
-      checkboxDisabled: true,
+      canSubscribe: false,
+      checkboxDisabled: false,
       email: '',
       emailInputDisabled: false,
       hostName: 'localhost:8080'
@@ -75,7 +76,7 @@ export default {
             this.updateInfo(cookie)
           }, error => {
             if (error.status === 404) {
-              this.checkboxDisabled = false
+              this.canSubscribe = true
             } else {
               this.$refs.emailForm.classList.add('error')
               this.emailInputDisabled = true
@@ -100,6 +101,7 @@ export default {
               if (error.status === 404) {
                 this.$refs.people.checked = false
                 this.$refs.foodtravel.checked = false
+                this.canSubscribe = true
               } else {
                 this.$refs.emailForm.classList.add('error')
                 this.emailInputDisabled = true
@@ -114,7 +116,7 @@ export default {
       } else {
         this.$refs.people.checked = false
         this.$refs.foodtravel.checked = false
-        this.checkboxDisabled = true
+        this.canSubscribe = false
         this.$refs.emailForm.classList.add('invaild')
       }
       return false
@@ -129,36 +131,41 @@ export default {
       }
     },
     checkboxChanged (category) {
-      superagent
-      .post(`${this.hostName}/api/newsletter`)
-      .send({ user: this.email, item: category })
-      .end((err, response) => {
-        if (!err && response) {
-          const data = JSON.parse(response.text)
-          let categories = ''
-          if (data && data.item && data.item.length !== 0) {
-            data.item.forEach((c) => {
-              categories = categories + c.name + ','
-            })
-          }
-          Cookie.set('mm-newsletter', `${this.email};${categories}`, { expires: '3M' })
-          const cookie = Cookie.get('mm-newsletter')
-          this.updateInfo(cookie)
-          this.checkboxDisabled = true
-          if (this.$refs[category].checked) {
-            this.$refs[`${category}Block`].classList.remove('subscribed')
-            this.$refs[`${category}Block`].classList.remove('cancel')
-            this.$refs[`${category}Block`].classList.add('subscribed')
+      if (this.email && this.canSubscribe) {
+        superagent
+        .post(`${this.hostName}/api/newsletter`)
+        .send({ user: this.email, item: category })
+        .end((err, response) => {
+          if (!err && response) {
+            const data = JSON.parse(response.text)
+            let categories = ''
+            if (data && data.item && data.item.length !== 0) {
+              data.item.forEach((c) => {
+                categories = categories + c.name + ','
+              })
+            }
+            Cookie.set('mm-newsletter', `${this.email};${categories}`, { expires: '3M' })
+            const cookie = Cookie.get('mm-newsletter')
+            this.updateInfo(cookie)
+            this.checkboxDisabled = true
+            if (this.$refs[category].checked) {
+              this.$refs[`${category}Block`].classList.remove('subscribed')
+              this.$refs[`${category}Block`].classList.remove('cancel')
+              this.$refs[`${category}Block`].classList.add('subscribed')
+            } else {
+              this.$refs[`${category}Block`].classList.remove('subscribed')
+              this.$refs[`${category}Block`].classList.remove('cancel')
+              this.$refs[`${category}Block`].classList.add('cancel')
+            }
+            setTimeout(() => { this.checkboxDisabled = false }, 2000)
           } else {
-            this.$refs[`${category}Block`].classList.remove('subscribed')
-            this.$refs[`${category}Block`].classList.remove('cancel')
-            this.$refs[`${category}Block`].classList.add('cancel')
+            this.checkboxDisabled = true
           }
-          setTimeout(() => { this.checkboxDisabled = false }, 2000)
-        } else {
-          this.checkboxDisabled = true
-        }
-      })
+        })
+      } else {
+        this.$refs.emailForm.classList.add('invaild')
+        this.$refs[category].checked = false
+      }
     },
     cleanCheckInfo () {
       this.$refs.emailForm.classList.remove('vaild')
@@ -185,7 +192,7 @@ export default {
           }
         })
         this.email = mail
-        this.checkboxDisabled = false
+        this.canSubscribe = true
       }
     }
   },
