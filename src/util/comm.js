@@ -331,7 +331,7 @@ export function hasClass (ele, cls) {
     return ele.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'))
   } else {
     ele.className = cls
-    return
+    return true
   }
 }
 

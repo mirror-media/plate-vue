@@ -412,6 +412,8 @@
         this.creditCommentShow = false
         document.removeEventListener('mousewheel', this.mouseWheelHandler)
         document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
+        removeClass(document.body, 'limited-height')
+        removeClass(document.documentElement, 'limited-height')
       }
     },
     name: 'ariticle-body-photo',
