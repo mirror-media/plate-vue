@@ -6,7 +6,8 @@
           <header-foodtravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
         </section>
         <heroImage-foodtravel :commonData='commonData' :sectionName='sectionName'/>
-        <featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>
+        <editor-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"></editor-foodtravel>
+        <!--<featuredStory-foodtravel :sectionfeatured='sectionfeatured' :viewport="viewport"/>-->
         <latestArticle-foodtravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" ref="articleList" id="articleList" :showLatestOnly="false"/>
         <latestArticle-foodtravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" ref="articleListAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
         <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" :className="'moreFoodTravel'" />
@@ -90,6 +91,7 @@ import ArticleListFull from '../components/ArticleListFull.vue'
 import AudioList from '../components/AudioList.vue'
 import Cookie from 'vue-cookie'
 import EditorChoiceFull from '../components/EditorChoiceFull.vue'
+import EditorChoiceFoodTravel from '../components/EditorChoiceFoodTravel.vue'
 import FeaturedStoryFoodTravel from '../components/FeaturedStoryFoodTravel.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
@@ -322,6 +324,7 @@ export default {
     'article-list': ArticleList,
     'article-list-full': ArticleListFull,
     'audio-list': AudioList,
+    'editor-foodtravel': EditorChoiceFoodTravel,
     'editorChoice-full': EditorChoiceFull,
     'featuredStory-foodtravel': FeaturedStoryFoodTravel,
     'footer-full': FooterFull,
@@ -438,9 +441,8 @@ export default {
           if (this.$route.params.title === 'videohub') {
             return _.uniqBy(_.get(this.$store.state, [ 'playlist', 'items' ]), 'id')
           }
-          if (this.$route.params.title === 'news-people' || this.$route.params.title === 'entertainment') {
-            // return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this, [ 'sectionfeatured' ]), 'id'), 'id')
-            return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'id')
+          if (this.$route.params.title === 'foodtravel') {
+            return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this, [ 'sectionfeatured' ]), 'slug'), 'slug')
           }
           return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
       }
@@ -592,7 +594,12 @@ export default {
       return _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#bcbcbc')
     },
     sectionfeatured () {
-      return _.take(_.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.camelize(this.sectionName)), [ this.camelize(this.sectionName) ]), 3)
+      switch (this.pageStyle) {
+        case 'video':
+          return _.take(_.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.camelize(this.sectionName)), [ this.camelize(this.sectionName) ]), 5)
+        default:
+          return _.take(_.get(_.pick(_.get(this.$store.state.commonData, [ 'sectionfeatured', 'items' ]), this.camelize(this.sectionName)), [ this.camelize(this.sectionName) ]), 3)
+      }
     },
     sectionId () {
       let _sectionId
