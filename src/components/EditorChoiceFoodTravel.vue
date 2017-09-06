@@ -1,5 +1,6 @@
 <template>
   <section class="editorChoiceFood">
+    <h2 class="editorChoiceFood__title">編輯精選</h2>
     <div class="editorChoiceFoodBlock" v-for="(item, index) in sectionfeatured">
       <router-link :to="getHref(item)" class="editorChoiceFoodBlock__img" target="_blank"><figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure></router-link>
       <div class="editorChoiceFoodBlock__content">
@@ -51,7 +52,7 @@ export default {
       } else if (this.viewport < 900) {
         return this.getTruncatedVal(title, 19)
       } else if (this.viewport < 1300) {
-        return this.getTruncatedVal(title, 15)
+        return this.getTruncatedVal(title, 14)
       } else {
         return this.getTruncatedVal(title, 19)
       }
@@ -70,11 +71,23 @@ export default {
   display flex
   flex-direction column
   padding 10% 5% 5%
+  &__title
+    width 120px
+    padding 10px
+    margin 0 0 25px
+    color #fff
+    font-size 24px
+    font-weight 300
+    letter-spacing 1px
+    line-height 26px
+    background-color #4d4d4d
+    
 .editorChoiceFoodBlock
   display flex
   flex-direction column
   width 100%
   margin-bottom 40px
+  background-color rgba(255, 255, 255, .6)
   figure
     width 100%
     height 100%
@@ -86,27 +99,16 @@ export default {
   &__img
     position relative
     width 100%
-    
-    &:before
-      content '編輯精選' 
-      position absolute
-      bottom 0
-      left 1px
-      z-index 1
-      padding .5em
-      color #fff
-      background-color #4d4d4d
   &__content
+    padding 1em
     a
       color #000
     h2
-      margin .5em 0
-      padding-bottom .5em
+      margin 0
       font-weight 700
       line-height 1.5
-      border-bottom 3px solid #000
     p
-      margin 0
+      margin .5em 0  0
       text-align justify
       line-height 1.5
 
@@ -121,7 +123,11 @@ export default {
       width 48%
       
     &__content
+      display flex
+      flex-direction column
+      justify-content center
       width 48%
+      padding-right 1em
       h2
         margin 0
       p
@@ -134,13 +140,13 @@ export default {
     justify-content space-between
     padding 0
     margin 5%
-    > div:first-child
+    > div:nth-child(2)
       width 100%
       h2
         font-size 2rem
       p
         font-size 1.5rem
-    > div:not(:first-child)
+    > div:not(:first-child):not(:nth-child(2))
       width 48%
       margin-top 40px
       h2
@@ -153,5 +159,8 @@ export default {
 @media (min-width: 1200px)
   .editorChoiceFood
     margin 5% 4.3% 5% 8.3%
+  .editorChoiceFoodBlock
+    &__content
+      padding-right 2em
 
 </style>
