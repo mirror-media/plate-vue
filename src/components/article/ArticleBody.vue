@@ -120,8 +120,7 @@
         <h3>推薦文章</h3>
       </div>
       <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A'"></div>
-      <div class="_pvmax_recommend kianGi" data-widget-id="34adabba-78ea-4350-8b24-9fbd9cb210c1" v-if="abIndicator === 'B'"></div>
-      <div id="_popIn_recommend" class="popIn"></div>
+      <div id="_popIn_recommend" class="popIn" v-if="abIndicator === 'B'"></div>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
       </div>
