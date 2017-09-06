@@ -519,16 +519,6 @@
           document.querySelector('head').appendChild(breadcrumbScript)
         }
       },
-      insertKianGiScript () {
-        const kianGiScript = document.createElement('script')
-        kianGiScript.setAttribute('id', 'kianGiScript')
-        kianGiScript.innerHTML = `var _pvmax = {"siteId": "ad29e713-4619-48da-a44d-4f3ee5906f94"};
-          (function(d, s, id) { var js, pjs = d.getElementsByTagName(s)[0];if (d.getElementById(id)) return;js = d.createElement(s); js.id = id; js.async = true;
-          js.src = "//api.pvmax.net/v1.0/pvmax.js";pjs.parentNode.insertBefore(js, pjs);}(document, 'script', 'pvmax-jssdk'));`
-        if (!document.querySelector('#kianGiScript')) {
-          document.querySelector('head').appendChild(kianGiScript)
-        }
-      },
       insertMatchedContentScript () {
         const matchedContentStart = document.createElement('script')
         const matchedContentContent = document.createElement('ins')
@@ -618,13 +608,6 @@
         }
         this.insertJSONLDScript()
       },
-      updateKianGiScript () {
-        const kianGiScript = document.querySelector('#kianGiScript')
-        if (kianGiScript) {
-          document.querySelector('head').removeChild(kianGiScript)
-        }
-        this.insertKianGiScript()
-      },
       updateMatchedContentScript () {
         const matchedContentStart = document.querySelector('#matchedContentStart')
         const matchedContentContent = document.querySelector('#matchedContentContent')
@@ -673,9 +656,8 @@
       if (this.abIndicator === 'A') {
         this.insertMatchedContentScript()
       } else {
-        this.insertKianGiScript()
+        this.insertPopInScript()
       }
-      this.insertPopInScript()
 
       if (!_.isEmpty(this.articleData)) {
         this.sendGA(this.articleData)
@@ -698,9 +680,8 @@
         if (this.abIndicator === 'A') {
           this.updateMatchedContentScript()
         } else {
-          this.updateKianGiScript()
+          this.updatePopInScript()
         }
-        this.updatePopInScript()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
       },
