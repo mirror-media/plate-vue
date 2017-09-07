@@ -87,8 +87,6 @@ export function createStore () {
       },
       FETCH_ARTICLES_BY_UUID: ({ commit, state }, { uuid, type, params }) => {
         const orig = _.values(_.get(state, [ 'articlesByUUID', type, uuid, 'items' ]))
-        console.log('type', type)
-        console.log('uuid', uuid)
         if (state.articlesByUUID[type][uuid]) {
           if (state.uuid === uuid && params.page > 1) {
             return fetchArticlesByUuid(uuid, type, params).then(articles => {
