@@ -311,7 +311,12 @@ const getUUID = (store, type, to) => {
           return _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
       }
     case SECTION:
+      if (to.params.title === 'topic') {
+        return 'topic'
+      }
       return _.get(_.find(_.get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
+    case TAG:
+      return to.params.tagId
   }
 }
 
@@ -442,9 +447,9 @@ export default {
             return _.uniqBy(_.get(this.$store.state, [ 'playlist', 'items' ]), 'id')
           }
           if (this.$route.params.title === 'foodtravel') {
-            return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), _.get(this, [ 'sectionfeatured' ]), 'slug'), 'slug')
+            return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', this.type, this.uuid, 'items' ]), _.get(this, [ 'sectionfeatured' ]), 'slug'), 'slug')
           }
-          return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
+          return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', this.type, this.uuid, 'items' ]), 'slug')
       }
     },
     audios () {
@@ -525,7 +530,7 @@ export default {
           if (this.$route.params.title === 'videohub') {
             return _.get(this.$store.state, [ 'playlist', 'items', 'length' ], 0) > MAXRESULT
           }
-          return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE) !== 1
+          return _.get(this.$store.state, [ 'articlesByUUID', this.type, this.uuid, 'meta', 'page' ], PAGE) !== 1
       }
     },
     hasDFP () {
@@ -553,7 +558,7 @@ export default {
           if (this.type === AUTHOR) {
             return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articles', 'meta', 'total' ], 0)
           }
-          return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'total' ], 0)
+          return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', this.type, this.uuid, 'meta', 'total' ], 0)
       }
     },
     isMobile () {
@@ -573,7 +578,7 @@ export default {
           if (this.$route.params.title === 'videohub') {
             return Math.floor(_.get(this.$store.state, [ 'playlist', 'items', 'length' ], 0) / MAXRESULT)
           }
-          return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE)
+          return _.get(this.$store.state, [ 'articlesByUUID', this.type, this.uuid, 'meta', 'page' ], PAGE)
       }
     },
     pageStyle () {
@@ -837,7 +842,6 @@ export default {
   beforeRouteUpdate (to, from, next) {
     const type = _.toUpper(_.split(to.path, '/')[1])
     const pageStyle = _.get(_.find(_.get(this.$store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'style' ], 'feature')
-
     fetchListData(this.$store, type, pageStyle, getUUID(this.$store, type, to), false, false)
     .then(() => next())
   },
