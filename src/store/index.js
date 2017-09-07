@@ -33,7 +33,12 @@ export function createStore () {
     state: {
       activities: {},
       articles: {},
-      articlesByUUID: {},
+      articlesByUUID: {
+        CATEGORY: {},
+        SECTION: {},
+        TAG: {},
+        TOPIC: {}
+      },
       articlesPopList: {},
       articlesGroupedList: {},
       audios: {},
@@ -52,13 +57,14 @@ export function createStore () {
       latestArticles: {},
       nodes: {},
       playlist: {},
+      questionnaire: {},
       searchResult: {},
       tag: {},
       tags: [],
       timeline: {},
       topic: {},
       topics: {},
-      questionnaire: {}
+      uuid: ''
     },
 
     actions: {
@@ -80,18 +86,27 @@ export function createStore () {
         })
       },
       FETCH_ARTICLES_BY_UUID: ({ commit, state }, { uuid, type, params }) => {
-        const orig = _.values(state.articlesByUUID[ 'items' ])
-        return state.articlesByUUID.items && (params.page > 1)
-          ? fetchArticlesByUuid(uuid, type, params).then(articles => {
-            articles[ 'items' ] = _.concat(orig, _.get(articles, [ 'items' ]))
-            commit('SET_ARTICLES_BY_UUID', { articles })
-            commit('SET_AUTHORS', articles)
-            commit('SET_TAGS', articles)
-          }) : fetchArticlesByUuid(uuid, type, params).then(articles => {
-            commit('SET_ARTICLES_BY_UUID', { articles })
-            commit('SET_AUTHORS', articles)
+        const orig = _.values(_.get(state, [ 'articlesByUUID', type, uuid, 'items' ]))
+        console.log('type', type)
+        console.log('uuid', uuid)
+        if (state.articlesByUUID[type][uuid]) {
+          if (state.uuid === uuid && params.page > 1) {
+            return fetchArticlesByUuid(uuid, type, params).then(articles => {
+              articles[ 'items' ] = _.concat(orig, _.get(articles, [ 'items' ]))
+              commit('SET_ARTICLES_BY_UUID', { articles, type, uuid })
+              commit('SET_TAGS', articles)
+            })
+          } else {
+            commit('SET_UUID', { uuid })
+            return Promise.resolve()
+          }
+        } else {
+          return fetchArticlesByUuid(uuid, type, params).then(articles => {
+            commit('SET_ARTICLES_BY_UUID', { articles, type, uuid })
+            commit('SET_UUID', { uuid })
             commit('SET_TAGS', articles)
           })
+        }
       },
 
       FETCH_ARTICLES_GROUPED_LIST: ({ commit, state }, { params = {}}) => {
@@ -247,8 +262,8 @@ export function createStore () {
         Vue.set(state, 'articles', articles)
       },
 
-      SET_ARTICLES_BY_UUID: (state, { articles }) => {
-        Vue.set(state, 'articlesByUUID', articles)
+      SET_ARTICLES_BY_UUID: (state, { articles, type, uuid }) => {
+        Vue.set(state['articlesByUUID'][type], uuid, articles)
       },
 
       SET_ARTICLES_GROUPED_LIST: (state, { articlesGroupedList }) => {
@@ -369,6 +384,10 @@ export function createStore () {
 
       SET_USER: (state, { user }) => {
         Vue.set(state.users, user.id, user)
+      },
+
+      SET_UUID: (state, { uuid }) => {
+        Vue.set(state, 'uuid', uuid)
       },
 
       SET_YOUTUBE_PLAY_LIST: (state, { playlist }) => {

@@ -46,6 +46,22 @@
           <share :right="`20px`" :bottom="`20px`"></share>
         </template>
 
+        <template v-else-if="topicType === 'group'">
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"></app-header>
+          <div class="topic">
+            <div class="topic-title"><h1></h1></div>
+            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
+          </div>
+          <group-list :articles='articles' :tags="tags" :viewport="viewport"></group-list>
+          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
+            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
+          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
+          <section class="footer container">
+            <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
+          </section>
+        </template>
+
         <template v-else>
           <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"></app-header>
           <div class="topic">
@@ -88,6 +104,7 @@ import ArticleListFull from '../components/ArticleListFull.vue'
 import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
+import GroupList from '../components/GroupList.vue'
 import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
 import Leading from '../components/Leading.vue'
@@ -160,14 +177,15 @@ const fetchTopicImages = (store, uuid) => {
   })
 }
 
-const fetchArticlesByUuid = (store, uuid, isLoadMore, maxResult = MAXRESULT) => {
+const fetchArticlesByUuid = (store, uuid, type, isLoadMore, needRelated, maxResult = MAXRESULT) => {
   const page = isLoadMore || PAGE
   return store.dispatch('FETCH_ARTICLES_BY_UUID', {
     'uuid': uuid,
-    'type': TOPIC,
+    'type': type,
     'params': {
       page: page,
-      max_results: maxResult
+      max_results: maxResult,
+      related: needRelated
     }
   })
 }
@@ -180,6 +198,7 @@ export default {
     'article-list': ArticleList,
     'article-list-full': ArticleListFull,
     'footer-full': FooterFull,
+    'group-list': GroupList,
     'header-full': HeaderFull,
     'leading': Leading,
     'leading-watch': LeadingWatch,
@@ -257,7 +276,7 @@ export default {
   },
   computed: {
     articles () {
-      return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', 'items' ]), 'slug')
+      return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items' ]), 'slug')
     },
     articleUrl () {
       return `${SITE_URL}/topic/${this.currArticleSlug}/`
@@ -307,13 +326,13 @@ export default {
       return _.get(this.$store, [ 'state', 'fbAppId' ])
     },
     hasAutoScroll () {
-      return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE) !== 1
+      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'page' ], PAGE) !== 1
     },
     hasDFP () {
       return this.dfp !== '' || this.mobileDfp !== ''
     },
     hasMore () {
-      return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'total' ], 0)
+      return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'total' ], 0)
     },
     mobileDfp () {
       return _.get(this.topic, [ 'mobileDfp' ], null)
@@ -325,7 +344,7 @@ export default {
       return this.$route.params.topicId === TOPIC_PROTEST_ID
     },
     page () {
-      return _.get(this.$store.state, [ 'articlesByUUID', 'meta', 'page' ], PAGE)
+      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuidh, 'meta', 'page' ], PAGE)
     },
     pageStyle () {
       return _.get(this.topic, [ 'pageStyle' ])
@@ -343,6 +362,11 @@ export default {
         default:
           return 'other'
       }
+    },
+    tags () {
+      return _.filter(_.get(this.$store.state, [ 'tags' ]), (t) => {
+        return _.includes(_.get(this.topic, [ 'tags' ]), t.id)
+      })
     },
     timeline () {
       return _.get(this.$store.state, [ 'timeline' ])
@@ -417,7 +441,7 @@ export default {
       currentPage += 1
       this.loading = true
 
-      fetchArticlesByUuid(this.$store, this.uuid, currentPage)
+      fetchArticlesByUuid(this.$store, this.uuid, TOPIC, currentPage, false)
       .then(() => {
         this.loading = false
         this.canScrollLoadMord = true
@@ -509,7 +533,7 @@ export default {
     } else {
       maxResult = 12
     }
-    fetchArticlesByUuid(this.$store, uuid, false, maxResult)
+    fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, maxResult)
     .then(() => {
       fetchTopicImages(this.$store, uuid)
       .then(() => {
@@ -544,9 +568,16 @@ export default {
     fetchEvent(this.$store, 'logo')
     if (this.topicType !== 'timeline') {
       if (this.topicType === 'portraitWall') {
-        fetchArticlesByUuid(this.$store, uuid, false, 25)
+        fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 25)
+      } else if (this.topicType === 'group') {
+        fetchArticlesByUuid(this.$store, uuid, TOPIC, false, 'full')
+        // if (this.tags && this.tags.length !== 0) {
+        //   _.forEach(this.tags, (tagId) => {
+        //     fetchArticlesByUuid(this.$store, tagId, TAG, false)
+        //   })
+        // }
       } else {
-        fetchArticlesByUuid(this.$store, uuid, false)
+        fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false)
       }
       fetchTopicImages(this.$store, uuid)
     }
