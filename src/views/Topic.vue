@@ -93,7 +93,7 @@
 <script>
 
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_FINPROJECT_ID, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { camelize } from 'humps'
 import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
@@ -526,33 +526,44 @@ export default {
   beforeRouteUpdate (to, from, next) {
     let topicType
     let maxResult
+    let needRelated
     const uuid = _.split(to.path, '/')[2]
     const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
-    if (uuid === TOPIC_FINPROJECT_ID) {
-      maxResult = 25
-    } else {
-      maxResult = 12
-    }
-    fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, maxResult)
-    .then(() => {
-      fetchTopicImages(this.$store, uuid)
+
+    if (!topic) {
+      fetchTopicByUuid(this.$store, uuid)
       .then(() => {
-        if (!topic) {
-          fetchTopicByUuid(this.$store, uuid)
-          .then(() => {
-            topicType = _.get(this.$store.state.topic, [ 'items', '0', 'type' ])
-            if (topicType === 'timeline') {
-              fetchTimeline(this.$store, uuid)
-            }
-          })
-        } else {
-          topicType = _.get(topic, [ 'type' ])
-          if (topicType === 'timeline') {
-            fetchTimeline(this.$store, uuid)
-          }
+        topicType = _.get(this.$store.state.topic, [ 'items', '0', 'type' ])
+        if (topicType === 'group') {
+          needRelated = 'full'
         }
-      }).then(() => next())
-    })
+        if (topicType === 'portraitWall') {
+          maxResult = 25
+        }
+        if (topicType === 'timeline') {
+          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, needRelated, maxResult), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
+          .then(next())
+        } else {
+          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, needRelated, maxResult), fetchTopicImages(this.$store, uuid) ])
+          .then(next())
+        }
+      })
+    } else {
+      topicType = _.get(topic, [ 'type' ])
+      if (topicType === 'group') {
+        needRelated = 'full'
+      }
+      if (topicType === 'portraitWall') {
+        maxResult = 25
+      }
+      if (topicType === 'timeline') {
+        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, needRelated, maxResult), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
+        .then(next())
+      } else {
+        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, needRelated, maxResult), fetchTopicImages(this.$store, uuid) ])
+        .then(next())
+      }
+    }
   },
   beforeRouteLeave (to, from, next) {
     if (process.env.VUE_ENV === 'client') {
@@ -571,11 +582,6 @@ export default {
         fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 25)
       } else if (this.topicType === 'group') {
         fetchArticlesByUuid(this.$store, uuid, TOPIC, false, 'full')
-        // if (this.tags && this.tags.length !== 0) {
-        //   _.forEach(this.tags, (tagId) => {
-        //     fetchArticlesByUuid(this.$store, tagId, TAG, false)
-        //   })
-        // }
       } else {
         fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false)
       }
