@@ -533,7 +533,7 @@ export default {
     if (!topic) {
       fetchTopicByUuid(this.$store, uuid)
       .then(() => {
-        topicType = _.get(this.$store.state.topic, [ 'items', '0', 'type' ])
+        topicType = _.camelCase(_.get(this.$store.state.topic, [ 'items', '0', 'type' ]))
         if (topicType === 'group') {
           needRelated = 'full'
         }
@@ -549,7 +549,7 @@ export default {
         }
       })
     } else {
-      topicType = _.get(topic, [ 'type' ])
+      topicType = _.camelCase(_.get(topic, [ 'type' ]))
       if (topicType === 'group') {
         needRelated = 'full'
       }
