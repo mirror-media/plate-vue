@@ -188,7 +188,6 @@ export default {
   },
   mounted () {
     const cookie = Cookie.get('mm-newsletter')
-    this.checkHostDomain()
     this.updateInfo(cookie)
   }
 }
