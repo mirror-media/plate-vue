@@ -46,8 +46,7 @@ export default {
       canSubscribe: false,
       checkboxDisabled: false,
       email: '',
-      emailInputDisabled: false,
-      hostName: 'localhost:8080'
+      emailInputDisabled: false
     }
   },
   methods: {
@@ -63,7 +62,7 @@ export default {
         this.$refs.emailForm.classList.add('vaild')
         const cookie = Cookie.get('mm-newsletter')
         if (!cookie) { // get user info from API
-          fetchNewsletter(`${this.hostName}/api/newsletter/${this.email}`)
+          fetchNewsletter(`/api/newsletter/${this.email}`)
           .then(response => {
             let categories = ''
             if (response.result.length !== 0) {
@@ -86,7 +85,7 @@ export default {
         } else {
           const cookieEmail = _.split(cookie, ';')[0]
           if (this.email !== cookieEmail) {
-            fetchNewsletter(`${this.hostName}/api/newsletter/${this.email}`)
+            fetchNewsletter(`/api/newsletter/${this.email}`)
             .then(response => {
               let categories = ''
               if (response.result.length !== 0) {
@@ -121,19 +120,10 @@ export default {
       }
       return false
     },
-    checkHostDomain () {
-      if (process.env.VUE_ENV === 'client') {
-        if (location.host.indexOf('localhost') === -1) {
-          this.hostName = 'https://dev.mirrormedia.mg'
-        } else {
-          this.hostName = 'http://localhost:8080'
-        }
-      }
-    },
     checkboxChanged (category) {
       if (this.email && this.canSubscribe) {
         superagent
-        .post(`${this.hostName}/api/newsletter`)
+        .post(`/api/newsletter`)
         .send({ user: this.email, item: category })
         .end((err, response) => {
           if (!err && response) {
