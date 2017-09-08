@@ -134,19 +134,24 @@ router.get('/newsletter/:userEmail', function(req, res, next) {
 router.post('/newsletter', jsonParser, function(req, res, next) {
   if (req && req.body && req.body.user && req.body.item) {
     const url = `${NEWSLETTER_PROTOCOL}://${NEWSLETTER_HOST}:${NEWSLETTER_PORT}/user`
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     const userEmail = req.body.user
-    superagent
-    .post(url)
-    .send({ user: userEmail, item: req.body.item })
-    .end((err, response) => {
-      if (!err && response) {
-        return res.status(200).json({ user: response.body.user, item: response.body.result })
-      } else {
-        console.error(`error during fetch data from newsletter post : ${url} ${userEmail}`)
-        console.error(err)
-        return res.status(500).json({ error: 'Error.' })
-      }
-    })
+    if (re.test(userEmail)) {
+      superagent
+      .post(url)
+      .send({ user: userEmail, item: req.body.item })
+      .end((err, response) => {
+        if (!err && response) {
+          return res.status(200).json({ user: response.body.user, item: response.body.result })
+        } else {
+          console.error(`error during fetch data from newsletter post : ${url} ${userEmail}`)
+          console.error(err)
+          return res.status(500).json({ error: 'Error.' })
+        }
+      })
+    } else {
+      return res.status(404).json({ error: 'Not Found.' })
+    }
   } else {
     return res.status(404).json({ error: 'Not Found.' })
   }
