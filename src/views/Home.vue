@@ -18,6 +18,8 @@
               <div class="focusNewsContainer">
                 <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-show="viewport < 1200" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
               </div>
+              <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
               <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
                 <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
                 <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
@@ -651,6 +653,8 @@ section.footer
           line-height 1.15
           &::after
             display none
+    .latest-main-container
+      margin-top 15px
 
   section.footer
     width 1024px

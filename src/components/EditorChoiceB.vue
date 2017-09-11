@@ -252,12 +252,11 @@ export default {
         height 65px
 
 @media (min-width: 1200px)
-  
   .editorChoice
     display block
     position relative
     width 100%
-    margin-bottom 35px
+    margin-bottom 15px
     > h2
       display block
       margin 0 0 10px
