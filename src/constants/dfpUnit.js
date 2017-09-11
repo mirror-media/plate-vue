@@ -48,7 +48,7 @@ export default {
     'LMBNA5': { 'aduid': 'mirror_m_hp_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ '' ] },
     'LMBNA9': { 'aduid': 'mirror_m_hp_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ '' ] },
     'LPCHD': { 'aduid': 'mirror_pc_hp_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-bottom: 20px !important' ] },
-    'LPCB1': { 'aduid': 'mirror_pc_hp_728x90_B1', 'dimensions': '728x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
+    'LPCB1': { 'aduid': 'mirror_pc_hp_728x90_B1', 'dimensions': '728x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // 'LPCFT': { 'aduid': 'mm_pc_hp_970x90_FT', 'dimensions': '1x1,970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-top: 20px' ] },
     'LPCNA3': { 'aduid': 'mirror_pc_hp_fluid_NA3', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA5': { 'aduid': 'mirror_pc_hp_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
