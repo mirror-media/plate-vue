@@ -1,22 +1,28 @@
 <template>
   <section class="newsletter">
     <form ref="emailForm" v-on:submit.prevent="checkEmailValid">
-      <input type="email" v-model="email" v-on:change="changeEvent" v-on:focus="focusEvent" v-on:focusout="focusoutEvent" v-on:input="cleanCheckInfo"  :disabled="emailInputDisabled" placeholder="請輸入您的 Email:" required>
+      <input type="email" v-model="email" v-on:input="cleanCheckInfo" placeholder="請輸入您的 Email:" required>
       <label></label>
     </form>
     <div class="newsletterCategories">
       <div ref="peopleBlock" class="newsletterCategories__category">
-        <input ref="people" type="checkbox" :disabled="checkboxDisabled" v-on:change="checkboxChanged('people')">
+        <input ref="people" type="checkbox" v-on:change="checkboxChanged('people')">
         <label>鏡人物</label>
         <p>《鏡週刊》人物組的鬥陣俱樂部：「一鏡到底」，「鏡相人間」，「心內話」三大單元，紙本未盡之處，這裡細說從頭。</p>
       </div>
       <div class="newsletterCategories__line"></div>
       <div ref="foodtravelBlock" class="newsletterCategories__category">
-        <input ref="foodtravel" type="checkbox" :disabled="checkboxDisabled" v-on:change="checkboxChanged('foodtravel')">
+        <input ref="foodtravel" type="checkbox" v-on:change="checkboxChanged('foodtravel')">
         <label>鏡食旅</label>
         <p>《鏡週刊》美食旅遊團隊，堅持實地採訪紀錄，帶你發掘全世界好食好旅，偶爾還有好酒情報。</p>
       </div>
-      <div class="newsletterCategories__curtain" v-show="loading">Loading</div>
+      <div class="newsletterCategories__curtain" v-show="loading">
+        <transition>
+          <svg class="spinner" width="44px" height="44px" viewBox="0 0 44 44">
+            <circle class="path" fill="none" stroke-width="4" stroke-linecap="round" cx="22" cy="22" r="20"></circle>
+          </svg>
+        </transition>
+      </div>
     </div>
   </section>
 </template>
@@ -26,7 +32,7 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import superagent from 'superagent'
 
-const API_TIMEOUT = 5000
+const API_TIMEOUT = 3000
 
 function fetchNewsletter (url) {
   return new Promise((resolve, reject) => {
@@ -47,52 +53,23 @@ export default {
   name: 'newsletter',
   data () {
     return {
-      canSubscribe: false,
       checkboxDisabled: false,
       email: '',
       emailInputDisabled: false,
-      hasChanged: false,
       loading: false
     }
   },
   methods: {
-    changeEvent () {
-      this.hasChanged = true
-    },
-    checkEmailValid () {
-      this.canSubscribe = false
-      this.$refs.emailForm.classList.remove('invaild')
+    checkEmailValid (category) {
       this.$refs.peopleBlock.classList.remove('subscribed')
       this.$refs.peopleBlock.classList.remove('cancel')
       this.$refs.foodtravelBlock.classList.remove('subscribed')
       this.$refs.foodtravelBlock.classList.remove('cancel')
-      const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      if (re.test(this.email)) {
-        const cookie = Cookie.get('mm-newsletter')
-        if (!cookie) { // get user info from API
-          fetchNewsletter(`/api/newsletter/${this.email}`)
-          .then(response => {
-            let categories = ''
-            if (response.result.length !== 0) {
-              response.result.forEach((c) => {
-                categories = categories + c.name + ','
-              })
-            }
-            Cookie.set('mm-newsletter', `${response.user};${categories}`, { expires: '3M' })
-            const cookie = Cookie.get('mm-newsletter')
-            this.updateInfo(cookie)
-          }, error => {
-            if (error.status === 404) {
-              this.canSubscribe = true
-            } else {
-              this.$refs.emailForm.classList.add('error')
-              this.emailInputDisabled = true
-              this.checkboxDisabled = true
-            }
-          })
-        } else {
-          const cookieEmail = _.split(cookie, ';')[0]
-          if (this.email !== cookieEmail) {
+      return new Promise((resolve, reject) => {
+        const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        if (re.test(this.email)) {
+          const cookie = Cookie.get('mm-newsletter')
+          if (!cookie) {
             fetchNewsletter(`/api/newsletter/${this.email}`)
             .then(response => {
               let categories = ''
@@ -101,35 +78,68 @@ export default {
                   categories = categories + c.name + ','
                 })
               }
-              Cookie.set('mm-newsletter', `${response.user};${categories}`, { expires: '3M' })
-              const cookie = Cookie.get('mm-newsletter')
-              this.updateInfo(cookie)
-            }, error => {
-              if (error.status === 404) {
-                this.$refs.people.checked = false
-                this.$refs.foodtravel.checked = false
-                this.canSubscribe = true
+              if (categories.includes(category)) {
+                Cookie.set('mm-newsletter', `${response.user};${categories}`, { expires: '3M' })
+                const cookie = Cookie.get('mm-newsletter')
+                this.updateInfo(cookie)
+                return reject()
+              } else {
+                return resolve()
+              }
+            })
+            .catch(err => {
+              if (err.status === 404) {
+                return resolve()
               } else {
                 this.$refs.emailForm.classList.add('error')
                 this.emailInputDisabled = true
                 this.checkboxDisabled = true
+                return reject()
               }
             })
+          } else {
+            const cookieEmail = _.split(cookie, ';')[0]
+            if (this.email !== cookieEmail) {
+              fetchNewsletter(`/api/newsletter/${this.email}`)
+              .then(response => {
+                let categories = ''
+                if (response.result.length !== 0) {
+                  response.result.forEach((c) => {
+                    categories = categories + c.name + ','
+                  })
+                }
+                Cookie.set('mm-newsletter', `${response.user};${categories}`, { expires: '3M' })
+                const cookie = Cookie.get('mm-newsletter')
+                this.updateInfo(cookie)
+                return resolve()
+              })
+              .catch(err => {
+                if (err.status === 404) {
+                  this.$refs.people.checked = false
+                  this.$refs.foodtravel.checked = false
+                  return resolve()
+                } else {
+                  this.$refs.emailForm.classList.add('error')
+                  this.emailInputDisabled = true
+                  this.checkboxDisabled = true
+                  return reject()
+                }
+              })
+            } else {
+              return resolve()
+            }
           }
-          if (this.email === cookieEmail) {
-            this.updateInfo(cookie)
-          }
+        } else {
+          this.$refs.people.checked = false
+          this.$refs.foodtravel.checked = false
+          this.$refs.emailForm.classList.add('invaild')
+          return reject()
         }
-      } else {
-        this.$refs.people.checked = false
-        this.$refs.foodtravel.checked = false
-        this.canSubscribe = false
-        this.$refs.emailForm.classList.add('invaild')
-      }
-      return false
+      })
     },
     checkboxChanged (category) {
-      if (this.hasChanged && this.email && this.canSubscribe) {
+      this.checkEmailValid(category)
+      .then(() => {
         this.loading = true
         superagent
         .post(`/api/newsletter`)
@@ -159,29 +169,16 @@ export default {
             setTimeout(() => {
               this.checkboxDisabled = false
               this.loading = false
-            }, 1500)
+            }, 1000)
           } else {
             this.checkboxDisabled = true
             this.loading = false
           }
         })
-      } else {
-        this.$refs.emailForm.classList.add('invaild')
-        this.$refs[category].checked = false
-      }
+      })
     },
     cleanCheckInfo () {
       this.$refs.emailForm.classList.remove('invaild')
-    },
-    detectKeyboard () {
-      document.activeElement.blur()
-    },
-    focusEvent () {
-      window.addEventListener('touchstart', this.detectKeyboard)
-    },
-    focusoutEvent () {
-      window.removeEventListener('touchstart', this.detectKeyboard)
-      this.checkEmailValid()
     },
     updateInfo (cookie) {
       if (cookie) {
@@ -194,8 +191,6 @@ export default {
           }
         })
         this.email = mail
-        this.hasChanged = true
-        this.canSubscribe = true
       }
     }
   },
@@ -207,6 +202,8 @@ export default {
 
 </script>
 <style lang="stylus" scoped>
+$offset = 126
+$duration = 1.4s
 
 .newsletter
   display flex
@@ -383,5 +380,38 @@ export default {
         display block
       p
         display block
+
+.spinner
+  transition opacity .15s ease
+  animation rotator $duration linear infinite
+  animation-play-state paused
+  animation-play-state running
+  &.v-enter, &.v-leave-active
+    opacity 0
+  &.v-enter-active, &.v-leave
+    opacity 1
+
+@keyframes rotator
+  0%
+    transform scale(0.5) rotate(0deg)
+  100%
+    transform scale(0.5) rotate(270deg)
+
+.spinner .path
+  stroke #ff6600
+  stroke-dasharray $offset
+  stroke-dashoffset 0
+  transform-origin center
+  animation dash $duration ease-in-out infinite
+
+@keyframes dash
+  0%
+    stroke-dashoffset $offset
+  50%
+    stroke-dashoffset ($offset/2)
+    transform rotate(135deg)
+  100%
+    stroke-dashoffset $offset
+    transform rotate(450deg)
 
 </style>
