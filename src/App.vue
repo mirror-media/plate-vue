@@ -183,16 +183,17 @@ button:focus {
       max-height 100%
 
 .dfp-cover
-  height 100vh
-  width 100vw
-  position fixed
-  top 0
-  left 0
-  z-index 9997
-  background-color rgba(0, 0, 0, 0.7)
-  display flex
-  justify-content center
-  align-items center
+  &:not(.vpon)
+    height 100vh
+    width 100vw
+    position fixed
+    top 0
+    left 0
+    z-index 9997
+    background-color rgba(0, 0, 0, 0.7)
+    display flex
+    justify-content center
+    align-items center
 
   > .ad
     position relative
@@ -210,6 +211,10 @@ button:focus {
       background-size contain
       background-position center center
       cursor pointer
+  
+  &.vpon
+    margin 0
+    padding 0
 
 .limited-height
   height 100%

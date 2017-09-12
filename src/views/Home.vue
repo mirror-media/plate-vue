@@ -73,6 +73,9 @@
             <div class="close" @click="closeCoverAd"></div>
           </div>
         </div>
+        <div class="dfp-cover vpon" v-show="viewport < 1199">
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR-VPON" v-if="showDfpCoverAdVponFlag && (viewport < 550) && dfpMode === 'dev'" :config="props.config"/>
+        </div>
       </div>
     </template>
   </vue-dfp-provider>
@@ -213,6 +216,7 @@ export default {
       hasScrollLoadMore: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE) > 1,
       page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
       showDfpCoverAdFlag: false,
+      showDfpCoverAdVponFlag: false,
       viewport: undefined
     }
   },
@@ -231,9 +235,13 @@ export default {
           if (position === 'LMBCVR' || position === 'MBCVR') {
             const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
             if (adDisplayStatus === 'none') {
-              this.showDfpCoverAdFlag = false
+              this.updateCookie().then((isVisited) => {
+                this.showDfpCoverAdVponFlag = !isVisited
+              })
             } else {
-              this.updateCookie()
+              this.updateCookie().then((isVisited) => {
+                this.showDfpCoverAdFlag = !isVisited
+              })
             }
           }
         },
@@ -345,13 +353,13 @@ export default {
       this.hasScrollLoadMore = false
     },
     updateCookie () {
-      const cookie = Cookie.get('visited')
-      if (!cookie) {
-        Cookie.set('visited', 'true', { expires: '10m' })
-        this.showDfpCoverAdFlag = true
-      } else {
-        this.showDfpCoverAdFlag = false
-      }
+      return new Promise((resolve) => {
+        const cookie = Cookie.get('visited')
+        if (this.dfpMode !== 'dev') {
+          Cookie.set('visited', 'true', { expires: '10m' })
+        }
+        resolve(cookie === 'true')
+      })
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
@@ -397,7 +405,6 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
-    // this.updateCookie()
     this.checkIfLockJS()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
