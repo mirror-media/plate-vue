@@ -1,18 +1,18 @@
 <template>
   <section class="newsletter">
     <form ref="emailForm" v-on:submit.prevent="checkEmailValid">
-      <input type="email" v-model="email" v-on:input="cleanCheckInfo" placeholder="請輸入您的 Email:" required>
+      <input type="email" v-model="email" v-on:focus="focusEvent" v-on:focusout="focusoutEvent" v-on:input="cleanCheckInfo" :disabled="emailInputDisabled" placeholder="請輸入您的 Email:" required>
       <label></label>
     </form>
     <div class="newsletterCategories">
       <div ref="peopleBlock" class="newsletterCategories__category">
-        <input ref="people" type="checkbox" v-on:change="checkboxChanged('people')">
+        <input ref="people" type="checkbox" :disabled="checkboxDisabled" v-on:change="checkboxChanged('people')">
         <label>鏡人物</label>
         <p>《鏡週刊》人物組的鬥陣俱樂部：「一鏡到底」，「鏡相人間」，「心內話」三大單元，紙本未盡之處，這裡細說從頭。</p>
       </div>
       <div class="newsletterCategories__line"></div>
       <div ref="foodtravelBlock" class="newsletterCategories__category">
-        <input ref="foodtravel" type="checkbox" v-on:change="checkboxChanged('foodtravel')">
+        <input ref="foodtravel" type="checkbox" :disabled="checkboxDisabled" v-on:change="checkboxChanged('foodtravel')">
         <label>鏡食旅</label>
         <p>《鏡週刊》美食旅遊團隊，堅持實地採訪紀錄，帶你發掘全世界好食好旅，偶爾還有好酒情報。</p>
       </div>
@@ -179,6 +179,15 @@ export default {
     },
     cleanCheckInfo () {
       this.$refs.emailForm.classList.remove('invaild')
+    },
+    detectKeyboard () {
+      document.activeElement.blur()
+    },
+    focusEvent () {
+      window.addEventListener('touchstart', this.detectKeyboard)
+    },
+    focusoutEvent () {
+      window.removeEventListener('touchstart', this.detectKeyboard)
     },
     updateInfo (cookie) {
       if (cookie) {
