@@ -540,6 +540,7 @@ export default {
         color rgba(65, 65, 65, 0.61)
 
         p 
+          text-align justify 
           strong 
             color rgba(65, 65, 65, 0.61)
             font-weight bold
@@ -560,7 +561,7 @@ export default {
           font-size 18px
           line-height 36px
           margin 1.5em 0
-        
+          text-align justify
         .youtube 
           clear both
           .youtube-container 
@@ -707,9 +708,11 @@ export default {
           flex 3
         
         .quote-content 
-          font-size 24px
+          line-height 2.2rem 
+          font-size 1.2rem
           color #3a759e
           flex 10
+          text-align justify 
         
       
       .info-box-container 
@@ -851,13 +854,16 @@ export default {
 
         p, h2, .split-line, .embedded, .article_main_pop, .article_main_proj, .article_main_related_bottom, .article_fb_comment, ul, .youtube, .dfpad-set
           padding 0 145px
+          text-align justify
 
         .article_main_pop
           margin-top 40px
         
         blockquote
           padding 0 145px
-
+          &.quote 
+            > .quote-content 
+              text-align justify
         .innerImg 
           padding 0 145px 1.5em
           
@@ -1032,6 +1038,26 @@ export default {
         
         blockquote.blockquote
           padding 0
+        blockquote.quote 
+          > .quoteIcon 
+            height 40px 
+            width 40px 
+            max-width 30px 
+            margin-top 8px 
+             
+          > .quote-content 
+            line-height 2.1rem 
+            font-size 1.2rem 
+            text-align justify 
+ 
+      > .article_main 
+        .innerImg 
+          .caption 
+            text-align justify 
+ 
+      > .article_title 
+        h1 
+          font-size 2.2rem         
 
 
 
