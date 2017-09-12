@@ -1,7 +1,7 @@
 <template>
   <section class="newsletter">
     <form ref="emailForm" v-on:submit.prevent="checkEmailValid">
-      <input type="email" v-model="email" v-on:change="checkEmailValid" v-on:focus="focusEvent" v-on:focusout="focusoutEvent" v-on:input="cleanCheckInfo"  :disabled="emailInputDisabled" placeholder="請輸入您的 Email:" required>
+      <input type="email" v-model="email" v-on:change="changeEvent" v-on:focus="focusEvent" v-on:focusout="focusoutEvent" v-on:input="cleanCheckInfo"  :disabled="emailInputDisabled" placeholder="請輸入您的 Email:" required>
       <label></label>
     </form>
     <div class="newsletterCategories">
@@ -16,6 +16,7 @@
         <label>鏡食旅</label>
         <p>《鏡週刊》美食旅遊團隊，堅持實地採訪紀錄，帶你發掘全世界好食好旅，偶爾還有好酒情報。</p>
       </div>
+      <div class="newsletterCategories__curtain" v-show="loading">Loading</div>
     </div>
   </section>
 </template>
@@ -25,10 +26,13 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import superagent from 'superagent'
 
+const API_TIMEOUT = 5000
+
 function fetchNewsletter (url) {
   return new Promise((resolve, reject) => {
     superagent
     .get(url)
+    .timeout(API_TIMEOUT)
     .end((err, response) => {
       if (!err && response) {
         return resolve(JSON.parse(response.text))
@@ -46,12 +50,17 @@ export default {
       canSubscribe: false,
       checkboxDisabled: false,
       email: '',
-      emailInputDisabled: false
+      emailInputDisabled: false,
+      hasChanged: false,
+      loading: false
     }
   },
   methods: {
+    changeEvent () {
+      this.hasChanged = true
+    },
     checkEmailValid () {
-      this.$refs.emailForm.classList.remove('vaild')
+      this.canSubscribe = false
       this.$refs.emailForm.classList.remove('invaild')
       this.$refs.peopleBlock.classList.remove('subscribed')
       this.$refs.peopleBlock.classList.remove('cancel')
@@ -59,7 +68,6 @@ export default {
       this.$refs.foodtravelBlock.classList.remove('cancel')
       const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
       if (re.test(this.email)) {
-        this.$refs.emailForm.classList.add('vaild')
         const cookie = Cookie.get('mm-newsletter')
         if (!cookie) { // get user info from API
           fetchNewsletter(`/api/newsletter/${this.email}`)
@@ -121,10 +129,12 @@ export default {
       return false
     },
     checkboxChanged (category) {
-      if (this.email && this.canSubscribe) {
+      if (this.hasChanged && this.email && this.canSubscribe) {
+        this.loading = true
         superagent
         .post(`/api/newsletter`)
         .send({ user: this.email, item: category })
+        .timeout(API_TIMEOUT)
         .end((err, response) => {
           if (!err && response) {
             const data = JSON.parse(response.text)
@@ -137,7 +147,6 @@ export default {
             Cookie.set('mm-newsletter', `${this.email};${categories}`, { expires: '3M' })
             const cookie = Cookie.get('mm-newsletter')
             this.updateInfo(cookie)
-            this.checkboxDisabled = true
             if (this.$refs[category].checked) {
               this.$refs[`${category}Block`].classList.remove('subscribed')
               this.$refs[`${category}Block`].classList.remove('cancel')
@@ -147,9 +156,13 @@ export default {
               this.$refs[`${category}Block`].classList.remove('cancel')
               this.$refs[`${category}Block`].classList.add('cancel')
             }
-            setTimeout(() => { this.checkboxDisabled = false }, 2000)
+            setTimeout(() => {
+              this.checkboxDisabled = false
+              this.loading = false
+            }, 1500)
           } else {
             this.checkboxDisabled = true
+            this.loading = false
           }
         })
       } else {
@@ -158,7 +171,6 @@ export default {
       }
     },
     cleanCheckInfo () {
-      this.$refs.emailForm.classList.remove('vaild')
       this.$refs.emailForm.classList.remove('invaild')
     },
     detectKeyboard () {
@@ -182,6 +194,7 @@ export default {
           }
         })
         this.email = mail
+        this.hasChanged = true
         this.canSubscribe = true
       }
     }
@@ -265,6 +278,7 @@ export default {
           padding .2em 0
           color red
   &Categories
+    position relative
     order 1
     display flex
     justify-content space-between
@@ -292,6 +306,17 @@ export default {
       display none
       width 1px
       background-color #ccc
+    &__curtain
+      position absolute
+      top 0
+      left 0
+      bottom 0
+      right 0
+      z-index 10
+      display flex
+      justify-content center
+      align-items center
+      background-color #fff
     input[type=checkbox]
       margin-right .5em
     label
