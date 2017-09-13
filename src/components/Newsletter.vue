@@ -108,10 +108,14 @@ export default {
                     categories = categories + c.name + ','
                   })
                 }
-                Cookie.set('mm-newsletter', `${response.user};${categories}`, { expires: '3M' })
-                const cookie = Cookie.get('mm-newsletter')
-                this.updateInfo(cookie)
-                return resolve()
+                if (categories.includes(category)) {
+                  Cookie.set('mm-newsletter', `${response.user};${categories}`, { expires: '3M' })
+                  const cookie = Cookie.get('mm-newsletter')
+                  this.updateInfo(cookie)
+                  return reject()
+                } else {
+                  return resolve()
+                }
               })
               .catch(err => {
                 if (err.status === 404) {
@@ -176,6 +180,7 @@ export default {
           }
         })
       })
+      .catch(() => {})
     },
     cleanCheckInfo () {
       this.$refs.emailForm.classList.remove('invaild')
@@ -407,7 +412,7 @@ $duration = 1.4s
     transform scale(0.5) rotate(270deg)
 
 .spinner .path
-  stroke #ff6600
+  stroke #0c5a80
   stroke-dasharray $offset
   stroke-dashoffset 0
   transform-origin center
