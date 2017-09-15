@@ -190,7 +190,8 @@
       const topicId = _.get(topics, [ '_id' ], '')
       let abIndicator
       if (process.env.VUE_ENV === 'client') {
-        abIndicator = this.getMmid()
+        // abIndicator = this.getMmid()
+        abIndicator = 'B'
       }
       return {
         title: `${title} - ${SITE_TITLE_SHORT}`,
@@ -293,7 +294,7 @@
     },
     data () {
       return {
-        abIndicator: 'A',
+        abIndicator: 'B',
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpMode: 'prod',
@@ -647,7 +648,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      this.abIndicator = this.getMmid()
+      // this.abIndicator = this.getMmid()
 
       if (this.abIndicator === 'A') {
         this.insertMatchedContentScript()
