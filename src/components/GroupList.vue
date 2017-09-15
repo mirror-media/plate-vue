@@ -56,7 +56,7 @@ export default {
 
 .groupList
   padding 1em 0
-  background-color #DCD2BE
+  
 .groupListBlockContainer
   width 90%
   margin 0 auto
@@ -67,7 +67,6 @@ export default {
     position relative
     left 25px
     margin 0
-    color #544741
     font-size 1.7rem
     font-weight 400
     &:before
@@ -78,7 +77,7 @@ export default {
       transform skew(-20deg)
       width 30px
       height 100%
-      background-color #d8c9b2
+      background-color rgba(135,156,169,0.15)
     &:after
       content ''
       position absolute
@@ -87,7 +86,7 @@ export default {
       transform skew(-20deg)
       width 10px
       height 100%
-      background-color #d2c1a3
+      background-color #999
   > div:nth-of-type(2)
     margin-top 20px
   > div:last-of-type
@@ -97,7 +96,7 @@ export default {
   display flex
   justify-content space-between
   padding 1em 0
-  border-bottom 1px solid #aa9987
+  border-bottom 1px solid #34495e
   &__img
     width calc(45% - 10px)
     margin 0
@@ -120,13 +119,11 @@ export default {
       text-align left
       line-height 1.5
       letter-spacing 1px
-      a
-        color #544741
     p
       display none
       margin 0
       a
-        color #333
+        color #999
 
 @media (min-width: 600px)
   .groupListBlockContainer
@@ -136,7 +133,7 @@ export default {
     h1
       font-size 1.9rem
     > div:last-of-type
-      border-bottom 1px solid #aa9987
+      border-bottom 1px solid #34495e
     > div:nth-of-type(2)
       margin-top 1.8em
     &__title
