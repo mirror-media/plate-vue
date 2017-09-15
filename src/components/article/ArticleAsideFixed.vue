@@ -1,6 +1,6 @@
 <template>
   <section class="articleAsideFixed">
-    <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="false">
+    <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
       <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
         <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
       </blockquote>
