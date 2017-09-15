@@ -43,14 +43,13 @@
         <div class="list-title container" :style="{ color: sectionColor }">
           <span class="list-title__text" v-text="title"></span>
         </div>
-        <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP'>
+        <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode">
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
           <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
           <vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
-          <div v-for="(a, i) in adIds" :id="`compass-fit-${a.id}`"
-                  class="listArticleBlock nativeDFP margin-top-0"
-                  v-if="dfpMode === 'dev' && runMicroAd(i)" slot="microAd"></div>
+          <div v-for="(a, i) in getValue(microAds, [ 'listing' ])" :id="`compass-fit-${getValue(a, [ 'pcId' ])}`"
+                  class="listArticleBlock nativeDFP margin-top-0" v-if="dfpMode === 'dev' && runMicroAd(getValue(a, [ 'pcId' ]))" :slot="`microAd${i}`"></div>
         </article-list>
         <div><vue-dfp v-if="title !== 'Topic' && !isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" /></div>
         <div><vue-dfp v-if="title !== 'Topic' && isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" /></div>
@@ -82,8 +81,9 @@ import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORAL
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, getTruncatedVal, unLockJS, insertMicroAd } from '../util/comm'
+import { currEnv, getTruncatedVal, getValue, unLockJS, insertMicroAd } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
+import { microAds } from '../constants/microAds'
 import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
@@ -416,17 +416,14 @@ export default {
   data () {
     return {
       abIndicator: 'A',
-      adIds: [
-        { id: '4273368', loaded: false },
-        { id: '4273369', loaded: false },
-        { id: '4273370', loaded: false }
-      ],
       articleListAutoScrollHeight: 0,
       canScrollLoadMord: true,
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       loading: false,
+      microAds,
+      microAdLoded: {},
       showDfpCoverAdFlag: false,
       viewport: undefined
     }
@@ -713,6 +710,7 @@ export default {
       })
       return role
     },
+    getValue,
     insertCustomizedMarkup () {
       const custCss = document.createElement('style')
       const custScript = document.createElement('script')
@@ -745,9 +743,8 @@ export default {
         this.loading = false
       })
     },
-    runMicroAd (index) {
-      insertMicroAd({ adId: this.adIds[index].id, currEnv: this.dfpMode, microAdLoded: this.adIds[index].loaded })
-      this.adIds[index]['loaded'] = true
+    runMicroAd (adId) {
+      this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.dfpMode, microAdLoded: this.microAdLoded[adId] })
       return true
     },
     scrollHandler (e) {

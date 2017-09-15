@@ -33,13 +33,12 @@
             <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
-            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist">
+            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist" :currEnv="dfpMode">
               <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpId="props.dfpId" slot="dfpNA3" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpId="props.dfpId" slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
-              <div v-for="(a, i) in adIds" :id="`compass-fit-${a.id}`"
-                  class="pop_item margin-top-0"
-                  v-if="dfpMode === 'dev' && runMicroAd(i)" slot="microAd"></div>
+              <div v-for="(a, i) in getValue(microAds, [ 'article' ])" :id="`compass-fit-${getValue(a, [ 'pcId' ])}`"
+                  class="pop_item margin-top-0" v-if="dfpMode === 'dev' && runMicroAd(getValue(a, [ 'pcId' ]))" :slot="`microAd${i}`"></div>
             </pop-list>
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
@@ -82,6 +81,7 @@
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
+  import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
   import ArticleBody from '../components/article/ArticleBody.vue'
@@ -294,16 +294,13 @@
     data () {
       return {
         abIndicator: 'A',
-        adIds: [
-          { id: '4273371', loaded: false },
-          { id: '4273372', loaded: false },
-          { id: '4273373', loaded: false }
-        ],
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
         hasSentFirstEnterGA: false,
+        microAds,
+        microAdLoded: {},
         state: {},
         showDfpCoverAdFlag: false,
         showDfpFixedBtn: false,
@@ -568,9 +565,8 @@
           }
         }
       },
-      runMicroAd (index) {
-        insertMicroAd({ adId: this.adIds[index].id, currEnv: this.dfpMode, microAdLoded: this.adIds[index].loaded })
-        this.adIds[index]['loaded'] = true
+      runMicroAd (adId) {
+        this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.dfpMode, microAdLoded: this.microAdLoded[adId] })
         return true
       },
       sendGA (articleData) {

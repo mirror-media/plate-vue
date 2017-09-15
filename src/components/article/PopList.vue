@@ -3,7 +3,6 @@
     <div class="pop_title"><h3>熱門文章</h3></div>
     <div class="pop_list">
       <template v-for="(o, i) in popArticles">
-        <slot name="microAd" v-if="i === 0"></slot>
         <div class="pop_item">
           <figure>
             <router-link :to="o.slug" :id="'popular-' + i">
@@ -15,7 +14,8 @@
             <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 21)" />
           </div>
         </div>
-        <slot :name="getSlotName(i)" v-if="i === 1 || i === 2 || i === 3" />
+        <slot :name="getSlotName(i)" v-if="(i === 1 || i === 2 || i === 3) && currEnv === 'prod'" />
+        <slot :name="`microAd${getMicroAdName(i)}`" v-if="(i === 1 || i === 2 || i === 3) && currEnv === 'dev'"></slot>
       </template>
     </div>
   </div>
@@ -26,7 +26,7 @@
   import _ from 'lodash'
   export default {
     name: 'pop-list',
-    props: [ 'pop' ],
+    props: [ 'pop', 'currEnv' ],
     computed: {
       popArticles () {
         return _.take(this.pop, 6)
@@ -52,6 +52,9 @@
         if (index === 3) {
           return 'dfpNA7'
         }
+      },
+      getMicroAdName (index) {
+        return index === 1 ? 0 : index === 2 ? 1 : 2
       }
     }
   }

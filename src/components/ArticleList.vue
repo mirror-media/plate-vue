@@ -2,9 +2,9 @@
   <section class="articleList container">
 
     <template v-for="(item, index) in articles">
-      <slot name="microAd" v-if="index === 0"></slot>
       <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" :key="getValue(item, [ 'id' ], Date.now())"/>
-      <slot :name="getNativeDfpSlotName(index)" v-if="(index === 1 || index === 2 || index === 5) && hasDFP" />
+      <slot :name="getNativeDfpSlotName(index)" v-if="(index === 1 || index === 2 || index === 5) && hasDFP && currEnv === 'prod'" />
+      <slot :name="`microAd${getMicroAdName(index)}`" v-if="(index === 1 || index === 2 || index === 5) && currEnv === 'dev'"></slot>
     </template>
     
   </section>
@@ -20,7 +20,7 @@ export default {
   components: {
     'listArticle-block': ListArticleBlock
   },
-  props: [ 'articles', 'hasDFP' ],
+  props: [ 'articles', 'hasDFP', 'currEnv' ],
   data () {
     return {
       togglePause: undefined
@@ -37,6 +37,9 @@ export default {
       if (index === 5) {
         return 'dfpNA9'
       }
+    },
+    getMicroAdName (index) {
+      return index === 1 ? 0 : index === 2 ? 1 : 2
     },
     getValue,
     pauseAllAudio (index) {
