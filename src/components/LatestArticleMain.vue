@@ -3,9 +3,6 @@
     <div class="latest-main-container_title"><h3>最新文章</h3></div>
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
-        <div id="compass-fit-4273899" class="latest-list_item nativeDFP margin-top-0" v-if="index === 0 && currEnv === 'dev' && viewport > 1199 && runMicroAd(4273899)"></div>
-        <div id="compass-fit-4274405" class="latest-list_item nativeDFP margin-top-0" v-if="index === 0 && currEnv === 'dev' && viewport < 600 && runMicroAd(4274405)"></div>
-        <slot name="outOfPageTest" v-if="index === 0 && currEnv === 'dev'"></slot>
         <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
           <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`"  v-if="o.style !== 'projects' && o.style !== 'campaign'" :target="target">
             <div class="latest-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
@@ -27,7 +24,11 @@
             </a>
           </div>
         </div>
-        <slot :name="slotArr[ index ]" v-if="index < 3"></slot>
+        <slot :name="slotArr[ index ]" v-if="index < 3  && currEnv === 'prod' "></slot>
+        <div :id="`compass-fit-${getValue(microAds, [ 'homepage', index, 'pcId' ])}`"
+            class="latest-list_item nativeDFP margin-top-0" v-if="index < 3 && currEnv === 'dev' && viewport > 1199 && runMicroAd(getValue(microAds, [ 'homepage', index, 'pcId' ]))"></div>
+        <div :id="`compass-fit-${getValue(microAds, [ 'homepage', index, 'mobileId' ])}`"
+            class="latest-list_item nativeDFP margin-top-0" v-if="index < 3 && currEnv === 'dev' && viewport < 600 && runMicroAd(getValue(microAds, [ 'homepage', index, 'mobileId' ]))"></div>
       </template>
     </div>
   </div>
@@ -36,6 +37,7 @@
 import _ from 'lodash'
 import { SECTION_MAP } from '../constants'
 import { currEnv, getHref, getTruncatedVal, getValue, insertMicroAd } from '../util/comm'
+import { microAds } from '../constants/microAds'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
@@ -63,7 +65,8 @@ export default {
   data () {
     return {
       currEnv: 'prod',
-      microAdLoded: false
+      microAdLoded: {},
+      microAds
     }
   },
   methods: {
@@ -90,8 +93,7 @@ export default {
       return (section.length > 0) ? section : category
     },
     runMicroAd (adId) {
-      insertMicroAd({ adId, currEnv: this.currEnv, microAdLoded: this.microAdLoded })
-      this.microAdLoded = true
+      this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.currEnv, microAdLoded: this.microAdLoded[adId] })
       return true
     },
     updateSysStage () {

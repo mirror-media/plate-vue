@@ -301,7 +301,7 @@ export function setMmCookie () {
   return uuid
 }
 
-export function insertMicroAd ({ adId, currEnv, microAdLoded }) {
+export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
   if (process.env.VUE_ENV === 'client' && currEnv === 'dev' && microAdLoded === false) {
     const _lgy_lw = document.createElement('script')
     _lgy_lw.type = 'text/javascript'
