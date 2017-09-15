@@ -103,7 +103,7 @@
       </div>
       <div class="split-line"></div>
       <div class="fbPagePlugin">
-        <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-small-header="true" data-adapt-container-width="true" data-hide-cover="true" data-show-facepile="false">
+        <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
           <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
             <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
           </blockquote>
@@ -969,8 +969,8 @@ export default {
   .fbPagePlugin
     display none
     margin-top 15px
-    .fb-page
-      width 100%
+    .fb-page, .fb-page span, .fb-page span iframe[style]
+      width 100% !important
   
   .kianGi
     margin-top 1em
