@@ -58,6 +58,13 @@ export const DFP_OPTIONS = {
   afterAllAdsLoaded: undefined
 }
 
+export const VPON_CONFIG = {
+  vpon_ad_test: '1',
+  vpon_ad_licensy_key: '8a8081825d0c002f015d35a443c237c0',
+  vpon_ad_format: 'mi',
+  debug: true
+}
+
 export const GA_ID = 'UA-83609754-1'
 export const GA_TEST_ID = 'UA-83609754-2'
 
