@@ -41,7 +41,7 @@
           </div>
         </div>
         <div class="dfp-cover vpon" v-show="viewport < 1199"> 
-          <vue-dfp :is="props.vueDfp" pos="LMBCVR-VPON" v-if="showDfpCoverAdVponFlag && (viewport < 550) && dfpMode === 'dev'" :config="props.config"/> 
+          <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550) && dfpMode === 'dev'" v-html="vponHtml"></div>>
         </div>
       </div>
     </template>
@@ -50,8 +50,8 @@
 
 <script>
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
-import { currEnv, unLockJS } from '../util/comm'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, VPON_CONFIG } from '../constants'
+import { currEnv, insertVponAdSDK, unLockJS } from '../util/comm'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import EditorChoice from '../components/EditorChoice.vue'
@@ -172,6 +172,7 @@ export default {
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
+      isVponSDKLoaded: false,
       loading: false,
       hasScrollLoadMore: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE) > 1,
       page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
@@ -197,6 +198,7 @@ export default {
             if (adDisplayStatus === 'none') {
               this.updateCookie().then((isVisited) => {
                 this.showDfpCoverAdVponFlag = !isVisited
+                this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
               })
             } else {
               this.updateCookie().then((isVisited) => {
@@ -271,6 +273,13 @@ export default {
     },
     projects () {
       return _.get(this.commonData, [ 'projects', 'items' ])
+    },
+    vponHtml () {
+      const mode = _.get(VPON_CONFIG, [ 'vpon_ad_test' ], '1')
+      const key = _.get(VPON_CONFIG, [ 'vpon_ad_licensy_key' ], '')
+      const format = _.get(VPON_CONFIG, [ 'vpon_ad_format' ], 'mi')
+      const debug = _.get(VPON_CONFIG, [ 'debug' ], true)
+      return `<vpon vpon_ad_test="${mode}" vpon_ad_licensy_key="${key}" vpon_ad_format="${format}" debug="${debug}"></vpon>`
     }
   },
   methods: {
@@ -283,6 +292,7 @@ export default {
     initHasScrollLoadMore () {
       this.hasScrollLoadMore = false
     },
+    insertVponAdSDK,
     updateCookie () {
       return new Promise((resolve) => {
         const cookie = Cookie.get('visited')
