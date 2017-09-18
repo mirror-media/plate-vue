@@ -190,8 +190,7 @@
       const topicId = _.get(topics, [ '_id' ], '')
       let abIndicator
       if (process.env.VUE_ENV === 'client') {
-        // abIndicator = this.getMmid()
-        abIndicator = 'B'
+        abIndicator = this.getMmid()
       }
       return {
         title: `${title} - ${SITE_TITLE_SHORT}`,
@@ -294,7 +293,7 @@
     },
     data () {
       return {
-        abIndicator: 'B',
+        abIndicator: 'A',
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpMode: 'prod',
@@ -571,7 +570,6 @@
         return true
       },
       sendGA (articleData) {
-        // const abIndicator = this.getMmid()
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
@@ -648,7 +646,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      // this.abIndicator = this.getMmid()
+      this.abIndicator = this.getMmid()
 
       if (this.abIndicator === 'A') {
         this.insertMatchedContentScript()
