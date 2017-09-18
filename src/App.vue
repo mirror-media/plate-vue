@@ -56,7 +56,7 @@
           [
             { target: '.article_body > .article_main .poplist-container', seenFlag: false, desc: 'popular' },
             { target: '.article_body > .article_main .article_main_tags', seenFlag: false, desc: 'tag' },
-            { target: '.article_body > .article_main .article_main_related_bottom', seenFlag: false, desc: 'end' }
+            { target: '.article_body > .article_main .newsletter', seenFlag: false, desc: 'end' }
           ]
         )
       },
