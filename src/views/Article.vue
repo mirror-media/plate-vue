@@ -25,7 +25,9 @@
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
-              <article-aside-fixed :projects="projectlist"></article-aside-fixed>
+              <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist">
+                <pop-list-vert :pop="popularlist" slot="popListVert"></pop-list-vert>
+              </article-aside-fixed>
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
@@ -33,7 +35,7 @@
             <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
-            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist" :currEnv="dfpMode">
+            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(abIndicator === 'B' && viewport >= 1200)" :currEnv="dfpMode">
               <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpId="props.dfpId" slot="dfpNA3" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpId="props.dfpId" slot="dfpNA5" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
@@ -94,6 +96,7 @@
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import PopList from '../components/article/PopList.vue'
+  import PopListVert from '../components/article/PopListVert.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
   import ShareTools from '../components/article/ShareTools.vue'
@@ -285,6 +288,7 @@
       'latest-list': LatestList,
       'live-stream': LiveStream,
       'pop-list': PopList,
+      'pop-list-vert': PopListVert,
       'related-list': RelatedList,
       'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
@@ -555,16 +559,6 @@
           document.querySelector('body').appendChild(mediafarmersScript)
         }
       },
-      insertPopInScript () {
-        if (this.articleStyle !== 'photography') {
-          const popInScript = document.createElement('script')
-          popInScript.setAttribute('id', 'popInScript')
-          popInScript.innerHTML = `var _pop = _pop || [];_pop.push(["_set_read_categoryName","${_.get(this.articleData, [ 'sections', '0', 'name' ])}"]);(function() { var pa = document.createElement("script"); pa.type = "text/javascript"; pa.charset = "utf-8"; pa.async = true;pa.src = window.location.protocol + "//api.popin.cc/searchbox/mirrormedia.js";var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(pa, s);})();`
-          if (!document.querySelector('#popInScript')) {
-            document.querySelector('body').appendChild(popInScript)
-          }
-        }
-      },
       runMicroAd (adId) {
         this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.dfpMode, microAdLoded: this.microAdLoded[adId] })
         return true
@@ -619,13 +613,6 @@
         document.querySelector('body').removeChild(mediafarmersScript)
         this.insertMediafarmersScript()
       },
-      updatePopInScript () {
-        const popInScript = document.querySelector('#popInScript')
-        if (popInScript) {
-          document.querySelector('body').removeChild(popInScript)
-        }
-        this.insertPopInScript()
-      },
       updateViewport () {
         const browser = typeof window !== 'undefined'
         if (browser) {
@@ -646,13 +633,8 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
+      this.insertMatchedContentScript()
       this.abIndicator = this.getMmid()
-
-      if (this.abIndicator === 'A') {
-        this.insertMatchedContentScript()
-      } else {
-        this.insertPopInScript()
-      }
 
       if (!_.isEmpty(this.articleData)) {
         this.sendGA(this.articleData)
@@ -671,12 +653,8 @@
         })
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
+        this.updateMatchedContentScript()
 
-        if (this.abIndicator === 'A') {
-          this.updateMatchedContentScript()
-        } else {
-          this.updatePopInScript()
-        }
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
       },

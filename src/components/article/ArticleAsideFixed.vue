@@ -5,20 +5,17 @@
         <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
       </blockquote>
     </div>
+    <slot name="popListVert" v-if="abIndicator === 'B'"></slot>
   </section>
 </template>
 
 <script>
 
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import ProjectListVert from './ProjectListVert.vue'
 
 export default {
   name: 'articleAsideFixed',
-  components: {
-    'project-listVert': ProjectListVert
-  },
-  props: [ 'projects' ],
+  props: [ 'abIndicator', 'projects' ],
   methods: {
     detectFixAside: function (e) {
       const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight

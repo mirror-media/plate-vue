@@ -12,7 +12,9 @@
         <template>
           <section class="styleB">
             <main>
-              <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>    
+              <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>
+              <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
+              <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank"/>
               <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
               <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
               <div class="focusNewsContainer">
@@ -32,7 +34,6 @@
             <aside v-show="viewport >= 1200">
               <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
               <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
-              <project-listVert :initProjects="projects" :isSquareStyle="true" :openInNewWindow="true" v-if="abIndicator === 'A'"></project-listVert>
             </aside>
           </section>
         </template>
@@ -168,11 +169,11 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    const abIndicator = this.abIndicator
+    // const abIndicator = this.abIndicator
     return {
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="home${abIndicator}">
+        <meta name="mm-opt" content="">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -415,14 +416,14 @@ export default {
     })
     this.checkIfLockJS()
     this.updateSysStage()
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
 
     window.addEventListener('scroll', this.detectFixProject)
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    // window.ga('set', 'contentGroup3', '')
-    window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {
@@ -522,9 +523,12 @@ export default {
   .latest-main-container
     width 90%
     margin 0 auto
+  .project-container
+    width 90%
+    margin 0 auto
   .aside-title
-    padding 0 2rem
-    margin-top 10px
+    width 90%
+    margin 10px auto 0
 
     h2
       font-size 1.5rem
@@ -596,7 +600,9 @@ section.footer
   .styleB
     padding 0 2rem
     .aside-title
-      padding 0
+      width 100%
+    .project-container
+      width 100%
     .focusNewsContainer
       display flex
       flex-wrap wrap
