@@ -116,11 +116,10 @@
       <div class="dfpad-set" style="display: flex; justify-content: space-around;">
         <slot name="dfpad-set"></slot>
       </div>
-      <div v-if="abIndicator === 'A'">
+      <div>
         <h3>推薦文章</h3>
       </div>
-      <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A'"></div>
-      <div id="_popIn_recommend" class="popIn" v-if="abIndicator === 'B'"></div>
+      <div id="matchedContentContainer" class="matchedContentContainer"></div>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
       </div>
@@ -372,9 +371,6 @@ export default {
   },
   name: 'article-body',
   props: {
-    abIndicator: {
-      default: () => { return '' }
-    },
     articleData: {
       default: () => { return undefined }
     },
