@@ -60,7 +60,8 @@ export const DFP_OPTIONS = {
 
 export const VPON_CONFIG = {
   vpon_ad_test: '0',
-  vpon_ad_licensy_key: '8a8081825d0c002f015d35a443c237c0',
+  // vpon_ad_licensy_key: '8a8081825d0c002f015d35a443c237c0',
+  vpon_ad_licensy_key: '8a8081825e98980c015e9d59341707d0',
   vpon_ad_format: 'mi',
   debug: true
 }
