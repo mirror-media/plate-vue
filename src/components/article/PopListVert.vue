@@ -3,10 +3,10 @@
     <div class="popListVert__title">熱門文章</div>
     <div class="popListVert-list">
       <div class="popListVert-list__item" v-for="(o, i) in popArticles">
-        <a class="popListVert-list__item--img"><img v-lazy="getImage(o, 'mobile')" :alt="getValue(o, [ 'title' ])"></a>
+        <router-link :to="o.slug" :id="`popular-${i}-popVertImg`" class="popListVert-list__item--img"><img v-lazy="getImage(o, 'mobile')" :alt="getValue(o, [ 'title' ])"></router-link>
         <div class="popListVert-list__item--text">
           <div :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])"></div>
-          <h2><a v-text="getTruncatedVal(o.title, 12)"></a></h2>
+          <h2><router-link :to="o.slug" :id="`popular-${i}-popVertTitle`" v-text="getTruncatedVal(o.title, 12)"></router-link></h2>
         </div>
       </div>
     </div>
