@@ -71,6 +71,7 @@
           <div class="close" @click="closeCoverAd"></div>
         </div>
       </div>
+      <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
       <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
         <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/>
       </dfp-fixed>
@@ -81,7 +82,7 @@
 <script>
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
-  import { currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd } from '../util/comm'
+  import { currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
@@ -303,10 +304,12 @@
         dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
         hasSentFirstEnterGA: false,
+        isVponSDKLoaded: false,
         microAds,
         microAdLoded: {},
         state: {},
         showDfpCoverAdFlag: false,
+        showDfpCoverAdVponFlag: false,
         showDfpFixedBtn: false,
         viewport: undefined
       }
@@ -336,9 +339,14 @@
             if (position === 'LMBCVR' || position === 'MBCVR') {
               const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
               if (adDisplayStatus === 'none') {
-                this.showDfpCoverAdFlag = false
+                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  this.showDfpCoverAdVponFlag = !isVisited
+                  this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+                })
               } else {
-                this.updateCookie()
+                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  this.showDfpCoverAdFlag = !isVisited
+                })
               }
             }
             if (position === 'PCFF') {
@@ -559,6 +567,7 @@
           document.querySelector('body').appendChild(mediafarmersScript)
         }
       },
+      insertVponAdSDK,
       runMicroAd (adId) {
         this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.dfpMode, microAdLoded: this.microAdLoded[adId] })
         return true
@@ -576,15 +585,6 @@
           window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         }
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
-      },
-      updateCookie () {
-        const cookie = Cookie.get('visited')
-        if (!cookie) {
-          Cookie.set('visited', 'true', { expires: '10m' })
-          this.showDfpCoverAdFlag = true
-        } else {
-          this.showDfpCoverAdFlag = false
-        }
       },
       updateJSONLDScript () {
         const newsArticleScript = document.querySelector('#js-newsArticle')
@@ -621,7 +621,8 @@
       },
       updateSysStage () {
         this.dfpMode = currEnv()
-      }
+      },
+      vponHtml
     },
     mounted () {
       this.initializeFBComments()

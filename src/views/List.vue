@@ -70,6 +70,7 @@
         </div>
       </div>
 
+      <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
     </template>
   </vue-dfp-provider>
 </template>
@@ -77,11 +78,11 @@
 
 import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, FB_APP_ID,
   FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS,
-  SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants/index'
+  SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, getTruncatedVal, getValue, unLockJS, insertMicroAd } from '../util/comm'
+import { currEnv, getTruncatedVal, getValue, unLockJS, insertMicroAd, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { microAds } from '../constants/microAds'
 import _ from 'lodash'
@@ -421,10 +422,12 @@ export default {
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
+      isVponSDKLoaded: false,
       loading: false,
       microAds,
       microAdLoded: {},
       showDfpCoverAdFlag: false,
+      showDfpCoverAdVponFlag: false,
       viewport: undefined
     }
   },
@@ -499,8 +502,14 @@ export default {
             const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
             if (adDisplayStatus === 'none') {
               this.showDfpCoverAdFlag = false
+              updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                this.showDfpCoverAdVponFlag = !isVisited
+                this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+              })
             } else {
-              this.updateCookie()
+              updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                this.showDfpCoverAdFlag = !isVisited
+              })
             }
           }
         },
@@ -743,6 +752,7 @@ export default {
         this.loading = false
       })
     },
+    insertVponAdSDK,
     runMicroAd (adId) {
       this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.dfpMode, microAdLoded: this.microAdLoded[adId] })
       return true
@@ -763,15 +773,6 @@ export default {
           this.canScrollLoadMord = false
           this.loadMore()
         }
-      }
-    },
-    updateCookie () {
-      const cookie = Cookie.get('visited')
-      if (!cookie) {
-        Cookie.set('visited', 'true', { expires: '10m' })
-        this.showDfpCoverAdFlag = true
-      } else {
-        this.showDfpCoverAdFlag = false
       }
     },
     updateCustomizedMarkup () {
@@ -795,7 +796,8 @@ export default {
     },
     updateSysStage () {
       this.dfpMode = currEnv()
-    }
+    },
+    vponHtml
   },
   watch: {
     // abIndicator: function () {
