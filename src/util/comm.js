@@ -1,4 +1,4 @@
-import { SITE_DOMAIN, SITE_URL } from '../constants'
+import { SITE_DOMAIN, SITE_URL, VPON_CONFIG } from '../constants'
 import _ from 'lodash'
 import Browser from 'bowser'
 import Cookie from 'vue-cookie'
@@ -352,4 +352,22 @@ export function removeClass (ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
   ele.className = trim(ele.className)
+}
+
+export function vponHtml () {
+  const mode = _.get(VPON_CONFIG, [ 'vpon_ad_test' ], '1')
+  const key = _.get(VPON_CONFIG, [ 'vpon_ad_licensy_key' ], '')
+  const format = _.get(VPON_CONFIG, [ 'vpon_ad_format' ], 'mi')
+  const debug = _.get(VPON_CONFIG, [ 'debug' ], true)
+  return `<vpon vpon_ad_test="${mode}" vpon_ad_licensy_key="${key}" vpon_ad_format="${format}" debug="${debug}"></vpon>`
+}
+
+export function updateCookie ({ currEnv }) {
+  return new Promise((resolve) => {
+    const cookie = Cookie.get('visited')
+    if (currEnv !== 'dev') {
+      Cookie.set('visited', 'true', { expires: '10m' })
+    }
+    resolve(cookie === 'true')
+  })
 }
