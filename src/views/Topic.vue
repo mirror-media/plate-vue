@@ -68,7 +68,7 @@
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
-          <article-list ref="articleList" id="articleList" :articles='articles' :hasDFP='false'></article-list>
+          <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='false'></article-list>
           <!--<section class="container">
             <more v-if="hasMore" v-on:loadMore="loadMore"></more>
           </section>-->
