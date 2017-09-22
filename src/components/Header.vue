@@ -8,7 +8,7 @@
         <vue-dfp class="header-logoSearch__logoAd--ad" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
       </div>
       <div class="header-logoSearch__search desktop-only">
-        <input type="search" v-model="searchVal" @keyup.enter="search(searchVal)" @change="hasChanged()" placeholder="">
+        <input type="search" v-model="searchVal" @keyup.enter="search(searchVal)" placeholder="">
         <button @click="search(searchVal)">
           <img class="header-logoSearch__search--icon" src="/public/icon/search.svg" alt="搜尋"/>
         </button>
@@ -89,7 +89,7 @@
 
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">
       <form action="." v-on:submit.prevent="search(searchVal)" >
-        <input type="search" v-model="searchVal" @change="hasChanged()" @focusout="search(searchVal)" placeholder="搜尋">
+        <input type="search" v-model="searchVal" @focusout="search(searchVal)" placeholder="搜尋">
       </form>
       <a @click="closeSearchBar()"><img src="/public/icon/close.png" alt="關閉搜尋列"></a>
     </section>
@@ -114,7 +114,6 @@ export default {
   props: [ 'commonData', 'eventLogo', 'viewport', 'props' ],
   data () {
     return {
-      isChanged: false,
       isScrolled: false,
       openSearch: false,
       openSide: false,
@@ -192,9 +191,6 @@ export default {
         currentYPosition() > 69 ? this.isScrolled = true : this.isScrolled = false
       })
     },
-    hasChanged () {
-      this.isChanged = true
-    },
     openMoreService () {
       this.disableScroll()
       this.$refs.moreServiceList.classList.add('active')
@@ -220,7 +216,8 @@ export default {
       }
     },
     search (searchVal = '') {
-      if (this.isChanged && searchVal !== '') {
+      const currentKeyword = _.get(this.$route, [ 'params', 'keyword' ])
+      if (searchVal !== currentKeyword && searchVal !== '') {
         document.activeElement.blur()
         this.$router.push('/search/' + this.searchVal)
         this.openSearch = false
