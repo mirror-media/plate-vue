@@ -316,7 +316,7 @@ export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
 }
 
 export function insertVponAdSDK ({ currEnv = 'dev', isVponSDKLoaded = false }) {
-  if (process.env.VUE_ENV === 'client' && currEnv === 'dev' && isVponSDKLoaded === false) {
+  if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
     const script = document.createElement('script')
     script.type = 'text/javascript'
     script.src = '//m.vpon.com/sdk/vpadn-sdk.js'
