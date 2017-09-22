@@ -69,7 +69,7 @@
     <div class="searchFull" v-show="openSearch">
       <div class="searchFull-container">
         <form action="." v-on:submit.prevent="search(searchVal)">
-          <input type="search" placeholder="Search" v-model="searchVal" @change="hasChanged()">
+          <input type="search" placeholder="Search" @focusout="search(searchVal)" v-model="searchVal">
         </form>
         <a @click="closeSearchBar()">
           <img src="/public/icon/close.png" alt="關閉搜尋列">
@@ -93,7 +93,6 @@ export default {
     return {
       blackNav: false,
       defaultNav: true,
-      isChanged: false,
       opacity: 1,
       openSearch: false,
       openSide: false,
@@ -138,8 +137,13 @@ export default {
       this.openSide = true
     },
     search (searchVal = '') {
-      if (this.isChanged && searchVal !== '') {
+      const currentKeyword = _.get(this.$route, [ 'params', 'keyword' ])
+      if (searchVal !== currentKeyword && searchVal !== '') {
+        document.activeElement.blur()
         this.$router.push('/search/' + this.searchVal)
+        this.openSearch = false
+      } else {
+        document.activeElement.blur()
         this.openSearch = false
       }
     },
@@ -149,9 +153,6 @@ export default {
         this.opacity < 0 ? this.defaultNav = false : this.defaultNav = true
         this.opacity < 1 ? this.blackNav = true : this.blackNav = false
       }
-    },
-    hasChanged () {
-      this.isChanged = true
     }
   },
   mounted () {
