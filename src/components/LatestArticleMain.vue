@@ -24,11 +24,14 @@
             </a>
           </div>
         </div>
-        <slot :name="slotArr[ index ]" v-if="index < 3  && currEnv === 'prod' "></slot>
-        <div :id="`compass-fit-${getValue(microAds, [ 'homepage', index, 'pcId' ])}`"
-            class="latest-list_item nativeDFP margin-top-0" v-if="index < 3 && currEnv === 'dev' && viewport > 1199 && runMicroAd(getValue(microAds, [ 'homepage', index, 'pcId' ]))"></div>
-        <div :id="`compass-fit-${getValue(microAds, [ 'homepage', index, 'mobileId' ])}`"
-            class="latest-list_item nativeDFP margin-top-0" v-if="index < 3 && currEnv === 'dev' && viewport < 600 && runMicroAd(getValue(microAds, [ 'homepage', index, 'mobileId' ]))"></div>
+        <micro-ad :currEnv="currEnv" :currUrl="currUrl" 
+                  :id="`${getValue(microAds, [ 'homepage', index, 'pcId' ])}`"
+                  v-if="index < 3 && viewport > 1199"
+                  class="latest-list_item nativeDFP margin-top-0"></micro-ad>        
+        <micro-ad :currEnv="currEnv" :currUrl="currUrl" 
+                  :id="`${getValue(microAds, [ 'homepage', index, 'mobileId' ])}`"
+                  v-if="index < 3 && viewport < 600"
+                  class="latest-list_item nativeDFP margin-top-0"></micro-ad>        
       </template>
     </div>
   </div>
@@ -36,13 +39,17 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../constants'
-import { currEnv, getHref, getTruncatedVal, getValue, insertMicroAd } from '../util/comm'
+import { currEnv, getHref, getTruncatedVal, getValue } from '../util/comm'
 import { microAds } from '../constants/microAds'
+import MicroAd from '../components/MicroAd.vue'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
   name: 'latest-list-main',
   computed: {
+    currUrl () {
+      return this.$route.fullPath
+    },
     latestListBeforeDFPNA3 () {
       return _.take(this.latestList, 2)
     },
@@ -57,10 +64,10 @@ export default {
     },
     latestArticleArr () {
       return [ this.latestListBeforeDFPNA3, this.latestListBeforeDFPNA5, this.latestListBeforeDFPNA9, this.latestListAfterDFPNA9 ]
-    },
-    slotArr () {
-      return [ 'dfpNA3', 'dfpNA5', 'dfpNA9' ]
     }
+  },
+  components: {
+    MicroAd
   },
   data () {
     return {
@@ -91,10 +98,6 @@ export default {
       const section = _.get(article, [ 'sections', 0, 'title' ], '')
       const category = _.get(article, [ 'categories', 0, 'title' ], '')
       return (section.length > 0) ? section : category
-    },
-    runMicroAd (adId) {
-      this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.currEnv, microAdLoded: this.microAdLoded[adId] })
-      return true
     },
     updateSysStage () {
       this.currEnv = currEnv()

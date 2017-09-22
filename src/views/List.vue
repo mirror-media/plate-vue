@@ -44,12 +44,10 @@
           <span class="list-title__text" v-text="title"></span>
         </div>
         <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode">
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA3" slot="dfpNA3" :config="props.config" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA5" slot="dfpNA5" :config="props.config" />
-          <vue-dfp v-if="hasDFP" :is="props.vueDfp" pos="LPCNA9" slot="dfpNA9" :config="props.config" />
           <vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBL1" slot="dfpL1" :config="props.config" />
-          <div v-for="(a, i) in getValue(microAds, [ 'listing' ])" :id="`compass-fit-${getValue(a, [ 'pcId' ])}`"
-                  class="listArticleBlock nativeDFP margin-top-0" v-if="dfpMode === 'dev' && runMicroAd(getValue(a, [ 'pcId' ]))" :slot="`microAd${i}`"></div>
+          <micro-ad v-for="(a, i) in getValue(microAds, [ 'listing' ])" :currEnv="dfpMode" :currUrl="currUrl"
+                  :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
+                  class="listArticleBlock nativeDFP margin-top-0" v-if="hasDFP" :slot="`microAd${i}`"></micro-ad>
         </article-list>
         <div><vue-dfp v-if="title !== 'Topic' && !isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" /></div>
         <div><vue-dfp v-if="title !== 'Topic' && isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" /></div>
@@ -82,7 +80,7 @@ import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORAL
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, getTruncatedVal, getValue, unLockJS, insertMicroAd, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
+import { currEnv, getTruncatedVal, getValue, unLockJS, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { microAds } from '../constants/microAds'
 import _ from 'lodash'
@@ -107,6 +105,7 @@ import LeadingWatch from '../components/LeadingWatch.vue'
 import ListChoice from '../components/ListChoice.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
+import MicroAd from '../components/MicroAd.vue'
 import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
@@ -344,6 +343,7 @@ export default {
     'list-choice': ListChoice,
     'live-stream': LiveStream,
     'loading': Loading,
+    'micro-ad': MicroAd,
     'more': More,
     'more-full': MoreFull,
     'share': Share,
@@ -425,7 +425,6 @@ export default {
       isVponSDKLoaded: false,
       loading: false,
       microAds,
-      microAdLoded: {},
       showDfpCoverAdFlag: false,
       showDfpCoverAdVponFlag: false,
       viewport: undefined
@@ -474,6 +473,9 @@ export default {
     },
     commonData () {
       return this.$store.state.commonData
+    },
+    currUrl () {
+      return this.$route.fullPath
     },
     customCSS () {
       switch (this.type) {
@@ -753,10 +755,6 @@ export default {
       })
     },
     insertVponAdSDK,
-    runMicroAd (adId) {
-      this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.dfpMode, microAdLoded: this.microAdLoded[adId] })
-      return true
-    },
     scrollHandler (e) {
       if (this.$refs.articleList) {
         const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
