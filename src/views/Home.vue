@@ -7,66 +7,33 @@
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
-        <!--<editor-choice :editorChoice= 'editorChoice' :viewport="viewport" v-if="abIndicator !== 'B'" target="_blank"/>-->
-        <!--<vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="(viewport < 550) && (abIndicator !== 'B')" :config="props.config"/>-->
-        <template>
-          <section class="styleB">
-            <main>
-              <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>
-              <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
-              <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
-              <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
-              <div class="focusNewsContainer">
-                <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-show="viewport < 1200" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
-              </div>
-              <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-              <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
-                <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LMBNA3" v-if="(viewport < 600)" slot="dfpNA3" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
-              </LatestArticleMain>
-            </main>
-            <aside v-show="viewport >= 1200">
-              <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
-              <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
-            </aside>
-          </section>
-        </template>
-        <!--<template v-if="abIndicator !== 'B'">
-          <section class="container list">
-            <div class="project-title--mobile">
-              <h2>專題報導</h2>
+        <section class="home-mainContent">
+          <main>
+            <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>
+            <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
+            <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank"/>
+            <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
+            <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
+            <div class="focusNewsContainer">
+              <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-show="viewport < 1200" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
             </div>
-            <ProjectList class="mobile-only" :projects="projects" :viewport="viewport" target="_blank"/>
-            <aside>
-              <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
-              <LatestArticleAside :groupedArticle="o" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
-            </aside>
-            <main>
-              <h2 class="project-title--desktop">專題報導</h2>
-              <ProjectList class="mobile-hide" :projects="projects" :viewport="viewport" target="_blank"/>
-              <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-              <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
-                <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LMBNA3" v-if="(viewport < 600)" slot="dfpNA3" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
-                <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
-              </LatestArticleMain>
-            </main>
-          </section>
-        </template><-->
+            <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
+            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank">
+              <vue-dfp :is="props.vueDfp" pos="LPCNA3" v-if="(viewport > 1199)"  slot="dfpNA3" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LPCNA5" v-if="(viewport > 1199)"  slot="dfpNA5" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LPCNA9" v-if="(viewport > 1199)"  slot="dfpNA9" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA3" v-if="(viewport < 600)" slot="dfpNA3" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA5" v-if="(viewport < 600)" slot="dfpNA5" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBNA9" v-if="(viewport < 600)" slot="dfpNA9" :config="props.config"/>
+            </LatestArticleMain>
+          </main>
+          <aside v-show="viewport >= 1200">
+            <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
+            <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+          </aside>
+        </section>
         <loading :show="loading" />
-        <!--<section class="container">
-          <more v-if="true" v-on:loadMore="loadMore" />
-        </section>-->
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <div class="ad">
@@ -503,7 +470,7 @@ export default {
       width 90%
       margin 0 auto
 
-.styleB
+.home-mainContent
   width 100%
   .latest-main-container
     width 90%
@@ -582,7 +549,7 @@ section.footer
       main
         width 100%
 
-  .styleB
+  .home-mainContent
     padding 0 2rem
     .aside-title
       width 100%
@@ -639,7 +606,7 @@ section.footer
               display none
   .editorChoice
     margin-top 0
-  .styleB
+  .home-mainContent
     display flex
     width 1024px
     margin 40px auto 0

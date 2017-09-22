@@ -88,8 +88,8 @@
     </nav>
 
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">
-      <form action="." v-on:submit.prevent="search(searchVal)">
-        <input type="search" v-model="searchVal"  @change="hasChanged()" placeholder="搜尋">
+      <form action="." v-on:submit.prevent="search(searchVal)" >
+        <input type="search" v-model="searchVal" @change="hasChanged()" @focusout="search(searchVal)" placeholder="搜尋">
       </form>
       <a @click="closeSearchBar()"><img src="/public/icon/close.png" alt="關閉搜尋列"></a>
     </section>
@@ -221,7 +221,11 @@ export default {
     },
     search (searchVal = '') {
       if (this.isChanged && searchVal !== '') {
+        document.activeElement.blur()
         this.$router.push('/search/' + this.searchVal)
+        this.openSearch = false
+      } else {
+        document.activeElement.blur()
         this.openSearch = false
       }
     }
