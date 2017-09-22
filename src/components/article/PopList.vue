@@ -14,8 +14,7 @@
             <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 21)" />
           </div>
         </div>
-        <slot :name="getSlotName(i)" v-if="(i === 1 || i === 2 || i === 3) && currEnv === 'prod'" />
-        <slot :name="`microAd${getMicroAdName(i)}`" v-if="(i === 1 || i === 2 || i === 3) && currEnv === 'dev'"></slot>
+        <slot :name="`microAd${getMicroAdName(i)}`" v-if="(i === 1 || i === 2 || i === 3)"></slot>
       </template>
     </div>
   </div>
@@ -41,17 +40,6 @@
         const sectionId = _.get(sect, [ 'id' ])
         const style = { backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc') }
         return style
-      },
-      getSlotName (index) {
-        if (index === 1) {
-          return 'dfpNA3'
-        }
-        if (index === 2) {
-          return 'dfpNA5'
-        }
-        if (index === 3) {
-          return 'dfpNA7'
-        }
       },
       getMicroAdName (index) {
         return index === 1 ? 0 : index === 2 ? 1 : 2

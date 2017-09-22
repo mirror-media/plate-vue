@@ -36,11 +36,9 @@
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(abIndicator === 'B' && viewport >= 1200)" :currEnv="dfpMode">
-              <vue-dfp :is="props.vueDfp" pos="PCPOP3" :dfpId="props.dfpId" slot="dfpNA3" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="PCPOP5" :dfpId="props.dfpId" slot="dfpNA5" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="PCPOP7" :dfpId="props.dfpId" slot="dfpNA7" :config="props.config"/>
-              <div v-for="(a, i) in getValue(microAds, [ 'article' ])" :id="`compass-fit-${getValue(a, [ 'pcId' ])}`"
-                  class="pop_item margin-top-0" v-if="dfpMode === 'dev' && runMicroAd(getValue(a, [ 'pcId' ]))" :slot="`microAd${i}`"></div>
+              <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
+                  :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
+                  class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
@@ -82,7 +80,7 @@
 <script>
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
-  import { currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
+  import { currEnv, getTruncatedVal, lockJS, unLockJS, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
@@ -96,6 +94,7 @@
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
+  import MicroAd from '../components/MicroAd.vue'
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
   import RelatedList from '../components/article/RelatedList.vue'
@@ -294,7 +293,8 @@
       'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
-      ArticleVideo
+      ArticleVideo,
+      MicroAd
     },
     data () {
       return {
@@ -306,7 +306,6 @@
         hasSentFirstEnterGA: false,
         isVponSDKLoaded: false,
         microAds,
-        microAdLoded: {},
         state: {},
         showDfpCoverAdFlag: false,
         showDfpCoverAdVponFlag: false,
@@ -568,10 +567,6 @@
         }
       },
       insertVponAdSDK,
-      runMicroAd (adId) {
-        this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.dfpMode, microAdLoded: this.microAdLoded[adId] })
-        return true
-      },
       sendGA (articleData) {
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')

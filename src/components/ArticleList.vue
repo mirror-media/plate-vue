@@ -3,8 +3,7 @@
 
     <template v-for="(item, index) in articles">
       <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" :key="getValue(item, [ 'id' ], Date.now())"/>
-      <slot :name="getNativeDfpSlotName(index)" v-if="(index === 1 || index === 2 || index === 5) && hasDFP && currEnv === 'prod'" />
-      <slot :name="`microAd${getMicroAdName(index)}`" v-if="(index === 1 || index === 2 || index === 5) && currEnv === 'dev'"></slot>
+      <slot :name="`microAd${getMicroAdName(index)}`" v-if="(index === 1 || index === 2 || index === 5) && hasDFP"></slot>
     </template>
     
   </section>
@@ -27,17 +26,6 @@ export default {
     }
   },
   methods: {
-    getNativeDfpSlotName (index) {
-      if (index === 1) {
-        return 'dfpNA3'
-      }
-      if (index === 2) {
-        return 'dfpNA5'
-      }
-      if (index === 5) {
-        return 'dfpNA9'
-      }
-    },
     getMicroAdName (index) {
       return index === 1 ? 0 : index === 2 ? 1 : 2
     },

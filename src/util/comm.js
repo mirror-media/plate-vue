@@ -302,7 +302,7 @@ export function setMmCookie () {
 }
 
 export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
-  if (process.env.VUE_ENV === 'client' && currEnv === 'dev' && microAdLoded === false) {
+  if (process.env.VUE_ENV === 'client' && microAdLoded === false) {
     const _lgy_lw = document.createElement('script')
     _lgy_lw.type = 'text/javascript'
     _lgy_lw.charset = 'UTF-8'
@@ -310,7 +310,7 @@ export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
     _lgy_lw.src = ((document.location.protocol === 'https:') ? 'https://' : 'http://') + `nt.compass-fit.jp/lift_widget.js?adspot_id=${adId}`
     const _lgy_lw_0 = document.getElementsByTagName('script')[0]
     _lgy_lw_0.parentNode.insertBefore(_lgy_lw, _lgy_lw_0)
-    console.log('microad', adId, 'loaded')
+    if (currEnv === 'dev') { console.log('microad', adId, 'loaded') }
   }
   return true
 }
@@ -321,7 +321,6 @@ export function insertVponAdSDK ({ currEnv = 'dev', isVponSDKLoaded = false }) {
     script.type = 'text/javascript'
     script.src = '//m.vpon.com/sdk/vpadn-sdk.js'
     document.body.appendChild(script)
-    console.log('vpon sdk loaded')
   }
   return true
 }
