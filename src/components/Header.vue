@@ -8,8 +8,8 @@
         <vue-dfp class="header-logoSearch__logoAd--ad" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
       </div>
       <div class="header-logoSearch__search desktop-only">
-        <input type="search" v-model="searchVal" @keyup.enter="search(searchVal)" placeholder="">
-        <button @click="search(searchVal)">
+        <input type="search" v-model="searchVal" @input="searchValueChange" @keyup.enter="searchDesktop(searchVal)" placeholder="">
+        <button @click="searchDesktop(searchVal)">
           <img class="header-logoSearch__search--icon" src="/public/icon/search.svg" alt="搜尋"/>
         </button>
         <div class="header-logoSearch__more" @click.prevent="openMoreService">
@@ -88,8 +88,8 @@
     </nav>
 
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">
-      <form action="." v-on:submit.prevent="search(searchVal)" >
-        <input type="search" v-model="searchVal" @focusout="search(searchVal)" placeholder="搜尋">
+      <form action="." v-on:submit.prevent="searchMobile(searchVal)" >
+        <input type="search" v-model="searchVal" @input="searchValueChange" @focusout="searchMobile(searchVal)" placeholder="搜尋">
       </form>
       <a @click="closeSearchBar()"><img src="/public/icon/close.png" alt="關閉搜尋列"></a>
     </section>
@@ -114,6 +114,7 @@ export default {
   props: [ 'commonData', 'eventLogo', 'viewport', 'props' ],
   data () {
     return {
+      isChanged: false,
       isScrolled: false,
       openSearch: false,
       openSide: false,
@@ -215,15 +216,30 @@ export default {
         return false
       }
     },
-    search (searchVal = '') {
-      const currentKeyword = _.get(this.$route, [ 'params', 'keyword' ])
-      if (searchVal !== currentKeyword && searchVal !== '') {
+    searchDesktop (searchVal = '') {
+      if (this.isChanged) {
+        this.$router.push('/search/' + this.searchVal)
+        this.openSearch = false
+      } else {
+        this.openSearch = false
+      }
+    },
+    searchMobile (searchVal = '') {
+      if (this.isChanged) {
         document.activeElement.blur()
         this.$router.push('/search/' + this.searchVal)
         this.openSearch = false
       } else {
         document.activeElement.blur()
         this.openSearch = false
+      }
+    },
+    searchValueChange () {
+      const currentKeyword = _.get(this.$route, [ 'params', 'keyword' ])
+      if (this.searchVal !== currentKeyword && this.searchVal !== '') {
+        this.isChanged = true
+      } else {
+        this.isChanged = false
       }
     }
   },
