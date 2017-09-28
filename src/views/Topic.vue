@@ -177,7 +177,7 @@ const fetchTopicImages = (store, uuid) => {
   })
 }
 
-const fetchArticlesByUuid = (store, uuid, type, isLoadMore, needRelated, maxResult = MAXRESULT) => {
+const fetchArticlesByUuid = (store, uuid, type, isLoadMore, useMetaEndpoint, maxResult = MAXRESULT) => {
   const page = isLoadMore || PAGE
   return store.dispatch('FETCH_ARTICLES_BY_UUID', {
     'uuid': uuid,
@@ -185,7 +185,7 @@ const fetchArticlesByUuid = (store, uuid, type, isLoadMore, needRelated, maxResu
     'params': {
       page: page,
       max_results: maxResult,
-      related: needRelated
+      useMetaEndpoint: useMetaEndpoint
     }
   })
 }
@@ -526,7 +526,7 @@ export default {
   beforeRouteUpdate (to, from, next) {
     let topicType
     let maxResult
-    let needRelated
+    let useMetaEndpoint
     const uuid = _.split(to.path, '/')[2]
     const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
 
@@ -535,32 +535,34 @@ export default {
       .then(() => {
         topicType = _.camelCase(_.get(this.$store.state.topic, [ 'items', '0', 'type' ]))
         if (topicType === 'group') {
-          needRelated = 'full'
+          maxResult = 25
+          useMetaEndpoint = true
         }
         if (topicType === 'portraitWall') {
           maxResult = 25
         }
         if (topicType === 'timeline') {
-          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, needRelated, maxResult), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
+          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, useMetaEndpoint, maxResult), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
           .then(next())
         } else {
-          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, needRelated, maxResult), fetchTopicImages(this.$store, uuid) ])
+          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, useMetaEndpoint, maxResult), fetchTopicImages(this.$store, uuid) ])
           .then(next())
         }
       })
     } else {
       topicType = _.camelCase(_.get(topic, [ 'type' ]))
       if (topicType === 'group') {
-        needRelated = 'full'
+        maxResult = 25
+        useMetaEndpoint = true
       }
       if (topicType === 'portraitWall') {
         maxResult = 25
       }
       if (topicType === 'timeline') {
-        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, needRelated, maxResult), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
+        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, useMetaEndpoint, maxResult), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
         .then(next())
       } else {
-        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, needRelated, maxResult), fetchTopicImages(this.$store, uuid) ])
+        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, useMetaEndpoint, maxResult), fetchTopicImages(this.$store, uuid) ])
         .then(next())
       }
     }
@@ -581,7 +583,7 @@ export default {
       if (this.topicType === 'portraitWall') {
         fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 25)
       } else if (this.topicType === 'group') {
-        fetchArticlesByUuid(this.$store, uuid, TOPIC, false, 'full')
+        fetchArticlesByUuid(this.$store, uuid, TOPIC, false, true, 25)
       } else {
         fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false)
       }
@@ -592,7 +594,6 @@ export default {
     this.updateViewport()
     this.insertCustomizedMarkup()
     this.checkIfLockJS()
-    this.updateViewport()
     this.updateSysStage()
     // this.abIndicator = this.getMmid()
 
@@ -611,8 +612,8 @@ export default {
   },
   destroyed () {
     window.removeEventListener('resize', this.updateViewport)
-    if (this.topicType === 'list') { window.removeEventListener('scroll', this.scrollHandler) }
-    if (this.topicType === 'timeline') { window.removeEventListener('scroll', this.timelineScrollHandler) }
+    window.removeEventListener('scroll', this.scrollHandler)
+    window.removeEventListener('scroll', this.timelineScrollHandler)
   },
   watch: {
     uuid: function () {
