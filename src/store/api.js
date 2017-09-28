@@ -102,11 +102,11 @@ function loadArticlesByUuid (uuid = '', type = '', params = {}, isOnlyMeta = tru
     default:
       return Promise.resolve()
   }
+  params.related ? (params.useMetaEndpoint = true) : ''
   params.sort = params.sort || '-publishedDate'
-  const query = _buildQuery(params)
-  const needRelated = _.get(params, [ 'related' ]) === 'full'
   let url
-  needRelated ? url = `${_host}/api/meta` : url = `${_host}/api/listing`
+  params.useMetaEndpoint ? url = `${_host}/api/meta` : url = `${_host}/api/listing`
+  const query = _buildQuery(params)
   url = `${url}?${query}`
   return _doFetch(url)
 }
