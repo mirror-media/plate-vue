@@ -198,7 +198,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
               max_results: MAXRESULT
             })
           }
-          return
+          return Promise.resolve()
       }
     case TAG:
       if (!hasPrefetch) {
@@ -530,7 +530,7 @@ export default {
           return _.get(this.$store.state, [ 'articles', 'meta', 'page' ], PAGE) !== 1
         default:
           if (this.$route.params.title === 'topic') {
-            return _.get(this.$store.state, [ 'topics', 'meta', 'page' ], PAGE) !== 1
+            return _.get(this.$store.state, [ 'topics', 'meta', 'total' ], 0) > 9
           }
           if (this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading') {
             return _.get(this.$store.state, [ 'audios', 'meta', 'page' ], PAGE) !== 1
