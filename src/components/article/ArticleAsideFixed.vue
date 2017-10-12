@@ -1,11 +1,6 @@
 <template>
   <section class="articleAsideFixed">
-    <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-      <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-        <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-      </blockquote>
-    </div>
-    <slot name="popListVert" v-if="abIndicator === 'B'"></slot>
+    <slot name="popListVert"></slot>
   </section>
 </template>
 
@@ -15,29 +10,24 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 
 export default {
   name: 'articleAsideFixed',
-  props: [ 'abIndicator', 'projects' ],
+  props: [ 'projects' ],
   methods: {
     detectFixAside: function (e) {
       const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-      const asideLatestList = document.querySelector('.latest-list-container')
-      const dfpR2 = document.querySelector('.dfp-r2')
+      const fbPageFixed = document.querySelector('.article_aside_fbPage')
       const articleAsideFixed = document.querySelector('.articleAsideFixed')
       const dfpFtTopPosition = elmYPosition('.article_footer')
-      const projectBottomPosition = currentYPosition() + articleAsideFixed.offsetHeight + 44
+      const articleAsideBottomPos = currentYPosition() + articleAsideFixed.offsetHeight + 20
       const deltaY = vh - (elmYPosition('.article_footer') - currentYPosition())
-      let dfpR2BottomPosition
-      if (dfpR2.offsetHeight === 0) {
-        dfpR2BottomPosition = elmYPosition('.latest-list-container') + asideLatestList.offsetHeight
-      } else {
-        dfpR2BottomPosition = elmYPosition('.dfp-r2') + dfpR2.offsetHeight
-      }
-      if (currentYPosition() > dfpR2BottomPosition && (projectBottomPosition < dfpFtTopPosition)) {
+      const fbPageBottomPosition = elmYPosition('.article_aside_fbPage') + fbPageFixed.offsetHeight
+
+      if (currentYPosition() > fbPageBottomPosition && ((articleAsideBottomPos + 20) < dfpFtTopPosition)) {
         articleAsideFixed.classList.add('fixed-top')
       } else {
         articleAsideFixed.classList.remove('fixed-top')
       }
-      if (projectBottomPosition > dfpFtTopPosition) {
-        articleAsideFixed.style.bottom = `${deltaY + 44}px`
+      if (currentYPosition() > fbPageBottomPosition && (articleAsideBottomPos + 20) >= dfpFtTopPosition) {
+        articleAsideFixed.style.bottom = `${deltaY + 20}px`
         articleAsideFixed.classList.add('fixed')
       } else {
         articleAsideFixed.classList.remove('fixed')
