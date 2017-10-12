@@ -13,5 +13,10 @@ export const microAds = {
     { pos: 'NA3', mobileId: '4273365', pcId: '4273365' },
     { pos: 'NA5', mobileId: '4273369', pcId: '4273369' },
     { pos: 'NA7', mobileId: '4273373', pcId: '4273373' }
+  ],
+  articleFixed: [
+    { pos: 'NA3', mobileId: '4276377', pcId: '4276377' },
+    { pos: 'NA5', mobileId: '4276378', pcId: '4276378' },
+    { pos: 'NA9', mobileId: '4276379', pcId: '4276379' }
   ]
 }

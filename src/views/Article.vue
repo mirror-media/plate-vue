@@ -25,8 +25,17 @@
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
-              <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist">
-                <pop-list-vert :pop="popularlist" slot="popListVert"></pop-list-vert>
+              <div class="article_aside_fbPage" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
+                <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
+                  <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
+                </blockquote>
+              </div>
+              <article-aside-fixed :projects="projectlist">
+                <pop-list-vert :pop="popularlist" slot="popListVert">
+                  <micro-ad  v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
+                    :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
+                    class="popListVert-list__item" :slot="`microAd${getValue(a, [ 'pos' ])}`"></micro-ad>
+                </pop-list-vert>
               </article-aside-fixed>
             </aside>
             <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
@@ -35,10 +44,10 @@
             <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
-            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(abIndicator === 'B' && viewport >= 1200)" :currEnv="dfpMode">
+            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-                  :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-                  class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
+                :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
+                class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
@@ -287,14 +296,14 @@
       'dfp-fixed': DfpFixed,
       'latest-list': LatestList,
       'live-stream': LiveStream,
+      'micro-ad': MicroAd,
       'pop-list': PopList,
       'pop-list-vert': PopListVert,
       'related-list': RelatedList,
       'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
-      ArticleVideo,
-      MicroAd
+      ArticleVideo
     },
     data () {
       return {
@@ -697,6 +706,9 @@
         padding-top 10px
         width 310px
         margin-top -30px
+        &_fbPage
+          width 300px
+          margin 20px auto 0
       
       .article_footer
         text-align center
