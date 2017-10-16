@@ -25,7 +25,7 @@
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
-              <div class="article_aside_fbPage" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
+              <div class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
                 <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
                   <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
                 </blockquote>
@@ -708,7 +708,7 @@
         margin-top -30px
         &_fbPage
           width 300px
-          margin 20px auto 0
+          margin 20px 5px 0
       
       .article_footer
         text-align center

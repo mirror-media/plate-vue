@@ -9,10 +9,18 @@
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 
 export default {
-  name: 'articleAsideFixed',
-  props: [ 'projects' ],
+  name: 'ArticleAsideFixed',
+  props: {
+    projects: Array
+  },
+  created () {
+    window.addEventListener('scroll', this.$_articleDetectAsideFixed)
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.$_articleDetectAsideFixed)
+  },
   methods: {
-    detectFixAside: function (e) {
+    $_articleDetectAsideFixed: function (e) {
       const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       const fbPageFixed = document.querySelector('.article_aside_fbPage')
       const articleAsideFixed = document.querySelector('.articleAsideFixed')
@@ -33,18 +41,11 @@ export default {
         articleAsideFixed.classList.remove('fixed')
       }
     }
-  },
-  created () {
-    window.addEventListener('scroll', this.detectFixAside)
-  },
-  destroyed () {
-    window.removeEventListener('scroll', this.detectFixAside)
   }
 }
 
 </script>
 <style lang="stylus" scoped>
-
 .articleAsideFixed
   width 300px
   margin 15px auto 0
