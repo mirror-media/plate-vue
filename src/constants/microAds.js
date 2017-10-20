@@ -5,7 +5,7 @@ export const microAds = {
     { pos: 'NA9', mobileId: '4273371', pcId: '4273370' }
   ],
   listing: [
-    { pos: 'NA3', mobileId: '4276374', pcId: '4276374' },
+    { pos: 'NA3', mobileId: '4273364', pcId: '4273364' },
     { pos: 'NA5', mobileId: '4273368', pcId: '4273368' },
     { pos: 'NA9', mobileId: '4273372', pcId: '4273372' }
   ],
