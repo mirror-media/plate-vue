@@ -71,6 +71,7 @@ export const GA_TEST_ID = 'UA-83609754-2'
 
 export const SOCIAL_LINK = {
   AD: 'https://www.mirrormedia.mg/story/ad1018001/index.html?utm_source=mm&utm_medium=footer&utm_campaign=salesteam',
+  AUTH: 'https://www.mirrormedia.mg/story/webauthorize/',
   DOWNLOADAPP: 'http://hyperurl.co/mmfooter',
   EMAIL: 'mailto:mirror885@mirrormedia.mg',
   FACEBOOK: 'https://www.facebook.com/mirrormediamg/',
