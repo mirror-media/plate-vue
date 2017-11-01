@@ -133,6 +133,13 @@ function loadContacts (params = {}) {
   return _doFetch(url)
 }
 
+function loadData (params = {}, endpoint) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/${endpoint}`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadEditorChoice () {
   const url = `${_host}/api/combo?endpoint=choices`
   return _doFetch(url)
@@ -143,6 +150,11 @@ function loadEvent (params = {}) {
   let url = `${_host}/api/event`
   url = `${url}?${query}`
   return _doFetch(url)
+}
+
+function loadHotWatch (params = {}) {
+  // const query = _buildQuery(params)
+  return Promise.resolve({})
 }
 
 function loadImages (uuid = '', type = '', params = {}) {
@@ -166,6 +178,11 @@ function loadImages (uuid = '', type = '', params = {}) {
   const query = _buildQuery(params)
   let url = `${_host}/api/images`
   url = `${url}?${query}`
+  return _doFetch(url)
+}
+
+function loadImage (uuid = '') {
+  const url = `${_host}/api/images/${uuid}`
   return _doFetch(url)
 }
 
@@ -279,6 +296,14 @@ export function fetchEvent (params = {}) {
   return loadEvent(params)
 }
 
+export function fetchHotWatch (params = {}) {
+  return loadHotWatch(params)
+}
+
+export function fetchImage (uuid = '') {
+  return loadImage(uuid)
+}
+
 export function fetchImages (uuid = '', type = '', params = {}) {
   return loadImages(uuid, type, params)
 }
@@ -313,6 +338,18 @@ export function fetchTimeline (slug = '') {
 
 export function fetchTopic (params = {}) {
   return loadTopic(params)
+}
+
+export function fetchWatch (params = {}) {
+  return loadData(params, 'watches')
+}
+
+export function fetchWatchBrands (params = {}) {
+  return loadData(params, 'watchbrands')
+}
+
+export function fetchWatchFunctions (params) {
+  return loadData(params, 'watchfunctions')
 }
 
 export function fetchYoutubePlaylist (limit = {}, pageToken = '') {

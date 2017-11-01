@@ -13,6 +13,8 @@ import { fetchActivities,
   fetchContacts,
   fetchEditorChoice,
   fetchEvent,
+  fetchHotWatch,
+  fetchImage,
   fetchImages,
   fetchLatestArticle,
   fetchNodes,
@@ -22,6 +24,9 @@ import { fetchActivities,
   fetchTimeline,
   fetchTopic,
   fetchYoutubePlaylist,
+  fetchWatch,
+  fetchWatchBrands,
+  fetchWatchFunctions,
   logClient } from './api'
 
 Vue.use(Vuex)
@@ -52,6 +57,7 @@ export function createStore () {
       fbAppId: FB_APP_ID,
       fbPagesId: FB_PAGES_ID,
       highlightNodes: {},
+      hotWatches: {},
       images: {},
       latestArticle: {},
       latestArticles: {},
@@ -64,7 +70,10 @@ export function createStore () {
       timeline: {},
       topic: {},
       topics: {},
-      uuid: ''
+      uuid: '',
+      watchBrands: {},
+      watches: {},
+      watchFunctions: {}
     },
 
     actions: {
@@ -152,6 +161,18 @@ export function createStore () {
       FETCH_EVENT: ({ commit, state }, { params }) => {
         return fetchEvent(params).then(event => {
           commit('SET_EVENT', { event })
+        })
+      },
+
+      FETCH_HOT_WATCH: ({ commit, state }, { params }) => {
+        return fetchHotWatch(params).then(watchList => {
+          commit('SET_HOT_WATCH', { watchList })
+        })
+      },
+
+      FETCH_IMAGE: ({ commit, state }, { uuid }) => {
+        return fetchImage(uuid).then(image => {
+          commit('SET_IMAGE', { image })
         })
       },
 
@@ -247,7 +268,26 @@ export function createStore () {
             playlist[ 'items' ] = _.concat(orig, _.get(playlist, [ 'items' ]))
             commit('SET_YOUTUBE_PLAY_LIST', { playlist })
           })
+      },
+
+      FETCH_WATCH: ({ commit, state }, { params }) => {
+        return fetchWatch(params).then((watchList) => {
+          commit('SET_WATCH', { watchList })
+        })
+      },
+
+      FETCH_WATCH_BRANDS: ({ commit, state }, { params }) => {
+        return fetchWatchBrands(params).then(brandList => {
+          commit('SET_WATCH_BRANDS', { brandList })
+        })
+      },
+
+      FETCH_WATCH_FUNCTIONS: ({ commit, state }, { params }) => {
+        return fetchWatchFunctions(params).then(functionList => {
+          commit('SET_WATCH_FUNCTIONS', { functionList })
+        })
       }
+
     },
 
     mutations: {
@@ -321,6 +361,16 @@ export function createStore () {
         Vue.set(state, 'highlightNodes', nodes)
       },
 
+      SET_HOT_WATCH: (state, { watchList }) => {
+        Vue.set(state, 'hotWatches', watchList.items)
+      },
+
+      SET_IMAGE: (state, { image }) => {
+        const origImages = _.values(state.images)
+        origImages.push(image)
+        Vue.set(state, 'images', origImages)
+      },
+
       SET_IMAGES: (state, { images }) => {
         Vue.set(state, 'images', images)
       },
@@ -390,6 +440,18 @@ export function createStore () {
 
       SET_YOUTUBE_PLAY_LIST: (state, { playlist }) => {
         Vue.set(state, 'playlist', playlist)
+      },
+
+      SET_WATCH: (state, { watchList }) => {
+        Vue.set(state, 'watches', watchList.items)
+      },
+
+      SET_WATCH_BRANDS: (state, { brandList }) => {
+        Vue.set(state, 'watchBrands', brandList.items)
+      },
+
+      SET_WATCH_FUNCTIONS: (state, { functionList }) => {
+        Vue.set(state, 'watchFunctions', functionList.items)
       }
 
     },
