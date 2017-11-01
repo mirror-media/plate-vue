@@ -3,8 +3,8 @@
     <slot :slide="slideComp"></slot>
     <slot name="custNav" :thisSwiperId="slideId"></slot>
     <div class="swiper-pagination" :id="swiperPagiantionId" slot="pagination" :style="custStyle"></div>
-    <div class="swiper-button swiper-button-prev" :class="navBtnClass" slot="button-prev"></div>
-    <div class="swiper-button swiper-button-next" :class="navBtnClass" slot="button-next"></div>
+    <div class="swiper-button swiper-button-prev" :class="navBtnClass" slot="button-prev" :style="[ navBtnStyle, navBtnPrevStyle ]"></div>
+    <div class="swiper-button swiper-button-next" :class="navBtnClass" slot="button-next" :style="[ navBtnStyle, navBtnNextStyle ]"></div>
   </swiper>
 </template>
 <script>
@@ -26,6 +26,15 @@
         return {
           enabled: (this.option[ 'setNavBtn' ])
         }
+      },
+      navBtnStyle () {
+        return this.option[ 'navBtnStyle' ] || {}
+      },
+      navBtnNextStyle () {
+        return this.option[ 'navBtnNextStyle' ] || {}
+      },
+      navBtnPrevStyle () {
+        return this.option[ 'navBtnPrevStyle' ] || {}
       },
       swiperPagiantionId () {
         return `${this.slideId}-pagination`

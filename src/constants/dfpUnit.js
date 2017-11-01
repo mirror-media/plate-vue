@@ -472,5 +472,11 @@ export default {
     'LPCNA9': { 'aduid': 'mirror_RWD_wat_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'nativeDFP', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     // LOGO : position on header
     'LOGO': { 'aduid': 'mirror_RWD_ros_110x50_logo', 'dimensions': '110x50', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] }
+  },
+  'watch101': { // watch101
+    'PCHD': { 'aduid': 'mirror_pc_news_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'MBHD': { 'aduid': 'mirror_m_news_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin-top: 0' ] },
+    'NA1': { 'aduid': 'mirror_RWD_watyearbook_fluid_NA', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'nativeDFP', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] }
   }
 }
