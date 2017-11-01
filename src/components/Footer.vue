@@ -4,7 +4,7 @@
       <div><span><a id="footer-subscribe" :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></span></div>
       <div><span><a id="footer-ad" :href="SOCIAL_LINK.AD" target="_blank">廣告合作</a></span></div>
       <div><span><a id="footer-activity" href="https://www.mirrormedia.mg/category/campaign" target="_blank">活動專區</a></span></div>
-      <div><span><a id="footer-download" href="http://hyperurl.co/mmfooter" target="_blank">下載ＡＰＰ</a></span></div>
+      <div><span><a id="footer-download" href="https://www.mirrormedia.mg/story/20161228corpmkt001/" target="_blank">下載ＡＰＰ</a></span></div>
     </div>
     <div class="follow mobile-hide">
       <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" target="_blank"><img src="/public/icon/line@2x.png" alt="Line" class="footer-icon line" /></a>
