@@ -20,8 +20,6 @@
     <div class="items">
       <watch-item v-for="(item, index) in filteredWatchList" :item="item" :key="`item-${index}`" v-on:openLightbox="openLightbox"></watch-item>
     </div>
-    <watch-item-lightbox v-if="lightboxStatus && viewport <= 768" v-on:closeLightbox="closeLightbox" :lightboxItem="lightboxItem"></watch-item-lightbox>
-    <watch-item-lightbox-pc v-if="lightboxStatus && viewport > 768" v-on:closeLightbox="closeLightbox" :lightboxItem="lightboxItem"></watch-item-lightbox-pc>
   </div>
 </template>
 <script>
@@ -29,19 +27,14 @@
   import FilterCurrItem from './FilterCurrItem.vue'
   import FilterOptions from './FilterOptions.vue'
   import WatchItem from './WatchItem.vue'
-  import WatchItemLightbox from './WatchItemLightbox.vue'
-  import WatchItemLightboxPC from './WatchItemLightboxPC.vue'
   import numeral from 'numeral'
-  // import { elmYPosition, smoothScrollTo } from 'kc-scroll'
   import { FILTER_WORDING, FILTER_MULTI, FILTER_OPTIONS_PRICE } from '../../constants/watch101.js'
   
   export default {
     components: {
       'current-filter': FilterCurrItem,
       'option-list': FilterOptions,
-      'watch-item': WatchItem,
-      'watch-item-lightbox': WatchItemLightbox,
-      'watch-item-lightbox-pc': WatchItemLightboxPC
+      'watch-item': WatchItem
     },
     computed: {
       fillterOptsClass () {
@@ -94,8 +87,6 @@
         filterOpened: undefined,
         filterWording: FILTER_WORDING,
         filterSets: [],
-        lightboxStatus: false,
-        lightboxItem: undefined,
         isOpenedClass: {
           'gender': { active: false },
           'price': { active: false },
@@ -119,9 +110,6 @@
           oldFilterItem.title = filterItem.item
         }
       },
-      closeLightbox () {
-        this.lightboxStatus = false
-      },
       delFilter (filterItem) {
         this.filterSets = _.filter(this.filterSets, (item) => {
           return item.name !== filterItem.name || item.title !== filterItem.title
@@ -140,12 +128,9 @@
         this.filter = item
         this.isOpenedClass[ item ].active = true
         this.filterOpened = item
-        // const eleTopY = elmYPosition('.filter--items .' + item)
-        // smoothScrollTo({ yPos: eleTopY + 50 })
       },
       openLightbox (item) {
-        this.lightboxItem = item
-        this.lightboxStatus = true
+        this.$emit('openLightbox', item)
       }
     },
     mounted () {

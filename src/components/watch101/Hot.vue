@@ -3,7 +3,7 @@
     <app-slider :option="sliderOption">
       <template scope="props">
         <swiper-slide :is="props.slide" v-for="(watch, index) in list" :key="`hot-${index}`">
-          <div class="hot-item">
+          <div class="hot-item" @click="openLightbox(watch)">
             <div class="hot-item--order"><span v-text="`${index + 1}`"></span></div>
             <div class="hot-item--img">
               <img :alt="watch.description" v-lazy="getValue(watch, [ 'watchImage', 'image', 'url' ])"
@@ -56,7 +56,11 @@
     },
     name: 'hot-list',
     methods: {
-      getValue
+      getValue,
+      openLightbox (item) {
+        console.log('hihi')
+        this.$emit('openLightbox', item)
+      }
     },
     mounted () {},
     props: [ 'list' ]
@@ -91,18 +95,23 @@
             right 25px
       .hot-item
         // height calc(100% - 60px)
-        height calc(100% - 20px)
+        height calc(100% - 30px)
         position relative
         // padding 30px
-        padding 10px 30px
+        padding 15px 30px
+        display flex
+        justify-content flex-end
+        flex-direction column
+        cursor pointer
 
         &--order
-          position relative
+          position absolute
           z-index: 1
-          padding-right 50%
+          // padding-right 65%
           // height 60%
           height  50%
-          font-size 2.5rem
+          top 10px
+          font-size 2.25rem
         &--title
           position relative
           z-index: 1
@@ -123,7 +132,8 @@
           top 10px
           width 65%
           // height 100%
-          height calc(100% - 20px)
+          height calc(100% - 40px)
+          padding 10px 0
           > img
             object-fit cover
             object-position center center

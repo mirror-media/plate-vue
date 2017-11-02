@@ -46,7 +46,7 @@
         <div class="relateds" v-if="getValue(lightboxItem, [ 'relateds' ])">
           <div class="title" v-text="WORDING[ 'RELATED' ]"></div>
           <div class="item" v-for="post in getValue(lightboxItem, [ 'relateds' ])">
-            <a :href="`${SITE_URL}/story/${getValue(post, [ 'slug' ], getValue(post, [ 'name' ], ''))}`" v-text="getValue(post, [ 'title' ], '')"></a>
+            <a target="_blank" :href="`${SITE_URL}/story/${getValue(post, [ 'slug' ], getValue(post, [ 'name' ], ''))}`" v-text="getValue(post, [ 'title' ], '')"></a>
           </div>
         </div>
       </div>
@@ -113,12 +113,14 @@
         background-size contain
         background-repeat no-repeat
         background-image url(/public/icon/watch-lightbox-close.png)
+        cursor pointer
       &--pic, &--content
         display inline-block
         height 100%
         vertical-align top
       &--pic
         width 45%
+        padding 20px 0
         > img
           width 100%
           height 100%
@@ -127,8 +129,9 @@
       &--content
         width 55%
         overflow auto
-        > div
-          padding 30px 50px 30px 30px
+        > div:not(.content)
+          padding 0 50px 0 30px
+          margin 30px 0
         > .brief
           > div
             margin 0.2rem 0
@@ -145,6 +148,7 @@
           background-color #404040
           color rgba(255, 255, 255, 0.8)
           text-align justify
+          padding 30px 50px 30px 30px
           > p
             font-size 0.9rem
             font-weight normal
@@ -186,4 +190,8 @@
             padding 0 0 1rem
             font-size 1rem
             font-weight bold
+          > .item
+            text-align left
+            margin 1rem 0
+            font-size 0.9rem
 </style>

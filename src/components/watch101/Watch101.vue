@@ -20,13 +20,15 @@
     <div class="watch--listing">
       <div class="hot" v-if="hotWatchList.length > 0">
         <div class="hot--title">熱門錶款</div>
-        <hot-list v-if="viewport <= 768" class="hot--list" :list="hotWatchList"></hot-list>
-        <hot-list-verticle v-else class="host--list" :list="hotWatchList"></hot-list-verticle>
+        <hot-list v-if="viewport <= 768" class="hot--list" :list="hotWatchList" v-on:openLightbox="openLightbox"></hot-list>
+        <hot-list-verticle v-else class="host--list" :list="hotWatchList" v-on:openLightbox="openLightbox"></hot-list-verticle>
       </div>
       <div class="listing">
-        <watch-list :watchList="watchList" :viewport="viewport"></watch-list>
+        <watch-list :watchList="watchList" :viewport="viewport"  v-on:openLightbox="openLightbox"></watch-list>
       </div>
     </div>
+    <watch-item-lightbox v-if="lightboxStatus && viewport <= 768" v-on:closeLightbox="closeLightbox" :lightboxItem="lightboxItem"></watch-item-lightbox>
+    <watch-item-lightbox-pc v-if="lightboxStatus && viewport > 768" v-on:closeLightbox="closeLightbox" :lightboxItem="lightboxItem"></watch-item-lightbox-pc>
     <slot name="footer"></slot>
   </div>
 </template>
@@ -35,6 +37,8 @@
   import Hot from './Hot.vue'
   import HotAside from './HotAside.vue'
   import WatchList from './WatchList.vue'
+  import WatchItemLightbox from './WatchItemLightbox.vue'
+  import WatchItemLightboxPC from './WatchItemLightboxPC.vue'
   import { getValue } from '../../util/comm'
 
   const fetchHotWatch = (store) => {
@@ -78,7 +82,9 @@
     components: {
       'hot-list': Hot,
       'hot-list-verticle': HotAside,
-      'watch-list': WatchList
+      'watch-list': WatchList,
+      'watch-item-lightbox': WatchItemLightbox,
+      'watch-item-lightbox-pc': WatchItemLightboxPC
     },
     computed: {
       leading () {
@@ -97,11 +103,21 @@
     },
     data () {
       return {
-        getValue
+        getValue,
+        lightboxStatus: false,
+        lightboxItem: undefined
       }
     },
     name: 'watch101-list',
-    methods: {},
+    methods: {
+      closeLightbox () {
+        this.lightboxStatus = false
+      },
+      openLightbox (item) {
+        this.lightboxItem = item
+        this.lightboxStatus = true
+      }
+    },
     mounted () {
     },
     props: [ 'viewport' ]
