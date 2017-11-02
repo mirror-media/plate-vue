@@ -45,7 +45,7 @@
       <div class="lightbox-wrapper--related" v-if="getValue(lightboxItem, [ 'relateds' ])">
         <div class="lightbox-wrapper--related_title" v-text="WORDING[ 'RELATED' ]"></div>
         <div class="lightbox-wrapper--related_item" v-for="post in getValue(lightboxItem, [ 'relateds' ])">
-          <a :href="`${SITE_URL}/story/${getValue(post, [ 'slug' ], getValue(post, [ 'name' ], ''))}`" v-text="getValue(post, [ 'title' ], '')"></a>
+          <a target="_blank" :href="`${SITE_URL}/story/${getValue(post, [ 'slug' ], getValue(post, [ 'name' ], ''))}`" v-text="getValue(post, [ 'title' ], '')"></a>
         </div>
       </div>
       <div class="lightbox-wrapper--close" @click="closeLightbox"></div>
@@ -102,7 +102,7 @@
       overflow auto
       &--close
         content ''
-        position absolute
+        position fixed
         right 10px
         top 10px
         height 30px
@@ -159,6 +159,7 @@
           > div
             display inline-block
             vertical-align top
+            color #636363
             &.title
               width 29%
             &.content
@@ -169,9 +170,18 @@
                 margin 0 0.5rem 5px 0
       &--related
         background-color #fff
+        padding-bottom 40px
         &_title
           padding 20px
           font-size 1.3rem
           font-weight bold
           border-bottom 1px solid #000
+          margin-bottom 20px
+        &_item
+          padding 0 20px
+          margin 10px 0
+          > a
+            &, &:hover, &:link, &:visited
+              color #636363
+              
 </style>

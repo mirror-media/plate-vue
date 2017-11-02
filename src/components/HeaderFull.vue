@@ -4,7 +4,7 @@
       <div class="headerFull__menu">
         <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png" alt="開啟側邊欄"></a>
       </div>
-      <div class="headerFull__logo">
+      <div class="headerFull__logo" v-if="(showLogo === undefined || showLogo === true)">
         <router-link :to=" '/section/' + sectionName "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
@@ -29,7 +29,7 @@
       <div class="headerFull__menu">
         <a @click="openSideBar()"><img src="/public/icon/hamburger_white.png" alt="開啟側邊欄"></a>
       </div>
-      <div class="headerFull__logo">
+      <div class="headerFull__logo" v-if="(showLogo === undefined || showLogo === true)">
         <router-link :to=" '/section/' + sectionName "><img :src="getSectionLogoUrl()"></router-link>
       </div>
       <div class="headerFull__link">
@@ -88,7 +88,7 @@ import _ from 'lodash'
 
 export default {
   name: 'header-full',
-  props: [ 'commonData', 'sectionName', 'sections' ],
+  props: [ 'commonData', 'sectionName', 'sections', 'showLogo' ],
   data () {
     return {
       isChanged: false,
