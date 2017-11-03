@@ -91,7 +91,6 @@
         return _.get(this.$store, [ 'state', 'images', 0 ])
       },
       hotWatchList () {
-        console.log('watches', _.get(this.$store, [ 'state', 'hotWatches' ]))
         const hotList = _.get(this.$store, [ 'state', 'hotWatches' ]) || _.get(this.$store, [ 'state', 'watches' ], [])
         return hotList
       },
