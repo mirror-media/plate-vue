@@ -153,8 +153,8 @@ function loadEvent (params = {}) {
 }
 
 function loadHotWatch (params = {}) {
-  // const query = _buildQuery(params)
-  return Promise.resolve({})
+  const url = `${_host}/api/hotwatches`
+  return _doFetch(url)
 }
 
 function loadImages (uuid = '', type = '', params = {}) {

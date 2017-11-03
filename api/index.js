@@ -86,8 +86,8 @@ router.all('/', function(req, res, next) {
     next()
 });
 
-router.use('/grouped', function(req, res, next) {
-  const url = `${SERVER_PROTOCOL}://${SERVER_HOST}/json/grouped.json`
+const fetchStaticJson = (req, res, next, jsonFileName) => {
+  const url = `${SERVER_PROTOCOL}://${SERVER_HOST}/json/${jsonFileName}.json`
   redisFetching(url, ({ err, data }) => {
     if (!err && data) {
       res.json(JSON.parse(data))
@@ -101,12 +101,24 @@ router.use('/grouped', function(req, res, next) {
         } else {
           res.send('{\'error\':' + err + '}')
           // res.status(500).end('Internal Error 500')
-          console.error(`error during fetch data from grouped : ${url}`)
+          console.error(`error during fetch data from ${jsonFileName} : ${url}`)
           console.error(err)  
         }
       })
     }
   })
+}
+
+router.use('/grouped', function(req, res, next) {
+  fetchStaticJson(req, res, next, 'grouped')
+});
+
+router.use('/hotwatches', function(req,res, next) {
+  fetchStaticJson(req, res, next, 'popularwatches')
+})
+
+router.use('/poplist', function(req, res, next) {
+  fetchStaticJson(req, res, next, 'popularlist')
 });
 
 router.get('/newsletter/:userEmail', function(req, res, next) {
@@ -177,29 +189,6 @@ router.use('/playlist', function(req, res, next) {
         } else {
           redisWriting(`${url}?${req.url}`, JSON.stringify(response.body))
           res.json(response.body)
-        }
-      })
-    }
-  })
-});
-
-router.use('/poplist', function(req, res, next) {
-  const url = `${SERVER_PROTOCOL}://${SERVER_HOST}/json/popularlist.json`
-  redisFetching(url, ({ err, data }) => {
-    if (!err && data) {
-      res.json(JSON.parse(data))
-    } else {
-      superagent
-      .get(url)
-      .end((err, response) => {
-        if (!err && response) {
-          redisWriting(url, response.text)
-          res.json(JSON.parse(response.text))
-        } else {
-          res.send('{\'error\':' + err + '}')
-          // res.status(500).end('Internal Error 500')
-          console.error(`error during fetch data from poplist : ${url}`)
-          console.error(err) 
         }
       })
     }
