@@ -5,6 +5,7 @@
       <div><span><a id="footer-ad" :href="SOCIAL_LINK.AD" target="_blank">廣告合作</a></span></div>
       <div><span><a id="footer-activity" href="https://www.mirrormedia.mg/category/campaign" target="_blank">活動專區</a></span></div>
       <div><span><a id="footer-download" href="https://www.mirrormedia.mg/story/20161228corpmkt001/" target="_blank">下載ＡＰＰ</a></span></div>
+      <div><span><a id="footer-auth" href="https://www.mirrormedia.mg/story/webauthorize/" target="_blank">內容授權</a></span></div>
     </div>
     <div class="follow mobile-hide">
       <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" target="_blank"><img src="/public/icon/line@2x.png" alt="Line" class="footer-icon line" /></a>
