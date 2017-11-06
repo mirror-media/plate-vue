@@ -91,7 +91,8 @@
         return _.get(this.$store, [ 'state', 'images', 0 ])
       },
       hotWatchList () {
-        const hotList = _.get(this.$store, [ 'state', 'hotWatches' ]) || _.get(this.$store, [ 'state', 'watches' ], [])
+        let hotList = _.get(this.$store, [ 'state', 'hotWatches' ]) || _.get(this.$store, [ 'state', 'watches' ], [])
+        hotList = hotList.length > 0 ? hotList : _.get(this.$store, [ 'state', 'watches' ], [])
         return hotList
       },
       title () {
