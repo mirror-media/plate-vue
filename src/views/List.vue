@@ -34,7 +34,7 @@
         <footer-full :commonData='commonData' :sectionName='sectionName' />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
-      <div class="list-view" v-if="pageStyle === 'watch101'">
+      <div class="list-view" v-else-if="pageStyle === 'watch101'">
         <watch101-list :viewport="viewport">
           <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' :showLogo="false" class="watch101" slot="header"/>
           <footer-full :commonData='commonData' :sectionName='sectionName' slot="footer" />
