@@ -29,6 +29,14 @@ export const FILTER_OPTIONS_PRICE = [
   { name: 'NTD500,000 ~ NTD1,500,000', from: 500000, to: 1499999 },
   { name: 'NTD1,500,000 ~ NTD3,000,000', from: 1500000, to: 2999999 },
   { name: 'NTD3,000,000以上', from: 3000000 }
+  // { name: '三萬元以下', from: 0, to: 29999 },
+  // { name: '三萬元 ~ 七萬元', from: 30000, to: 69999 },
+  // { name: '七萬元 ~ 十五萬元', from: 70000, to: 149999 },
+  // { name: '十五萬元 ~ 三十萬元', from: 150000, to: 299999 },
+  // { name: '三十萬元 ~ 五十萬元', from: 300000, to: 499999 },
+  // { name: '五十萬元 ~ 一百五十萬元', from: 500000, to: 1499999 },
+  // { name: '一百五十萬元 ~ 三百萬元', from: 1500000, to: 2999999 },
+  // { name: '三百萬元以上', from: 3000000 }
 ]
 
 export const FILTER_OPTIONS_GENDER = [

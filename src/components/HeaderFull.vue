@@ -325,4 +325,7 @@ header
         text-align right
       > a
         margin-left 50px
+  .watch101
+    .headerFull
+      height 60px
 </style>
