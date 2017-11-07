@@ -1,5 +1,5 @@
 <template>
-  <div class="option-list">
+  <div class="option-list" :class="className">
     <div class="option-list--item" v-for="(opt, ind) in options()" v-text="opt.name" @click="select(ind)" :class="isSelectedClass[ ind ]"></div>
   </div>
 </template>
@@ -13,9 +13,17 @@
    } from '../../constants/watch101.js'
 
   export default {
+    computed: {
+      className () {
+        return {
+          price: this.isTypePrice
+        }
+      }
+    },
     data () {
       return {
-        isSelectedClass: FILTER_OPTIONS_PRICE.map((opt) => ({ name: opt.namem, id: opt.id, active: false }))
+        isSelectedClass: FILTER_OPTIONS_PRICE.map((opt) => ({ name: opt.namem, id: opt.id, active: false })),
+        isTypePrice: false
       }
     },
     name: 'option-list',
@@ -82,6 +90,7 @@
     watch: {
       filter: function () {
         this.setUpSelectedStatus()
+        this.isTypePrice = this.filter === 'price'
       },
       currFilters: function () {
         this.setUpSelectedStatus()
@@ -125,5 +134,7 @@
         display flex
         align-items center
         padding 0 20px
-
+      &.price
+        flex-wrap nowrap
+        flex-direction column
 </style>

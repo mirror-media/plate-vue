@@ -36,7 +36,7 @@
       </div>
       <div class="list-view" v-if="pageStyle === 'watch101'">
         <watch101-list :viewport="viewport">
-          <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' :showLogo="false" slot="header"/>
+          <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' :showLogo="false" class="watch101" slot="header"/>
           <footer-full :commonData='commonData' :sectionName='sectionName' slot="footer" />
           <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="PCHD" :config="props.config" slot="ad-hd"/>
           <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="MBHD" :config="props.config" slot="ad-hd" />
