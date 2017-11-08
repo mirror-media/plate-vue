@@ -364,7 +364,7 @@ export function vponHtml () {
 export function updateCookie ({ currEnv }) {
   return new Promise((resolve) => {
     const cookie = Cookie.get('visited')
-    if (currEnv !== 'dev') {
+    if (currEnv === 'prod' && !cookie) {
       Cookie.set('visited', 'true', { expires: '10m' })
     }
     resolve(cookie === 'true')
