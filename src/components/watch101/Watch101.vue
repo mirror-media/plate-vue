@@ -6,8 +6,8 @@
     </div>
     <div class="watch--leading">
       <div class="watch--leading_wrapper">
-        <img :alt="getValue(leading, [ 'description' ])" v-lazy="getValue(leading, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-            :data-srcset="`
+        <img :alt="getValue(leading, [ 'description' ])" src="getValue(leading, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+            :srcset="`
               ${getValue(leading, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')} 800w,
               ${getValue(leading, [ 'image', 'resizedTargets', 'tablet', 'url' ], '')} 1200w,
               ${getValue(leading, [ 'image', 'resizedTargets', 'desktop', 'url' ], '')} 2000w`">
