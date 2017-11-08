@@ -13,7 +13,7 @@ export class ScrollTriggerRegister {
   }
   init () {
     Promise.all([
-      this.destroy().then(() => this._init())
+      this._destroy().then(() => this._init())
     ])
   }
   _init () {
