@@ -207,7 +207,7 @@ function loadQuestionnaire (id) {
 
 function loadSearch (keyword = '', params = {}) {
   let url = `${_host}/api/search`
-  url = `${url}?query=${encodeURIComponent(keyword)}&hitsPerPage=${params.max_results}&page=${params.page - 1}`
+  url = `${url}?query=${encodeURIComponent(`"${keyword}"`)}&hitsPerPage=${params.max_results}&page=${params.page - 1}`
   return _doFetch(url)
 }
 
