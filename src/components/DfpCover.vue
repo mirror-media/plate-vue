@@ -43,7 +43,7 @@
       justify-content center
       align-items center
 
-      &--wrapper
+      .ad-cover--wrapper
         position relative
         width 320px
         height 480px

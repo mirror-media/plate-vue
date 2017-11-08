@@ -89,6 +89,7 @@
 <script>
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
+  import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { currEnv, getTruncatedVal, lockJS, unLockJS, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
@@ -629,7 +630,6 @@
       vponHtml
     },
     mounted () {
-      this.initializeFBComments()
       this.insertMediafarmersScript()
       this.updateViewport()
       this.clientSideFlag = process.env.VUE_ENV === 'client'
@@ -638,8 +638,12 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      this.insertMatchedContentScript()
       // this.abIndicator = this.getMmid()
+      const scrollTriggerRegister = new ScrollTriggerRegister([
+        { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
+        { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
+      ])
+      scrollTriggerRegister.init()
 
       if (!_.isEmpty(this.articleData)) {
         this.sendGA(this.articleData)

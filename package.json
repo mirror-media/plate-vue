@@ -53,6 +53,7 @@
     "twitter": "^1.7.0",
     "twitter-text": "^1.14.3",
     "uuid": "^3.1.0",
+    "verge": "^1.10.2",
     "vue": "^2.3.2",
     "vue-awesome-swiper": "^2.6.2",
     "vue-cookie": "^1.1.3",
