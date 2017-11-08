@@ -27,20 +27,22 @@
         </template>
       </app-slider>
     </div>
-    <div class="slide-nav-btn prev" @click="goPrev"></div>
-    <div class="slide-nav-btn next" @click="goNext"></div>
+    <nav-btn class="slide-nav-btn prev" v-on:goPrev="goPrev" clickHandlerEvt="goPrev"></nav-btn>
+    <nav-btn class="slide-nav-btn next" v-on:goNext="goNext" clickHandlerEvt="goNext"></nav-btn>
   </div>
 </template>
 <script>
   import _ from 'lodash'
   import { SECTION_MAP, SITE_URL } from '../../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
+  import ProjectListNavBtn from './ProjectListNavBtn.vue'
   import Slider from '../Slider.vue'
   import sanitizeHtml from 'sanitize-html'
 
   export default {
     components: {
-      'app-slider': Slider
+      'app-slider': Slider,
+      'nav-btn': ProjectListNavBtn
     },
     computed: {
       ifShowProjects () {
