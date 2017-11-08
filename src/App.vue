@@ -212,8 +212,8 @@ button:focus {
       background-size contain
       background-position center center
       cursor pointer
-  
-  &.vpon
+
+  &.vpon, &.ad2
     margin 0
     padding 0
 

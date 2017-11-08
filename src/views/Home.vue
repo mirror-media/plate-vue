@@ -28,12 +28,12 @@
         </section>
         <loading :show="loading" />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-        <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
-          <div class="ad">
-            <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config"/>
-            <div class="close" @click="closeCoverAd"></div>
-          </div>
-        </div>
+        <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+        </DfpCover>
+        <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199 && dfpMode === 'dev'" :showCloseBtn="false" class="raw">
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+        </DfpCover>
         <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
       </div>
     </template>
@@ -47,6 +47,7 @@ import { currEnv, insertVponAdSDK, unLockJS, updateCookie, vponHtml } from '../u
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
+import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
 import EditorChoiceB from '../components/EditorChoiceB.vue'
 import Footer from '../components/Footer.vue'
@@ -118,6 +119,7 @@ export default {
     'loading': Loading,
     'more': More,
     'project-listVert': ProjectListVert,
+    DfpCover,
     LatestArticleAside,
     LatestArticleMain,
     PopularArticles,
@@ -176,6 +178,7 @@ export default {
       hasScrollLoadMore: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE) > 1,
       page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
       showDfpCoverAdFlag: false,
+      showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
       viewport: undefined
     }
@@ -192,18 +195,40 @@ export default {
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
-          if (position === 'LMBCVR' || position === 'MBCVR') {
-            const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-            if (adDisplayStatus === 'none') {
-              updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                this.showDfpCoverAdVponFlag = !isVisited
-                this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
-              })
-            } else {
-              updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                this.showDfpCoverAdFlag = !isVisited
-              })
-            }
+
+          const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
+          switch (position) {
+            case 'LMBCVR':
+              if (adDisplayStatus === 'none') {
+                if (this.dfpMode !== 'dev') {
+                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                    if (!isVisited) {
+                      this.showDfpCoverAdVponFlag = true
+                      this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+                    }
+                  })
+                } else {
+                  this.showDfpCoverAd2Flag = true
+                }
+              } else {
+                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  this.showDfpCoverAdFlag = !isVisited
+                })
+              }
+              break
+            case 'LMBCVR2':
+              if (adDisplayStatus === 'none') {
+                this.showDfpCoverAd2Flag = false
+                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  if (!isVisited) {
+                    this.showDfpCoverAdVponFlag = true
+                    this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+                  }
+                })
+              } else {
+                updateCookie({ currEnv: this.dfpMode })
+              }
+              break
           }
         },
         setCentering: true
@@ -277,9 +302,6 @@ export default {
   methods: {
     checkIfLockJS () {
       unLockJS()
-    },
-    closeCoverAd () {
-      this.showDfpCoverAdFlag = false
     },
     detectFixProject: function (e) {
       const secondLastFocusNews = document.querySelector('aside .latest-aside-container.secondLast')
