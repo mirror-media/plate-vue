@@ -6,11 +6,12 @@
     </div>
     <div class="watch--leading">
       <div class="watch--leading_wrapper">
-        <img :alt="getValue(leading, [ 'description' ])" src="getValue(leading, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+        <img :alt="getValue(leading, [ 'description' ])" v-if="leading"
+            :src="getImageCertain(getValue(leading, [ 'image', 'resizedTargets' ], {}), 'desktop')"
             :srcset="`
-              ${getValue(leading, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')} 800w,
-              ${getValue(leading, [ 'image', 'resizedTargets', 'tablet', 'url' ], '')} 1200w,
-              ${getValue(leading, [ 'image', 'resizedTargets', 'desktop', 'url' ], '')} 2000w`">
+              ${getImageCertain(getValue(leading, [ 'image', 'resizedTargets' ], {}), 'mobile')} 800w,
+              ${getImageCertain(getValue(leading, [ 'image', 'resizedTargets' ], {}), 'tablet')} 1200w,
+              ${getImageCertain(getValue(leading, [ 'image', 'resizedTargets' ], {}), 'desktop')} 2000w,`">
         <div class="title" v-if="title"><span v-text="title"></span></div>
       </div>
     </div>
@@ -39,7 +40,7 @@
   import WatchList from './WatchList.vue'
   import WatchItemLightbox from './WatchItemLightbox.vue'
   import WatchItemLightboxPC from './WatchItemLightboxPC.vue'
-  import { getValue } from '../../util/comm'
+  import { getImageCertain, getValue } from '../../util/comm'
 
   const fetchHotWatch = (store) => {
     return store.dispatch('FETCH_HOT_WATCH', {})
@@ -104,7 +105,6 @@
     },
     data () {
       return {
-        getValue,
         lightboxStatus: false,
         lightboxItem: undefined
       }
@@ -117,7 +117,9 @@
       openLightbox (item) {
         this.lightboxItem = item
         this.lightboxStatus = true
-      }
+      },
+      getImageCertain,
+      getValue
     },
     mounted () {
     },
@@ -210,12 +212,16 @@
               padding 30px
               &:before, &:after
                 border-width 3px
+      &--ad1
+        padding 30px 0
       &--listing
         display flex
         flex-direction row-reverse
         height auto
         justify-content center
-        margin-top 30px
+        max-width 1100px
+        margin 30px auto 0
+
         .hot
           // flex: 1
           width 25%
