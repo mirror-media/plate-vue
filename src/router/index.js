@@ -31,6 +31,7 @@ export function createRouter () {
   }
   return new Router({
     mode: 'history',
+    fallback: false,
     scrollBehavior: () => ({ y: 0 }),
     routes: [
       { path: '/activity/:activityId/', component: Activity },

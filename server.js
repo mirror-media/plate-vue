@@ -5,6 +5,7 @@ const LRU = require('lru-cache')
 const express = require('express')
 const favicon = require('serve-favicon')
 const compression = require('compression')
+const microcache = require('route-cache')
 const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
@@ -73,18 +74,14 @@ app.use('/public', serve('./public', true))
 app.use('/manifest.json', serve('./manifest.json', true))
 app.use('/service-worker.js', serve('./dist/service-worker.js'))
 
-// 1-second microcache.
-// https://www.nginx.com/blog/benefits-of-microcaching-nginx/
-// const microCache = LRU({
-//   max: 100,
-//   maxAge: 1000
-// })
-
-// since this app has no user-specific content, every page is micro-cacheable.
-// if your app involves user-specific content, you need to implement custom
-// logic to determine whether a request is cacheable based on its url and
-// headers.
-// const isCacheable = req => useMicroCache
+ // since this app has no user-specific content, every page is micro-cacheable.
+  // if your app involves user-specific content, you need to implement custom
+  // logic to determine whether a request is cacheable based on its url and
+  // headers.
+  // 1-second microcache.
+  // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
+  // app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
+ 
 
 function render (req, res, next) {
   if (req.url.indexOf('/api/') === 0) {
@@ -104,7 +101,7 @@ function render (req, res, next) {
   } else {
     const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, (i) => (req.clientIp.indexOf(i) > -1)).length > 0
     if (!isValidReq) {
-      res.status(403).end('Forbidden')
+      res.status(403).send('Forbidden')
       console.log('Attempted to access draft in fail: 403 Forbidden')
     }
   }
@@ -130,24 +127,13 @@ function render (req, res, next) {
       isErrorOccurred = true
       
       if ('403' == err.status) {
-        res.status(403).end('403 | Forbidden')
+        res.status(403).send('403 | Forbidden')
         return
       }
       res.status(500).render('500')
       return 
     } 
   }
-
-  // const cacheable = isCacheable(req)
-  // if (cacheable) {
-  //   const hit = microCache.get(req.url)
-  //   if (hit) {
-  //     if (!isProd) {
-  //       console.log(`cache hit!`)
-  //     }
-  //     return res.end(hit)
-  //   }
-  // }
 
   const context = {
     title: '',
@@ -165,10 +151,7 @@ function render (req, res, next) {
     if (err) {
       return handleError(err)
     }
-    res.end(html)
-    // if (cacheable) {
-    //   microCache.set(req.url, html)
-    // }
+    res.send(html)
     if (!isProd) {
       console.log(`whole request: ${Date.now() - s}ms`)
     }
