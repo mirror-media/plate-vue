@@ -98,7 +98,6 @@
         <slot name="relatedlistBottom"></slot>
       </div>
       <div class="article_main_tags">
-        <i class="tags_icon" v-if="tags.length > 0"></i>
         <div class="tags" v-html="tags" v-if="tags.length > 0"></div>
       </div>
       <div class="split-line"></div>
@@ -546,23 +545,25 @@ export default {
       .article_main_tags 
         clear both
         margin-top 3em
-
-        .tags_icon 
-          background-image url(/public/icon/sprite@3x.png)
-          background-position -733px -741px
-          background-repeat no-repeat
-          background-size 866px 862px
-          display inline-block
-          vertical-align middle
-          zoom .65
-
-          width 45px
-          height 45px
+        padding-left 32px
         
         .tags 
           display inline-block
           color rgba(2, 2, 2, 0.5)
           font-size 18px
+          position relative
+          &::before
+            content ''
+            position absolute
+            top 0
+            left -35px
+            background-position -410px -405px
+            background-repeat no-repeat
+            background-size 488px 467px
+            background-image url(/public/icon/sprite@3x.png)
+            width 25px
+            height 20px
+            display block
 
           a, a:hover, a:link, a:visited 
             color rgba(2, 2, 2, 0.5)
@@ -1002,6 +1003,8 @@ export default {
         > div:not([class="dfpad-set"]), article
           padding-left 25px
           padding-right 25px
+          &.article_main_tags
+            padding-left 60px
 
       .article_basic-info
         .category
@@ -1071,6 +1074,8 @@ export default {
         > div:not([class="dfpad-set"]), article
           padding-left 0
           padding-right 0
+          &.article_main_tags
+            padding-left 32px
 
   @media (min-width 0px) and (max-width 767px)
     .article_body
