@@ -4,7 +4,6 @@ import Router from 'vue-router'
 import VueLazyload from 'vue-lazyload'
 
 Vue.use(Router)
-
 Vue.use(VueLazyload, {
   preLoad: 1.3,
   error: '/public/notImage.png',
@@ -12,18 +11,17 @@ Vue.use(VueLazyload, {
   attempt: 1
 })
 
-import NotFound from '../views/404.vue'
-import Activity from '../views/Activity.vue'
-import Article from '../views/Article.vue'
-import ArticleM from '../views/ArticleM.vue'
-import Home from '../views/Home.vue'
-// import HomeB from '../views/HomeB.vue'
-import List from '../views/List.vue'
-import Project from '../views/Project.vue'
-import Questionnaire from '../views/Questionnaire.vue'
-import Search from '../views/Search.vue'
-import TimelineView from '../views/TimelineView.vue'
-import Topic from '../views/Topic.vue'
+const Activity = () => import('../views/Activity.vue')
+const Article = () => import('../views/Article.vue')
+const ArticleM = () => import('../views/ArticleM.vue')
+const Home = () => import('../views/Home.vue')
+const List = () => import('../views/List.vue')
+const NotFound = () => import('../views/404.vue')
+const Project = () => import('../views/Project.vue')
+const Questionnaire = () => import('../views/Questionnaire.vue')
+const Search = () => import('../views/Search.vue')
+const TimelineView = () => import('../views/TimelineView.vue')
+const Topic = () => import('../views/Topic.vue')
 
 export function createRouter () {
   if (process.env.VUE_ENV === 'client') {
