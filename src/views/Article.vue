@@ -83,6 +83,7 @@
         <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/>
       </dfp-fixed>
       <adult-content-alert v-if="isAdultContent" />
+      <div class="fb-quote"></div>
     </template>
   </vue-dfp-provider>
 </template>

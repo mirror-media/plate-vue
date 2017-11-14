@@ -59,6 +59,7 @@
         <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/>
       </dfp-fixed>
       <adult-content-alert v-if="isAdultContent" />
+      <div class="fb-quote"></div>
     </template>
   </vue-dfp-provider>
 </template>
@@ -190,9 +191,10 @@
           <meta property="og:type" content="article">
           <meta property="og:title" content="${(ogTitle.length > 0) ? truncate(ogTitle, 21) + ' - ' + SITE_TITLE_SHORT : truncate(title, 21) + ' - ' + SITE_TITLE_SHORT}">
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
-          <meta property="og:url" content="${SITE_URL + '/story/' + slug + '/'}">
+          <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
-        `
+        `,
+        link: `<link rel="canonical" href="${SITE_URL}/story/${slug}/" />`
       }
     },
     beforeRouteEnter (to, from, next) {
