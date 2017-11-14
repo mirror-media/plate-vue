@@ -14,6 +14,7 @@ const serverTitleMetaMixin = {
   created () {
     const metaSet = getMetaSet(this)
     if (!metaSet) { return }
+    const link = metaSet.link
     const meta = metaSet.meta
     const title = metaSet.title
     if (title) {
@@ -21,6 +22,9 @@ const serverTitleMetaMixin = {
     }
     if (meta) {
       this.$ssrContext.meta = meta
+    }
+    if (link) {
+      this.$ssrContext.meta = link
     }
   }
 }
