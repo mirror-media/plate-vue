@@ -10,7 +10,7 @@
     <div class="article_subtitle" v-if="subtitle.length > 0"><h2 v-text="subtitle"></h2></div>
     <div class="article_credit" v-html="credit"></div>
     <main class="article_main">
-      <div class="brief">
+      <div class="brief fb-quotable">
         <div v-for="p in briefArr">
           <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
             <img class="thumbnail"
