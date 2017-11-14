@@ -226,9 +226,10 @@
           <meta property="og:type" content="article">
           <meta property="og:title" content="${(ogTitle.length > 0) ? ogTitle + ' - ' + SITE_TITLE_SHORT : title + ' - ' + SITE_TITLE_SHORT}">
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
-          <meta property="og:url" content="${SITE_URL + '/story/' + slug + '/'}">
+          <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
-        `
+        `,
+        link: `<link rel="canonical" href="${SITE_URL}/story/${slug}/" />`
       }
     },
     beforeRouteEnter (to, from, next) {

@@ -138,7 +138,8 @@ function render (req, res, next) {
   const context = {
     title: '',
     meta: '',    
-    url: req.url
+    url: req.url,
+    link: ''
   }
 
   res.on('finish', function () {
