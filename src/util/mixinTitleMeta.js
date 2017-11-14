@@ -24,7 +24,7 @@ const serverTitleMetaMixin = {
       this.$ssrContext.meta = meta
     }
     if (link) {
-      this.$ssrContext.meta = link
+      this.$ssrContext.link = link
     }
   }
 }
