@@ -393,6 +393,7 @@ export default {
         ogImage = SITE_OGIMAGE
         ogDescription = SITE_DESCRIPTION
     }
+
     if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
       const e = new Error()
       e.massage = 'Page Not Found'

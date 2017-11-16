@@ -43,7 +43,7 @@
 <script>
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, insertVponAdSDK, unLockJS, updateCookie, vponHtml } from '../util/comm'
+import { consoleLogOnDev, currEnv, insertVponAdSDK, unLockJS, updateCookie, vponHtml } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
@@ -197,6 +197,16 @@ export default {
           const position = dfpCover.getAttribute('pos')
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
+          const afVponLoader = () => {
+            if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
+              consoleLogOnDev({ msg: 'noad2 detected' })
+              this.showDfpCoverAdVponFlag = true
+              this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+            }
+          }
+          window.addEventListener('noad2', afVponLoader)
+          window.parent.addEventListener('noad2', afVponLoader)
+
           switch (position) {
             case 'LMBCVR':
               if (adDisplayStatus === 'none') {
@@ -217,17 +227,14 @@ export default {
               }
               break
             case 'LMBCVR2':
+              consoleLogOnDev({ msg: 'ad2 loaded' })
               if (adDisplayStatus === 'none') {
-                this.showDfpCoverAd2Flag = false
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  if (!isVisited) {
-                    this.showDfpCoverAdVponFlag = true
-                    this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
-                  }
-                })
-              } else {
-                updateCookie({ currEnv: this.dfpMode })
+                consoleLogOnDev({ msg: 'dfp response no ad2' })
+                afVponLoader()
               }
+              updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                this.showDfpCoverAd2Flag = !isVisited
+              })
               break
           }
         },
