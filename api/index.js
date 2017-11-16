@@ -49,7 +49,11 @@ const redisPoolWrite = isProd ? RedisConnectionPool('myRedisPoolWrite', {
       auth_pass: REDIS_AUTH
     } //options for createClient of node-redis, optional
   }) : redisPoolRead
-
+const redisFetchingByHash = (key, field, callback) => {
+  redisPoolRead.send_command('HMGET', [ key, ...field ], function (err, data) {
+    callback && callback({ err, data })
+  })
+}  
 const redisFetching = (url, callback) => {
   redisPoolRead.get(decodeURIComponent(url), function (err, data) {
     redisPoolRead.ttl(decodeURIComponent(url), (_err, _data) => {
@@ -291,6 +295,18 @@ router.use('/tracking', function(req, res, next) {
 
 router.use('/drafts', function(req, res, next) {
   next()
+})
+
+router.use('/related_news', function(req, res, next) {
+  const query = req.query
+  consoleLogOnDev({ showSplitLine: true, msg: '/related_news' + req.url })
+  redisFetchingByHash('news_dict', query.id.split(','), ({ err, data }) => {
+    if (!err && data) {
+      res.json(data)
+    } else {
+      res.json({ count: 0, result: [] })
+    }
+  })
 })
 
 router.get('*', (req, res) => {
