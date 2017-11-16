@@ -300,7 +300,7 @@ router.use('/drafts', function(req, res, next) {
 router.use('/related_news', function(req, res, next) {
   const query = req.query
   consoleLogOnDev({ showSplitLine: true, msg: '/related_news' + req.url })
-  redisFetchingByHash('news_dict', query.id.split(','), ({ err, data }) => {
+  redisFetchingByHash('news_dict', _.get(query, [ 'id' ], '').split(','), ({ err, data }) => {
     if (!err && data) {
       res.json(data)
     } else {
