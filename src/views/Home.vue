@@ -230,7 +230,6 @@ export default {
               consoleLogOnDev({ msg: 'ad2 loaded' })
               if (adDisplayStatus === 'none') {
                 consoleLogOnDev({ msg: 'dfp response no ad2' })
-                afVponLoader()
               }
               updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
                 this.showDfpCoverAd2Flag = !isVisited
