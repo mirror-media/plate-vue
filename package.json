@@ -32,7 +32,7 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "forever": "^0.15.3",
     "humps": "^2.0.0",
-    "kc-scroll": "^0.2.69",
+    "kc-scroll": "^0.2.70",
     "less": "^2.7.2",
     "lodash": "^4.17.4",
     "lru-cache": "^4.0.2",
