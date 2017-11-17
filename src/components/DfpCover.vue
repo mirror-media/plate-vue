@@ -60,4 +60,5 @@
           background-position center center
           cursor pointer   
           border 1px solid rgba(255, 255, 255, 0.7)
+          background-color rgba(0, 0, 0, 0.1)
 </style>
