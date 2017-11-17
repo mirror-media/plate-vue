@@ -381,7 +381,7 @@
                 })
                 break
               case 'PCFF':
-                this.showDfpFixedBtn = !adDisplayStatus === 'none'
+                this.showDfpFixedBtn = !(adDisplayStatus === 'none')
                 break
             }
           },
