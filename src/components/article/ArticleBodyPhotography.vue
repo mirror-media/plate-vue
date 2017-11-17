@@ -678,7 +678,7 @@
         background-color #000
         
         .img
-    
+
           img
             object-fit contain
             max-height 100%
