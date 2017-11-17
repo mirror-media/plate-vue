@@ -59,7 +59,7 @@
           background-size contain
           background-position center center
           cursor pointer   
-          border 1px solid rgba(255, 255, 255, 0.7)
-          background-color rgba(0, 0, 0, 0.2)
+          border 2px solid rgba(255, 255, 255, 0.7)
+          background-color rgba(0, 0, 0, 0.3)
           box-shadow 0 0 10px rgba(0, 0, 0, 0.4)
 </style>
