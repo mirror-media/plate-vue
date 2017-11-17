@@ -52,13 +52,14 @@
           position absolute
           top 5px
           right 5px
-          width 32px
-          height 32px
+          width 36px
+          height 36px
           background-image url(/public/icon/close_white.png)
           background-repeat no-repeat
           background-size contain
           background-position center center
           cursor pointer   
           border 1px solid rgba(255, 255, 255, 0.7)
-          background-color rgba(0, 0, 0, 0.1)
+          background-color rgba(0, 0, 0, 0.2)
+          box-shadow 0 0 10px rgba(0, 0, 0, 0.4)
 </style>
