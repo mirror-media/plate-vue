@@ -210,16 +210,7 @@ export default {
           switch (position) {
             case 'LMBCVR':
               if (adDisplayStatus === 'none') {
-                if (this.dfpMode !== 'dev') {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                    if (!isVisited) {
-                      this.showDfpCoverAdVponFlag = true
-                      this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
-                    }
-                  })
-                } else {
-                  this.showDfpCoverAd2Flag = true
-                }
+                this.showDfpCoverAd2Flag = true
               } else {
                 updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
                   this.showDfpCoverAdFlag = !isVisited

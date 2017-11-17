@@ -69,13 +69,12 @@
         <share :right="`20px`" :bottom="`20px`" />
       </div>
 
-      <div class="dfp-cover" v-show="showDfpCoverAdFlag && viewport < 1199">
-        <div class="ad">
-          <vue-dfp :is="props.vueDfp" pos="LMBCVR" extClass="mobile-only" :config="props.config" />
-          <div class="close" @click="closeCoverAd"></div>
-        </div>
-      </div>
-
+      <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      </DfpCover>
+      <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199 && dfpMode === 'dev'" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      </DfpCover>
       <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
     </template>
   </vue-dfp-provider>
@@ -88,7 +87,7 @@ import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORAL
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, getTruncatedVal, getValue, unLockJS, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
+import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, unLockJS, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { microAds } from '../constants/microAds'
 import _ from 'lodash'
@@ -97,6 +96,7 @@ import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
 import AudioList from '../components/AudioList.vue'
 import Cookie from 'vue-cookie'
+import DfpCover from '../components/DfpCover.vue'
 import EditorChoiceFull from '../components/EditorChoiceFull.vue'
 import EditorChoiceFoodTravel from '../components/EditorChoiceFoodTravel.vue'
 import FeaturedStoryFoodTravel from '../components/FeaturedStoryFoodTravel.vue'
@@ -360,7 +360,8 @@ export default {
     'share': Share,
     'video-list': VideoList,
     'vue-dfp-provider': VueDfpProvider,
-    'watch101-list': Watch101
+    'watch101-list': Watch101,
+    DfpCover
   },
   asyncData ({ store }) {
     return fetchCommonData(store)
@@ -439,6 +440,7 @@ export default {
       loading: false,
       microAds,
       showDfpCoverAdFlag: false,
+      showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
       viewport: undefined
     }
@@ -513,19 +515,37 @@ export default {
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
-          if (position === 'LMBCVR' || position === 'MBCVR') {
-            const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-            if (adDisplayStatus === 'none') {
-              this.showDfpCoverAdFlag = false
-              updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                this.showDfpCoverAdVponFlag = !isVisited
-                this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
-              })
-            } else {
-              updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                this.showDfpCoverAdFlag = !isVisited
-              })
+
+          const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
+          const afVponLoader = () => {
+            if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
+              consoleLogOnDev({ msg: 'noad2 detected' })
+              this.showDfpCoverAdVponFlag = true
+              this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
             }
+          }
+          window.addEventListener('noad2', afVponLoader)
+          window.parent.addEventListener('noad2', afVponLoader)
+
+          switch (position) {
+            case 'LMBCVR':
+              if (adDisplayStatus === 'none') {
+                this.showDfpCoverAd2Flag = true
+              } else {
+                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  this.showDfpCoverAdFlag = !isVisited
+                })
+              }
+              break
+            case 'LMBCVR2':
+              consoleLogOnDev({ msg: 'ad2 loaded' })
+              if (adDisplayStatus === 'none') {
+                consoleLogOnDev({ msg: 'dfp response no ad2' })
+              }
+              updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                this.showDfpCoverAd2Flag = !isVisited
+              })
+              break
           }
         },
         setCentering: true
@@ -725,9 +745,6 @@ export default {
     camelize,
     checkIfLockJS () {
       unLockJS()
-    },
-    closeCoverAd () {
-      this.showDfpCoverAdFlag = false
     },
     elmYPosition,
     getRole,
