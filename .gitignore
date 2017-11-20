@@ -12,3 +12,6 @@ src/utils/jquery.dfp.min.js
 src/utils/swiper/
 gcskeyfile.json
 archives
+selenium-debug.log
+test/unit/coverage/*
+test/e2e/reports/*
