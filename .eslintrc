@@ -12,5 +12,8 @@
     "globals": {
       "location": true,
       "source": true
+    },
+    "env": {
+      "jasmine": true
     }
 }
