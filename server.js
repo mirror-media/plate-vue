@@ -166,6 +166,12 @@ app.get('*', isProd ? render : (req, res, next) => {
 app.use('/api', require('./api/index'))
 
 const port = process.env.PORT || 8080
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`server started at localhost:${port}`)
 })
+module.exports = {
+  ready: readyPromise,
+  close: () => {
+    server.close()
+  }
+}

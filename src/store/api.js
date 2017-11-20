@@ -320,6 +320,10 @@ export function fetchQuestionnaire (id) {
   return loadQuestionnaire(id)
 }
 
+export function fetchRelatedList () {
+  return ''
+}
+
 export function fetchSearch (keyword = '', params = {}) {
   return loadSearch(keyword, params)
 }
