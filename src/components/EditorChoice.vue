@@ -1,7 +1,7 @@
 <template>
   <section id="editorChoice" class="editorChoice container">
     <app-slider class="editorChoice-slides grid grid-4-fifth" slideId="editorChoiceSlider" :option="sliderOption" v-if="viewport > 1199">
-      <template scope="props">
+      <template slot-scope="props">
         <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
           <template>
             <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target">

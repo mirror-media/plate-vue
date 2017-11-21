@@ -1,6 +1,6 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
-    <template scope="props" slot="dfpPos">
+    <template slot-scope="props" slot="dfpPos">
       <div class="foodtravel-redesign" v-if="pageStyle === 'video'">
         <section>
           <header-foodtravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />

@@ -2,7 +2,7 @@
   <div class="project-container" v-if="(filteredProjects.length > 0)">
     <div class="proj_list">
       <app-slider :option="sliderOption" v-if="ifShowProjects" :slideId="sliderId">
-        <template scope="props">
+        <template slot-scope="props">
           <swiper-slide :is="props.slide" v-for="(o, i) in filteredProjects" v-if="i < 10" :key="`${i}-${Date.now()}`">
             <div class="proj_item">
               <div>

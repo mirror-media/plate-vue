@@ -10,11 +10,13 @@ const _host = getHost()
 
 function _buildQuery (params = {}) {
   let query = {}
-  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo' ]
+  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id' ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where' || ele === 'embedded') {
         query[ele] = JSON.stringify(params[ele])
+      } else if (ele === 'id') {
+        query[ele] = params[ele].join(',')
       } else {
         query[ele] = params[ele]
       }
@@ -320,8 +322,8 @@ export function fetchQuestionnaire (id) {
   return loadQuestionnaire(id)
 }
 
-export function fetchRelatedList () {
-  return ''
+export function fetchRelatedList (params = {}) {
+  return loadData(params, 'related_news')
 }
 
 export function fetchSearch (keyword = '', params = {}) {

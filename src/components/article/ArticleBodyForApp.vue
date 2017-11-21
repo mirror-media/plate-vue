@@ -29,7 +29,7 @@
             :id="'latest-'+ p.id" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
-            <template scope="props">
+            <template slot-scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div>
                   <div class="slideshowImg">
@@ -60,7 +60,7 @@
             :id="'latest-'+ p.id" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
-            <template scope="props">
+            <template slot-scope="props">
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
               </swiper-slide>
