@@ -3,7 +3,7 @@
     <div class="leading-container">
       <div class="leading-slideshow" v-if="type === 'slideshow' && slideshowImgs.length > 0">
         <app-slider :option="sliderOption">
-          <template scope="props">
+          <template slot-scope="props">
             <swiper-slide :is="props.slide" v-for="(o, i) in slideshowImgs" :key="`${i}-${Date.now()}`">
               <img :src="getValue(o, [ 'image', 'url' ])"
                    :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,

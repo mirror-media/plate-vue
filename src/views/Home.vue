@@ -1,6 +1,6 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions" :mode="dfpMode">
-    <template scope="props" slot="dfpPos">
+    <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
           <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>

@@ -3,7 +3,7 @@
     <items-title-rect class="header-rect">精選影音</items-title-rect>
     <div class="featured_list">
       <app-slider :option="sliderOption" v-if="ifShowFeatured" :slideId="sliderId">
-        <template scope="props">
+        <template slot-scope="props">
           <swiper-slide :is="props.slide" v-for="(o, i) in sectionfeatured" v-if="i < 10" :key="`${i}-${Date.now()}`">
             <div class="featured_item">
               <div>

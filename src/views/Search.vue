@@ -1,6 +1,6 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
-    <template scope="props" slot="dfpPos">
+    <template slot-scope="props" slot="dfpPos">
       <div class="search-view">
         <section style="width: 100%;">
           <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>

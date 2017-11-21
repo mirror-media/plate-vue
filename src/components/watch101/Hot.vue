@@ -1,7 +1,7 @@
 <template>
   <div class="items">
     <app-slider :option="sliderOption">
-      <template scope="props">
+      <template slot-scope="props">
         <swiper-slide :is="props.slide" v-for="(watch, index) in list" :key="`hot-${index}`">
           <div class="hot-item" @click="openLightbox(watch)">
             <div class="hot-item--order"><span v-text="`${index + 1}`"></span></div>
