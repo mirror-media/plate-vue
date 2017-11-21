@@ -371,7 +371,7 @@ export function updateCookie ({ currEnv }) {
   return new Promise((resolve) => {
     const cookie = Cookie.get('visited')
     if (currEnv === 'prod' && !cookie) {
-      Cookie.set('visited', 'true', { expires: '10m' })
+      Cookie.set('visited', 'true', { expires: '5m' })
     }
     resolve(cookie === 'true')
   })
