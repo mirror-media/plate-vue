@@ -20,7 +20,7 @@ module.exports = function (config) {
       '../../node_modules/es6-promise/dist/es6-promise.auto.js',
     ],
     preprocessors: {
-      './index.js': ['webpack', 'sourcemap']
+      './index.js': ['webpack', 'sourcemap', 'coverage']
     },
     webpack: webpackConfig,
     webpackMiddleware: {
@@ -33,8 +33,9 @@ module.exports = function (config) {
         { type: 'text-summary' }
       ]
     },
-    // port: 8080,
+    // port: 9876,
     // listenAddress: 'localhost',
-    // hostname: 'localhost'
+    // hostname: 'localhost',
+    autoWatch: true,
   })
 }

@@ -1,7 +1,6 @@
 import chai from 'chai'
 // import request from 'request'
 // import { fetchRelatedList, fetchHotWatch } from 'src/store/api'
-
 chai.should()
 // const assert = chai.assert
 
@@ -15,12 +14,19 @@ describe('Api: fetchRelatedList', () => {
     //   done()
     // })
     // act
-    // return fetchHotWatch({
-        // id: ['58fb0af65d01e70d00a33a0e']
+    // return fetchRelatedList({
+    // // return fetchHotWatch({
+    //     id: ['58fb0af65d01e70d00a33a0e']
     // }).then((actual) => {
     // // assert
     //   console.log('actual', actual)
     //   assert.typeOf(actual, expected)
     // })
+    // chai.request(server)
+    // .put('/api/related_news?id=58fb0af65d01e70d00a33a0e')
+    // .end(function(err, res) {
+    //     expect(err).to.be.null;
+    //     expect(res).to.have.status(200);
+    // });
   })
 })
