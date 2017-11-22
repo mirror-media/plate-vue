@@ -87,7 +87,7 @@ import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORAL
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, unLockJS, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
+import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, unLockJS, insertVponAdSDK, sendAdCoverGA, updateCookie, vponHtml } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { microAds } from '../constants/microAds'
 import _ from 'lodash'
@@ -519,6 +519,7 @@ export default {
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
           const afVponLoader = () => {
             if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
+              sendAdCoverGA('vpon')
               consoleLogOnDev({ msg: 'noad2 detected' })
               this.showDfpCoverAdVponFlag = true
               this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
@@ -529,6 +530,7 @@ export default {
 
           switch (position) {
             case 'LMBCVR':
+              sendAdCoverGA('dfp')
               if (adDisplayStatus === 'none') {
                 this.showDfpCoverAd2Flag = true
               } else {
@@ -538,6 +540,7 @@ export default {
               }
               break
             case 'LMBCVR2':
+              sendAdCoverGA('ad2')
               consoleLogOnDev({ msg: 'ad2 loaded' })
               if (adDisplayStatus === 'none') {
                 consoleLogOnDev({ msg: 'dfp response no ad2' })

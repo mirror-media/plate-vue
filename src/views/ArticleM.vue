@@ -66,7 +66,7 @@
 <script>
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
-  import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd, insertVponAdSDK, updateCookie, vponHtml } from '../util/comm'
+  import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd, insertVponAdSDK, sendAdCoverGA, updateCookie, vponHtml } from '../util/comm'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleBody from '../components/article/ArticleBodyForApp.vue'
@@ -315,6 +315,7 @@
             const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
             const afVponLoader = () => {
               if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
+                sendAdCoverGA('vpon')
                 consoleLogOnDev({ msg: 'noad2 detected' })
                 this.showDfpCoverAdVponFlag = true
                 this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
@@ -324,6 +325,7 @@
             window.parent.addEventListener('noad2', afVponLoader)
             switch (position) {
               case 'MBCVR':
+                sendAdCoverGA('dfp')
                 if (adDisplayStatus === 'none') {
                   this.showDfpCoverAd2Flag = true
                 } else {
@@ -334,6 +336,7 @@
                 break
               case 'MBCVR2':
                 consoleLogOnDev({ msg: 'ad2 loaded' })
+                sendAdCoverGA('ad2')
                 if (adDisplayStatus === 'none') {
                   consoleLogOnDev({ msg: 'dfp response no ad2' })
                 }

@@ -301,18 +301,7 @@ export default {
     },
     dfpOptions () {
       return Object.assign({}, DFP_OPTIONS, {
-        afterEachAdLoaded: (event) => {
-          const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
-          const position = dfpCover.getAttribute('pos')
-          if (position === 'LMBCVR' || position === 'MBCVR') {
-            const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-            if (adDisplayStatus === 'none') {
-              this.showDfpCoverAdFlag = false
-            } else {
-              this.updateCookie()
-            }
-          }
-        },
+        afterEachAdLoaded: (event) => {},
         setCentering: true
       })
     },
