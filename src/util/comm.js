@@ -376,3 +376,10 @@ export function updateCookie ({ currEnv }) {
     resolve(cookie === 'true')
   })
 }
+
+export function sendAdCoverGA (label) {
+  window && window.ga && window.ga('send', 'event', 'mobile-ad', 'visible', label, {
+    location: document.location.href,
+    nonInteraction: true
+  })
+}
