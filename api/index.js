@@ -302,7 +302,13 @@ router.use('/related_news', function(req, res, next) {
   consoleLogOnDev({ showSplitLine: true, msg: '/related_news' + req.url })
   redisFetchingByHash('news_dict', _.get(query, [ 'id' ], '').split(','), ({ err, data }) => {
     if (!err && data) {
-      res.json(JSON.parse(data))
+      let parsed
+      try {
+        parsed = JSON.parse(data)
+      } catch (e) {
+        parsed = { err: e, result: [], data }
+      }
+      res.json(parsed)
     } else {
       res.json({ count: 0, result: [] })
     }

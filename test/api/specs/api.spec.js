@@ -9,7 +9,15 @@ describe('Api: fetchRelatedList', () => {
     api.get('/api/related_news?id=58fb0af65d01e70d00a33a0e')
     .end(function(err, res) {
       if (err) return console.log(err)
-      res.body.should.be.instanceof(Object).and.have.property('related_news')
+      res.body.should.be.an('object').and.have.property('related_news')
+      done()
+    });
+  })
+  it('should get related news list from api', (done) => {
+    api.get('/api/related_news?id=5a162e8e1a53670d0048cb69')
+    .end(function(err, res) {
+      if (err) return console.log(err)
+      res.body.should.be.an('object').and.have.property('related_news')
       done()
     });
   })

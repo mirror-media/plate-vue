@@ -51,6 +51,11 @@
             </pop-list>
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+            <template slot="recommendList">
+              <div v-if="abIndicator === 'A' || (abIndicator === 'B' && recommendlist.lenth > 0)"><h3>推薦文章</h3></div>
+              <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A'" ></div>
+              <RecommendList v-else="abIndicator === 'B'" :recommendList="recommendlist"></RecommendList>
+            </template>
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
@@ -109,6 +114,7 @@
   import MicroAd from '../components/MicroAd.vue'
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
+  import RecommendList from '../components/article/RecommendList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
   import ShareTools from '../components/article/ShareTools.vue'
@@ -151,6 +157,14 @@
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
+  const fetchRecommendList = (store, id) => {
+    return store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
+      params: {
+        id: id
+      }
+    })
+  }
+
   const fetchLatestArticle = (store, params) => {
     return store.dispatch('FETCH_LATESTARTICLE', { params: params })
   }
@@ -164,7 +178,10 @@
   }
 
   const fetchData = (store) => {
-    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
+    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug).then(() => {
+      const id = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { 'slug': store.state.route.params.slug }), [ 'id' ], '')
+      return fetchRecommendList(store, id)
+    }) ])
   }
 
   export default {
@@ -203,14 +220,14 @@
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
-      // let abIndicator
-      // if (process.env.VUE_ENV === 'client') {
-      //   abIndicator = this.getMmid()
-      // }
+      let abIndicator
+      if (process.env.VUE_ENV === 'client') {
+        abIndicator = this.getMmid()
+      }
       return {
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="">
+          <meta name="mm-opt" content="${abIndicator}">
           <meta name="robots" content="${robotsValue}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
@@ -239,16 +256,21 @@
         next(vm => {
           const _targetArticle = _.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
           if (!_targetArticle) {
-            fetchArticles(vm.$store, to.params.slug).then(() => {
-              const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
-              return fetchLatestArticle(vm.$store, {
-                sort: '-publishedDate',
-                where: {
-                  'sections': _.get(sections, [ 0, 'id' ])
-                }
-              })
-            })
-            fetchPop(vm.$store)
+            Promise.all([
+              fetchArticles(vm.$store, to.params.slug).then(() => {
+                const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
+                return fetchLatestArticle(vm.$store, {
+                  sort: '-publishedDate',
+                  where: {
+                    'sections': _.get(sections, [ 0, 'id' ])
+                  }
+                })
+              }).then(() => {
+                const id = _.get(_.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { 'slug': vm.$store.state.route.params.slug }), [ 'id' ], '')
+                return fetchRecommendList(vm.$store, id)
+              }),
+              fetchPop(vm.$store)
+            ])
           }
         })
       } else {
@@ -266,6 +288,9 @@
         }).then(() => {
           next()
         })
+      }).then(() => {
+        const id = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
+        return fetchRecommendList(this.$store, id)
       })
     },
     beforeRouteLeave (to, from, next) {
@@ -308,7 +333,8 @@
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
-      DfpCover
+      DfpCover,
+      RecommendList
     },
     data () {
       return {
@@ -488,6 +514,9 @@
         const items = _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
         return items
       },
+      recommendlist () {
+        return _.get(this.$store, [ 'state', 'articlesRecommendList', 'relatedNews' ], [])
+      },
       relateds () {
         return _.get(this.articleData, [ 'relateds' ], [])
       },
@@ -656,7 +685,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      // this.abIndicator = this.getMmid()
+      this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
         { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
         { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
