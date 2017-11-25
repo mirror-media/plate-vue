@@ -218,9 +218,12 @@ button:focus {
     padding 0
 
 .limited-height
-  height calc(100vh + 1px)
+  // height calc(100vh + 1px)
+  height 100%
   background-color #000
   // overflow hidden
+  &.no-scroll
+    overflow hidden
 
 [lazy=loading]
   margin 0 auto

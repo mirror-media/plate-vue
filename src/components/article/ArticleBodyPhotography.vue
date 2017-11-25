@@ -21,38 +21,42 @@
         <div class="stick" v-for="(o, i) in imgArr" :style="stickBottom((i))" :class="{ 'passed' : stickflag[i] }" :index="i" @click="goPage"></div>
       </div>
     </div>
+    <div :class="[ 'leading', 'widthDesc' ]">
+      <div :class="[ 'leading_wrapper', leadingWrapperHide ? 'hide' : '' ]">
+        <div class="title">
+          <span><h2 v-text="title"></h2></span>
+        </div>
+        <div class="brief">
+          <div :class="captionStyle">
+            <div v-text="heroCaption"></div>
+            <span v-text="getValue(brief, [ 'apiData', 0, 'content', 0 ], '')"></span>
+          </div>
+        </div>
+        <div class="img">
+          <img :src="getValue(heroImg, [ 'image', 'url' ])" :class="landscapeClass"
+                :srcset="`${getValue(heroImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
+                          ${getValue(heroImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
+                          ${getValue(heroImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+        </div> 
+      </div>  
+    </div>
     <div class="article_body">
-      <div class="pic-container">
-        <section class="pic-section active">
-          <div class="title">
-            <span><h2 v-text="title"></h2></span>
-          </div>
-          <div class="brief">
-            <div :class="captionStyle">
-              <div v-text="heroCaption"></div>
-              <span v-text="getValue(brief, [ 'apiData', 0, 'content', 0 ], '')"></span>
+      <div class="pic-wrapper" :class="[ picContainerActive ? 'active' : '' ]">
+        <div :class="[ 'pic-container' ]">
+          <section :class="[ 'pic-section', i > 0 ? '' : 'active' ]" v-for="(o, i) in imgArr">
+            <div class="brief">
+              <div :class="captionStyle">
+                <span v-text="getValue(o, [ 'content', 0, 'description' ], '')"></span>
+              </div>
             </div>
-          </div>
-          <div class="img">
-            <img :src="getValue(heroImg, [ 'image', 'url' ])" :class="landscapeClass"
-                  :srcset="`${getValue(heroImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                            ${getValue(heroImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                            ${getValue(heroImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
-          </div>
-        </section>
-        <section class="pic-section" v-for="(o, i) in imgArr">
-          <div class="brief">
-            <div :class="captionStyle">
-              <span v-text="getValue(o, [ 'content', 0, 'description' ], '')"></span>
+            <div class="img">
+              <img :src="getValue(o, [ 'content', 0, 'url' ])" :class="landscapeClass"
+                    :srcset="`${getValue(o, [ 'content', 0, 'mobile', 'url' ])} 800w,
+                              ${getValue(o, [ 'content', 0, 'tablet', 'url' ])} 1200w,
+                              ${getValue(o, [ 'content', 0, 'desktop', 'url' ])} 2000w`" />      
             </div>
-          </div>
-          <div class="img">
-            <img :src="getValue(o, [ 'content', 0, 'url' ])" :class="landscapeClass"
-                  :srcset="`${getValue(o, [ 'content', 0, 'mobile', 'url' ])} 800w,
-                            ${getValue(o, [ 'content', 0, 'tablet', 'url' ])} 1200w,
-                            ${getValue(o, [ 'content', 0, 'desktop', 'url' ])} 2000w`" />      
-          </div>
-        </section>
+          </section>
+        </div>
       </div>
     </div>
     <div class="credit-comment" :class="creditCommentClass">
@@ -66,10 +70,11 @@
 <script>
   import { OnePageScroller } from 'kc-scroll'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-  import { getValue, addClass, removeClass } from '../../util/comm'
+  import { getClientOS, getValue, addClass, removeClass } from '../../util/comm'
   import { shareGooglePlus, shareLine, shareFacebook } from '../../util/comm'
   import _ from 'lodash'
   import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
+  import verge from 'verge'
 
   export default {
     components: {
@@ -102,7 +107,8 @@
       },
       creditCommentClass () {
         return {
-          show: this.creditCommentShow
+          show: this.creditCommentShow,
+          active: this.creditCommentFixed
         }
       },
       goNextPageClass () {
@@ -148,17 +154,23 @@
     },
     data () {
       return {
+        touchLock: false,
         currIndex: 1,
+        currOS: '',
         creditCommentShow: false,
+        creditCommentFixed: false,
         descHide: false,
         descSwitch: _.get(this.articleData, [ 'isAdvertised' ], false),
         lastAnimation: 0,
+        leadingWrapperHide: false,
         isLandscape: false,
         goNextPageHide: false,
         onePageScroll: (new OnePageScroller()),
+        picContainerActive: false,
         quietPeriod: 700,
         scrollingFlag: false,
         stickflag: [],
+        touchDelta: 0,
         touchStartY: 0
       }
     },
@@ -168,7 +180,7 @@
       getValue,
       goNextPage () {
         const nextPage = this.currIndex <= this.imgArr.length ? this.currIndex + 1 : this.currIndex
-        if (this.currIndex < this.imgArr.length + 1) {
+        if (this.currIndex < this.imgArr.length) {
           this.onePageScroll.moveTo(nextPage)
         } else {
           this.smoothScroll('.credit-comment')
@@ -194,37 +206,21 @@
         }
       },
       initOnepage () {
-        this.onePageScroll.init('.article_body', {
+        this.onePageScroll.init('.pic-wrapper', {
           afterMove: (index, next_el) => {
             this.currIndex = parseInt(index)
             this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
-            if (this.currIndex === this.imgArr.length + 1) {
+            if (this.currIndex === this.imgArr.length) {
               this.creditCommentShow = true
-              this.initFBComment()
-              removeClass(document.body, 'limited-height')
-              removeClass(document.documentElement, 'limited-height')
-              setTimeout(() => {
-                document.addEventListener('touchstart', this.touchStartHandler)
-                document.addEventListener('touchend', this.touchEndHandler)
-                document.addEventListener('mousewheel', this.mouseWheelHandler)
-                document.addEventListener('DOMMouseScroll', this.mouseWheelHandler)
-              }, 1000)
             } else {
               this.creditCommentShow = false
-              document.removeEventListener('touchstart', this.touchStartHandler)
-              document.removeEventListener('touchmove', this.touchMoveHandler)
-              document.removeEventListener('touchend', this.touchEndHandler)
-              document.removeEventListener('mousewheel', this.mouseWheelHandler)
-              document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
-              addClass(document.body, 'limited-height')
-              addClass(document.documentElement, 'limited-height')
             }
           },
           animationTime: 500,
           beforeMove: (index, next_el) => {
             this.smoothScroll('.article_body')
             if (parseInt(index) > this.currIndex) {
-              this.sideProgressHandler('pass', parseInt(index - 1))
+              this.sideProgressHandler('pass', parseInt(index) - 1)
             } else {
               this.sideProgressHandler('back', parseInt(index))
             }
@@ -235,51 +231,41 @@
           quietPeriod: 750
         })
       },
-      mouseWheelHandler (evt) {
+      mouseWheelHandlerN (evt) {
         const delta = evt.wheelDelta || -evt.detail
-        const targ = evt.target
-        const timeNow = new Date().getTime()
-
-        const shouldDo = this.onePageScroll._isDescendant(document.querySelector('.article_body'), targ)
-
-        const creditCommentTopY = this.elmYPosition('.credit-comment')
-        const currTop = this.currentYPosition()
-
-        if (delta < 0 && this.currIndex === this.imgArr.length + 1 && shouldDo && creditCommentTopY > currTop) {
-          if (timeNow - this.lastAnimation < this.quietPeriod + 500) {
-            evt.preventDefault()
-            return
-          } else {
-            this.smoothScroll('.credit-comment')
-            this.onePageScroll.pauseToggle()
+        if (delta < 0) {
+          if (this.currIndex === this.imgArr.length) {
+            this.picContainerActive = false
+            this.onePageScroll.doPause()
           }
-        } else if (delta > 0 && this.currIndex === this.imgArr.length + 1 && !shouldDo) {
-          if (creditCommentTopY > currTop) {
-            if (this.scrollingFlag === true) {
-              evt.preventDefault()
-              return
-            } else {
-              this.smoothScroll('.article_body')
-              this.scrollingFlag = true
-              setTimeout(() => {
-                this.scrollingFlag = false
-                this.onePageScroll.pauseToggle()
-              }, 1000)
-            }
+        } else if (delta > 0) {
+          if (this.currIndex === 1) {
+            this.picContainerActive = false
+            this.onePageScroll.doPause()
+            this.leadingWrapperHide = false
+          } else {
+            this.leadingWrapperHide = true
           }
         }
-        this.lastAnimation = timeNow
       },
       scrollHandler (e) {
+        const deviceHeight = verge.viewportH()
         const currTop = this.currentYPosition()
-        const creditCommentTopY = this.elmYPosition('.credit-comment')
-        const tHtml = document.documentElement
-        if (currTop + (tHtml.clientHeight / 2) > creditCommentTopY && creditCommentTopY !== 0) {
-          this.goNextPageHide = true
-          this.descHide = true
+        const currBtm = currTop + deviceHeight
+        const articleBodyTopY = this.elmYPosition('.article_body')
+        const articleBodyBtmY = articleBodyTopY + deviceHeight
+
+        if ((articleBodyTopY <= currTop && this.currIndex === 1) || (articleBodyBtmY >= currBtm && this.currIndex === this.imgArr.length)) {
+          this.picContainerActive = true
+          this.touchLock = true
+          if (this.onePageScroll.pauseFlag) {
+            setTimeout(() => {
+              this.onePageScroll.cancelPause()
+            }, 1000)
+          }
         } else {
-          this.goNextPageHide = false
-          this.descHide = false
+          this.touchLock = false
+          this.picContainerActive = false
         }
       },
       setUpHtmlHeight () {
@@ -343,40 +329,47 @@
         this.descSwitch = !this.descSwitch
         this.descShowDefault = false
       },
-      touchEndHandler () {
-        document.removeEventListener('touchmove', this.touchMoveHandler)
-      },
-      touchStartHandler (event) {
-        const touches = event.touches
-
-        if (touches && touches.length) {
-          this.touchStartY = touches[0].pageY
-          document.addEventListener('touchmove', this.touchMoveHandler)
-        }
-      },
-      touchMoveHandler (event) {
-        const targ = event.target
-        const touches = event.touches
-
-        const creditCommentTopY = this.elmYPosition('.credit-comment')
-        const currTop = this.currentYPosition()
-        const shouldDo = this.onePageScroll._isDescendant(document.querySelector('.article_body'), targ)
-        const timeNow = new Date().getTime()
-
-        if (touches && touches.length) {
-          const deltaY = this.touchStartY - touches[0].pageY
-          if (deltaY >= 50 && shouldDo && creditCommentTopY > currTop) {
-            if (timeNow - this.lastAnimation < this.quietPeriod + 500) {
-              event.preventDefault()
-              return
-            } else {
-              this.smoothScroll('.credit-comment')
-              this.onePageScroll.pauseToggle()
-              this.lastAnimation = timeNow
-            }
-          } else if (deltaY <= -50 && !shouldDo) {
+      touchEndHandlerN (event) {
+        const deltaY = event.pageY - this.touchStartY
+        document.removeEventListener('touchmove', this.touchMoveHandlerN)
+        if (deltaY >= 50) {
+          if (this.currIndex === 1) {
+            this.picContainerActive = false
+            this.onePageScroll.doPause()
+            this.touchLock = false
+            this.leadingWrapperHide = false
+          } else {
+            this.leadingWrapperHide = true
+          }
+        } else if (deltaY <= -50) {
+          if (this.currIndex === this.imgArr.length) {
+            this.picContainerActive = false
+            this.onePageScroll.doPause()
+            this.touchLock = false
+            this.leadingWrapperHide = true
           }
         }
+      },
+      touchStartHandlerN (event) {
+        const target = event.target
+        const touches = event.touches
+        if (touches && touches.length) {
+          this.touchStartY = touches[0].pageY
+          document.addEventListener('touchmove', this.touchMoveHandlerN)
+          if (this.touchLock) {
+            if (target.getAttribute('class').indexOf('go-next-page') === -1 &&
+                target.getAttribute('class').indexOf('mm-icon') === -1 &&
+                target.getAttribute('class').indexOf('icon line') === -1 &&
+                target.getAttribute('class').indexOf('icon facebook') === -1 &&
+                target.getAttribute('class').indexOf('icon g-plus') === -1 &&
+                target.getAttribute('class').indexOf('btn-toggle-description') === -1) {
+              return event.preventDefault()
+            }
+          }
+        }
+      },
+      touchMoveHandlerN (event) {
+        return event.preventDefault()
       },
       updateProgressbar (percentage) {
         return new Promise((resolve) => {
@@ -392,6 +385,7 @@
     mounted () {
       this.updateIsLandscape()
       this.smoothScroll(null, 0)
+      this.currOS = getClientOS()
 
       Promise.all([
         this.setUpHtmlHeight(),
@@ -402,9 +396,19 @@
       if (window === undefined) {
         window.addEventListener('load', () => {
           this.initOnepage()
+          this.onePageScroll.doPause()
+          if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('mousewheel', this.mouseWheelHandlerN) }
+          if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('DOMMouseScroll', this.mouseWheelHandlerN) }
+          if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchstart', this.touchStartHandlerN) }
+          if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchend', this.touchEndHandlerN) }
         })
       } else {
         this.initOnepage()
+        this.onePageScroll.doPause()
+        if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('mousewheel', this.mouseWheelHandlerN) }
+        if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('DOMMouseScroll', this.mouseWheelHandlerN) }
+        if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchstart', this.touchStartHandlerN) }
+        if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchend', this.touchEndHandlerN) }
       }
     },
     beforeRouteLeave (to, from, next) {
@@ -440,6 +444,69 @@
   }
 </script>
 <style lang="stylus" scoped>
+  .leading
+    height calc(180vh)
+    &_wrapper
+      position fixed
+      top 0
+      left 0
+      height 100vh
+      width 100vw
+      &.hide
+        opacity 0
+      .title
+        position relative
+        span
+          position absolute
+          height 100vh
+          width 100vw
+          display flex
+          justify-content center
+          padding-top 10%
+          z-index 10
+          background-image linear-gradient(0deg, transparent, rgba(0,0,0,0.5))
+          h2
+            font-size 2.5rem
+            color #fff
+            font-weight 300
+            text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
+            font-family 'Noto Sans TC','STHeitiTC-Light','Microsoft JhengHei',sans-serif
+      .brief
+        & > div
+          position absolute
+          z-index 10
+          height 20vh
+          width 100vw
+          display flex
+          justify-content flex-start
+          align-items center
+          flex-direction column
+          background-image linear-gradient(180deg,transparent,rgba(0,0,0,0.7))
+          bottom 0   
+
+          div
+            margin-bottom 20px
+            color #d1d1d1
+            text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
+
+          span
+            width 70%
+            color #fff
+            text-align left
+            word-break break-all
+            display flex
+            align-items center
+            justify-content center
+            bottom 0
+            line-height 20px
+            text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
+            font-size 16px
+
+          &.hide
+            display none
+
+          &.show
+            display flex
   .sharebox
     position fixed
     top 0
@@ -538,7 +605,7 @@
     height 40px
     position fixed
     transition all .1s
-    z-index 102
+    z-index 23
     width 40px
 
     .hint
@@ -613,10 +680,11 @@
     width 100vw
     position relative
     padding 5% 0
-    background-color rgba(51, 51, 51, 0.83)
+    background-color #333333
     overflow auto
     height auto
     display none
+    z-index 21
     .credit
       color #fff
       width 900px
@@ -642,6 +710,10 @@
       padding 1.5rem
     &.show
       display block
+    &.active
+      position fixed
+      top 0
+      left 0
 
   .go-next-page
       position fixed
@@ -654,7 +726,7 @@
       background-size contain
       background-position center center
       border-radius 10px
-      z-index 20
+      z-index 23
       cursor pointer
       -webkit-transition all .1s
       transition all .1s
@@ -669,43 +741,36 @@
 
   .article_body
     height 100vh
-    > .pic-container
-      > .pic-section
-        width 100vw
-        height 100vh
-        overflow hidden
-        position relative
-        background-color #000
-        
-        .img
-
-          img
-            object-fit contain
-            max-height 100%
-            position absolute
-            z-index 0
-            height 100vh
-            width 100vw
-            object-position center center  
-    
-    .title
-      position relative
-      span
-        position absolute
-        height 100vh
-        width 100vw
-        display flex
-        justify-content center
-        padding-top 10%
-        z-index 10
-        background-image linear-gradient(0deg, transparent, rgba(0,0,0,0.5))
-        h2
-          font-size 2.5rem
-          color #fff
-          font-weight 300
-          text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
-          font-family 'Noto Sans TC','STHeitiTC-Light','Microsoft JhengHei',sans-serif
-
+    width 100vw
+    overflow hidden
+    > .pic-wrapper
+      width 100vw
+      height 100vh
+      &.active
+        position fixed
+        top 0
+        left 0
+        z-index 22
+      > .pic-container
+        &.active
+          position fixed
+          top 0
+          left 0
+        > .pic-section
+          width 100vw
+          height 100vh
+          overflow hidden
+          position relative
+          background-color #000        
+          .img
+            img
+              object-fit contain
+              max-height 100%
+              position absolute
+              z-index 0
+              height 100vh
+              width 100vw
+              object-position center center
     .brief
       & > div
         position absolute
@@ -741,16 +806,56 @@
           display none
 
         &.show
-          display flex
-      
-    
-
-    
+          display flex    
   @media (min-width 768px)
     .mobile-only
       display none !important
 
-  @media (max-width 767px) and (min-width 0px)
+  @media screen and (-webkit-min-device-pixel-ratio:0) and (max-width 767px) and (orientation:landscape)
+    .go-next-page
+      bottom auto
+      top 23px
+    .btn-toggle-description
+      bottom auto
+      left auto
+      top 20px
+      right 55px
+      .hint
+        top 45px
+        left auto
+  @media (max-width 767px)
+    .leading
+      &.widthDesc
+        background-image linear-gradient(180deg, transparent, rgba(0,0,0,0.7))
+      &_wrapper
+        .title
+          span
+            text-align center
+            padding 20px          
+            margin-bottom 0!important
+            position relative
+            height auto
+            width 100%
+            display inline-block
+        .img
+          width 100%
+          height 100%
+          position absolute
+          top 0
+          left 0
+          img:not([class="landscape"])
+            width 100%
+            height 100%
+            object-fit cover
+            object-position center center
+            background-color #696969
+        
+        .brief
+          position relative
+          & > div
+            height auto
+            background-image none
+            position relative
     .go-next-page
       &.center
         left 50%
@@ -771,23 +876,18 @@
         width 100%
         margin 40px auto 0
     .article_body
-      > .pic-container
-        > .pic-section
-          .title
-            span
-              text-align center
-              padding 20px          
-              margin-bottom 0!important
-
-          .img
-            img:not([class="landscape"])
-              object-fit contain
-              object-position 0 20%
-              background-color #696969
-          
-          .brief
-            & > div
-              height 40vh
+      > .pic-wrapper
+        > .pic-container
+          > .pic-section
+            .img
+              img:not([class="landscape"])
+                object-fit contain
+                object-position 0 20%
+                background-color #696969
+            
+            .brief
+              & > div
+                height 40vh
 
 
 </style>
