@@ -515,8 +515,8 @@
       getMmid () {
         const mmid = Cookie.get('mmid')
         const role = getRole({ mmid, distribution: [
-          { id: 'A', weight: 50 },
-          { id: 'B', weight: 50 } ]
+          { id: 'A', weight: 100 },
+          { id: 'B', weight: 0 } ]
         })
         return role
       },
