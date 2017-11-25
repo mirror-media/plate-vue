@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div ref="photos" class="photos">
     <div class="sharebox">
       <div class="mm-icon" @click="goHome"></div>
       <div class="share-icon">
@@ -284,6 +284,12 @@
           resolve()
         })
       },
+      setUpSelectorPreventor () {
+        return new Promise((resolve) => {
+          this.$refs[ 'photos' ].ondragstart = function () { return false }
+          this.$refs[ 'photos' ].onselectstart = function () { return false }
+        })
+      },
       setUpResizeHandler () {
         return new Promise((resolve) => {
           window.removeEventListener('resize', this.updateIsLandscape)
@@ -357,12 +363,13 @@
           this.touchStartY = touches[0].pageY
           document.addEventListener('touchmove', this.touchMoveHandlerN)
           if (this.touchLock) {
-            if (target.getAttribute('class').indexOf('go-next-page') === -1 &&
-                target.getAttribute('class').indexOf('mm-icon') === -1 &&
-                target.getAttribute('class').indexOf('icon line') === -1 &&
-                target.getAttribute('class').indexOf('icon facebook') === -1 &&
-                target.getAttribute('class').indexOf('icon g-plus') === -1 &&
-                target.getAttribute('class').indexOf('btn-toggle-description') === -1) {
+            const targClass = target.getAttribute('class') || ''
+            if (targClass.indexOf('go-next-page') === -1 &&
+                targClass.indexOf('mm-icon') === -1 &&
+                targClass.indexOf('icon line') === -1 &&
+                targClass.indexOf('icon facebook') === -1 &&
+                targClass.indexOf('icon g-plus') === -1 &&
+                targClass.indexOf('btn-toggle-description') === -1) {
               return event.preventDefault()
             }
           }
@@ -390,7 +397,8 @@
       Promise.all([
         this.setUpHtmlHeight(),
         this.setUpResizeHandler(),
-        this.setUpScrollHandler()
+        this.setUpScrollHandler(),
+        this.setUpSelectorPreventor()
       ])
 
       if (window === undefined) {
@@ -444,6 +452,13 @@
   }
 </script>
 <style lang="stylus" scoped>
+  .photos
+    -webkit-touch-callout none
+    -webkit-user-select none
+    -khtml-user-select none
+    -moz-user-select none
+    -ms-user-select none
+    user-select none
   .leading
     height calc(180vh)
     &_wrapper
