@@ -115,10 +115,7 @@
       <div class="dfpad-set" style="display: flex; justify-content: space-around;">
         <slot name="dfpad-set"></slot>
       </div>
-      <div>
-        <h3>推薦文章</h3>
-      </div>
-      <div id="matchedContentContainer" class="matchedContentContainer"></div>
+      <slot name="recommendList"></slot>
       <div class="article_main_pop">
         <slot name="poplist"></slot>
       </div>

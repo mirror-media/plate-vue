@@ -32,6 +32,11 @@
             
             <related-list-one-col :isApp="true" :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+            <template slot="recommendList">
+              <div v-if="abIndicator === 'A' || (abIndicator === 'B' && recommendlist.lenth > 0)"><h3>推薦文章</h3></div>
+              <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A'" ></div>
+              <RecommendList v-else="abIndicator === 'B'" :recommendList="recommendlist"></RecommendList>
+            </template>
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
@@ -67,6 +72,7 @@
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd, insertVponAdSDK, sendAdCoverGA, updateCookie, vponHtml } from '../util/comm'
+  import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleBody from '../components/article/ArticleBodyForApp.vue'
@@ -80,6 +86,7 @@
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import PopList from '../components/article/PopList.vue'
+  import RecommendList from '../components/article/RecommendList.vue'
   import RelatedList from '../components/article/RelatedList.vue'
   import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
   import ShareTools from '../components/article/ShareTools.vue'
@@ -121,6 +128,14 @@
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
+  const fetchRecommendList = (store, id) => {
+    return store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
+      params: {
+        id: id
+      }
+    })
+  }
+
   const fetchLatestArticle = (store, params) => {
     return store.dispatch('FETCH_LATESTARTICLE', { params: params })
   }
@@ -134,7 +149,10 @@
   }
 
   const fetchData = (store) => {
-    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
+    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug).then(() => {
+      const id = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { 'slug': store.state.route.params.slug }), [ 'id' ], '')
+      return fetchRecommendList(store, id)
+    }) ])
   }
 
   export default {
@@ -172,10 +190,15 @@
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
 
+      let abIndicator
+      if (process.env.VUE_ENV === 'client') {
+        abIndicator = this.getMmid()
+      }
+
       return {
         title: truncate(title, 21) + ` - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="">
+          <meta name="mm-opt" content="${abIndicator}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
           <meta name="section-name" content="${sectionName}">
@@ -203,16 +226,21 @@
         next(vm => {
           const _targetArticle = _.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
           if (!_targetArticle) {
-            fetchArticles(vm.$store, to.params.slug).then(() => {
-              const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
-              return fetchLatestArticle(vm.$store, {
-                sort: '-publishedDate',
-                where: {
-                  'sections': _.get(sections, [ 0, 'id' ])
-                }
-              })
-            })
-            fetchPop(vm.$store)
+            Promise.all([
+              fetchArticles(vm.$store, to.params.slug).then(() => {
+                const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
+                return fetchLatestArticle(vm.$store, {
+                  sort: '-publishedDate',
+                  where: {
+                    'sections': _.get(sections, [ 0, 'id' ])
+                  }
+                })
+              }).then(() => {
+                const id = _.get(_.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { 'slug': vm.$store.state.route.params.slug }), [ 'id' ], '')
+                return fetchRecommendList(vm.$store, id)
+              }),
+              fetchPop(vm.$store)
+            ])
           }
         })
       } else {
@@ -230,6 +258,9 @@
         }).then(() => {
           next()
         })
+      }).then(() => {
+        const id = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
+        return fetchRecommendList(this.$store, id)
       })
     },
     beforeRouteLeave (to, from, next) {
@@ -269,11 +300,12 @@
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
-      DfpCover
+      DfpCover,
+      RecommendList
     },
     data () {
       return {
-        abIndicator: '',
+        abIndicator: 'A',
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpMode: 'prod',
@@ -455,6 +487,9 @@
         const items = _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
         return items
       },
+      recommendlist () {
+        return _.get(this.$store, [ 'state', 'articlesRecommendList', 'relatedNews' ], [])
+      },
       relateds () {
         return _.get(this.articleData, [ 'relateds' ], [])
       },
@@ -477,22 +512,13 @@
       closeDfpFixed () {
         this.showDfpFixedBtn = false
       },
-      getMmab () {
-        const mmab = Cookie.get('mmab')
-        if (mmab === 'a' && this.viewport >= 1200) {
-          window.ga('send', 'event', 'mm-opt', 'visible', 'articleA', {
-            nonInteraction: true
-          })
-          this.abIndicator = '-a'
-        } else if (mmab === 'b' && this.viewport >= 1200) {
-          window.ga('send', 'event', 'mm-opt', 'visible', 'articleB', {
-            nonInteraction: true
-          })
-          this.abIndicator = '-b'
-        } else {
-          this.abIndicator = ''
-        }
-        return mmab
+      getMmid () {
+        const mmid = Cookie.get('mmid')
+        const role = getRole({ mmid, distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 } ]
+        })
+        return role
       },
       getTruncatedVal,
       getValue (o = {}, p = [], d = '') {
@@ -593,6 +619,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
+      this.abIndicator = this.getMmid()
       this.sendGA(this.articleData)
     },
     updated () {

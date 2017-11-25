@@ -16,7 +16,7 @@ function _buildQuery (params = {}) {
       if (ele === 'where' || ele === 'embedded') {
         query[ele] = JSON.stringify(params[ele])
       } else if (ele === 'id') {
-        query[ele] = params[ele].join(',')
+        query[ele] = typeof params[ele] === 'string' ? params[ele] : params[ele].join(',')
       } else {
         query[ele] = params[ele]
       }
@@ -322,7 +322,7 @@ export function fetchQuestionnaire (id) {
   return loadQuestionnaire(id)
 }
 
-export function fetchRelatedList (params = {}) {
+export function fetchRecommendList (params = {}) {
   return loadData(params, 'related_news')
 }
 
