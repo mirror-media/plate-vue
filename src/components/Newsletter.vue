@@ -220,6 +220,7 @@ $offset = 126
 $duration = 1.4s
 
 .newsletter
+  clear both
   display flex
   flex-direction column
   justify-content center
