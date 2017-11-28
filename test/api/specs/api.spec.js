@@ -1,8 +1,8 @@
-const supertest = require('supertest')
-
-const api = supertest('http://localhost:8080')
 const chai = require('chai')
 const should = chai.should()
+
+const supertest = require('supertest')
+const api = supertest('http://localhost:8080')
 
 describe('Api: fetchRelatedList', () => {
   it('should get related news list from api', (done) => {
