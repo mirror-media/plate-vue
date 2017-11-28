@@ -1,6 +1,6 @@
 <template>
-  <div class="recommend-main-container" v-if="(recommendList.length > 0)">
-    <div class="recommend-list">
+  <div class="recommend-main-container">
+    <div class="recommend-list" v-if="(recommendList.length > 0)">
       <template v-for="(articles, index) in recommendArticleArr">
         <div class="recommend-list_item" v-for="(o, i) in recommendArticleArr[ index ]" v-if="i < 9">
           <router-link :to="getValue(o, [ 'slug' ])" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}-1`">
@@ -21,8 +21,6 @@
 import _ from 'lodash'
 import { SECTION_MAP } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../util/comm'
-import { microAds } from '../../constants/microAds'
-import sanitizeHtml from 'sanitize-html'
 
 export default {
   name: 'recommend-list-main',
@@ -36,9 +34,7 @@ export default {
   },
   data () {
     return {
-      currEnv: 'prod',
-      microAdLoded: {},
-      microAds
+      currEnv: 'prod'
     }
   },
   methods: {
@@ -63,8 +59,7 @@ export default {
       const section = _.get(article, [ 'sections', 0, 'title' ], 'ceshi')
       const category = _.get(article, [ 'categories', 0, 'title' ], 'FASDFF')
       return (section.length > 0) ? section : category
-    },
-    sanitizeHtml
+    }
   },
   mounted () {},
   props: {

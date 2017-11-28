@@ -1,3 +1,5 @@
+const { getRole } = require('../util')
+
 module.exports = function (browser) {
   this.showArticleContainer = () => {
     return browser.assert.elementPresent('.article-container')
@@ -30,5 +32,19 @@ module.exports = function (browser) {
       .assert.elementPresent('main.article_main > article.content')
       .assert.elementPresent('main.article_main > .article_main_related_bottom')
       .assert.elementPresent('main.article_main > .article_main_tags')
+  }
+  this.showRecommendList = () => {
+    return browser.getCookie('mmid', function callback(result) {
+      const mmid = result.value
+      const role = getRole({ mmid, distribution: [
+        { id: 'A', weight: 100 },
+        { id: 'B', weight: 0 } ]
+      })
+      if (role === 'B') {
+        return this.assert.elementPresent('.recommend-main-container')
+      } else {
+        return this
+      }
+    })
   }
 }

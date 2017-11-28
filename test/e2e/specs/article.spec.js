@@ -14,6 +14,7 @@ module.exports = {
       .page.article().showDivAriticle()
       .page.article().showDivArticleBody()
       .page.article().showDivAriticleMain()
+      .page.article().showRecommendList()
       .end()
   }
 };
