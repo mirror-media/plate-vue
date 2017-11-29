@@ -154,7 +154,7 @@ function render (req, res, next) {
       try {
         global.gc()
       } catch (e) {
-        process.exit(1)
+        // process.exit(1)
       }
     }
   })
