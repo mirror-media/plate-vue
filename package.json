@@ -5,13 +5,14 @@
   "private": true,
   "scripts": {
     "api": "node test/api/runner.js --timeout 5000 test/api/specs/*.spec.js",
-    "dev": "forever -e err.log serverCluster.js",
-    "start": "cross-env NODE_ENV=production PORT=8080 forever -e err.log serverCluster.js",
+    "dev": "run npm-forever",
+    "start": "cross-env NODE_ENV=production PORT=8080 npm run npm-forever",
     "build": "rimraf dist && npm run build:client && npm run build:server",
     "build:client": "cross-env NODE_ENV=production webpack --config build/webpack.client.config.js --progress --hide-modules",
     "build:server": "cross-env NODE_ENV=production webpack --config build/webpack.server.config.js --progress --hide-modules",
     "e2e": "node test/e2e/runner.js",
     "lint": "eslint --ext .js,.vue src test/unit/specs",
+    "npm-forever": "forever -e err.log -c 'node --expose-gc' serverCluster.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "unit-watch": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js",
     "validate": "npm ls"
