@@ -5,12 +5,19 @@ const LRU = require('lru-cache')
 const express = require('express')
 const favicon = require('serve-favicon')
 const compression = require('compression')
+const memwatch = require('memwatch-next')
 const microcache = require('route-cache')
 const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
 
+memwatch.on('leak', function(info) {
+  console.log('GETING MEMORY LEAK:', _.map(info, (o, k) => (`${k}: ${o}`)).join(', '))
+})
+memwatch.on('stats', function(stats) {
+  console.log('GC STATs:', _.map(stats, (o, k) => (`${k}: ${o}`)).join(', '))
+})
 
 const isProd = process.env.NODE_ENV === 'production'
 // const useMicroCache = process.env.MICRO_CACHE !== 'false'
@@ -144,7 +151,11 @@ function render (req, res, next) {
 
   res.on('finish', function () {
     if (isPageNotFound || isErrorOccurred) {
-      process.exit(1)
+      try {
+        global.gc()
+      } catch (e) {
+        process.exit(1)
+      }
     }
   })
 
