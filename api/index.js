@@ -336,7 +336,15 @@ router.get('*', (req, res) => {
             }
           ).end((error, response) => {
             if (!error && response) {
-              const res_data = JSON.parse(response.text)
+              let res_data
+              try {
+                res_data = JSON.parse(response.text)
+              } catch (e) {
+                res.send(e)
+                console.error(`got bad data from: ${req.url}`)
+                console.error(e) 
+                return 
+              }
               const res_num = _.get(res_data, [ '_meta', 'total' ])
               if (res_num && res_num > 0) {
                 redisWriting(req.url, response.text)
