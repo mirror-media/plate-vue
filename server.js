@@ -136,7 +136,7 @@ function render (req, res, next) {
         res.status(403).send('403 | Forbidden')
         return
       }
-      res.status(500).render('500')
+      res.status(500).render('500', { err, timestamp: (new Date).toString() })
       return 
     } 
   }

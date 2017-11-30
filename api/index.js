@@ -87,7 +87,7 @@ const redisWriting = (url, data, callback) => {
 }
 
 router.all('/', function(req, res, next) {
-    next()
+  next()
 });
 
 const fetchStaticJson = (req, res, next, jsonFileName) => {
@@ -315,25 +315,12 @@ router.use('/related_news', function(req, res, next) {
   })
 })
 
-function LeakingClass() {
-}
-
 router.get('*', (req, res) => {
-
-  var leaks = [];
-  setInterval(function() {
-    for (var i = 0; i < 1000; i++) {
-      leaks.push(new LeakingClass);
-    }
-    const mem = process.memoryUsage()
-    // console.log('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), leaks.length)
-  }, 1000);
-
     res.header('Cache-Control', 'public, max-age=300');
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "X-Requested-With")
     console.log(apiHost)
-    console.log(decodeURIComponent(req.url))
+    console.log(decodeURIComponent(req.url)) 
     try {
       redisFetching(req.url, ({ err, data }) => {
         if (!err && data) {
