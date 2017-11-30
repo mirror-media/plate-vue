@@ -42,6 +42,8 @@
   import WatchItemLightboxPC from './WatchItemLightboxPC.vue'
   import { getImageCertain, getValue } from '../../util/comm'
 
+  const MAXRESULT = 200
+
   const fetchHotWatch = (store) => {
     return store.dispatch('FETCH_HOT_WATCH', {})
   }
@@ -49,7 +51,8 @@
   const fetchWatch = (store) => {
     return store.dispatch('FETCH_WATCH', {
       params: {
-        related: 'full'
+        related: 'full',
+        max_results: MAXRESULT
       }
     })
   }
@@ -59,7 +62,11 @@
   }
 
   const fetchWatchFunctions = (store) => {
-    return store.dispatch('FETCH_WATCH_FUNCTIONS', {})
+    return store.dispatch('FETCH_WATCH_FUNCTIONS', {
+      params: {
+        max_results: 50
+      }
+    })
   }
 
   const fetchLeadingImg = (store, { uuid }) => {

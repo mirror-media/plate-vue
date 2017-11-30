@@ -11,7 +11,6 @@
       <div class="lightbox-wrapper--content">
         <div class="brief">
           <div class="brand" v-text="getValue(lightboxItem, [ 'brand', 'name' ])"></div>
-          <div class="name" v-text="getValue(lightboxItem, [ 'name' ])"></div>
           <div class="type" v-text="getValue(lightboxItem, [ 'type' ])"></div>
           <div class="price" v-text="price"></div>
         </div>
@@ -39,7 +38,7 @@
           <div class="item functions">
             <div class="item--title"><span v-text="WORDING[ 'FUNCTIONS' ]"></span></div>
             <div class="item--content">
-              <span v-for="fn in getValue(lightboxItem, [ 'watchfunction' ])" v-text="fn.name"></span>
+              <span v-for="(fn, i) in getValue(lightboxItem, [ 'watchfunction' ])" v-text="i !== 0 ? `、${fn.name}` : fn.name"></span>
             </div>
           </div>
         </div>
@@ -132,7 +131,11 @@
         > div:not(.content)
           padding 0 50px 0 30px
           margin 30px 0
+        > div
+          > div.title
+            color #404040
         > .brief
+          color #404040
           > div
             margin 0.2rem 0
             font-size 1rem
@@ -167,17 +170,19 @@
             margin 1rem 1.5rem 0 0
             vertical-align top
             font-size 0.9rem
+            line-height 1.5rem
             &--title, &--content
               vertical-align top
               display inline-block
             &--title
               width 34%
+              color #000
             &--content
+              color #808080
               margin-left 0.8rem
               width calc(66% - 0.8rem)
               > span
                 display inline-block
-                margin-right 0.5rem
             &.functions
               width calc(66% - 1.5rem)
               > .item--title
@@ -194,4 +199,7 @@
             text-align left
             margin 1rem 0
             font-size 0.9rem
+            > a
+              &, &:hover, &:link, &:visited
+                color #808080
 </style>

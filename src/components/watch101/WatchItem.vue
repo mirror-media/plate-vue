@@ -8,7 +8,7 @@
               ${getValue(item, [ 'watchImage', 'image', 'resizedTargets', 'desktop', 'url' ], '')} 2000w`">
     </div>
     <div class="watch-item--brand" v-text="getValue(item, [ 'brand', 'name' ], '')"></div>
-    <div class="watch-item--name" v-text="getValue(item, [ 'name' ], '')"></div>
+    <div class="watch-item--name" v-text="getValue(item, [ 'type' ], '')"></div>
     <div class="watch-item--price" v-text="getPice(getValue(item, [ 'price' ], ''))"></div>
   </div>
 </template>

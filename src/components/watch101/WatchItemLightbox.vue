@@ -10,7 +10,6 @@
               ${getValue(lightboxItem, [ 'watchImage', 'image', 'resizedTargets', 'desktop', 'url' ], '')} 2000w`">
         </div>
         <div class="brand" v-text="getValue(lightboxItem, [ 'brand', 'name' ])"></div>
-        <div class="name" v-text="getValue(lightboxItem, [ 'name' ])"></div>
         <div class="type" v-text="getValue(lightboxItem, [ 'type' ])"></div>
         <div class="price" v-text="price"></div>
       </div>
@@ -30,7 +29,7 @@
         <div class="lightbox-wrapper--specification_item">
           <div class="title"><span v-text="WORDING[ 'FUNCTIONS' ]"></span></div>
           <div class="content">
-            <span v-for="fn in getValue(lightboxItem, [ 'watchfunction' ])" v-text="fn.name"></span>
+            <span v-for="(fn, i) in getValue(lightboxItem, [ 'watchfunction' ])" v-text="i !== 0 ? `、${fn.name}` : fn.name"></span>
           </div>
         </div>
         <div class="lightbox-wrapper--specification_item">
@@ -100,6 +99,9 @@
       height 100%
       position relative
       overflow auto
+      > div
+        > div[class$="_title"]
+          color #404040
       &--close
         content ''
         position fixed
@@ -116,6 +118,7 @@
         // height 100vh
         background-color #fff
         padding 10px 0 20px
+        color #404040
         > div
           text-align center
         > div:not(.pic)
@@ -161,16 +164,19 @@
             vertical-align top
             color #636363
             &.title
+              color #000
               width 29%
             &.content
+              color #808080
               width 70%
               word-break break-word
               > span
                 display inline-block
-                margin 0 0.5rem 5px 0
+                margin 0 0 5px 0
       &--related
         background-color #fff
         padding-bottom 40px
+        line-height 1.5rem
         &_title
           padding 20px
           font-size 1.3rem

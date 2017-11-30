@@ -10,7 +10,7 @@
               ${getValue(watch, [ 'watchImage', 'image', 'resizedTargets', 'desktop', 'url' ], '')} 2000w`">
       </div>
       <div class="hot-item--title"><span v-text="getValue(watch, [ 'brand', 'name' ])"></span></div>
-      <div class="hot-item--desc"><span v-text="getValue(watch, [ 'name' ])"></span></div>
+      <div class="hot-item--desc"><span v-text="getValue(watch, [ 'type' ])"></span></div>
     </div>
   </div>
 </template>
