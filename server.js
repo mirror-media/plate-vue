@@ -155,7 +155,7 @@ function render (req, res, next) {
       for (let i = 0; i < 10; i += 1) {
         console.log('MEMORY WAS WUNNING OUT')
       } 
-      console.log('KILLING PROCESS IN 1 SECOND')
+      console.log(`KILLING PROCESS IN 1 SECOND(At ${(new Date).toString()})`)
       process.exit(1)
     }
     if (isPageNotFound || isErrorOccurred) {
@@ -229,6 +229,6 @@ memwatch.on('stats', function(stats) {
     }, 1000)
     killTimer.unref()
     server.close()
-    console.log('GOING TO KILL PROCESS IN 1 SECOND')
+    console.log(`GOING TO KILL PROCESS IN 1 SECOND(At ${(new Date).toString()})`)
   }
 })
