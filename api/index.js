@@ -75,7 +75,7 @@ const redisFetching = (url, callback) => {
 const redisWriting = (url, data, callback) => {
   redisPoolWrite.set(decodeURIComponent(url), data, function (err) {
     if(err) {
-      console.log('redis writing in fail. ', decodeURIComponent(url), err)
+      // console.log('redis writing in fail. ', decodeURIComponent(url), err)
     } else {
       redisPoolWrite.expire(decodeURIComponent(url), REDIS_TIMEOUT, function(error, d) {
         if(error) {
@@ -315,7 +315,20 @@ router.use('/related_news', function(req, res, next) {
   })
 })
 
+function LeakingClass() {
+}
+
 router.get('*', (req, res) => {
+
+  var leaks = [];
+  setInterval(function() {
+    for (var i = 0; i < 1000; i++) {
+      leaks.push(new LeakingClass);
+    }
+    const mem = process.memoryUsage()
+    // console.log('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), leaks.length)
+  }, 1000);
+
     res.header('Cache-Control', 'public, max-age=300');
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "X-Requested-With")

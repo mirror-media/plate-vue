@@ -5,6 +5,7 @@ const LRU = require('lru-cache')
 const express = require('express')
 const favicon = require('serve-favicon')
 const compression = require('compression')
+const maxMemUsageLimit = 1000 * 1024 * 1024
 const memwatch = require('memwatch-next')
 const microcache = require('route-cache')
 const requestIp = require('request-ip')
@@ -12,12 +13,9 @@ const resolve = file => path.resolve(__dirname, file)
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
 
-memwatch.on('leak', function(info) {
-  console.log('GETING MEMORY LEAK:', _.map(info, (o, k) => (`${k}: ${o}`)).join(', '))
-})
-memwatch.on('stats', function(stats) {
-  console.log('GC STATs:', _.map(stats, (o, k) => (`${k}: ${o}`)).join(', '))
-})
+const formatMem = (bytes) => {
+  return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
+}
 
 const isProd = process.env.NODE_ENV === 'production'
 // const useMicroCache = process.env.MICRO_CACHE !== 'false'
@@ -91,6 +89,7 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
  
 
 function render (req, res, next) {
+
   if (req.url.indexOf('/api/') === 0) {
     next()
     return
@@ -150,11 +149,20 @@ function render (req, res, next) {
   }
 
   res.on('finish', function () {
+    const mem = process.memoryUsage()
+    console.log('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed))
+    if (mem.heapUsed > maxMemUsageLimit) {
+      for (let i = 0; i < 10; i += 1) {
+        console.log('MEMORY WAS WUNNING OUT')
+      } 
+      console.log('KILLING PROCESS IN 1 SECOND')
+      process.exit(1)
+    }
     if (isPageNotFound || isErrorOccurred) {
       try {
         global.gc()
       } catch (e) {
-        process.exit(1)
+        // process.exit(1)
       }
     }
   })
@@ -180,9 +188,47 @@ const port = process.env.PORT || 8080
 const server = app.listen(port, () => {
   console.log(`server started at localhost:${port}`)
 })
+
 module.exports = {
   ready: readyPromise,
   close: () => {
     server.close()
   }
 }
+
+memwatch.on('leak', function(info) {
+  const growth = formatMem(info.growth)
+  const mem = process.memoryUsage()
+  console.log('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
+  console.log('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed))
+})
+memwatch.on('stats', function(stats) {
+  const estBase = formatMem(stats.estimated_base)
+  const currBase = formatMem(stats.current_base)
+  const min = formatMem(stats.min)
+  const max = formatMem(stats.max)
+  console.log('GC STATs:', [
+    'num_full_gc ' + stats.num_full_gc,
+    'num_inc_gc ' + stats.num_inc_gc,
+    'heap_compactions ' + stats.heap_compactions,
+    'usage_trend ' + stats.usage_trend,
+    'estimated_base ' + estBase,
+    'current_base ' + currBase,
+    'min ' + min,
+    'max ' + max
+  ].join(', '))
+  if (stats.current_base > maxMemUsageLimit) {
+    for (let i = 0; i < 10; i += 1) {
+      console.log('MEMORY WAS WUNNING OUT')
+    } 
+    /**
+     * kill this process gracefully
+     */
+    const killTimer = setTimeout(() => {
+      process.exit(1)
+    }, 1000)
+    killTimer.unref()
+    server.close()
+    console.log('GOING TO KILL PROCESS IN 1 SECOND')
+  }
+})
