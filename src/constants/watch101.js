@@ -11,7 +11,7 @@ export const FILTER_WORDING = {
 
 export const WORDING = {
   SPEC: '詳細規格',
-  TYPE: '手錶型號',
+  TYPE: '手錶名稱',
   MATERIAL: '錶殼材質',
   SERIES: '系列名稱',
   FUNCTIONS: '搭載功能',

@@ -75,7 +75,7 @@ const redisFetching = (url, callback) => {
 const redisWriting = (url, data, callback) => {
   redisPoolWrite.set(decodeURIComponent(url), data, function (err) {
     if(err) {
-      console.log('redis writing in fail. ', decodeURIComponent(url), err)
+      // console.log('redis writing in fail. ', decodeURIComponent(url), err)
     } else {
       redisPoolWrite.expire(decodeURIComponent(url), REDIS_TIMEOUT, function(error, d) {
         if(error) {
@@ -87,7 +87,7 @@ const redisWriting = (url, data, callback) => {
 }
 
 router.all('/', function(req, res, next) {
-    next()
+  next()
 });
 
 const fetchStaticJson = (req, res, next, jsonFileName) => {
@@ -320,7 +320,7 @@ router.get('*', (req, res) => {
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "X-Requested-With")
     console.log(apiHost)
-    console.log(decodeURIComponent(req.url))
+    console.log(decodeURIComponent(req.url)) 
     try {
       redisFetching(req.url, ({ err, data }) => {
         if (!err && data) {

@@ -2,7 +2,7 @@
   <div class="items">
     <app-slider :option="sliderOption">
       <template slot-scope="props">
-        <swiper-slide :is="props.slide" v-for="(watch, index) in list" :key="`hot-${index}`">
+        <swiper-slide :is="props.slide" v-for="(watch, index) in list" :key="`hot-${index}`" v-if="index < 10">
           <div class="hot-item" @click="openLightbox(watch)">
             <div class="hot-item--order"><span v-text="`${index + 1}`"></span></div>
             <div class="hot-item--img">
@@ -13,7 +13,7 @@
                   ${getValue(watch, [ 'watchImage', 'image', 'resizedTargets', 'desktop', 'url' ], '')} 2000w`">
             </div>
             <div class="hot-item--title"><span v-text="getValue(watch, [ 'brand', 'name' ])"></span></div>
-            <div class="hot-item--desc"><span v-text="getValue(watch, [ 'name' ])"></span></div>
+            <div class="hot-item--desc"><span v-text="getValue(watch, [ 'type' ])"></span></div>
           </div>
         </swiper-slide>
       </template>
