@@ -1,8 +1,8 @@
 <template >
   <div class="listArticleBlock" :class="{ noHoverEffect: removeHoverEffect }" >
-    <template v-if="articleType === 'campaign' || articleType === 'projects'">
+    <template v-if="articleType === 'campaign' || articleType === 'projects' || articleType === 'readr'">
       <figure class="listArticleBlock__figure">
-        <a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
+        <a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
           <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
         </a>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
@@ -76,7 +76,7 @@
 <script>
 
 import { SECTION_MAP } from '../../constants'
-import { getBrief, getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
+import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
 import _ from 'lodash'
 import moment from 'moment'
 
@@ -165,6 +165,7 @@ export default {
     },
     getBrief,
     getHref,
+    getHrefFull,
     getImage,
     getAudioCurrent () {
       this.audioCurrent = this.$refs.audio.currentTime

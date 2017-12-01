@@ -4,12 +4,12 @@
       <div class="title"><h4 :style="titleStyle()">相關文章</h4></div>
       <div class="item" v-for="(o, i) in relateds" v-if="o">
         <div class="title" v-if="!isApp">
-          <router-link :to="getHref(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related${abIndicator}-${o.name}-btm`" v-if="o.style !== 'projects'"></router-link>
-          <a :href="getHref(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related${abIndicator}-${o.name}-btm`" v-if="o.style === 'projects'"></a>
+          <router-link :to="getHref(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related${abIndicator}-${o.name}-btm`" v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'"></router-link>
+          <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related${abIndicator}-${o.name}-btm`" v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'"></a>
         </div>
         <div class="title" v-if="isApp">
-          <router-link :to="`/app/${getValue(o, [ 'slug' ], '')}`" v-text="getValue(o, [ 'title' ], '')" :id="`related${abIndicator}-${o.name}-btm`" v-if="o.style !== 'projects'"></router-link>
-          <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" v-text="getValue(o, [ 'title' ], '')" :id="`related${abIndicator}-${o.name}-btm`" v-if="o.style === 'projects'"></a>
+          <router-link :to="`/app/${getValue(o, [ 'slug' ], '')}`" v-text="getValue(o, [ 'title' ], '')" :id="`related${abIndicator}-${o.name}-btm`" v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'"></router-link>
+          <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related${abIndicator}-${o.name}-btm`" v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'"></a>
         </div>
       </div>
     </div>
@@ -17,13 +17,14 @@
 </template>
 <script>
   import { SECTION_MAP } from '../../constants'
-  import { getHref, getValue } from '../../util/comm'
+  import { getHref, getHrefFull, getValue } from '../../util/comm'
   import _ from 'lodash'
 
   export default {
     computed: { },
     methods: {
       getHref,
+      getHrefFull,
       getValue,
       containerStyle () {
         return { border: `2px solid ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141')}` }
