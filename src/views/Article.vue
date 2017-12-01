@@ -115,7 +115,7 @@
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
   import RecommendList from '../components/article/RecommendList.vue'
-  import RelatedList from '../components/article/RelatedList.vue'
+  // import RelatedList from '../components/article/RelatedList.vue'
   import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -328,7 +328,7 @@
       'micro-ad': MicroAd,
       'pop-list': PopList,
       'pop-list-vert': PopListVert,
-      'related-list': RelatedList,
+      // 'related-list': RelatedList,
       'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,

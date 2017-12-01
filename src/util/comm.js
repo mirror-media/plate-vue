@@ -1,4 +1,4 @@
-import { SITE_DOMAIN, SITE_URL, VPON_CONFIG } from '../constants'
+import { SITE_DOMAIN, SITE_URL, SITE_PROJ_URL, VPON_CONFIG } from '../constants'
 import _ from 'lodash'
 import Browser from 'bowser'
 import Cookie from 'vue-cookie'
@@ -51,6 +51,24 @@ export function getHref (relAritlcle = {}) {
         return href
       } else {
         return `/story/${slug}/`
+      }
+  }
+}
+
+export function getHrefFull (relAritlcle = {}) {
+  const { href, style = '', slug } = relAritlcle
+  switch (style) {
+    case 'campaign':
+      return `${SITE_URL}/campaigns/${slug}`
+    case 'projects':
+      return `${SITE_URL}/projects/${slug}`
+    case 'readr':
+      return `${SITE_PROJ_URL}/project/${slug}`
+    default:
+      if (_.split(href, '/')[1] === 'topic') {
+        return href
+      } else {
+        return `${SITE_URL}/story/${slug}/`
       }
   }
 }

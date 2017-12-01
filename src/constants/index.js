@@ -135,6 +135,8 @@ export const SITE_TITLE_SHORT = '鏡週刊'
 
 export const SITE_URL = 'https://www.mirrormedia.mg'
 
+export const SITE_PROJ_URL = 'https://projects.mirrormedia.mg'
+
 export const SITE_DOMAIN = 'mirrormedia.mg'
 
 export const FB_APP_ID = '175313259598308'
