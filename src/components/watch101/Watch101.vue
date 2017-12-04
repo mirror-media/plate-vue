@@ -58,7 +58,11 @@
   }
 
   const fetchWatchBrands = (store) => {
-    return store.dispatch('FETCH_WATCH_BRANDS', {})
+    return store.dispatch('FETCH_WATCH_BRANDS', {
+      params: {
+        max_results: 50
+      }
+    })
   }
 
   const fetchWatchFunctions = (store) => {
