@@ -142,3 +142,5 @@ export const SITE_DOMAIN = 'mirrormedia.mg'
 export const FB_APP_ID = '175313259598308'
 
 export const FB_PAGE_ID = '1855418728011324'
+
+export const MM_TV_CH = '鏡電視'

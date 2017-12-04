@@ -9,9 +9,10 @@
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
         <section class="home-mainContent">
           <main>
-            <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank"/>
+            <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank" />
+            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport < 1200 && (abIndicator === 'A' || (abIndicator === 'B' && hasEventEmbedded))"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
-            <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank"/>
+            <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank" style="margin-bottom: 40px;" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
             <div class="focusNewsContainer">
@@ -22,12 +23,14 @@
             <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
           </main>
           <aside v-show="viewport >= 1200">
+            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && (abIndicator === 'A' || (abIndicator === 'B' && hasEventEmbedded))"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
             <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
         </section>
         <loading :show="loading" />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+        <live-stream :mediaData="eventMod" type="mmtv" v-else-if="abIndicator === 'B' && !hasEventEmbedded" />
         <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
@@ -56,6 +59,7 @@ import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
+import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
 import More from '../components/More.vue'
 import PopularArticles from '../components/PopularArticles.vue'
 import ProjectList from '../components/article/ProjectList.vue'
@@ -122,6 +126,7 @@ export default {
     DfpCover,
     LatestArticleAside,
     LatestArticleMain,
+    MirrorMediaTVAside,
     PopularArticles,
     ProjectList,
     VueDfpProvider
@@ -131,11 +136,11 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    // const abIndicator = this.abIndicator
+    const abIndicator = this.abIndicator
     return {
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="">
+        <meta name="mm-opt" content="${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -169,7 +174,7 @@ export default {
   },
   data () {
     return {
-      abIndicator: '',
+      abIndicator: 'A',
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
@@ -242,6 +247,9 @@ export default {
     },
     eventLogo () {
       return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+    },
+    eventMod () {
+      return _.get(this.$store, [ 'state', 'eventMod', 'items', '0' ])
     },
     groupedArticle () {
       return _.slice(_.get(this.articlesGroupedList, [ 'grouped' ]))
@@ -372,7 +380,8 @@ export default {
   beforeMount () {
     return Promise.all([
       fetchEvent(this.$store, 'embedded'),
-      fetchEvent(this.$store, 'logo')
+      fetchEvent(this.$store, 'logo'),
+      fetchEvent(this.$store, 'mod')
     ])
   },
   mounted () {
@@ -383,7 +392,7 @@ export default {
     })
     this.checkIfLockJS()
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
+    this.abIndicator = this.getMmid()
 
     window.addEventListener('scroll', this.detectFixProject)
 
@@ -461,7 +470,7 @@ export default {
     aside
       .aside-title
         // overflow hidden
-        padding: 0 2rem;
+        padding: 0 2rem
         margin-top 10px
 
         h2

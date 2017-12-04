@@ -56,6 +56,7 @@ export function createStore () {
       editorChoice: {},
       eventEmbedded: {},
       eventLogo: {},
+      eventMod: {},
       fbAppId: FB_APP_ID,
       fbPagesId: FB_PAGES_ID,
       highlightNodes: {},
@@ -363,6 +364,9 @@ export function createStore () {
             break
           case 'logo':
             Vue.set(state, 'eventLogo', event)
+            break
+          case 'mod':
+            Vue.set(state, 'eventMod', event)
             break
         }
       },
