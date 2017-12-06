@@ -386,8 +386,10 @@ export default {
       case CATEGORY:
         sectionName = this.sectionName
         ogTitle = this.getTruncatedVal(this.title, 11)
-        ogImage = SITE_OGIMAGE
-        ogDescription = SITE_DESCRIPTION
+        const ogDesc = _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'ogDescription' ])
+        const ogImg = _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ])
+        ogImage = ogImg || SITE_OGIMAGE
+        ogDescription = ogDesc || SITE_DESCRIPTION
         break
       default:
         ogTitle = this.getTruncatedVal(this.title, 11) || ''
