@@ -224,7 +224,8 @@
               &:before, &:after
                 border-width 3px
       &--ad1
-        padding 30px 0
+        > .ad-container
+          padding 30px 0
       &--listing
         display flex
         flex-direction row-reverse
