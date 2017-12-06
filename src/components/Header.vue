@@ -1,32 +1,31 @@
 <template>
   <header id="header" class="header">
 
-    <section class="header-logoSearch">
-      <a @click="openSideBar()" id="menubar" class="mobile-only"><img src="/public/icon/hamburger@2x.png" alt="選單" class="header-icon"></a>
-      <div class="header-logoSearch__logoAd">
-        <router-link :to="'/'" id="header-logo"><img :src="logoImage" class="header-logoSearch__logoAd--logo" alt="鏡週刊 Mirror Media"></router-link>
-        <vue-dfp class="header-logoSearch__logoAd--ad" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
+    <section class="headerContainer">
+      <div id="menubar" class="headerContainer__menu" @click="openSideBar"></div>
+      <div class="headerContainer__logo">
+        <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img src="/public/logo.svg" alt="鏡週刊 Mirror Media"></router-link>
+        <a v-show="logoEventImg && !hasLogoDfp" class="headerContainer__logo--event" :href="logoEventHref"><img :src="logoEventImg"></a>
+        <vue-dfp ref="logoDfp" class="headerContainer__logo--dfp" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
       </div>
-      <div class="header-logoSearch__search desktop-only">
+      <div class="headerContainer__search--mobile" @click="openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></div>
+      <div class="headerContainer__search--desktop">
         <input type="search" v-model="searchVal" @input="searchValueChange" @keyup.enter="searchDesktop(searchVal)" placeholder="">
         <button @click="searchDesktop(searchVal)">
-          <img class="header-logoSearch__search--icon" src="/public/icon/search.svg" alt="搜尋"/>
+          <img class="" src="/public/icon/search.svg" alt="搜尋"/>
         </button>
-        <div class="header-logoSearch__more" @click.prevent="openMoreService">
+        <div class="headerContainer__more" @click.prevent="openMoreService">
           <img src="/public/icon/more_grey@2x.png" alt="更多">
-          <div class="header-logoSearch__more--list" ref="moreServiceList">
-            <a class="header-logoSearch__more--listItem" :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>
-            <a class="header-logoSearch__more--listItem" :href="socialLink.MAGAZINE" target="_blank">訂閱電子雜誌</a>
-            <a class="header-logoSearch__more--listItem" :href="socialLink.AUTH" target="_blank">內容授權</a>
-            <a class="header-logoSearch__more--listItem" :href="socialLink.AD" target="_blank">廣告合作</a>
-            <a class="header-logoSearch__more--listItem" href="/category/campaign" target="_blank">活動專區</a>
-            <a class="header-logoSearch__more--listItem" :href="socialLink.DOWNLOADAPP" target="_blank">下載APP</a>
+          <div ref="moreServiceList">
+            <a class="headerContainer__more--item" :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>
+            <a class="headerContainer__more--item" :href="socialLink.MAGAZINE" target="_blank">訂閱電子雜誌</a>
+            <a class="headerContainer__more--item" :href="socialLink.AUTH" target="_blank">內容授權</a>
+            <a class="headerContainer__more--item" :href="socialLink.AD" target="_blank">廣告合作</a>
+            <a class="headerContainer__more--item" href="/category/campaign" target="_blank">活動專區</a>
+            <a class="headerContainer__more--item" :href="socialLink.DOWNLOADAPP" target="_blank">下載APP</a>
           </div>
         </div>
       </div>
-      <a @click="openSearchBar()" class="header-logoSearch__search mobile-only">
-        <img src="/public/icon/search.svg" alt="開啟搜尋列">
-      </a>
     </section>
 
     <nav class="header-menu--section">
@@ -124,8 +123,17 @@ export default {
     }
   },
   computed: {
+    hasLogoDfp () {
+      return this.$refs.logoDfp.style.display !== 'none'
+    },
     headerAmount () {
       return _.get(this.sections, [ 'length' ])
+    },
+    logoEventImg () {
+      return _.get(this.eventLogo, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ], null)
+    },
+    logoEventHref () {
+      return _.get(this.eventLogo, [ 'link' ], '/')
     },
     logoImage () {
       const eventLogo = _.get(this.eventLogo, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ], null)
@@ -152,7 +160,7 @@ export default {
   },
   methods: {
     closeMoreServiceList (e) {
-      if (e.target.className === 'header-logoSearch__more--listItem') {
+      if (e.target.className === 'headerContainer__more--item') {
         window.open(e.target.href)
       }
       e.stopPropagation()
@@ -275,40 +283,7 @@ $color-mirrorfiction = #968375
     vertical-align middle
   img
     image-rendering optimize-contrast
-  &-logoSearch
-    display flex
-    align-items center
-    justify-content space-between
-    padding 10px 20px
-    &__logoAd--logo
-      height 50px
-    &__more
-      display flex
-      justify-content center
-      align-items center
-      position relative
-      width 20px
-      height 35px
-      margin-left 10px
-      cursor pointer
-      img
-        height 20px
-      &--list
-        display none
-        flex-direction column
-        position absolute
-        top 0
-        left 0
-        z-index 10
-        width 130px
-        background-color #fff
-        border 1px solid #eee
-        &.active
-          display flex
-        a
-          padding .5em 1em
-          font-size 1rem
-          text-align center
+  
   &-icon
     width 32px
   &-menu
@@ -364,6 +339,52 @@ $color-mirrorfiction = #968375
       display flex
       > a
         margin-left 10px
+
+.headerContainer
+  display flex
+  justify-content space-between
+  align-items center
+  width 90%
+  margin 0 auto
+  padding 20px 0
+  > div
+    cursor pointer
+  &__menu
+    display inline-block
+    width 34px
+    height 34px
+    background-image url('/public/icon/hamburger@2x.png')
+    background-repeat no-repeat
+    background-size 24px 24px
+    background-position center center
+      
+  &__logo
+    display inline-flex
+    align-items center
+    max-width 195px
+    overflow hidden
+    > a
+      display inline-block
+    &--orig
+      margin-right 5px
+      > img
+        width 95px
+    &--event
+      > img
+        max-width 95px
+        max-height 50px
+    &--dfp
+      max-width 95px
+  &__search
+    &--mobile
+      display inline-block
+      padding 2px
+      font-size 0
+      > img
+        width 30px
+        height 30px
+    &--desktop
+      display none
 
 .header-menu
   > a:hover, > div:hover
@@ -529,13 +550,6 @@ $color-mirrorfiction = #968375
     justify-content space-between
     padding 0 .5em
 
-.header-logoSearch__logoAd
-  display flex
-  align-items flex-end
-  &--ad
-    display flex
-    align-items flex-end
-
 .sprite
   background-image url('/public/icon/socialMedia_white@2x.png')
   background-repeat no-repeat
@@ -566,38 +580,12 @@ $color-mirrorfiction = #968375
     height 20px
     background-position -66px -60px
 
+@media (min-width: 600px)
+  .headerContainer
+    width calc(100% - 4em)
+
 @media (min-width: 1200px)
   .header
-    &-logoSearch
-      width 1024px
-      padding 10px 0
-      margin 0 auto
-      &__search
-        &.desktop-only
-          display flex !important
-          align-items center
-          width 285px
-          height 35px
-        input
-          float left
-          width 200px
-          height 35px
-          padding 0 10px
-          text-align right
-          border 1px solid rgb(238, 238, 238)
-          border-radius 2px
-          border-right none
-        button
-          padding 0
-          margin 0
-          background-color #fff
-          border 1px solid rgb(238, 238, 238)
-          border-radius 2px
-          border-left none
-        &--icon
-          float left
-          width 49px
-          height 33px
     &-menu
       display flex
       flex-wrap wrap
@@ -643,8 +631,71 @@ $color-mirrorfiction = #968375
               color #fff
     &-sidebar
       display none
-    
-@media (max-width: 350px)
-  .header-logoSearch
-    padding 10px 8px
+  .headerContainer
+    width 1024px
+    padding 10px 0
+    &__menu
+      display none
+    &__logo
+      max-width none
+      &--orig
+        > img
+          width auto
+          height 50px
+      &--event
+        > img
+          max-width none
+          max-height 50px
+    &__search
+      &--mobile
+        display none
+      &--desktop
+        display flex
+        align-items center
+        input
+          float left
+          width 200px
+          height 35px
+          margin 0
+          padding 0 10px
+          text-align right
+          border 1px solid rgb(238, 238, 238)
+          border-radius 2px
+          border-right none
+        button
+          height 35px
+          padding 0
+          margin 0
+          background-color #fff
+          border 1px solid rgb(238, 238, 238)
+          border-radius 2px
+          border-left none
+    &__more
+      display flex
+      justify-content center
+      align-items center
+      position relative
+      width 20px
+      height 35px
+      margin-left 10px
+      cursor pointer
+      img
+        height 20px
+      > div
+        display none
+        flex-direction column
+        position absolute
+        top 0
+        left 0
+        z-index 10
+        width 130px
+        background-color #fff
+        border 1px solid #eee
+        &.active
+          display flex
+        a
+          padding .5em 1em
+          font-size 1rem
+          text-align center
+
 </style>
