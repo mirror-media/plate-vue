@@ -1,5 +1,5 @@
 <template>
-  <div class="liveStream" v-if="showLiveStream">
+  <div class="liveStream" v-if="showLiveStream" ref="pop">
     <div class="liveStream__curtain" v-show="!hasZoomIn" @click="toggleZoomIn()"></div>
     <div class="liveStream-container" :class="{ zoomIn: hasZoomIn }" v-html="mediaDataEmbed" @click="toggleZoomIn()"></div>
     <img class="liveStream__close" src="/public/icon/close-btn.png" alt="關閉" v-show="!hasZoomIn" @click="closeLiveStream()">
@@ -25,6 +25,8 @@ export default {
   data () {
     return {
       hasZoomIn: false,
+      isGaCloseEventSentYet: false,
+      isGaPlayEventSentYet: false,
       showLiveStream: true
     }
   },
@@ -37,9 +39,19 @@ export default {
     closeLiveStream () {
       Cookie.set('liveStreamClosed', 'true', { expires: '10m' })
       this.showLiveStream = false
+      !this.isGaCloseEventSentYet && window.ga && window.ga('send', 'event', 'homemod', 'click', 'live close', {
+        location: document.location.href,
+        nonInteraction: false
+      })
+      this.isGaCloseEventSentYet = true
     },
     toggleZoomIn () {
       this.hasZoomIn = !this.hasZoomIn
+      !this.isGaPlayEventSentYet && window.ga && window.ga('send', 'event', 'homemod', 'click', 'live play', {
+        location: document.location.href,
+        nonInteraction: false
+      })
+      this.isGaPlayEventSentYet = true
     }
   },
   mounted () {

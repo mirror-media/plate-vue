@@ -140,7 +140,7 @@ export default {
     return {
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="${abIndicator}">
+        <meta name="mm-opt" content="mod${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -335,8 +335,8 @@ export default {
     getMmid () {
       const mmid = Cookie.get('mmid')
       const role = this.getRole({ mmid, distribution: [
-        { id: 'A', weight: 50 },
-        { id: 'B', weight: 50 } ]
+        { id: 'A', weight: 100 },
+        { id: 'B', weight: 0 } ]
       })
       return role
     },

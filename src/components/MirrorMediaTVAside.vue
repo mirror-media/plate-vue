@@ -1,7 +1,8 @@
 <template>
   <div class="mmtv-aside">
     <div class="mmtv-aside--title"><h2 v-text="mmtvTitle"></h2></div>
-    <div class="mmtv-aside--container" v-html="mediaDataEmbed"></div>
+    <div class="mmtv-aside--curtain" @click="toggleLightbox"></div>
+    <div class="mmtv-aside--container" :class="containerClass" v-html="mediaDataEmbed" ref="embed-code" @click="toggleLightbox"></div>
   </div>
 </template>
 <script>
@@ -9,19 +10,31 @@
   import { MM_TV_CH } from '../constants/'
   export default {
     computed: {
+      containerClass () {
+        return {
+          lightbox: this.showAsLightbox
+        }
+      },
       mediaDataEmbed () {
         return _.get(this.mediaData, [ 'embed' ])
       }
     },
     data () {
       return {
+        isGaEventSentYet: false,
+        showAsLightbox: false,
         mmtvTitle: MM_TV_CH
       }
     },
     name: 'mmtv-aside',
     methods: {
-      openLightbox () {
-        console.log('open light box')
+      toggleLightbox () {
+        this.showAsLightbox = !this.showAsLightbox
+        !this.isGaEventSentYet && window.ga && window.ga('send', 'event', 'homemod', 'click', 'fix play', {
+          location: document.location.href,
+          nonInteraction: false
+        })
+        this.isGaEventSentYet = true
       }
     },
     mounted () {},
@@ -50,6 +63,16 @@
           margin-right -100%
           margin-left 10px
           border-top 5px solid #356d9c
+    &--curtain
+      position absolute
+      z-index 100
+      top 0
+      left 0
+      bottom 0
+      right 0
+      width 100%
+      height 100%
+      cursor pointer
     &--container
       position relative
       width 100%
@@ -59,14 +82,34 @@
       cursor pointer
       margin-bottom 40px
 
-      iframe
+      &.lightbox
+        position fixed
+        top 0
+        left 0
+        width 100vw
+        height 100vh
+        padding-top 0
+        display flex
+        justify-content center
+        align-items center
+        z-index 1000
+        cursor default
+        iframe
+          width 100%
+          height calc(100vw / 16 * 9)
+          max-width 1024px
+          max-height 576px
+          position relative
+
+      > iframe
         position absolute
         top 0
         left 0
         width 100%
         height 100%
-        transition transform .2s ease-out
         cursor pointer
+        transition all 0.2s ease-out
+
   @media (min-width: 600px)
     .mmtv-aside
       width 100%
@@ -89,6 +132,7 @@
             margin-right -100%
             margin-left 10px
             border-top 5px solid #356d9c
+
   @media (min-width: 1200px)
     .mmtv-aside
       margin-top 0
@@ -102,4 +146,5 @@
             display none
       &--container
         margin-bottom 30px
+
 </style>
