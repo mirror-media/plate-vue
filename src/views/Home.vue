@@ -10,7 +10,7 @@
         <section class="home-mainContent">
           <main>
             <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank" />
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport < 1200 && (abIndicator === 'A' || (abIndicator === 'B' && hasEventEmbedded))"></MirrorMediaTVAside>
+            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport < 1200 && (abIndicator === 'B' || (abIndicator === 'A' && hasEventEmbedded))"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
             <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank" style="margin-bottom: 40px;" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
@@ -23,14 +23,14 @@
             <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
           </main>
           <aside v-show="viewport >= 1200">
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && (abIndicator === 'A' || (abIndicator === 'B' && hasEventEmbedded))"></MirrorMediaTVAside>
+            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && (abIndicator === 'B' || (abIndicator === 'A' && hasEventEmbedded))"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
             <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
         </section>
         <loading :show="loading" />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-        <live-stream :mediaData="eventMod" type="mmtv" v-else-if="abIndicator === 'B' && !hasEventEmbedded" />
+        <live-stream :mediaData="eventMod" type="mmtv" v-else-if="abIndicator === 'A' && !hasEventEmbedded" />
         <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
