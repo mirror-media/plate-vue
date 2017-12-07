@@ -30,7 +30,7 @@
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"></app-header>
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header>
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
@@ -47,7 +47,7 @@
         </template>
 
         <template v-else-if="topicType === 'group'">
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"></app-header>
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header>
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
@@ -63,7 +63,7 @@
         </template>
 
         <template v-else>
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"></app-header>
+          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header>
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
@@ -95,7 +95,7 @@
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { camelize } from 'humps'
-import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
+import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
@@ -268,8 +268,12 @@ export default {
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
+      isVponSDKLoaded: false,
       loading: false,
       showDfpCoverAdFlag: false,
+      showDfpCoverAd2Flag: false,
+      showDfpCoverAdVponFlag: false,
+      showDfpHeaderLogo: false,
       siteTitle: SITE_TITLE,
       viewport: 0
     }
@@ -301,7 +305,52 @@ export default {
     },
     dfpOptions () {
       return Object.assign({}, DFP_OPTIONS, {
-        afterEachAdLoaded: (event) => {},
+        afterEachAdLoaded: (event) => {
+          const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
+          const position = dfpCover.getAttribute('pos')
+
+          const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
+          const afVponLoader = () => {
+            if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
+              sendAdCoverGA('vpon')
+              consoleLogOnDev({ msg: 'noad2 detected' })
+              this.showDfpCoverAdVponFlag = true
+              this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+            }
+          }
+          window.addEventListener('noad2', afVponLoader)
+          window.parent.addEventListener('noad2', afVponLoader)
+
+          switch (position) {
+            case 'LMBCVR':
+              sendAdCoverGA('dfp')
+              if (adDisplayStatus === 'none') {
+                this.showDfpCoverAd2Flag = true
+              } else {
+                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  this.showDfpCoverAdFlag = !isVisited
+                })
+              }
+              break
+            case 'LMBCVR2':
+              consoleLogOnDev({ msg: 'ad2 loaded' })
+              sendAdCoverGA('ad2')
+              if (adDisplayStatus === 'none') {
+                consoleLogOnDev({ msg: 'dfp response no ad2' })
+              }
+              updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                this.showDfpCoverAd2Flag = !isVisited
+              })
+              break
+            case 'LOGO':
+              if (adDisplayStatus === 'none') {
+                this.showDfpHeaderLogo = false
+              } else {
+                this.showDfpHeaderLogo = true
+              }
+              break
+          }
+        },
         setCentering: true
       })
     },

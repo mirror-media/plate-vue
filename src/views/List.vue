@@ -44,7 +44,7 @@
         </watch101-list>
       </div>
       <div class="list-view" v-else>
-        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
+        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
         <!--<list-choice v-if="type === `SECTION` && sectionfeatured && title !== 'Topic' && title !== '影音'" :abIndicator="abIndicator" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />-->
@@ -444,6 +444,7 @@ export default {
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
+      showDfpHeaderLogo: false,
       viewport: undefined
     }
   },
@@ -550,6 +551,13 @@ export default {
               updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
                 this.showDfpCoverAd2Flag = !isVisited
               })
+              break
+            case 'LOGO':
+              if (adDisplayStatus === 'none') {
+                this.showDfpHeaderLogo = false
+              } else {
+                this.showDfpHeaderLogo = true
+              }
               break
           }
         },
