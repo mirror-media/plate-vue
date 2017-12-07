@@ -183,6 +183,13 @@ export function createStore () {
       },
 
       FETCH_IMAGES: ({ commit, state }, { uuid, type, params }) => {
+        if (params.page !== 1) {
+          const orig = _.values(state.images.items)
+          return fetchImages(uuid, type, params).then(images => {
+            images.items = _.concat(orig, _.get(images, [ 'items' ]))
+            commit('SET_IMAGES', { images })
+          })
+        }
         return fetchImages(uuid, type, params).then(images => {
           commit('SET_IMAGES', { images })
         })
