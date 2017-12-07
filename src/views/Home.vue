@@ -3,7 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :viewport="viewport" :props="props"/>
+          <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
@@ -180,6 +180,7 @@ export default {
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
+      showDfpHeaderLogo: false,
       viewport: undefined
     }
   },
@@ -228,6 +229,13 @@ export default {
               updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
                 this.showDfpCoverAd2Flag = !isVisited
               })
+              break
+            case 'LOGO':
+              if (adDisplayStatus === 'none') {
+                this.showDfpHeaderLogo = false
+              } else {
+                this.showDfpHeaderLogo = true
+              }
               break
           }
         },

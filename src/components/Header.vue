@@ -2,19 +2,19 @@
   <header id="header" class="header">
 
     <section class="headerContainer">
-      <div id="menubar" class="headerContainer__menu" @click="openSideBar"></div>
+      <div id="menubar" class="headerContainer__menu" @click="$_header_openSideBar"></div>
       <div class="headerContainer__logo">
         <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img src="/public/logo.svg" alt="鏡週刊 Mirror Media"></router-link>
-        <a v-show="logoEventImg && !hasLogoDfp" class="headerContainer__logo--event" :href="logoEventHref"><img :src="logoEventImg"></a>
+        <a v-show="logoEventImg && !showDfpHeaderLogo" class="headerContainer__logo--event" :href="logoEventHref"><img :src="logoEventImg"></a>
         <vue-dfp ref="logoDfp" class="headerContainer__logo--dfp" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
       </div>
-      <div class="headerContainer__search--mobile" @click="openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></div>
+      <div class="headerContainer__search--mobile" @click="$_header_openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></div>
       <div class="headerContainer__search--desktop">
-        <input type="search" v-model="searchVal" @input="searchValueChange" @keyup.enter="searchDesktop(searchVal)" placeholder="">
-        <button @click="searchDesktop(searchVal)">
+        <input type="search" v-model="searchVal" @input="$_header_searchValueChange" @keyup.enter="$_header_searchDesktop(searchVal)" placeholder="">
+        <button @click="$_header_searchDesktop(searchVal)">
           <img class="" src="/public/icon/search.svg" alt="搜尋"/>
         </button>
-        <div class="headerContainer__more" @click.prevent="openMoreService">
+        <div class="headerContainer__more" @click.prevent="$_header_openMoreService">
           <img src="/public/icon/more_grey@2x.png" alt="更多">
           <div ref="moreServiceList">
             <a class="headerContainer__more--item" :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>
@@ -31,13 +31,13 @@
     <nav class="header-menu--section">
       <div class="header-menu">
         <template v-for="item in sections">
-          <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: getColor(item) }">
+          <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }">
             <router-link :id="`header-${item.id}-menu`" :to="`/section/${item.name}`" v-text="item.title"></router-link>
             <div class="dropdown-content" :class="item.name">
               <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-menu`" />
             </div>
           </div>
-          <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: getColor(item) }"></router-link>
+          <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
         </template>
         <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">鏡文學</a>
       </div>
@@ -54,13 +54,13 @@
 
     <nav class="header-sidebar" :class="{ open: openSide }">
       <div class="header-sidebar__close">
-        <img @click="closeSideBar()" src="/public/icon/close_white@2x.png" alt="關閉側邊欄" >
+        <img @click="$_header_closeSideBar" src="/public/icon/close_white@2x.png" alt="關閉側邊欄" >
       </div>
       <div class="header-sidebar__topic">
         <a :href="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-sidebar`"></a>
       </div>
       <div class="header-sidebar__sections">
-        <div class="header-sidebar__section" v-for="(item, index) in sections" :style="{ borderLeftColor: getColor(item) }">
+        <div class="header-sidebar__section" v-for="(item, index) in sections" :style="{ borderLeftColor: $_header_getColor(item) }">
           <a :href="`/section/${item.name}`" v-text="item.title"></a>
           <div class="header-sidebar__categories" v-if="item.categories.length !== 0">
             <a :href="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-sidebar`"></a>
@@ -89,16 +89,16 @@
     </nav>
 
     <section class="header-searchbar mobile-only" :class="{ open: openSearch }">
-      <form action="." v-on:submit.prevent="searchMobile(searchVal)" >
-        <input type="search" v-model="searchVal" @input="searchValueChange" @focusout="searchMobile(searchVal)" placeholder="搜尋">
+      <form action="." v-on:submit.prevent="$_header_searchMobile(searchVal)" >
+        <input type="search" v-model="searchVal" @input="$_header_searchValueChange" @focusout="$_header_searchMobile(searchVal)" placeholder="搜尋">
       </form>
-      <a @click="closeSearchBar()"><img src="/public/icon/close.png" alt="關閉搜尋列"></a>
+      <a @click="$_header_closeSearchBar"><img src="/public/icon/close.png" alt="關閉搜尋列"></a>
     </section>
     <section class="header-scrolled mobile-only" v-show="isScrolled">
-      <a @click="openSideBar()"><img src="/public/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
+      <a @click="$_header_openSideBar"><img src="/public/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
       <div>
         <a href="/"><img src="/public/icon/logo@2x.png" alt="鏡週刊 Mirror Media"></a>
-        <a @click="openSearchBar()"><img src="/public/icon/search.svg" alt="開啟搜尋列"></a>
+        <a @click="$_header_openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></a>
       </div>
     </section>
   </header>
@@ -111,8 +111,26 @@ import { getValue } from '../util/comm'
 import _ from 'lodash'
 
 export default {
-  name: 'app-header',
-  props: [ 'commonData', 'eventLogo', 'viewport', 'props' ],
+  name: 'AppHeader',
+  props: {
+    commonData: {
+      type: Object,
+      required: true
+    },
+    eventLogo: {
+      type: Object
+    },
+    props: {
+      type: Object
+    },
+    showDfpHeaderLogo: {
+      type: Boolean,
+      default: false
+    },
+    viewport: {
+      type: Number
+    }
+  },
   data () {
     return {
       isChanged: false,
@@ -123,9 +141,6 @@ export default {
     }
   },
   computed: {
-    hasLogoDfp () {
-      return this.$refs.logoDfp.style.display !== 'none'
-    },
     headerAmount () {
       return _.get(this.sections, [ 'length' ])
     },
@@ -158,75 +173,77 @@ export default {
       }
     }
   },
+  mounted () {
+    this.$_header_handleScroll()
+  },
   methods: {
-    closeMoreServiceList (e) {
+    $_header_closeMoreServiceList (e) {
       if (e.target.className === 'headerContainer__more--item') {
         window.open(e.target.href)
       }
       e.stopPropagation()
       e.preventDefault()
       this.$refs.moreServiceList.classList.remove('active')
-      this.enableScroll()
-      window.removeEventListener('click', this.closeMoreServiceList, true)
+      this.$_header_enableScroll()
+      window.removeEventListener('click', this.$_header_closeMoreServiceList, true)
     },
-    closeSearchBar () {
+    $_header_closeSearchBar () {
       this.openSearch = false
     },
-    closeSideBar () {
+    $_header_closeSideBar () {
       this.openSide = false
     },
-    disableScroll () {
+    $_header_disableScroll () {
       if (window.addEventListener) {
-        window.addEventListener('DOMMouseScroll', this.preventDefault, false)
+        window.addEventListener('DOMMouseScroll', this.$_header_preventDefault, false)
       }
-      window.onwheel = this.preventDefault
-      window.onmousewheel = document.onmousewheel = this.preventDefault
-      window.ontouchmove = this.preventDefault
-      document.onkeydown = this.preventDefaultForScrollKeys
+      window.onwheel = this.$_header_preventDefault
+      window.onmousewheel = document.onmousewheel = this.$_header_preventDefault
+      window.ontouchmove = this.$_header_preventDefault
+      document.onkeydown = this.$_header_preventDefaultForScrollKeys
     },
-    enableScroll () {
+    $_header_enableScroll () {
       if (window.removeEventListener) {
-        window.removeEventListener('DOMMouseScroll', this.preventDefault, false)
+        window.removeEventListener('DOMMouseScroll', this.$_header_preventDefault, false)
       }
       window.onmousewheel = document.onmousewheel = null
       window.onwheel = null
       window.ontouchmove = null
       document.onkeydown = null
     },
-    getColor (item) {
+    $_header_getColor (item) {
       return _.get(SECTION_MAP, [ _.get(item, [ 'id' ]), 'bgcolor' ])
     },
-    getValue,
-    handleScroll () {
+    $_header_handleScroll () {
       window.addEventListener('scroll', () => {
         currentYPosition() > 69 ? this.isScrolled = true : this.isScrolled = false
       })
     },
-    openMoreService () {
-      this.disableScroll()
+    $_header_openMoreService () {
+      this.$_header_disableScroll()
       this.$refs.moreServiceList.classList.add('active')
-      window.addEventListener('click', this.closeMoreServiceList, true)
+      window.addEventListener('click', this.$_header_closeMoreServiceList, true)
     },
-    openSearchBar () {
+    $_header_openSearchBar () {
       this.openSearch = true
     },
-    openSideBar () {
+    $_header_openSideBar () {
       this.openSide = true
     },
-    preventDefault (e) {
+    $_header_preventDefault (e) {
       e = e || window.event
       if (e.preventDefault) {
         e.preventDefault()
       }
       e.returnValue = false
     },
-    preventDefaultForScrollKeys (e) {
+    $_header_preventDefaultForScrollKeys (e) {
       if (e.keyCode === 40) {
         e.preventDefault(e)
         return false
       }
     },
-    searchDesktop (searchVal = '') {
+    $_header_searchDesktop (searchVal = '') {
       if (this.isChanged) {
         this.$router.push('/search/' + this.searchVal)
         this.openSearch = false
@@ -234,7 +251,7 @@ export default {
         this.openSearch = false
       }
     },
-    searchMobile (searchVal = '') {
+    $_header_searchMobile (searchVal = '') {
       if (this.isChanged) {
         document.activeElement.blur()
         this.$router.push('/search/' + this.searchVal)
@@ -244,17 +261,15 @@ export default {
         this.openSearch = false
       }
     },
-    searchValueChange () {
+    $_header_searchValueChange () {
       const currentKeyword = _.get(this.$route, [ 'params', 'keyword' ])
       if (this.searchVal !== currentKeyword && this.searchVal !== '') {
         this.isChanged = true
       } else {
         this.isChanged = false
       }
-    }
-  },
-  mounted () {
-    this.handleScroll()
+    },
+    getValue
   }
 }
 
