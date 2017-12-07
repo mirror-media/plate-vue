@@ -249,6 +249,17 @@ export function mmLog ({ category, eventType, target, description }) {
   return _normalizeLog({ category, eventType, target, description })
 }
 
+export function isDescendant (child, { classname = 'none' }) {
+  let node = child.parentNode
+  while (node !== null && node !== undefined) {
+    if (node.className && node.className.indexOf(classname) > -1) {
+      return true
+    }
+    node = node.parentNode
+  }
+  return false
+}
+
 function _isAlinkDescendant (child) {
   let node = child.parentNode
   while (node !== null && node !== undefined) {

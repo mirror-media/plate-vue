@@ -372,7 +372,7 @@ export function createStore () {
       },
 
       SET_HOT_WATCH: (state, { watchList }) => {
-        Vue.set(state, 'hotWatches', watchList.items)
+        Vue.set(state, 'hotWatches', _.get(watchList, [ 'items' ]))
       },
 
       SET_IMAGE: (state, { image }) => {
