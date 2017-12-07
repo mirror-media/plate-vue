@@ -29,6 +29,7 @@
   import WatchItem from './WatchItem.vue'
   import numeral from 'numeral'
   import { FILTER_WORDING, FILTER_MULTI, FILTER_OPTIONS_PRICE } from '../../constants/watch101.js'
+  import { isDescendant } from '../../util/comm'
   
   export default {
     components: {
@@ -131,9 +132,28 @@
       },
       openLightbox (item) {
         this.$emit('openLightbox', item)
+      },
+      setupFullPageClickHandler () {
+        return new Promise((resolve) => {
+          window.addEventListener('click', (event) => {
+            const targ = event.target
+            const isDescendantFilterOpts = isDescendant(targ, { classname: 'filter--options' })
+            const isDescendantFilterItems = isDescendant(targ, { classname: 'filter--items' })
+            if (!isDescendantFilterOpts && !isDescendantFilterItems) {
+              this.filterOpened = false
+              _.map(this.isOpenedClass, (object) => {
+                object.active = false
+              })
+            }
+          })
+          resolve()
+        })
       }
     },
     mounted () {
+      Promise.all([
+        this.setupFullPageClickHandler()
+      ])
     },
     props: [ 'watchList', 'viewport' ],
     watch: {

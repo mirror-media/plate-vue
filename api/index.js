@@ -75,7 +75,7 @@ const redisFetching = (url, callback) => {
 const redisWriting = (url, data, callback) => {
   redisPoolWrite.set(decodeURIComponent(url), data, function (err) {
     if(err) {
-      // console.log('redis writing in fail. ', decodeURIComponent(url), err)
+      console.log('redis writing in fail. ', decodeURIComponent(url), err)
     } else {
       redisPoolWrite.expire(decodeURIComponent(url), REDIS_TIMEOUT, function(error, d) {
         if(error) {
