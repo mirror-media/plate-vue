@@ -17,4 +17,4 @@ module.exports = {
       .page.article().showRecommendList()
       .end()
   }
-};
+}
