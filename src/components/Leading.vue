@@ -5,11 +5,12 @@
         <app-slider :option="sliderOption">
           <template slot-scope="props">
             <swiper-slide :is="props.slide" v-for="(o, i) in slideshowImgs" :key="`${i}-${Date.now()}`">
-              <img :src="getValue(o, [ 'image', 'url' ])"
-                   :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                              ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                              ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
-              
+              <a :href="$_leading_getHref(o)" target="_blank">
+                <img  :src="getValue(o, [ 'image', 'url' ])"
+                      :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
+                                  ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
+                                  ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+              </a>
             </swiper-slide>
           </template>
         </app-slider>
@@ -69,6 +70,9 @@ export default {
     }
   },
   methods: {
+    $_leading_getHref (item) {
+      return _.split(item.keywords, '@-')[1]
+    },
     getValue
   },
   name: 'leading',

@@ -33,9 +33,9 @@
           <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header>
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
+            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="portraitWallSlideImages"></leading>
           </div>
-          <portraitWall-list :articles="articles" :initialMediaData="mediaData"></portraitWall-list>
+          <portraitWall-list :articles="articles" :initialMediaData="portraitWallListImages"></portraitWall-list>
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
@@ -173,6 +173,22 @@ const fetchTopicImages = (store, uuid) => {
     'type': TOPIC,
     'params': {
       max_results: 25
+    }
+  })
+}
+
+const fetchTopicAllImages = (store, uuid) => {
+  const page = _.get(store.state, [ 'images', 'meta', 'page' ], 0) + 1
+  return store.dispatch('FETCH_IMAGES', {
+    'uuid': uuid,
+    'type': TOPIC,
+    'params': {
+      max_results: 25,
+      page: page
+    }
+  }).then(() => {
+    if (_.get(store.state, [ 'images', 'items', 'length' ]) < _.get(store.state, [ 'images', 'meta', 'total' ])) {
+      fetchTopicAllImages(store, uuid)
     }
   })
 }
@@ -386,6 +402,21 @@ export default {
     },
     pageStyle () {
       return _.get(this.topic, [ 'pageStyle' ])
+    },
+    portraitWallListImages () {
+      return _.filter(_.get(this.mediaData, [ 'images', 'items' ]), (i) => {
+        return _.indexOf(i.keywords, '@') === -1
+      })
+    },
+    portraitWallSlideImages () {
+      const slideImages = _.filter(_.get(this.$store.state, [ 'images', 'items' ]), (i) => {
+        return _.indexOf(i.keywords, '@') !== -1
+      })
+      return {
+        images: {
+          items: slideImages
+        }
+      }
     },
     projects () {
       return _.get(this.commonData, [ 'projects', 'items' ])
@@ -625,7 +656,7 @@ export default {
       } else {
         fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false)
       }
-      fetchTopicImages(this.$store, uuid)
+      fetchTopicAllImages(this.$store, uuid)
     }
   },
   mounted () {
