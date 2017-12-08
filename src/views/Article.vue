@@ -52,9 +52,9 @@
             <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
-              <div v-if="abIndicator === 'A' || (abIndicator === 'B' && recommendlist.lenth > 0)"><h3>推薦文章</h3></div>
-              <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A'" ></div>
-              <RecommendList v-else="abIndicator === 'B'" :recommendList="recommendlist"></RecommendList>
+              <div><h3>推薦文章</h3></div>
+              <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A' || recommendlist.length === 0" ></div>
+              <RecommendList v-else-if="abIndicator === 'B'" :recommendList="recommendlist"></RecommendList>
             </template>
           </article-body>
           <div class="article_footer">
@@ -549,11 +549,15 @@
       },
       getMmid () {
         const mmid = Cookie.get('mmid')
+        let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+        if (assisgnedRole) {
+          assisgnedRole = assisgnedRole.toUpperCase()
+        }
         const role = getRole({ mmid, distribution: [
           { id: 'A', weight: 100 },
           { id: 'B', weight: 0 } ]
         })
-        return role
+        return assisgnedRole || role
       },
       getTruncatedVal,
       getValue (o = {}, p = [], d = '') {
