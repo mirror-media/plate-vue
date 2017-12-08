@@ -10,7 +10,7 @@
         <section class="home-mainContent">
           <main>
             <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank" />
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport < 1200 && (abIndicator === 'B' || (abIndicator === 'A' && hasEventEmbedded))"></MirrorMediaTVAside>
+            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport < 1200 && (abIndicator === 'B' || (abIndicator === 'A' && hasEventEmbedded)) && hasEventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
             <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank" style="margin-bottom: 40px;" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
@@ -23,14 +23,14 @@
             <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
           </main>
           <aside v-show="viewport >= 1200">
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && (abIndicator === 'B' || (abIndicator === 'A' && hasEventEmbedded))"></MirrorMediaTVAside>
+            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && (abIndicator === 'B' || (abIndicator === 'A' && hasEventEmbedded)) && hasEventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
             <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
         </section>
         <loading :show="loading" />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-        <live-stream :mediaData="eventMod" type="mmtv" v-else-if="abIndicator === 'A' && !hasEventEmbedded" />
+        <live-stream :mediaData="eventMod" type="mmtv" v-else-if="abIndicator === 'A' && !hasEventEmbedded && hasEventMod" />
         <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
@@ -271,6 +271,15 @@ export default {
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
+    hasEventMod () {
+      const _now = moment()
+      const _eventStartTime = moment(new Date(_.get(this.eventMod, [ 'startDate' ])))
+      let _eventEndTime = moment(new Date(_.get(this.eventMod, [ 'endDate' ])))
+      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+        _eventEndTime = moment(new Date(_.get(this.eventMod, [ 'endDate' ]))).add(12, 'h')
+      }
+      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
+    },
     latestArticlesList () {
       return _.get(this.$store.state, [ 'latestArticles', 'items' ])
     },
@@ -342,11 +351,15 @@ export default {
     getRole,
     getMmid () {
       const mmid = Cookie.get('mmid')
+      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      if (assisgnedRole) {
+        assisgnedRole = assisgnedRole.toUpperCase()
+      }
       const role = this.getRole({ mmid, distribution: [
-        { id: 'A', weight: 100 },
-        { id: 'B', weight: 0 } ]
+        { id: 'A', weight: 50 },
+        { id: 'B', weight: 50 } ]
       })
-      return role
+      return assisgnedRole || role
     },
     initHasScrollLoadMore () {
       this.hasScrollLoadMore = false
