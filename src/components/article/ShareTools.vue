@@ -14,12 +14,12 @@
       fixToolBox () {
         const article = document.querySelector('.article')
         const header = document.querySelector('.header')
-        const headerLogo = document.querySelector('.header-logoSearch')
+        const headerLogo = document.querySelector('.headerContainer')
         const shareBox = document.querySelector('.share-toolbox')
         const sbLoo = document.querySelector('.share-toolbox .mm-icon')
         window.addEventListener('scroll', () => {
           const currTop = currentYPosition()
-          const headerLogoBtm = elmYPosition('.header-logoSearch') + headerLogo.clientHeight
+          const headerLogoBtm = elmYPosition('.headerContainer') + headerLogo.clientHeight
           if (currTop > headerLogoBtm) {
             sbLoo.setAttribute('class', 'item mm-icon active')
           } else {
