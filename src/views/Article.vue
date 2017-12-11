@@ -80,7 +80,7 @@
       <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
-      <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199 && dfpMode === 'dev'" :showCloseBtn="false" class="raw"> 
+      <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
       <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
