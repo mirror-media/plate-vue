@@ -4,8 +4,7 @@
     <section class="headerContainer">
       <div id="menubar" class="headerContainer__menu" @click="$_header_openSideBar"></div>
       <div class="headerContainer__logo">
-        <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img src="/public/logo.svg" alt="鏡週刊 Mirror Media"></router-link>
-        <a v-show="logoEventImg && !showDfpHeaderLogo" class="headerContainer__logo--event" :href="logoEventHref"><img :src="logoEventImg"></a>
+        <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img :src="logoImage" alt="鏡週刊 Mirror Media"></router-link>
         <vue-dfp ref="logoDfp" class="headerContainer__logo--dfp" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
       </div>
       <div class="headerContainer__search--mobile" @click="$_header_openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></div>
@@ -381,9 +380,9 @@ $color-mirrorfiction = #968375
     > a
       display inline-block
     &--orig
-      margin-right 5px
       > img
-        width 95px
+        max-height 50px
+        width 170px
     &--event
       > img
         max-width 95px
