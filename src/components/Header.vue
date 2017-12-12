@@ -4,7 +4,8 @@
     <section class="headerContainer">
       <div id="menubar" class="headerContainer__menu" @click="$_header_openSideBar"></div>
       <div class="headerContainer__logo">
-        <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img :src="logoImage" alt="鏡週刊 Mirror Media"></router-link>
+        <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img src="/public/logo.svg" alt="鏡週刊 Mirror Media"></router-link>
+ +      <a v-show="logoEventImg && !showDfpHeaderLogo" class="headerContainer__logo--event" :href="logoEventHref"><img :src="logoEventImg"></a>
         <vue-dfp ref="logoDfp" class="headerContainer__logo--dfp" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
       </div>
       <div class="headerContainer__search--mobile" @click="$_header_openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></div>
@@ -148,10 +149,6 @@ export default {
     },
     logoEventHref () {
       return _.get(this.eventLogo, [ 'link' ], '/')
-    },
-    logoImage () {
-      const eventLogo = _.get(this.eventLogo, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ], null)
-      return eventLogo || '/public/logo.svg'
     },
     sections () {
       return _.filter(_.get(this.commonData, [ 'sections', 'items' ]), 'isFeatured')
@@ -381,14 +378,17 @@ $color-mirrorfiction = #968375
       display inline-block
     &--orig
       > img
-        max-height 50px
-        width 170px
+        max-width 95px
+        width auto
+        height 50px
     &--event
+      margin-left 5px
       > img
         max-width 95px
         max-height 50px
     &--dfp
       max-width 95px
+      margin-left 5px
   &__search
     &--mobile
       display inline-block
@@ -654,8 +654,7 @@ $color-mirrorfiction = #968375
       max-width none
       &--orig
         > img
-          width auto
-          height 50px
+          max-width none
       &--event
         > img
           max-width none
