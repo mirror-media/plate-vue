@@ -393,7 +393,9 @@
               case 'MBCVR':
                 sendAdCoverGA('dfp')
                 if (adDisplayStatus === 'none') {
-                  this.showDfpCoverAd2Flag = true
+                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                    this.showDfpCoverAd2Flag = !isVisited
+                  })
                 } else {
                   updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
                     this.showDfpCoverAdFlag = !isVisited
@@ -406,9 +408,6 @@
                 if (adDisplayStatus === 'none') {
                   consoleLogOnDev({ msg: 'dfp response no ad2' })
                 }
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAd2Flag = !isVisited
-                })
                 break
               case 'PCFF':
                 this.showDfpFixedBtn = !(adDisplayStatus === 'none')
