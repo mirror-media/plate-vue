@@ -65,6 +65,7 @@ export function createStore () {
       latestArticle: {},
       latestArticles: {},
       nodes: {},
+      ogimage: {},
       playlist: {},
       questionnaire: {},
       searchResult: {},
@@ -177,9 +178,9 @@ export function createStore () {
         })
       },
 
-      FETCH_IMAGE: ({ commit, state }, { uuid }) => {
+      FETCH_IMAGE: ({ commit, state }, { uuid, type }) => {
         return fetchImage(uuid).then(image => {
-          commit('SET_IMAGE', { image })
+          commit('SET_IMAGE', { image, type })
         })
       },
 
@@ -386,10 +387,14 @@ export function createStore () {
         Vue.set(state, 'hotWatches', _.get(watchList, [ 'items' ]))
       },
 
-      SET_IMAGE: (state, { image }) => {
-        const origImages = _.values(state.images)
-        origImages.push(image)
-        Vue.set(state, 'images', origImages)
+      SET_IMAGE: (state, { image, type }) => {
+        if (type === 'OG') {
+          Vue.set(state, 'ogimage', image)
+        } else {
+          const origImages = _.values(state.images)
+          origImages.push(image)
+          Vue.set(state, 'images', origImages)
+        }
       },
 
       SET_IMAGES: (state, { images }) => {
