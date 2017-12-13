@@ -7,6 +7,7 @@ const { YOUTUBE_PROTOCOL, YOUTUBE_HOST, YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY, YO
 const bodyParser = require('body-parser')
 const express = require('express')
 const isProd = process.env.NODE_ENV === 'production'
+const Redis = require('redis')
 const RedisConnectionPool = require('redis-connection-pool')
 const router = express.Router()
 const superagent = require('superagent')
@@ -28,26 +29,73 @@ const consoleLogOnDev = ({ msg, showSplitLine }) => {
 }
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
-
+const redisOpts = {
+  auth_pass: REDIS_AUTH,
+  retry_strategy: function (options) {
+    if (options.error && options.error.code === 'ECONNREFUSED') {
+      return new Error('The server refused the connection')
+    }
+    if (options.total_retry_time > 1000 * 5) {
+      return new Error('Retry time exhausted')
+    }
+    if (options.attempt > 1) {
+      return undefined
+    }
+    if (options.times_connected > 1) {
+      return undefined
+    }
+    // reconnect after
+    return 100
+  }  
+}
+const redisChecker = (port, host) => {
+  return new Promise((resolve, reject) => {
+    let client
+    let version_string
+    let version_array
+    let blocking_support
+    client = Redis.createClient(port, host, Object.assign({}, redisOpts))
+    try {
+      client.on('error', function (err) {
+        client.quit()
+        resolve({ status: 'error', err })
+      })
+      client.on('end', function () {
+        client.quit()
+        resolve({ status: 'end', err: 'Connection to redis closed before being ready for some reasons' })
+      })
+      client.on('ready', function () {
+        client.server_info = client.server_info || {}
+        version_string = client.server_info.redis_version
+        version_array = client.server_info.versions
+        if (!version_array || version_array[0] < 2) {
+          blocking_support = false
+        }
+        client.quit()
+        resolve({ status: 'ready', version_string })
+      });
+    } catch (e) {
+      resolve({ status: 'error', err: 'cannot connect to redis: ' + e })
+      client.quit()
+    }
+  })
+}
 const redisPoolRead = RedisConnectionPool('myRedisPoolRead', {
     host: REDIS_READ_HOST, // default
     port: REDIS_READ_PORT, //default
     max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50, // defalut
     perform_checks: false, // checks for needed push/pop functionality
     database: 0, // database number to use
-    options: {
-      auth_pass: REDIS_AUTH
-    } //options for createClient of node-redis, optional
+    options: redisOpts //options for createClient of node-redis, optional
   })
+
 const redisPoolWrite = isProd ? RedisConnectionPool('myRedisPoolWrite', {
     host: REDIS_WRITE_HOST, // default
     port: REDIS_WRITE_PORT, //default
     max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50, // defalut
     perform_checks: false, // checks for needed push/pop functionality
     database: 0, // database number to use
-    options: {
-      auth_pass: REDIS_AUTH
-    } //options for createClient of node-redis, optional
+    options: redisOpts //options for createClient of node-redis, optional
   }) : redisPoolRead
 const redisFetchingByHash = (key, field, callback) => {
   redisPoolRead.send_command('HMGET', [ key, ...field ], function (err, data) {
@@ -55,33 +103,45 @@ const redisFetchingByHash = (key, field, callback) => {
   })
 }  
 const redisFetching = (url, callback) => {
-  redisPoolRead.get(decodeURIComponent(url), function (err, data) {
-    redisPoolRead.ttl(decodeURIComponent(url), (_err, _data) => {
-      if (!_err && _data) {
-        if (_data === -1) {
-          redisPoolWrite.del(decodeURIComponent(url), (_e, _d) => {
-            if (_e) {
-              console.log('deleting key ', decodeURIComponent(url), 'from redis in fail ', _e)
+  redisChecker(REDIS_READ_PORT, REDIS_READ_HOST).then((response) => {
+    if (response.status === 'ready') {
+      redisPoolRead.get(decodeURIComponent(url), function (err, data) {
+        redisPoolRead.ttl(decodeURIComponent(url), (_err, _data) => {
+          if (!_err && _data) {
+            if (_data === -1) {
+              redisPoolWrite.del(decodeURIComponent(url), (_e, _d) => {
+                if (_e) {
+                  console.log('deleting key ', decodeURIComponent(url), 'from redis in fail ', _e)
+                }
+              })
             }
-          })
-        }
-      } else {
-        console.log('fetching ttl in fail ', _err)
-      }
-    })
-    callback && callback({ err, data })
+          } else {
+            console.log('fetching ttl in fail ', _err)
+          }
+        })
+        callback && callback({ err, data })
+      })
+    } else {
+      callback && callback({ err: response, data: null })
+    }
   })
 }
 const redisWriting = (url, data, callback) => {
-  redisPoolWrite.set(decodeURIComponent(url), data, function (err) {
-    if(err) {
-      console.log('redis writing in fail. ', decodeURIComponent(url), err)
-    } else {
-      redisPoolWrite.expire(decodeURIComponent(url), REDIS_TIMEOUT, function(error, d) {
-        if(error) {
-          console.log('failed to set redis expire time. ', decodeURIComponent(url), err)
+  redisChecker(REDIS_WRITE_PORT, REDIS_WRITE_HOST).then((response) => {
+    if (response.status === 'ready') {
+      redisPoolWrite.set(decodeURIComponent(url), data, function (err) {
+        if(err) {
+          console.log('redis writing in fail. ', decodeURIComponent(url), err)
+        } else {
+          redisPoolWrite.expire(decodeURIComponent(url), REDIS_TIMEOUT, function(error, d) {
+            if(error) {
+              console.log('failed to set redis expire time. ', decodeURIComponent(url), err)
+            }
+          })
         }
       })
+    } else {
+      console.log('Failed to writing data to redis while trying to reach redis server.', response)
     }
   })
 }
@@ -327,6 +387,10 @@ router.get('*', (req, res) => {
           // consoleLogOnDev({ msg: `GOT DATA FROM REDIS: \n${decodeURIComponent(req.url)}`, showSplitLine: true })
           res.json(JSON.parse(data))
         } else {
+          if (err) {
+            console.log('Error occurred when fetching data from redis. Instead, going to fetch data from api.')
+            console.log(err)
+          }
           superagent
           .get(apiHost + req.url)
           .timeout(
