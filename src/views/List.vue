@@ -136,7 +136,20 @@ const fetchCommonData = (store) => {
       if (_.toUpper(_.split(store.state.route.path, '/')[1]) === AUTHOR) {
         return fetchAuthor(store, store.state.route.params.authorId)
       }
+      if (_.toUpper(_.split(store.state.route.path, '/')[1]) === CATEGORY) {
+        return fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(store.state.route.path, '/')[2], 'ogImage' ], ''))
+      }
     })
+}
+
+const fetchCategoryOgImages = (store, uuid) => {
+  return store.dispatch('FETCH_IMAGE', {
+    'uuid': uuid,
+    'params': {
+      max_results: 1
+    },
+    'type': 'OG'
+  })
 }
 
 const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = false, pageToken = '') => {
@@ -387,7 +400,7 @@ export default {
         sectionName = this.sectionName
         ogTitle = this.getTruncatedVal(this.title, 11)
         const ogDesc = _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'ogDescription' ])
-        const ogImg = _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ])
+        const ogImg = _.get(this.$store, [ 'state', 'ogimage', 'image', 'resizedTargets', 'desktop', 'url' ])
         ogImage = ogImg || SITE_OGIMAGE
         ogDescription = ogDesc || SITE_DESCRIPTION
         break
