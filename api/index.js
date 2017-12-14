@@ -99,7 +99,6 @@ const redisFetching = (url, callback) => {
   redisPoolRead.get(decodeURIComponent(url), function (err, data) {
     isResponded = true
     clearInterval(checkTimeout)
-    if (timeout <= 0) { return }
     redisPoolRead.ttl(decodeURIComponent(url), (_err, _data) => {
       if (!_err && _data) {
         if (_data === -1) {
@@ -113,6 +112,7 @@ const redisFetching = (url, callback) => {
         console.log('fetching ttl in fail ', _err)
       }
     })
+    if (timeout <= 0) { return }
     callback && callback({ err, data })
   })
 }
@@ -135,7 +135,6 @@ const redisWriting = (url, data, callback) => {
   redisPoolWrite.set(decodeURIComponent(url), data, function (err) {
     isResponded = true
     clearInterval(checkTimeout)
-    if (timeout <= 0) { return }
     if(err) {
       console.log('redis writing in fail. ', decodeURIComponent(url), err)
     } else {
