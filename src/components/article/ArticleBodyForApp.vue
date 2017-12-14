@@ -1,5 +1,5 @@
 <template>
-  <div class="article_body" v-if="articleData" :class="styleForCurrArticle">
+  <div class="article_body" v-if="!isArticleEmpay()" :class="styleForCurrArticle">
     <div class="article_basic-info">
       <div class="category">
         <span class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
@@ -211,6 +211,9 @@ export default {
     getHref,
     getTruncatedVal,
     getValue,
+    isArticleEmpay () {
+      return _.isEmpty(this.articleData)
+    },
     moment,
     paragraphComposer (item) {
       switch (item.type) {
@@ -339,7 +342,7 @@ export default {
   name: 'article-body',
   props: {
     articleData: {
-      default: () => { return undefined }
+      default: () => { return {} }
     },
     projlistData: {
       default: () => { return [] }
