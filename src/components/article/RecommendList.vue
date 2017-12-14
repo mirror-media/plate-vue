@@ -3,12 +3,12 @@
     <div class="recommend-list" v-if="(recommendList.length > 0)">
       <template v-for="(articles, index) in recommendArticleArr">
         <div class="recommend-list_item" v-for="(o, i) in recommendArticleArr[ index ]" v-if="i < 9">
-          <router-link :to="getValue(o, [ 'slug' ])" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}-1`">
+          <router-link :to="'/story/' + getValue(o, [ 'slug' ])" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}-1`">
             <div class="recommend-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
           </router-link>
           <div class="recommend-list_item_title">
             <div class="recommend-list_item_label" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
-            <router-link :to="getValue(o, [ 'slug' ])" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}-2`" :target="target">
+            <router-link :to="'/story/' + getValue(o, [ 'slug' ])" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}-2`" :target="target">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
             </router-link>
           </div>
