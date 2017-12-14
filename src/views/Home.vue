@@ -418,8 +418,9 @@ export default {
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', '')
     // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
+    window.ga('set', 'contentGroup3', `mod${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {
