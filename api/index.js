@@ -1,8 +1,9 @@
 const _ = require('lodash')
-const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, REDIS_AUTH, REDIS_MAX_CLIENT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_TIMEOUT, REDIS_CONNECTION_TIMEOUT, TWITTER_API } = require('./config')
+const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE } = require('./config')
+const { REDIS_AUTH, REDIS_MAX_CLIENT, REDIS_READ_HOST, REDIS_READ_PORT, REDIS_WRITE_HOST, REDIS_WRITE_PORT, REDIS_TIMEOUT, REDIS_CONNECTION_TIMEOUT, REDIS_RECOMMEND_NEWS_HOST, REDIS_RECOMMEND_NEWS_PORT } = require('./config')
 const { GCP_KEYFILE, GCP_PROJECT_ID, GCP_STACKDRIVER_LOG_NAME } = require('./config')
 const { LOCAL_PROTOCOL, LOCAL_PORT, LOCAL_HOST, NEWSLETTER_PROTOCOL, NEWSLETTER_HOST, NEWSLETTER_PORT, SERVER_PROTOCOL, SERVER_HOST, QUESTIONNAIRE_HOST, QUESTIONNAIRE_PROTOCOL } = require('./config')
-const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT } = require('./config')
+const { SEARCH_PROTOCOL, SEARCH_HOST, SEARCH_ENDPOINT, SEARCH_API_KEY, SEARCH_API_APPID, SEARCH_API_TIMEOUT, TWITTER_API } = require('./config')
 const { YOUTUBE_PROTOCOL, YOUTUBE_HOST, YOUTUBE_PLAYLIST_ID, YOUTUBE_API_KEY, YOUTUBE_API_TIMEOUT } = require('./config')
 const bodyParser = require('body-parser')
 const express = require('express')
@@ -50,25 +51,33 @@ const redisOpts = {
   }  
 }
 
-const redisPoolRead = RedisConnectionPool('myRedisPoolRead', {
-    host: REDIS_READ_HOST, // default
-    port: REDIS_READ_PORT, //default
-    max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50, // defalut
-    perform_checks: false, // checks for needed push/pop functionality
-    database: 0, // database number to use
-    options: redisOpts //options for createClient of node-redis, optional
-  })
-
-const redisPoolWrite = isProd ? RedisConnectionPool('myRedisPoolWrite', {
-    host: REDIS_WRITE_HOST, // default
-    port: REDIS_WRITE_PORT, //default
-    max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50, // defalut
-    perform_checks: false, // checks for needed push/pop functionality
-    database: 0, // database number to use
-    options: redisOpts //options for createClient of node-redis, optional
+const redisPoolRead = RedisConnectionPool('redisPoolRead', {
+  host: REDIS_READ_HOST, // default
+  port: REDIS_READ_PORT, //default
+  max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50, // defalut
+  perform_checks: false, // checks for needed push/pop functionality
+  database: 0, // database number to use
+  options: redisOpts //options for createClient of node-redis, optional
+})
+const redisPoolWrite = isProd ? RedisConnectionPool('redisPoolWrite', {
+    host: REDIS_WRITE_HOST,
+    port: REDIS_WRITE_PORT,
+    max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
+    perform_checks: false,
+    database: 0,
+    options: redisOpts
   }) : redisPoolRead
+const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendNews', {
+    host: REDIS_RECOMMEND_NEWS_HOST,
+    port: REDIS_RECOMMEND_NEWS_PORT,
+    max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
+    perform_checks: false,
+    database: 0,
+    options: redisOpts
+  }) : redisPoolRead
+
 const redisFetchingByHash = (key, field, callback) => {
-  redisPoolRead.send_command('HMGET', [ key, ...field ], function (err, data) {
+  redisPoolRecommendNews.send_command('HMGET', [ key, ...field ], function (err, data) {
     callback && callback({ err, data })
   })
 }  
