@@ -30,7 +30,7 @@ node {
             slack_user = slackUsers(git_author_mail)
             sh("echo slack target: ${slack_user}")
 
-            sh("git clone https://github.com/mirror-media/plate-vue-docker.git")
+            sh("git clone -b dev https://github.com/mirror-media/plate-vue-docker.git")
 
             sh("gcloud source repos clone default --project=mirrormedia-1470651750304")
             sh("cp default/plate-vue/config.js plate-vue-docker/")
