@@ -338,7 +338,7 @@
     },
     data () {
       return {
-        abIndicator: 'A',
+        abIndicator: '',
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpMode: 'prod',
