@@ -43,6 +43,26 @@
           <vue-dfp :is="props.vueDfp" pos="NA1" :config="props.config" slot="ad-na1" />
         </watch101-list>
       </div>
+
+      <div class="list-view" v-else-if="pageStyle === 'light'">
+        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
+        <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
+        <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
+        <div class="list-title container" :style="{ color: sectionColor }">
+          <span class="list-title__text" v-text="title"></span>
+        </div>
+        <article-list-light id="articleList" ref="articleList" :articles="autoScrollArticles" :latest="latestList" :showLatest="true" :viewport="viewport"></article-list-light>
+        <article-list-light v-show="hasAutoScroll" id="articleListAutoScroll" ref="articleListAutoScroll" :articles="autoScrollArticlesLoadMore" :latest="latestList" :viewport="viewport"></article-list-light>
+        <div><vue-dfp v-if="title !== 'Topic' && !isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" /></div>
+        <div><vue-dfp v-if="title !== 'Topic' && isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" /></div>
+        <loading :show="loading" />
+        <section class="footer container">
+          <app-footer />
+        </section>
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+        <share :right="`20px`" :bottom="`20px`" />
+      </div>
+
       <div class="list-view" v-else>
         <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
@@ -94,6 +114,7 @@ import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
+import ArticleListLight from '../components/ArticleListLight.vue'
 import AudioList from '../components/AudioList.vue'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
@@ -205,6 +226,15 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
             max_results: MAXRESULT,
             related: 'full'
           })
+        case 'light':
+          return Promise.all([
+            fetchExternals(store, {
+              page: page,
+              max_results: MAXRESULT,
+              sort: '-publishedDate'
+            }),
+            fetchLatestArticle(store)
+          ])
         default:
           if (uuid === VIDEOHUB_ID) {
             return fetchYoutubePlaylist(store, MAXRESULT, pageToken)
@@ -295,6 +325,20 @@ const fetchEvent = (store, eventType = 'embedded') => {
   })
 }
 
+const fetchExternals = (store, params = {}) => {
+  return store.dispatch('FETCH_EXTERNALS', {
+    'params': params
+  })
+}
+
+const fetchLatestArticle = (store) => {
+  return store.dispatch('FETCH_LATESTARTICLE', {
+    params: {
+      sort: '-publishedDate'
+    }
+  })
+}
+
 const fetchTag = (store, id) => {
   return store.dispatch('FETCH_TAG', {
     'id': id
@@ -351,6 +395,7 @@ export default {
     'article-leading': ArticleLeading,
     'article-list': ArticleList,
     'article-list-full': ArticleListFull,
+    'article-list-light': ArticleListLight,
     'audio-list': AudioList,
     'editor-foodtravel': EditorChoiceFoodTravel,
     'editorChoice-full': EditorChoiceFull,
@@ -479,6 +524,9 @@ export default {
           if (this.$route.params.title === 'foodtravel') {
             return _.uniqBy(_.xorBy(_.get(this.$store.state, [ 'articlesByUUID', this.type, this.uuid, 'items' ]), _.get(this, [ 'sectionfeatured' ]), 'slug'), 'slug')
           }
+          if (this.$route.params.title === 'externals') {
+            return _.uniqBy(_.get(this.$store.state, [ 'externals', 'items' ]), 'id')
+          }
           return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', this.type, this.uuid, 'items' ]), 'slug')
       }
     },
@@ -593,6 +641,9 @@ export default {
           if (this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading') {
             return _.get(this.$store.state, [ 'audios', 'meta', 'page' ], PAGE) !== 1
           }
+          if (this.$route.params.title === 'externals') {
+            return _.get(this.$store.state, [ 'externals', 'meta', 'page' ], PAGE) !== 1
+          }
           if (this.$route.params.title === 'videohub') {
             return _.get(this.$store.state, [ 'playlist', 'items', 'length' ], 0) > MAXRESULT
           }
@@ -620,6 +671,8 @@ export default {
           return _.get(this.playlist, [ 'length' ], 0) < _.get(this.$store.state, [ 'playlist', 'pageInfo', 'totalResults' ], 0)
         case 'topic':
           return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'topics', 'meta', 'total' ], 0)
+        case 'externals':
+          return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'externals', 'meta', 'total' ], 0)
         default:
           if (this.type === AUTHOR) {
             return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articles', 'meta', 'total' ], 0)
@@ -629,6 +682,9 @@ export default {
     },
     isMobile () {
       return this.viewport < 1200
+    },
+    latestList () {
+      return _.get(this.$store.state.latestArticle, [ 'items' ], [])
     },
     page () {
       switch (this.type) {
@@ -640,6 +696,9 @@ export default {
           }
           if (this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading') {
             return _.get(this.$store.state, [ 'audios', 'meta', 'page' ], PAGE)
+          }
+          if (this.$route.params.title === 'externals') {
+            return _.get(this.$store.state, [ 'externals', 'meta', 'page' ], PAGE)
           }
           if (this.$route.params.title === 'videohub') {
             return Math.floor(_.get(this.$store.state, [ 'playlist', 'items', 'length' ], 0) / MAXRESULT)
