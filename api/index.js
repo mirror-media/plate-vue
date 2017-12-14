@@ -81,7 +81,6 @@ const redisFetchingByHash = (key, field, callback) => {
   let timeout = REDIS_CONNECTION_TIMEOUT || 2000
   const checkTimeout = setInterval(() => {
     timeout -= 1000
-    console.log('Left', timeout / 1000, 's')
     if (isResponded) {
       clearInterval(checkTimeout)
       return
