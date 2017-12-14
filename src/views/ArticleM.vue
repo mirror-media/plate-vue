@@ -198,7 +198,7 @@
       return {
         title: truncate(title, 21) + ` - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="${abIndicator}">
+          <meta name="mm-opt" content="article${abIndicator}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
           <meta name="section-name" content="${sectionName}">
@@ -514,8 +514,8 @@
       getMmid () {
         const mmid = Cookie.get('mmid')
         const role = getRole({ mmid, distribution: [
-          { id: 'A', weight: 100 },
-          { id: 'B', weight: 0 } ]
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 } ]
         })
         return role
       },
@@ -573,11 +573,13 @@
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
-          window.ga('set', 'contentGroup3', '')
+          // window.ga('set', 'contentGroup3', '')
+          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         } else {
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
-          window.ga('set', 'contentGroup3', '')
+          // window.ga('set', 'contentGroup3', '')
+          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         }
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
