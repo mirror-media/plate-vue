@@ -174,7 +174,7 @@ export default {
   },
   data () {
     return {
-      abIndicator: 'A',
+      abIndicator: '',
       dfpid: DFP_ID,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
