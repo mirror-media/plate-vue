@@ -14,6 +14,7 @@ import { fetchActivities,
   fetchContacts,
   fetchEditorChoice,
   fetchEvent,
+  fetchExternals,
   fetchHotWatch,
   fetchImage,
   fetchImages,
@@ -57,6 +58,8 @@ export function createStore () {
       eventEmbedded: {},
       eventLogo: {},
       eventMod: {},
+      external: {},
+      externals: {},
       fbAppId: FB_APP_ID,
       fbPagesId: FB_PAGES_ID,
       highlightNodes: {},
@@ -170,6 +173,26 @@ export function createStore () {
         return fetchEvent(params).then(event => {
           commit('SET_EVENT', { event })
         })
+      },
+
+      FETCH_EXTERNAL: ({ commit, state }, { params }) => {
+        const slug = _.get(params, [ 'where', 'name', '$in', 0 ])
+        console.log('slug', slug)
+        return state.external.slug ? Promise.resolve(state.external.slug)
+          : fetchExternals(params).then(external => {
+            commit('SET_EXTERNAL', { external })
+          })
+      },
+
+      FETCH_EXTERNALS: ({ commit, state }, { params }) => {
+        const orig = _.values(state.externals[ 'items' ])
+        return state.externals.items && (params.page > 1)
+          ? fetchExternals(params).then(externals => {
+            externals[ 'items' ] = _.concat(orig, _.get(externals, [ 'items' ]))
+            commit('SET_EXTERNALS', { externals })
+          }) : fetchExternals(params).then(externals => {
+            commit('SET_EXTERNALS', { externals })
+          })
       },
 
       FETCH_HOT_WATCH: ({ commit, state }, { params }) => {
@@ -377,6 +400,18 @@ export function createStore () {
             Vue.set(state, 'eventMod', event)
             break
         }
+      },
+
+      SET_EXTERNAL: (state, { external }) => {
+        Vue.set(state['external'], external.items[0].name, external.items[0])
+      },
+
+      SET_EXTERNALS: (state, { externals }) => {
+        const items = _.get(externals, [ 'items' ])
+        items.forEach((e) => {
+          Vue.set(state['external'], e.name, e)
+        })
+        Vue.set(state, 'externals', externals)
       },
 
       SET_HIGHLIGHTNODES: (state, { nodes }) => {

@@ -154,6 +154,14 @@ function loadEvent (params = {}) {
   return _doFetch(url)
 }
 
+function loadExternals (params = {}) {
+  params.sort = params.sort
+  const query = _buildQuery(params)
+  let url = `${_host}/api/externals`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadHotWatch (params = {}) {
   const url = `${_host}/api/hotwatches`
   return _doFetch(url)
@@ -296,6 +304,10 @@ export function fetchEditorChoice () {
 
 export function fetchEvent (params = {}) {
   return loadEvent(params)
+}
+
+export function fetchExternals (params = {}) {
+  return loadExternals(params)
 }
 
 export function fetchHotWatch (params = {}) {

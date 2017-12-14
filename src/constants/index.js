@@ -97,9 +97,9 @@ export const TAG = 'TAG'
 
 export const TOPIC = 'TOPIC'
 
-export const SECTION_WATCH_ID = '57dfe3b0ee85930e00cad4d7'
-
 export const SECTION_FOODTRAVEL_ID = '57dfe399ee85930e00cad4d6'
+
+export const SECTION_WATCH_ID = '57dfe3b0ee85930e00cad4d7'
 
 export const CATEGORY＿INTERVIEW_ID = '5975642de531830d00e32a5b'
 
