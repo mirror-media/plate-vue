@@ -77,7 +77,23 @@ const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendN
   }) : redisPoolRead
 
 const redisFetchingByHash = (key, field, callback) => {
+  let isResponded = false
+  let timeout = REDIS_CONNECTION_TIMEOUT || 2000
+  const checkTimeout = setInterval(() => {
+    timeout -= 1000
+    if (isResponded) {
+      clearInterval(checkTimeout)
+      return
+    }
+    if (timeout <= 0) {
+      clearInterval(checkTimeout)
+      callback && callback({ err: 'ERROR: Timeout occured while connecting to redis.', data: null })
+    }
+  }, 1000)
   redisPoolRecommendNews.send_command('HMGET', [ key, ...field ], function (err, data) {
+    isResponded = true
+    clearInterval(checkTimeout)
+    if (timeout <= 0) { return }
     callback && callback({ err, data })
   })
 }  
@@ -99,7 +115,6 @@ const redisFetching = (url, callback) => {
   redisPoolRead.get(decodeURIComponent(url), function (err, data) {
     isResponded = true
     clearInterval(checkTimeout)
-    if (timeout <= 0) { return }
     redisPoolRead.ttl(decodeURIComponent(url), (_err, _data) => {
       if (!_err && _data) {
         if (_data === -1) {
@@ -113,6 +128,7 @@ const redisFetching = (url, callback) => {
         console.log('fetching ttl in fail ', _err)
       }
     })
+    if (timeout <= 0) { return }
     callback && callback({ err, data })
   })
 }
@@ -135,7 +151,6 @@ const redisWriting = (url, data, callback) => {
   redisPoolWrite.set(decodeURIComponent(url), data, function (err) {
     isResponded = true
     clearInterval(checkTimeout)
-    if (timeout <= 0) { return }
     if(err) {
       console.log('redis writing in fail. ', decodeURIComponent(url), err)
     } else {
@@ -372,6 +387,10 @@ router.use('/related_news', function(req, res, next) {
       }
       res.json(parsed)
     } else {
+      if (err) {
+        console.log('Error occurred when fetching data from related-newsredis.')
+        console.log(err)
+      }
       res.json({ count: 0, result: [] })
     }
   })
