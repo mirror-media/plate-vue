@@ -4,6 +4,7 @@
       <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header>
       <vue-dfp :is="props.vueDfp" :config="props.config" pos="PCHD" class="dfp dfp--desktop" style="margin: 20px auto;"></vue-dfp>
       <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBHD" class="dfp dfp--mobile" style="margin: 20px auto;"></vue-dfp>
+      
       <article-body-external :articleData="articleData">
         <vue-dfp :is="props.vueDfp" slot="dfp-MBE1" pos="MBE1" :dfpId="props.dfpId" :config="props.config" class="dfp dfp--mobile"/>
         <div slot="dfp-PCE1E2" class="dfp--PCE1E2 dfp--desktop">
@@ -25,7 +26,6 @@
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBFT" class="dfp dfp--mobile" :extClass="`${styleDfpAd}`"></vue-dfp>
           <app-footer/>
         </div>
-        
         <article-aside-fixed slot="articleAsideFixed">
           <pop-list-vert :pop="popularList" slot="popListVert">
             <micro-ad  v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
@@ -34,6 +34,7 @@
           </pop-list-vert>
         </article-aside-fixed>
       </article-body-external>
+      
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded"></live-stream>
       <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR" :config="props.config"></vue-dfp>
@@ -70,8 +71,8 @@
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
   }
 
-  const fetchData = (store) => {
-    return Promise.all([ fetchSSRData(store), fetchExternal(store, store.state.route.params.name) ])
+  const fetchData = (store, slug) => {
+    return Promise.all([ fetchSSRData(store), fetchExternal(store, slug) ])
   }
 
   const fetchEvent = (store, eventType = 'embedded') => {
@@ -118,8 +119,8 @@
 
   export default {
     name: 'External',
-    asyncData ({ store }) {
-      return fetchData(store)
+    asyncData ({ store, route: { params: { name }}}) {
+      return fetchData(store, name)
     },
     components: {
       'app-footer': Footer,
@@ -332,15 +333,6 @@
     },
     updated () {
       this.$_external_updateSysStage()
-    },
-    beforeRouteEnter (to, from, next) {
-      console.log('beforeRouteEnter')
-      next()
-    },
-    beforeRouteUpdate (to, from, next) {
-      return fetchExternal(this.$store, to.params.name).then(() => {
-        next()
-      })
     },
     beforeRouteLeave (to, from, next) {
       if (process.env.VUE_ENV === 'client') {

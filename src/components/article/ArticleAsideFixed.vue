@@ -31,12 +31,7 @@ export default {
       const articleAsideBottomPos = currentYPosition() + articleAsideFixed.offsetHeight + 20
       const deltaY = vh - (dfpFtTopPosition - currentYPosition())
       const fbPageBottomPosition = (elmYPosition('.article_aside_fbPage') || elmYPosition('.article__aside--fbPage')) + fbPageFixed.offsetHeight
-      console.log('currentYPosition', currentYPosition())
-      console.log('fbPageBottomPosition', fbPageBottomPosition)
-      console.log('articleAsideBottomPos', articleAsideBottomPos)
-      console.log('dfpFtTopPosition', dfpFtTopPosition)
-      console.log('deltaY', deltaY + 20)
-      console.log('articleBottomPosition', articleBottomPosition)
+
       if (articleBottomPosition > articleAsideBottomPos) {
         if (currentYPosition() > fbPageBottomPosition && ((articleAsideBottomPos + 20) < dfpFtTopPosition)) {
           articleAsideFixed.classList.add('fixed-top')
