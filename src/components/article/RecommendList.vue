@@ -4,7 +4,11 @@
       <template v-for="(articles, index) in recommendArticleArr">
         <div class="recommend-list_item" v-for="(o, i) in recommendArticleArr[ index ]" v-if="i < 9">
           <router-link :to="'/story/' + getValue(o, [ 'slug' ])" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}-1`">
-            <div class="recommend-list_item_img" :style="`background-image: url(${getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')})`"></div>
+            <div class="recommend-list_item_img">
+              <lazy-component>
+                <img :alt="getTruncatedVal(o.title, 22)" :src="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')">
+              </lazy-component>
+            </div>
           </router-link>
           <div class="recommend-list_item_title">
             <div class="recommend-list_item_label" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
@@ -29,9 +33,10 @@ export default {
       return this.$route.fullPath
     },
     recommendArticleArr () {
-      const filteredRecommendList = this.recommendList.length > 9 && (this.referrerSlug !== 'N/A' || this.excludingArticle !== 'N/A')
-        ? _.filter(this.recommendList, (a) => (_.get(a, [ 'slug' ]) !== this.referrerSlug) && (_.get(a, [ 'slug' ]) !== this.excludingArticle))
-        : this.recommendList
+      const origRecommendList = _.map(this.recommendList, (a) => (Object.assign({}, a)))
+      const filteredRecommendList = origRecommendList.length > 9 && (this.referrerSlug !== 'N/A' || this.excludingArticle !== 'N/A')
+        ? _.filter(origRecommendList, (a) => (_.get(a, [ 'slug' ]) !== this.referrerSlug) && (_.get(a, [ 'slug' ]) !== this.excludingArticle))
+        : origRecommendList
       const excludingArticlesLen = this.excludingArticles.length
       for (let i = 0; i < excludingArticlesLen; i += 1) {
         if (filteredRecommendList.length < 9) { return }
@@ -154,6 +159,18 @@ export default {
             padding-top calc(100% - 30px)
             &[lazy=loading]
               background-size 40%
+            > div
+              position absolute
+              top 0
+              left 0
+              width 100%
+              height 100%
+              >img
+                object-fit cover
+                object-position center center
+                width 100%
+                height 100%
+            
 
         &_title
           background-color #fff

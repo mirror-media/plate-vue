@@ -5,6 +5,7 @@ import VueLazyload from 'vue-lazyload'
 
 Vue.use(Router)
 Vue.use(VueLazyload, {
+  lazyComponent: true,
   preLoad: 1.3,
   error: '/public/notImage.png',
   loading: '/public/icon/loading.gif',
