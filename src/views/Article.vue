@@ -54,7 +54,7 @@
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
               <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A' || recommendlist.length === 0" ></div>
-              <RecommendList v-else-if="abIndicator === 'B'" :recommendList="recommendlist"></RecommendList>
+              <RecommendList id="matchedContent" class="matchedContent" v-else-if="abIndicator === 'B'" :recommendList="recommendlist"></RecommendList>
             </template>
           </article-body>
           <div class="article_footer">
