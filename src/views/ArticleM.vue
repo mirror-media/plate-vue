@@ -35,7 +35,7 @@
             <template slot="recommendList">
               <div v-if="abIndicator === 'A' || (abIndicator === 'B' && recommendlist.lenth > 0)"><h3>推薦文章</h3></div>
               <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A'" ></div>
-              <RecommendList v-else="abIndicator === 'B'" :recommendList="recommendlist"></RecommendList>
+              <RecommendList id="matchedContent" class="matchedContent" v-else="abIndicator === 'B'" :recommendList="recommendlist :excludingArticles="relateds" :excludingArticle="routeUpateReferrerSlug""></RecommendList>
             </template>
           </article-body>
           <div class="article_footer">
@@ -260,6 +260,7 @@
         })
       }).then(() => {
         const id = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
+        this.routeUpateReferrerSlug = _.get(from, [ 'params', 'slug' ], 'N/A')
         return fetchRecommendList(this.$store, id)
       })
     },
@@ -313,6 +314,7 @@
         isVponSDKLoaded: false,
         microAds,
         microAdLoded: {},
+        routeUpateReferrerSlug: 'N/A',
         showDfpCoverAdFlag: false,
         showDfpCoverAd2Flag: false,
         showDfpCoverAdVponFlag: false,

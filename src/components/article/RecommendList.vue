@@ -4,7 +4,7 @@
       <template v-for="(articles, index) in recommendArticleArr">
         <div class="recommend-list_item" v-for="(o, i) in recommendArticleArr[ index ]" v-if="i < 9">
           <router-link :to="'/story/' + getValue(o, [ 'slug' ])" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}-1`">
-            <div class="recommend-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
+            <div class="recommend-list_item_img" :style="`background-image: url(${getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')})`"></div>
           </router-link>
           <div class="recommend-list_item_title">
             <div class="recommend-list_item_label" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
@@ -19,7 +19,7 @@
 </template>
 <script>
 import _ from 'lodash'
-import { SECTION_MAP } from '../../constants'
+import { SECTION_MAP, SITE_DOMAIN } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../util/comm'
 
 export default {
@@ -29,12 +29,21 @@ export default {
       return this.$route.fullPath
     },
     recommendArticleArr () {
-      return [ this.recommendList ]
+      const filteredRecommendList = this.recommendList.length > 9 && (this.referrerSlug !== 'N/A' || this.excludingArticle !== 'N/A')
+        ? _.filter(this.recommendList, (a) => (_.get(a, [ 'slug' ]) !== this.referrerSlug) && (_.get(a, [ 'slug' ]) !== this.excludingArticle))
+        : this.recommendList
+      const excludingArticlesLen = this.excludingArticles.length
+      for (let i = 0; i < excludingArticlesLen; i += 1) {
+        if (filteredRecommendList.length < 9) { return }
+        _.remove(filteredRecommendList, { slug: _.get(this.excludingArticles[ i ], [ 'slug' ]) })
+      }
+      return [ filteredRecommendList ]
     }
   },
   data () {
     return {
-      currEnv: 'prod'
+      currEnv: 'prod',
+      referrerSlug: 'N/A'
     }
   },
   methods: {
@@ -59,18 +68,33 @@ export default {
       const section = _.get(article, [ 'sections', 0, 'title' ], 'ceshi')
       const category = _.get(article, [ 'categories', 0, 'title' ], 'FASDFF')
       return (section.length > 0) ? section : category
+    },
+    extracSlugFromreferrer (referrer = '') {
+      const filteredReferrer = referrer.replace(/^https?:\/\//, '').replace(/\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*$/, '')
+      const referrerArr = filteredReferrer.split('/')
+      if ((referrerArr[ 0 ].indexOf(SITE_DOMAIN) > -1 || referrerArr[ 0 ].indexOf('localhost') > -1) && referrerArr[ 1 ] === 'story') {
+        this.referrerSlug = referrerArr[ 2 ]
+      }
     }
   },
-  mounted () {},
+  mounted () {
+    this.extracSlugFromreferrer(document.referrer)
+  },
   props: {
+    excludingArticle: {
+      default: () => ('N/A')
+    },
+    excludingArticles: {
+      default: () => ([])
+    },
     recommendList: {
-      default: () => { return [] }
+      default: () => ([])
     },
     target: {
       default: () => ('_self')
     },
     viewport: {
-      default: () => { return undefined }
+      default: () => (undefined)
     }
   }
 }
