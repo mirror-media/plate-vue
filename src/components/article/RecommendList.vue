@@ -84,6 +84,12 @@ export default {
   },
   mounted () {
     this.extracSlugFromreferrer(document.referrer)
+    if (this.recommendList.length > 0) {
+      window.ga && window.ga('send', 'event', 'article', 'visible', 'matchedcontent', {
+        location: document.location.href,
+        nonInteraction: false
+      })
+    }
   },
   props: {
     excludingArticle: {
