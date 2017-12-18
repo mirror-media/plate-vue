@@ -1,15 +1,17 @@
 const _ = require('lodash')
-const fs = require('fs')
-const path = require('path')
+const Cookies = require( "cookies" )
 const LRU = require('lru-cache')
+const compression = require('compression')
 const express = require('express')
 const favicon = require('serve-favicon')
-const compression = require('compression')
+const fs = require('fs')
 const maxMemUsageLimit = 1000 * 1024 * 1024
 const memwatch = require('memwatch-next')
 const microcache = require('route-cache')
+const path = require('path')
 const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
+const uuidv4 = require('uuid/v4')
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
 
@@ -115,6 +117,12 @@ function render (req, res, next) {
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 
+  const cookies = new Cookies( req, res, {} )
+  const mmid = cookies.get('mmid')
+  if (!mmid) {
+    cookies.set('mmid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
+  }
+  
   const handleError = err => {
     if (err.url) {
       res.redirect(err.url)
