@@ -7,9 +7,8 @@
 </template>
 
 <script>
-  import { mmLog, setMmCookie } from './util/comm.js'
+  import { mmLog } from './util/comm.js'
   import { visibleTracking } from './util/visibleTracking'
-  import Cookie from 'vue-cookie'
   import Tap from 'tap.js'
 
   export default {
@@ -45,12 +44,6 @@
           this.doLog(event)
         })
       },
-      setCookie () {
-        let cookie = Cookie.get('mmid')
-        if (!cookie) {
-          cookie = setMmCookie()
-        }
-      },
       setUpVisibleTracking () {
         this.visibleTracking(
           [
@@ -66,7 +59,6 @@
     mounted () {
       this.doc = document
       this.launchLogger()
-      this.setCookie()
       this.setUpVisibleTracking()
     },
     watch: {
