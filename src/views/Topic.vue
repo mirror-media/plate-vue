@@ -123,18 +123,17 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 const MAXRESULT = 12
 const PAGE = 1
 
-const fetchData = (store) => {
+const fetchData = (store, id) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'projects', 'topics' ] })
   .then(() => {
-    if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': store.state.route.params.topicId }))) {
-      return fetchTopicByUuid(store, store.state.route.params.topicId)
+    if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': id }))) {
+      return fetchTopicByUuid(store, id)
     }
   })
   .then(() => {
-    const topicType = _.get(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': store.state.route.params.topicId }), [ 'type' ]) ||
-      _.get(store.getters.topic, [ 'items', '0', 'type' ])
+    const topicType = _.get(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': id }), [ 'type' ]) || _.get(store.getters.topic, [ 'items', '0', 'type' ])
     if (topicType === 'timeline') {
-      return fetchTimeline(store, store.state.route.params.topicId)
+      return fetchTimeline(store, id)
     }
   })
 }
@@ -206,8 +205,25 @@ const fetchArticlesByUuid = (store, uuid, type, isLoadMore, useMetaEndpoint, max
   })
 }
 
+const fetchAllArticlesByUuid = (store, uuid, type, useMetaEndpoint) => {
+  const page = _.get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'meta', 'page' ], 0) + 1
+  return store.dispatch('FETCH_ARTICLES_BY_UUID', {
+    'uuid': uuid,
+    'type': type,
+    'params': {
+      page: page,
+      max_results: 10,
+      useMetaEndpoint: useMetaEndpoint
+    }
+  }).then(() => {
+    if (_.get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'items', 'length' ]) < _.get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'meta', 'total' ])) {
+      fetchAllArticlesByUuid(store, uuid, type, useMetaEndpoint)
+    }
+  })
+}
+
 export default {
-  name: 'topic-view',
+  name: 'Topic',
   components: {
     'app-footer': Footer,
     'app-header': Header,
@@ -228,8 +244,8 @@ export default {
     'vue-dfp-provider': VueDfpProvider,
     ProjectList
   },
-  asyncData ({ store }) {
-    return fetchData(store)
+  asyncData ({ store, route }) {
+    return fetchData(store, route.params.topicId)
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
@@ -467,6 +483,36 @@ export default {
       }
     }
   },
+  beforeMount () {
+    fetchEvent(this.$store, 'logo')
+    if (this.topicType !== 'timeline') {
+      if (this.topicType === 'portraitWall') {
+        fetchAllArticlesByUuid(this.$store, this.uuid, TOPIC, false)
+      } else if (this.topicType === 'group') {
+        fetchAllArticlesByUuid(this.$store, this.uuid, TOPIC, true)
+      } else {
+        fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false)
+      }
+      fetchTopicAllImages(this.$store, this.uuid)
+    }
+  },
+  mounted () {
+    this.updateViewport()
+    this.insertCustomizedMarkup()
+    this.checkIfLockJS()
+    this.updateSysStage()
+    // this.abIndicator = this.getMmid()
+
+    window.ga('set', 'contentGroup1', '')
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
+
+    window.addEventListener('resize', this.updateViewport)
+    if (this.topicType === 'list') { window.addEventListener('scroll', this.scrollHandler) }
+    if (this.topicType === 'timeline') { window.addEventListener('scroll', this.timelineScrollHandler) }
+  },
   methods: {
     camelize,
     checkIfLockJS () {
@@ -576,25 +622,8 @@ export default {
       this.dfpMode = currEnv()
     }
   },
-  beforeRouteEnter (to, from, next) {
-    if (from.matched.length !== 0) {
-      next(vm => {
-        return fetchTopicByUuid(vm.$store, to.params.topicId).then(() => {
-          const topicType = _.get(_.find(_.get(vm.$store.state.topics, [ 'items' ]), { 'id': to.params.topicId }), [ 'type' ]) ||
-            _.get(vm.$store.state.topic, [ 'items', '0', 'type' ])
-          if (topicType === 'timeline') {
-            return fetchTimeline(vm.$store, to.params.topicId)
-          }
-        })
-      })
-    } else {
-      next()
-    }
-  },
   beforeRouteUpdate (to, from, next) {
     let topicType
-    let maxResult
-    let useMetaEndpoint
     const uuid = _.split(to.path, '/')[2]
     const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
 
@@ -603,34 +632,32 @@ export default {
       .then(() => {
         topicType = _.camelCase(_.get(this.$store.state.topic, [ 'items', '0', 'type' ]))
         if (topicType === 'group') {
-          maxResult = 25
-          useMetaEndpoint = true
-        }
-        if (topicType === 'portraitWall') {
-          maxResult = 25
-        }
-        if (topicType === 'timeline') {
-          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, useMetaEndpoint, maxResult), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
+          Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, true), fetchTopicImages(this.$store, uuid) ])
+          .then(next())
+        } else if (topicType === 'portraitWall') {
+          Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, false), fetchTopicImages(this.$store, uuid) ])
+          .then(next())
+        } else if (topicType === 'timeline') {
+          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
           .then(next())
         } else {
-          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, useMetaEndpoint, maxResult), fetchTopicImages(this.$store, uuid) ])
+          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
           .then(next())
         }
       })
     } else {
       topicType = _.camelCase(_.get(topic, [ 'type' ]))
       if (topicType === 'group') {
-        maxResult = 25
-        useMetaEndpoint = true
-      }
-      if (topicType === 'portraitWall') {
-        maxResult = 25
-      }
-      if (topicType === 'timeline') {
-        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, useMetaEndpoint, maxResult), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
+        Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, true), fetchTopicImages(this.$store, uuid) ])
+        .then(next())
+      } else if (topicType === 'portraitWall') {
+        Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, false), fetchTopicImages(this.$store, uuid) ])
+        .then(next())
+      } else if (topicType === 'timeline') {
+        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
         .then(next())
       } else {
-        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, useMetaEndpoint, maxResult), fetchTopicImages(this.$store, uuid) ])
+        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
         .then(next())
       }
     }
@@ -643,37 +670,6 @@ export default {
       custScript.innerHTML = ''
     }
     next()
-  },
-  beforeMount () {
-    const uuid = _.split(this.$route.path, '/')[2]
-    fetchEvent(this.$store, 'logo')
-    if (this.topicType !== 'timeline') {
-      if (this.topicType === 'portraitWall') {
-        fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 25)
-      } else if (this.topicType === 'group') {
-        fetchArticlesByUuid(this.$store, uuid, TOPIC, false, true, 25)
-      } else {
-        fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false)
-      }
-      fetchTopicAllImages(this.$store, uuid)
-    }
-  },
-  mounted () {
-    this.updateViewport()
-    this.insertCustomizedMarkup()
-    this.checkIfLockJS()
-    this.updateSysStage()
-    // this.abIndicator = this.getMmid()
-
-    window.ga('set', 'contentGroup1', '')
-    window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
-    window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
-
-    window.addEventListener('resize', this.updateViewport)
-    if (this.topicType === 'list') { window.addEventListener('scroll', this.scrollHandler) }
-    if (this.topicType === 'timeline') { window.addEventListener('scroll', this.timelineScrollHandler) }
   },
   updated () {
     this.updateSysStage()
