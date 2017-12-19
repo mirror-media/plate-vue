@@ -38,6 +38,7 @@ export function createRouter () {
       { path: '/author/:authorId/', component: List },
       { path: '/category/:title', component: List },
       { path: '/external/:name', component: External },
+      { path: '/externals/:name', component: List },
       {
         path: '/story/:slug',
         component: Article

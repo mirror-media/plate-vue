@@ -6,6 +6,7 @@
       </div>
       <article class="article">
         <div class="article__info">
+          <div class="article__info--section">校園</div>
           <div class="article__info--date" v-text="date"></div>
         </div>
         <h1 v-text="title"></h1>
@@ -122,13 +123,19 @@
       text-align justify
     &__info
       display flex
-      justify-content flex-end
+      justify-content space-between
+      align-items flex-end
+      &--section
+        padding-left 10px
+        font-size 1.3rem
+        border-left 7px solid #ee5a24
       &--date
         color #a1a1a1
         font-size 1rem
         font-style italic
         font-weight normal
     &__main
+      margin-top 30px
       &--brief
         color #08639e
         text-align justify
@@ -230,10 +237,14 @@
         align-items flex-start
       &__main
         width 695px
+        margin-top 30px
+        > p:first-of-type
+          margin-top 0
         &--fbPage
           display none
       &__aside
         display block
+        margin-top 10px
         &--fbPage
           margin-top 20px
       .popularList

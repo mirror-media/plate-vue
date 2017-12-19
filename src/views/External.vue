@@ -72,7 +72,7 @@
   }
 
   const fetchData = (store, slug) => {
-    return Promise.all([ fetchSSRData(store), fetchExternal(store, slug) ])
+    return Promise.all([ fetchSSRData(store), fetchPartners(store), fetchExternal(store, slug) ])
   }
 
   const fetchEvent = (store, eventType = 'embedded') => {
@@ -105,6 +105,20 @@
     return store.dispatch('FETCH_LATESTARTICLE', {
       params: {
         sort: '-publishedDate'
+      }
+    })
+  }
+
+  const fetchPartners = (store) => {
+    const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+    return store.dispatch('FETCH_PARTNERS', {
+      params: {
+        max_results: 25,
+        page: page
+      }
+    }).then(() => {
+      if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+        fetchPartners(store)
       }
     })
   }

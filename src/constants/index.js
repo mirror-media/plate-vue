@@ -91,6 +91,8 @@ export const AUTHOR = 'AUTHOR'
 
 export const CATEGORY = 'CATEGORY'
 
+export const EXTERNALS = 'EXTERNALS'
+
 export const SEARCH = 'SEARCH'
 
 export const SECTION = 'SECTION'

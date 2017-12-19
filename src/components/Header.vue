@@ -31,14 +31,20 @@
     <nav class="header-menu--section">
       <div class="header-menu">
         <template v-for="item in sections">
-          <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount} )`, borderTopColor: $_header_getColor(item) }">
+          <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }">
             <router-link :id="`header-${item.id}-menu`" :to="`/section/${item.name}`" v-text="item.title"></router-link>
             <div class="dropdown-content" :class="item.name">
               <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-menu`" />
             </div>
           </div>
-          <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount} )`, borderTopColor: $_header_getColor(item) }"></router-link>
+          <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
         </template>
+        <div class="header-menu__item dropdown external" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">
+          <router-link :id="`header-external-menu`" :to="`/externals/external`" >校園</router-link>
+          <div class="dropdown-content external">
+            <router-link v-for="p in partners" :id="`header-${p.id}-menu`" :key="`${p.id}-menu`" :to="`/externals/${p.name}`" v-text="p.name"></router-link>
+          </div>
+        </div>
       </div>
     </nav>
 
@@ -66,6 +72,12 @@
           <a :href="`/section/${item.name}`" v-text="item.title"></a>
           <div class="header-sidebar__categories" v-if="item.categories.length !== 0">
             <a :href="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-sidebar`"></a>
+          </div>
+        </div>
+        <div class="header-sidebar__section external">
+          <a :href="`/externals/external`">校園</a>
+          <div class="header-sidebar__categories">
+            <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :to="`/externals/${p.name}`" v-text="p.name"></a>
           </div>
         </div>
         <div class="header-sidebar__section mirrorfiction">
@@ -151,6 +163,9 @@ export default {
     },
     logoEventHref () {
       return _.get(this.eventLogo, [ 'link' ], '/')
+    },
+    partners () {
+      return _.get(this.commonData, [ 'partners', 'items' ])
     },
     sections () {
       return _.filter(_.get(this.commonData, [ 'sections', 'items' ]), 'isFeatured')
@@ -307,6 +322,8 @@ $color-mirrorfiction = #968375
       display none
     &__item
       border-top 3px solid #000
+      &.external
+        border-color $color-external
       &.mirrorfiction
         padding 9.5px 0
         font-size 0
@@ -433,6 +450,8 @@ $color-mirrorfiction = #968375
       background-color $color-culture
     &.watch
       background-color $color-watch
+    &.external
+      background-color $color-external
     &.mirrorfiction
       background-color $color-mirrorfiction
   &__item
@@ -490,6 +509,9 @@ $color-mirrorfiction = #968375
   &.watch
     a:hover
       color $color-watch
+  &.external
+    a:hover
+      color $color-external
   &.mirrorfiction
     a:hover
       color $color-mirrorfiction
@@ -542,6 +564,8 @@ $color-mirrorfiction = #968375
       color #fff
       font-size 1.2rem
       font-weight 300
+    &.external
+      border-left-color $color-external
     &.mirrorfiction
       border-bottom none
       border-left-color $color-mirrorfiction

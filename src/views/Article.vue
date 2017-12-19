@@ -153,6 +153,20 @@
     })
   }
 
+  const fetchPartners = (store) => {
+    const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+    return store.dispatch('FETCH_PARTNERS', {
+      params: {
+        max_results: 25,
+        page: page
+      }
+    }).then(() => {
+      if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+        fetchPartners(store)
+      }
+    })
+  }
+
   const fetchPop = (store) => {
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
@@ -312,6 +326,7 @@
       })
       fetchPop(this.$store)
       fetchCommonData(this.$store)
+      fetchPartners(this.$store)
       fetchEvent(this.$store, 'embedded')
       fetchEvent(this.$store, 'logo')
     },

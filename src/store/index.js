@@ -20,6 +20,7 @@ import { fetchActivities,
   fetchImages,
   fetchLatestArticle,
   fetchNodes,
+  fetchPartners,
   fetchQuestionnaire,
   fetchSearch,
   fetchTag,
@@ -176,8 +177,6 @@ export function createStore () {
       },
 
       FETCH_EXTERNAL: ({ commit, state }, { params }) => {
-        const slug = _.get(params, [ 'where', 'name', '$in', 0 ])
-        console.log('slug', slug)
         return state.external.slug ? Promise.resolve(state.external.slug)
           : fetchExternals(params).then(external => {
             commit('SET_EXTERNAL', { external })
@@ -253,6 +252,17 @@ export function createStore () {
           } ])
           commit('SET_NODES', { nodes })
         })
+      },
+
+      FETCH_PARTNERS: ({ commit, state }, { params }) => {
+        const orig = _.values(_.get(state, [ 'commonData', 'partners', 'items' ]))
+        return orig && (params.page > 1)
+          ? fetchPartners(params).then(partners => {
+            partners[ 'items' ] = _.concat(orig, _.get(partners, [ 'items' ]))
+            commit('SET_PARTNERS', { partners })
+          }) : fetchPartners(params).then(partners => {
+            commit('SET_PARTNERS', { partners })
+          })
       },
 
       FETCH_QUESTIONNAIRE: ({ commit, state }, { id }) => {
@@ -450,6 +460,10 @@ export function createStore () {
 
       SET_POSTVUE: (state, { commonData }) => {
         Vue.set(state, 'latestArticles', _.get(commonData, [ 'postsVue' ]))
+      },
+
+      SET_PARTNERS: (state, { partners }) => {
+        Vue.set(state['commonData'], 'partners', partners)
       },
 
       SET_QUESTIONNAIRE: (state, { questionnaire }) => {

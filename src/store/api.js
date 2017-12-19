@@ -210,6 +210,13 @@ function loadNodes (params = {}) {
   return _doFetch(url)
 }
 
+function loadPartners (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/partners`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadQuestionnaire (id) {
   const apiHost = `${_host}/api/questionnaire?file=${id}/${id}.json`
   return _doFetch(apiHost)
@@ -332,6 +339,10 @@ export function fetchNodes (params = {}) {
 
 export function fetchQuestionnaire (id) {
   return loadQuestionnaire(id)
+}
+
+export function fetchPartners (params = {}) {
+  return loadPartners(params)
 }
 
 export function fetchRecommendList (params = {}) {
