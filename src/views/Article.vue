@@ -709,6 +709,13 @@
         this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
       }
+
+      if (this.recommendlist.length > 0 && this.abIndicator === 'B') {
+        window.ga && window.ga('send', 'event', 'article', 'visible', 'matchedcontent', {
+          location: document.location.href,
+          nonInteraction: false
+        })
+      }
     },
     updated () {
       this.updateSysStage()
@@ -726,6 +733,13 @@
 
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
+
+        if (this.recommendlist.length > 0 && this.abIndicator === 'B') {
+          window.ga && window.ga('send', 'event', 'article', 'visible', 'matchedcontent', {
+            location: document.location.href,
+            nonInteraction: false
+          })
+        }
       },
       articleData: function () {
         if (!this.hasSentFirstEnterGA) {
