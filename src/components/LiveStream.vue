@@ -113,6 +113,9 @@ export default {
       iframe
         top 50%
         transform translate(-50%, -50%)
+      iframe:fullscreen
+        top auto
+        transform none
   &__close
     position absolute
     z-index 150
