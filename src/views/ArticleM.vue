@@ -624,6 +624,13 @@
       this.updateSysStage()
       this.abIndicator = this.getMmid()
       this.sendGA(this.articleData)
+
+      if (this.recommendlist.length > 0 && this.abIndicator === 'B') {
+        window.ga && window.ga('send', 'event', 'article', 'visible', 'matchedcontent', {
+          location: document.location.href,
+          nonInteraction: false
+        })
+      }
     },
     updated () {
       this.updateSysStage()
@@ -643,6 +650,12 @@
         // call getMmab to send related ab test ga
         // and will remove it after ab test got finished
         // this.getMmab()
+        if (this.recommendlist.length > 0 && this.abIndicator === 'B') {
+          window.ga && window.ga('send', 'event', 'article', 'visible', 'matchedcontent', {
+            location: document.location.href,
+            nonInteraction: false
+          })
+        }
       },
       articleData: function () {
         this.updateJSONLDScript()
