@@ -14,11 +14,13 @@ import { fetchActivities,
   fetchContacts,
   fetchEditorChoice,
   fetchEvent,
+  fetchExternals,
   fetchHotWatch,
   fetchImage,
   fetchImages,
   fetchLatestArticle,
   fetchNodes,
+  fetchPartners,
   fetchQuestionnaire,
   fetchSearch,
   fetchTag,
@@ -57,6 +59,8 @@ export function createStore () {
       eventEmbedded: {},
       eventLogo: {},
       eventMod: {},
+      external: {},
+      externals: {},
       fbAppId: FB_APP_ID,
       fbPagesId: FB_PAGES_ID,
       highlightNodes: {},
@@ -172,6 +176,24 @@ export function createStore () {
         })
       },
 
+      FETCH_EXTERNAL: ({ commit, state }, { params }) => {
+        return state.external.slug ? Promise.resolve(state.external.slug)
+          : fetchExternals(params).then(external => {
+            commit('SET_EXTERNAL', { external })
+          })
+      },
+
+      FETCH_EXTERNALS: ({ commit, state }, { params }) => {
+        const orig = _.values(state.externals[ 'items' ])
+        return state.externals.items && (params.page > 1)
+          ? fetchExternals(params).then(externals => {
+            externals[ 'items' ] = _.concat(orig, _.get(externals, [ 'items' ]))
+            commit('SET_EXTERNALS', { externals })
+          }) : fetchExternals(params).then(externals => {
+            commit('SET_EXTERNALS', { externals })
+          })
+      },
+
       FETCH_HOT_WATCH: ({ commit, state }, { params }) => {
         return fetchHotWatch(params).then(watchList => {
           commit('SET_HOT_WATCH', { watchList })
@@ -230,6 +252,17 @@ export function createStore () {
           } ])
           commit('SET_NODES', { nodes })
         })
+      },
+
+      FETCH_PARTNERS: ({ commit, state }, { params }) => {
+        const orig = _.values(_.get(state, [ 'commonData', 'partners', 'items' ]))
+        return orig && (params.page > 1)
+          ? fetchPartners(params).then(partners => {
+            partners[ 'items' ] = _.concat(orig, _.get(partners, [ 'items' ]))
+            commit('SET_PARTNERS', { partners })
+          }) : fetchPartners(params).then(partners => {
+            commit('SET_PARTNERS', { partners })
+          })
       },
 
       FETCH_QUESTIONNAIRE: ({ commit, state }, { id }) => {
@@ -379,6 +412,18 @@ export function createStore () {
         }
       },
 
+      SET_EXTERNAL: (state, { external }) => {
+        Vue.set(state['external'], external.items[0].name, external.items[0])
+      },
+
+      SET_EXTERNALS: (state, { externals }) => {
+        const items = _.get(externals, [ 'items' ])
+        items.forEach((e) => {
+          Vue.set(state['external'], e.name, e)
+        })
+        Vue.set(state, 'externals', externals)
+      },
+
       SET_HIGHLIGHTNODES: (state, { nodes }) => {
         Vue.set(state, 'highlightNodes', nodes)
       },
@@ -415,6 +460,10 @@ export function createStore () {
 
       SET_POSTVUE: (state, { commonData }) => {
         Vue.set(state, 'latestArticles', _.get(commonData, [ 'postsVue' ]))
+      },
+
+      SET_PARTNERS: (state, { partners }) => {
+        Vue.set(state['commonData'], 'partners', partners)
       },
 
       SET_QUESTIONNAIRE: (state, { questionnaire }) => {
