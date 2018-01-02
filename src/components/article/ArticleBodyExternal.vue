@@ -27,6 +27,7 @@
               <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
               <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
             </div>
+            <slot name="recommendList"></slot>
             <slot name="dfp-MBE1"></slot>
             <slot name="dfp-PCE1E2"></slot>
             <slot name="popularList"></slot>
@@ -202,6 +203,9 @@
       .fbComment
         margin 1.5em 0
       
+      h3
+        font-size 26px
+
     .footer
       padding-left 0
       padding-right 0

@@ -9,7 +9,7 @@ module.exports = {
     browser
       .page.basic().showPageRoot('http://localhost:8080/')
       .page.home().showHomeView()
-      .page.home().showMmTv()
+      // .page.home().showMmTv()
       .end()
   }
 };
