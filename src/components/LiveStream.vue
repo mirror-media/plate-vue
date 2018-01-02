@@ -39,23 +39,9 @@ export default {
     closeLiveStream () {
       Cookie.set('liveStreamClosed', 'true', { expires: '10m' })
       this.showLiveStream = false
-      if (this.type === 'mmtv') {
-        !this.isGaCloseEventSentYet && window.ga && window.ga('send', 'event', 'homemod', 'click', 'live close', {
-          location: document.location.href,
-          nonInteraction: false
-        })
-        this.isGaCloseEventSentYet = true
-      }
     },
     toggleZoomIn () {
       this.hasZoomIn = !this.hasZoomIn
-      if (this.type === 'mmtv') {
-        !this.isGaPlayEventSentYet && window.ga && window.ga('send', 'event', 'homemod', 'click', 'live play', {
-          location: document.location.href,
-          nonInteraction: false
-        })
-        this.isGaPlayEventSentYet = true
-      }
     }
   },
   mounted () {
