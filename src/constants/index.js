@@ -22,7 +22,9 @@ export const SECTION_MAP = {
   // culture
   '5964418a4bbe120f002a3198': { 'bgcolor': '#009245' },
   // watch
-  '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e' }
+  '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e' },
+  // external dev
+  '5a2f4ab66fed0f0e00d6ab00': { 'bgcolor': '#ee5a24' }
 }
 
 export const DFP_SIZE_MAPPING = {
@@ -89,6 +91,8 @@ export const AUTHOR = 'AUTHOR'
 
 export const CATEGORY = 'CATEGORY'
 
+export const EXTERNALS = 'EXTERNALS'
+
 export const SEARCH = 'SEARCH'
 
 export const SECTION = 'SECTION'
@@ -97,9 +101,9 @@ export const TAG = 'TAG'
 
 export const TOPIC = 'TOPIC'
 
-export const SECTION_WATCH_ID = '57dfe3b0ee85930e00cad4d7'
-
 export const SECTION_FOODTRAVEL_ID = '57dfe399ee85930e00cad4d6'
+
+export const SECTION_WATCH_ID = '57dfe3b0ee85930e00cad4d7'
 
 export const CATEGORY＿INTERVIEW_ID = '5975642de531830d00e32a5b'
 

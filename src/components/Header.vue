@@ -39,7 +39,12 @@
           </div>
           <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
         </template>
-        <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">鏡文學</a>
+        <div class="header-menu__item dropdown external" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">
+          <a>校園</a>
+          <div class="dropdown-content external">
+            <router-link v-for="p in partners" :id="`header-${p.id}-menu`" :key="`${p.id}-menu`" :to="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></router-link>
+          </div>
+        </div>
       </div>
     </nav>
 
@@ -47,8 +52,11 @@
       <div>
         <div class="header-menu">
           <router-link :to="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-menu`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-menu`" />
+          <router-link to="/section/topic">更多</router-link>
         </div>
-        <router-link to="/section/topic">更多</router-link>
+        <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
+          <img src="/public/icon/mirrorfiction.png" alt="鏡文學"/>
+        </a>
       </div>
     </nav>
 
@@ -64,6 +72,12 @@
           <a :href="`/section/${item.name}`" v-text="item.title"></a>
           <div class="header-sidebar__categories" v-if="item.categories.length !== 0">
             <a :href="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-sidebar`"></a>
+          </div>
+        </div>
+        <div class="header-sidebar__section external">
+          <a>校園</a>
+          <div class="header-sidebar__categories">
+            <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :to="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></a>
           </div>
         </div>
         <div class="header-sidebar__section mirrorfiction">
@@ -149,6 +163,9 @@ export default {
     },
     logoEventHref () {
       return _.get(this.eventLogo, [ 'link' ], '/')
+    },
+    partners () {
+      return _.filter(_.get(this.commonData, [ 'partners', 'items' ]), 'public')
     },
     sections () {
       return _.filter(_.get(this.commonData, [ 'sections', 'items' ]), 'isFeatured')
@@ -283,6 +300,7 @@ $color-foodtravel = #eac151
 $color-mafalda = #662d8e
 $color-culture = #009245
 $color-watch = #c1d16e
+$color-external = #ee5a24
 $color-mirrorfiction = #968375
 
 .header
@@ -300,10 +318,20 @@ $color-mirrorfiction = #968375
   &-menu
     &--section
       display none
+    &--topic
+      display none
     &__item
       border-top 3px solid #000
+      &.external
+        border-color $color-external
       &.mirrorfiction
-        border-color #968375
+        padding 9.5px 0
+        font-size 0
+        line-height 1
+        border none
+        img
+          width auto
+          height 30px
   &-searchbar
     display flex
     justify-content space-between
@@ -422,6 +450,8 @@ $color-mirrorfiction = #968375
       background-color $color-culture
     &.watch
       background-color $color-watch
+    &.external
+      background-color $color-external
     &.mirrorfiction
       background-color $color-mirrorfiction
   &__item
@@ -479,6 +509,9 @@ $color-mirrorfiction = #968375
   &.watch
     a:hover
       color $color-watch
+  &.external
+    a:hover
+      color $color-external
   &.mirrorfiction
     a:hover
       color $color-mirrorfiction
@@ -531,6 +564,8 @@ $color-mirrorfiction = #968375
       color #fff
       font-size 1.2rem
       font-weight 300
+    &.external
+      border-left-color $color-external
     &.mirrorfiction
       border-bottom none
       border-left-color $color-mirrorfiction
@@ -643,6 +678,8 @@ $color-mirrorfiction = #968375
             &:hover
               background-color #000
               color #fff
+            &:last-of-type
+              border none
     &-sidebar
       display none
   .headerContainer

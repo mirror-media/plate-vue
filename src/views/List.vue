@@ -43,6 +43,26 @@
           <vue-dfp :is="props.vueDfp" pos="NA1" :config="props.config" slot="ad-na1" />
         </watch101-list>
       </div>
+
+      <div class="list-view" v-else-if="pageStyle === 'light'">
+        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
+        <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
+        <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
+        <div class="list-title container" :style="{ color: sectionColor }">
+          <span class="list-title__text" v-text="title"></span>
+        </div>
+        <article-list-light id="articleList" ref="articleList" :articles="autoScrollArticles" :latest="latestList" :showLatest="true" :viewport="viewport"></article-list-light>
+        <article-list-light v-show="hasAutoScroll" id="articleListAutoScroll" ref="articleListAutoScroll" :articles="autoScrollArticlesLoadMore" :latest="latestList" :viewport="viewport"></article-list-light>
+        <div><vue-dfp v-if="title !== 'Topic' && !isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" /></div>
+        <div><vue-dfp v-if="title !== 'Topic' && isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" /></div>
+        <loading :show="loading" />
+        <section class="footer container">
+          <app-footer />
+        </section>
+        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+        <share :right="`20px`" :bottom="`20px`" />
+      </div>
+
       <div class="list-view" v-else>
         <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
@@ -81,7 +101,7 @@
 </template>
 <script>
 
-import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, FB_APP_ID,
+import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, EXTERNALS, FB_APP_ID,
   FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS,
   SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
@@ -94,6 +114,7 @@ import _ from 'lodash'
 import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
+import ArticleListLight from '../components/ArticleListLight.vue'
 import AudioList from '../components/AudioList.vue'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
@@ -128,18 +149,20 @@ const MAXRESULT = 12
 const PAGE = 1
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
-    .then(() => {
-      if (_.toUpper(_.split(store.state.route.path, '/')[1]) === TAG) {
-        return fetchTag(store, store.state.route.params.tagId)
-      }
-      if (_.toUpper(_.split(store.state.route.path, '/')[1]) === AUTHOR) {
-        return fetchAuthor(store, store.state.route.params.authorId)
-      }
-      if (_.toUpper(_.split(store.state.route.path, '/')[1]) === CATEGORY) {
-        return fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(store.state.route.path, '/')[2], 'ogImage' ], ''))
-      }
-    })
+  return Promise.all([
+    store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
+    fetchPartners(store)
+  ]).then(() => {
+    if (_.toUpper(_.split(store.state.route.path, '/')[1]) === TAG) {
+      return fetchTag(store, store.state.route.params.tagId)
+    }
+    if (_.toUpper(_.split(store.state.route.path, '/')[1]) === AUTHOR) {
+      return fetchAuthor(store, store.state.route.params.authorId)
+    }
+    if (_.toUpper(_.split(store.state.route.path, '/')[1]) === CATEGORY) {
+      return fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(store.state.route.path, '/')[2], 'ogImage' ], ''))
+    }
+  })
 }
 
 const fetchCategoryOgImages = (store, uuid) => {
@@ -237,6 +260,48 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
           max_results: MAXRESULT
         })
       }
+    case EXTERNALS:
+      if (uuid !== 'external') {
+        const partner = _.find(_.get(store.state, [ 'commonData', 'partners', 'items' ]), { 'name': uuid })
+        const partnerId = _.get(partner, [ 'id' ])
+        if (isLoadMore) {
+          return fetchExternals(store, {
+            page: page,
+            max_results: MAXRESULT,
+            sort: '-publishedDate',
+            where: {
+              partner: partnerId
+            }
+          })
+        }
+        return Promise.all([
+          fetchExternals(store, {
+            page: page,
+            max_results: MAXRESULT,
+            sort: '-publishedDate',
+            where: {
+              partner: partnerId
+            }
+          }),
+          fetchLatestArticle(store)
+        ])
+      } else {
+        if (isLoadMore) {
+          return fetchExternals(store, {
+            page: page,
+            max_results: MAXRESULT,
+            sort: '-publishedDate'
+          })
+        }
+        return Promise.all([
+          fetchExternals(store, {
+            page: page,
+            max_results: MAXRESULT,
+            sort: '-publishedDate'
+          }),
+          fetchLatestArticle(store)
+        ])
+      }
   }
 }
 
@@ -295,6 +360,34 @@ const fetchEvent = (store, eventType = 'embedded') => {
   })
 }
 
+const fetchExternals = (store, params = {}) => {
+  return store.dispatch('FETCH_EXTERNALS', {
+    'params': params
+  })
+}
+
+const fetchLatestArticle = (store) => {
+  return store.dispatch('FETCH_LATESTARTICLE', {
+    params: {
+      sort: '-publishedDate'
+    }
+  })
+}
+
+const fetchPartners = (store) => {
+  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  return store.dispatch('FETCH_PARTNERS', {
+    params: {
+      max_results: 25,
+      page: page
+    }
+  }).then(() => {
+    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+      fetchPartners(store)
+    }
+  })
+}
+
 const fetchTag = (store, id) => {
   return store.dispatch('FETCH_TAG', {
     'id': id
@@ -333,6 +426,8 @@ const getUUID = (store, type, to) => {
         default:
           return _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
       }
+    case EXTERNALS:
+      return to.params.name
     case SECTION:
       if (to.params.title === 'topic') {
         return 'topic'
@@ -351,6 +446,7 @@ export default {
     'article-leading': ArticleLeading,
     'article-list': ArticleList,
     'article-list-full': ArticleListFull,
+    'article-list-light': ArticleListLight,
     'audio-list': AudioList,
     'editor-foodtravel': EditorChoiceFoodTravel,
     'editorChoice-full': EditorChoiceFull,
@@ -404,18 +500,24 @@ export default {
         ogImage = ogImg || SITE_OGIMAGE
         ogDescription = ogDesc || SITE_DESCRIPTION
         break
+      case EXTERNALS:
+        sectionName = ''
+        ogTitle = this.getTruncatedVal(this.title, 11)
+        ogImage = SITE_OGIMAGE
+        ogDescription = SITE_DESCRIPTION
+        break
       default:
         ogTitle = this.getTruncatedVal(this.title, 11) || ''
         ogImage = SITE_OGIMAGE
         ogDescription = SITE_DESCRIPTION
     }
 
-    if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
-      const e = new Error()
-      e.massage = 'Page Not Found'
-      e.code = '404'
-      throw e
-    }
+    // if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
+    //   const e = new Error()
+    //   e.massage = 'Page Not Found'
+    //   e.code = '404'
+    //   throw e
+    // }
 
     const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
     this.titleBase = title
@@ -466,6 +568,8 @@ export default {
       switch (this.type) {
         case AUTHOR:
           return _.get(this.$store.state, [ 'articles', 'items' ])
+        case EXTERNALS:
+          return _.uniqBy(_.get(this.$store.state, [ 'externals', 'items' ]), 'id')
         default:
           if (this.$route.params.title === 'topic') {
             return _.uniqBy(_.get(this.$store.state, [ 'topics', 'items' ]), 'id')
@@ -586,6 +690,8 @@ export default {
       switch (this.type) {
         case AUTHOR:
           return _.get(this.$store.state, [ 'articles', 'meta', 'page' ], PAGE) !== 1
+        case EXTERNALS:
+          return _.get(this.$store.state, [ 'externals', 'meta', 'page' ], PAGE) !== 1
         default:
           if (this.$route.params.title === 'topic') {
             return _.get(this.$store.state, [ 'topics', 'meta', 'total' ], 0) > 9
@@ -624,16 +730,24 @@ export default {
           if (this.type === AUTHOR) {
             return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articles', 'meta', 'total' ], 0)
           }
+          if (this.type === EXTERNALS) {
+            return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'externals', 'meta', 'total' ], 0)
+          }
           return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', this.type, this.uuid, 'meta', 'total' ], 0)
       }
     },
     isMobile () {
       return this.viewport < 1200
     },
+    latestList () {
+      return _.get(this.$store.state.latestArticle, [ 'items' ], [])
+    },
     page () {
       switch (this.type) {
         case AUTHOR:
           return _.get(this.$store.state, [ 'articles', 'meta', 'page' ], PAGE)
+        case EXTERNALS:
+          return _.get(this.$store.state, [ 'externals', 'meta', 'page' ], PAGE)
         default:
           if (this.$route.params.title === 'topic') {
             return _.get(this.$store.state, [ 'topics', 'meta', 'page' ], PAGE)
@@ -653,6 +767,8 @@ export default {
           return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
         case CATEGORY:
           return this.$route.params.title !== 'watch101' ? _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'style' ], 'feature') : 'watch101'
+        case EXTERNALS:
+          return 'light'
         default:
           return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'style' ], 'feature')
       }
@@ -661,7 +777,12 @@ export default {
       return _.get(this.$store.state, [ 'playlist' ])
     },
     section () {
-      return _.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title })
+      switch (this.type) {
+        case EXTERNALS:
+          return _.find(_.get(this.commonData, [ 'partners', 'items' ]), { 'name': this.$route.params.name })
+        default:
+          return _.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title })
+      }
     },
     sectionColor () {
       return _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#bcbcbc')
@@ -736,6 +857,11 @@ export default {
           }
         case TAG:
           return _.get(this.$store.state, [ 'tag', 'name' ])
+        case EXTERNALS:
+          if (this.$route.params.name === 'external') {
+            return '校園'
+          }
+          return _.get(this.section, [ 'display' ])
       }
     },
     type () {
@@ -762,6 +888,8 @@ export default {
           }
         case TAG:
           return this.$route.params.tagId
+        case EXTERNALS:
+          return this.$route.params.name
       }
     }
   },

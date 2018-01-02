@@ -124,7 +124,10 @@ const MAXRESULT = 12
 const PAGE = 1
 
 const fetchData = (store, id) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'projects', 'topics' ] })
+  return Promise.all([
+    store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'projects', 'topics' ] }),
+    fetchPartners(store)
+  ])
   .then(() => {
     if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': id }))) {
       return fetchTopicByUuid(store, id)
@@ -146,6 +149,20 @@ const fetchEvent = (store, eventType = 'embedded') => {
         isFeatured: true,
         eventType: eventType
       }
+    }
+  })
+}
+
+const fetchPartners = (store) => {
+  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  return store.dispatch('FETCH_PARTNERS', {
+    params: {
+      max_results: 25,
+      page: page
+    }
+  }).then(() => {
+    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+      fetchPartners(store)
     }
   })
 }

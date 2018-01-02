@@ -75,7 +75,8 @@ const fetchSSRData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] }).then(() => {
     return Promise.all([
       fetchCommonData(store),
-      fetchArticlesGroupedList(store)
+      fetchArticlesGroupedList(store),
+      fetchPartners(store)
     ])
   })
 }
@@ -98,6 +99,20 @@ const fetchEvent = (store, eventType = 'embedded') => {
 
 const fetchArticlesGroupedList = (store) => {
   return store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
+}
+
+const fetchPartners = (store) => {
+  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  return store.dispatch('FETCH_PARTNERS', {
+    params: {
+      max_results: 25,
+      page: page
+    }
+  }).then(() => {
+    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+      fetchPartners(store)
+    }
+  })
 }
 
 const MAXRESULT = 20

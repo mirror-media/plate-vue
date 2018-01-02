@@ -1,4 +1,4 @@
-<template >
+<template>
   <div class="listArticleBlock" :class="{ noHoverEffect: removeHoverEffect }" >
     <template v-if="articleType === 'campaign' || articleType === 'projects' || articleType === 'readr'">
       <figure class="listArticleBlock__figure">
