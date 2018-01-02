@@ -417,8 +417,8 @@
         }
       },
       $_external_sendGA (articleData) {
-        window.ga('set', 'contentGroup1', '')
-        window.ga('set', 'contentGroup2', '')
+        window.ga('set', 'contentGroup1', 'external')
+        window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'partner', 'name' ], '')}`)
         window.ga('set', 'contentGroup3', '')
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },

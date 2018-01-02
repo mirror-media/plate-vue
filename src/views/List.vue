@@ -1054,11 +1054,15 @@ export default {
     this.insertCustomizedMarkup()
     this.updateSysStage()
     // this.abIndicator = this.getMmid()
-    if (this.sectionName === 'other') {
+    if (this.type === EXTERNALS) {
+      window.ga('set', 'contentGroup1', 'external')
+      window.ga('set', 'contentGroup2', this.uuid)
+      window.ga('set', 'contentGroup3', '')
+      // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    } else if (this.sectionName === 'other') {
       window.ga('set', 'contentGroup1', '')
       window.ga('set', 'contentGroup2', '')
       window.ga('set', 'contentGroup3', '')
-      // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     } else {
       window.ga('set', 'contentGroup1', this.sectionName)
       window.ga('set', 'contentGroup2', '')
