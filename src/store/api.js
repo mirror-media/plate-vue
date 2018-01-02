@@ -154,6 +154,14 @@ function loadEvent (params = {}) {
   return _doFetch(url)
 }
 
+function loadExternals (params = {}) {
+  params.sort = params.sort
+  const query = _buildQuery(params)
+  let url = `${_host}/api/externals`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadHotWatch (params = {}) {
   const url = `${_host}/api/hotwatches`
   return _doFetch(url)
@@ -198,6 +206,13 @@ function loadLatestArticle (params = {}) {
 function loadNodes (params = {}) {
   const query = _buildQuery(params)
   let url = `${_host}/api/nodes`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
+function loadPartners (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/partners`
   url = `${url}?${query}`
   return _doFetch(url)
 }
@@ -298,6 +313,10 @@ export function fetchEvent (params = {}) {
   return loadEvent(params)
 }
 
+export function fetchExternals (params = {}) {
+  return loadExternals(params)
+}
+
 export function fetchHotWatch (params = {}) {
   return loadHotWatch(params)
 }
@@ -320,6 +339,10 @@ export function fetchNodes (params = {}) {
 
 export function fetchQuestionnaire (id) {
   return loadQuestionnaire(id)
+}
+
+export function fetchPartners (params = {}) {
+  return loadPartners(params)
 }
 
 export function fetchRecommendList (params = {}) {

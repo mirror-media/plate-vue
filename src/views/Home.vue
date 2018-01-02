@@ -10,7 +10,6 @@
         <section class="home-mainContent">
           <main>
             <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank" />
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport < 1200 && (abIndicator === 'B' || (abIndicator === 'A' && hasEventEmbedded)) && hasEventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
             <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank" style="margin-bottom: 40px;" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
@@ -23,14 +22,13 @@
             <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
           </main>
           <aside v-show="viewport >= 1200">
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && (abIndicator === 'B' || (abIndicator === 'A' && hasEventEmbedded)) && hasEventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
             <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
         </section>
         <loading :show="loading" />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-        <live-stream :mediaData="eventMod" type="mmtv" v-else-if="abIndicator === 'A' && !hasEventEmbedded && hasEventMod" />
+        <live-stream :mediaData="eventMod" type="mmtv" v-else-if="!hasEventEmbedded && hasEventMod" />
         <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
@@ -75,7 +73,8 @@ const fetchSSRData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] }).then(() => {
     return Promise.all([
       fetchCommonData(store),
-      fetchArticlesGroupedList(store)
+      fetchArticlesGroupedList(store),
+      fetchPartners(store)
     ])
   })
 }
@@ -98,6 +97,20 @@ const fetchEvent = (store, eventType = 'embedded') => {
 
 const fetchArticlesGroupedList = (store) => {
   return store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
+}
+
+const fetchPartners = (store) => {
+  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  return store.dispatch('FETCH_PARTNERS', {
+    params: {
+      max_results: 25,
+      page: page
+    }
+  }).then(() => {
+    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+      fetchPartners(store)
+    }
+  })
 }
 
 const MAXRESULT = 20
@@ -136,11 +149,12 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    const abIndicator = this.abIndicator
+    // const abIndicator = this.abIndicator
     return {
       title: SITE_TITLE,
+      // meta: `
+      //   <meta name="mm-opt" content="mod${abIndicator}">
       meta: `
-        <meta name="mm-opt" content="mod${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -412,15 +426,15 @@ export default {
     })
     this.checkIfLockJS()
     this.updateSysStage()
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
 
     window.addEventListener('scroll', this.detectFixProject)
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    // window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', '')
     // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
-    window.ga('set', 'contentGroup3', `mod${this.abIndicator}`)
+    // window.ga('set', 'contentGroup3', `mod${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {
