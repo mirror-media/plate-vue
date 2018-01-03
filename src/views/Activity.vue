@@ -145,6 +145,7 @@ export default {
     const ogDescription = sanitizeHtml(_.get(this.$store.state, [ 'activities', 'items', '0', 'brief', 'html' ]), { allowedTags: [] })
     const description = ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
     return {
+      url: `${SITE_URL}/activity/${this.$route.params.activityId}`,
       title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`,
       meta: `
         <meta name="mm-opt" content="">
