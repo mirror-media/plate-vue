@@ -432,7 +432,8 @@ export default {
     > div
       width 100%
       
-  .article_body 
+  .article_body
+    position relative
     width 100%
 
     .article_basic-info 

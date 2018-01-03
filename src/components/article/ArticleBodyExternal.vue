@@ -111,6 +111,8 @@
 .articleBodyExternal
   width 100%
   font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
+  main
+    position relative
   &Container
     width 100%
     background-color #fff
@@ -255,7 +257,11 @@
         display block
         margin-top 10px
         &--fbPage
-          margin-top 20px
+          width 300px
+          margin 20px auto 0
+          overflow hidden
+          .fb-page
+            width 100%
       .popularList
         display none
       .footer
