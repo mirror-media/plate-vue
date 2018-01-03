@@ -196,6 +196,7 @@
       }
 
       return {
+        url: `${SITE_URL}/story/${slug}/`,
         title: truncate(title, 21) + ` - ${SITE_TITLE_SHORT}`,
         meta: `
           <meta name="mm-opt" content="article${abIndicator}">

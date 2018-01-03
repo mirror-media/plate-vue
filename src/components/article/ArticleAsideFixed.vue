@@ -41,14 +41,23 @@ export default {
         } else {
           articleAsideFixed.classList.remove('fixed-top')
         }
-
         if ((currentYPosition() + vh) > articleMainPosBtm) {
-          let fixValue = 0
-          if (document.querySelector('main .footer')) {
-            fixValue = document.querySelector('main .footer').offsetHeight
+          let fixValue
+          if (popListVert > vh) {
+            fixValue = 0
+            if (document.querySelector('main .footer')) {
+              fixValue = document.querySelector('main .footer').offsetHeight
+            }
+            articleAsideFixed.classList.add('fixed')
+            articleAsideFixed.style.bottom = `${fixValue}px`
+          } else {
+            fixValue = 20
+            if (document.querySelector('main .footer')) {
+              fixValue = document.querySelector('main .footer').offsetHeight
+            }
+            articleAsideFixed.classList.add('fixed')
+            articleAsideFixed.style.bottom = `${fixValue}px`
           }
-          articleAsideFixed.classList.add('fixed')
-          articleAsideFixed.style.bottom = `${fixValue}px`
         } else {
           articleAsideFixed.classList.remove('fixed')
           articleAsideFixed.style.bottom = `auto`
