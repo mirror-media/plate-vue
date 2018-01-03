@@ -484,7 +484,7 @@ export default {
     },
     mediaData () {
       return {
-        images: _.get(this.$store.state, [ 'images' ])
+        images: _.get(this.$store.state, [ 'images', this.uuid ])
       }
     },
     uuid () {

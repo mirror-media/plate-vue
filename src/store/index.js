@@ -211,11 +211,11 @@ export function createStore () {
           const orig = _.values(state.images.items)
           return fetchImages(uuid, type, params).then(images => {
             images.items = _.concat(orig, _.get(images, [ 'items' ]))
-            commit('SET_IMAGES', { images })
+            commit('SET_IMAGES', { uuid, images })
           })
         }
         return fetchImages(uuid, type, params).then(images => {
-          commit('SET_IMAGES', { images })
+          commit('SET_IMAGES', { uuid, images })
         })
       },
 
@@ -442,8 +442,8 @@ export function createStore () {
         }
       },
 
-      SET_IMAGES: (state, { images }) => {
-        Vue.set(state, 'images', images)
+      SET_IMAGES: (state, { uuid, images }) => {
+        Vue.set(state['images'], uuid, images)
       },
 
       SET_LATESTARTICLE: (state, { latestArticle }) => {
