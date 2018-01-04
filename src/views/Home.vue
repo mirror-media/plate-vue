@@ -9,7 +9,8 @@
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
         <section class="home-mainContent">
           <main>
-            <editor-choiceB :editorChoice= 'editorChoice' :viewport="viewport" target="_blank" />
+            <editor-choice v-if="abIndicator === 'A'" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+            <editor-choiceB v-else-if="abIndicator === 'B'" :editorChoice='editorChoice' :viewport="viewport" target="_blank"/>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
             <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank" style="margin-bottom: 40px;" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
@@ -149,13 +150,12 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    // const abIndicator = this.abIndicator
+    const abIndicator = this.abIndicator
     return {
       url: SITE_URL,
       title: SITE_TITLE,
-      // meta: `
-      //   <meta name="mm-opt" content="mod${abIndicator}">
       meta: `
+        <meta name="mm-opt" content="choice${abIndicator}">
         <meta name="robots" content="index">
         <meta name="mm-opt" content="">
         <meta name="keywords" content="${SITE_KEYWORDS}">
@@ -428,7 +428,7 @@ export default {
     })
     this.checkIfLockJS()
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
+    this.abIndicator = this.getMmid()
 
     window.addEventListener('scroll', this.detectFixProject)
 

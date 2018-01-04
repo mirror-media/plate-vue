@@ -1,69 +1,103 @@
 <template>
   <section id="editorChoice" class="editorChoice">
     <h2>編輯精選</h2>
-    <app-slider class="editorChoice__slides" slideId="editorChoiceSlider" :option="sliderOption" v-if="viewport > 1199">
-      <template slot-scope="props">
-        <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
-          <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
-              </div>
-            </router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
-              </div>
-            </a>
-          </template>
-        </swiper-slide>
-      </template>
-    </app-slider>
-    <div class="editorChoice__menu">
-      <template v-for="(item, index) in editorChoice">
-        <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
-          @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
-          <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
-        </router-link>
-        <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
-          @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
-          <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
-        </a>
-      </template>
+    <div class="editorChoice__flat">
+      <router-link 
+        v-if="editorChoice[0].style !== 'projects' && editorChoice[0].style !== 'campaign' && editorChoice[0].style !== 'readr'"
+        class="editorChoice__flat--highlight-choice" 
+        :id="'choices-' + editorChoice[0].name"
+        :to="getHref(editorChoice[0])"
+        :target="target">
+        <figure v-lazy:background-image="getImage(editorChoice[0], 'desktop')">
+          <figcaption>
+            <p v-text="getTitle(editorChoice[0])"></p>
+          </figcaption>
+        </figure>
+      </router-link>
+      <a
+        v-if="editorChoice[0].style === 'projects' || editorChoice[0].style === 'campaign' || editorChoice[0].style === 'readr'"
+        class="editorChoice__flat--highlight-choice"
+        :id="'choices-' + editorChoice[0].name"
+        :href="getHrefFull(editorChoice[0])"
+        :target="target">
+        <figure v-lazy:background-image="getImage(editorChoice[0], 'desktop')">
+          <figcaption>
+            <p v-text="getTitle(editorChoice[0])"></p>
+          </figcaption>
+        </figure>
+      </a>
+      <ul class="editorChoice__flat--list-choice">
+        <li v-for="(item, index) in editorChoice.slice(1)">
+          <router-link 
+            v-if="item.style !== 'projects' && item.style !== 'campaign' && item.style !== 'readr'"
+            :to="getHref(item)" 
+            :id="'choices-' + item.name" 
+            :target="target"
+            v-text="getTitle(item, 24)">
+          </router-link>
+          <a 
+            v-if="item.style === 'projects' || item.style === 'campaign' || item.style === 'readr'"
+            :href="getHrefFull(item)" 
+            :id="'choices-' + item.name"
+            :target="target"
+            v-text="getTitle(item, 24)">
+          </a>
+        </li>
+      </ul>
     </div>
     <div class="editorChoice--mobile">
       <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
         <template>
-          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style !== 'projects'" :target="target">
+          <router-link
+            :to="getHref(item)"
+            :id="'choices-' + item.name"
+            class="editorChoice__block--img"
+            v-if="item.style !== 'projects'"
+            :target="target">
             <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
             <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </router-link>
-          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style === 'projects'" :target="target">
+          <a
+            :href="`https://www.mirrormedia.mg${getHref(item)}`"
+            :id="'choices-' + item.name"
+            class="editorChoice__block--img"
+            v-if="item.style === 'projects'"
+            :target="target">
             <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
             <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </a>
         </template>
         <div class="editorChoice__block--title" :class="getSection(item)">
           <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></a>
+            <router-link
+              :to="getHref(item)"
+              :id="'choices-' + item.name"
+              v-if="item.style !== 'projects' && item.style !== 'campaign' && item.style !== 'readr'"
+              :target="target">
+              <h2 v-text="getTitle(item, 24)"></h2>
+            </router-link>
+            <a
+              :href="getHrefFull(item)"
+              :id="'choices-' + item.name"
+              v-if="item.style === 'projects' || item.style === 'campaign' || item.style === 'readr'"
+              :target="target">
+              <h2 v-text="getTitle(item, 24)"></h2>
+            </a>
           </template>
         </div>
       </div>
     </div>
   </section>
 </template>
-<script>
 
+<script>
 import { SECTION_MAP } from '../constants'
-import { getHref, getImage, getSection, getTitle, getTruncatedVal, getValue } from '../util/comm'
-import Slider from './Slider.vue'
+import { getHref, getHrefFull, getImage, getSection, getTitle, getTruncatedVal, getValue } from '../util/comm'
 import _ from 'lodash'
 
 export default {
   name: 'editorChoiceB',
-  components: {
-    'app-slider': Slider
-  },
   props: {
     editorChoice: {
       default: () => { return this.editorChoice }
@@ -75,39 +109,9 @@ export default {
       default: () => { return undefined }
     }
   },
-  computed: {
-    sliderOption () {
-      return {
-        setNavBtn: false,
-        grabCursor: false,
-        autoplay: 5000,
-        autoplayDisableOnInteraction: false,
-        onSlideChangeStart: (swiper) => {
-          this.updateNavStatus(swiper.activeIndex)
-        }
-      }
-    }
-  },
   methods: {
-    jumpToSlide (e, pTarget) {
-      if (!e && !pTarget) { return }
-      const targ = pTarget || e.target
-      const targOld = targ.parentNode.getAttribute('class')
-      // const targSect = targ.getAttribute('section')
-      const i = Number(targ.getAttribute('index'))
-      window.refs[ 'editorChoiceSlider' ].slideTo((i + 1), 1000, false)
-      const lastTarg = document.querySelector(`.${targOld}.active`)
-      if (lastTarg) {
-        lastTarg.setAttribute('class', `${targOld}`)
-        lastTarg.removeAttribute('style')
-      }
-      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
-      targ.parentNode.setAttribute('class', `${targOld} active`)
-    },
-    jumpToSlideForParent (e) {
-      this.jumpToSlide(null, e.target.children[0])
-    },
     getHref,
+    getHrefFull,
     getSrcSet (img) {
       return `${img.resizedTargets.mobile.url} 600w, ${img.resizedTargets.tablet.url} 900w, ${img.resizedTargets.desktop.url} 1200w`
     },
@@ -123,63 +127,21 @@ export default {
       }
       return style
     },
-    setHoverEvent () {
-      const _targ = document.querySelectorAll('.editorChoice__menu--item')
-      const _targChilde = document.querySelectorAll('.editorChoice__menu--item > span')
-      _.map(_targ, (o) => {
-        o.onmouseover = (e) => {
-          this.jumpToSlide(null, e.target.children[0])
-        }
-      })
-      _.map(_targChilde, (o) => {
-        o.onmouseover = (e) => {
-          this.jumpToSlide(e)
-        }
-      })
-    },
     styleFor1stitem (sect) {
       return {
         borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
       }
-    },
-    updateNavStatus (ind) {
-      const index = (ind !== 6) ? (ind % 6) : 1
-      const targ = document.querySelector(`.editorChoice__menu--item span[index="${(index - 1)}"]`)
-      const targOld = targ.parentNode.getAttribute('class')
-      // const targSect = targ.getAttribute('section')
-      const lastTarg = document.querySelector(`.${targOld}.active`)
-      if (lastTarg) {
-        lastTarg.setAttribute('class', `${targOld}`)
-        lastTarg.removeAttribute('style')
-      }
-      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
-      targ.parentNode.setAttribute('class', `${targOld} active`)
     }
-  },
-  mounted () {
-    this.setHoverEvent()
-  },
-  updated () {
-    this.setHoverEvent()
   }
 }
 </script>
-<style lang="stylus" scoped>
 
+
+<style lang="stylus" scoped>
 .editorChoice
   > h2
     display none
-  &__slides
-    display none
-    &--img
-      position absolute
-      width 100%
-      height 100%
-      background-position 50% 50%
-      background-repeat no-repeat
-      background-size cover
-      
-  &__menu
+  &__flat
     display none
   &--mobile
     display flex
@@ -236,7 +198,7 @@ export default {
         margin-right -100%
         margin-left 10px
         border-top 5px solid #356d9c
-       
+
 @media (min-width: 600px)
   .editorChoice
     &--mobile
@@ -264,37 +226,53 @@ export default {
       font-size 1.3rem
       line-height 1.15
       font-weight 400
-    .editorChoice__slides
-      display block
-      width 100%
-      height 500px
-    .editorChoice__menu
+    &__flat
+      height 340px
+      border 1px solid #d3d3d3
       display flex
-      position absolute
-      left 0
-      right 0
-      bottom 0
-      z-index 10
-      width 100%
-      background-color rgba(246,246,246,.8)
-      a:not(:last-child)
-        border-right 1px solid rgba(204, 204, 204, 0.75)
-      &--item
+      &--highlight-choice
+        width 65%
+        height 339px
+        figure
+          height 339px
+          margin 0
+          background-repeat no-repeat
+          background-size 100% 100%
+          position relative
+          figcaption
+            position absolute
+            bottom 0
+            color white
+            width 100%
+            height 68px
+            background-color rgba(0, 0, 0, 0.3)
+            font-size 20px
+            font-weight 600
+            display flex
+            align-items center
+            padding 0 40px 0 40px
+            p
+              letter-spacing 1px
+              text-align justify
+      &--list-choice
+        width 35%
+        margin 0
+        padding 20px 15px
+        list-style none
         display flex
-        justify-content center
-        align-items center
-        flex-grow 1
-        flex-basis 0
-        padding .5em 1em
-        color #000
-        span
-          text-align justify
-          line-height 1.3
-          font-weight 300
-        &.active
-          background-color #356d9c
-          color #fff
+        flex-direction column
+        li
+          flex 1 1 auto
+          display flex
+          align-items center
+          a
+            font-size 16px
+            color black
+            text-align justify
+            line-height 1.25
+        li + li
+          border-top 1px solid #d3d3d3
     &--mobile
       display none
-
 </style>
+
