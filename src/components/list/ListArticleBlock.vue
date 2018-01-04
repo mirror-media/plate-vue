@@ -8,8 +8,8 @@
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
-        <h2><a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></a></h2>
-        <p><a :href="`https://www.mirrormedia.mg${getHref(article)}`" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></a></p>
+        <h2><a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></a></h2>
+        <p><a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></a></p>
       </div>
     </template>
     <template v-else-if="articleType === 'video'">
