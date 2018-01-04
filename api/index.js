@@ -180,7 +180,7 @@ const fetchStaticJson = (req, res, next, jsonFileName) => {
           redisWriting(url, response.text)
           res.json(JSON.parse(response.text))
         } else {
-          res.send('{\'error\':' + err + '}')
+          res.status(500).send('{\'error\':' + err + '}')
           // res.status(500).end('Internal Error 500')
           console.error(`error during fetch data from ${jsonFileName} : ${url}`)
           console.error(err)  
@@ -263,7 +263,7 @@ router.use('/playlist', function(req, res, next) {
       .query(query)
       .end(function(err, response) {
         if (err) {
-          res.send(err)
+          res.status(500).send(err)
           // res.status(500).end('Internal Error 500')
           console.error(`error during fetch data from playlist : ${req.url}`)
           console.error(err)    
@@ -293,7 +293,7 @@ router.use('/questionnaire', function(req, res, next) {
             redisWriting(url, response.text)
             res.json(JSON.parse(response.text))
           } else {
-            res.send('{\'error\':' + err + '}')
+            res.status(500).send('{\'error\':' + err + '}')
             // res.status(500).end('Internal Error 500')
             console.error(`error during fetch data from questionnaire : ${req.url}`)
             console.error(err)   
@@ -320,7 +320,7 @@ router.use('/search', function(req, res, next) {
       .query(query)
       .end(function(err, response) {
         if (err) {
-          res.send(err)
+          res.status(500).send(err)
           // res.status(500).end('Internal Error 500')
           console.error(`error during fetch data from search : ${req.url}`)
           console.error(err)    
@@ -341,7 +341,7 @@ router.use('/twitter', function(req, res, next) {
   } else {
       client.get('statuses/user_timeline', query, function(err, data) {
           if (err) {
-              res.send(err)
+              res.status(500).send(err)
               // res.status(500).end('Internal Error 500')
               console.error(`error during fetch data from twitter : ${req.url}`)
               console.error(err) 
@@ -391,7 +391,7 @@ router.use('/related_news', function(req, res, next) {
         console.log('Error occurred when fetching data from related-newsredis.')
         console.log(err)
       }
-      res.json({ count: 0, result: [] })
+      res.status(500).json({ count: 0, result: [] })
     }
   })
 })
@@ -436,7 +436,7 @@ router.get('*', (req, res) => {
               }
               res.send(res_data)
             } else {
-              res.send(error)
+              res.status(500).send(error)
               console.error(`error during fetch data : ${req.url}`)
               console.error(error)  
             }
@@ -444,7 +444,7 @@ router.get('*', (req, res) => {
         }
       })
     } catch (e) {
-      res.send(e)
+      res.status(500).send(e)
       console.error(`error during fetch data from api : ${req.url}`)
       console.error(e)
     }
