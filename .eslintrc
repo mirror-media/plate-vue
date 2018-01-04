@@ -1,6 +1,8 @@
 {
-    "parser": "babel-eslint",
-    "extends": "vue",
+    "extends": [ "plugin:vue/base" ],
+    "parserOptions": {
+      "parser": "babel-eslint"
+    },
     "plugins": [
         "import"
     ],
