@@ -1,51 +1,48 @@
 <template>
-  <section id="editorChoice" class="editorChoice container">
-    <app-slider class="editorChoice-slides grid grid-4-fifth" slideId="editorChoiceSlider" :option="sliderOption" v-if="viewport > 1199">
+  <section id="editorChoice" class="editorChoice">
+    <h2>編輯精選</h2>
+    <app-slider class="editorChoice__slides" slideId="editorChoiceSlider" :option="sliderOption" v-if="viewport > 1199">
       <template slot-scope="props">
         <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
           <template>
             <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice-image" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
+              <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
             </router-link>
             <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice-image" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
+              <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
               </div>
             </a>
           </template>
         </swiper-slide>
       </template>
     </app-slider>
-    <div class="editorChoice-list grid grid-1-fifth">
+    <div class="editorChoice__menu">
       <template v-for="(item, index) in editorChoice">
-        <router-link :to="getHref(item)" :id="'choices-' + item.name"
-              :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
-              :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
-              @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
-          <span v-text="getTitle(item, 24)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
+        <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
+          @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
+          <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
         </router-link>
-        <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name"
-              :class="(index === 0) ? 'editorChoice-list__item active' : 'editorChoice-list__item'"
-              :style="(index === 0) ? styleFor1stitem(getValue(item, [ 'sections', 0, 'id' ])) : ''"
-              @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
-          <span v-text="getTitle(item, 24)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
+        <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
+          @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
+          <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
         </a>
       </template>
     </div>
-    <div class="editorChoice-title mobile-only"><h2>編輯精選</h2></div>
-    <div class="editorChoice-list mobile-only">
-      <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice-list-post">
+    <div class="editorChoice--mobile">
+      <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
+      <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
         <template>
-          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style !== 'projects'" :target="target">
+          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style !== 'projects'" :target="target">
             <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
-            <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
+            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </router-link>
-          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice-list-post__img" v-if="item.style === 'projects'" :target="target">
+          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style === 'projects'" :target="target">
             <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
-            <div class="section-label" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
+            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </a>
         </template>
-        <div class="editorChoice-list-post__title" :class="getSection(item)">
+        <div class="editorChoice__block--title" :class="getSection(item)">
           <template>
             <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></router-link>
             <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></a>
@@ -63,9 +60,20 @@ import Slider from './Slider.vue'
 import _ from 'lodash'
 
 export default {
-  beforeMount () {},
+  name: 'editorChoice',
   components: {
     'app-slider': Slider
+  },
+  props: {
+    editorChoice: {
+      default: () => { return this.editorChoice }
+    },
+    target: {
+      default: () => ('_self')
+    },
+    viewport: {
+      default: () => { return undefined }
+    }
   },
   computed: {
     sliderOption () {
@@ -80,28 +88,12 @@ export default {
       }
     }
   },
-  data () {
-    return {
-
-    }
-  },
-  props: {
-    editorChoice: {
-      default: () => { return this.editorChoice }
-    },
-    target: {
-      default: () => ('_self')
-    },
-    viewport: {
-      default: () => { return undefined }
-    }
-  },
   methods: {
     jumpToSlide (e, pTarget) {
       if (!e && !pTarget) { return }
       const targ = pTarget || e.target
       const targOld = targ.parentNode.getAttribute('class')
-      const targSect = targ.getAttribute('section')
+      // const targSect = targ.getAttribute('section')
       const i = Number(targ.getAttribute('index'))
       window.refs[ 'editorChoiceSlider' ].slideTo((i + 1), 1000, false)
       const lastTarg = document.querySelector(`.${targOld}.active`)
@@ -109,7 +101,7 @@ export default {
         lastTarg.setAttribute('class', `${targOld}`)
         lastTarg.removeAttribute('style')
       }
-      targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
+      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
       targ.parentNode.setAttribute('class', `${targOld} active`)
     },
     jumpToSlideForParent (e) {
@@ -132,8 +124,8 @@ export default {
       return style
     },
     setHoverEvent () {
-      const _targ = document.querySelectorAll('.editorChoice-list__item')
-      const _targChilde = document.querySelectorAll('.editorChoice-list__item > span')
+      const _targ = document.querySelectorAll('.editorChoice__menu--item')
+      const _targChilde = document.querySelectorAll('.editorChoice__menu--item > span')
       _.map(_targ, (o) => {
         o.onmouseover = (e) => {
           this.jumpToSlide(null, e.target.children[0])
@@ -152,22 +144,21 @@ export default {
     },
     updateNavStatus (ind) {
       const index = (ind !== 6) ? (ind % 6) : 1
-      const targ = document.querySelector(`.editorChoice-list__item span[index="${(index - 1)}"]`)
+      const targ = document.querySelector(`.editorChoice__menu--item span[index="${(index - 1)}"]`)
       const targOld = targ.parentNode.getAttribute('class')
-      const targSect = targ.getAttribute('section')
+      // const targSect = targ.getAttribute('section')
       const lastTarg = document.querySelector(`.${targOld}.active`)
       if (lastTarg) {
         lastTarg.setAttribute('class', `${targOld}`)
         lastTarg.removeAttribute('style')
       }
-      targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
+      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
       targ.parentNode.setAttribute('class', `${targOld} active`)
     }
   },
   mounted () {
     this.setHoverEvent()
   },
-  name: 'editorChoice',
   updated () {
     this.setHoverEvent()
   }
@@ -176,41 +167,66 @@ export default {
 <style lang="stylus" scoped>
 
 .editorChoice
-  &.container
-    display block
-    flex-direction column
-    width 100%
-    height auto
-    margin-bottom 35px
-
-  .grid
-    position relative
-    overflow hidden
-
-  &-slides
-    height: 100%
-  &-image
-    position absolute
-    width 100%
-    height 100%
-    background-position 50% 50%
-    background-repeat no-repeat
-    background-size cover
-
-    & img
+  > h2
+    display none
+  &__slides
+    display none
+    &--img
+      position absolute
       width 100%
       height 100%
-
-  &-title
+      background-position 50% 50%
+      background-repeat no-repeat
+      background-size cover
+      
+  &__menu
+    display none
+  &--mobile
+    display flex
+    flex-direction column
+    width 90%
+    margin 0 auto
+    > div:not(:last-child):not(:first-child)
+      margin-bottom 20px
+    .editorChoice__block--img
+      position relative
+      color #fff
+      display block
+      figure
+        width 100%
+        padding-top 66.66%
+        margin 0
+        background-position 50% 50%
+        background-repeat no-repeat
+        background-size cover
+      > div
+        position absolute
+        height 35px
+        background-color #000
+        display flex 
+        justify-content center
+        align-items center 
+        font-size 1.2rem       
+        top auto
+        bottom 0
+        left 0
+        white-space nowrap
+        padding 0 20px !important
+    .editorChoice__block--title
+      padding 0.5em 0
+      h2
+        margin 0
+        font-size 1.25rem
+        line-height 1.6rem
+        font-weight normal
+    
+  &__eyebrow
     width 100%
-    padding 0 2em
     margin-bottom 10px
     color #356d9c
-
-    > h2
+    h2
       margin 0
       overflow hidden
-
       &::after
         content ""
         display inline-block
@@ -221,105 +237,64 @@ export default {
         margin-left 10px
         border-top 5px solid #356d9c
 
-  &-list
-    display none
-    height 100%
-    a:last-child
-      div
-        border-bottom none
-
-    &__item
-      display flex
-      flex-direction: column
-      justify-content: center
-      height 20%
-      padding 0 1em
-      border-bottom 1px solid rgba(204, 204, 204, 0.75);
-      cursor: pointer
-      > span
-        font-size 1rem
-        line-height 1.5rem
-      &:last-child
-        border-bottom none
-      &.active
-        background-color #fff
-
-    &.mobile-only
-      display flex
-      flex-direction column
-      width 90%
-      margin 0 auto
-
-      > div:not(:last-child)
-        margin-bottom 20px
-
-      .editorChoice-list-post
-
-        > a
-          position relative
-          color #fff
-          display block
-
-          .section-label
-            position absolute
-            height 35px
-            background-color #000
-            display flex 
-            justify-content center
-            align-items center 
-            font-size 1.2rem       
-            top auto
-            bottom 0
-            left 0
-            white-space nowrap
-            padding 0 20px !important
-
-        &__img
-          > figure
-            width 100%
-            padding-top 66.66%
-            margin 0
-            background-position 50% 50%
-            background-repeat no-repeat
-            background-size cover
-            &[lazy=loading]
-              background-size 40% 40%
-                
-        &__title
-          padding .5em 0
-
-          h2
-            font-size 1.25rem
-            line-height 1.6rem
-            margin 0
-            font-weight normal
-
 @media (min-width: 600px)
-  .editorChoice-list
-    &.mobile-only
+  .editorChoice
+    &--mobile
       flex-direction row
       flex-wrap wrap
       justify-content space-between
       width 100%
-      padding 0 2em
-      > div:first-child
+      > div:nth-child(2)
         width 100%
-      > div:not(:first-child)
+      > div:not(:first-child):not(:nth-child(2))
         width calc( (100% - 30px)/2 )
-      .editorChoice-list-post
-        &__title
-          height 65px
+      .editorChoice__block--title
+        height 65px
 
 @media (min-width: 1200px)
   .editorChoice
-    &.container
-      display flex
-      flex-direction: row
-      width 1024px
-      height 500px
-      margin-bottom 35px
-    &-list
+    display block
+    position relative
+    width 100%
+    margin-bottom 15px
+    > h2
       display block
-      background-color #f6f6f6
+      margin 0 0 10px
+      color #356d9c
+      font-size 1.3rem
+      line-height 1.15
+      font-weight 400
+    .editorChoice__slides
+      display block
+      width 100%
+      height 500px
+    .editorChoice__menu
+      display flex
+      position absolute
+      left 0
+      right 0
+      bottom 0
+      z-index 10
+      width 100%
+      background-color rgba(246,246,246,.8)
+      a:not(:last-child)
+        border-right 1px solid rgba(204, 204, 204, 0.75)
+      &--item
+        display flex
+        justify-content center
+        align-items center
+        flex-grow 1
+        flex-basis 0
+        padding .5em 1em
+        color #000
+        span
+          text-align justify
+          line-height 1.3
+          font-weight 300
+        &.active
+          background-color #356d9c
+          color #fff
+    &--mobile
+      display none
 
 </style>
