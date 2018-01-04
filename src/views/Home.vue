@@ -151,11 +151,13 @@ export default {
   metaSet () {
     // const abIndicator = this.abIndicator
     return {
+      url: SITE_URL,
       title: SITE_TITLE,
       // meta: `
       //   <meta name="mm-opt" content="mod${abIndicator}">
       meta: `
         <meta name="robots" content="index">
+        <meta name="mm-opt" content="">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
         <meta name="twitter:card" content="summary_large_image">

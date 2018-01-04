@@ -17,6 +17,7 @@ const serverTitleMetaMixin = {
     const link = metaSet.link
     const meta = metaSet.meta
     const title = metaSet.title
+    const url = metaSet.url
     if (title) {
       this.$ssrContext.title = title
     }
@@ -25,6 +26,9 @@ const serverTitleMetaMixin = {
     }
     if (link) {
       this.$ssrContext.link = link
+    }
+    if (url) {
+      this.$ssrContext.url = url
     }
   }
 }
@@ -44,8 +48,12 @@ const clientTitleMetaMixin = {
     if (!metaSet) { return }
     const meta = metaSet.meta
     const title = metaSet.title
+    const url = metaSet.url
     if (title) {
       document.querySelector('title').innerHTML = title
+    }
+    if (url) {
+      document.head.querySelector(`link[rel='alternate']`).href = url
     }
     if (meta) {
       const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')
