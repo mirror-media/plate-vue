@@ -25,6 +25,7 @@
     "@google-cloud/logging": "^1.0.1",
     "@google-cloud/storage": "^1.5.2",
     "babel-eslint": "^8.1.2",
+    "babel-polyfill": "^6.26.0",
     "big-integer": "^1.6.26",
     "body-parser": "^1.17.2",
     "bowser": "^1.9.1",
