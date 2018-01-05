@@ -1,5 +1,7 @@
 <template>
   <section class="articleAsideFixed">
+    <slot name="dfpR2"></slot>
+    <slot name="fbPage"></slot>
     <slot name="popListVert"></slot>
   </section>
 </template>
@@ -11,7 +13,13 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 export default {
   name: 'ArticleAsideFixed',
   props: {
-    projects: Array
+    abIndicator: {
+      type: String,
+      default: 'A'
+    },
+    projects: {
+      type: Array
+    }
   },
   mounted () {
     window.addEventListener('scroll', this.$_articleDetectAsideFixed)
@@ -29,10 +37,17 @@ export default {
       const articleAsideHeight = articleAside.offsetHeight
       const popListVert = document.querySelector('.popListVert').offsetHeight
       const deltaHeightBtwAsideWindow = popListVert - vh
-      const fbPageFixed = document.querySelector('.article_aside_fbPage') || document.querySelector('.article__aside--fbPage')
-      const fbPageFixedPosBtm = elmYPosition('.article_aside_fbPage') + fbPageFixed.offsetHeight || elmYPosition('.article__aside--fbPage') + fbPageFixed.offsetHeight
+      let fixedPos
+      let fixedPosBtm
+      if (this.abIndicator === 'B') {
+        fixedPos = document.querySelector('.article_aside .latest-list-container') || document.querySelector('.article__aside .latest-list-container')
+        fixedPosBtm = elmYPosition('.article_aside .latest-list-container') + fixedPos.offsetHeight || elmYPosition('.article__aside .latest-list-container') + fixedPos.offsetHeight
+      } else {
+        fixedPos = document.querySelector('.article_aside_fbPage') || document.querySelector('.article__aside--fbPage')
+        fixedPosBtm = elmYPosition('.article_aside_fbPage') + fixedPos.offsetHeight || elmYPosition('.article__aside--fbPage') + fixedPos.offsetHeight
+      }
       if (articleMain.offsetHeight > articleAsideHeight) {
-        if (currentYPosition() > fbPageFixedPosBtm && (currentYPosition() + vh) <= articleMainPosBtm) {
+        if (currentYPosition() > fixedPosBtm && (currentYPosition() + vh) <= articleMainPosBtm) {
           articleAsideFixed.classList.add('fixed-top')
           articleAsideFixed.style.top = `0px`
           if (articleMainPosBtm - (currentYPosition() + vh) < deltaHeightBtwAsideWindow) {

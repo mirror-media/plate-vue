@@ -24,13 +24,19 @@
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
-              <div class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
+              <vue-dfp :is="props.vueDfp" v-if="abIndicator === 'A'" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
+              <div v-if="abIndicator === 'A'" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
                 <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
                   <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
                 </blockquote>
               </div>
-              <article-aside-fixed :projects="projectlist">
+              <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist">
+                <vue-dfp :is="props.vueDfp" v-if="abIndicator === 'B'" slot="dfpR2" pos="PCR2B" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
+                <div v-if="abIndicator === 'B'" slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
+                  <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
+                    <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
+                  </blockquote>
+                </div>
                 <pop-list-vert :pop="popularlist" slot="popListVert">
                   <micro-ad  v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                     :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
@@ -53,8 +59,7 @@
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
-              <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A' || recommendlist.length === 0" ></div>
-              <RecommendList id="matchedContent" class="matchedContent" v-else-if="abIndicator === 'B'" :recommendList="recommendlist" :excludingArticles="relateds" :excludingArticle="routeUpateReferrerSlug"></RecommendList>
+              <div id="matchedContentContainer" class="matchedContentContainer"></div>
             </template>
           </article-body>
           <div class="article_footer">
@@ -802,7 +807,7 @@
         margin-top -30px
         &_fbPage
           width 300px
-          margin 20px 5px 0
+          margin 20px 5px 15px
       
       .article_footer
         text-align center
