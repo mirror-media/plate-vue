@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "api": "node test/api/runner.js --timeout 5000 test/api/specs/*.spec.js",
-    "dev": "run npm-forever",
+    "dev": "npm run npm-forever",
     "start": "cross-env NODE_ENV=production PORT=80 npm run npm-forever",
     "build": "rimraf dist && npm run build:client && npm run build:server",
     "build:client": "cross-env NODE_ENV=production webpack --config build/webpack.client.config.js --progress --hide-modules",

@@ -1,11 +1,10 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'596441d04bbe120f002a319a'">
     <template slot-scope="props" slot="dfpPos">
       <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header>
-      <vue-dfp :is="props.vueDfp" :config="props.config" pos="PCHD" class="dfp dfp--desktop" style="margin: 20px auto;"></vue-dfp>
-      <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBHD" class="dfp dfp--mobile" style="margin: 20px auto;"></vue-dfp>
-      
-      <article-body-external :articleData="articleData">
+      <article-body-external :abIndicator="abIndicator" :articleData="articleData">
+        <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto 20px;"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto 20px;"></vue-dfp>
         <vue-dfp :is="props.vueDfp" slot="dfp-MBE1" pos="MBE1" :dfpId="props.dfpId" :config="props.config" class="dfp dfp--mobile"/>
         <div slot="dfp-PCE1E2" class="dfp--PCE1E2 dfp--desktop">
           <vue-dfp :is="props.vueDfp" pos="PCE1" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
@@ -30,22 +29,30 @@
           <div><h3>推薦文章</h3></div>
           <div id="matchedContentContainer" class="matchedContentContainer"></div>
         </template>
-        <article-aside-fixed slot="articleAsideFixed">
+        <article-aside-fixed :abIndicator="abIndicator" slot="articleAsideFixed">
+          <vue-dfp :is="props.vueDfp" v-if="abIndicator === 'B'" slot="dfpR2" pos="PCR2B" class="dfp--desktop" :config="props.config"></vue-dfp>
+          <div v-if="abIndicator === 'B'" slot="fbPage" class="article__aside--fbPage">
+            <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
+              <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
+                <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
+              </blockquote>
+            </div>
+          </div>
           <pop-list-vert :pop="popularList" slot="popListVert">
-            <micro-ad  v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
+            <micro-ad  v-for="a in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
               :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
               class="popListVert-list__item" :slot="`microAd${getValue(a, [ 'pos' ])}`"></micro-ad>
           </pop-list-vert>
         </article-aside-fixed>
       </article-body-external>
-      
+      <share-tools v-if="viewport > 1200"></share-tools>
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded"></live-stream>
       <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR" :config="props.config"></vue-dfp>
       </DfpCover> 
       <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
         <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR2" :config="props.config"></vue-dfp>
-      </DfpCover> 
+      </DfpCover>
     </template>
   </vue-dfp-provider>
 </template>
@@ -54,10 +61,12 @@
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { consoleLogOnDev, currEnv, getValue, insertVponAdSDK, sendAdCoverGA, updateCookie, vponHtml } from '../util/comm'
+  import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import _ from 'lodash'
   import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
   import ArticleBodyExternal from '../components/article/ArticleBodyExternal.vue'
+  import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
@@ -67,6 +76,7 @@
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
   import ProjectList from '../components/article/ProjectList.vue'
+  import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import titleMetaMixin from '../util/mixinTitleMeta'
@@ -152,6 +162,7 @@
       'pop-list': PopList,
       'pop-list-vert': PopListVert,
       'proj-list': ProjectList,
+      'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
       DfpCover
     },
@@ -168,12 +179,16 @@
       const category = _.get(partner, [ 'name' ], '')
       const ogDescription = truncate(brief, 197) || SITE_DESCRIPTION
       const imageUrl = thumb || SITE_OGIMAGE
+      let abIndicator
+      if (process.env.VUE_ENV === 'client') {
+        abIndicator = this.$_external_getMmid()
+      }
 
       return {
         url: `${SITE_URL}/external/${name}/`,
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="">
+          <meta name="mm-opt" content="external${abIndicator}">
           <meta name="robots" content="index">
           <meta name="description" content="${ogDescription}">
           <meta name="section-name" content="externals">
@@ -340,6 +355,7 @@
     },
     mounted () {
       this.clientSideFlag = process.env.VUE_ENV === 'client'
+      this.abIndicator = this.$_external_getMmid()
       this.$_external_updateViewport()
       this.$_external_updateSysStage()
       this.$_external_insertMediafarmersScript()
@@ -372,6 +388,18 @@
       next()
     },
     methods: {
+      $_external_getMmid () {
+        const mmid = Cookie.get('mmid')
+        let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+        if (assisgnedRole) {
+          assisgnedRole = assisgnedRole.toUpperCase()
+        }
+        const role = getRole({ mmid, distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 } ]
+        })
+        return assisgnedRole || role
+      },
       $_external_initializeFBComments () {
         if (window.FB) {
           window.FB && window.FB.init({
@@ -420,7 +448,8 @@
       $_external_sendGA (articleData) {
         window.ga('set', 'contentGroup1', 'external')
         window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'partner', 'name' ], '')}`)
-        window.ga('set', 'contentGroup3', '')
+        // window.ga('set', 'contentGroup3', '')
+        window.ga('set', 'contentGroup3', `external${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       $_external_updateMediafarmersScript () {
@@ -464,6 +493,9 @@
     display flex
     justify-content space-around
     margin-bottom 15px
+  &--PCHD
+    width 1160px
+    margin 0 auto
 
 @media (max-width 999px)
   .dfp

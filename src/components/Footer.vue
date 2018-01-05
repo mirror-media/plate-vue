@@ -33,7 +33,7 @@
   import { shareGooglePlus, shareLine, shareFacebook } from '../util/comm'
 
   export default {
-    name: 'footer',
+    name: 'AppFooter',
     computed: {
       ifShowShareBottom () {
         return {

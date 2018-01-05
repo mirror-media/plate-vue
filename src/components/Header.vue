@@ -34,7 +34,7 @@
           <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }">
             <router-link :id="`header-${item.id}-menu`" :to="`/section/${item.name}`" v-text="item.title"></router-link>
             <div class="dropdown-content" :class="item.name">
-              <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-menu`" />
+              <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-menu-${i}`" />
             </div>
           </div>
           <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
@@ -65,13 +65,13 @@
         <img @click="$_header_closeSideBar" src="/public/icon/close_white@2x.png" alt="關閉側邊欄" >
       </div>
       <div class="header-sidebar__topic">
-        <a :href="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-sidebar`"></a>
+        <a :href="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-sidebar-${i}`"></a>
       </div>
       <div class="header-sidebar__sections">
-        <div class="header-sidebar__section" v-for="(item, index) in sections" :style="{ borderLeftColor: $_header_getColor(item) }">
+        <div class="header-sidebar__section" v-for="(item, i) in sections" :style="{ borderLeftColor: $_header_getColor(item) }" :key="`${item.id}-sidebar-${i}`">
           <a :href="`/section/${item.name}`" v-text="item.title"></a>
           <div class="header-sidebar__categories" v-if="item.categories.length !== 0">
-            <a :href="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-sidebar`"></a>
+            <a :href="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-sidebar-${i}`"></a>
           </div>
         </div>
         <div class="header-sidebar__section external">
