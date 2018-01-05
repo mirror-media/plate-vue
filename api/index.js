@@ -175,15 +175,15 @@ const fetchStaticJson = (req, res, next, jsonFileName) => {
     } else {
       superagent
       .get(url)
-      .end((err, response) => {
-        if (!err && response) {
+      .end((e, response) => {
+        if (!e && response) {
           redisWriting(url, response.text)
           res.json(JSON.parse(response.text))
         } else {
-          res.status(500).send('{\'error\':' + err + '}')
+          res.status(response.status).send('{\'error\':' + e + '}')
           // res.status(500).end('Internal Error 500')
           console.error(`error during fetch data from ${jsonFileName} : ${url}`)
-          console.error(err)  
+          console.error(e)  
         }
       })
     }
@@ -288,15 +288,15 @@ router.use('/questionnaire', function(req, res, next) {
       } else {
         superagent
         .get(url)
-        .end((err, response) => {
-          if (!err && response) {
+        .end((e, response) => {
+          if (!e && response) {
             redisWriting(url, response.text)
             res.json(JSON.parse(response.text))
           } else {
-            res.status(500).send('{\'error\':' + err + '}')
+            res.status(response.status).send('{\'error\':' + e + '}')
             // res.status(500).end('Internal Error 500')
             console.error(`error during fetch data from questionnaire : ${req.url}`)
-            console.error(err)   
+            console.error(e)   
           }
         })
       }
@@ -318,12 +318,12 @@ router.use('/search', function(req, res, next) {
       .set('X-Algolia-API-Key', SEARCH_API_KEY)
       .set('X-Algolia-Application-Id', SEARCH_API_APPID)
       .query(query)
-      .end(function(err, response) {
-        if (err) {
-          res.status(500).send(err)
+      .end(function(e, response) {
+        if (e) {
+          res.status(response.status).send(e)
           // res.status(500).end('Internal Error 500')
           console.error(`error during fetch data from search : ${req.url}`)
-          console.error(err)    
+          console.error(e)    
         } else {
           redisWriting(`${url}?${req.url}`, JSON.stringify(response.body))
           res.json(response.body)
@@ -340,14 +340,14 @@ router.use('/twitter', function(req, res, next) {
       res.send('empty screen_name')
   } else {
       client.get('statuses/user_timeline', query, function(err, data) {
-          if (err) {
-              res.status(500).send(err)
-              // res.status(500).end('Internal Error 500')
-              console.error(`error during fetch data from twitter : ${req.url}`)
-              console.error(err) 
-          } else {
-              res.json(data)
-          }
+        if (err) {
+          res.status(500).send(err)
+          // res.status(500).end('Internal Error 500')
+          console.error(`error during fetch data from twitter : ${req.url}`)
+          console.error(err) 
+        } else {
+          res.json(data)
+        }
       })
   }
 
@@ -436,7 +436,7 @@ router.get('*', (req, res) => {
               }
               res.send(res_data)
             } else {
-              res.status(500).send(error)
+              res.status(response.status).send(error)
               console.error(`error during fetch data : ${req.url}`)
               console.error(error)  
             }
