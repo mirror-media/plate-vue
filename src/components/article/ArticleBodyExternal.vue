@@ -1,6 +1,8 @@
 <template>
   <section class="articleBodyExternal">
     <div class="articleBodyExternalContainer">
+      <slot name="dfp-PCHD"></slot>
+      <slot name="dfp-MBHD"></slot>
       <div class="articleBodyExternal__heroImage">
         <img v-if="heroImage" v-lazy="heroImage">
       </div>
@@ -16,6 +18,7 @@
             <p class="article__main--brief" v-text="brief"></p>
             <div class="article__main--content" v-html="content"></div>
             <newsletter></newsletter>
+            <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
             <div class="article__main--fbPage">
               <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
                 <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
@@ -37,8 +40,8 @@
           <section class="article__aside">
             <slot name="dfp-PCR1"></slot>
             <slot name="latestList"></slot>
-            <slot name="dfp-PCR2"></slot>
-            <div class="article__aside--fbPage">
+            <slot v-if="abIndicator === 'A'" name="dfp-PCR2"></slot>
+            <div v-if="abIndicator === 'A'" class="article__aside--fbPage">
               <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
                 <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
                   <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
@@ -55,6 +58,7 @@
 </template>
 
 <script>
+  import { SOCIAL_LINK } from '../../constants'
   import _ from 'lodash'
   import Newsletter from '../../components/Newsletter.vue'
   import moment from 'moment'
@@ -65,6 +69,10 @@
       'newsletter': Newsletter
     },
     props: {
+      abIndicator: {
+        type: String,
+        default: 'A'
+      },
       articleData: {
         type: Object,
         required: true
@@ -98,6 +106,9 @@
           return link
         }
         return
+      },
+      socialLink () {
+        return SOCIAL_LINK
       },
       title () {
         return _.get(this.articleData, [ 'title' ])
@@ -144,6 +155,12 @@
         font-weight normal
     &__main
       margin-top 30px
+      a, a:hover, a:link, a:visited
+        padding-bottom 5px
+        color #3195b3
+        text-decoration none
+        border-bottom 1px solid #3195b3
+        cursor pointer
       &--brief
         color #08639e
         text-align justify
@@ -163,13 +180,6 @@
           font-size 18px
           line-height 36px
           text-align justify
-        a, a:hover, a:link, a:visited
-          padding-bottom 5px
-          color #3195b3
-          text-decoration none
-          border-bottom 1px solid #3195b3
-          cursor pointer
-          
         img 
           width 100%
         .picture-box
@@ -258,7 +268,7 @@
         margin-top 10px
         &--fbPage
           width 300px
-          margin 20px auto 0
+          margin 20px auto 15px
           overflow hidden
           .fb-page
             width 100%

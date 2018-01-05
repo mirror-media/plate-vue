@@ -94,6 +94,7 @@
         </div>
       </article>
       <newsletter></newsletter>
+      <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
       </div>
@@ -130,7 +131,7 @@
 </template>
 <script>
 import _ from 'lodash'
-import { SECTION_MAP } from '../../constants'
+import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
 import { getHref, getTruncatedVal, getValue } from '../../util/comm'
 // import { getRole } from '../../util/mmABRoleAssign'
 import Annotation from './Annotation.vue'
@@ -211,6 +212,9 @@ export default {
         paginationHide: false,
         setNavBtn: true
       }
+    },
+    socialLink () {
+      return SOCIAL_LINK
     },
     subtitle () {
       const { subtitle = [] } = this.articleData
