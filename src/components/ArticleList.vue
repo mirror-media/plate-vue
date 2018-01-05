@@ -76,6 +76,6 @@ export default {
       width 1044px
   .nativeDFP
     width calc( (100% - 60px) / 3 )
-
+  
 
 </style>
