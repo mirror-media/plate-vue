@@ -391,7 +391,7 @@ router.use('/related_news', function(req, res, next) {
         console.log('Error occurred when fetching data from related-newsredis.')
         console.log(err)
       }
-      res.status(500).json({ count: 0, result: [] })
+      res.json({ count: 0, result: [] })
     }
   })
 })
