@@ -185,7 +185,6 @@
       }
 
       return {
-        url: `${SITE_URL}/external/${name}/`,
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
           <meta name="mm-opt" content="external${abIndicator}">

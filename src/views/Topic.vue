@@ -286,7 +286,6 @@ export default {
     }
 
     return {
-      url: ogUrl,
       title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
         <meta name="mm-opt" content="">

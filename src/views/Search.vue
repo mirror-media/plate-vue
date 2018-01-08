@@ -107,7 +107,6 @@ export default {
     const title = (this.title) ? `${this.title} - ${SITE_TITLE}` : SITE_TITLE
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
     return {
-      url: ogUrl,
       title: title,
       meta: `
         <meta name="mm-opt" content="">

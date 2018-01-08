@@ -244,7 +244,6 @@
         abIndicator = this.getMmid()
       }
       return {
-        url: `${SITE_URL}/story/${slug}/`,
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
           <meta name="mm-opt" content="article${abIndicator}">
