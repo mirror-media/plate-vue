@@ -152,7 +152,6 @@ export default {
   metaSet () {
     const abIndicator = this.abIndicator
     return {
-      url: SITE_URL,
       title: SITE_TITLE,
       meta: `
         <meta name="mm-opt" content="choice${abIndicator}">
