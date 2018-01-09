@@ -51,7 +51,7 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 .popListVert
   width 100%
   border 1px solid #dedede

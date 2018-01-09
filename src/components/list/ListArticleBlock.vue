@@ -192,7 +192,7 @@ export default {
 }
 
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
 
 .listArticleBlock
   width 100%
@@ -288,6 +288,5 @@ export default {
 @media (min-width: 1200px)
   .listArticleBlock
     width calc( (100% - 60px) / 3 )
-
 
 </style>

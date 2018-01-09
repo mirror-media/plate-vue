@@ -6,19 +6,19 @@
           <swiper-slide :is="props.slide" v-for="(o, i) in filteredProjects" v-if="i < 10" :key="`${i}-${Date.now()}`">
             <div class="proj_item">
               <div>
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-1'" :target="target">
+                <a :href="`${getHrefFull(o)}`" :id="'projects-' + o.name + '-1'" :target="target">
                   <div class="proj_item_img" :title="getValue(o, [ 'title' ])"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
               </div>
               <div class="proj_item_title">
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-2'" :target="target">
+                <a :href="`${getHrefFull(o)}`" :id="'projects-' + o.name + '-2'" :target="target">
                   {{ getTruncatedVal(o.title, 20) }}
                 </a>
               </div>
               <div class="proj_item_desc">
-                <a :href="`${siteUrl}/projects/${o.slug}`" :id="'projects-' + o.name + '-3'" :target="target">
+                <a :href="`${getHrefFull(o)}`" :id="'projects-' + o.name + '-3'" :target="target">
                   {{ getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20) }}
                 </a>
               </div>
@@ -34,7 +34,7 @@
 <script>
   import _ from 'lodash'
   import { SECTION_MAP, SITE_URL } from '../../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
+  import { getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import ProjectListNavBtn from './ProjectListNavBtn.vue'
   import Slider from '../Slider.vue'
   import sanitizeHtml from 'sanitize-html'
@@ -84,6 +84,7 @@
         }
       },
       getHref,
+      getHrefFull,
       getImage,
       getTruncatedVal,
       getValue,

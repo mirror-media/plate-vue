@@ -522,7 +522,6 @@ export default {
     const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
     this.titleBase = title
     return {
-      url: ogUrl,
       title: title,
       meta: `
         <meta name="mm-opt" content="">
