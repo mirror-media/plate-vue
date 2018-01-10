@@ -3,10 +3,17 @@
     <div class="related-list__list" :style="containerStyle()">
       <div class="related-list__list__title"><h4 :style="titleStyle()">相關文章</h4></div>
       <template v-for="(o, i) in relateds">
-        <div class="related-list__list__item" v-if="o">
+        <div class="related-list__list__item" v-if="o"  :id="`related-${getValue(o, [ 'slug' ], Date.now())}`">
           <div class="title">
             <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" v-if="shouldShowItem(o)"></router-link>
             <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" v-else></a>
+          </div>
+        </div>
+      </template>
+      <template v-for="(o, i) in filteredRecommends">
+        <div class="related-list__list__item" v-if="o"  :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`">
+          <div class="title">
+            <router-link :to="'/story/' + getValue(o, [ 'slug' ])" v-text="getValue(o, [ 'title' ], '')"></router-link>
           </div>
         </div>
       </template>
@@ -15,11 +22,29 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { SECTION_MAP } from '../../constants'
-  import { getHref, getHrefFull, getValue } from '../../util/comm'
+  import { SECTION_MAP, RELATED_LIST_MAX } from '../../constants'
+  import { extractSlugFromreferrer, getHref, getHrefFull, getValue } from '../../util/comm'
 
   export default {
-    computed: {},
+    computed: {
+      filteredRecommends () {
+        const origRecommendList = _.map(this.recommends, (a) => (Object.assign({}, a)))
+        const excludingArticlesLen = this.relateds.length
+        const filteredRecommendList = this.referrerSlug !== 'N/A' || this.excludingArticle !== 'N/A'
+          ? _.filter(origRecommendList, (a) => (_.get(a, [ 'slug' ]) !== this.referrerSlug) && (_.get(a, [ 'slug' ]) !== this.excludingArticle))
+          : origRecommendList
+        for (let i = 0; i < excludingArticlesLen; i += 1) {
+          _.remove(filteredRecommendList, { slug: _.get(this.relateds[ i ], [ 'slug' ]) })
+        }
+
+        return _.take(filteredRecommendList, RELATED_LIST_MAX - excludingArticlesLen)
+      }
+    },
+    data () {
+      return {
+        referrerSlug: 'N/A'
+      }
+    },
     methods: {
       getHref,
       getHrefFull,
@@ -43,6 +68,7 @@
       custCss.setAttribute('class', 'relatedBtmStyle')
       custCss.appendChild(document.createTextNode(customCSS))
       document.querySelector('body').appendChild(custCss)
+      this.referrerSlug = extractSlugFromreferrer(document.referrer)
     },
     watch: {
       sectionId: function () {
@@ -51,14 +77,20 @@
     },
     name: 'related-list',
     props: {
+      abIndicator: {
+        default: () => ('')
+      },
+      excludingArticle: {
+        default: () => ('N/A')
+      },
       isApp: {
         default: () => false
       },
-      relateds: {
+      recommends: {
         default: () => ([])
       },
-      abIndicator: {
-        default: () => ('')
+      relateds: {
+        default: () => ([])
       },
       sectionId: {
         default: () => ('')
