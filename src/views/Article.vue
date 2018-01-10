@@ -55,7 +55,6 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <!--related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" /-->
             <RelatedListWithRecommendList v-if="relateds.length > 0 || recommendlist.length > 0" slot="relatedlistBottom" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
@@ -120,9 +119,6 @@
   import MicroAd from '../components/MicroAd.vue'
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
-  // import RecommendList from '../components/article/RecommendList.vue'
-  // import RelatedList from '../components/article/RelatedList.vue'
-  import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
   import RelatedListWithRecommendList from '../components/article/RelatedListWithRecommendList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -351,13 +347,10 @@
       'micro-ad': MicroAd,
       'pop-list': PopList,
       'pop-list-vert': PopListVert,
-      // 'related-list': RelatedList,
-      'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
-      // RecommendList,
       RelatedListWithRecommendList
     },
     data () {
@@ -732,13 +725,6 @@
         this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
       }
-
-      if (this.recommendlist.length > 0 && this.abIndicator === 'B') {
-        window.ga && window.ga('send', 'event', 'article', 'visible', 'matchedcontent', {
-          location: document.location.href,
-          nonInteraction: false
-        })
-      }
     },
     updated () {
       this.updateSysStage()
@@ -756,13 +742,6 @@
 
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
-
-        if (this.recommendlist.length > 0 && this.abIndicator === 'B') {
-          window.ga && window.ga('send', 'event', 'article', 'visible', 'matchedcontent', {
-            location: document.location.href,
-            nonInteraction: false
-          })
-        }
       },
       articleData: function () {
         if (!this.hasSentFirstEnterGA) {

@@ -13,7 +13,8 @@
       <template v-for="(o, i) in filteredRecommends">
         <div class="related-list__list__item" v-if="o"  :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`">
           <div class="title">
-            <router-link :to="'/story/' + getValue(o, [ 'slug' ])" v-text="getValue(o, [ 'title' ], '')"></router-link>
+            <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" v-if="shouldShowItem(o)"></router-link>
+            <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" v-else></a>
           </div>
         </div>
       </template>

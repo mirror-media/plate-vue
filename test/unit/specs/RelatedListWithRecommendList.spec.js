@@ -64,10 +64,33 @@ describe('RelatedListWithRecommendList.vue', () => {
     })
     const recommends = RelatedListWithRecommendListComp.find('.related-list__list__item[id^="recommend-"]')
     const recommendsLen = 10 - relatedsMock.length
+    const filteredRecommends = RelatedListWithRecommendListComp.vm.filteredRecommends
     expect(recommends.length).to.equal(recommendsLen)
+    expect(recommends.length).to.equal(filteredRecommends.length)
     for (let i = 0; i < recommendsLen; i += 1) {
       expect(recommends[ i ].text()).to.equal(recommendsMock[ i ].title)
+      expect(recommends[ i ].text()).to.equal(filteredRecommends[ i ].title)
     }
-
+  })
+  it('recommends should not contain referrer article and current article', () => {
+    const recommendsMockJoinedByRelatedsMock = [ ...relatedsMock, ...recommendsMock ]
+    RelatedListWithRecommendListComp.setProps({
+      relateds: relatedsMock,
+      recommends: recommendsMockJoinedByRelatedsMock,
+      excludingArticle: '20171222game_hs0'
+    })
+    RelatedListWithRecommendListComp.setData({
+      referrerSlug: '20171222game_hs1'
+    })
+    const recommends = RelatedListWithRecommendListComp.find('.related-list__list__item[id^="recommend-"]')
+    const filteredRecommends = RelatedListWithRecommendListComp.vm.filteredRecommends
+    expect(recommends.length).to.equal(filteredRecommends.length)
+    for (let i = 0; i < recommends.length; i += 1) {
+      expect(recommends[ i ].text()).to.equal(filteredRecommends[ i ].title)
+      expect(filteredRecommends[ i ].slug).to.not.equal('20171222game_hs0')
+      expect(filteredRecommends[ i ].slug).to.not.equal('20171222game_hs1')
+      expect(filteredRecommends[ i ].slug).to.not.equal(relatedsMock[ 0 ].slug)
+      expect(filteredRecommends[ i ].slug).to.not.equal(relatedsMock[ 1 ].slug)
+    }
   })
 })

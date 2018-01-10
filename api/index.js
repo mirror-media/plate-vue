@@ -67,14 +67,14 @@ const redisPoolWrite = isProd ? RedisConnectionPool('redisPoolWrite', {
     database: 0,
     options: redisOpts
   }) : redisPoolRead
-const redisPoolRecommendNews = RedisConnectionPool('redisPoolRecommendNews', {
+const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendNews', {
     host: REDIS_RECOMMEND_NEWS_HOST,
     port: REDIS_RECOMMEND_NEWS_PORT,
     max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
     perform_checks: false,
     database: 0,
-    options: Object.assign({}, redisOpts, { auth_pass: 'm1rr0rm3d1a' })
-  })
+    options: redisOpts 
+  }) : redisPoolRead 
   
 const redisFetchingByHash = (key, field, callback) => {
   let isResponded = false
