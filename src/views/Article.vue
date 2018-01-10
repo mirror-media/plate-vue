@@ -55,7 +55,8 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
+            <!--related-list-one-col :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" /-->
+            <RelatedListWithRecommendList :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
@@ -119,9 +120,10 @@
   import MicroAd from '../components/MicroAd.vue'
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
-  import RecommendList from '../components/article/RecommendList.vue'
+  // import RecommendList from '../components/article/RecommendList.vue'
   // import RelatedList from '../components/article/RelatedList.vue'
   import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
+  import RelatedListWithRecommendList from '../components/article/RelatedListWithRecommendList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
@@ -355,7 +357,8 @@
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
-      RecommendList
+      // RecommendList,
+      RelatedListWithRecommendList
     },
     data () {
       return {
