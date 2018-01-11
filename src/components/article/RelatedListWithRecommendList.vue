@@ -3,18 +3,18 @@
     <div class="related-list__list" :style="containerStyle()">
       <div class="related-list__list__title"><h4 :style="titleStyle()">相關文章</h4></div>
       <template v-for="(o, i) in relateds">
-        <div class="related-list__list__item" v-if="o"  :id="`related-${getValue(o, [ 'slug' ], Date.now())}`">
+        <div class="related-list__list__item" v-if="o">
           <div class="title">
-            <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" v-if="shouldShowItem(o)"></router-link>
-            <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" v-else></a>
+            <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related-${getValue(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
+            <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related-${getValue(o, [ 'slug' ], Date.now())}`" v-else></a>
           </div>
         </div>
       </template>
       <template v-for="(o, i) in filteredRecommends">
-        <div class="related-list__list__item" v-if="o"  :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`">
+        <div class="related-list__list__item" v-if="o">
           <div class="title">
-            <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" v-if="shouldShowItem(o)"></router-link>
-            <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" v-else></a>
+            <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
+            <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-else></a>
           </div>
         </div>
       </template>
