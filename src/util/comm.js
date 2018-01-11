@@ -412,3 +412,13 @@ export function sendAdCoverGA (label) {
     nonInteraction: true
   })
 }
+
+export function extractSlugFromreferrer (referrer = '') {
+  const filteredReferrer = referrer.replace(/^https?:\/\//, '').replace(/\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*$/, '')
+  const referrerArr = filteredReferrer.split('/')
+  if ((referrerArr[ 0 ].indexOf(SITE_DOMAIN) > -1 || referrerArr[ 0 ].indexOf('localhost') > -1) && referrerArr[ 1 ] === 'story') {
+    return referrerArr[ 2 ]
+  } else {
+    return 'N/A'
+  }
+}

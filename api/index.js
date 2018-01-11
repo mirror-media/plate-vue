@@ -73,9 +73,9 @@ const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendN
     max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
     perform_checks: false,
     database: 0,
-    options: redisOpts
-  }) : redisPoolRead
-
+    options: redisOpts 
+  }) : redisPoolRead 
+  
 const redisFetchingByHash = (key, field, callback) => {
   let isResponded = false
   let timeout = REDIS_CONNECTION_TIMEOUT || 2000

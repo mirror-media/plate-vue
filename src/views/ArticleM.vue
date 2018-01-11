@@ -29,13 +29,11 @@
             <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
-            
-            <related-list-one-col :isApp="true" :relateds="relateds" v-if="(relateds.length > 0)" slot="relatedlistBottom" :sectionId="sectionId" />
+            <RelatedListWithRecommendList :isApp="true" v-if="relateds.length > 0 || recommendlist.length > 0" slot="relatedlistBottom" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
-              <div v-if="abIndicator === 'A' || (abIndicator === 'B' && recommendlist.lenth > 0)"><h3>推薦文章</h3></div>
-              <div id="matchedContentContainer" class="matchedContentContainer" v-if="abIndicator === 'A'" ></div>
-              <RecommendList id="matchedContent" class="matchedContent" v-else="abIndicator === 'B'" :recommendList="recommendlist :excludingArticles="relateds" :excludingArticle="routeUpateReferrerSlug""></RecommendList>
+              <div><h3>推薦文章</h3></div>
+              <div id="matchedContentContainer" class="matchedContentContainer"></div>
             </template>
           </article-body>
           <div class="article_footer">
@@ -86,9 +84,7 @@
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import PopList from '../components/article/PopList.vue'
-  import RecommendList from '../components/article/RecommendList.vue'
-  // import RelatedList from '../components/article/RelatedList.vue'
-  import RelatedListOneCol from '../components/article/RelatedListOneCol.vue'
+  import RelatedListWithRecommendList from '../components/article/RelatedListWithRecommendList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
@@ -296,13 +292,11 @@
       'latest-list': LatestList,
       'live-stream': LiveStream,
       'pop-list': PopList,
-      // 'related-list': RelatedList,
-      'related-list-one-col': RelatedListOneCol,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
-      RecommendList
+      RelatedListWithRecommendList
     },
     data () {
       return {
@@ -624,13 +618,6 @@
       this.updateSysStage()
       this.abIndicator = this.getMmid()
       this.sendGA(this.articleData)
-
-      if (this.recommendlist.length > 0 && this.abIndicator === 'B') {
-        window.ga && window.ga('send', 'event', 'article', 'visible', 'matchedcontent', {
-          location: document.location.href,
-          nonInteraction: false
-        })
-      }
     },
     updated () {
       this.updateSysStage()
@@ -646,16 +633,6 @@
         this.checkIfLockJS()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
-
-        // call getMmab to send related ab test ga
-        // and will remove it after ab test got finished
-        // this.getMmab()
-        if (this.recommendlist.length > 0 && this.abIndicator === 'B') {
-          window.ga && window.ga('send', 'event', 'article', 'visible', 'matchedcontent', {
-            location: document.location.href,
-            nonInteraction: false
-          })
-        }
       },
       articleData: function () {
         this.updateJSONLDScript()
