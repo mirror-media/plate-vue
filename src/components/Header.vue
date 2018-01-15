@@ -77,7 +77,7 @@
         <div class="header-sidebar__section external">
           <a>校園</a>
           <div class="header-sidebar__categories">
-            <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :to="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></a>
+            <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :href="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></a>
           </div>
         </div>
         <div class="header-sidebar__section mirrorfiction">
