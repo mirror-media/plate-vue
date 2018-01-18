@@ -8,11 +8,11 @@
         <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
-        <div class="article-heromedia" v-if="heroVideo" >
+        <div class="article-heromedia" :class="{ 'padding-50': abIndicator === 'B' }" v-if="heroVideo" >
           <article-video :video="heroVideo" class="heroimg" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
-        <div class="article-heromedia" v-else-if="heroImage">
+        <div class="article-heromedia" :class="{ 'padding-50': abIndicator === 'B' }" v-else-if="heroImage">
           <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
           :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
@@ -837,6 +837,12 @@
   @media (min-width 1000px)
     .mobile-only
       display none !important
+
+  @media (min-width 768px)
+    .article-container
+      .article-heromedia
+        &.padding-50
+          padding 0 50px
 
   @media (min-width 768px) and (max-width 1199px)
     .article-container
