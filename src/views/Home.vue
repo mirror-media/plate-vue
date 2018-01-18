@@ -9,8 +9,7 @@
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
         <section class="home-mainContent">
           <main>
-            <editor-choice v-if="abIndicator === 'A'" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
-            <editor-choiceB v-else-if="abIndicator === 'B'" :editorChoice='editorChoice' :viewport="viewport" target="_blank"/>
+            <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
             <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank" style="margin-bottom: 40px;" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
@@ -51,7 +50,6 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
-import EditorChoiceB from '../components/EditorChoiceB.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
@@ -132,7 +130,6 @@ export default {
     'app-footer': Footer,
     'app-Header': Header,
     'editor-choice': EditorChoice,
-    'editor-choiceB': EditorChoiceB,
     'live-stream': LiveStream,
     'loading': Loading,
     'more': More,
@@ -154,7 +151,7 @@ export default {
     return {
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="choice${abIndicator}">
+        <meta name="mm-opt" content="home${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
