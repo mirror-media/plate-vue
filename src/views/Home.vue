@@ -10,8 +10,6 @@
         <section class="home-mainContent">
           <main>
             <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
-            <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
-            <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank" style="margin-bottom: 40px;" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
             <div class="focusNewsContainer">
@@ -59,8 +57,6 @@ import Loading from '../components/Loading.vue'
 import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
 import More from '../components/More.vue'
 import PopularArticles from '../components/PopularArticles.vue'
-import ProjectList from '../components/article/ProjectList.vue'
-import ProjectListVert from '../components/article/ProjectListVert.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
@@ -133,13 +129,11 @@ export default {
     'live-stream': LiveStream,
     'loading': Loading,
     'more': More,
-    'project-listVert': ProjectListVert,
     DfpCover,
     LatestArticleAside,
     LatestArticleMain,
     MirrorMediaTVAside,
     PopularArticles,
-    ProjectList,
     VueDfpProvider
   },
   asyncData ({ store }) {
