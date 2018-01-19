@@ -11,6 +11,7 @@
           <main>
             <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
+            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport < 1200 && hasEventEmbedded"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
             <div class="focusNewsContainer">
               <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-show="viewport < 1200" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
@@ -21,6 +22,7 @@
             <LatestArticleMainB v-else-if="abIndicator === 'B'" id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMainB>
           </main>
           <aside v-show="viewport >= 1200">
+            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && hasEventEmbedded"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
             <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
           </aside>
