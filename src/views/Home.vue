@@ -17,7 +17,8 @@
             </div>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
+            <LatestArticleMain v-if="abIndicator === 'A'" id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
+            <LatestArticleMainB v-else-if="abIndicator === 'B'" id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMainB>
           </main>
           <aside v-show="viewport >= 1200">
             <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
@@ -52,6 +53,7 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
+import LatestArticleMainB from '../components/LatestArticleMainB.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
@@ -132,6 +134,7 @@ export default {
     DfpCover,
     LatestArticleAside,
     LatestArticleMain,
+    LatestArticleMainB,
     MirrorMediaTVAside,
     PopularArticles,
     VueDfpProvider
