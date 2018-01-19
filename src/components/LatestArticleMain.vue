@@ -83,13 +83,6 @@ export default {
     getValue,
     getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
-      // let device = 'label-width'
-      // if (this.viewport < 600) {
-      //   device = 'label-width-mobile'
-      // } else if (this.viewport > 599 && this.viewport < 1200) {
-      //   device = 'label-width-tablet'
-      // }
-
       const style = {
         backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
       }

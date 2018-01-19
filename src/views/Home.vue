@@ -26,7 +26,7 @@
         </section>
         <loading :show="loading" />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-        <live-stream :mediaData="eventMod" type="mmtv" v-else-if="!hasEventEmbedded && hasEventMod" />
+        <live-stream :mediaData="eventMod" type="mod" v-else-if="!hasEventEmbedded && hasEventMod" />
         <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
