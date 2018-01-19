@@ -1,12 +1,12 @@
 <template>
   <div class="latest-main-container" v-if="(latestList.length > 0)">
-    <div class="latest-main-container_title"><h3>最新文章</h3></div>
+    <div class="title"><h3>最新文章</h3></div>
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
         <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
           <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="shouldShowItem(o)" :target="target">
             <div class="latest-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
-            <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
+            <div class="latest-list_item_label tablet tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </router-link>
           <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="!shouldShowItem(o)" tid="ee" :target="target">
             <div class="latest-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
@@ -118,21 +118,14 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-  .label-width-auto
-    white-space nowrap
-    padding 0 20px !important
-
   .latest-main-container
-    font-size 1.1rem
-
-    &_title
+    font-size 1.0625rem
+    & > .title
       color #356d9c
       overflow hidden
-
-      > h3
+      h3
         margin .5em 0 0
         font-size 1.5rem
-
         &::after
           content ""
           display inline-block
@@ -142,201 +135,166 @@ export default {
           margin-right -100%
           margin-left 10px
           border-top 5px solid #356d9c
-
     .latest-list
       margin-top 10px
       display flex
       align-content flex-start
-      flex-wrap wrap
       justify-content space-between
-
+      flex-wrap wrap
       .ad-container
         margin-bottom 15px
+        padding-bottom 15px
         border-bottom 1px solid rgba(0,0,0,0.28)
         width 100%
-        padding-bottom 15px
-
       &_item
+        display flex 
+        width 100%        
         vertical-align top
         margin-bottom 15px
-
-        display flex 
         border-bottom 1px solid rgba(0, 0, 0, 0.28)
-        padding-bottom 15px 
-        width 100%
-
+        padding-bottom 15px
         a
           position relative
           display block 
-          flex 1 
-
-          .latest-list_item_img
-            background-repeat no-repeat
-            background-size cover
-            background-position center center
-            padding-top 100%
-            &[lazy=loading]
-              background-size 40%
-
-          .latest-list_item_label
-            position absolute
-            height 25px
-            white-space nowrap
-            padding 0 10px
-            background-color #000
+          // flex 1
+          flex 0 0 27%
+        &_img
+          background-repeat no-repeat
+          background-size cover
+          background-position center center
+          padding-top 100%
+          &[lazy=loading]
+            background-size 40%
+        &_label
+          position absolute
+          top 0
+          padding 0 10px
+          height 30px
+          white-space nowrap
+          background-color #000
+          color #fff
+          font-size 1rem
+          display flex 
+          justify-content center
+          align-items center
+          &.tablet
             top -25px
-            color #fff
-            font-size 0.9rem
-            display flex 
-            justify-content center
-            align-items center
-
+            height 25px
         &_title
           background-color #fff
           border-top-width 0
-          line-height 1.4rem
-          font-size 1rem
+          min-height 60px
+          padding-top 35px
+          padding-left 20px
+          line-height 1.5rem
+          font-size 1.0625rem 
+
           display flex
           justify-content center
           align-items flex-start
-          min-height 60px
-          padding-top 0 
-
-          flex 1
           flex-direction column 
-          padding-left 20px 
 
+          position relative
           a
             width 100%
             max-height 100%
-
             h3
-              font-size 1.2rem 
+              line-height 1.5rem
+              font-size 1.0625rem 
               font-weight 300 
-              line-height 1.7rem 
-
+              margin 0
             &:hover, &:link, &:visited
               color #8c8c8c
               font-weight normal
               border none
-
-          .latest-list_item_label
-            height 35px
-            white-space nowrap
-            padding 0 10px
-            background-color #000
-            color #fff
-            font-size 1.2rem
-            display flex 
-            justify-content center
-            align-items center
-
   .tablet-only
     display none !important
+
   @media (min-width: 600px) and (max-width: 1199px)
-    .latest-main-container
-      .latest-list
-        &_item
-          > a
-            .latest-list_item_label
-              width 60px
-              white-space normal
-  @media (min-width: 600px)  
     .tablet-only
       display block !important
-
-      &.latest-list_item_label
-        display flex !important
-
     .tablet-hidden
-      display none !important
-
+      display none !important  
     .latest-main-container
-      width 100%
-      margin 0
-
-      &_title
-
-        > h3
-          margin .5em 0
-
-      
       .latest-list
-        flex-direction column
-        width 100%
-
-        .ad-container
-          border-bottom none
-
         &_item
-          width 100%
-          border-bottom none
-
-          > a
-            .latest-list_item_img
-              padding-top 60%
-
-            .latest-list_item_label
+          &_label
+            width 60px
+            white-space normal
+            &.tablet
+              display flex !important
               top 0
               right -60px
               height 60px
-              font-size 1.2rem
+              z-index 1
+  @media (min-width: 600px)
+    .latest-main-container
+      width 100%
+      margin 0
+      font-size 1.1rem
+      & > .title
+        > h3
+          margin .5em 0
+      .latest-list
+        flex-direction column
+        width 100%
+        .ad-container
+          border-bottom none
+        &_item
+          width 100%
+          border-bottom none
+          > a
+            flex 1
+          &_img
+            padding-top 60%
+          &_label
+            font-size 1.2rem
 
           &_title
             flex 1.5
+            padding-top 0
             padding-left 80px
-            font-weight 300
+            font-weight 600
 
             > a
               h3
                 margin 0 0 10px
                 font-size 1.3rem
-
+                font-weight normal
+              .brief
+                font-weight 300
   @media (min-width: 1200px)
     .desktop-hidden
       display none !important
-
+    .tablet-only
+      display none
     .latest-main-container
-      &_title
+      & > .title
         overflow hidden
-
         > h3
           font-size 1.3rem
           margin 0
-
           &::after
             display none
-
       .latest-list
         flex-direction row
-
         .ad-container
           width 31%
-
         &_item
           width 31%
           display block
-
-          > a
-            .latest-list_item_label
-              height 25px
-              white-space normal
-              padding 0 10px
-              top auto
-              bottom 0
-              left 0
-              right auto
-              font-size 0.9rem
-
+          &_label
+            font-size 0.9rem
+            height 25px
+            white-space normal
+            padding 0 10px
+            top -25px
+            left 0
           &_title
             padding-left 0
             padding-top 5px
-
             > a
               h3
                 font-size 1rem
                 font-weight 300
-
-    .tablet-only
-      display none
 </style>
