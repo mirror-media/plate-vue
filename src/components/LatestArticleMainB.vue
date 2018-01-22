@@ -28,6 +28,10 @@
                   :id="`${getValue(microAds, [ 'homepage', index, 'pcId' ])}`"
                   v-if="index < 3 && viewport > 1199"
                   class="latest-list_item nativeDFP margin-top-0"></micro-ad>        
+        <micro-ad :currEnv="currEnv" :currUrl="currUrl" 
+                  :id="`${getValue(microAds, [ 'homepage', index, 'mobileId' ])}`"
+                  v-if="index < 3 && viewport < 600"
+                  class="latest-list_item nativeDFP margin-top-0"></micro-ad>        
       </template>
     </div>
   </div>
