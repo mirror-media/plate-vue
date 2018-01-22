@@ -4,21 +4,21 @@
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
         <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
-          <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="shouldShowItem(o)" :target="target">
+          <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'" :target="target">
             <div class="latest-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </router-link>
-          <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="!shouldShowItem(o)" tid="ee" :target="target">
+          <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'" tid="ee" :target="target">
             <div class="latest-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </a>
           <div class="latest-list_item_title">
             <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
-            <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`" v-if="shouldShowItem(o)" :target="target">
+            <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`" v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'" :target="target">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
             </router-link>
-            <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`" v-if="!shouldShowItem(o)" :target="target">
+            <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`" v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'" :target="target">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
             </a>
@@ -83,6 +83,13 @@ export default {
     getValue,
     getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
+      // let device = 'label-width'
+      // if (this.viewport < 600) {
+      //   device = 'label-width-mobile'
+      // } else if (this.viewport > 599 && this.viewport < 1200) {
+      //   device = 'label-width-tablet'
+      // }
+
       const style = {
         backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
       }
@@ -96,10 +103,7 @@ export default {
     updateSysStage () {
       this.currEnv = currEnv()
     },
-    sanitizeHtml,
-    shouldShowItem (article) {
-      return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
-    },
+    sanitizeHtml
   },
   mounted () {
     this.updateSysStage()
