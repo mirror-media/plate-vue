@@ -9,7 +9,10 @@
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
         <section class="home-mainContent">
           <main>
-            <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+            <editor-choice v-if="abIndicator === 'A'" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+            <editor-choiceB v-else-if="abIndicator === 'B'" :editorChoice='editorChoice' :viewport="viewport" target="_blank"/>
+            <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>專題報導</h2></div>
+            <ProjectList v-if="(viewport <= 1199)" :projects="projects" :viewport="viewport" target="_blank" style="margin-bottom: 40px;" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
             <div class="focusNewsContainer">
@@ -48,6 +51,7 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
+import EditorChoiceB from '../components/EditorChoiceB.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
@@ -57,6 +61,8 @@ import Loading from '../components/Loading.vue'
 import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
 import More from '../components/More.vue'
 import PopularArticles from '../components/PopularArticles.vue'
+import ProjectList from '../components/article/ProjectList.vue'
+import ProjectListVert from '../components/article/ProjectListVert.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
@@ -126,14 +132,17 @@ export default {
     'app-footer': Footer,
     'app-Header': Header,
     'editor-choice': EditorChoice,
+    'editor-choiceB': EditorChoiceB,
     'live-stream': LiveStream,
     'loading': Loading,
     'more': More,
+    'project-listVert': ProjectListVert,
     DfpCover,
     LatestArticleAside,
     LatestArticleMain,
     MirrorMediaTVAside,
     PopularArticles,
+    ProjectList,
     VueDfpProvider
   },
   asyncData ({ store }) {
@@ -145,7 +154,7 @@ export default {
     return {
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="home${abIndicator}">
+        <meta name="mm-opt" content="choice${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
