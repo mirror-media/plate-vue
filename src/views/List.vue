@@ -48,8 +48,8 @@
         <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
-        <div class="list-title container" :style="{ color: sectionColor }">
-          <span class="list-title__text" v-text="title"></span>
+        <div class="list-title container" >
+          <a :href="getValue(section, [ 'website' ])" :style="{ color: sectionColor }" class="list-title__text" target="_blank" v-text="title"></a>
         </div>
         <article-list-light id="articleList" ref="articleList" :articles="autoScrollArticles" :latest="latestList" :showLatest="true" :viewport="viewport"></article-list-light>
         <article-list-light v-show="hasAutoScroll" id="articleListAutoScroll" ref="articleListAutoScroll" :articles="autoScrollArticlesLoadMore" :latest="latestList" :viewport="viewport"></article-list-light>
@@ -512,12 +512,12 @@ export default {
         ogDescription = SITE_DESCRIPTION
     }
 
-    // if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
-    //   const e = new Error()
-    //   e.massage = 'Page Not Found'
-    //   e.code = '404'
-    //   throw e
-    // }
+    if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    }
 
     const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
     this.titleBase = title
@@ -785,6 +785,9 @@ export default {
       }
     },
     sectionColor () {
+      if (this.type === EXTERNALS) {
+        return _.get(SECTION_MAP, [ 'external', 'bgcolor' ], '#bcbcbc')
+      }
       return _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#bcbcbc')
     },
     sectionfeatured () {
