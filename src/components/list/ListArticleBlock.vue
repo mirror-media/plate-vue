@@ -192,7 +192,7 @@ export default {
 }
 
 </script>
-<style lang="stylus" scoped>
+<style lang="stylus">
 
 .listArticleBlock
   width 100%
