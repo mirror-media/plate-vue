@@ -17,6 +17,7 @@
           <section class="article__main">
             <p class="article__main--brief" v-text="brief"></p>
             <div class="article__main--content" v-html="content"></div>
+            <p class="article__main--ref">【<strong>本文經</strong><span v-text="partner"></span><strong>授權轉載</strong><a :href="source" target="_blank">看原文</a>】</p>
             <newsletter></newsletter>
             <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
             <div class="article__main--fbPage">
@@ -107,8 +108,14 @@
         }
         return
       },
+      partner () {
+        return _.get(this.articleData, [ 'partner', 'display' ])
+      },
       socialLink () {
         return SOCIAL_LINK
+      },
+      source () {
+        return _.get(this.articleData, [ 'source' ])
       },
       title () {
         return _.get(this.articleData, [ 'title' ])
@@ -189,6 +196,16 @@
             font-size 15px
             line-height 1.7
             letter-spacing 0.3px
+      &--ref
+        font-size 18px
+        font-weight 700
+        strong
+          color #FF0000
+        a, a:hover, a:link, a:visited
+          padding 0
+          margin-left .8em
+          color #171717
+          border none
       &--fbPage
         width 100%
         margin-top 15px
