@@ -360,6 +360,16 @@ export function insertVponAdSDK ({ currEnv = 'dev', isVponSDKLoaded = false }) {
   return true
 }
 
+export function insertYahooAd ({ currEnv = 'dev', isAdLoaded = false }) {
+  if (process.env.VUE_ENV === 'client' && isAdLoaded === false) {
+    const script = document.createElement('script')
+    script.type = 'text/javascript'
+    script.src = '//delivery.vidible.tv/jsonp/pid=5a3c734b1e64223b3a558c6e/56bcd17ce4b018167fea5539_bein.js?m.busterEnabled=true'
+    document.querySelector('.vdb_player').appendChild(script)
+  }
+  return true
+}
+
 export function trim (str) {
   return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 }
