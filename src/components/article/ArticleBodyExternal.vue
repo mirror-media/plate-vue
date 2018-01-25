@@ -17,7 +17,7 @@
           <section class="article__main">
             <p class="article__main--brief" v-text="brief"></p>
             <div class="article__main--content" v-html="content"></div>
-            <p class="article__main--ref">【<strong>本文經</strong><span v-text="partner"></span><strong>授權轉載</strong><a :href="source" target="_blank">看原文</a>】</p>
+            <p v-if="source" class="article__main--ref">【<strong>本文經</strong><span v-text="partner"></span><strong>授權轉載</strong><a :href="source" target="_blank">看原文</a>】</p>
             <newsletter></newsletter>
             <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
             <div class="article__main--fbPage">
