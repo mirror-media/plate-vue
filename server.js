@@ -80,7 +80,6 @@ app.use('/dist', serve('./dist', true))
 app.use('/public', serve('./public', true))
 app.use('/manifest.json', serve('./manifest.json', true))
 app.use('/service-worker.js', serve('./dist/service-worker.js'))
-app.use('/aol-o2/index.html', serve('./aol-o2/index.html'))
 
  // since this app has no user-specific content, every page is micro-cacheable.
   // if your app involves user-specific content, you need to implement custom
