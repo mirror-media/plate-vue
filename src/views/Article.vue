@@ -88,7 +88,6 @@
       </dfp-fixed>
       <adult-content-alert v-if="isAdultContent" />
       <div class="fb-quote"></div>
-      <div id="5a3c734b1e64223b3a558c6e" class="vdb_player vdb_5a3c734b1e64223b3a558c6e56bcd17ce4b018167fea5539" vdb_params="m.busterEnabled=true"></div>
     </template>
   </vue-dfp-provider>
 </template>
@@ -96,7 +95,7 @@
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
-  import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, insertVponAdSDK, insertYahooAd, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
+  import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
@@ -721,13 +720,6 @@
         this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
       }
-
-      /**
-       * Would remove it.
-       */
-       if (this.dfpMode === 'dev') {
-        this.isYahooAdLoaded = insertYahooAd({ currEnv: this.dfpMode, isAdLoaded: this.isYahooAdLoaded })
-       }
     },
     updated () {
       this.updateSysStage()
