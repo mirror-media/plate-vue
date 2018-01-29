@@ -10,13 +10,15 @@
           </div>
         </div>
       </template>
-      <template v-for="(o, i) in filteredRecommends">
-        <div class="related-list__list__item" v-if="o">
-          <div class="title">
-            <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
-            <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-else></a>
+      <template v-if="!isAd">
+        <template v-for="(o, i) in filteredRecommends">
+          <div class="related-list__list__item" v-if="o">
+            <div class="title">
+              <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
+              <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-else></a>
+            </div>
           </div>
-        </div>
+        </template>
       </template>
     </div>
   </div>
@@ -85,6 +87,9 @@
         default: () => ('N/A')
       },
       isApp: {
+        default: () => false
+      },
+      isAd: {
         default: () => false
       },
       recommends: {

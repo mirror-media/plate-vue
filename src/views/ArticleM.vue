@@ -29,7 +29,7 @@
             <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
-            <RelatedListWithRecommendList :isApp="true" v-if="relateds.length > 0 || recommendlist.length > 0" slot="relatedlistBottom" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
+            <RelatedListWithRecommendList :isApp="true" v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)" slot="relatedlistBottom" :isAd="isAd" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
@@ -439,6 +439,9 @@
       },
       isAdultContent () {
         return _.get(this.articleData, [ 'isAdult' ], false)
+      },
+      isAd () {
+        return _.get(this.articleData, [ 'isAdvertised' ], false)
       },
       isCategoryBusinessMoney () {
         const categories = _.flatten(_.map(_.get(this.articleData, [ 'categories' ]), (o) => _.get(o, [ 'name' ])))
