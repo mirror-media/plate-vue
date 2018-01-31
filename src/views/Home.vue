@@ -18,8 +18,7 @@
             </div>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-            <LatestArticleMain v-if="abIndicator === 'A'" id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
-            <LatestArticleMainB v-else-if="abIndicator === 'B'" id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMainB>
+            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
           </main>
           <aside v-show="viewport >= 1200">
             <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && hasEventEmbedded"></MirrorMediaTVAside>
