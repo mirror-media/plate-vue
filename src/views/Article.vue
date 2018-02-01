@@ -24,15 +24,9 @@
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <vue-dfp :is="props.vueDfp" v-if="abIndicator === 'A'" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
-              <div v-if="abIndicator === 'A'" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-                <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-                  <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-                </blockquote>
-              </div>
               <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist">
-                <vue-dfp :is="props.vueDfp" v-if="abIndicator === 'B'" slot="dfpR2" pos="PCR2B" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
-                <div v-if="abIndicator === 'B'" slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
+                <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
+                <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
                   <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
                     <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
                   </blockquote>
@@ -55,7 +49,7 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <RelatedListWithRecommendList v-if="relateds.length > 0 || recommendlist.length > 0" slot="relatedlistBottom" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
+            <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)" slot="relatedlistBottom" :isAd="isAd" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
@@ -362,6 +356,7 @@
         dfpUnits: DFP_UNITS,
         hasSentFirstEnterGA: false,
         isVponSDKLoaded: false,
+        isYahooAdLoaded: false,
         microAds,
         routeUpateReferrerSlug: 'N/A',
         showDfpCoverAdFlag: false,
@@ -500,6 +495,9 @@
       },
       isAdultContent () {
         return _.get(this.articleData, [ 'isAdult' ], false)
+      },
+      isAd () {
+        return _.get(this.articleData, [ 'isAdvertised' ], false)
       },
       jsonLDBreadcrumbList () {
         return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",

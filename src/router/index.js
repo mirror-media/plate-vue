@@ -58,7 +58,7 @@ export function createRouter () {
       { path: '/tag/:tagId', component: List },
       { path: '/topic/:topicId', component: Topic },
       { path: '/404', component: NotFound },
-      { path: '/', component: Home }
+      { path: '/', component: Home },
     ]
   })
 }

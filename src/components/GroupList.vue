@@ -1,8 +1,13 @@
 <template>
   <section class="groupList">
-    <div class="groupListBlockContainer" v-for="tag in tags">
+    <div
+      v-for="tag in tags"
+      :key="tag.id"
+      class="groupListBlockContainer"
+      :class="`tag-${tag.id}`"
+      :style="[ getPostAmountByTag(tag.id) < 3 ? { 'justify-content': 'center' } : {} ]">
       <div class="groupListBlockContainer__title"><h1 v-text="tag.name"></h1></div>
-      <div class="groupListBlock" v-for="post in getPostByTag(tag.id)">
+      <div v-for="post in getPostByTag(tag.id)" :key="post.id" class="groupListBlock">
         <figure class="groupListBlock__img"><a :href="getHref(post)" target="_blank" :style="{ backgroundImage: 'url(' + getImage(post, 'mobile') + ')' }"></a></figure>
         <div class="groupListBlock__content">
           <h2><a :href="getHref(post)" target="_blank" v-text="viewport < 600 ? getTruncatedVal(post.title, 19) : post.title"></a></h2>
@@ -42,6 +47,12 @@ export default {
     },
     getHref,
     getImage,
+    getPostAmountByTag (tagId) {
+      const posts = _.filter(this.articles, (a) => {
+        return _.find(_.get(a, [ 'tags' ]), { 'id': tagId })
+      })
+      return _.get(posts, 'length', 0)
+    },
     getPostByTag (tagId) {
       return _.filter(this.articles, (a) => {
         return _.find(_.get(a, [ 'tags' ]), { 'id': tagId })
@@ -55,6 +66,8 @@ export default {
 <style lang="stylus" scoped>
 
 .groupList
+  display flex
+  flex-direction column
   padding 1em 0
   
 .groupListBlockContainer
