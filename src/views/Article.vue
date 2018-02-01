@@ -23,7 +23,7 @@
           <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
+              <latest-list :latest="latestList" :class="[ abIndicator === 'B' ? 'B' : '' ]" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
               <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist">
                 <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
                 <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">

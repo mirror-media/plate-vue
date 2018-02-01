@@ -16,7 +16,13 @@
         <main>
           <section class="article__main">
             <p class="article__main--brief" v-text="brief"></p>
-            <div class="article__main--content" v-html="content"></div>
+            <div class="article__main--content">
+              <template v-for="(p, index) in content">
+                <p :key="`content-${index}`" v-html="p"></p>
+                <slot v-if="index === 0" name="dfp-AT1"></slot>
+                <slot v-if="index === 1" name="dfp-AT2"></slot>
+              </template>
+            </div>
             <p v-if="source" class="article__main--ref">【<strong>本文經</strong><span v-text="partner"></span><strong>授權轉載</strong><a :href="source" target="_blank">看原文</a>】</p>
             <newsletter></newsletter>
             <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
@@ -41,14 +47,6 @@
           <section class="article__aside">
             <slot name="dfp-PCR1"></slot>
             <slot name="latestList"></slot>
-            <slot v-if="abIndicator === 'A'" name="dfp-PCR2"></slot>
-            <div v-if="abIndicator === 'A'" class="article__aside--fbPage">
-              <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-                <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-                  <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-                </blockquote>
-              </div>
-            </div>
             <slot name="articleAsideFixed"></slot>
           </section>
           <slot name="footer"></slot>
@@ -70,10 +68,6 @@
       'newsletter': Newsletter
     },
     props: {
-      abIndicator: {
-        type: String,
-        default: 'A'
-      },
       articleData: {
         type: Object,
         required: true
@@ -88,8 +82,7 @@
         if (orig.includes('<p>')) {
           return orig
         }
-        const addTagContent = _.join(_.map(_.split(orig, `\r\n\r\n`), p => `<p>${p}</p>`), '')
-        return addTagContent
+        return _.split(orig, `\r\n\r\n`)
       },
       credit () {
         const author = _.uniq(_.split(_.get(this.articleData, [ 'extendByline' ]), ','))
