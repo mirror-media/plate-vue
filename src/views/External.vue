@@ -1,5 +1,5 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'57e1e0e5ee85930e00cad4e9'">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'other'">
     <template slot-scope="props" slot="dfpPos">
       <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header>
       <article-body-external :articleData="articleData">

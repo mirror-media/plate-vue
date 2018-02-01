@@ -353,12 +353,12 @@ export default {
         }
       } else {
         if (this.viewport >= 1200 && (currentYPosition() > secondLastFocusNewsBottomPos)) {
-          if (this.abIndicator === 'B') {
+          if (this.abIndicator === 'B' && mirrorMediaTVAsideMod) {
             mirrorMediaTVAsideMod.classList.add('fixed')
           }
           lastFocusNews.classList.add('fixed')
         } else {
-          if (this.abIndicator === 'B') {
+          if (this.abIndicator === 'B' && mirrorMediaTVAsideMod) {
             mirrorMediaTVAsideMod.classList.remove('fixed')
           }
           lastFocusNews.classList.remove('fixed')
