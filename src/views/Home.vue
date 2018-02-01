@@ -11,24 +11,26 @@
           <main>
             <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport < 1200 && hasEventEmbedded"></MirrorMediaTVAside>
+            <MirrorMediaTVAside v-if="abIndicator === 'A' && viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
             <div class="focusNewsContainer">
               <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-show="viewport < 1200" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
             </div>
+            <MirrorMediaTVAside v-if="abIndicator === 'B' && viewport < 1200 && hasEventMod" :mediaData="eventMod"></MirrorMediaTVAside>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
             <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
           </main>
           <aside v-show="viewport >= 1200">
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && hasEventEmbedded"></MirrorMediaTVAside>
+            <MirrorMediaTVAside v-if="abIndicator === 'A' && viewport >= 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
             <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+            <MirrorMediaTVAside v-if="abIndicator === 'B' && viewport >= 1200 && hasEventMod" :mediaData="eventMod"></MirrorMediaTVAside>
           </aside>
         </section>
         <loading :show="loading" />
-        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-        <live-stream :mediaData="eventMod" type="mod" v-else-if="!hasEventEmbedded && hasEventMod" />
+        <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
+        <live-stream v-else-if="abIndicator === 'A' && !hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
         <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
@@ -342,6 +344,7 @@ export default {
       const lastFocusNews = document.querySelector('aside .latest-aside-container.last')
       const lastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.last') + lastFocusNews.offsetHeight
       const project = document.querySelector('.projectListVert')
+      const mirrorMediaTVAsideMod = document.querySelector('.mmtv-aside')
       if (project) {
         if (this.viewport >= 1200 && (currentYPosition() > lastFocusNewsBottomPos)) {
           project.classList.add('fixed')
@@ -350,8 +353,14 @@ export default {
         }
       } else {
         if (this.viewport >= 1200 && (currentYPosition() > secondLastFocusNewsBottomPos)) {
+          if (this.abIndicator === 'B') {
+            mirrorMediaTVAsideMod.classList.add('fixed')
+          }
           lastFocusNews.classList.add('fixed')
         } else {
+          if (this.abIndicator === 'B') {
+            mirrorMediaTVAsideMod.classList.remove('fixed')
+          }
           lastFocusNews.classList.remove('fixed')
         }
       }
@@ -559,8 +568,15 @@ section.footer
     position fixed
     top 20px
     right auto
-    width calc(1024px * 0.25 - 30px)     
-      
+    width calc(1024px * 0.25 - 30px)
+
+.mmtv-aside
+  &.fixed
+    position fixed
+    top 460px
+    right auto
+    width calc(1024px * 0.25 - 30px)
+
 @media (min-width: 600px)
   .list
     &.container

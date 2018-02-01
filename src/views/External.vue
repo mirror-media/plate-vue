@@ -1,17 +1,19 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'57e1e0e5ee85930e00cad4e9'">
     <template slot-scope="props" slot="dfpPos">
       <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header>
-      <article-body-external :abIndicator="abIndicator" :articleData="articleData">
+      <article-body-external :articleData="articleData">
         <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto 20px;"></vue-dfp>
         <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto 20px;"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" pos="MBAR1" class="dfp dfp--mobile"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" slot="dfp-AT2" :config="props.config" :dfpId="props.dfpId" pos="MBAR2" class="dfp dfp--mobile"></vue-dfp>
         <vue-dfp :is="props.vueDfp" slot="dfp-MBE1" pos="MBE1" :dfpId="props.dfpId" :config="props.config" class="dfp dfp--mobile"/>
         <div slot="dfp-PCE1E2" class="dfp--PCE1E2 dfp--desktop">
           <vue-dfp :is="props.vueDfp" pos="PCE1" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
           <vue-dfp :is="props.vueDfp" pos="PCE2" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
         </div>
         <vue-dfp :is="props.vueDfp" slot="dfp-PCR1" pos="PCR1" class="dfp--desktop" :config="props.config" ></vue-dfp>
-        <latest-list slot="latestList" :latest="latestArticle"></latest-list>
+        <latest-list slot="latestList" :class="[ abIndicator === 'B' ? 'B' : '' ]" :latest="latestArticle"></latest-list>
         <vue-dfp :is="props.vueDfp" slot="dfp-PCR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
         <pop-list slot="popularList" class="popularList" :pop="popularList" >
           <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
@@ -29,9 +31,9 @@
           <div><h3>推薦文章</h3></div>
           <div id="matchedContentContainer" class="matchedContentContainer"></div>
         </template>
-        <article-aside-fixed :abIndicator="abIndicator" slot="articleAsideFixed">
-          <vue-dfp :is="props.vueDfp" v-if="abIndicator === 'B'" slot="dfpR2" pos="PCR2B" class="dfp--desktop" :config="props.config"></vue-dfp>
-          <div v-if="abIndicator === 'B'" slot="fbPage" class="article__aside--fbPage">
+        <article-aside-fixed slot="articleAsideFixed">
+          <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
+          <div slot="fbPage" class="article__aside--fbPage">
             <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
               <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
                 <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
@@ -210,7 +212,7 @@
     },
     data () {
       return {
-        abIndicator: 'A',
+        abIndicator: '',
         clientSideFlag: false,
         dfpid: DFP_ID,
         dfpMode: 'prod',
