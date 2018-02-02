@@ -19,8 +19,8 @@
             <div class="article__main--content">
               <template v-for="(p, index) in content">
                 <p :key="`content-${index}`" v-html="p"></p>
-                <slot v-if="index === 0" name="dfp-AT1"></slot>
-                <slot v-if="index === 1" name="dfp-AT2"></slot>
+                <slot v-if="index === 1" name="dfp-AT1"></slot>
+                <slot v-if="index === 4" name="dfp-AT2"></slot>
               </template>
             </div>
             <p v-if="source" class="article__main--ref">【<strong>本文經</strong><span v-text="partner"></span><strong>授權轉載</strong><a :href="source" target="_blank">看原文</a>】</p>
@@ -37,9 +37,9 @@
               <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
               <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
             </div>
-            <slot name="recommendList"></slot>
             <slot name="dfp-MBE1"></slot>
             <slot name="dfp-PCE1E2"></slot>
+            <slot name="recommendList"></slot>
             <slot name="popularList"></slot>
             <slot name="projectList"></slot>
             <slot name="fbComment"></slot>
