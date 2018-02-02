@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 
 export default {
