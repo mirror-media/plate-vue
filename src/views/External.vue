@@ -508,4 +508,7 @@
     &--mobile
       display none !important
 
+@media (min-width 1200px)
+  .matchedContentContainer
+    margin-bottom 20px
 </style>
