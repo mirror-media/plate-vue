@@ -49,8 +49,8 @@
             <slot name="latestList"></slot>
             <slot name="articleAsideFixed"></slot>
           </section>
-          <slot name="footer"></slot>
         </main>
+        <slot name="footer"></slot>
       </article>
     </div>
   </section>
