@@ -150,3 +150,5 @@ export const FB_PAGE_ID = '1855418728011324'
 export const MM_TV_CH = '鏡電視'
 
 export const RELATED_LIST_MAX = 10
+
+export const RECOMM_HITORY_MAX_IN_LOCALSTORAGE = 10
