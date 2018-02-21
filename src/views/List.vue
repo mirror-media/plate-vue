@@ -162,6 +162,15 @@ const fetchCommonData = (store) => {
     if (_.toUpper(_.split(store.state.route.path, '/')[1]) === CATEGORY) {
       return fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(store.state.route.path, '/')[2], 'ogImage' ], ''))
     }
+  }).catch(err => {
+    if (err.status === 404) {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    } else {
+      throw err
+    }
   })
 }
 
