@@ -143,9 +143,13 @@ function render (req, res, next) {
       if ('403' == err.status) {
         res.status(403).send('403 | Forbidden')
         return
+      } else if ('404' == err.status) {
+        res.status(404).render('404')
+        return
+      } else {
+        res.status(500).render('500', { err, timestamp: (new Date).toString() })
+        return
       }
-      res.status(500).render('500', { err, timestamp: (new Date).toString() })
-      return 
     } 
   }
 
