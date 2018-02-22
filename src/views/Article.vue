@@ -12,19 +12,33 @@
           <article-video :video="heroVideo" class="heroimg" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
-        <div class="article-heromedia" v-else-if="heroImage">
-          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+        <div v-else-if="heroImage" class="article-heromedia" :class="{ b: abIndicator === 'B' }">
+          <div v-if="abIndicator === 'B'" class="hero-info">
+            <div
+              class="hero-info-category"
+              :style="{ borderLeftColor: getValue(sectionMap, [ sectionId, 'bgcolor' ]) }"
+              v-text="getValue(articleData, [ 'categories', 0, 'title' ], getValue(articleData, [ 'sections', 0, 'title' ], ''))"></div>
+            <h1 v-text="getValue(articleData, [ 'title' ])"></h1>
+            <div class="hero-info-heroCaption" v-text="heroCaption"></div>
+          </div>
+          <div v-if="(abIndicator === 'B') && heroImage && heroImage.image" class="hero-img">
+            <img :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+              :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
+              getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
+              getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
+          </div>
+          <img v-if="(abIndicator === 'A') && heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
           :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
-          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
+          <div v-if="abIndicator === 'A'" class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
+          <article-body :abIndicator="abIndicator" :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <latest-list :latest="latestList" :class="[ abIndicator === 'B' ? 'B' : '' ]" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist">
+              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
+              <article-aside-fixed :projects="projectlist">
                 <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
                 <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
                   <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
@@ -359,6 +373,7 @@
         isYahooAdLoaded: false,
         microAds,
         routeUpateReferrerSlug: 'N/A',
+        sectionMap: SECTION_MAP,
         showDfpCoverAdFlag: false,
         showDfpCoverAd2Flag: false,
         showDfpCoverAdVponFlag: false,
@@ -762,7 +777,66 @@
       background-color #fff
       max-width 1160px
       position relative
-
+      &.b
+        display flex
+        justify-content space-between
+        .hero-info
+          display flex
+          flex-direction column
+          width 33.34%
+          padding 80px 0 0 0
+          background-color #989898
+          > h1
+            flex 1
+            width 80%
+            margin 0 auto
+            color #fff
+            font-size 40px
+            font-weight 400
+            line-height 1.3
+            text-align justify
+        .hero-info-category
+          width 80%
+          margin 0 auto 15px
+          padding-left 10px
+          color #000
+          font-size 21px
+          border-left 7px solid #989898
+        .hero-info-heroCaption
+          position relative
+          padding 10px 10%
+          color #fff
+          font-weight 300
+          line-height 1.4
+          border-top 3px solid #fff
+          &::after
+            content ''
+            position absolute
+            top -9px
+            right -7.5px
+            z-index 1
+            width 15px
+            height 15px
+            background-color #fff
+            border-radius 50%
+        .hero-img
+          position relative
+          width 66.66%
+          &::after
+            content ''
+            display block
+            width 100%
+            padding-top 66.66%
+          > img
+            position absolute
+            top 0
+            left 0
+            bottom 0
+            right 0
+            width 100%
+            height 100%
+            object-fit cover
+            object-position 50% 50%
       .heroimg
         width 100%
         &[lazy=loading]

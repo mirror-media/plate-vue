@@ -229,6 +229,55 @@ export default {
         > a
           color rgba(0, 0, 0, 0.65)
 
+.latest-aside-container.b
+  margin-bottom 0
+  position relative
+  border-left 3px solid #356d9c
+  border-right 3px solid #356d9c
+  &.first
+    border-top 3px solid #356d9c
+    &:before, &:after
+      content none
+  &.last
+    margin-bottom 30px
+    border-bottom 3px solid #356d9c
+  &:before
+    content ''
+    position absolute
+    top -1.5px
+    left 15px
+    width calc(100% - 30px)
+    height 3px
+    background-color #356d9c
+  &:after
+    content ''
+    position absolute
+    top -7.5px
+    left calc(50% - 7.5px)
+    width 15px
+    height 15px
+    background-color #356d9c
+    border-radius 50%
+    
+  .latest-list
+    width calc(100% - 30px)
+    margin 0 auto
+    .latest-list_item
+      &:first-of-type
+        > a
+          display none
+        .latest-list_item_title
+          padding-top 18px
+      &:last-of-type
+        .latest-list_item_title
+          border-bottom none
+        .latest-list_item_title
+          padding-bottom 18px
+    .latest-list_item_title
+      border-bottom-width 2px
+      > a
+        color #000
+
 @media (min-width: 600px)
   .latest-aside-container
     width 48%
