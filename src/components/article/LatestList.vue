@@ -104,32 +104,4 @@
       &:last-child
         padding-bottom 0
 
-.latest-list-container.B
-  .list
-    .item
-      margin 15px 0
-      .thumbnail
-        display none
-      .content
-        display flex
-        flex-direction column
-        padding 0
-        .content_category
-          order 2
-          padding 0
-          border none
-          a
-            color #a1a1a1
-            font-size 13px
-            font-weight 300
-        .content_title
-          order 1
-          padding 0
-          text-align justify
-          a
-            color #171717
-            font-size 18px
-            line-height 1.3
-  
-
 </style>
