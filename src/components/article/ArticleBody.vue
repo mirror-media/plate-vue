@@ -1,14 +1,18 @@
 <template>
   <div class="article_body" v-if="!isArticleEmpay()" :class="styleForCurrArticle">
-    <div class="article_basic-info">
+    <div v-if="abIndicator === 'A'" class="article_basic-info">
       <div class="category">
         <span class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
       </div>
       <div class="date" v-text="date"></div>
     </div>
-    <div class="article_title"><h1 v-text="title"></h1></div>
-    <div class="article_subtitle" v-if="subtitle.length > 0"><h2 v-text="subtitle"></h2></div>
-    <div class="article_credit" v-html="credit"></div>
+    <div v-if="abIndicator === 'A'" class="article_title"><h1 v-text="title"></h1></div>
+    <div v-if="abIndicator === 'A' && subtitle.length > 0" class="article_subtitle" ><h2 v-text="subtitle"></h2></div>
+    <div v-if="abIndicator === 'B'" class="article__basic-info">
+      <div class="article__credit" v-html="credit"></div>
+      <div class="article__date" v-text="date"></div>
+    </div>
+    <div v-if="abIndicator === 'A'" class="article_credit" v-html="credit"></div>
     <main class="article_main">
       <div class="brief fb-quotable">
         <div v-for="p in briefArr">
@@ -374,6 +378,10 @@ export default {
   },
   name: 'article-body',
   props: {
+    abIndicator: {
+      type: String,
+      default: 'A'
+    },
     articleData: {
       default: () => { return {} }
     },
@@ -998,6 +1006,19 @@ export default {
       padding 0
       font-size 0
       border none
+  
+  .article__basic-info
+    display flex
+    justify-content space-between
+    width 695px
+  .article__credit
+    a.blue:hover, a.blue:link, a.blue:visited 
+      color #74afd2
+  .article__date
+    font-style italic
+    font-size 17px
+    color #a1a1a1
+    font-weight normal
 
   @media (min-width 0px) and (max-width 499px)
     .article_body
