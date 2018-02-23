@@ -12,8 +12,8 @@
           <article-video :video="heroVideo" class="heroimg" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
-        <div v-else-if="heroImage" class="article-heromedia" :class="{ b: abIndicator === 'B' }">
-          <div v-if="abIndicator === 'B'" class="hero-info">
+        <div v-else-if="heroImage" class="article-heromedia" :class="{ b: (abIndicator === 'B') && viewport > 1199 }">
+          <div v-if="(abIndicator === 'B') && viewport > 1199" class="hero-info">
             <div
               class="hero-info-category"
               :style="{ borderLeftColor: getValue(sectionMap, [ sectionId, 'bgcolor' ]) }"
@@ -21,17 +21,17 @@
             <h1 v-text="getValue(articleData, [ 'title' ])"></h1>
             <div class="hero-info-heroCaption" v-text="heroCaption"></div>
           </div>
-          <div v-if="(abIndicator === 'B') && heroImage && heroImage.image" class="hero-img">
+          <div v-if="(abIndicator === 'B') && viewport > 1199 && heroImage && heroImage.image" class="hero-img">
             <img :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
               :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
               getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
               getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
           </div>
-          <img v-if="(abIndicator === 'A') && heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+          <img v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200)) && heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
           :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
           getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
-          <div v-if="abIndicator === 'A'" class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
+          <div v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200))" class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
           <article-body :abIndicator="abIndicator" :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
