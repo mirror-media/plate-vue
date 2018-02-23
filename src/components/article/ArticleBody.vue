@@ -1,18 +1,18 @@
 <template>
   <div class="article_body" v-if="!isArticleEmpay()" :class="styleForCurrArticle">
-    <div v-if="abIndicator === 'A'" class="article_basic-info">
+    <div v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200))" class="article_basic-info">
       <div class="category">
         <span class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
       </div>
       <div class="date" v-text="date"></div>
     </div>
-    <div v-if="abIndicator === 'A'" class="article_title"><h1 v-text="title"></h1></div>
-    <div v-if="abIndicator === 'A' && subtitle.length > 0" class="article_subtitle" ><h2 v-text="subtitle"></h2></div>
-    <div v-if="abIndicator === 'B'" class="article__basic-info">
+    <div v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200))" class="article_title"><h1 v-text="title"></h1></div>
+    <div v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200)) && subtitle.length > 0" class="article_subtitle" ><h2 v-text="subtitle"></h2></div>
+    <div v-if="(abIndicator === 'B') && viewport > 1199" class="article__basic-info">
       <div class="article__credit" v-html="credit"></div>
       <div class="article__date" v-text="date"></div>
     </div>
-    <div v-if="abIndicator === 'A'" class="article_credit" v-html="credit"></div>
+    <div v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200))" class="article_credit" v-html="credit"></div>
     <main class="article_main">
       <div class="brief fb-quotable">
         <div v-for="p in briefArr">
