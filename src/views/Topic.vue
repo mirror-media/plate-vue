@@ -90,7 +90,8 @@
 <script>
 
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { FB_APP_ID, FB_PAGE_ID, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { camelize } from 'humps'
 import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
@@ -278,11 +279,13 @@ export default {
     const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
     const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
     if (!metaTitle && process.env.VUE_ENV === 'server') {
       return this.pageNotFoundHandler()
     }
 
     return {
+      url: relUrl,
       title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
         <meta name="mm-opt" content="">

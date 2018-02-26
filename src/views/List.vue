@@ -102,8 +102,8 @@
 <script>
 
 import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, EXTERNALS, FB_APP_ID,
-  FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS,
-  SITE_OGIMAGE, SITE_TITLE, SITE_URL, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants'
+  FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
@@ -488,6 +488,7 @@ export default {
   metaSet () {
     const type = this.type
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
     let ogImage
     let ogTitle
     let ogDescription
@@ -531,6 +532,7 @@ export default {
     const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
     this.titleBase = title
     return {
+      url: relUrl,
       title: title,
       meta: `
         <meta name="mm-opt" content="">
