@@ -43,7 +43,8 @@
 
 <script>
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currEnv, insertVponAdSDK, unLockJS, updateCookie, vponHtml } from '../util/comm'
 import _ from 'lodash'
 // import Cookie from 'vue-cookie'
@@ -125,6 +126,7 @@ export default {
   mixins: [ titleMetaMixin ],
   metaSet () {
     return {
+      url: SITE_MOBILE_URL,
       title: SITE_TITLE,
       meta: `
         <meta name="mm-opt" content="">

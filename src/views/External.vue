@@ -61,7 +61,8 @@
 </template>
 
 <script>
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
+  import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { consoleLogOnDev, currEnv, getValue, insertVponAdSDK, sendAdCoverGA, updateCookie, vponHtml } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
@@ -188,6 +189,7 @@
       }
 
       return {
+        url: `${SITE_MOBILE_URL}/external/${name}/`,
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
           <meta name="mm-opt" content="external${abIndicator}">
