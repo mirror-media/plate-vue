@@ -292,8 +292,9 @@ router.get('*', fetchFromRedis, (req, res, next) => {
           }
           res.send(res_data)
         } else {
-          res.status(response.status).send(error)
-          if (response.status !== 404) {
+          const status = _.get(response, 'status') || _.get(error, 'status') || 500
+          res.status(status).send(error)
+          if (status !== 404) {
             console.error(`error during fetch data: ${req.url}`)
             console.error(error)  
           } else {
