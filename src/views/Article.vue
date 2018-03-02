@@ -136,6 +136,7 @@
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
 
+  const debug = require('debug')('CLIENT:VIEWS:article')
   const fetchArticles = (store, slug) => {
     return store.dispatch('FETCH_ARTICLES', {
       params: {
@@ -218,11 +219,18 @@
     },
     mixins: [ titleMetaMixin ],
     metaSet () {
-      if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
-        const e = new Error()
-        e.massage = 'Page Not Found'
-        e.code = '404'
-        throw e
+      debug('About to change the metaSet.')
+      debug('this.articleData.slug', this.articleData.slug)
+      debug('process.env.VUE_ENV', process.env.VUE_ENV)
+      if (!this.articleData.slug) {
+        if (process.env.VUE_ENV === 'server') {
+          const e = new Error()
+          e.massage = 'Page Not Found'
+          e.code = '404'
+          throw e
+        } else {
+          location.replace('/404')
+        }
       }
       const {
         brief = {},
