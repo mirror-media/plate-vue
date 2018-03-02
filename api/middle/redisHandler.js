@@ -151,6 +151,8 @@ const fetchFromRedis = (req, res, next) => {
       res.redis = data
       next()
     } else {
+      console.error('>>> Fetch data from Redis in fail')
+      console.error('>>>', req.url)
       next(error)
     }
   })
