@@ -222,15 +222,11 @@
       debug('About to change the metaSet.')
       debug('this.articleData.slug', this.articleData.slug)
       debug('process.env.VUE_ENV', process.env.VUE_ENV)
-      if (!this.articleData.slug) {
-        if (process.env.VUE_ENV === 'server') {
-          const e = new Error()
-          e.massage = 'Page Not Found'
-          e.code = '404'
-          throw e
-        } else {
-          location.replace('/404')
-        }
+      if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
+        const e = new Error()
+        e.massage = 'Page Not Found'
+        e.code = '404'
+        throw e
       }
       const {
         brief = {},
@@ -286,47 +282,23 @@
         link: `<link rel="canonical" href="${SITE_URL}/story/${slug}/" />`
       }
     },
-    beforeRouteEnter (to, from, next) {
-      if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
-        next(vm => {
-          const _targetArticle = _.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
-          if (!_targetArticle) {
-            Promise.all([
-              fetchArticles(vm.$store, to.params.slug).then(() => {
-                const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
-                return fetchLatestArticle(vm.$store, {
-                  sort: '-publishedDate',
-                  where: {
-                    'sections': _.get(sections, [ 0, 'id' ])
-                  }
-                })
-              }).then(() => {
-                const id = _.get(_.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { 'slug': vm.$store.state.route.params.slug }), [ 'id' ], '')
-                return fetchRecommendList(vm.$store, id)
-              }),
-              fetchPop(vm.$store)
-            ])
-          }
-        })
-      } else {
-        next()
-      }
-    },
     beforeRouteUpdate (to, from, next) {
+      debug('beforeRouteUpdate')
       fetchArticles(this.$store, to.params.slug).then(() => {
+        const theComingArticleSlug = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'slug' ])
+        debug('this.articleData', theComingArticleSlug)
+        if (!theComingArticleSlug) { location.replace('/404') }
         const sections = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
         return fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: {
             'sections': _.get(sections, [ 0, 'id' ])
           }
-        }).then(() => {
-          next()
         })
       }).then(() => {
         const id = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
         this.routeUpateReferrerSlug = _.get(from, [ 'params', 'slug' ], 'N/A')
-        return fetchRecommendList(this.$store, id)
+        return fetchRecommendList(this.$store, id).then(() => next())
       })
     },
     beforeRouteLeave (to, from, next) {
@@ -339,6 +311,7 @@
       next()
     },
     beforeMount () {
+      debug('beforeMount')
       const { sections } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
       fetchLatestArticle(this.$store, {
         sort: '-publishedDate',
