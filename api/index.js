@@ -39,7 +39,8 @@ const fetchStaticJson = (req, res, next, jsonFileName) => {
           redisWriting(url, response.text)
           res.json(JSON.parse(response.text))
         } else {
-          res.status(response.status).send('{\'error\':' + e + '}')
+          const status = _.get(response, 'status') || _.get(e, 'status') || 500
+          res.status(status).send('{\'error\':' + e + '}')
           console.error(`error during fetch data from ${jsonFileName} : ${url}`)
           console.error(e)  
         }
@@ -152,7 +153,8 @@ router.use('/questionnaire', function(req, res, next) {
             redisWriting(url, response.text)
             res.json(JSON.parse(response.text))
           } else {
-            res.status(response.status).send('{\'error\':' + e + '}')
+            const status = _.get(response, 'status') || _.get(e, 'status') || 500
+            res.status(status).send('{\'error\':' + e + '}')
             // res.status(500).end('Internal Error 500')
             console.error(`error during fetch data from questionnaire : ${req.url}`)
             console.error(e)   
@@ -179,7 +181,8 @@ router.use('/search', function(req, res, next) {
       .query(query)
       .end(function(e, response) {
         if (e) {
-          res.status(response.status).send(e)
+          const status = _.get(response, 'status') || _.get(e, 'status') || 500
+          res.status(status).send('{\'error\':' + e + '}')
           // res.status(500).end('Internal Error 500')
           console.error(`error during fetch data from search : ${req.url}`)
           console.error(e)    
@@ -257,11 +260,13 @@ router.use('/related_news', function(req, res, next) {
 
 router.get('*', fetchFromRedis, (req, res, next) => {
   if (res.redis) {
-    debug('fetch data from Redis.', req.url)
+    debug('Fetch data from Redis.')
+    debug(req.url)
     const resData = JSON.parse(res.redis)
     res.json(resData)
   } else {
-    debug('fetch data from Api.', req.url)
+    debug('Fetch data from Api.')
+    debug(req.url)
     res.header('Cache-Control', 'public, max-age=300');
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "X-Requested-With")
@@ -281,7 +286,8 @@ router.get('*', fetchFromRedis, (req, res, next) => {
             res_data = JSON.parse(response.text)
           } catch (e) {
             res.send(e)
-            console.error(`Got bad data from: ${req.url}`)
+            console.error(`>>> Got bad data from api.`)
+            console.error(`>>> ${req.url}`)
             console.error(e) 
             return 
           }
@@ -296,7 +302,8 @@ router.get('*', fetchFromRedis, (req, res, next) => {
           res.header('Cache-Control', 'no-cache')
           res.status(status).send(error)
           if (status !== 404) {
-            console.error(`error during fetch data: ${req.url}`)
+            console.error(`>>> Error occurred during fetching data from api.`)
+            console.error(`>>> ${req.url}`)
             console.error(error)  
           } else {
             console.error(`Not Found: ${req.url}`)

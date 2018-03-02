@@ -140,6 +140,7 @@ function render (req, res, next) {
       console.error(err)
       isErrorOccurred = true
       
+      err.status = err.status || 500
       if ('403' == err.status) {
         res.status(403).send('403 | Forbidden')
         return
