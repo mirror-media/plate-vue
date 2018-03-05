@@ -646,12 +646,11 @@ export default {
                     
         .embedded 
           text-align center
-          margin 1.5em 0
+          margin 1.5em auto
           clear both
-          display flex
-          flex-direction column
-          align-items center
 
+          > div:not(.caption)
+            margin 0 auto
           > .caption 
             font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
             font-size 15px
@@ -663,6 +662,7 @@ export default {
 
           > iframe
             max-width 100%
+            margin 0 auto
 
         .audioBox
           width 100%
