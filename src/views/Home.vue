@@ -9,7 +9,8 @@
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
         <section class="home-mainContent" :class="{ b: abIndicator === 'B' }">
           <main>
-            <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+            <editor-choice v-if="abIndicator === 'A'" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+            <EditorChoiceB v-else-if="abIndicator === 'B'" :editorChoice='editorChoice' :viewport="viewport" target="_blank"></EditorChoiceB>
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
@@ -69,6 +70,7 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
+import EditorChoiceB from '../components/EditorChoiceB.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
@@ -152,6 +154,7 @@ export default {
     'loading': Loading,
     'more': More,
     DfpCover,
+    EditorChoiceB,
     LatestArticleAside,
     LatestArticleMain,
     LatestArticleMainB,
@@ -717,7 +720,7 @@ section.footer
         padding 20px 25px 25px
         border 1px solid #245990
     .latest-main-container
-      margin-top 15px
+      margin-top 25px
 
   section.footer
     width 1024px
