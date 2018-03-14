@@ -23,7 +23,14 @@
           <aside v-show="viewport >= 1200">
             <MirrorMediaTVAside v-if="viewport >= 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
-            <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0 , b: abIndicator === 'B' }" :key="`${i}-groupedlist`" target="_blank"/>
+            <LatestArticleAside v-for="(o, i) in groupedArticle" target="_blank"
+              :groupedArticle="o"
+              :index="i"
+              :needStick="false"
+              :viewport="viewport"
+              :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
+              :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0 }"
+              :key="`${i}-groupedlist`" />
           </aside>
         </section>
         <loading :show="loading" />
