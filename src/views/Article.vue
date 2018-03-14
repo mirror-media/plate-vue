@@ -9,11 +9,16 @@
         <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
-          <article-video :video="heroVideo" class="heroimg" />
-          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
+          <HeroVideo
+            :abIndicator="abIndicator"
+            :viewport="viewport"
+            :sectionMap="sectionMap"
+            :sectionId="sectionId"
+            :articleData="articleData"
+            :heroCaption="heroCaption"
+            :video="heroVideo"></HeroVideo>
         </div>
         <HeroImage v-else-if="heroImage"
-          :class="{ b: (abIndicator === 'B') && viewport > 1199 }"
           :abIndicator="abIndicator"
           :viewport="viewport"
           :sectionMap="sectionMap"
@@ -112,6 +117,7 @@
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import HeroImage from '../components/article/HeroImage.vue'
+  import HeroVideo from '../components/article/HeroVideo.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
@@ -332,6 +338,7 @@
       ArticleVideo,
       DfpCover,
       HeroImage,
+      HeroVideo,
       RelatedListWithRecommendList
     },
     data () {
@@ -750,10 +757,6 @@
       background-color #fff
       max-width 1160px
       position relative
-
-      .heroimg-caption
-        margin-top 5px
-        padding 5px 50px 0
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
@@ -799,11 +802,6 @@
 
   @media (min-width 0px) and (max-width 499px)
     .article-container
-      .article-heromedia
-        .heroimg-caption
-          padding 5px 25px 0
-          line-height 1.3rem
-      
       .article
         padding 30px 0 0
 
@@ -826,11 +824,7 @@
       display none !important
 
   @media (min-width 768px) and (max-width 1199px)
-    .article-container
-      .article-heromedia
-        .heroimg-caption
-          text-align center
-      
+    .article-container      
       .article
         padding 100px 50px 0
 
