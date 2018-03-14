@@ -1,91 +1,41 @@
 <template>
   <section id="editorChoice" class="editorChoice">
-    <h2>編輯精選</h2>
-    <div class="editorChoice__flat">
-      <router-link 
-        v-if="editorChoice[0].style !== 'projects' && editorChoice[0].style !== 'campaign' && editorChoice[0].style !== 'readr'"
-        class="editorChoice__flat--highlight-choice" 
-        :id="'choices-' + editorChoice[0].name"
-        :to="getHref(editorChoice[0])"
-        :target="target">
-        <figure v-lazy:background-image="getImage(editorChoice[0], 'desktop')">
-          <figcaption>
-            <p v-text="getTitle(editorChoice[0])"></p>
-          </figcaption>
-        </figure>
-      </router-link>
-      <a
-        v-if="editorChoice[0].style === 'projects' || editorChoice[0].style === 'campaign' || editorChoice[0].style === 'readr'"
-        class="editorChoice__flat--highlight-choice"
-        :id="'choices-' + editorChoice[0].name"
-        :href="getHrefFull(editorChoice[0])"
-        :target="target">
-        <figure v-lazy:background-image="getImage(editorChoice[0], 'desktop')">
-          <figcaption>
-            <p v-text="getTitle(editorChoice[0])"></p>
-          </figcaption>
-        </figure>
-      </a>
-      <ul class="editorChoice__flat--list-choice">
-        <li v-for="(item, index) in editorChoice.slice(1)">
-          <router-link 
-            v-if="item.style !== 'projects' && item.style !== 'campaign' && item.style !== 'readr'"
-            :to="getHref(item)" 
-            :id="'choices-' + item.name" 
-            :target="target"
-            v-text="getTitle(item, 24)">
-          </router-link>
-          <a 
-            v-if="item.style === 'projects' || item.style === 'campaign' || item.style === 'readr'"
-            :href="getHrefFull(item)" 
-            :id="'choices-' + item.name"
-            :target="target"
-            v-text="getTitle(item, 24)">
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div class="editorChoice--mobile">
-      <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
-      <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
-        <template>
-          <router-link
-            :to="getHref(item)"
-            :id="'choices-' + item.name"
-            class="editorChoice__block--img"
-            v-if="item.style !== 'projects'"
-            :target="target">
-            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
-            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
-          </router-link>
-          <a
-            :href="`https://www.mirrormedia.mg${getHref(item)}`"
-            :id="'choices-' + item.name"
-            class="editorChoice__block--img"
-            v-if="item.style === 'projects'"
-            :target="target">
-            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
-            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
-          </a>
+    <h2 v-text="$t('homepage.editor_choice')"></h2>
+    <div class="editorChoice__container">
+      <div class="editorChoice__left">
+        <template v-for="post in editorChoiceLeft">
+          <LinkTool :post="post" :target="target" :id="'choices-' + post.name" class="editorChoice__item">
+            <div class="editorChoice__item__img" slot="content">
+              <img :alt="get(post, 'title', '')" 
+                :src="get(post, 'heroImage.image.resizedTargets.mobile.url', '')"
+                :srcset="`${get(post, 'heroImage.image.resizedTargets.mobile.url', '')} 800w,
+                            ${get(post, 'heroImage.image.resizedTargets.tablet.url', '')} 1200w,
+                            ${get(post, 'heroImage.image.resizedTargets.desktop.url', '')} 2000w`">
+            </div>
+            <div class="editorChoice__item__content" slot="content">
+              <span class="section" v-text="get(post, [ 'sections', 0, 'title' ], get(post, [ 'categories', 0, 'title' ]))"></span>
+              <span class="title" v-text="get(post, 'title', '')"></span>
+            </div>
+          </LinkTool>
         </template>
-        <div class="editorChoice__block--title" :class="getSection(item)">
-          <template>
-            <router-link
-              :to="getHref(item)"
-              :id="'choices-' + item.name"
-              v-if="item.style !== 'projects' && item.style !== 'campaign' && item.style !== 'readr'"
-              :target="target">
-              <h2 v-text="getTitle(item, 24)"></h2>
-            </router-link>
-            <a
-              :href="getHrefFull(item)"
-              :id="'choices-' + item.name"
-              v-if="item.style === 'projects' || item.style === 'campaign' || item.style === 'readr'"
-              :target="target">
-              <h2 v-text="getTitle(item, 24)"></h2>
-            </a>
-          </template>
-        </div>
+      </div>
+      <div class="editorChoice__right">
+        <template v-for="post in editorChoiceRight">
+          <LinkTool :post="post" :target="target" :id="'choices-' + post.name" class="editorChoice__item">
+            <div class="editorChoice__item__img" slot="content">
+              <img :alt="get(post, 'title', '')" 
+                :src="get(post, 'heroImage.image.resizedTargets.mobile.url', '')"
+                :srcset="`${get(post, 'heroImage.image.resizedTargets.mobile.url', '')} 800w,
+                            ${get(post, 'heroImage.image.resizedTargets.tablet.url', '')} 1200w,
+                            ${get(post, 'heroImage.image.resizedTargets.desktop.url', '')} 2000w`">
+            </div>
+            <div class="editorChoice__item__content" slot="content">
+              <span class="section" v-text="get(post, [ 'sections', 0, 'title' ], get(post, [ 'categories', 0, 'title' ]))"></span>
+              <span class="title" v-text="get(post, 'title', '')"></span>
+            </div>
+          </LinkTool>
+        </template>
+        <slot name="mmtv"></slot>
       </div>
     </div>
   </section>
@@ -93,11 +43,23 @@
 
 <script>
 import { SECTION_MAP } from '../constants'
-import { getHref, getHrefFull, getImage, getSection, getTitle, getTruncatedVal, getValue } from '../util/comm'
-import _ from 'lodash'
+import { getHref, getHrefFull, getImage, getSection, getTitle, getTruncatedVal } from '../util/comm'
+import { get, slice, take } from 'lodash'
+import LinkTool from './LinkTool.vue'
 
 export default {
-  name: 'editorChoiceB',
+  name: 'EditorChoiceB',
+  components: {
+    LinkTool
+  },
+  computed: {
+    editorChoiceLeft () {
+      return take(this.editorChoice, 3)
+    },
+    editorChoiceRight () {
+      return slice(this.editorChoice, 3, 5)
+    }
+  },
   props: {
     editorChoice: {
       default: () => { return this.editorChoice }
@@ -119,7 +81,7 @@ export default {
     getSection,
     getTitle,
     getTruncatedVal,
-    getValue,
+    get,
     getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])
       const style = {
@@ -139,140 +101,61 @@ export default {
 
 <style lang="stylus" scoped>
 .editorChoice
+  margin-bottom 20px
   > h2
-    display none
-  &__flat
-    display none
-  &--mobile
-    display flex
-    flex-direction column
-    width 90%
-    margin 0 auto
-    > div:not(:last-child):not(:first-child)
-      margin-bottom 20px
-    .editorChoice__block--img
-      position relative
-      color #fff
-      display block
-      figure
-        width 100%
-        padding-top 66.66%
-        margin 0
-        background-position 50% 50%
-        background-repeat no-repeat
-        background-size cover
-      > div
-        position absolute
-        height 35px
-        background-color #000
-        display flex 
-        justify-content center
-        align-items center 
-        font-size 1.2rem       
-        top auto
-        bottom 0
-        left 0
-        white-space nowrap
-        padding 0 20px !important
-    .editorChoice__block--title
-      padding 0.5em 0
-      h2
-        margin 0
-        font-size 1.25rem
-        line-height 1.6rem
-        font-weight normal
-    
-  &__eyebrow
-    width 100%
-    margin-bottom 10px
-    color #356d9c
-    h2
-      margin 0
-      overflow hidden
-      &::after
-        content ""
-        display inline-block
-        height .5em
-        vertical-align middle
-        width 100%
-        margin-right -100%
-        margin-left 10px
-        border-top 5px solid #356d9c
-
-@media (min-width: 600px)
-  .editorChoice
-    &--mobile
-      flex-direction row
-      flex-wrap wrap
-      justify-content space-between
-      width 100%
-      > div:nth-child(2)
-        width 100%
-      > div:not(:first-child):not(:nth-child(2))
-        width calc( (100% - 30px)/2 )
-      .editorChoice__block--title
-        height 65px
-
-@media (min-width: 1200px)
-  .editorChoice
     display block
-    position relative
+    margin 0 0 10px
+    color #356d9c
+    font-size 1.3rem
+    line-height 1.15
+    font-weight 400
+  &__container
+    display flex
+  &__left
+    margin-right 20px
+    flex 1
+  &__right
+    flex 1
+  &__item
+    margin 20px 0
+    display flex
+    height 110px
     width 100%
-    margin-bottom 15px
-    > h2
-      display block
-      margin 0 0 10px
-      color #356d9c
-      font-size 1.3rem
-      line-height 1.15
-      font-weight 400
-    &__flat
-      height 340px
-      border 1px solid #d3d3d3
+    &__img
+      width 40%
+      > img
+        width 100%
+        height 100%
+        object-fit cover
+        object-position center center
+    &__content
+      width 60%
+      font-size 1rem
+      line-height 1.375rem
+      padding-left 10px
       display flex
-      &--highlight-choice
-        width 65%
-        height 339px
-        figure
-          height 339px
-          margin 0
-          background-repeat no-repeat
-          background-size 100% 100%
-          position relative
-          figcaption
-            position absolute
-            bottom 0
-            color white
-            width 100%
-            height 68px
-            background-color rgba(0, 0, 0, 0.3)
-            font-size 20px
-            font-weight 600
-            display flex
-            align-items center
-            padding 0 40px 0 40px
-            p
-              letter-spacing 1px
-              text-align justify
-      &--list-choice
-        width 35%
-        margin 0
-        padding 20px 15px
-        list-style none
-        display flex
-        flex-direction column
-        li
-          flex 1 1 auto
-          display flex
-          align-items center
-          a
-            font-size 16px
-            color black
-            text-align justify
-            line-height 1.25
-        li + li
-          border-top 1px solid #d3d3d3
-    &--mobile
-      display none
+      flex-direction column
+      justify-content center
+      > span
+        display block
+      .section
+        color #244765
+        margin-bottom 3px
+        border-bottom 1px solid #d8d8d8
+        padding-bottom 5px
+        font-weight 600
+      .title
+        color #797979
+        text-shadow 0 0 5px #f3f3f3
+        padding-top 5px
+    
+
+// @media (min-width: 600px)
+//   .editorChoice
+    
+
+// @media (min-width: 1200px)
+//   .editorChoice
+    
 </style>
 
