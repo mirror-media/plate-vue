@@ -56,7 +56,14 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)" slot="relatedlistBottom" :isAd="isAd" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
+            <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+              slot="relatedlistBottom" 
+              :abIndicator="abIndicator"
+              :isAd="isAd"
+              :sectionId="sectionId"
+              :relateds="relateds"
+              :recommends="recommendlist"
+              :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
