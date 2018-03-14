@@ -7,9 +7,15 @@
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
-        <section class="home-mainContent">
+        <section class="home-mainContent" :class="{ b: abIndicator === 'B' }">
           <main>
-            <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+            <editor-choice v-if="abIndicator === 'A' || (abIndicator === 'B' && viewport < 1200)" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+            <EditorChoiceB v-else-if="abIndicator === 'B'" :editorChoice='editorChoice' :viewport="viewport" target="_blank">
+              <div class="mmtv-in-editorchoice" slot="mmtv" >
+                <MirrorMediaTVAside :mediaData="eventMod" :showTitle="false" :abIndicator="abIndicator"></MirrorMediaTVAside>
+                <div class="mmtv-in-editorchoice__title"><span v-text="get(eventMod, 'name', $t('mmtv'))"></span></div>
+              </div>
+            </EditorChoiceB>
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
@@ -24,24 +30,29 @@
             </div>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
+            <LatestArticleMain id="latestArticle" target="_blank"
+              :latestList="latestArticle" 
+              :viewport="viewport"
+              :abIndicator="abIndicator"></LatestArticleMain>
           </main>
           <aside v-show="viewport >= 1200">
-            <MirrorMediaTVAside v-if="viewport >= 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
-            <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
-            <LatestArticleAside v-for="(o, i) in groupedArticle" target="_blank"
-              :groupedArticle="o"
-              :index="i"
-              :needStick="false"
-              :viewport="viewport"
-              :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
-              :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0 }"
-              :key="`${i}-groupedlist`" />
+            <div>
+              <MirrorMediaTVAside v-if="viewport >= 1200 && hasEventEmbedded && abIndicator === 'A'" :mediaData="eventMod"></MirrorMediaTVAside>
+              <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
+              <LatestArticleAside v-for="(o, i) in groupedArticle" target="_blank"
+                :groupedArticle="o"
+                :index="i"
+                :needStick="false"
+                :viewport="viewport"
+                :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
+                :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0 }"
+                :key="`${i}-groupedlist`" />
+            </div>
           </aside>
         </section>
         <loading :show="loading" />
         <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
-        <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
+        <live-stream v-else-if="!hasEventEmbedded && hasEventMod && (abIndicator === 'A' || (abIndicator === 'B' && viewport < 1200))" :mediaData="eventMod" type="mod" />
         <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
@@ -64,6 +75,7 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
+import EditorChoiceB from '../components/EditorChoiceB.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
@@ -147,6 +159,7 @@ export default {
     'loading': Loading,
     'more': More,
     DfpCover,
+    EditorChoiceB,
     LatestArticleAside,
     LatestArticleMain,
     LatestArticleMainB,
@@ -372,6 +385,7 @@ export default {
         }
       }
     },
+    get: _.get,
     getRole,
     getMmid () {
       const mmid = Cookie.get('mmid')
@@ -686,6 +700,7 @@ section.footer
     width 1024px
     margin 40px auto 0
     padding 0
+
     main
       width 75%
     aside
@@ -701,8 +716,31 @@ section.footer
           line-height 1.15
           &::after
             display none
+    &.b
+      main
+        width calc(75% - 60px)
+        margin-right 20px
+        min-width 730px
+        .mmtv-in-editorchoice
+          height 120px
+          background-color #f1f1f1
+          display flex
+          justify-content flex-start
+          align-items center
+          &__title
+            height 100%
+            flex 1
+            display flex
+            justify-content center
+            align-items center
+            padding 20px
+
+      aside
+        width calc(25% + 30px)
+        padding 20px 25px 25px
+        border 1px solid #245990
     .latest-main-container
-      margin-top 15px
+      margin-top 25px
 
   section.footer
     width 1024px

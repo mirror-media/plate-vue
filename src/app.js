@@ -1,18 +1,28 @@
 import Vue from 'vue'
+import VueI18n from 'vue-i18n'
 import App from './App.vue'
 // import store from './store'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 import titleMetaMixin from './util/mixinTitleMeta'
+import ZHTW from './locale/zh-tw.js'
 import * as filters from './filters'
+
 
 // mixin for handling title
 Vue.mixin(titleMetaMixin)
+Vue.use(VueI18n)
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
+})
+
+const messages = { zh_tw: ZHTW }
+const i18n = new VueI18n({
+  locale: 'zh_tw',
+  messages
 })
 
 // Expose a factory function that creates a fresh set of store, router,
@@ -30,6 +40,7 @@ export function createApp () {
   // here we inject the router, store and ssr context to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = new Vue({
+    i18n,
     router,
     store,
     render: h => h(App)
