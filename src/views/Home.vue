@@ -24,7 +24,10 @@
             </div>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
+            <LatestArticleMain id="latestArticle" target="_blank"
+              :latestList="latestArticle" 
+              :viewport="viewport"
+              :abIndicator="abIndicator"></LatestArticleMain>
           </main>
           <aside v-show="viewport >= 1200">
             <MirrorMediaTVAside v-if="viewport >= 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
