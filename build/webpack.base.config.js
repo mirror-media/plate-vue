@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const vueConfig = require('./vue-loader.config')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const { PUBLIC_PATH } = require('../api/config')
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -12,7 +13,7 @@ module.exports = {
     : '#cheap-module-source-map',
   output: {
     path: path.resolve(__dirname, '../dist'),
-    publicPath: isProd ? 'https://mirrormedia.com.tw/dist/' : '/dist/',
+    publicPath: PUBLIC_PATH || '/dist/',
     filename: '[name].[chunkhash].js'
   },
   resolve: {

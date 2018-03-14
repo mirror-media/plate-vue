@@ -14,7 +14,13 @@
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
             <div class="focusNewsContainer">
-              <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-show="viewport < 1200" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+              <LatestArticleAside v-show="viewport < 1200" v-for="(o, i) in groupedArticle" target="_blank"
+                :groupedArticle="o"
+                :viewport="viewport"
+                :needStick="false"
+                :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
+                :class="{ last: i === (groupedArticle.length - 1), first: i === 0}"
+                :key="`${i}-groupedlist`" />
             </div>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
