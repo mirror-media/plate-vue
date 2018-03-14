@@ -9,30 +9,23 @@
         <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
-          <article-video :video="heroVideo" class="heroimg" />
-          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
+          <HeroVideo
+            :abIndicator="abIndicator"
+            :viewport="viewport"
+            :sectionMap="sectionMap"
+            :sectionId="sectionId"
+            :articleData="articleData"
+            :heroCaption="heroCaption"
+            :video="heroVideo"></HeroVideo>
         </div>
-        <div v-else-if="heroImage" class="article-heromedia" :class="{ b: (abIndicator === 'B') && viewport > 1199 }">
-          <div v-if="(abIndicator === 'B') && viewport > 1199" class="hero-info">
-            <div
-              class="hero-info-category"
-              :style="{ borderLeftColor: getValue(sectionMap, [ sectionId, 'bgcolor' ]) }"
-              v-text="getValue(articleData, [ 'categories', 0, 'title' ], getValue(articleData, [ 'sections', 0, 'title' ], ''))"></div>
-            <h1 v-text="getValue(articleData, [ 'title' ])"></h1>
-            <div class="hero-info-heroCaption" v-text="heroCaption"></div>
-          </div>
-          <div v-if="(abIndicator === 'B') && viewport > 1199 && heroImage && heroImage.image" class="hero-img">
-            <img :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-              :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-              getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-              getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
-          </div>
-          <img v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200)) && heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-          :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
-          <div v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200))" class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
-        </div>
+        <HeroImage v-else-if="heroImage"
+          :abIndicator="abIndicator"
+          :viewport="viewport"
+          :sectionMap="sectionMap"
+          :sectionId="sectionId"
+          :articleData="articleData"
+          :heroCaption="heroCaption"
+          :heroImage="heroImage"></HeroImage>
         <div class="article" v-if="articleData">
           <article-body :abIndicator="abIndicator" :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
@@ -63,7 +56,14 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)" slot="relatedlistBottom" :isAd="isAd" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
+            <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+              slot="relatedlistBottom" 
+              :abIndicator="abIndicator"
+              :isAd="isAd"
+              :sectionId="sectionId"
+              :relateds="relateds"
+              :recommends="recommendlist"
+              :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
@@ -123,6 +123,8 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
+  import HeroImage from '../components/article/HeroImage.vue'
+  import HeroVideo from '../components/article/HeroVideo.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
@@ -342,6 +344,8 @@
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
+      HeroImage,
+      HeroVideo,
       RelatedListWithRecommendList
     },
     data () {
@@ -760,74 +764,6 @@
       background-color #fff
       max-width 1160px
       position relative
-      &.b
-        display flex
-        justify-content space-between
-        .hero-info
-          display flex
-          flex-direction column
-          width 33.34%
-          padding 80px 0 0 0
-          background-color #989898
-          > h1
-            flex 1
-            width 80%
-            margin 0 auto
-            color #fff
-            font-size 40px
-            font-weight 400
-            line-height 1.3
-            text-align justify
-        .hero-info-category
-          width 80%
-          margin 0 auto 15px
-          padding-left 10px
-          color #000
-          font-size 21px
-          border-left 7px solid #989898
-        .hero-info-heroCaption
-          position relative
-          padding 10px 10%
-          color #fff
-          font-weight 300
-          line-height 1.4
-          border-top 3px solid #fff
-          &::after
-            content ''
-            position absolute
-            top -9px
-            right -7.5px
-            z-index 1
-            width 15px
-            height 15px
-            background-color #fff
-            border-radius 50%
-        .hero-img
-          position relative
-          width 66.66%
-          &::after
-            content ''
-            display block
-            width 100%
-            padding-top 66.66%
-          > img
-            position absolute
-            top 0
-            left 0
-            bottom 0
-            right 0
-            width 100%
-            height 100%
-            object-fit cover
-            object-position 50% 50%
-      .heroimg
-        width 100%
-        &[lazy=loading]
-          object-fit contain
-          height 150px
-      .heroimg-caption
-        margin-top 5px
-        padding 5px 50px 0
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
@@ -873,11 +809,6 @@
 
   @media (min-width 0px) and (max-width 499px)
     .article-container
-      .article-heromedia
-        .heroimg-caption
-          padding 5px 25px 0
-          line-height 1.3rem
-      
       .article
         padding 30px 0 0
 
@@ -900,11 +831,7 @@
       display none !important
 
   @media (min-width 768px) and (max-width 1199px)
-    .article-container
-      .article-heromedia
-        .heroimg-caption
-          text-align center
-      
+    .article-container      
       .article
         padding 100px 50px 0
 
