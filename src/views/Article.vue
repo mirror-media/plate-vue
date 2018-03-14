@@ -12,27 +12,15 @@
           <article-video :video="heroVideo" class="heroimg" />
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
-        <div v-else-if="heroImage" class="article-heromedia" :class="{ b: (abIndicator === 'B') && viewport > 1199 }">
-          <div v-if="(abIndicator === 'B') && viewport > 1199" class="hero-info">
-            <div
-              class="hero-info-category"
-              :style="{ borderLeftColor: getValue(sectionMap, [ sectionId, 'bgcolor' ]) }"
-              v-text="getValue(articleData, [ 'categories', 0, 'title' ], getValue(articleData, [ 'sections', 0, 'title' ], ''))"></div>
-            <h1 v-text="getValue(articleData, [ 'title' ])"></h1>
-            <div class="hero-info-heroCaption" v-text="heroCaption"></div>
-          </div>
-          <div v-if="(abIndicator === 'B') && viewport > 1199 && heroImage && heroImage.image" class="hero-img">
-            <img :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-              :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-              getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-              getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
-          </div>
-          <img v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200)) && heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-          :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
-          <div v-if="((abIndicator === 'A') || ((abIndicator === 'B') && viewport < 1200))" class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
-        </div>
+        <HeroImage v-else-if="heroImage"
+          :class="{ b: (abIndicator === 'B') && viewport > 1199 }"
+          :abIndicator="abIndicator"
+          :viewport="viewport"
+          :sectionMap="sectionMap"
+          :sectionId="sectionId"
+          :articleData="articleData"
+          :heroCaption="heroCaption"
+          :heroImage="heroImage"></HeroImage>
         <div class="article" v-if="articleData">
           <article-body :abIndicator="abIndicator" :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
@@ -123,6 +111,7 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
+  import HeroImage from '../components/article/HeroImage.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
@@ -342,6 +331,7 @@
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
+      HeroImage,
       RelatedListWithRecommendList
     },
     data () {
@@ -760,71 +750,7 @@
       background-color #fff
       max-width 1160px
       position relative
-      &.b
-        display flex
-        justify-content space-between
-        .hero-info
-          display flex
-          flex-direction column
-          width 33.34%
-          padding 80px 0 0 0
-          background-color #989898
-          > h1
-            flex 1
-            width 80%
-            margin 0 auto
-            color #fff
-            font-size 40px
-            font-weight 400
-            line-height 1.3
-            text-align justify
-        .hero-info-category
-          width 80%
-          margin 0 auto 15px
-          padding-left 10px
-          color #000
-          font-size 21px
-          border-left 7px solid #989898
-        .hero-info-heroCaption
-          position relative
-          padding 10px 10%
-          color #fff
-          font-weight 300
-          line-height 1.4
-          border-top 3px solid #fff
-          &::after
-            content ''
-            position absolute
-            top -9px
-            right -7.5px
-            z-index 1
-            width 15px
-            height 15px
-            background-color #fff
-            border-radius 50%
-        .hero-img
-          position relative
-          width 66.66%
-          &::after
-            content ''
-            display block
-            width 100%
-            padding-top 66.66%
-          > img
-            position absolute
-            top 0
-            left 0
-            bottom 0
-            right 0
-            width 100%
-            height 100%
-            object-fit cover
-            object-position 50% 50%
-      .heroimg
-        width 100%
-        &[lazy=loading]
-          object-fit contain
-          height 150px
+
       .heroimg-caption
         margin-top 5px
         padding 5px 50px 0
