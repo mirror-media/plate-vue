@@ -35,6 +35,7 @@
             </div>
           </LinkTool>
         </template>
+        <slot name="mmtv"></slot>
       </div>
     </div>
   </section>
