@@ -11,7 +11,7 @@
           <main>
             <editor-choice v-if="abIndicator === 'A' || (abIndicator === 'B' && viewport < 1200)" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
             <EditorChoiceB v-else-if="abIndicator === 'B'" :editorChoice='editorChoice' :viewport="viewport" target="_blank">
-              <div class="mmtv-in-editorchoice" slot="mmtv" >
+              <div class="mmtv-in-editorchoice" v-if="hasEventMod" slot="mmtv">
                 <MirrorMediaTVAside :mediaData="eventMod" :showTitle="false" :abIndicator="abIndicator"></MirrorMediaTVAside>
                 <div class="mmtv-in-editorchoice__title"><span v-text="get(eventMod, 'name', $t('mmtv'))"></span></div>
               </div>
