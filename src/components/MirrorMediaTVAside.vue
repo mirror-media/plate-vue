@@ -1,7 +1,7 @@
 <template>
   <div class="mmtv-aside" :class="{ b: abIndicator === 'B' }">
     <div class="mmtv-aside--title" v-if="showTitle"><h2 v-text="$t('mmtv')"></h2></div>
-    <div class="mmtv-aside--curtain" @click="toggleLightbox"></div>
+    <div class="mmtv-aside--curtain" id="mod_curtain" @click="toggleLightbox"></div>
     <div class="mmtv-aside--container" :class="containerClass" v-html="mediaDataEmbed" ref="embed-code" @click="toggleLightbox"></div>
   </div>
 </template>
