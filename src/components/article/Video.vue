@@ -1,7 +1,7 @@
 <template>
   <div class="video-container" @mouseover="mouseoverHandler" @click="videoPlay" >
     <video width="100%" height="100%" controls controlsList="nodownload" preload="metadata" playsinline :ref="videoId" :id="videoId"
-          :poster="poster" :style="{ backgroundImage: `url(${getValue(video, ['poster'], '/public/notImage.png')})` }">
+          :poster="poster" :style="posterStyle">
             <source :src="getValue(video, [ 'url' ])" :type="getValue(video, [ 'filetype' ])">
             Your browser does not support the video tag.
     </video>
@@ -9,7 +9,7 @@
   </div>
 </template>
 <script>
-  import _ from 'lodash'
+  import { get, map } from 'lodash'
   import { getClientOS } from '../../util/comm.js'
 
   export default {
@@ -21,8 +21,15 @@
         } : {}
       },
       poster () {
-        const poster = _.get(this.video, [ 'poster' ])
+        const poster = get(this.video, [ 'poster' ])
         return !poster ? poster : '/public/transperent.png'
+      },
+      posterStyle () {
+        return !this.played ? {
+          backgroundImage: `url(${get(this.video, 'poster', '/public/notImage.png')})`,
+        } : {
+          backgroundColor: '#000'
+        }
       },
       videoClass () {
         return {
@@ -35,9 +42,10 @@
     data () {
       return {
         hoverFlag: false,
+        played: false,
         playingFlag: false,
         opacity: 1,
-        videoId: `video-${_.get(this.video, [ 'id' ])}-${Math.floor(Math.random() * (10000000000 - 100000) + 100000)}`
+        videoId: `video-${get(this.video, [ 'id' ])}-${Math.floor(Math.random() * (10000000000 - 100000) + 100000)}`
       }
     },
     methods: {
@@ -54,7 +62,7 @@
       },
       getClientOS,
       getValue (o = {}, p = [], d = '') {
-        return _.get(o, p, d)
+        return get(o, p, d)
       },
       mouseoverHandler (e) {
         const target = e.target
@@ -68,6 +76,7 @@
         }
       },
       videoPlay (e) {
+        this.played = true
         if (!this.playingFlag) {
           this.$refs[this.videoId].play()
         } else {
@@ -78,7 +87,7 @@
     mounted () {
       this.$refs[this.videoId].addEventListener('play', () => {
         const videosThisPAge = document.querySelectorAll('video')
-        _.map(videosThisPAge, (v) => {
+        map(videosThisPAge, (v) => {
           if (v.getAttribute('id') !== this.videoId) {
             v.pause()
           }
