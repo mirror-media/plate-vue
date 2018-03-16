@@ -1,9 +1,12 @@
 <template>
   <div class="heroimage-container">
-    <template v-if="viewport > 1199">
+    <template v-if="viewport < 1200">
+      <ArticleVideo v-if="video" :video="video" class="heroimg"></ArticleVideo>
+      <div class="heroimg-caption" v-text="heroCaption" v-show="heroCaption && heroCaption.length > 0"></div>
+    </template>
+    <template v-else>
       <div class="hero-info">
-        <div
-          class="hero-info-category"
+        <div class="hero-info-category"
           :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"
           v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"></div>
         <h1 v-text="get(articleData, [ 'title' ])"></h1>
@@ -13,10 +16,7 @@
         <ArticleVideo v-if="video" :video="video" class="heroimg"></ArticleVideo>
       </div>
     </template>
-    <template v-else>
-      <ArticleVideo v-if="video" :video="video" class="heroimg"></ArticleVideo>
-      <div class="heroimg-caption" v-text="heroCaption" v-show="heroCaption && heroCaption.length > 0"></div>
-    </template>
+
   </div>
 </template>
 <script>
