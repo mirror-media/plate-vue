@@ -21,7 +21,7 @@
       <div class="brief fb-quotable">
         <div v-for="p in briefArr">
           <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
-            <img class="thumbnail"
+            <img class="thumbnail" v-if="viewport"
                   :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
                   v-lazy="`${getValue(p.content, [ 0, 'url' ], '/public/notImage.png')}`"
                   :data-srcset="`
@@ -41,7 +41,7 @@
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div>
                   <div class="slideshowImg">
-                    <img :alt="getValue(o, [ 'description' ], '')" 
+                    <img :alt="getValue(o, [ 'description' ], '')"
                           :src="getValue(o, [ 'url' ], '')"
                           :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
                                       ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
@@ -62,7 +62,7 @@
       <article class="content">
         <div v-for="(p, index) in contArr">
           <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
-            <img class="thumbnail"
+            <img class="thumbnail" v-if="viewport"
                   :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
                   v-lazy="`${getValue(p.content, [ 0, 'url' ], '/public/notImage.png')}`"
                   :data-srcset="`
@@ -82,7 +82,7 @@
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div>
                   <div class="slideshowImg">
-                    <img :alt="getValue(o, [ 'description' ], '')" 
+                    <img :alt="getValue(o, [ 'description' ], '')"
                           :src="getValue(o, [ 'url' ], '')"
                           :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
                                       ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
