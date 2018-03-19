@@ -23,11 +23,11 @@
           <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
             <img class="thumbnail"
                   :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
-                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '')}`"
+                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '/public/notImage.png')}`"
                   :data-srcset="`
-                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '')} 800w,
-                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '')} 1200w,
-                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '')} 2000w`">
+                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '/public/notImage.png')} 800w,
+                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '/public/notImage.png')} 1200w,
+                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '/public/notImage.png')} 2000w`">
             <div class="caption" v-text="getValue(p.content, [ 0, 'description' ], '')"></div>
           </div>
           <div v-else-if="p.type === 'video'" is="article-video" 
@@ -64,11 +64,11 @@
           <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
             <img class="thumbnail"
                   :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
-                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '')}`"
+                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '/public/notImage.png')}`"
                   :data-srcset="`
-                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '')} 800w,
-                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '')} 1200w,
-                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '')} 2000w`">
+                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '/public/notImage.png')} 800w,
+                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '/public/notImage.png')} 1200w,
+                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '/public/notImage.png')} 2000w`">
             <div class="caption" v-text="getValue(p.content, [ 0, 'description' ], '')"></div>
           </div>
           <div v-else-if="p.type === 'video'" is="article-video" 

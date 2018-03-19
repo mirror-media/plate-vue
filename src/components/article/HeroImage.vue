@@ -10,19 +10,19 @@
         <div class="hero-info-heroCaption" v-text="heroCaption"></div>
       </div>
       <div v-if="heroImage && heroImage.image" class="hero-img">
-        <img :alt="heroCaption" v-lazy="get(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-          :data-srcset="get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-          get(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-          get(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
+        <img :alt="heroCaption" v-lazy="get(images, 'desktop')"
+          :data-srcset="get(images, 'mobile') + ' 800w, ' +
+          get(images, 'tablet') + ' 1200w, ' +
+          get(images, 'desktop') + ' 2000w'" />
       </div>
     </template>
     <template v-else>
       <img v-if="heroImage && heroImage.image" class="heroimg"
-        v-lazy="get(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+        v-lazy="get(images, 'desktop')"
         :alt="heroCaption"
-        :data-srcset="get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-        get(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-        get(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
+        :data-srcset="get(images, 'mobile') + ' 800w, ' +
+        get(images, 'tablet') + ' 1200w, ' +
+        get(images, 'desktop') + ' 2000w'" />
       <div class="heroimg-caption" v-text="heroCaption" v-show="heroCaption && heroCaption.length > 0"></div>
     </template>
   </div>
@@ -31,8 +31,18 @@
   import { get } from 'lodash'
   export default {
     name: 'HeroImage',
+    computed: {
+      images () {
+        return {
+          desktop: get(this.heroImage, 'image.resizedTargets.desktop.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
+          tablet: get(this.heroImage, 'image.resizedTargets.tablet.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
+          mobile: get(this.heroImage, 'image.resizedTargets.mobile.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
+          tiny: get(this.heroImage, 'image.resizedTargets.tiny.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
+        }
+      }
+    },
     methods: {
-      get
+      get,
     },
     mounted () {},
     props: [ 'abIndicator', 'articleData', 'heroCaption', 'heroImage', 'sectionId', 'sectionMap', 'viewport' ]
