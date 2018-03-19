@@ -16,7 +16,7 @@
           get(images, 'desktop') + ' 2000w'" />
       </div>
     </template>
-    <template v-else>
+    <template v-else-if="viewport">
       <img v-if="heroImage && heroImage.image" class="heroimg"
         v-lazy="get(images, 'desktop')"
         :alt="heroCaption"
