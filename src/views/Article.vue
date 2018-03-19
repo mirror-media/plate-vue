@@ -207,6 +207,9 @@
   }
 
   const fetchData = (store) => {
+    debug('Going to fetch article data.')
+    debug('Going to fetch article data.')
+    debug('Going to fetch article data.')
     return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug).then(() => {
       const id = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { 'slug': store.state.route.params.slug }), [ 'id' ], '')
       return fetchRecommendList(store, id)
