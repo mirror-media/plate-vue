@@ -289,21 +289,26 @@
     beforeRouteUpdate (to, from, next) {
       debug('beforeRouteUpdate')
       fetchArticles(this.$store, to.params.slug).then(() => {
-        const theComingArticleSlug = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'slug' ])
+        const thisItem = _.find(_.get(this.$store, 'state.articles.items'), { 'slug': to.params.slug })
+
+        const id = _.get(thisItem, 'id', '')
+        const sections = _.get(thisItem, 'sections')
+        const theComingArticleSlug = _.get(thisItem, 'slug')
+
         debug('this.articleData', theComingArticleSlug)
         if (!theComingArticleSlug) { location.replace('/404') }
-        const sections = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
-        return fetchLatestArticle(this.$store, {
-          sort: '-publishedDate',
-          where: {
-            'sections': _.get(sections, [ 0, 'id' ])
-          }
-        })
-      }).then(() => {
-        const id = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
-        this.routeUpateReferrerSlug = _.get(from, [ 'params', 'slug' ], 'N/A')
-        return fetchRecommendList(this.$store, id).then(() => next())
-      })
+        this.routeUpateReferrerSlug = _.get(from, 'params.slug', 'N/A')
+
+        return Promise.all([
+          fetchLatestArticle(this.$store, {
+            sort: '-publishedDate',
+            where: {
+              'sections': _.get(sections, [ 0, 'id' ])
+            }
+          }),
+          fetchRecommendList(this.$store, id)
+        ])
+      }).then(() => next())
     },
     beforeRouteLeave (to, from, next) {
       if (process.env.VUE_ENV === 'client') {
