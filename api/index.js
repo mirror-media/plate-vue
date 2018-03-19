@@ -259,15 +259,18 @@ router.use('/related_news', function(req, res, next) {
 })
 
 router.get('*', fetchFromRedis, (req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Access-Control-Allow-Headers", "X-Requested-With")
   if (res.redis) {
     debug('Fetch data from Redis.')
     debug(req.url)
     const resData = JSON.parse(res.redis)
+    res.header('Cache-Control', 'public, max-age=300')
     res.json(resData)
   } else {
     debug('Fetch data from Api.')
     debug(req.url)
-    res.header('Cache-Control', 'public, max-age=300');
+    res.header('Cache-Control', 'public, max-age=300')
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "X-Requested-With")
     console.log(apiHost)
@@ -296,6 +299,7 @@ router.get('*', fetchFromRedis, (req, res, next) => {
             res.dataString = response.text
             next()
           }
+          res.header('Cache-Control', 'public, max-age=300')
           res.send(res_data)
         } else {
           const status = _.get(response, 'status') || _.get(error, 'status') || 500
