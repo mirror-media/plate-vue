@@ -140,6 +140,7 @@
 
   const debug = require('debug')('CLIENT:VIEWS:article')
   const fetchArticles = (store, slug) => {
+    debug('Going to fetch article data.', slug)
     return store.dispatch('FETCH_ARTICLES', {
       params: {
         related: 'full',
@@ -207,9 +208,6 @@
   }
 
   const fetchData = (store) => {
-    debug('Going to fetch article data.')
-    debug('Going to fetch article data.')
-    debug('Going to fetch article data.')
     return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug).then(() => {
       const id = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { 'slug': store.state.route.params.slug }), [ 'id' ], '')
       return fetchRecommendList(store, id)
@@ -220,7 +218,8 @@
     name: 'article-view',
     preFetch: fetchData,
     asyncData ({ store, route: { params: { id }}}) {
-      return fetchData(store)
+      debug('RUN asyncData')
+      return !process.browser ? fetchData(store) : Promise.resolve()
     },
     mixins: [ titleMetaMixin ],
     metaSet () {
