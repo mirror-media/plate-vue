@@ -110,10 +110,10 @@ function render (req, res, next) {
     const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, (i) => (req.clientIp.indexOf(i) > -1)).length > 0
     if (!isValidReq) {
       res.status(403).send('Forbidden')
-      console.log('Attempted to access draft in fail: 403 Forbidden')
+      console.error('Attempted to access draft in fail: 403 Forbidden')
     }
   }
-  console.log('request ip:', req.clientIp)
+  console.error('request ip:', req.clientIp)
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 
@@ -129,11 +129,11 @@ function render (req, res, next) {
     } else if (err && err.code == 404) {
       isPageNotFound = true
       res.status(404).render('404')
-      console.log('##########REQUEST URL(404)############')
-      console.log('REQUEST URL:', req.url)
+      console.error('##########REQUEST URL(404)############')
+      console.error('REQUEST URL:', req.url)
       console.error(err)
-      console.log('######################')
-      console.log('######################')
+      console.error('######################')
+      console.error('######################')
       return
     } else {
       console.error(`error during renderToString() error : ${req.url}`)
