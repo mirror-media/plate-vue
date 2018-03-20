@@ -31,6 +31,15 @@
   import HashTable from 'jshashtable'
 
   const debug = require('debug')('CLIENT:RelatedListWithRecommendList')
+  const fetchRecommendList = (store, id) => {
+    debug('id', id)
+    return store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
+      params: {
+        id: id
+      }
+    })
+  }
+
   export default {
     computed: {
       filteredRecommends () {
@@ -50,7 +59,7 @@
           hashtable.put(_.get(a, [ 'slug' ]), a)
         })
         return hashtable
-      }
+      },
     },
     data () {
       return {
@@ -93,6 +102,10 @@
         return { color: _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
       }
     },
+    beforeMount () {
+      debug('beforeMount')
+      fetchRecommendList(this.$store, this.currArticleId)
+    },
     mounted () {
       const customCSS = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
       const custCss = document.createElement('style')
@@ -102,9 +115,13 @@
       this.referrerSlug = extractSlugFromreferrer(document.referrer)
     },
     watch: {
+      currArticleId: function () {
+        debug('currArticleId change detected.')
+        fetchRecommendList(this.$store, this.currArticleId)
+      },
       sectionId: function () {
         document.querySelector('.relatedBtmStyle').innerHTML = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
-      }
+      },
     },
     name: 'related-list',
     props: {
@@ -122,6 +139,9 @@
       },
       recommends: {
         default: () => ([])
+      },
+      currArticleId: {
+        default: () => ''
       },
       relateds: {
         default: () => ([])

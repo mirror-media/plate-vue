@@ -30,7 +30,11 @@
           <article-body :abIndicator="abIndicator" :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
+              <latest-list
+                v-if="ifRenderAside"
+                :latest="latestList"
+                :currArticleSlug="currArticleSlug"
+                :sectionId="getValue(articleData, [ 'sections', 0, 'id' ])"></latest-list>
               <article-aside-fixed :projects="projectlist">
                 <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
                 <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
@@ -62,6 +66,7 @@
               :isAd="isAd"
               :sectionId="sectionId"
               :relateds="relateds"
+              :currArticleId="currArticleId"
               :recommends="recommendlist"
               :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
@@ -187,18 +192,6 @@
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
-  const fetchRecommendList = (store, id) => {
-    return store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
-      params: {
-        id: id
-      }
-    })
-  }
-
-  const fetchLatestArticle = (store, params) => {
-    return store.dispatch('FETCH_LATESTARTICLE', { params: params })
-  }
-
   const fetchSSRData = (store) => {
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
   }
@@ -208,10 +201,7 @@
   }
 
   const fetchData = (store) => {
-    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug).then(() => {
-      const id = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { 'slug': store.state.route.params.slug }), [ 'id' ], '')
-      return fetchRecommendList(store, id)
-    }) ])
+    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
   }
 
   export default {
@@ -288,27 +278,17 @@
     },
     beforeRouteUpdate (to, from, next) {
       debug('beforeRouteUpdate')
-      fetchArticles(this.$store, to.params.slug).then(() => {
-        const thisItem = _.find(_.get(this.$store, 'state.articles.items'), { 'slug': to.params.slug })
+      fetchArticles(this.$store, to.params.slug)
+        .then(() => {
+          const thisItem = _.find(_.get(this.$store, 'state.articles.items'), { 'slug': to.params.slug })
+          const theComingArticleSlug = _.get(thisItem, 'slug')
 
-        const id = _.get(thisItem, 'id', '')
-        const sections = _.get(thisItem, 'sections')
-        const theComingArticleSlug = _.get(thisItem, 'slug')
-
-        debug('this.articleData', theComingArticleSlug)
-        if (!theComingArticleSlug) { location.replace('/404') }
-        this.routeUpateReferrerSlug = _.get(from, 'params.slug', 'N/A')
-
-        return Promise.all([
-          fetchLatestArticle(this.$store, {
-            sort: '-publishedDate',
-            where: {
-              'sections': _.get(sections, [ 0, 'id' ])
-            }
-          }),
-          fetchRecommendList(this.$store, id)
-        ])
-      }).then(() => next())
+          debug('this.articleData', theComingArticleSlug)
+          if (!theComingArticleSlug) { location.replace('/404') }
+          this.routeUpateReferrerSlug = _.get(from, 'params.slug', 'N/A')
+          return
+        })
+        .then(() => next())
     },
     beforeRouteLeave (to, from, next) {
       if (process.env.VUE_ENV === 'client') {
@@ -321,13 +301,6 @@
     },
     beforeMount () {
       debug('beforeMount')
-      const { sections } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
-      fetchLatestArticle(this.$store, {
-        sort: '-publishedDate',
-        where: {
-          'sections': _.get(sections, [ 0, 'id' ])
-        }
-      })
       fetchPop(this.$store)
       fetchCommonData(this.$store)
       fetchPartners(this.$store)
@@ -390,6 +363,9 @@
       },
       currArticleSlug () {
         return this.$store.state.route.params.slug
+      },
+      currArticleId () {
+        return _.get(_.find(_.get(this.$store, 'state.articles.items'), { 'slug': this.$store.state.route.params.slug }), 'id', '')
       },
       commonData () {
         return this.$store.state.commonData
