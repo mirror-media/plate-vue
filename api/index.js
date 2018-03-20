@@ -276,8 +276,6 @@ router.get('*', (req, res, next) => {
     // debug('Fetch data from Api.')
     // debug(req.url)
     res.header('Cache-Control', 'public, max-age=300')
-    console.error('Fetch data from Api.', `${Date.now() - req.startTime}ms`) 
-    console.error(decodeURIComponent(req.url)) 
     // console.error(apiHost)
     // console.error(decodeURIComponent(req.url)) 
     superagent
@@ -304,6 +302,8 @@ router.get('*', (req, res, next) => {
             res.dataString = response.text
             next()
           }
+          console.error('Fetch data from Api.', `${Date.now() - req.startTime}ms`) 
+          console.error(decodeURIComponent(req.url)) 
           res.header('Cache-Control', 'public, max-age=300')
           res.send(res_data)
         } else {
