@@ -81,6 +81,7 @@ export default {
         document.querySelector('head').removeChild(googleFonts)
       }
     }
+    next()
   },
   beforeMount () {
     fetchPop(this.$store)

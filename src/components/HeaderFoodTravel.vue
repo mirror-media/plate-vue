@@ -85,7 +85,7 @@
       openSideBar () {
         this.openSide = true
       },
-      search (searchVal = '') {
+      search () {
         this.$router.push('/search/' + this.searchVal)
       }
     },

@@ -155,7 +155,7 @@
   export default {
     name: 'article-view',
     preFetch: fetchData,
-    asyncData ({ store, route: { params: { id }}}) {
+    asyncData ({ store }) { // asyncData ({ store, route: { params: { id }}})
       return fetchData(store)
     },
     mixins: [ titleMetaMixin ],
@@ -182,7 +182,7 @@
       const categorieName = _.get(categories, [ 0, 'name' ], '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
+      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')

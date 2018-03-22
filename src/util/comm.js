@@ -350,7 +350,7 @@ export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
   return true
 }
 
-export function insertVponAdSDK ({ currEnv = 'dev', isVponSDKLoaded = false }) {
+export function insertVponAdSDK ({ isVponSDKLoaded = false }) {
   if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
     const script = document.createElement('script')
     script.type = 'text/javascript'

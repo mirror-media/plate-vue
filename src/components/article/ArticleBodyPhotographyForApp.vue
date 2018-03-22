@@ -186,7 +186,7 @@
       },
       initOnepage () {
         this.onePageScroll.init('.article_body', {
-          afterMove: (index, next_el) => {
+          afterMove: (index) => {
             this.currIndex = parseInt(index)
             this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
             if (this.currIndex === this.imgArr.length + 1) {
@@ -212,7 +212,7 @@
             }
           },
           animationTime: 500,
-          beforeMove: (index, next_el) => {
+          beforeMove: (index) => {
             this.smoothScroll('.article_body')
             if (parseInt(index) > this.currIndex) {
               this.sideProgressHandler('pass', parseInt(index - 1))
@@ -261,7 +261,7 @@
         }
         this.lastAnimation = timeNow
       },
-      scrollHandler (e) {
+      scrollHandler () {
         const currTop = this.currentYPosition()
         const creditCommentTopY = this.elmYPosition('.credit-comment')
         const tHtml = document.documentElement
@@ -310,7 +310,7 @@
         shareFacebook({ route: this.$route.path })
       },
       sideProgressHandler (action, index) {
-        return new Promise((resolve) => {
+        return new Promise(() => {
           const _targContainer = document.querySelector('.stick-container')
           if (!_targContainer) { return }
           const _targElement = _targContainer.querySelector(`.stick:nth-child(${index})`)
@@ -365,12 +365,13 @@
               this.onePageScroll.pauseToggle()
               this.lastAnimation = timeNow
             }
-          } else if (deltaY <= -50 && !shouldDo) {
           }
+          // else if (deltaY <= -50 && !shouldDo) {
+          // }
         }
       },
       updateProgressbar (percentage) {
-        return new Promise((resolve) => {
+        return new Promise(() => {
           const _progressBar = document.querySelector('.progress-bar')
           _progressBar.setAttribute('style', `left: ${percentage}%;`)
         })
@@ -406,6 +407,7 @@
         removeClass(document.body, 'limited-height')
         removeClass(document.documentElement, 'limited-height')
       }
+      next()
     },
     name: 'ariticle-body-photo',
     props: {

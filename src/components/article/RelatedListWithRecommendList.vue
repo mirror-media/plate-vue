@@ -82,7 +82,7 @@
       routerLinkUrl (article) {
         return !this.isApp ? getHref(article) : `/app/${getValue(article, [ 'slug' ], '')}`
       },
-      recommendsClickHandler (slug, event) {
+      recommendsClickHandler (slug) {
         try {
           const dqueue = this.getRecommClickHistory()
           debug('Event click detected.', slug)

@@ -137,7 +137,7 @@ export default {
     openSideBar () {
       this.openSide = true
     },
-    search (searchVal = '') {
+    search () {
       if (this.isChanged) {
         this.$router.push('/search/' + this.searchVal)
         this.openSearch = false
@@ -154,7 +154,7 @@ export default {
       }
     },
     handleScroll () {
-      window.onscroll = (e) => {
+      window.onscroll = () => {
         this.opacity = 1 - this.currentYPosition() / 300
         this.opacity < 0 ? this.defaultNav = false : this.defaultNav = true
         this.opacity < 1 ? this.blackNav = true : this.blackNav = false

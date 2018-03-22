@@ -16,6 +16,7 @@
     },
     methods: {
       getHref,
+      getHrefFull,
       shouldShowItem (article) {
         return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
       },
