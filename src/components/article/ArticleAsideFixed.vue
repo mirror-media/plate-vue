@@ -28,8 +28,8 @@ export default {
     window.removeEventListener('scroll', this.$_articleDetectAsideFixed)
   },
   methods: {
-    $_articleDetectAsideFixed: function (e) {
-      const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    $_articleDetectAsideFixed: function () {
+      // const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       const articleAsideFixed = document.querySelector('.articleAsideFixed')
       const articleMain = document.querySelector('.article_main') || document.querySelector('.article__main')
       const articleMainPosBtm = (elmYPosition('.article_main') || elmYPosition('.article__main')) + articleMain.offsetHeight

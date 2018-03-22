@@ -584,7 +584,7 @@ export default {
       e.code = '404'
       throw e
     },
-    scrollHandler (e) {
+    scrollHandler () {
       if (this.$refs.articleList) {
         const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
         const currentBottom = this.currentYPosition() + vh
@@ -602,7 +602,7 @@ export default {
         }
       }
     },
-    timelineScrollHandler (e) {
+    timelineScrollHandler () {
       const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       const timelineBodyBriefHeight = document.querySelector('.timelineBody__brief').offsetHeight
       const activityBoxHeight = document.querySelector('.timelineMenu-activityBox').offsetHeight

@@ -144,7 +144,7 @@ export default {
           link: `https://www.mirrormedia.mg/activity/${_.get(this.$route, [ 'params', 'activityId' ])}/`,
           picture: imageUrl,
           description
-        }, function (response) {})
+        }, function () {})
       window.ga('send', 'event', 'activity', 'click', 'share-node')
     },
     touchend (e) {

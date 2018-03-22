@@ -299,7 +299,7 @@ export default {
       })
     },
     handleScroll () {
-      window.onscroll = (e) => {
+      window.onscroll = () => {
         const _latestArticleDiv = document.querySelector('#latestArticle')
         if (!_latestArticleDiv) { return }
         const firstPageArticleHeight = _latestArticleDiv.offsetHeight

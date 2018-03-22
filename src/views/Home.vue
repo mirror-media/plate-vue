@@ -364,13 +364,13 @@ export default {
     checkIfLockJS () {
       unLockJS()
     },
-    detectFixProject: function (e) {
+    detectFixProject: function () {
       const secondLastFocusNews = document.querySelector('aside .latest-aside-container.secondLast')
       const secondLastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.secondLast') + secondLastFocusNews.offsetHeight
       const lastFocusNews = document.querySelector('aside .latest-aside-container.last')
       const lastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.last') + lastFocusNews.offsetHeight
       const project = document.querySelector('.projectListVert')
-      const mirrorMediaTVAsideMod = document.querySelector('.mmtv-aside')
+      // const mirrorMediaTVAsideMod = document.querySelector('.mmtv-aside')
       if (project) {
         if (this.viewport >= 1200 && (currentYPosition() > lastFocusNewsBottomPos)) {
           project.classList.add('fixed')
@@ -422,7 +422,7 @@ export default {
       })
     },
     handleScroll () {
-      window.onscroll = (e) => {
+      window.onscroll = () => {
         const _latestArticleDiv = document.querySelector('#latestArticle')
         if (!_latestArticleDiv) { return }
         const firstPageArticleHeight = _latestArticleDiv.offsetHeight

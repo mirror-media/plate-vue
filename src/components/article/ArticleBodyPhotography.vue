@@ -207,7 +207,7 @@
       },
       initOnepage () {
         this.onePageScroll.init('.pic-wrapper', {
-          afterMove: (index, next_el) => {
+          afterMove: (index) => {
             this.currIndex = parseInt(index)
             this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
             if (this.currIndex === this.imgArr.length) {
@@ -217,7 +217,7 @@
             }
           },
           animationTime: 500,
-          beforeMove: (index, next_el) => {
+          beforeMove: (index) => {
             this.smoothScroll('.article_body')
             if (parseInt(index) > this.currIndex) {
               this.sideProgressHandler('pass', parseInt(index) - 1)
@@ -248,7 +248,7 @@
           }
         }
       },
-      scrollHandler (e) {
+      scrollHandler () {
         const deviceHeight = verge.viewportH()
         const currTop = this.currentYPosition()
         const currBtm = currTop + deviceHeight
@@ -285,7 +285,7 @@
         })
       },
       setUpSelectorPreventor () {
-        return new Promise((resolve) => {
+        return new Promise(() => {
           this.$refs[ 'photos' ].ondragstart = function () { return false }
           this.$refs[ 'photos' ].onselectstart = function () { return false }
         })
@@ -311,7 +311,7 @@
         shareFacebook({ route: this.$route.path })
       },
       sideProgressHandler (action, index) {
-        return new Promise((resolve) => {
+        return new Promise(() => {
           const _targContainer = document.querySelector('.stick-container')
           if (!_targContainer) { return }
           const _targElement = _targContainer.querySelector(`.stick:nth-child(${index})`)
@@ -379,7 +379,7 @@
         return event.preventDefault()
       },
       updateProgressbar (percentage) {
-        return new Promise((resolve) => {
+        return new Promise(() => {
           const _progressBar = document.querySelector('.progress-bar')
           _progressBar.setAttribute('style', `left: ${percentage}%;`)
         })
@@ -427,6 +427,7 @@
         removeClass(document.body, 'limited-height')
         removeClass(document.documentElement, 'limited-height')
       }
+      next()
     },
     name: 'ariticle-body-photo',
     props: {

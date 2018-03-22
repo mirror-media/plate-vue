@@ -256,7 +256,7 @@ export default {
         return false
       }
     },
-    $_header_searchDesktop (searchVal = '') {
+    $_header_searchDesktop () {
       if (this.isChanged) {
         this.$router.push('/search/' + this.searchVal)
         this.openSearch = false
@@ -264,7 +264,7 @@ export default {
         this.openSearch = false
       }
     },
-    $_header_searchMobile (searchVal = '') {
+    $_header_searchMobile () {
       if (this.isChanged) {
         document.activeElement.blur()
         this.$router.push('/search/' + this.searchVal)

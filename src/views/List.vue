@@ -148,19 +148,19 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 const MAXRESULT = 12
 const PAGE = 1
 
-const fetchCommonData = (store) => {
+const fetchCommonData = (store, route) => {
   return Promise.all([
     store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
     fetchPartners(store)
   ]).then(() => {
-    if (_.toUpper(_.split(store.state.route.path, '/')[1]) === TAG) {
-      return fetchTag(store, store.state.route.params.tagId)
+    if (_.toUpper(_.split(route.path, '/')[1]) === TAG) {
+      return fetchTag(store, route.params.tagId)
     }
-    if (_.toUpper(_.split(store.state.route.path, '/')[1]) === AUTHOR) {
-      return fetchAuthor(store, store.state.route.params.authorId)
+    if (_.toUpper(_.split(route.path, '/')[1]) === AUTHOR) {
+      return fetchAuthor(store, route.params.authorId)
     }
-    if (_.toUpper(_.split(store.state.route.path, '/')[1]) === CATEGORY) {
-      return fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(store.state.route.path, '/')[2], 'ogImage' ], ''))
+    if (_.toUpper(_.split(route.path, '/')[1]) === CATEGORY) {
+      return fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(route.path, '/')[2], 'ogImage' ], ''))
     }
   }).catch(err => {
     if (err.status === 404) {
@@ -436,7 +436,7 @@ const getUUID = (store, type, to) => {
           return _.get(_.find(_.get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
       }
     case EXTERNALS:
-      return to.params.name
+      return to.params.title
     case SECTION:
       if (to.params.title === 'topic') {
         return 'topic'
@@ -481,8 +481,8 @@ export default {
     'watch101-list': Watch101,
     DfpCover
   },
-  asyncData ({ store }) {
-    return fetchCommonData(store)
+  asyncData ({ store, route }) {
+    return fetchCommonData(store, route)
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
@@ -790,7 +790,7 @@ export default {
     section () {
       switch (this.type) {
         case EXTERNALS:
-          return _.find(_.get(this.commonData, [ 'partners', 'items' ]), { 'name': this.$route.params.name })
+          return _.find(_.get(this.commonData, [ 'partners', 'items' ]), { 'name': this.$route.params.title })
         default:
           return _.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title })
       }
@@ -872,7 +872,7 @@ export default {
         case TAG:
           return _.get(this.$store.state, [ 'tag', 'name' ])
         case EXTERNALS:
-          if (this.$route.params.name === 'external') {
+          if (this.$route.params.title === 'external') {
             return '校園'
           }
           return _.get(this.section, [ 'display' ])
@@ -903,7 +903,7 @@ export default {
         case TAG:
           return this.$route.params.tagId
         case EXTERNALS:
-          return this.$route.params.name
+          return this.$route.params.title
       }
     }
   },
@@ -958,7 +958,7 @@ export default {
       })
     },
     insertVponAdSDK,
-    scrollHandler (e) {
+    scrollHandler () {
       if (this.$refs.articleList) {
         const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
         const currentBottom = this.currentYPosition() + vh
