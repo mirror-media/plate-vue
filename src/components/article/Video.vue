@@ -75,7 +75,7 @@
           this.fadeOutPauseBtn()
         }
       },
-      videoPlay (e) {
+      videoPlay () {
         this.played = true
         if (!this.playingFlag) {
           this.$refs[this.videoId].play()

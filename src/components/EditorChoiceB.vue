@@ -45,6 +45,7 @@
 import { SECTION_MAP } from '../constants'
 import { getHref, getHrefFull, getImage, getSection, getTitle, getTruncatedVal } from '../util/comm'
 import { get, slice, take } from 'lodash'
+import _ from 'lodash'
 import LinkTool from './LinkTool.vue'
 
 export default {

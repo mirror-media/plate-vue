@@ -1,6 +1,6 @@
 import { mount } from 'avoriaz'
 import RelatedListWithRecommendList from 'src/components/article/RelatedListWithRecommendList.vue'
-import Vue from 'vue'
+// import Vue from 'vue'
 
 describe('RelatedListWithRecommendList.vue', () => {
   const RelatedListWithRecommendListComp = mount(RelatedListWithRecommendList)

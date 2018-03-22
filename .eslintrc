@@ -1,5 +1,8 @@
 {
-    "extends": [ "plugin:vue/base" ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:vue/base"
+    ],
     "parserOptions": {
       "parser": "babel-eslint"
     },
@@ -9,6 +12,9 @@
     "rules": { 
       "array-bracket-spacing": [ 2, "always" ],
       "camelcase": [ 0, "" ],
+      "no-case-declarations": 1,
+      "no-console": 1,
+      "no-useless-escape": 1,
       "yoda": [ 0, "never" ]
     },
     "globals": {
@@ -16,6 +22,7 @@
       "source": true
     },
     "env": {
+      "node": true,
       "jasmine": true
     }
 }

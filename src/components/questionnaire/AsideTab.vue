@@ -6,13 +6,13 @@
 <script>
   export default {
     methods: {
-      tabMarginTop (index, number, total) {
+      tabMarginTop (index) {
         return (index < 7) ? '-5%' : `${-5 - ((index - 6) * 150)}%`
       },
       tabName (n) {
         return `Ｑ${(n)}`
       },
-      tabTop (index, number, total) {
+      tabTop (index, number) {
         return (12 * (number - 1)) + '%'
       },
       tabZindex (index, number, total) {

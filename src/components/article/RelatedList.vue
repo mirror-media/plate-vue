@@ -43,7 +43,7 @@
         custCss.appendChild(document.createTextNode(customCSS))
         document.querySelector('body').appendChild(custCss)
 
-        window.addEventListener('scroll', (e) => {
+        window.addEventListener('scroll', () => {
           const relatedDom = document.querySelector('.related-list-container')
           if (!relatedDom || !asideDom.offsetLeft) { return }
           const currTop = currentYPosition()
@@ -80,7 +80,7 @@
             window.relatedOffsetLeft = (relatedDom.offsetLeft + relatedDom.offsetParent.offsetLeft)
           }
         })
-        window.addEventListener('resize', (e) => {
+        window.addEventListener('resize', () => {
           this.updateRelatedListStyle()
         })
       },

@@ -1,3 +1,4 @@
+/*eslint no-unused-vars: 0*/
 import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'

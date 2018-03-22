@@ -77,17 +77,17 @@ function loadArticles (params = {}, preview) {
   return _doFetch(url)
 }
 
-function loadArticlesGroupedList (params = {}) {
+function loadArticlesGroupedList () {
   const apiHost = `${_host}/api/grouped`
   return _doFetch(apiHost)
 }
 
-function loadArticlesPopList (params = {}) {
+function loadArticlesPopList () {
   const url = `${_host}/api/poplist`
   return _doFetch(url)
 }
 
-function loadArticlesByUuid (uuid = '', type = '', params = {}, isOnlyMeta = true) {
+function loadArticlesByUuid (uuid = '', type = '', params = {}) {
   switch (type) {
     case SECTION:
       params = _setupWhereInParam('sections', [ uuid ], params)
@@ -162,7 +162,7 @@ function loadExternals (params = {}) {
   return _doFetch(url)
 }
 
-function loadHotWatch (params = {}) {
+function loadHotWatch () {
   const url = `${_host}/api/hotwatches`
   return _doFetch(url)
 }
