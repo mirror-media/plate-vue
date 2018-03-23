@@ -2,10 +2,10 @@
   <div class="heroimage-container">
     <template v-if="viewport > 1199">
       <div class="hero-info">
-        <div
-          class="hero-info-category"
-          :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"
-          v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"></div>
+        <div class="hero-info-category"
+          v-if="!isAd"
+          v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"
+          :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"></div>
         <h1 v-text="get(articleData, [ 'title' ])"></h1>
         <div class="hero-info-heroCaption" v-text="heroCaption"></div>
       </div>
@@ -45,7 +45,7 @@
       get,
     },
     mounted () {},
-    props: [ 'abIndicator', 'articleData', 'heroCaption', 'heroImage', 'sectionId', 'sectionMap', 'viewport' ]
+    props: [ 'abIndicator', 'articleData', 'heroCaption', 'heroImage', 'sectionId', 'sectionMap', 'viewport', 'isAd' ]
   }
 </script>
 <style lang="stylus" scoped>

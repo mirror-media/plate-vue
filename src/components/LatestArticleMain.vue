@@ -5,11 +5,11 @@
       <template v-for="(articles, index) in latestArticleArr">
         <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
           <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="shouldShowItem(o)" :target="target">
-            <div class="latest-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
+            <div class="latest-list_item_img" v-lazy:background-image="getImage(o, 'mobile')"></div>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </router-link>
           <a :href="getHrefFull(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="!shouldShowItem(o)" tid="ee" :target="target">
-            <div class="latest-list_item_img" v-lazy:background-image="getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
+            <div class="latest-list_item_img" v-lazy:background-image="getImage(o, 'mobile')"></div>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </a>
           <div class="latest-list_item_title">
@@ -39,7 +39,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../constants'
-import { currEnv, getHref, getHrefFull, getTruncatedVal, getValue } from '../util/comm'
+import { currEnv, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../util/comm'
 import { microAds } from '../constants/microAds'
 import MicroAd from '../components/MicroAd.vue'
 import sanitizeHtml from 'sanitize-html'
@@ -79,6 +79,7 @@ export default {
   methods: {
     getHref,
     getHrefFull,
+    getImage,
     getTruncatedVal,
     getValue,
     getSectionStyle (sect) {
