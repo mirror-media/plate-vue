@@ -1,14 +1,11 @@
 <template>
   <div class="heroimage-container">
-    <template v-if="viewport < 1200">
-      <ArticleVideo v-if="video" :video="video" class="heroimg"></ArticleVideo>
-      <div class="heroimg-caption" v-text="heroCaption" v-show="heroCaption && heroCaption.length > 0"></div>
-    </template>
-    <template v-else>
+    <template v-if="viewport > 1199">
       <div class="hero-info">
         <div class="hero-info-category"
-          :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"
-          v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"></div>
+          v-if="!isAd"
+          v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"
+          :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"></div>
         <h1 v-text="get(articleData, [ 'title' ])"></h1>
         <div class="hero-info-heroCaption" v-text="heroCaption"></div>
       </div>
@@ -16,7 +13,10 @@
         <ArticleVideo v-if="video" :video="video" class="heroimg"></ArticleVideo>
       </div>
     </template>
-
+    <template v-else-if="viewport">
+      <ArticleVideo v-if="video" :video="video" class="heroimg"></ArticleVideo>
+      <div class="heroimg-caption" v-text="heroCaption" v-show="heroCaption && heroCaption.length > 0"></div>
+    </template>
   </div>
 </template>
 <script>
@@ -32,7 +32,7 @@
       get
     },
     mounted () {},
-    props: [ 'abIndicator', 'articleData', 'heroCaption', 'sectionId', 'sectionMap', 'video', 'viewport' ]
+    props: [ 'abIndicator', 'articleData', 'heroCaption', 'sectionId', 'sectionMap', 'video', 'viewport', 'isAd' ]
   }
 </script>
 <style lang="stylus" scoped>

@@ -11,6 +11,7 @@
         <div class="article-heromedia" v-if="heroVideo" >
           <HeroVideo
             :abIndicator="abIndicator"
+            :isAd="isAd"
             :viewport="viewport"
             :sectionMap="sectionMap"
             :sectionId="sectionId"
@@ -20,6 +21,7 @@
         </div>
         <HeroImage v-else-if="heroImage"
           :abIndicator="abIndicator"
+          :isAd="isAd"
           :viewport="viewport"
           :sectionMap="sectionMap"
           :sectionId="sectionId"
