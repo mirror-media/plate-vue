@@ -457,8 +457,10 @@
         const { heroImage, heroVideo, ogImage } = this.articleData
         const heroImgUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const poster = ogImgUrl || (heroImgUrl || '/public/notImage.png')
-        return (heroVideo && heroVideo.video) ? Object.assign(_.get(heroVideo, [ 'video' ], {}), { id: _.get(heroVideo, [ 'id' ], '') }, { poster }) : heroVideo
+        const poster = heroImgUrl || (ogImgUrl || '/public/notImage.png')
+        return (heroVideo && heroVideo.video)
+          ? Object.assign(_.get(heroVideo, [ 'video' ], {}), { id: _.get(heroVideo, [ 'id' ], '') }, { poster })
+          : heroVideo
       },
       ifLockJS () {
         return _.get(this.articleData, [ 'lockJS' ])
