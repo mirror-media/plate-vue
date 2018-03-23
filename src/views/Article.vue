@@ -11,6 +11,7 @@
         <div class="article-heromedia" v-if="heroVideo" >
           <HeroVideo
             :abIndicator="abIndicator"
+            :isAd="isAd"
             :viewport="viewport"
             :sectionMap="sectionMap"
             :sectionId="sectionId"
@@ -20,6 +21,7 @@
         </div>
         <HeroImage v-else-if="heroImage"
           :abIndicator="abIndicator"
+          :isAd="isAd"
           :viewport="viewport"
           :sectionMap="sectionMap"
           :sectionId="sectionId"
@@ -115,7 +117,7 @@
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
-  import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
+  import { consoleLogOnDev, currEnv, getImage, getTruncatedVal, lockJS, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
@@ -454,10 +456,8 @@
         return _.get(this.articleData, [ 'heroImage' ])
       },
       heroVideo () {
-        const { heroImage, heroVideo, ogImage } = this.articleData
-        const heroImgUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const poster = heroImgUrl || (ogImgUrl || '/public/notImage.png')
+        const { heroVideo } = this.articleData
+        const poster = getImage(this.articleData)
         return (heroVideo && heroVideo.video)
           ? Object.assign(_.get(heroVideo, [ 'video' ], {}), { id: _.get(heroVideo, [ 'id' ], '') }, { poster })
           : heroVideo
