@@ -2,12 +2,14 @@
   <div class="heroimage-container">
     <template v-if="viewport > 1199">
       <div class="hero-info">
-        <div class="hero-info-category"
-          v-if="!isAd"
-          v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"
-          :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"></div>
-        <h1 v-text="get(articleData, [ 'title' ])"></h1>
-        <h2 v-if="get(articleData, [ 'subtitle' ])" v-text="get(articleData, [ 'subtitle' ])"></h2>
+        <div class="hero-info-category-container">
+          <div class="hero-info-category"
+            v-if="!isAd"
+            v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"
+            :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"></div>
+          <h1 v-text="get(articleData, [ 'title' ])"></h1>
+          <h2 v-if="get(articleData, [ 'subtitle' ])" v-text="get(articleData, [ 'subtitle' ])"></h2>
+        </div>
         <div class="hero-info-heroCaption" v-text="heroCaption"></div>
       </div>
       <div v-if="heroImage && heroImage.image" class="hero-img">
@@ -59,23 +61,25 @@
     justify-content space-between
   .hero-info
     display flex 
-    flex-direction column 
-    width 33.34% 
-    padding 80px 0 0 0 
-    background-color #989898 
+    flex-direction column
+    justify-content space-between 
+    width 33.34%
+    background-color #989898
+  .hero-info-category-container
+    display flex
+    flex-direction column
+    justify-content center
+    height 100%
+    padding 0 10%
     > h1 
-      flex 1 
-      width 80% 
-      margin 0 auto 
+      margin-top 10px
       color #fff 
       font-size 40px 
       font-weight 400 
       line-height 1.3 
       text-align justify
     > h2
-      flex 1 
-      width 80% 
-      margin 0 auto 
+      margin 0
       color #fff 
       font-size 30px 
       font-weight 300 
@@ -83,7 +87,6 @@
       text-align justify
   .hero-info-category 
     width 80% 
-    margin 0 auto 15px 
     padding-left 10px 
     color #000 
     font-size 21px 
