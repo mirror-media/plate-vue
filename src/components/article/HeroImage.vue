@@ -7,6 +7,7 @@
           v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"
           :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"></div>
         <h1 v-text="get(articleData, [ 'title' ])"></h1>
+        <h2 v-if="get(articleData, [ 'subtitle' ])" v-text="get(articleData, [ 'subtitle' ])"></h2>
         <div class="hero-info-heroCaption" v-text="heroCaption"></div>
       </div>
       <div v-if="heroImage && heroImage.image" class="hero-img">
@@ -70,7 +71,16 @@
       font-size 40px 
       font-weight 400 
       line-height 1.3 
-      text-align justify 
+      text-align justify
+    > h2
+      flex 1 
+      width 80% 
+      margin 0 auto 
+      color #fff 
+      font-size 30px 
+      font-weight 300 
+      line-height 1.3 
+      text-align justify
   .hero-info-category 
     width 80% 
     margin 0 auto 15px 
