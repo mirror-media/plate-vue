@@ -29,7 +29,13 @@
           :heroCaption="heroCaption"
           :heroImage="heroImage"></HeroImage>
         <div class="article" v-if="articleData">
-          <article-body :abIndicator="abIndicator" :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
+          <article-body
+            :abIndicator="abIndicator"
+            :articleData="articleData"
+            :isAd="isAd"
+            :poplistData="popularlist"
+            :projlistData="projectlist"
+            :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list
