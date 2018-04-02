@@ -1,5 +1,5 @@
 <template>
-  <div class="mmtv-aside" :class="{ b: abIndicator === 'B' }">
+  <div class="mmtv-aside">
     <div class="mmtv-aside--title" v-if="showTitle"><h2 v-text="$t('mmtv')"></h2></div>
     <div class="mmtv-aside--curtain" id="mod_curtain" @click="toggleLightbox"></div>
     <div class="mmtv-aside--container" :class="containerClass" v-html="mediaDataEmbed" ref="embed-code" @click="toggleLightbox"></div>
@@ -154,10 +154,5 @@
             display none
       &--container
         margin-bottom 30px
-      &.b
-        width 170px
-        margin 0
-        .mmtv-aside--container
-          margin-bottom 0
 
 </style>
