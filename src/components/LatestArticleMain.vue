@@ -1,5 +1,5 @@
 <template>
-  <div class="latest-main-container" v-if="(latestList.length > 0)" :class="{ b: abIndicator === 'B' }">
+  <div class="latest-main-container" v-if="(latestList.length > 0)">
     <div class="latest-main-container_title"><h3>最新文章</h3></div>
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
@@ -301,12 +301,6 @@ export default {
       display none !important
 
     .latest-main-container
-      &.b
-        padding 20px 25px 25px
-        border 1px solid #245990
-        > .latest-main-container_title
-          margin 0 0 20px
-
       &_title
         overflow hidden
 
