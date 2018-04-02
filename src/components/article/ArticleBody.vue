@@ -3,7 +3,7 @@
     <template v-if="viewport < 1200">
       <div class="article_basic-info">
         <div class="category">
-          <span class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
+          <span v-if="!isAd" class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
         </div>
         <div class="date" v-text="date"></div>
       </div>
@@ -394,6 +394,9 @@ export default {
     },
     viewport: {
       default: () => { return undefined }
+    },
+    isAd: {
+      default: () => false
     }
   }
 }
