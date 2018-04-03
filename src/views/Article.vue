@@ -156,7 +156,7 @@
     debug('Going to fetch article data.', slug)
     return store.dispatch('FETCH_ARTICLES', {
       params: {
-        related: 'full',
+        // related: 'full',
         clean: 'content',
         where: {
           'slug': {
