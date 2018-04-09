@@ -19,7 +19,7 @@
             :heroCaption="heroCaption"
             :video="heroVideo"></HeroVideo>
         </div>
-        <HeroImage v-else-if="heroImage"
+        <HeroImage v-else
           :abIndicator="abIndicator"
           :isAd="isAd"
           :viewport="viewport"
@@ -459,7 +459,7 @@
         return _.get(this.articleData, [ 'heroCaption' ], '')
       },
       heroImage () {
-        return _.get(this.articleData, [ 'heroImage' ])
+        return _.get(this.articleData, [ 'heroImage' ]) || { image: {}, }
       },
       heroVideo () {
         const { heroVideo } = this.articleData
