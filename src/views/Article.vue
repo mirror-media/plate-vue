@@ -57,12 +57,15 @@
                 </pop-list-vert>
               </article-aside-fixed>
             </aside>
-            <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCAROOP" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config" v-if="dfpMode === 'dev' && sectionId === '596441604bbe120f002a3197'" />
+            <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config" v-else />
+            <span id="innity-in-post" extClass="mobile-hide" slot="dfpad-AR1" v-if="dfpMode === 'dev'"></span>
+            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :config="props.config"/>
+            <span id="innity-in-post" extClass="mobile-only" slot="dfpad-AR1" v-if="dfpMode === 'dev'"></span>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
@@ -85,7 +88,8 @@
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBFTOOP" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" v-if="dfpMode === 'dev' && sectionId === '596441d04bbe120f002a319a'" />
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" v-else />
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
