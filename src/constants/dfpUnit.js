@@ -58,9 +58,10 @@ export default {
     'LPCNA5': { 'aduid': 'mirror_pc_hp_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA9': { 'aduid': 'mirror_pc_hp_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'articleList-block', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     // LOGO : position on header
-    'LOGO': { 'aduid': 'mirror_RWD_ros_110x50_logo', 'dimensions': '95x50', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] }
+    'LOGO': { 'aduid': 'mirror_RWD_ros_110x50_logo', 'dimensions': '95x50', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // 'LMBCVR-VPON': { 'aduid': 'mirror_m_ros_320x480_OOP', 'dimensions': '0x0', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ], outOfPage: true },
     // 'OOP': { 'aduid': 'test_mirror_rwd_peo_fluid_na3', 'dimensions': '', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'outOfPage': true }
+    // 'OOP': { 'aduid': 'mirror_pc_peo_640x390_AT1', 'dimensions': '', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ], 'outOfPage': true },
   },
   'other': { //  topic
 
@@ -132,7 +133,7 @@ export default {
     'PCR1': { 'aduid': 'mirror_pc_news_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'PCR2': { 'aduid': 'mirror_pc_news_300x600_R2', 'dimensions': '1x1,300x250,300x600', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'PCR2B': { 'aduid': 'mirror_pc_ros_300x600_R2', 'dimensions': '1x1,300x250,300x600', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'PCAR': { 'aduid': 'mirror_pc_news_640x390_AT1', 'dimensions': '1x1,640x390', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ 'clear: both' ] },
+    'PCAR': { 'aduid': 'mirror_pc_news_640x390_AT1', 'dimensions': '1x1,640x390', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ 'clear: both' ]},
     'PCE1': { 'aduid': 'mirror_pc_news_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCE2': { 'aduid': 'mirror_pc_news_300x250_E2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCFT': { 'aduid': 'mirror_pc_news_970x250_FT', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
@@ -147,7 +148,7 @@ export default {
     'LPCNA5': { 'aduid': 'mirror_RWD_news_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'nativeDFP', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA9': { 'aduid': 'mirror_RWD_news_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'nativeDFP', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     // LOGO : position on header
-    'LOGO': { 'aduid': 'mirror_RWD_ros_110x50_logo', 'dimensions': '95x50', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] }
+    'LOGO': { 'aduid': 'mirror_RWD_ros_110x50_logo', 'dimensions': '95x50', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
   },
   '596441d04bbe120f002a319a': { // businessmoney
     // MBHD, MBAR1, MBAR2, MBE1, MBFT, MBCVR : position on mobile article page
@@ -156,6 +157,7 @@ export default {
     'MBAR2': { 'aduid': 'mirror_m_fin_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
     'MBE1': { 'aduid': 'mirror_m_fin_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_fin_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
+    'MBFTOOP': { 'aduid': 'mirror_m_fin_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ], 'outOfPage': true },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'MBCVR2': { 'aduid': 'mirror_m_ros_320x480_AD2', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // MBHD, MBL1, MBFT
@@ -354,7 +356,8 @@ export default {
     'PCR1': { 'aduid': 'mirror_pc_peo_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'PCR2': { 'aduid': 'mirror_pc_peo_300x600_R2', 'dimensions': '1x1,300x250,300x600', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'PCR2B': { 'aduid': 'mirror_pc_ros_300x600_R2', 'dimensions': '1x1,300x250,300x600', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
-    'PCAR': { 'aduid': 'mirror_pc_peo_640x390_AT1', 'dimensions': '1x1,640x390', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ 'clear: both' ] },
+    'PCAR': { 'aduid': 'mirror_pc_peo_640x390_AT1', 'dimensions': '1x1,640x390', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ 'clear: both' ]},
+    'PCAROOP': { 'aduid': 'mirror_pc_peo_640x390_AT1', 'dimensions': '1x1,640x390', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ 'clear: both' ], 'outOfPage': true },
     'PCE1': { 'aduid': 'mirror_pc_peo_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCE2': { 'aduid': 'mirror_pc_peo_300x250_E2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'PCFT': { 'aduid': 'mirror_pc_peo_970x250_FT', 'dimensions': '1x1,970x90,970x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
