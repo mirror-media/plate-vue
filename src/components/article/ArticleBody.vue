@@ -376,6 +376,12 @@ export default {
   },
   mounted () {
     this.setUpLightbox()
+    /*global twttr*/
+    window.addEventListener('load', () => {
+      if (twttr) {
+        twttr.widgets.load() 
+      }
+    })
   },
   updated () {
     this.setUpLightbox()
