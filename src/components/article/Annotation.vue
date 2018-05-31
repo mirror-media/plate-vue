@@ -1,5 +1,5 @@
 <template>
-  <p >
+  <div class="annotation">
     <span class='part-1' v-text="annotationPart1"></span>
     <span class='part-2 tooltip' :class="isActive" @mouseover="mouseover" @mouseout="mouseout" @touchstart="touchstart" @touchend="touchend">
       <span v-text="annotationPart2"></span>
@@ -7,8 +7,8 @@
       <img src='/public/icon/info.png' style="height: 1.3rem; margin-left: 3px;">
     </span>
     <span v-if="!isPart3HasAnnotation" class='part-3' v-text="annotationPart3"></span>
-    <annotation v-else class="recursive-annotation" :annotationStr="annotationPart3"></annotation>
-  </p>
+    <annotation v-if="isPart3HasAnnotation" class="recursive-annotation" :annotationStr="annotationPart3"></annotation>
+  </div>
 </template>
 <script>
 import _ from 'lodash'
@@ -101,6 +101,13 @@ export default {
 }
 </script>
 <style lang="stylus">
+  .annotation
+    color #171717
+    font-size 18px
+    line-height 36px
+    margin 1.5em 0
+    text-align justify
+
   .tooltip
     position relative
     border-bottom 2px dotted black
