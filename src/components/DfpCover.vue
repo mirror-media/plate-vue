@@ -10,7 +10,9 @@
   </div>
 </template>
 <script>
+  const debug = require('debug')('CLIENT:DfpCover')
   export default {
+    name: 'DfpCover',
     computed: {
       displayBtnClose () {
         return this.showCloseBtn !== undefined ? this.showCloseBtn : true
@@ -21,13 +23,26 @@
         switcher: true
       }
     },
-    name: 'dfp-ad-cover',
     methods: {
       closeCover () {
         this.switcher = false
+      },
+      setupCloseEventListener () {
+        const handler = () => {
+          debug('GOT EVENT!!!')
+          this.switcher = false
+        }
+        return new Promise(resolve => {
+          debug('SETUP setupCloseEventListener!!!')
+          window.addEventListener('closecover', handler)
+          window.parent.addEventListener('closecover', handler)
+          resolve()
+        })
       }
     },
-    mounted () {},
+    mounted () {
+      this.setupCloseEventListener()
+    },
     props: [ 'showCloseBtn' ]
   }
 </script>
