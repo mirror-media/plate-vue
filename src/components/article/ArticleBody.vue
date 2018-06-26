@@ -679,14 +679,6 @@ export default {
 
         .audioBox
           width 100%
-          
-          .audioBox-content
-            h2
-              margin-top 10px
-              display flex
-              justify-content center
-              align-items center
-              font-size 1.5rem
 
         .video
           text-align center
