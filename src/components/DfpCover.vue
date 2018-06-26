@@ -1,5 +1,5 @@
 <template>
-  <div class="ad-cover" v-if="switcher">
+  <div class="ad-cover" :class="{ transparent: showDefaultSet, }" v-if="switcher">
     <div class="ad-cover--wrapper">
       <slot name="ad-cover">
       </slot>
@@ -20,7 +20,8 @@
     },
     data () {
       return {
-        switcher: true
+        showDefaultSet: true,
+        switcher: true,
       }
     },
     methods: {
@@ -30,12 +31,12 @@
       setupCloseEventListener () {
         const handler = () => {
           debug('GOT EVENT!!!')
-          this.switcher = false
+          this.showDefaultSet = false
         }
         return new Promise(resolve => {
           debug('SETUP setupCloseEventListener!!!')
-          window.addEventListener('closecover', handler)
-          window.parent.addEventListener('closecover', handler)
+          window.addEventListener('hidedefaultset', handler)
+          window.parent.addEventListener('hidedefaultset', handler)
           resolve()
         })
       }
@@ -59,6 +60,11 @@
       display flex
       justify-content center
       align-items center
+
+      &.transparent
+        background-color transparent
+        .ad-cover--wrapper_close
+          display none
 
       .ad-cover--wrapper
         position relative
