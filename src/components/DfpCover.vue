@@ -1,5 +1,5 @@
 <template>
-  <div class="ad-cover" :class="{ transparent: showDefaultSet, }" v-if="switcher">
+  <div class="ad-cover" :class="{ transparent: !showDefaultSet, }" v-if="switcher">
     <div class="ad-cover--wrapper">
       <slot name="ad-cover">
       </slot>
