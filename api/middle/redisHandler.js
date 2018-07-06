@@ -130,9 +130,9 @@ const redisWriting = (url, data, callback) => {
     }
   })
 }
-const redisFetchingRecommendNews = (key, field, callback) => {
+const redisFetchingRecommendNews = (field, callback) => {
   const timeoutHandler = new TimeoutHandler(callback)
-  redisPoolRecommendNews.send_command('HMGET', [ key, ...field ], function (err, data) {
+  redisPoolRecommendNews.send_command('MGET', [ ...field ], function (err, data) {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if (timeoutHandler.timeout <= 0) { return }
