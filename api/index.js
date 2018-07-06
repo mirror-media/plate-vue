@@ -239,7 +239,7 @@ router.use('/drafts', function(req, res, next) {
 router.use('/related_news', function(req, res, next) {
   const query = req.query
   debug('/related_news', req.url)
-  redisFetchingRecommendNews('news_dict', _.get(query, [ 'id' ], '').split(','), ({ err, data }) => {
+  redisFetchingRecommendNews( _.get(query, [ 'id' ], '').split(',').map( id => 'related-news-v2-' + id ), ({ err, data }) => {
     if (!err && data) {
       let parsed
       try {
