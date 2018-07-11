@@ -43,6 +43,7 @@ export default {
   'home': { //  homepage
     'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'LMBCVR2': { 'aduid': 'mirror_m_ros_320x480_AD2', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
+    'LMBCVR3': { 'aduid': 'mirror_m_ros_320x480_innity', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'LMBHD': { 'aduid': 'mirror_m_hp_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'LMBFS': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '320x480', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'LMBL1': { 'aduid': 'mirror_m_hp_300x250_L1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin-bottom: 35px;' ] },
