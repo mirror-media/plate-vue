@@ -53,6 +53,9 @@
         <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
+        <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+        </DfpCover>
         <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
       </div>
     </template>
@@ -63,7 +66,7 @@
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { consoleLogOnDev, currEnv, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
+import { currEnv, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
@@ -85,7 +88,7 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 
 // const MAXRESULT = 20
 // const PAGE = 1
-
+const debug = require('debug')('CLIENT:Home')
 const fetchSSRData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] }).then(() => {
     return Promise.all([
@@ -214,6 +217,7 @@ export default {
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
+      showDfpCoverInnityFlag: false,
       showDfpHeaderLogo: false,
       viewport: undefined
     }
@@ -233,15 +237,26 @@ export default {
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
           const afVponLoader = () => {
+            debug('Event "noad2" is detected!!')
             if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
               sendAdCoverGA('vpon')
-              consoleLogOnDev({ msg: 'noad2 detected' })
+              debug('noad2 detected and go vpon')
               this.showDfpCoverAdVponFlag = true
               this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
             }
           }
-          window.addEventListener('noad2', afVponLoader)
-          window.parent.addEventListener('noad2', afVponLoader)
+          const loadInnityAd = () => {
+            debug('Event "noad2" is detected!!')
+            if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+              sendAdCoverGA('innity')
+              debug('noad2 detected and go innity')
+              this.showDfpCoverInnityFlag = true
+            }
+          }
+          window.addEventListener('noad2', () => { this.dfpMode === 'prod' ? afVponLoader() : loadInnityAd() })
+          window.parent.addEventListener('noad2', () => { this.dfpMode === 'prod' ? afVponLoader() : loadInnityAd() })
+          // window.addEventListener('noad2', afVponLoader)
+          // window.parent.addEventListener('noad2', afVponLoader)
 
           switch (position) {
             case 'LMBCVR':
@@ -257,10 +272,17 @@ export default {
               }
               break
             case 'LMBCVR2':
-              consoleLogOnDev({ msg: 'ad2 loaded' })
+              debug('ad2 loaded')
               sendAdCoverGA('ad2')
               if (adDisplayStatus === 'none') {
-                consoleLogOnDev({ msg: 'dfp response no ad2' })
+                debug('dfp response no ad2')
+              }
+              break
+            case 'LMBCVR3':
+              debug('adInnity loaded')
+              sendAdCoverGA('innity')
+              if (adDisplayStatus === 'none') {
+                debug('dfp response no innity')
               }
               break
             case 'LOGO':
