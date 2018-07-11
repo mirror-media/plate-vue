@@ -13,42 +13,69 @@
         <div class="hero-info-heroCaption" v-text="heroCaption"></div>
       </div>
       <div v-if="heroImage && heroImage.image" class="hero-img">
-        <img :alt="heroCaption" :src="get(images, 'desktop')"
-          :srcset="get(images, 'mobile') + ' 800w, ' +
-          get(images, 'tablet') + ' 1200w, ' +
-          get(images, 'desktop') + ' 2000w'" />
+        <span class="img" v-show="!isVirtualImgLoaded"><img src="/public/icon/loading.gif" :alt="heroCaption"></span>
+        <span class="img" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
       </div>
     </template>
     <template v-else-if="viewport">
-      <img v-if="heroImage && heroImage.image" class="heroimg"
-        :src="get(images, 'desktop')"
-        :alt="heroCaption"
-        :srcset="get(images, 'mobile') + ' 800w, ' +
-        get(images, 'tablet') + ' 1200w, ' +
-        get(images, 'desktop') + ' 2000w'" />
+      <span class="heroimg" v-show="!isVirtualImgLoaded"><img src="/public/icon/loading.gif" :alt="heroCaption"></span>
+      <span class="heroimg" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
       <div class="heroimg-caption" v-text="heroCaption" v-show="heroCaption && heroCaption.length > 0"></div>
     </template>
   </div>
 </template>
 <script>
   import { get } from 'lodash'
+  const debug = require('debug')('CLIENT:HeroImage')
   export default {
     name: 'HeroImage',
-    computed: {
-      images () {
+    data () {
+      return {
+        images: {},
+        isVirtualImgLoaded: false,
+      }
+    },
+    methods: {
+      constructImages () {
         return {
           desktop: get(this.heroImage, 'image.resizedTargets.desktop.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
           tablet: get(this.heroImage, 'image.resizedTargets.tablet.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
           mobile: get(this.heroImage, 'image.resizedTargets.mobile.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
           tiny: get(this.heroImage, 'image.resizedTargets.tiny.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
         }
-      }
-    },
-    methods: {
+      },
+      lazyLoad () {
+        const lazy_img = document.createElement('img')
+        lazy_img.onload = () => {
+          debug('virtual img loaded!')
+          this.isVirtualImgLoaded = true
+          this.$refs[ 'lazyImg' ].appendChild(lazy_img)
+        }
+        lazy_img.setAttribute('alt', this.heroCaption)
+        lazy_img.setAttribute('src', get(this.images, 'desktop'))
+        lazy_img.setAttribute('srcset',
+          get(this.images, 'mobile') + ' 800w, ' +
+          get(this.images, 'tablet') + ' 1200w, ' +
+          get(this.images, 'desktop') + ' 2000w'
+        )
+      },
       get,
     },
-    mounted () {},
-    props: [ 'abIndicator', 'articleData', 'heroCaption', 'heroImage', 'sectionId', 'sectionMap', 'viewport', 'isAd' ]
+    mounted () {
+      this.images = this.constructImages()
+      this.lazyLoad()
+    },
+    props: [ 'abIndicator', 'articleData', 'heroCaption', 'heroImage', 'sectionId', 'sectionMap', 'viewport', 'isAd' ],
+    watch: {
+      heroImage () {
+        debug('Mutation detected: heroImage', this.heroImage)
+        this.isVirtualImgLoaded = false
+        const firstChild = this.$refs[ 'lazyImg' ].firstChild
+        firstChild && this.$refs[ 'lazyImg' ].removeChild(firstChild)
+        this.images = this.constructImages()
+        this.lazyLoad()
+      },
+    },
   }
 </script>
 <style lang="stylus" scoped>
@@ -111,15 +138,12 @@
   .hero-img 
     position relative 
     width 66.66% 
-    &[lazy=loading]
-      object-fit contain
-      height 150px
     &::after 
       content '' 
       display block 
       width 100% 
-      padding-top 66.66% 
-    > img 
+      padding-top 66.66%
+    .img 
       position absolute 
       top 0 
       left 0 
@@ -127,11 +151,16 @@
       right 0 
       width 100% 
       height 100% 
-      object-fit cover 
-      object-position 50% 50% 
+      & >>> img
+        width 100% 
+        height 100% 
+        object-fit cover 
+        object-position 50% 50% 
   @media (max-width: 1200px)
     .heroimg
-      width 100%
+      display block
+      img
+        width 100%
     .heroimage-container
       display block
     .heroimg-caption
