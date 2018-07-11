@@ -13,17 +13,17 @@
         <div class="hero-info-heroCaption" v-text="heroCaption"></div>
       </div>
       <div v-if="heroImage && heroImage.image" class="hero-img">
-        <img :alt="heroCaption" v-lazy="get(images, 'desktop')"
-          :data-srcset="get(images, 'mobile') + ' 800w, ' +
+        <img :alt="heroCaption" :src="get(images, 'desktop')"
+          :srcset="get(images, 'mobile') + ' 800w, ' +
           get(images, 'tablet') + ' 1200w, ' +
           get(images, 'desktop') + ' 2000w'" />
       </div>
     </template>
     <template v-else-if="viewport">
       <img v-if="heroImage && heroImage.image" class="heroimg"
-        v-lazy="get(images, 'desktop')"
+        :src="get(images, 'desktop')"
         :alt="heroCaption"
-        :data-srcset="get(images, 'mobile') + ' 800w, ' +
+        :srcset="get(images, 'mobile') + ' 800w, ' +
         get(images, 'tablet') + ' 1200w, ' +
         get(images, 'desktop') + ' 2000w'" />
       <div class="heroimg-caption" v-text="heroCaption" v-show="heroCaption && heroCaption.length > 0"></div>
