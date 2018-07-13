@@ -24,7 +24,6 @@
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
             :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>            
-          </div>
           <div v-else-if="p.type === 'video'" is="article-video" 
             :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
