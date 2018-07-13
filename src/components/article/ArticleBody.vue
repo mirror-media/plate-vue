@@ -20,15 +20,10 @@
     <main class="article_main">
       <div class="brief fb-quotable">
         <div v-for="p in briefArr">
-          <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
-            <img class="thumbnail" v-if="viewport"
-                  :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
-                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '/public/notImage.png')}`"
-                  :data-srcset="`
-                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '/public/notImage.png')} 800w,
-                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '/public/notImage.png')} 1200w,
-                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '/public/notImage.png')} 2000w`">
-            <div class="caption" v-text="getValue(p.content, [ 0, 'description' ], '')"></div>
+          <Img v-if="p.type === 'image'"
+            :viewport="viewport"
+            :image="getValue(p, [ 'content', 0 ])"
+            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></Img>            
           </div>
           <div v-else-if="p.type === 'video'" is="article-video" 
             :id="'latest-'+ p.id" 
@@ -61,16 +56,10 @@
       <div class="split-line"></div>
       <article class="content">
         <div v-for="(p, index) in contArr">
-          <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
-            <img class="thumbnail" v-if="viewport"
-                  :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
-                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '/public/notImage.png')}`"
-                  :data-srcset="`
-                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '/public/notImage.png')} 800w,
-                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '/public/notImage.png')} 1200w,
-                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '/public/notImage.png')} 2000w`">
-            <div class="caption" v-text="getValue(p.content, [ 0, 'description' ], '')"></div>
-          </div>
+          <Img v-if="p.type === 'image'"
+            :viewport="viewport"
+            :image="getValue(p, [ 'content', 0 ])"
+            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></Img>
           <div v-else-if="p.type === 'video'" is="article-video" 
             :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
@@ -146,6 +135,7 @@ import Annotation from './Annotation.vue'
 import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
 // import Cookie from 'vue-cookie'
+import Img from 'src/components/article/Img.vue'
 import Newsletter from '../../components/Newsletter.vue'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
@@ -158,7 +148,8 @@ export default {
     'newsletter': Newsletter,
     'proj-list': ProjectList,
     Annotation,
-    ArticleVideo
+    ArticleVideo,
+    Img,
   },
   computed: {
     articleStyle () {
@@ -522,46 +513,8 @@ export default {
       max-width 695px
       overflow hidden
 
-      .innerImg 
-        clear both
-        margin 1.5em 0
+      // .innerImg 
 
-        img 
-          width 100%
-          &[lazy=loading]
-            height 150px
-
-        .thumbnail
-          cursor pointer
-        
-        .caption 
-          font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
-          font-size 15px
-          line-height 1.7
-          letter-spacing 0.3px
-          color rgba(0, 0, 0, 0.498039)
-          padding-top 10px
-          padding-bottom 10px
-        
-        &.right 
-          float right
-          width 300px
-          margin-left 20px
-          border-bottom 2px solid #255577
-          margin-bottom 30px
-          padding-bottom 10px
-        
-        &.left 
-          float left
-          width 300px
-          margin-right 20px
-          border-bottom 2px solid #255577
-          margin-bottom 30px
-          padding-bottom 10px
-        
-        &.center 
-          margin-top 20px
-          width 100%
 
         
       .article_main_pop 
@@ -1139,11 +1092,6 @@ export default {
           > .quote-content
             line-height 2.1rem
             font-size 1.2rem
-            text-align justify
-
-      > .article_main
-        .innerImg
-          .caption
             text-align justify
 
       > .article_title
