@@ -20,10 +20,10 @@
     <main class="article_main">
       <div class="brief fb-quotable">
         <div v-for="p in briefArr">
-          <Img v-if="p.type === 'image'"
+          <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
-            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></Img>            
+            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>            
           </div>
           <div v-else-if="p.type === 'video'" is="article-video" 
             :id="'latest-'+ p.id" 
@@ -56,10 +56,10 @@
       <div class="split-line"></div>
       <article class="content">
         <div v-for="(p, index) in contArr">
-          <Img v-if="p.type === 'image'"
+          <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
-            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></Img>
+            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>
           <div v-else-if="p.type === 'video'" is="article-video" 
             :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
@@ -135,7 +135,7 @@ import Annotation from './Annotation.vue'
 import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
 // import Cookie from 'vue-cookie'
-import Img from 'src/components/article/Img.vue'
+import ArticleImg from 'src/components/article/ArticleImg.vue'
 import Newsletter from '../../components/Newsletter.vue'
 import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
@@ -149,7 +149,7 @@ export default {
     'proj-list': ProjectList,
     Annotation,
     ArticleVideo,
-    Img,
+    ArticleImg,
   },
   computed: {
     articleStyle () {

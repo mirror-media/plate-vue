@@ -8,9 +8,9 @@
 <script>
   import { currentYPosition, elmYPosition, } from 'kc-scroll'
   import { get, } from 'lodash'
-  const debug = require('debug')('CLIENT:Img')
+  const debug = require('debug')('CLIENT:ArticleImg')
   export default {
-    name: 'Img',
+    name: 'ArticleImg',
     computed: {
       caption () {
         return get(this.image, 'description', '')
