@@ -52,12 +52,12 @@
           this.$refs[ 'lazyImg' ].appendChild(lazy_img)
         }
         lazy_img.setAttribute('alt', this.heroCaption)
-        lazy_img.setAttribute('src', get(this.images, 'desktop'))
         lazy_img.setAttribute('srcset',
           get(this.images, 'mobile') + ' 800w, ' +
           get(this.images, 'tablet') + ' 1200w, ' +
           get(this.images, 'desktop') + ' 2000w'
         )
+        lazy_img.setAttribute('src', get(this.images, 'desktop'))
       },
       get,
     },
