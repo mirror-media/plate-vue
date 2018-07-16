@@ -159,7 +159,7 @@
   @media (max-width: 1200px)
     .heroimg
       display block
-      img
+      & >>> img
         width 100%
     .heroimage-container
       display block
