@@ -285,7 +285,7 @@
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
         `,
-        link: `<link rel="canonical" href="${SITE_URL}/story/${slug}/" />`
+        link: `<link rel="amphtml" href="${SITE_MOBILE_URL}/story/amp/${slug}/" />`
       }
     },
     beforeRouteUpdate (to, from, next) {
