@@ -76,7 +76,6 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
-import LatestArticleMainB from '../components/LatestArticleMainB.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
@@ -157,7 +156,6 @@ export default {
     DfpCover,
     LatestArticleAside,
     LatestArticleMain,
-    LatestArticleMainB,
     MirrorMediaTVAside,
     PopularArticles,
     VueDfpProvider
@@ -190,18 +188,6 @@ export default {
         <meta property="og:url" content="${SITE_URL}">
         <meta property="og:image" content="${SITE_OGIMAGE}">
       `
-    }
-  },
-  beforeRouteEnter (to, from, next) {
-    if (process.env.VUE_ENV === 'client' && to.path !== from.path) {
-      next(vm => {
-        if (_.get(vm.$store, [ 'state', 'commonData', 'sections', 'items' ]) || _.get(vm.$store, [ 'state', 'articlesGroupedList', 'choices' ])) {
-          fetchSSRData(vm.$store)
-          fetchArticlesGroupedList(vm.$store)
-        }
-      })
-    } else {
-      next()
     }
   },
   data () {
