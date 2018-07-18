@@ -6,8 +6,10 @@
   </div>
 </template>
 <script>
+  import verge from 'verge'
   import { currentYPosition, elmYPosition, } from 'kc-scroll'
   import { get, } from 'lodash'
+  
   const debug = require('debug')('CLIENT:ArticleImg')
   export default {
     name: 'ArticleImg',
@@ -54,9 +56,10 @@
       this.images = this.constructImages()
       window.addEventListener('scroll', () => {
         if (this.isVirtualImgCheckedOut) { return }
-        const currPos = currentYPosition()
+        const deviceHeight = verge.viewportH()
+        const currPosMid = currentYPosition() + deviceHeight / 2
         const this_ele = elmYPosition(`.content-image.img-${this.id}`)
-        if (currPos < this_ele + 500 && currPos > this_ele - 500) {
+        if (currPosMid < this_ele + 500 && currPosMid > this_ele - 500) {
           this.isVirtualImgCheckedOut = true
           this.lazyLoad()
         }
