@@ -1,0 +1,10 @@
+<header class="story-info">
+  <div class="story-info__section-date-container">
+    <h2 class="story-info__section-name story-info__section-name--<%= storyInfo.sectionColorModifier %>"><%= storyInfo.sectionName %></h2>
+    <p class="story-info__date"><%= storyInfo.storyDatePublished.dateFormatted %></p>
+  </div>
+  <h1 class="story-info__story-title"><%= storyInfo.storyTitle %></h1>
+  <div class="story-info__story-authors">
+    <%- storyInfo.storyCredits %>
+  </div>
+</header>

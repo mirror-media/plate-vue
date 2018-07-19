@@ -1,0 +1,11 @@
+<figure class="story-body-embeddedcode">
+  <amp-iframe
+    class="story-body-embeddedcode__iframe"
+    src="<%= _.get(new RegExp(/src=["']([^"']*)["']/).exec(_.get(item, [ 'content', 0, 'embeddedCode' ], '')), 1, '') %>"
+    sandbox="allow-scripts allow-same-origin allow-popups"
+    width="<%= _.get(item, [ 'content', 0, 'width' ], 0) %>"
+    height="<%= _.get(item, [ 'content', 0, 'height' ], 0) %>"
+  >
+  </amp-iframe>
+  <figcaption><%- _.get(item, [ 'content', 0, 'caption' ], '') %></figcaption>
+</figure>
