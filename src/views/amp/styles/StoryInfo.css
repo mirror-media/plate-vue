@@ -1,0 +1,75 @@
+.story-info {
+  margin: 13.5px 0 32.5px 0;
+  padding: 0 15px;
+}
+.story-info__section-date-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+.story-info__section-name {
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.29;
+  text-align: justify;
+  color: #ffffff;
+  padding: 7.7px 5.5px;
+}
+.story-info__section-name--news {
+  background-color: #30bac8;
+}
+.story-info__section-name--entertainment {
+  background-color: #bf3284;
+}
+.story-info__section-name--businessmoney {
+  background-color: #009045;
+}
+.story-info__section-name--people {
+  background-color: #efa256;
+}
+.story-info__section-name--videohub {
+  background-color: #969696;
+}
+.story-info__section-name--international {
+  background-color: #911f27;
+}
+.story-info__section-name--foodtravel {
+  background-color: #eac151;
+}
+.story-info__section-name--mafalda {
+  background-color: #662d8e;
+}
+.story-info__section-name--culture {
+  background-color: #009245;
+}
+.story-info__section-name--watch {
+  background-color: #c1d16e;
+}
+.story-info__section-name--external {
+  background-color: #ee5a24;
+}
+.story-info__date {
+  font-size: 14px;
+  line-height: 1.48;
+  text-align: right;
+  color: #a0a0a0;
+}
+.story-info__story-title {
+  font-size: 29px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: justify;
+  color: #224f73;
+  margin: 16.5px 0;
+}
+.story-info__story-authors {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 14px;
+  line-height: 1.48;
+  text-align: left;
+  color: #a0a0a0;
+}
+.story-info__story-authors > a {
+  color: #a0a0a0;
+}

@@ -1,0 +1,19 @@
+<div class="story-body-annotation">
+  <span><%- _.get(annotation, [ 'annotationPart1' ], '') %></span>
+  <span class="story-body-annotation__hint">
+    <span class="story-body-annotation__hint-text"><%- _.get(annotation, [ 'annotationPart2' ], '') %></span>
+    <amp-img
+      class="story-body-annotation__hint-icon"
+      src="/public/icon/info.png"
+      width="20.7px"
+      height="20.7px"
+    >
+    </amp-img>
+  </span>
+  <div class="story-body-annotation__content"><%- _.get(annotation, 'annotationText', '') %></div>
+  <% if (typeof _.get(annotation, [ 'annotationPart3' ], '') === 'object') { %>
+    <%- include('./Annotation', { annotation: _.get(annotation, [ 'annotationPart3' ], {}) }) %>
+  <% } else { %>
+    <span><%- _.get(annotation, [ 'annotationPart3' ], '') %></span>
+  <% } %>
+</div>

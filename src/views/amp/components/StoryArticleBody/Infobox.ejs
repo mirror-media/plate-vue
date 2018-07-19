@@ -1,0 +1,7 @@
+<div class="story-body-infobox">
+  <span class="story-body-infobox__icon"></span>
+  <div class="story-body-infobox__content">
+    <h1 class="story-body-infobox__title"><%= _.get(item, [ 'content', 0, 'title' ], '') %></h1>
+    <div class="story-body-infobox__body"><%- _.get(item, [ 'content', 0, 'body' ], '') %></div>
+  </div>
+</div>
