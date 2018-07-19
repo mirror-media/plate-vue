@@ -3,28 +3,28 @@ import dfpUnitId from './dfpUnit.js'
 
 export const SECTION_MAP = {
   // news
-  '57e1e0e5ee85930e00cad4e9': { 'bgcolor': '#30bac8' },
+  '57e1e0e5ee85930e00cad4e9': { 'sectionName': 'news', 'bgcolor': '#30bac8' },
   // entertainment
-  '57e1e11cee85930e00cad4ea': { 'bgcolor': '#bf3284' },
+  '57e1e11cee85930e00cad4ea': { 'sectionName': 'entertainment', 'bgcolor': '#bf3284' },
   // businessmoney category-business-money
-  '596441d04bbe120f002a319a': { 'bgcolor': '#009045' },
-  'category-business-money': { 'bgcolor': '#009045' },
+  '596441d04bbe120f002a319a': { 'sectionName': 'businessmoney', 'bgcolor': '#009045' },
+  'category-business-money': { 'sectionName': 'businessmoney', 'bgcolor': '#009045' },
   // people
-  '596441604bbe120f002a3197': { 'bgcolor': '#efa256' },
+  '596441604bbe120f002a3197': { 'sectionName': 'people', 'bgcolor': '#efa256' },
   // videohub
-  '5975ab2de531830d00e32b2f': { 'bgcolor': '#969696' },
+  '5975ab2de531830d00e32b2f': { 'sectionName': 'videohub', 'bgcolor': '#969696' },
   // international
-  '5964400d4bbe120f002a3191': { 'bgcolor': '#911f27' },
+  '5964400d4bbe120f002a3191': { 'sectionName': 'international', 'bgcolor': '#911f27' },
   // foodtravel
-  '57dfe399ee85930e00cad4d6': { 'bgcolor': '#eac151' },
+  '57dfe399ee85930e00cad4d6': { 'sectionName': 'foodtravel', 'bgcolor': '#eac151' },
   // mafalda
-  '5971aa8ce531830d00e32812': { 'bgcolor': '#662d8e' },
+  '5971aa8ce531830d00e32812': { 'sectionName': 'mafalda', 'bgcolor': '#662d8e' },
   // culture
-  '5964418a4bbe120f002a3198': { 'bgcolor': '#009245' },
+  '5964418a4bbe120f002a3198': { 'sectionName': 'culture', 'bgcolor': '#009245' },
   // watch
-  '57dfe3b0ee85930e00cad4d7': { 'bgcolor': '#c1d16e' },
+  '57dfe3b0ee85930e00cad4d7': { 'sectionName': 'watch', 'bgcolor': '#c1d16e' },
   // external
-  'external': { 'bgcolor': '#ee5a24' }
+  'external': { 'sectionName': 'external', 'bgcolor': '#ee5a24' }
 }
 
 export const DFP_SIZE_MAPPING = {
