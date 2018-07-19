@@ -1,0 +1,54 @@
+<% body.forEach(function (item, index) { %>
+  <% switch (item.type) {
+      case 'unstyled': %>
+      <%- include('./StoryArticleBody/Unstyled', { item }) %>
+    <% break; %>
+    <% case 'youtube': %>
+      <%- include('./StoryArticleBody/Youtube', { item }) %>
+    <% break; %>
+    <% case 'blockquote': %>
+      <%- include('./StoryArticleBody/Blockquote', { item }) %>
+    <% break; %>
+    <% case 'ordered-list-item': %>
+      <%- include('./StoryArticleBody/OrderedListItem', { item }) %>
+    <% break; %>
+    <% case 'unordered-list-item': %>
+      <%- include('./StoryArticleBody/UnorderedListItem', { item }) %>
+    <% break; %>
+    <% case 'image': %>
+      <%- include('./StoryArticleBody/Image', { item }) %>
+    <% break; %>
+    <% case 'video': %>
+      <%- include('./StoryArticleBody/Video', { item }) %>
+    <% break; %>
+    <% case 'audio': %>
+      <%- include('./StoryArticleBody/Audio', { item }) %>
+    <% break; %>
+    <% case 'header-two': %>
+      <%- include('./StoryArticleBody/HeaderTwo', { item }) %>
+    <% break; %>
+    <% case 'quoteby': %>
+      <%- include('./StoryArticleBody/QuoteBy', { item }) %>
+    <% break; %>
+    <% case 'slideshow': %>
+      <%- include('./StoryArticleBody/SlideShow', { item }) %>
+    <% break; %>
+    <% case 'infobox': %>
+      <%- include('./StoryArticleBody/Infobox', { item }) %>
+    <% break; %>
+    <% case 'embeddedcode': %>
+      <%- include('./StoryArticleBody/EmbeddedCode', { item }) %>
+    <% break; %>
+    <% case 'annotation': %>
+      <%- include('./StoryArticleBody/Annotation', { annotation }) %>
+    <% break; %>
+    <% default: %>
+    <% break; %>
+  <% } %>
+  <% if (index === storyContentFirstTwoUnstyledParagraph[0]) { %>
+    <%- include('./AppAds', { AMPAds, pos: 'AMPAT1' }) %>
+  <% } %>
+  <% if (index === storyContentFirstTwoUnstyledParagraph[1]) { %>
+    <%- include('./AppAds', { AMPAds, pos: 'AMPAT2' }) %>
+  <% } %>
+<% }) %>

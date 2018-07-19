@@ -1,0 +1,17 @@
+<ul class="story-body-ul">
+  <% if (_.isArray(item.content[0])){ %>
+    <% item.content[0].forEach(function (listItem, i) { %>
+      <div class="story-body-ul__container">
+        <p class="story-body-ul__index">&bull;</p>
+        <li class="story-body-ul__li"><%- listItem %></li>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <% item.content.forEach(function (listItem, i) { %>
+      <div class="story-body-ul__container">
+        <p class="story-body-ul__index">&bull;</p>
+        <li class="story-body-ul__li"><%- listItem %></li>
+      </div>
+    <% }) %>
+  <% } %>
+</ul>
