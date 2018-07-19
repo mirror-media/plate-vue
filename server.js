@@ -190,6 +190,7 @@ function render (req, res, next) {
     }
   })
 }
+app.use('/story/amp', require('./api/middle/story/index.amp'))
 
 app.get('*', isProd ? render : (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
