@@ -1,7 +1,7 @@
 <amp-ad
   class="app-ads"
-  width="<%= AMPAds.DFPUnits[pos].dimensions.width %>"
-  height="<%= AMPAds.DFPUnits[pos].dimensions.height %>"
+  width="<%= _.get(AMPAds, [ 'DFPUnits', pos, 'dimensions', 'width' ], 0) %>"
+  height="<%= _.get(AMPAds, [ 'DFPUnits', pos, 'dimensions', 'height' ], 0) %>"
   type="doubleclick"
-  data-slot="/<%= AMPAds.DFP_ID %>/<%= AMPAds.DFPUnits[pos].aduid %>">
+  data-slot="/<%= AMPAds.DFP_ID %>/<%= _.get(AMPAds, [ 'DFPUnits', pos, 'aduid' ], '') %>">
 </amp-ad>
