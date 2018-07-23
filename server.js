@@ -213,15 +213,15 @@ module.exports = {
 memwatch.on('leak', function(info) {
   const growth = formatMem(info.growth)
   const mem = process.memoryUsage()
-  console.log('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
-  console.log('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed))
+  console.error('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
+  console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed))
 })
 memwatch.on('stats', function(stats) {
   const estBase = formatMem(stats.estimated_base)
   const currBase = formatMem(stats.current_base)
   const min = formatMem(stats.min)
   const max = formatMem(stats.max)
-  console.log('GC STATs:', [
+  console.error('GC STATs:', [
     'num_full_gc ' + stats.num_full_gc,
     'num_inc_gc ' + stats.num_inc_gc,
     'heap_compactions ' + stats.heap_compactions,
@@ -233,7 +233,7 @@ memwatch.on('stats', function(stats) {
   ].join(', '))
   if (stats.current_base > maxMemUsageLimit) {
     for (let i = 0; i < 10; i += 1) {
-      console.log('MEMORY WAS WUNNING OUT')
+      console.error('MEMORY WAS WUNNING OUT')
     } 
     /**
      * kill this process gracefully
@@ -243,6 +243,6 @@ memwatch.on('stats', function(stats) {
     }, 1000)
     killTimer.unref()
     server.close()
-    console.log(`GOING TO KILL PROCESS IN 1 SECOND(At ${(new Date).toString()})`)
+    console.error(`GOING TO KILL PROCESS IN 1 SECOND(At ${(new Date).toString()})`)
   }
 })

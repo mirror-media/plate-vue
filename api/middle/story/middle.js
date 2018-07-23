@@ -77,7 +77,7 @@ const fetchStory = (req, res, next) => {
         res.status(status).send(error)
         if (status !== 404) {
           console.error(`>>> Error occurred during fetching data from api.`)
-          console.error(`>>> ${url}`)
+          console.error(`>>> ${req.url}`)
           console.error(error)  
         } else {
           console.error(`Not Found: ${url}`)
