@@ -1,12 +1,17 @@
 <template>
-  <div class="content-image" :class="`img-${id}`">
+  <div class="content-image" :class="`img-${id}`" @click="openLightBox">
     <span class="thumbnail" v-show="!isVirtualImgLoaded"><img src="/public/icon/loading.gif" :alt="caption"></span>
     <span class="thumbnail" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
     <div class="caption" v-text="caption"></div>
+    <div class="lightbox" v-show="isLightboxActive">
+      <div class="lightbox-close" @click="closeLightBox"></div>
+      <img class="lightbox-img" :class="{ loading: !isLightboxImgLoaded }" src="/public/icon/loading.gif" ref="lightboxImg">
+    </div>
   </div>
 </template>
 <script>
   import verge from 'verge'
+  import preventScroll from 'prevent-scroll'  
   import { currentYPosition, elmYPosition, } from 'kc-scroll'
   import { get, } from 'lodash'
   
@@ -22,11 +27,17 @@
       return {
         id: Date.now().toString(),
         images: {},
+        isLightboxActive: false,
+        isLightboxImgLoaded: false,
         isVirtualImgLoaded: false,
         isVirtualImgCheckedOut: false,
       }
     },
     methods: {
+      closeLightBox (e) {
+        this.isLightboxActive = false
+        e.stopPropagation()
+      },       
       constructImages () {
         return {
           desktop: get(this.image, 'desktop.url', get(this.image, 'image.url', '/public/notImage.png')),
@@ -35,6 +46,7 @@
           tiny: get(this.image, 'tiny.url', get(this.image, 'image.url', '/public/notImage.png')),
         }
       },
+      get,
       lazyLoad () {
         const lazy_img = document.createElement('img')
         lazy_img.onload = () => {
@@ -49,8 +61,18 @@
           get(this.images, 'desktop') + ' 2000w'
         )
         lazy_img.setAttribute('src', get(this.images, 'desktop'))
-      },    
-      get,
+      },  
+      lazyLoadLightboxImg () {
+        const img = new Image()
+        img.onload = () => {
+          this.$refs[ 'lightboxImg' ].setAttribute('src', img.src)
+          this.isLightboxImgLoaded = true
+        }
+        img.src = get(this.images, 'desktop')
+      },
+      openLightBox () {
+        this.isLightboxActive = true
+      }, 
     },
     mounted () {
       this.images = this.constructImages()
@@ -64,6 +86,7 @@
           this.lazyLoad()
         }
       })
+      preventScroll.off()
     },
     props: {
       viewport: {
@@ -78,15 +101,66 @@
         debug('Mutation detected: image', this.image)
         this.isVirtualImgLoaded = false
         this.isVirtualImgCheckedOut = false
+        this.isLightboxActive = false
+        this.isLightboxImgLoaded = false
         const firstChild = this.$refs[ 'lazyImg' ].firstChild
         firstChild && this.$refs[ 'lazyImg' ].removeChild(firstChild)
         this.images = this.constructImages()
-        // this.lazyLoad()
+        preventScroll.off()
+      },
+      isLightboxActive () {
+        if (this.isLightboxActive) {
+          preventScroll.on()
+          if (!this.isLightboxImgLoaded) {
+            this.lazyLoadLightboxImg()
+          }
+        } else {
+          preventScroll.off()
+        }
+        debug('Mutation detected: isLightboxActive', this.isLightboxActive)          
       },
     },    
   }
 </script>
 <style lang="stylus" scoped>
+  .lightbox
+    justify-content center
+    align-items center
+    width 100vw
+    height 100vh
+    background-color rgba(0,0,0,.7)
+    position fixed
+    top 0
+    left 0
+    z-index 99999
+    box-sizing border-box
+    display flex
+    justify-content center
+    align-items center
+
+    &-img
+      max-height 90vh
+      max-width 90vw
+      z-index 100002
+      object-fit contain
+      object-position center
+      &.loading
+        height 20%
+        width 20%
+
+    &-close
+      background-image url(/public/icon/close.png)
+      background-size contain
+      position absolute
+      top 10px
+      right 10px
+      width 20px
+      height 20px
+      z-index 100002
+
+      &:hover
+        filter brightness(200%)
+
   .content-image
     clear both
     margin 1.5em 0
