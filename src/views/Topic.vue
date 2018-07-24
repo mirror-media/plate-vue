@@ -335,9 +335,15 @@ export default {
       return `${SITE_URL}/topic/${this.currArticleSlug}/`
     },
     autoScrollArticles () {
+      if (this.topicType === 'wide') {
+        return _.take(this.articles, 3)
+      }
       return _.take(this.articles, 12)
     },
     autoScrollArticlesLoadMore () {
+      if (this.topicType === 'wide') {
+        return _.slice(this.articles, 3)
+      }
       return _.slice(this.articles, 12)
     },
     customCSS () {
@@ -507,6 +513,8 @@ export default {
         fetchAllArticlesByUuid(this.$store, this.uuid, TOPIC, false)
       } else if (this.topicType === 'group') {
         fetchAllArticlesByUuid(this.$store, this.uuid, TOPIC, true)
+      } else if (this.topicType === 'wide') {
+        fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false, 3)
       } else {
         fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false)
       }
@@ -527,7 +535,7 @@ export default {
     window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
 
     window.addEventListener('resize', this.updateViewport)
-    if (this.topicType === 'list') { window.addEventListener('scroll', this.scrollHandler) }
+    if (this.topicType === 'list' || this.topicType === 'wide') { window.addEventListener('scroll', this.scrollHandler) }
     if (this.topicType === 'timeline') { window.addEventListener('scroll', this.timelineScrollHandler) }
   },
   methods: {
@@ -568,11 +576,12 @@ export default {
       }
     },
     loadMore () {
+      const maxResult = this.topicType === 'wide' ? 3 : MAXRESULT
       let currentPage = this.page
       currentPage += 1
       this.loading = true
 
-      fetchArticlesByUuid(this.$store, this.uuid, TOPIC, currentPage, false)
+      fetchArticlesByUuid(this.$store, this.uuid, TOPIC, currentPage, false, maxResult)
       .then(() => {
         this.loading = false
         this.canScrollLoadMord = true
@@ -591,7 +600,6 @@ export default {
         const articleListBottom = this.elmYPosition('#articleList') + this.$refs.articleList.$el.offsetHeight
         this.articleListAutoScrollHeight = this.$refs.articleListAutoScroll.$el.offsetHeight
         const articleListAutoScrollBottom = this.elmYPosition('#articleListAutoScroll') + this.articleListAutoScrollHeight
-
         if (this.hasMore && (this.page === 1) && this.canScrollLoadMord && currentBottom > (articleListBottom - 300)) {
           this.canScrollLoadMord = false
           this.loadMore()
@@ -657,6 +665,9 @@ export default {
         } else if (topicType === 'timeline') {
           Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
           .then(next())
+        } else if (topicType === 'wide') {
+          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid) ])
+          .then(next())
         } else {
           Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
           .then(next())
@@ -672,6 +683,9 @@ export default {
         .then(next())
       } else if (topicType === 'timeline') {
         Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
+        .then(next())
+      } else if (topicType === 'wide') {
+        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid) ])
         .then(next())
       } else {
         Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
@@ -701,7 +715,7 @@ export default {
       this.$forceUpdate()
       if (process.env.VUE_ENV === 'client') {
         window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
-        if (this.topicType === 'list') {
+        if (this.topicType === 'list' || this.topicType === 'wide') {
           window.removeEventListener('scroll', this.scrollHandler)
           window.addEventListener('scroll', this.scrollHandler)
         } else {
@@ -793,6 +807,36 @@ export default {
     background-color #fff
 
 @media (min-width: 600px)
+  .topic-view.wide
+    .listArticleBlock
+      display flex
+      width 100%
+      &__figure
+        width 50%
+        padding-top 33.33%
+        &--colorBlock
+          display none
+      &__content
+        display flex
+        flex-direction column
+        align-items flex-start
+        width 50%
+        padding 40px 30px 30px
+        h2
+          min-height 0
+          padding 0
+          font-size 1.6rem
+          font-weight bold
+        p
+          margin-top 1em
+          font-size 1.2rem
+        &--colorBlock
+          display block
+          margin-bottom 1em
+          padding .5em
+          color #fff
+          letter-spacing 1px
+          
   .topicTimeline
     &__projects
       padding 5% 10%
