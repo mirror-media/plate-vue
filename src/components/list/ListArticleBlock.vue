@@ -66,6 +66,7 @@
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
+        <div class="listArticleBlock__content--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
         <h2><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></router-link></h2>
         <p><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
       </div>
@@ -258,6 +259,8 @@ export default {
       line-height 1.5
       a
         color #999
+    &--colorBlock
+      display none
   &__audio
     p
       text-align right
