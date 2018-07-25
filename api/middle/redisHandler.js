@@ -91,7 +91,7 @@ class TimeoutHandler {
 }
 
 const redisFetching = (url, callback) => {
-  const timeoutHandler = new TimeoutHandler(callback)
+  let timeoutHandler = new TimeoutHandler(callback)
   redisPoolRead.get(decodeURIComponent(url), (error, data) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
@@ -110,10 +110,11 @@ const redisFetching = (url, callback) => {
     })
     if (timeoutHandler.timeout <= 0) { return }
     callback && callback({ error, data })
+    timeoutHandler = null
   })
 }
 const redisWriting = (url, data, callback) => {
-  const timeoutHandler = new TimeoutHandler(callback)
+  let timeoutHandler = new TimeoutHandler(callback)
   redisPoolWrite.set(decodeURIComponent(url), data, (err) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
@@ -128,15 +129,17 @@ const redisWriting = (url, data, callback) => {
         }
       })
     }
+    timeoutHandler = null
   })
 }
 const redisFetchingRecommendNews = (field, callback) => {
-  const timeoutHandler = new TimeoutHandler(callback)
+  let timeoutHandler = new TimeoutHandler(callback)
   redisPoolRecommendNews.send_command('MGET', [ ...field ], function (err, data) {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if (timeoutHandler.timeout <= 0) { return }
     callback && callback({ err, data })
+    timeoutHandler = null
   })
 }
 
