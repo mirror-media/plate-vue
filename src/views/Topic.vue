@@ -811,6 +811,10 @@ export default {
     .listArticleBlock
       display flex
       width 100%
+      margin 0 10px
+      & + .listArticleBlock
+        margin-top 40px
+        margin-bottom 0
       &__figure
         width 50%
         padding-top 33.33%
