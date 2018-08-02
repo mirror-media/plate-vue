@@ -120,7 +120,6 @@ const sendArticleData = (req, res, next) => {
 
     // For Ads usage:
     storyContentFirstTwoUnstyledParagraph: firstTwoUnstyledParagraph(get(res.articleData, [ 'content', 'apiData' ], [])),
-    storyAdTrace: get(res.articleData, 'adTrace', ''),
 
     storyContentAnnotation: composeAnnotation(get(find(get(res.articleData, [ 'content', 'apiData' ], []), [ 'type', 'annotation' ]), [ 'content' ], '')),
     storyRelateds: get(res.articleData, [ 'relateds' ], []),
