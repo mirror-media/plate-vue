@@ -159,7 +159,8 @@ function render (req, res, next) {
     title: '',
     meta: '',    
     url: req.url,
-    link: ''
+    link: '',
+    adTrace: '',
   }
 
   res.on('finish', function () {
