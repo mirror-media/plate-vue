@@ -18,6 +18,7 @@ const serverTitleMetaMixin = {
     const meta = metaSet.meta
     const title = metaSet.title
     const url = metaSet.url
+    const adTrace = metaSet.adTrace
     if (title) {
       this.$ssrContext.title = title
     }
@@ -29,6 +30,9 @@ const serverTitleMetaMixin = {
     }
     if (url) {
       this.$ssrContext.url = url
+    }
+    if (adTrace) {
+      this.$ssrContext.adTrace = adTrace
     }
   }
 }
@@ -49,12 +53,26 @@ const clientTitleMetaMixin = {
     const meta = metaSet.meta
     const title = metaSet.title
     const url = metaSet.url
+    const link = metaSet.link
+    const adTrace = metaSet.adTrace
+    const adTraceScripts = [ ...document.querySelectorAll('*[data-name="ad-trace"]') ]
+    adTraceScripts.map(node => node.remove())
     if (title) {
       document.querySelector('title').innerHTML = title
+    }
+    if (link) {
+      const amphtml = document.head.querySelector(`link[rel='amphtml']`)
+      amphtml && (amphtml.href = link)
     }
     if (url) {
       const alternate = document.head.querySelector(`link[rel='alternate']`)
       alternate && (alternate.href = url)
+    }
+    if (adTrace) {
+      const parser = new DOMParser()
+      const doc = parser.parseFromString(adTrace, "text/html")
+      const scripts = [ ...doc.querySelectorAll('*[data-name="ad-trace"]') ]
+      scripts.map(node => document.head.appendChild(node))
     }
     if (meta) {
       const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')
