@@ -1,13 +1,14 @@
 <template>
-  <p >
+  <div class="annotation">
     <span class='part-1' v-text="annotationPart1"></span>
     <span class='part-2 tooltip' :class="isActive" @mouseover="mouseover" @mouseout="mouseout" @touchstart="touchstart" @touchend="touchend">
       <span v-text="annotationPart2"></span>
       <span class="tooltiptext" v-text="annotationText" :style="annotationTextStyle"></span>
       <img src='/public/icon/info.png' style="height: 1.3rem; margin-left: 3px;">
     </span>
-    <span class='part-3' v-text="annotationPart3"></span>
-  </p>
+    <span v-if="!isPart3HasAnnotation" class='part-3' v-text="annotationPart3"></span>
+    <annotation v-if="isPart3HasAnnotation" class="recursive-annotation" :annotationStr="annotationPart3"></annotation>
+  </div>
 </template>
 <script>
 import _ from 'lodash'
@@ -26,19 +27,25 @@ export default {
     annotationPart3 () {
       return this.annotationComposer.annotationPart3
     },
+    isPart3HasAnnotation () {
+      return this.hasAnnotation(this.annotationPart3)
+    },
     annotationText () {
       return this.annotationComposer.annotationText
     },
     annotationComposer () {
-      const annotationContentStart = this.annotationStr.toString().indexOf('<!--__ANNOTATION__=')
-      const annotationContentEnd = this.annotationStr.toString().indexOf('-->')
-      const annotationContent = (annotationContentStart > -1 && annotationContentEnd > -1)
-        ? this.annotationStr.toString().substring(annotationContentStart + '<!--__ANNOTATION__='.length, annotationContentEnd) : '{}'
+      const annotationContentStart = this.annotationStr.toString().indexOf(this.annotationTextTagStart)
+      const annotationContentEnd = this.annotationStr.toString().indexOf(this.annotationTextTagEnd)
+
+      const annotationContent = this.hasAnnotation(this.annotationStr) ? this.annotationStr.toString().substring(annotationContentStart + '<!--__ANNOTATION__='.length, annotationContentEnd) : '{}'
+
       const annotationContentObj = JSON.parse(annotationContent)
+
       let paragraph = this.annotationStr.toString()
       if (_.get(annotationContentObj, [ 'text' ])) {
         paragraph = paragraph.replace(`--><!--${annotationContentObj.text}-->`, '')
       }
+
       return {
         annotationPart1: this.annotationStr.toString().substring(0, annotationContentStart),
         annotationPart2: annotationContentObj.text,
@@ -61,6 +68,8 @@ export default {
   },
   data () {
     return {
+      annotationTextTagStart: '<!--__ANNOTATION__=',
+      annotationTextTagEnd: '-->',
       annotationTextStyle: '',
       mouseovered: false
     }
@@ -81,11 +90,24 @@ export default {
     },
     touchend () {
       this.mouseovered = false
+    },
+    hasAnnotation (paragraph) {
+      const annotationContentStart = paragraph.toString().indexOf(this.annotationTextTagStart)
+      const annotationContentEnd = paragraph.toString().indexOf(this.annotationTextTagEnd)
+
+      return (annotationContentStart > -1 && annotationContentEnd > -1)
     }
   }
 }
 </script>
 <style lang="stylus">
+  .annotation
+    color #171717
+    font-size 18px
+    line-height 36px
+    margin 1.5em 0
+    text-align justify
+
   .tooltip
     position relative
     border-bottom 2px dotted black
@@ -118,5 +140,8 @@ export default {
 
       & > .tooltiptext
         visibility visible
+
+  .recursive-annotation
+    display inline
 
 </style>

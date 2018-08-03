@@ -1,0 +1,23 @@
+<amp-carousel 
+  class="story-body-carousel"
+  width="1.48"
+  height="1.2"
+  layout="responsive"
+  type="slides"
+  controls
+  loop
+>
+  <% item.content.forEach(function (slide) { %>
+    <figure class="story-body-carousel__figure">
+      <div class="story-body-carousel__image-container">
+        <amp-img
+          class="story-body-image__image"
+          src="<%= _.get(slide, [ 'mobile', 'url' ], '') %>"
+          layout="fill"
+        >
+        </amp-img>
+      </div>
+      <figcaption class="story-body-carousel__figcaption"><%- _.get(slide, 'description', '') %></figcaption>
+    </figure>
+  <% }) %>
+</amp-carousel>

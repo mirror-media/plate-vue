@@ -25,8 +25,7 @@
           } else {
             sbLoo.setAttribute('class', 'item mm-icon')
           }
-          if (window.shareBoxLeft && window.shareBoxTop) {
-          } else {
+          if (!window.shareBoxLeft || !window.shareBoxTop) {
             window.shareBoxTop = header.offsetTop + header.offsetHeight
             window.shareBoxLeft = article.offsetLeft - shareBox.offsetWidth
             shareBox.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)

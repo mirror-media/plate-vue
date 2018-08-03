@@ -69,16 +69,13 @@
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
           <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='false'></article-list>
-          <!--<section class="container">
-            <more v-if="hasMore" v-on:loadMore="loadMore"></more>
-          </section>-->
-          <loading :show="loading"></loading>
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
           <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
             v-show="hasAutoScroll"></article-list>
+          <loading :show="loading"></loading>
           <!--<section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
           </section>-->
@@ -93,7 +90,8 @@
 <script>
 
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { FB_APP_ID, FB_PAGE_ID, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { camelize } from 'humps'
 import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
@@ -281,11 +279,13 @@ export default {
     const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
     const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
     if (!metaTitle && process.env.VUE_ENV === 'server') {
       return this.pageNotFoundHandler()
     }
 
     return {
+      url: relUrl,
       title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
         <meta name="mm-opt" content="">
@@ -335,9 +335,15 @@ export default {
       return `${SITE_URL}/topic/${this.currArticleSlug}/`
     },
     autoScrollArticles () {
+      if (this.topicType === 'wide') {
+        return _.take(this.articles, 3)
+      }
       return _.take(this.articles, 12)
     },
     autoScrollArticlesLoadMore () {
+      if (this.topicType === 'wide') {
+        return _.slice(this.articles, 3)
+      }
       return _.slice(this.articles, 12)
     },
     customCSS () {
@@ -418,7 +424,7 @@ export default {
       return this.dfp !== '' || this.mobileDfp !== ''
     },
     hasMore () {
-      return _.get(this.articles, [ 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'total' ], 0)
+      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items', 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'total' ], 0)
     },
     mobileDfp () {
       return _.get(this.topic, [ 'mobileDfp' ], null)
@@ -430,7 +436,7 @@ export default {
       return this.$route.params.topicId === TOPIC_PROTEST_ID
     },
     page () {
-      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuidh, 'meta', 'page' ], PAGE)
+      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'page' ], PAGE)
     },
     pageStyle () {
       return _.get(this.topic, [ 'pageStyle' ])
@@ -507,6 +513,8 @@ export default {
         fetchAllArticlesByUuid(this.$store, this.uuid, TOPIC, false)
       } else if (this.topicType === 'group') {
         fetchAllArticlesByUuid(this.$store, this.uuid, TOPIC, true)
+      } else if (this.topicType === 'wide') {
+        fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false, 3)
       } else {
         fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false)
       }
@@ -527,7 +535,7 @@ export default {
     window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
 
     window.addEventListener('resize', this.updateViewport)
-    if (this.topicType === 'list') { window.addEventListener('scroll', this.scrollHandler) }
+    if (this.topicType === 'list' || this.topicType === 'wide') { window.addEventListener('scroll', this.scrollHandler) }
     if (this.topicType === 'timeline') { window.addEventListener('scroll', this.timelineScrollHandler) }
   },
   methods: {
@@ -568,11 +576,12 @@ export default {
       }
     },
     loadMore () {
+      const maxResult = this.topicType === 'wide' ? 3 : MAXRESULT
       let currentPage = this.page
       currentPage += 1
       this.loading = true
 
-      fetchArticlesByUuid(this.$store, this.uuid, TOPIC, currentPage, false)
+      fetchArticlesByUuid(this.$store, this.uuid, TOPIC, currentPage, false, maxResult)
       .then(() => {
         this.loading = false
         this.canScrollLoadMord = true
@@ -584,14 +593,13 @@ export default {
       e.code = '404'
       throw e
     },
-    scrollHandler (e) {
+    scrollHandler () {
       if (this.$refs.articleList) {
         const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
         const currentBottom = this.currentYPosition() + vh
         const articleListBottom = this.elmYPosition('#articleList') + this.$refs.articleList.$el.offsetHeight
         this.articleListAutoScrollHeight = this.$refs.articleListAutoScroll.$el.offsetHeight
         const articleListAutoScrollBottom = this.elmYPosition('#articleListAutoScroll') + this.articleListAutoScrollHeight
-
         if (this.hasMore && (this.page === 1) && this.canScrollLoadMord && currentBottom > (articleListBottom - 300)) {
           this.canScrollLoadMord = false
           this.loadMore()
@@ -602,7 +610,7 @@ export default {
         }
       }
     },
-    timelineScrollHandler (e) {
+    timelineScrollHandler () {
       const windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       const timelineBodyBriefHeight = document.querySelector('.timelineBody__brief').offsetHeight
       const activityBoxHeight = document.querySelector('.timelineMenu-activityBox').offsetHeight
@@ -657,6 +665,9 @@ export default {
         } else if (topicType === 'timeline') {
           Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
           .then(next())
+        } else if (topicType === 'wide') {
+          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid) ])
+          .then(next())
         } else {
           Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
           .then(next())
@@ -672,6 +683,9 @@ export default {
         .then(next())
       } else if (topicType === 'timeline') {
         Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
+        .then(next())
+      } else if (topicType === 'wide') {
+        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid) ])
         .then(next())
       } else {
         Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
@@ -701,7 +715,7 @@ export default {
       this.$forceUpdate()
       if (process.env.VUE_ENV === 'client') {
         window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
-        if (this.topicType === 'list') {
+        if (this.topicType === 'list' || this.topicType === 'wide') {
           window.removeEventListener('scroll', this.scrollHandler)
           window.addEventListener('scroll', this.scrollHandler)
         } else {
@@ -793,6 +807,40 @@ export default {
     background-color #fff
 
 @media (min-width: 600px)
+  .topic-view.wide
+    .listArticleBlock
+      display flex
+      width 100%
+      margin 0 10px
+      & + .listArticleBlock
+        margin-top 40px
+        margin-bottom 0
+      &__figure
+        width 50%
+        padding-top 33.33%
+        &--colorBlock
+          display none
+      &__content
+        display flex
+        flex-direction column
+        align-items flex-start
+        width 50%
+        padding 40px 30px 30px
+        h2
+          min-height 0
+          padding 0
+          font-size 1.6rem
+          font-weight bold
+        p
+          margin-top 1em
+          font-size 1.2rem
+        &--colorBlock
+          display block
+          margin-bottom 1em
+          padding .5em
+          color #fff
+          letter-spacing 1px
+          
   .topicTimeline
     &__projects
       padding 5% 10%

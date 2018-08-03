@@ -1,0 +1,17 @@
+<ol class="story-body-ol">
+  <% if (_.isArray(item.content[0])){ %>
+    <% item.content[0].forEach(function (listItem, i) { %>
+      <div class="story-body-ol__container">
+        <p class="story-body-ol__index"><%= i + 1 %>.</p>
+        <li class="story-body-ol__li"><%- listItem %></li>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <% item.content.forEach(function (listItem, i) { %>
+      <div class="story-body-ol__container">
+        <p class="story-body-ol__index"><%= i + 1 %>.</p>
+        <li class="story-body-ol__li"><%- listItem %></li>
+      </div>
+    <% }) %>
+  <% } %>
+</ol>

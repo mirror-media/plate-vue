@@ -9,22 +9,41 @@
         <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
-          <article-video :video="heroVideo" class="heroimg" />
-          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
+          <HeroVideo
+            :abIndicator="abIndicator"
+            :isAd="isAd"
+            :viewport="viewport"
+            :sectionMap="sectionMap"
+            :sectionId="sectionId"
+            :articleData="articleData"
+            :heroCaption="heroCaption"
+            :video="heroVideo"></HeroVideo>
         </div>
-        <div class="article-heromedia" v-else-if="heroImage">
-          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" v-lazy="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-          :data-srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
-          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
-        </div>
+        <HeroImage v-else
+          :abIndicator="abIndicator"
+          :isAd="isAd"
+          :viewport="viewport"
+          :sectionMap="sectionMap"
+          :sectionId="sectionId"
+          :articleData="articleData"
+          :heroCaption="heroCaption"
+          :heroImage="heroImage"></HeroImage>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist" :projlistData="projectlist" :viewport="viewport">
+          <article-body
+            :abIndicator="abIndicator"
+            :articleData="articleData"
+            :isAd="isAd"
+            :poplistData="popularlist"
+            :projlistData="projectlist"
+            :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <article-aside-fixed :abIndicator="abIndicator" :projects="projectlist">
+              <latest-list
+                v-if="ifRenderAside"
+                :latest="latestList"
+                :currArticleSlug="currArticleSlug"
+                :sectionId="getValue(articleData, [ 'sections', 0, 'id' ])"></latest-list>
+              <article-aside-fixed :projects="projectlist">
                 <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
                 <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
                   <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
@@ -38,18 +57,29 @@
                 </pop-list-vert>
               </article-aside-fixed>
             </aside>
-            <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="PCAROOP" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config" v-if="dfpMode === 'dev' && sectionId === '596441604bbe120f002a3197'" />
+            <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config" v-else />
+            <span id="innity-in-post" extClass="mobile-hide" slot="dfpad-AR1" v-if="dfpMode === 'dev'"></span>
+            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :config="props.config"/>
+            <span id="innity-in-post" extClass="mobile-only" slot="dfpad-AR1" v-if="dfpMode === 'dev'"></span>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)" slot="relatedlistBottom" :isAd="isAd" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
+            <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+              slot="relatedlistBottom" 
+              :abIndicator="abIndicator"
+              :isAd="isAd"
+              :sectionId="sectionId"
+              :relateds="relateds"
+              :currArticleId="currArticleId"
+              :recommends="recommendlist"
+              :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
@@ -58,7 +88,8 @@
           </article-body>
           <div class="article_footer">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config"/>
+            <vue-dfp :is="props.vueDfp" pos="MBFTOOP" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" v-if="dfpMode === 'dev' && sectionId === '596441d04bbe120f002a319a'" />
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" v-else />
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
@@ -93,9 +124,10 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID } from '../constants'
+  import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
-  import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
+  import { consoleLogOnDev, currEnv, getImage, getTruncatedVal, lockJS, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
@@ -108,6 +140,8 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
+  import HeroImage from '../components/article/HeroImage.vue'
+  import HeroVideo from '../components/article/HeroVideo.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
@@ -121,10 +155,12 @@
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
 
+  const debug = require('debug')('CLIENT:VIEWS:article')
   const fetchArticles = (store, slug) => {
+    debug('Going to fetch article data.', slug)
     return store.dispatch('FETCH_ARTICLES', {
       params: {
-        related: 'full',
+        // related: 'full',
         clean: 'content',
         where: {
           'slug': {
@@ -168,18 +204,6 @@
     return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   }
 
-  const fetchRecommendList = (store, id) => {
-    return store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
-      params: {
-        id: id
-      }
-    })
-  }
-
-  const fetchLatestArticle = (store, params) => {
-    return store.dispatch('FETCH_LATESTARTICLE', { params: params })
-  }
-
   const fetchSSRData = (store) => {
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
   }
@@ -189,20 +213,21 @@
   }
 
   const fetchData = (store) => {
-    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug).then(() => {
-      const id = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { 'slug': store.state.route.params.slug }), [ 'id' ], '')
-      return fetchRecommendList(store, id)
-    }) ])
+    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
   }
 
   export default {
     name: 'article-view',
     preFetch: fetchData,
-    asyncData ({ store, route: { params: { id }}}) {
-      return fetchData(store)
+    asyncData ({ store }) { // asyncData ({ store, route: { params: { id }}})
+      debug('RUN asyncData')
+      return !process.browser ? fetchData(store) : Promise.resolve()
     },
     mixins: [ titleMetaMixin ],
     metaSet () {
+      debug('About to change the metaSet.')
+      debug('this.articleData.slug', this.articleData.slug)
+      debug('process.env.VUE_ENV', process.env.VUE_ENV)
       if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
         const e = new Error()
         e.massage = 'Page Not Found'
@@ -210,6 +235,7 @@
         throw e
       }
       const {
+        adTrace = '',
         brief = {},
         categories = {},
         heroImage = {},
@@ -227,7 +253,7 @@
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const robotsValue = isAdult ? 'noindex' : 'index'
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o, i) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
+      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
@@ -236,6 +262,7 @@
         abIndicator = this.getMmid()
       }
       return {
+        url: `${SITE_MOBILE_URL}/story/${slug}/`,
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
           <meta name="mm-opt" content="article${abIndicator}">
@@ -259,51 +286,23 @@
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
         `,
-        link: `<link rel="canonical" href="${SITE_URL}/story/${slug}/" />`
-      }
-    },
-    beforeRouteEnter (to, from, next) {
-      if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
-        next(vm => {
-          const _targetArticle = _.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
-          if (!_targetArticle) {
-            Promise.all([
-              fetchArticles(vm.$store, to.params.slug).then(() => {
-                const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
-                return fetchLatestArticle(vm.$store, {
-                  sort: '-publishedDate',
-                  where: {
-                    'sections': _.get(sections, [ 0, 'id' ])
-                  }
-                })
-              }).then(() => {
-                const id = _.get(_.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { 'slug': vm.$store.state.route.params.slug }), [ 'id' ], '')
-                return fetchRecommendList(vm.$store, id)
-              }),
-              fetchPop(vm.$store)
-            ])
-          }
-        })
-      } else {
-        next()
+        link: `<link rel="amphtml" href="${SITE_URL}/story/amp/${slug}/" />`,
+        adTrace: adTrace
       }
     },
     beforeRouteUpdate (to, from, next) {
-      fetchArticles(this.$store, to.params.slug).then(() => {
-        const sections = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
-        return fetchLatestArticle(this.$store, {
-          sort: '-publishedDate',
-          where: {
-            'sections': _.get(sections, [ 0, 'id' ])
-          }
-        }).then(() => {
-          next()
+      debug('beforeRouteUpdate')
+      fetchArticles(this.$store, to.params.slug)
+        .then(() => {
+          const thisItem = _.find(_.get(this.$store, 'state.articles.items'), { 'slug': to.params.slug })
+          const theComingArticleSlug = _.get(thisItem, 'slug')
+
+          debug('this.articleData', theComingArticleSlug)
+          if (!theComingArticleSlug) { location.replace('/404') }
+          this.routeUpateReferrerSlug = _.get(from, 'params.slug', 'N/A')
+          return
         })
-      }).then(() => {
-        const id = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
-        this.routeUpateReferrerSlug = _.get(from, [ 'params', 'slug' ], 'N/A')
-        return fetchRecommendList(this.$store, id)
-      })
+        .then(() => next())
     },
     beforeRouteLeave (to, from, next) {
       if (process.env.VUE_ENV === 'client') {
@@ -315,13 +314,7 @@
       next()
     },
     beforeMount () {
-      const { sections } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
-      fetchLatestArticle(this.$store, {
-        sort: '-publishedDate',
-        where: {
-          'sections': _.get(sections, [ 0, 'id' ])
-        }
-      })
+      debug('beforeMount')
       fetchPop(this.$store)
       fetchCommonData(this.$store)
       fetchPartners(this.$store)
@@ -345,6 +338,8 @@
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
+      HeroImage,
+      HeroVideo,
       RelatedListWithRecommendList
     },
     data () {
@@ -359,6 +354,7 @@
         isYahooAdLoaded: false,
         microAds,
         routeUpateReferrerSlug: 'N/A',
+        sectionMap: SECTION_MAP,
         showDfpCoverAdFlag: false,
         showDfpCoverAd2Flag: false,
         showDfpCoverAdVponFlag: false,
@@ -381,6 +377,9 @@
       },
       currArticleSlug () {
         return this.$store.state.route.params.slug
+      },
+      currArticleId () {
+        return _.get(_.find(_.get(this.$store, 'state.articles.items'), { 'slug': this.$store.state.route.params.slug }), 'id', '')
       },
       commonData () {
         return this.$store.state.commonData
@@ -466,14 +465,14 @@
         return _.get(this.articleData, [ 'heroCaption' ], '')
       },
       heroImage () {
-        return _.get(this.articleData, [ 'heroImage' ])
+        return _.get(this.articleData, [ 'heroImage' ]) || { image: {}, }
       },
       heroVideo () {
-        const { heroImage, heroVideo, ogImage } = this.articleData
-        const heroImgUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const poster = ogImgUrl || (heroImgUrl || '/public/notImage.png')
-        return (heroVideo && heroVideo.video) ? Object.assign(_.get(heroVideo, [ 'video' ], {}), { id: _.get(heroVideo, [ 'id' ], '') }, { poster }) : heroVideo
+        const { heroVideo } = this.articleData
+        const poster = getImage(this.articleData)
+        return (heroVideo && heroVideo.video)
+          ? Object.assign(_.get(heroVideo, [ 'video' ], {}), { id: _.get(heroVideo, [ 'id' ], '') }, { poster })
+          : heroVideo
       },
       ifLockJS () {
         return _.get(this.articleData, [ 'lockJS' ])
@@ -762,15 +761,6 @@
       background-color #fff
       max-width 1160px
       position relative
-
-      .heroimg
-        width 100%
-        &[lazy=loading]
-          object-fit contain
-          height 150px
-      .heroimg-caption
-        margin-top 5px
-        padding 5px 50px 0
     
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
@@ -816,11 +806,6 @@
 
   @media (min-width 0px) and (max-width 499px)
     .article-container
-      .article-heromedia
-        .heroimg-caption
-          padding 5px 25px 0
-          line-height 1.3rem
-      
       .article
         padding 30px 0 0
 
@@ -843,11 +828,7 @@
       display none !important
 
   @media (min-width 768px) and (max-width 1199px)
-    .article-container
-      .article-heromedia
-        .heroimg-caption
-          text-align center
-      
+    .article-container      
       .article
         padding 100px 50px 0
 

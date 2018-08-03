@@ -1,13 +1,12 @@
 <template>
   <div class="mmtv-aside">
-    <div class="mmtv-aside--title"><h2 v-text="mmtvTitle"></h2></div>
-    <div class="mmtv-aside--curtain" @click="toggleLightbox"></div>
+    <div class="mmtv-aside--title" v-if="showTitle"><h2 v-text="$t('mmtv')"></h2></div>
+    <div class="mmtv-aside--curtain" id="mod_curtain" @click="toggleLightbox"></div>
     <div class="mmtv-aside--container" :class="containerClass" v-html="mediaDataEmbed" ref="embed-code" @click="toggleLightbox"></div>
   </div>
 </template>
 <script>
   import _ from 'lodash'
-  import { MM_TV_CH } from '../constants/'
   export default {
     computed: {
       containerClass () {
@@ -23,7 +22,6 @@
       return {
         isGaEventSentYet: false,
         showAsLightbox: false,
-        mmtvTitle: MM_TV_CH
       }
     },
     name: 'mmtv-aside',
@@ -38,7 +36,17 @@
       }
     },
     mounted () {},
-    props: [ 'mediaData' ]
+    props: {
+      mediaData: {
+        default: () => ({})
+      },
+      showTitle: {
+        default: () => true
+      },
+      abIndicator: {
+        default: () => ''
+      }
+    }
   }
 </script>
 <style lang="stylus">

@@ -37,9 +37,9 @@ export function createRouter () {
       { path: '/activity/:activityId/', component: Activity },
       { path: '/activity/:activityId/:topicId', component: Activity },
       { path: '/author/:authorId/', component: List },
-      { path: '/category/:title', component: List },
+      // { path: '/category/:title', component: List },
       { path: '/external/:name', component: External },
-      { path: '/externals/:name', component: List },
+      // { path: '/externals/:name', component: List },
       {
         path: '/story/:slug',
         component: Article
@@ -53,7 +53,7 @@ export function createRouter () {
       // { path: '/homeb', component: HomeB },
       { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
       { path: '/search/:keyword', component: Search },
-      { path: '/section/:title', component: List },
+      { path: '/section/:title', component: List, alias: [ '/category/:title', '/externals/:title' ] },
       { path: '/timeline/:title', component: TimelineView },
       { path: '/tag/:tagId', component: List },
       { path: '/topic/:topicId', component: Topic },

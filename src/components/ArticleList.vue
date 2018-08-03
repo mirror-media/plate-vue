@@ -42,7 +42,7 @@ export default {
   &.container
     flex-direction column
     flex-wrap wrap
-    margin-top .5em
+    margin-top 20px
 
   &__dfp
     &--l1
@@ -55,6 +55,10 @@ export default {
   background-color #f4f1e9
   box-shadow 5px 5px 5px #bcbcbc
   transition all .3s ease-in-out
+
+#articleListAutoScroll
+  .listArticleBlock:last-child
+    margin-bottom 40px
 
 @media (min-width: 600px)
   .articleList

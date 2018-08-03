@@ -1,0 +1,28 @@
+<%# landscape image %>
+<% if (_.get(item, [ 'content', 0, 'mobile', 'width' ], 0) >= _.get(item, [ 'content', 0, 'mobile', 'height' ], 0)) { %>
+  <figure class="story-body-image">
+    <amp-img
+      class="story-body-image__image"
+      src="<%= _.get(item, [ 'content', 0, 'mobile', 'url' ], '') %>"
+      width="1.48"
+      height="1"
+      layout="responsive"
+    >
+    </amp-img>
+    <figcaption class="story-body-image__figcaption"><%= _.get(item, [ 'content', 0, 'description' ], '') %></figcaption>
+  </figure>
+<%# portrait image %>
+<% } else { %>
+  <figure class="story-body-image">
+    <div class="story-body-image__image-container">
+      <%# portrait image for testing: https://www.mirrormedia.com.tw/assets/images/20180314172516-ea09d089448fb080a82fef04ffdde9d6-mobile.jpg %>
+      <amp-img
+        class="story-body-image__image"
+        src="<%= _.get(item, [ 'content', 0, 'mobile', 'url' ], '') %>"
+        layout="fill"
+      >
+      </amp-img>
+    </div>
+    <figcaption class="story-body-image__figcaption"><%= _.get(item, [ 'content', 0, 'description' ], '') %></figcaption>
+  </figure>
+<% } %>

@@ -46,6 +46,7 @@
   <meta name="mobile-web-app-capable" content="yes" fixed='true'>
   <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" fixed='true'>
   <meta name="msvalidate.01" content="B035299087E538EBEC13FDDFEA238C8C" fixed='true'>
+  <link rel="alternate" href="{{ url }}" hreflang="x" />
   <link rel="icon" sizes="32x32" type="image/png" href="/public/favicon-32x32.png">
   <link rel="icon" sizes="16x16" type="image/png" href="/public/favicon-16x16.png">
   <link rel="icon" sizes="192x192" href="/public/favicon-192x192.png">
@@ -55,6 +56,26 @@
   <meta property="article:author" content="https://www.facebook.com/mirrormediamg/" fixed='true'>
   <meta property="article:publisher" content="https://www.facebook.com/mirrormediamg/" fixed='true'>
   <link rel="manifest" href="/manifest.json">
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+  <!-- GDPR -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+  <script>
+    window.addEventListener("load", function(){
+    window.cookieconsent.initialise({
+      "palette": {
+        "popup": { "background": "#252e39" },
+        "button": { "background": "#14a7d0" }
+      },
+      "theme": "edgeless",
+      "content": {
+        "message": "「本網站使用 cookie 及相關技術分析來改善使用者體驗。」",
+        "dismiss": "我知道了！",
+        "link": "了解更多",
+        "href": "https://www.mirrormedia.mg/story/privacy/"
+      }
+    })});
+  </script>
+  <!-- End GDPR -->
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -103,6 +124,7 @@
         background-color: #000;
     }
   </style>
+  {{{ adTrace }}}
 </head>
 
 <body>

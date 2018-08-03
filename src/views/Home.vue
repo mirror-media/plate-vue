@@ -11,29 +11,50 @@
           <main>
             <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport < 1200 && hasEventEmbedded"></MirrorMediaTVAside>
-            <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2>焦點新聞</h2></div>
+            <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
+            <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2 v-text="$t('homepage.focus')"></h2></div>
             <div class="focusNewsContainer">
-              <LatestArticleAside :groupedArticle="o" :viewport="viewport" :needStick="false" v-show="viewport < 1200" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+              <LatestArticleAside v-show="viewport < 1200" v-for="(o, i) in groupedArticle" target="_blank"
+                :groupedArticle="o"
+                :viewport="viewport"
+                :needStick="false"
+                :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
+                :class="{ last: i === (groupedArticle.length - 1), first: i === 0}"
+                :key="`${i}-groupedlist`" />
             </div>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
-            <LatestArticleMain id="latestArticle" :latestList="latestArticle" :viewport="viewport" target="_blank"></LatestArticleMain>
+            <LatestArticleMain id="latestArticle" target="_blank"
+              :latestList="latestArticle" 
+              :viewport="viewport"
+              :abIndicator="abIndicator"></LatestArticleMain>
           </main>
           <aside v-show="viewport >= 1200">
-            <MirrorMediaTVAside :mediaData="eventMod" v-if="viewport >= 1200 && hasEventEmbedded"></MirrorMediaTVAside>
-            <div class="aside-title" ref="aside_title"><h2>焦點新聞</h2></div>
-            <LatestArticleAside :groupedArticle="o" :index="i" :needStick="false" :viewport="viewport" v-for="(o, i) in groupedArticle" :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''" :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0}" :key="`${i}-groupedlist`" target="_blank"/>
+            <div>
+              <MirrorMediaTVAside v-if="viewport >= 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
+              <div class="aside-title" ref="aside_title"><h2 v-text="$t('homepage.focus')"></h2></div>
+              <LatestArticleAside v-for="(o, i) in groupedArticle" target="_blank"
+                :groupedArticle="o"
+                :index="i"
+                :needStick="false"
+                :viewport="viewport"
+                :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
+                :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0 }"
+                :key="`${i}-groupedlist`" />
+            </div>
           </aside>
         </section>
         <loading :show="loading" />
-        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-        <live-stream :mediaData="eventMod" type="mod" v-else-if="!hasEventEmbedded && hasEventMod" />
+        <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
+        <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
         <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
         <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+        </DfpCover>
+        <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
+          <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
         <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
       </div>
@@ -42,9 +63,10 @@
 </template>
 
 <script>
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { consoleLogOnDev, currEnv, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
+import { currEnv, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
@@ -54,7 +76,6 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
-import LatestArticleMainB from '../components/LatestArticleMainB.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
@@ -66,7 +87,7 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 
 // const MAXRESULT = 20
 // const PAGE = 1
-
+const debug = require('debug')('CLIENT:Home')
 const fetchSSRData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] }).then(() => {
     return Promise.all([
@@ -135,7 +156,6 @@ export default {
     DfpCover,
     LatestArticleAside,
     LatestArticleMain,
-    LatestArticleMainB,
     MirrorMediaTVAside,
     PopularArticles,
     VueDfpProvider
@@ -147,6 +167,7 @@ export default {
   metaSet () {
     const abIndicator = this.abIndicator
     return {
+      url: SITE_MOBILE_URL,
       title: SITE_TITLE,
       meta: `
         <meta name="mm-opt" content="home${abIndicator}">
@@ -169,18 +190,6 @@ export default {
       `
     }
   },
-  beforeRouteEnter (to, from, next) {
-    if (process.env.VUE_ENV === 'client' && to.path !== from.path) {
-      next(vm => {
-        if (_.get(vm.$store, [ 'state', 'commonData', 'sections', 'items' ]) || _.get(vm.$store, [ 'state', 'articlesGroupedList', 'choices' ])) {
-          fetchSSRData(vm.$store)
-          fetchArticlesGroupedList(vm.$store)
-        }
-      })
-    } else {
-      next()
-    }
-  },
   data () {
     return {
       abIndicator: '',
@@ -194,6 +203,7 @@ export default {
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
+      showDfpCoverInnityFlag: false,
       showDfpHeaderLogo: false,
       viewport: undefined
     }
@@ -213,15 +223,26 @@ export default {
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
           const afVponLoader = () => {
+            debug('Event "noad2" is detected!!')
             if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
               sendAdCoverGA('vpon')
-              consoleLogOnDev({ msg: 'noad2 detected' })
+              debug('noad2 detected and go vpon')
               this.showDfpCoverAdVponFlag = true
               this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
             }
           }
-          window.addEventListener('noad2', afVponLoader)
-          window.parent.addEventListener('noad2', afVponLoader)
+          const loadInnityAd = () => {
+            debug('Event "noad2" is detected!!')
+            if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+              sendAdCoverGA('innity')
+              debug('noad2 detected and go innity')
+              this.showDfpCoverInnityFlag = true
+            }
+          }
+          window.addEventListener('noad2', () => { this.dfpMode === 'prod' ? afVponLoader() : loadInnityAd() })
+          window.parent.addEventListener('noad2', () => { this.dfpMode === 'prod' ? afVponLoader() : loadInnityAd() })
+          // window.addEventListener('noad2', afVponLoader)
+          // window.parent.addEventListener('noad2', afVponLoader)
 
           switch (position) {
             case 'LMBCVR':
@@ -237,10 +258,17 @@ export default {
               }
               break
             case 'LMBCVR2':
-              consoleLogOnDev({ msg: 'ad2 loaded' })
+              debug('ad2 loaded')
               sendAdCoverGA('ad2')
               if (adDisplayStatus === 'none') {
-                consoleLogOnDev({ msg: 'dfp response no ad2' })
+                debug('dfp response no ad2')
+              }
+              break
+            case 'LMBCVR3':
+              debug('adInnity loaded')
+              sendAdCoverGA('innity')
+              if (adDisplayStatus === 'none') {
+                debug('dfp response no innity')
               }
               break
             case 'LOGO':
@@ -336,12 +364,13 @@ export default {
     checkIfLockJS () {
       unLockJS()
     },
-    detectFixProject: function (e) {
+    detectFixProject: function () {
       const secondLastFocusNews = document.querySelector('aside .latest-aside-container.secondLast')
       const secondLastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.secondLast') + secondLastFocusNews.offsetHeight
       const lastFocusNews = document.querySelector('aside .latest-aside-container.last')
       const lastFocusNewsBottomPos = elmYPosition('aside .latest-aside-container.last') + lastFocusNews.offsetHeight
       const project = document.querySelector('.projectListVert')
+      // const mirrorMediaTVAsideMod = document.querySelector('.mmtv-aside')
       if (project) {
         if (this.viewport >= 1200 && (currentYPosition() > lastFocusNewsBottomPos)) {
           project.classList.add('fixed')
@@ -356,6 +385,7 @@ export default {
         }
       }
     },
+    get: _.get,
     getRole,
     getMmid () {
       const mmid = Cookie.get('mmid')
@@ -392,7 +422,7 @@ export default {
       })
     },
     handleScroll () {
-      window.onscroll = (e) => {
+      window.onscroll = () => {
         const _latestArticleDiv = document.querySelector('#latestArticle')
         if (!_latestArticleDiv) { return }
         const firstPageArticleHeight = _latestArticleDiv.offsetHeight
@@ -559,8 +589,15 @@ section.footer
     position fixed
     top 20px
     right auto
-    width calc(1024px * 0.25 - 30px)     
-      
+    width calc(1024px * 0.25 - 30px)
+
+.mmtv-aside
+  &.fixed
+    position fixed
+    top 460px
+    right auto
+    width calc(1024px * 0.25 - 30px)
+
 @media (min-width: 600px)
   .list
     &.container
@@ -663,6 +700,7 @@ section.footer
     width 1024px
     margin 40px auto 0
     padding 0
+
     main
       width 75%
     aside
@@ -678,8 +716,9 @@ section.footer
           line-height 1.15
           &::after
             display none
+
     .latest-main-container
-      margin-top 15px
+      margin-top 25px
 
   section.footer
     width 1024px

@@ -1,33 +1,29 @@
 <template>
   <div class="audioBox">
-    <figure class="audioBox__figure">
-      <img v-lazy="getValue(audio, [ 'coverPhoto', 'image', 'resizedTargets', 'mobile', 'url' ], '/public/notImage.png')" :alt="getValue(audio, [ 'title' ])" />
-    </figure>
-    <div class="audioBox__control">
-      <audio ref="audio" preload="none" @loadeddata="audioLoaded" @ended="audioEnded" @timeupdate="renewAudioCurrent" @loadedmetadata="renewAudioDuration" @canplay="audioCanplay">
-        <source :src="getValue(audio, [ 'url' ])" :type="getValue(audio, [ 'filetype' ])">
-      </audio>
-      <h2 v-text="getValue(audio, [ 'title' ])" />
-      <div ref="audioProgress" class="audioBox__control--progress" v-on:click="changeProgress">
-        <div class="audioBox__control--progressCurrent" :style="{ width: `${progress}%` }" />
+    <div class="audioBox__action">
+      <button :class="{ paused: !isPlaying && !isEnded, playing: isPlaying && !isEnded, ended: isEnded }" @click="handleAudioClick"></button>
+    </div>
+    <div class="audioBox__info">
+      <h1 v-text="getValue(audio, 'title')"></h1>
+      <div ref="audioProgress" class="progress">
+        <div class="progress__line" @click="changeProgress($event)">
+          <div></div>
+        </div>
+        <div class="progress__current" :style="{ left: `calc(${progress}% - 10px)` }"></div>
       </div>
-      <div class="audioBox__control--controlBar">
-        <div class="audioBox__control--controlGroup">
-          <img v-lazy="`/public/icon/play-btn_blue@2x.png`" @click="audioPlay()" v-show="!isPlaying && !isEnded" />
-          <img v-lazy="`/public/icon/pause-btn_blue@2x.png`" @click="audioPause()" v-show="isPlaying && !isEnded" />
-          <img v-lazy="`/public/icon/replay-btn_blue@2x.png`" @click="audioReplay()" v-show="isEnded" />
-        </div>
-        <div class="audioBox__control--info">
-          <p v-show="audioDuration !== 0 && canPlay">{{ getAudioTime(audioCurrent) }} / {{ getAudioTime(audioDuration) }}</p>
-          <p v-show="audioDuration !== 0 && !canPlay" >讀取中...</p>
-        </div>
+      <div class="info">
+        <h1 v-text="getValue(audio, 'title')"></h1>
+        <p v-show="audioDuration !== 0 && canPlay">{{ getAudioTime(audioCurrent) }} / {{ getAudioTime(audioDuration) }}</p>
+        <p v-show="audioDuration !== 0 && !canPlay" >讀取中...</p>
       </div>
     </div>
+    <audio ref="audio" preload="none" @loadeddata="isLoaded = true" @ended="isEnded = true" @timeupdate="renewAudioCurrent" @loadedmetadata="renewAudioDuration" @canplay="canPlay = true">
+      <source :src="getValue(audio, 'url')" :type="getValue(audio, 'filetype')">
+    </audio>
   </div>
 </template>
 
 <script>
-
 import { getValue } from '../util/comm'
 import moment from 'moment'
 
@@ -51,44 +47,34 @@ export default {
     }
   },
   methods: {
-    audioCanplay () {
-      this.canPlay = true
-    },
-    audioEnded () {
-      this.isEnded = true
-    },
-    audioLoaded () {
-      this.isLoaded = true
-    },
-    audioPlay () {
-      const audioEle = this.$refs.audio
-      if (audioEle) {
-        this.isPlaying = true
-        audioEle.play()
-      }
-    },
-    audioPause () {
-      const audioEle = this.$refs.audio
-      if (audioEle) {
-        this.isPlaying = false
-        audioEle.pause()
-      }
-    },
-    audioReplay () {
-      const audioEle = this.$refs.audio
-      if (audioEle) {
-        this.isEnded = false
-        this.isPlaying = true
-        this.$refs.audio.currentTime = 0
-        audioEle.play()
+    handleAudioClick () {
+      if (this.isEnded) {
+        const audioEle = this.$refs.audio
+        if (audioEle) {
+          this.isEnded = false
+          this.isPlaying = true
+          this.$refs.audio.currentTime = 0
+          audioEle.play()
+        }
+      } else if (this.isPlaying) {
+        const audioEle = this.$refs.audio
+        if (audioEle) {
+          this.isPlaying = false
+          audioEle.pause()
+        }
+      } else {
+        const audioEle = this.$refs.audio
+        if (audioEle) {
+          this.isPlaying = true
+          audioEle.play()
+        }
       }
     },
     changeProgress (e) {
       const audioEle = this.$refs.audio
       if (!this.isLoaded) {
         audioEle.load()
-      }
-      if (this.isLoaded) {
+      } else {
         const newTime = e.offsetX / this.$refs.audioProgress.offsetWidth * this.$refs.audio.duration
         this.$refs.audio.currentTime = newTime
         this.isEnded = false
@@ -111,65 +97,134 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-
 .audioBox
-  display flex
-  flex-direction column
-  width 100%
-  margin-bottom 20px
-  padding 10px 0
-  background-color #fff
-  &__figure
-    display none
+  position relative
+  &__action
+    box-sizing content-box
     position relative
-    width 100%
-    padding-top 66.66%
-    margin 0
-    overflow hidden
-    img
+    left 3px
+    z-index 10
+    width 33%
+    padding-top 33%
+    background-color #fff
+    border 1px #fff solid
+    border-radius 50%
+    box-shadow 0 0 6px 1px rgba(0,0,0,.5)
+    button
+      box-sizing border-box;
       position absolute
-      top 0
-      left 0
-      bottom 0
-      right 0
-      width 100%
-      height 100%
-      object-fit cover
-      object-position 50% 50%
-  &__control
+      top 10%
+      left 10%
+      width 80%
+      height 80%
+      padding 0
+      border none
+      border-radius 50%
+      background-color transparent
+      background-size 60%
+      background-repeat no-repeat
+      background-position 50% 50%
+      box-shadow 0 0 10px 1px rgba(0,0,0,.4) inset
+      cursor pointer
+      &.paused
+        background-image url(/public/icon/play-btn_blue@2x.png)
+        background-position 60% 50%
+      &.ended
+        background-image url(/public/icon/replay-btn_blue@2x.png)
+      &.playing
+        background-image url(/public/icon/pause-btn_blue@2x.png)
+  &__info
     display flex
     flex-direction column
-    justify-content center
-    width 100%
-    padding 0
-    h2
-      font-size 1.2rem !important
-      margin 0 !important
-    &--progress
-      width 100%
-      height 4px
-      margin-top 1em
-      background-color #bcbcbc
-      cursor pointer
-    &--progressCurrent
-      height 4px
-      background-color #064f77
-    &--controlBar
-      display flex
-      justify-content space-between
-      height 36px
-      margin-top .5em
-      img
+    position absolute
+    top 0
+    right 0
+    width 83%
+    height 100%
+    background-color #004598
+    > h1
+      display none
+    .progress
+      position relative
+      width 85%
+      margin 15px 0 0 15%
+      &__line
+        padding 5px 0
+        cursor pointer
+        > div
+          height 4px
+          background-color #fff
+      &__current
+        position absolute
+        left -10px
+        z-index 10
         width 20px
         height 20px
-        margin-right 1em
+        background-color #fff
+        border-radius 50%
+        transform translateY(-16px)
+        box-shadow 0 0 10px 2px rgba(0, 0, 0, .4)
         cursor pointer
-    &--controlGroup
-      display flex
-      align-items center
-    &--info
+    .info
+      flex 1
+      padding .5em .5em .2em 25%
+      color #fff
+      h1, p
+        margin 0
+      h1
+        max-height 2.3rem
+        font-size 1rem
+        text-overflow ellipsis
+        overflow hidden
       p
-        margin 0 !important
-        font-size 1rem !important
+        margin-top .5em
+        color #fff
+        font-size .8rem
+        line-height .8rem
+        text-align left
 
+@media (min-width: 768px)
+  .audioBox
+    &__action
+      width 20%
+      padding-top 20%
+    &__info
+      width 90%
+      .progress
+        width 92%
+        margin-left 8%
+      .info
+        padding 1em 1em 1em 15%
+        h1
+          max-height 2.76rem
+          font-size 1rem
+        p
+          margin-top 1em
+          font-size 1rem
+          line-height 1rem
+
+@media (min-width: 1200px)
+  .audioBox
+    width calc(100% - 13px)
+    &__info
+      padding 1.5em 0 .5em
+      > h1
+        display block
+        height 3.45rem
+        margin 0
+        padding-left 15%
+        color #fff
+        font-size 1.5rem
+        text-overflow ellipsis
+        overflow hidden
+      .progress
+        width 89%
+        margin-left 11%
+      .info
+        padding 0 1em 0 15%
+        min-height 32px
+        h1
+          display none
+        p
+          text-align right
 </style>

@@ -1,0 +1,19 @@
+.story-relateds {
+  padding: 0 15px;
+}
+.story-relateds__title {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.41;
+  text-align: justify;
+  color: #2a597d;
+  margin: 0 0 23px 0;
+}
+.story-relateds__story-title {
+  font-size: 16px;
+  line-height: 1.31;
+  text-align: justify;
+  color: #4d4d4d;
+  display: block;
+  margin: 20px 0;
+}

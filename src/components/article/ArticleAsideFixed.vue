@@ -1,5 +1,5 @@
 <template>
-  <section class="articleAsideFixed">
+  <section ref="articleAsideFixed" class="articleAsideFixed">
     <slot name="dfpR2"></slot>
     <slot name="fbPage"></slot>
     <slot name="popListVert"></slot>
@@ -7,7 +7,6 @@
 </template>
 
 <script>
-
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 
 export default {
@@ -18,14 +17,19 @@ export default {
     }
   },
   mounted () {
+    if (document.querySelector('.article__main')) {
+      this.$refs.articleAsideFixed.classList.add('external')
+    } else {
+      this.$refs.articleAsideFixed.classList.remove('external')
+    }
     window.addEventListener('scroll', this.$_articleDetectAsideFixed)
   },
   beforeDestroy () {
     window.removeEventListener('scroll', this.$_articleDetectAsideFixed)
   },
   methods: {
-    $_articleDetectAsideFixed: function (e) {
-      const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    $_articleDetectAsideFixed: function () {
+      // const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
       const articleAsideFixed = document.querySelector('.articleAsideFixed')
       const articleMain = document.querySelector('.article_main') || document.querySelector('.article__main')
       const articleMainPosBtm = (elmYPosition('.article_main') || elmYPosition('.article__main')) + articleMain.offsetHeight
@@ -68,9 +72,12 @@ export default {
     top auto !important
     right calc((100% - 1160px) / 2 + 55px)
     margin auto
+    &.external
+      right calc((100% - 1170px) / 2 + 55px)
   &.fixed-top
     position fixed
     right calc((100% - 1160px) / 2 + 55px)
     margin auto
-
+    &.external
+      right calc((100% - 1170px) / 2 + 55px)
 </style>

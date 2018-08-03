@@ -7,6 +7,7 @@ const favicon = require('serve-favicon')
 const fs = require('fs')
 const maxMemUsageLimit = 1000 * 1024 * 1024
 const memwatch = require('memwatch-next')
+const moment = require('moment')
 const microcache = require('route-cache')
 const path = require('path')
 const requestIp = require('request-ip')
@@ -110,10 +111,10 @@ function render (req, res, next) {
     const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, (i) => (req.clientIp.indexOf(i) > -1)).length > 0
     if (!isValidReq) {
       res.status(403).send('Forbidden')
-      console.log('Attempted to access draft in fail: 403 Forbidden')
+      console.error('Attempted to access draft in fail: 403 Forbidden')
     }
   }
-  console.log('request ip:', req.clientIp)
+  console.error('request ip:', req.clientIp)
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 
@@ -129,23 +130,28 @@ function render (req, res, next) {
     } else if (err && err.code == 404) {
       isPageNotFound = true
       res.status(404).render('404')
-      console.log('##########REQUEST URL(404)############')
-      console.log('REQUEST URL:', req.url)
+      console.error('##########REQUEST URL(404)############')
+      console.error('REQUEST URL:', req.url)
       console.error(err)
-      console.log('######################')
-      console.log('######################')
+      console.error('######################')
+      console.error('######################')
       return
     } else {
       console.error(`error during renderToString() error : ${req.url}`)
       console.error(err)
       isErrorOccurred = true
       
+      err.status = err.status || 500
       if ('403' == err.status) {
         res.status(403).send('403 | Forbidden')
         return
+      } else if ('404' == err.status) {
+        res.status(404).render('404')
+        return
+      } else {
+        res.status(500).render('500', { err, timestamp: (new Date).toString() })
+        return
       }
-      res.status(500).render('500', { err, timestamp: (new Date).toString() })
-      return 
     } 
   }
 
@@ -153,17 +159,18 @@ function render (req, res, next) {
     title: '',
     meta: '',    
     url: req.url,
-    link: ''
+    link: '',
+    adTrace: '',
   }
 
   res.on('finish', function () {
     const mem = process.memoryUsage()
-    console.log('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed))
+    console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
     if (mem.heapUsed > maxMemUsageLimit) {
       for (let i = 0; i < 10; i += 1) {
-        console.log('MEMORY WAS WUNNING OUT')
+        console.error('MEMORY WAS WUNNING OUT')
       } 
-      console.log(`KILLING PROCESS IN 1 SECOND(At ${(new Date).toString()})`)
+      console.error(`KILLING PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
       process.exit(1)
     }
     if (isPageNotFound || isErrorOccurred) {
@@ -185,6 +192,7 @@ function render (req, res, next) {
     }
   })
 }
+app.use('/story/amp', require('./api/middle/story/index.amp'))
 
 app.get('*', isProd ? render : (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
@@ -207,15 +215,15 @@ module.exports = {
 memwatch.on('leak', function(info) {
   const growth = formatMem(info.growth)
   const mem = process.memoryUsage()
-  console.log('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
-  console.log('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed))
+  console.error('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
+  console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
 })
 memwatch.on('stats', function(stats) {
   const estBase = formatMem(stats.estimated_base)
   const currBase = formatMem(stats.current_base)
   const min = formatMem(stats.min)
   const max = formatMem(stats.max)
-  console.log('GC STATs:', [
+  console.error(`GC STATs(${moment().format('YYYY-MM-DD HH:mm:SS')}):`, '\n', [
     'num_full_gc ' + stats.num_full_gc,
     'num_inc_gc ' + stats.num_inc_gc,
     'heap_compactions ' + stats.heap_compactions,
@@ -227,7 +235,7 @@ memwatch.on('stats', function(stats) {
   ].join(', '))
   if (stats.current_base > maxMemUsageLimit) {
     for (let i = 0; i < 10; i += 1) {
-      console.log('MEMORY WAS WUNNING OUT')
+      console.error('MEMORY WAS WUNNING OUT')
     } 
     /**
      * kill this process gracefully
@@ -237,6 +245,6 @@ memwatch.on('stats', function(stats) {
     }, 1000)
     killTimer.unref()
     server.close()
-    console.log(`GOING TO KILL PROCESS IN 1 SECOND(At ${(new Date).toString()})`)
+    console.error(`GOING TO KILL PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
   }
 })

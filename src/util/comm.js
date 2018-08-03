@@ -7,6 +7,8 @@ import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 import uuidv4 from 'uuid/v4'
 
+const debug = require('debug')('CLIENT:comm')
+
 export function getAuthor (article, option = '', delimiter = '｜') {
   const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
     ? `文${delimiter}` + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, [ 'name' ], null) + '</a>' }).join('、') : ''
@@ -75,12 +77,15 @@ export function getHrefFull (relAritlcle = {}) {
 
 export function getImage (article, size) {
   let image
-  if (article.heroVideo && article.heroVideo.coverPhoto && article.heroVideo.coverPhoto.image) {
-    image = _.get(article, [ 'heroVideo', 'coverPhoto', 'image', 'resizedTargets' ])
-  } else if (article.heroImage && article.heroImage.image) {
+  if (article.heroImage && article.heroImage.image) {
+    debug('get heroimage')
     image = _.get(article, [ 'heroImage', 'image', 'resizedTargets' ])
   } else if (article.ogImage) {
+    debug('get ogImage')
     image = _.get(article, [ 'ogImage', 'image', 'resizedTargets' ])
+  } else if (article.heroVideo && article.heroVideo.coverPhoto && article.heroVideo.coverPhoto.image) {
+    debug('get heroVideo img')
+    image = _.get(article, [ 'heroVideo', 'coverPhoto', 'image', 'resizedTargets' ])
   }
   switch (size) {
     case 'desktop':
@@ -350,7 +355,7 @@ export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
   return true
 }
 
-export function insertVponAdSDK ({ currEnv = 'dev', isVponSDKLoaded = false }) {
+export function insertVponAdSDK ({ isVponSDKLoaded = false }) {
   if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
     const script = document.createElement('script')
     script.type = 'text/javascript'

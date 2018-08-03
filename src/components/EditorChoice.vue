@@ -34,11 +34,15 @@
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
         <template>
           <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style !== 'projects'" :target="target">
-            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
+            <LatestAriticleImg class="figure"
+              :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
+              :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
             <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </router-link>
           <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style === 'projects'" :target="target">
-            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
+            <LatestAriticleImg class="figure"
+              :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
+              :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
             <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </a>
         </template>
@@ -54,15 +58,17 @@
 </template>
 <script>
 
-import { SECTION_MAP } from '../constants'
-import { getHref, getImage, getSection, getTitle, getTruncatedVal, getValue } from '../util/comm'
-import Slider from './Slider.vue'
+import { SECTION_MAP } from 'src/constants'
+import { getHref, getImage, getSection, getTitle, getTruncatedVal, getValue } from 'src/util/comm'
+import LatestAriticleImg from 'src/components/LatestAriticleImg.vue'
+import Slider from 'src/components/Slider.vue'
 import _ from 'lodash'
 
 export default {
   name: 'editorChoice',
   components: {
-    'app-slider': Slider
+    'app-slider': Slider,
+    LatestAriticleImg
   },
   props: {
     editorChoice: {
@@ -192,14 +198,14 @@ export default {
       position relative
       color #fff
       display block
-      figure
+      .figure
         width 100%
         padding-top 66.66%
         margin 0
         background-position 50% 50%
         background-repeat no-repeat
         background-size cover
-      > div
+      > div:not(.figure)
         position absolute
         height 35px
         background-color #000

@@ -169,7 +169,7 @@
         this.showCorrectAnsFlag = showCorrectAns
         this.answerSlip[ answer.questId ] = answer
       },
-      goNextQuestion (e) {
+      goNextQuestion () {
         if (((!this.descShowFlag || !this.showCorrectAnsFlag) && this.gameType !== 'mind') ||
           (this.gameType === 'mind' && !this.answerSlip[ this.questions[ this.currQuestIndex ][ 'id' ] ])) { return }
 
@@ -200,7 +200,7 @@
       getQuestionnaireResult () {
         const answerSlip = this.getAnswerSlip()
         const score = _.chain(this.questions)
-                        .map((itm, idx) => {
+                        .map((itm) => {
                           const { id, options } = itm
                           const s = _.find(options, { id: answerSlip[ id ][ 'optId' ] })[ 'score' ]
                           return s

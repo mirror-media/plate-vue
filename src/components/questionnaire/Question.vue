@@ -19,10 +19,10 @@
   export default {
     name: 'question-container',
     methods: {
-      tabLeft (index, number, total) {
+      tabLeft (index, number) {
         return (20 * (number - 1)) + '%'
       },
-      tabMarginLeft (index, number, total) {
+      tabMarginLeft (index) {
         return (index < 5) ? '-5%' : `${-5 - ((index - 4) * 20)}%`
       },
       tabZindex (index, number, total) {

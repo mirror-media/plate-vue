@@ -1,0 +1,10 @@
+<figure class="story-body-youtube">
+  <amp-youtube
+    data-videoid="<%= _.get(item, [ 'content', 0, 'youtubeId' ], '') %>"
+    layout="responsive"
+    width="1.48"
+    height="1"
+  >
+  </amp-youtube>
+  <figcaption class="story-body-youtube__figcaption"><%= _.get(item, [ 'content', 0, 'description' ], '') %></figcaption>
+</figure>

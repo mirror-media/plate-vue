@@ -66,6 +66,7 @@
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
+        <div class="listArticleBlock__content--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
         <h2><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></router-link></h2>
         <p><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
       </div>
@@ -196,11 +197,11 @@ export default {
 
 .listArticleBlock
   width 100%
-  margin-bottom 40px
   background-color #fff
   box-shadow 5px 5px 5px #bcbcbc
   transition all .3s ease-in-out
-  
+  & + .listArticleBlock
+    margin-top 40px
   &__figure
     position relative
     width 100%
@@ -258,6 +259,8 @@ export default {
       line-height 1.5
       a
         color #999
+    &--colorBlock
+      display none
   &__audio
     p
       text-align right
@@ -274,6 +277,8 @@ export default {
   .listArticleBlock
     width calc( (100% - 40px) / 2 )
     margin 0 10px 40px
+    & + .listArticleBlock
+      margin-top 0
     &:hover
       transform translateY(-20px)
       box-shadow 5px 15px 5px #bcbcbc
@@ -288,5 +293,5 @@ export default {
 @media (min-width: 1200px)
   .listArticleBlock
     width calc( (100% - 60px) / 3 )
-
+    
 </style>
