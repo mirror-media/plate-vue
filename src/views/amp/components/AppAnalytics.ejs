@@ -1,0 +1,24 @@
+<amp-analytics type="googleanalytics">
+  <script type="application/json">
+  {
+    "vars": {
+      "account": "<%= GA_ID %>"
+    },
+    "triggers": {
+      "trackPageview": {
+        "on": "visible",
+        "request": "pageview"
+      },
+      "trackClickOnHeader" : {
+        "on": "click",
+        "selector": ".story-relateds__story-title",
+        "request": "event",
+        "vars": {
+          "eventCategory": "amp-related",
+          "eventAction": "click"
+        }
+      }
+    }
+  }
+  </script>
+</amp-analytics>
