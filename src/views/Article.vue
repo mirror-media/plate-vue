@@ -62,10 +62,16 @@
             <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="PCAROOP" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config" v-if="dfpMode === 'dev' && sectionId === '596441604bbe120f002a3197'" />
             <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config" v-else />
-            <span id="innity-in-post" extClass="mobile-hide" slot="dfpad-AR1" v-if="dfpMode === 'dev'"></span>
+            <template v-if="dfpMode === 'dev'" slot="dfpad-AR1">
+              <span id="innity-custom-adnetwork-span-63518"></span>
+              <span id="innity-custom-premium-span-12738"></span>            
+            </template>
+            <template v-if="dfpMode === 'dev'" slot="dfpad-AR2">
+              <span id="innity-custom-adnetwork-span-68557"></span>
+              <span id="innity-custom-premium-span-12739"></span>           
+            </template>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :config="props.config"/>
-            <span id="innity-in-post" extClass="mobile-only" slot="dfpad-AR1" v-if="dfpMode === 'dev'"></span>
             <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
