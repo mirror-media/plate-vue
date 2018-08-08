@@ -9,7 +9,7 @@ pipeline:
     username: plate-vue
     icon_url: https://vuejs.org/images/logo.png
     template: >
-      *start* building *{{repo.name}}*.
+      *start* building *{{repo.name}}* <${DRONE_BUILD_LINK}|#{{build.number}}>.
       *{{build.author}}* give *{{build.branch}}* a little push.
     when:
       event: [push]
