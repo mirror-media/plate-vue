@@ -1,5 +1,7 @@
 import _ from 'lodash'
 
+const debug = require('debug')('CLIENT:mixinTitleMeta')
+
 function getMetaSet (vm) {
   const { metaSet } = vm.$options
   if (metaSet) {
@@ -56,8 +58,7 @@ const clientTitleMetaMixin = {
     const link = metaSet.link
     const adTrace = metaSet.adTrace
     const adTraceScripts = [ ...document.querySelectorAll('*[data-name="ad-trace"]') ]
-    console.log('--- adTrace', adTrace)
-    console.log('--- adTraceScripts', adTraceScripts)
+    debug('adTrace', adTrace)
     adTraceScripts.map(node => node.remove())
     
     if (title) {
@@ -72,11 +73,10 @@ const clientTitleMetaMixin = {
       alternate && (alternate.href = url)
     }
     if (adTrace) {
-      console.log('--- adTrace append')
       const parser = new DOMParser()
       const doc = parser.parseFromString(adTrace, "text/html")
       const scripts = [ ...doc.querySelectorAll('*[data-name="ad-trace"]') ]
-      console.log('--- adTrace scripts', scripts)
+      debug('adTrace scripts', scripts)
       scripts.map(node => document.head.appendChild(node))
     }
     if (meta) {
