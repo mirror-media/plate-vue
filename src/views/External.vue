@@ -56,6 +56,9 @@
       <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
         <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR2" :config="props.config"></vue-dfp>
       </DfpCover>
+      <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      </DfpCover>      
     </template>
   </vue-dfp-provider>
 </template>
@@ -64,7 +67,7 @@
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
-  import { consoleLogOnDev, currEnv, getValue, insertVponAdSDK, sendAdCoverGA, updateCookie, vponHtml } from '../util/comm'
+  import { consoleLogOnDev, currEnv, getValue, sendAdCoverGA, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import _ from 'lodash'
@@ -225,7 +228,7 @@
         microAds,
         showDfpCoverAdFlag: false,
         showDfpCoverAd2Flag: false,
-        showDfpCoverAdVponFlag: false,
+        showDfpCoverInnityFlag: false,
         showDfpFixedBtn: false,
         showDfpHeaderLogo: false,
         viewport: undefined
@@ -251,16 +254,16 @@
             const position = dfpCurrAd.getAttribute('pos')
 
             const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
-            const afVponLoader = () => {
-              if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
-                sendAdCoverGA('vpon')
-                consoleLogOnDev({ msg: 'noad2 detected' })
-                this.showDfpCoverAdVponFlag = true
-                this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+            const loadInnityAd = () => {
+              // debug('Event "noad2" is detected!!')
+              if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+                sendAdCoverGA('innity')
+                // debug('noad2 detected and go innity')
+                this.showDfpCoverInnityFlag = true
               }
             }
-            window.addEventListener('noad2', afVponLoader)
-            window.parent.addEventListener('noad2', afVponLoader)
+            window.addEventListener('noad2', loadInnityAd)
+            window.parent.addEventListener('noad2', loadInnityAd)
             switch (position) {
               case 'MBCVR':
                 sendAdCoverGA('dfp')
@@ -281,6 +284,13 @@
                   consoleLogOnDev({ msg: 'dfp response no ad2' })
                 }
                 break
+              case 'LMBCVR3':
+                // debug('adInnity loaded')
+                sendAdCoverGA('innity')
+                if (adDisplayStatus === 'none') {
+                  // debug('dfp response no innity')
+                }
+                break    
               case 'PCFF':
                 this.showDfpFixedBtn = !(adDisplayStatus === 'none')
                 break
@@ -482,8 +492,6 @@
         this.$_external_insertMatchedContentScript()
       },
       getValue,
-      insertVponAdSDK,
-      vponHtml
     }
   }
 </script>

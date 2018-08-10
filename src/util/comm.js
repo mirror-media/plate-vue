@@ -1,4 +1,4 @@
-import { SITE_DOMAIN, SITE_URL, SITE_PROJ_URL, VPON_CONFIG } from '../constants'
+import { SITE_DOMAIN, SITE_URL, SITE_PROJ_URL, } from '../constants'
 import _ from 'lodash'
 import Browser from 'bowser'
 import Cookie from 'vue-cookie'
@@ -355,15 +355,16 @@ export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
   return true
 }
 
-export function insertVponAdSDK ({ isVponSDKLoaded = false }) {
-  if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
-    const script = document.createElement('script')
-    script.type = 'text/javascript'
-    script.src = '//m.vpon.com/sdk/vpadn-sdk.js'
-    document.body.appendChild(script)
-  }
-  return true
-}
+// Vpon ad is abandoned 20180810 BY KC
+// export function insertVponAdSDK ({ isVponSDKLoaded = false }) {
+//   if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
+//     const script = document.createElement('script')
+//     script.type = 'text/javascript'
+//     script.src = '//m.vpon.com/sdk/vpadn-sdk.js'
+//     document.body.appendChild(script)
+//   }
+//   return true
+// }
 
 export function trim (str) {
   return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
@@ -392,14 +393,14 @@ export function removeClass (ele, cls) {
   }
   ele.className = trim(ele.className)
 }
-
-export function vponHtml () {
-  const mode = _.get(VPON_CONFIG, [ 'vpon_ad_test' ], '1')
-  const key = _.get(VPON_CONFIG, [ 'vpon_ad_licensy_key' ], '')
-  const format = _.get(VPON_CONFIG, [ 'vpon_ad_format' ], 'mi')
-  const debug = _.get(VPON_CONFIG, [ 'debug' ], true)
-  return `<vpon vpon_ad_test="${mode}" vpon_ad_licensy_key="${key}" vpon_ad_format="${format}" debug="${debug}"></vpon>`
-}
+// Vpon ad is abandoned 20180810 BY KC
+// export function vponHtml () {
+//   const mode = _.get(VPON_CONFIG, [ 'vpon_ad_test' ], '1')
+//   const key = _.get(VPON_CONFIG, [ 'vpon_ad_licensy_key' ], '')
+//   const format = _.get(VPON_CONFIG, [ 'vpon_ad_format' ], 'mi')
+//   const debug = _.get(VPON_CONFIG, [ 'debug' ], true)
+//   return `<vpon vpon_ad_test="${mode}" vpon_ad_licensy_key="${key}" vpon_ad_format="${format}" debug="${debug}"></vpon>`
+// }
 
 export function updateCookie ({ currEnv }) {
   return new Promise((resolve) => {

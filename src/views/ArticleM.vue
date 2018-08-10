@@ -57,7 +57,9 @@
       <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
-      <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
+      <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      </DfpCover>  
       <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
         <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/>
       </dfp-fixed>
@@ -70,7 +72,7 @@
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
-  import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd, insertVponAdSDK, sendAdCoverGA, updateCookie, vponHtml } from '../util/comm'
+  import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd, sendAdCoverGA, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
@@ -313,7 +315,7 @@
         routeUpateReferrerSlug: 'N/A',
         showDfpCoverAdFlag: false,
         showDfpCoverAd2Flag: false,
-        showDfpCoverAdVponFlag: false,
+        showDfpCoverInnityFlag: false,        
         showDfpFixedBtn: false,
         state: {},
         viewport: undefined
@@ -343,16 +345,16 @@
             const position = dfpCurrAd.getAttribute('pos')
 
             const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
-            const afVponLoader = () => {
-              if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
-                sendAdCoverGA('vpon')
-                consoleLogOnDev({ msg: 'noad2 detected' })
-                this.showDfpCoverAdVponFlag = true
-                this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+            const loadInnityAd = () => {
+              // debug('Event "noad2" is detected!!')
+              if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+                sendAdCoverGA('innity')
+                // debug('noad2 detected and go innity')
+                this.showDfpCoverInnityFlag = true
               }
             }
-            window.addEventListener('noad2', afVponLoader)
-            window.parent.addEventListener('noad2', afVponLoader)
+            window.addEventListener('noad2', loadInnityAd)
+            window.parent.addEventListener('noad2', loadInnityAd)
             switch (position) {
               case 'MBCVR':
                 sendAdCoverGA('dfp')
@@ -373,6 +375,13 @@
                   consoleLogOnDev({ msg: 'dfp response no ad2' })
                 }
                 break
+              case 'LMBCVR3':
+                // debug('adInnity loaded')
+                sendAdCoverGA('innity')
+                if (adDisplayStatus === 'none') {
+                  // debug('dfp response no innity')
+                }
+                break    
               case 'PCFF':
                 this.showDfpFixedBtn = !(adDisplayStatus === 'none')
                 break
@@ -565,7 +574,6 @@
           document.querySelector('body').appendChild(mediafarmersScript)
         }
       },
-      insertVponAdSDK,
       runMicroAd (adId) {
         this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.dfpMode, microAdLoded: this.microAdLoded[adId] })
         return true
@@ -609,7 +617,6 @@
       updateSysStage () {
         this.dfpMode = currEnv()
       },
-      vponHtml
     },
     mounted () {
       this.initializeFBComments()
