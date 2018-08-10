@@ -186,16 +186,6 @@ export default {
           const position = dfpCover.getAttribute('pos')
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-          const afVponLoader = () => {
-            if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
-              sendAdCoverGA('vpon')
-              consoleLogOnDev({ msg: 'noad2 detected' })
-              this.showDfpCoverAdVponFlag = true
-              this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
-            }
-          }
-          window.addEventListener('noad2', afVponLoader)
-          window.parent.addEventListener('noad2', afVponLoader)
 
           switch (position) {
             case 'LMBCVR':
