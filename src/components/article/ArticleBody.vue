@@ -89,11 +89,11 @@
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
         </div>
       </article>
-      <newsletter></newsletter>
-      <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
       </div>
+      <newsletter></newsletter>
+      <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
       <div class="article_main_tags">
         <div class="tags" v-html="tags" v-if="tags.length > 0"></div>
       </div>
