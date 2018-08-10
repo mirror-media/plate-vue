@@ -56,7 +56,6 @@
         <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
-        <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
       </div>
     </template>
   </vue-dfp-provider>
@@ -66,7 +65,7 @@
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, insertVponAdSDK, sendAdCoverGA, unLockJS, updateCookie, vponHtml } from '../util/comm'
+import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
@@ -202,7 +201,6 @@ export default {
       page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
-      showDfpCoverAdVponFlag: false,
       showDfpCoverInnityFlag: false,
       showDfpHeaderLogo: false,
       viewport: undefined
@@ -222,15 +220,6 @@ export default {
           const position = dfpCover.getAttribute('pos')
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-          const afVponLoader = () => {
-            debug('Event "noad2" is detected!!')
-            if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
-              sendAdCoverGA('vpon')
-              debug('noad2 detected and go vpon')
-              this.showDfpCoverAdVponFlag = true
-              this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
-            }
-          }
           const loadInnityAd = () => {
             debug('Event "noad2" is detected!!')
             if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
@@ -239,10 +228,8 @@ export default {
               this.showDfpCoverInnityFlag = true
             }
           }
-          window.addEventListener('noad2', () => { this.dfpMode === 'prod' ? afVponLoader() : loadInnityAd() })
-          window.parent.addEventListener('noad2', () => { this.dfpMode === 'prod' ? afVponLoader() : loadInnityAd() })
-          // window.addEventListener('noad2', afVponLoader)
-          // window.parent.addEventListener('noad2', afVponLoader)
+          window.addEventListener('noad2', loadInnityAd)
+          window.parent.addEventListener('noad2', loadInnityAd)
 
           switch (position) {
             case 'LMBCVR':
@@ -402,7 +389,6 @@ export default {
     initHasScrollLoadMore () {
       this.hasScrollLoadMore = false
     },
-    insertVponAdSDK,
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.documentElement.clientWidth || document.body.clientWidth
@@ -434,7 +420,6 @@ export default {
         }
       }
     },
-    vponHtml
   },
   beforeMount () {
     return Promise.all([

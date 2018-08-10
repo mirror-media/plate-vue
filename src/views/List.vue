@@ -95,7 +95,9 @@
       <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
-      <div class="dfp-cover vpon" v-if="showDfpCoverAdVponFlag && (viewport < 550)" v-html="vponHtml()"></div>
+      <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      </DfpCover>         
     </template>
   </vue-dfp-provider>
 </template>
@@ -107,7 +109,7 @@ import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TI
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, unLockJS, insertVponAdSDK, sendAdCoverGA, updateCookie, vponHtml } from '../util/comm'
+import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, unLockJS, sendAdCoverGA, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { microAds } from '../constants/microAds'
 import _ from 'lodash'
@@ -147,7 +149,7 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
-
+const debug = require('debug')('CLIENT:LIST')
 const fetchCommonData = (store, route) => {
   return Promise.all([
     store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
@@ -569,7 +571,7 @@ export default {
       microAds,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
-      showDfpCoverAdVponFlag: false,
+      showDfpCoverInnityFlag: false,
       showDfpHeaderLogo: false,
       viewport: undefined
     }
@@ -648,16 +650,16 @@ export default {
           const position = dfpCover.getAttribute('pos')
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
-          const afVponLoader = () => {
-            if (this.showDfpCoverAd2Flag && !this.isVponSDKLoaded) {
-              sendAdCoverGA('vpon')
-              consoleLogOnDev({ msg: 'noad2 detected' })
-              this.showDfpCoverAdVponFlag = true
-              this.isVponSDKLoaded = this.insertVponAdSDK({ currEnv: this.dfpMode, isVponSDKLoaded: this.isVponSDKLoaded })
+          const loadInnityAd = () => {
+            debug('Event "noad2" is detected!!')
+            if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+              sendAdCoverGA('innity')
+              debug('noad2 detected and go innity')
+              this.showDfpCoverInnityFlag = true
             }
           }
-          window.addEventListener('noad2', afVponLoader)
-          window.parent.addEventListener('noad2', afVponLoader)
+          window.addEventListener('noad2', loadInnityAd)
+          window.parent.addEventListener('noad2', loadInnityAd)
 
           switch (position) {
             case 'LMBCVR':
@@ -679,6 +681,13 @@ export default {
                 consoleLogOnDev({ msg: 'dfp response no ad2' })
               }
               break
+            case 'LMBCVR3':
+                debug('adInnity loaded')
+                sendAdCoverGA('innity')
+                if (adDisplayStatus === 'none') {
+                  debug('dfp response no innity')
+                }
+                break                   
             case 'LOGO':
               if (adDisplayStatus === 'none') {
                 this.showDfpHeaderLogo = false
@@ -957,7 +966,6 @@ export default {
         this.loading = false
       })
     },
-    insertVponAdSDK,
     scrollHandler () {
       if (this.$refs.articleList) {
         const vh = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
@@ -998,7 +1006,6 @@ export default {
     updateSysStage () {
       this.dfpMode = currEnv()
     },
-    vponHtml
   },
   watch: {
     // abIndicator: function () {
