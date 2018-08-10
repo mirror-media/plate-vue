@@ -57,7 +57,7 @@
         <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR2" :config="props.config"></vue-dfp>
       </DfpCover>
       <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+        <vue-dfp :is="props.vueDfp" pos="MBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>      
     </template>
   </vue-dfp-provider>
@@ -284,7 +284,7 @@
                   consoleLogOnDev({ msg: 'dfp response no ad2' })
                 }
                 break
-              case 'LMBCVR3':
+              case 'MBCVR3':
                 // debug('adInnity loaded')
                 sendAdCoverGA('innity')
                 if (adDisplayStatus === 'none') {
