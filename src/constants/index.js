@@ -71,6 +71,7 @@ export const DFP_OPTIONS = {
 
 export const GA_ID = 'UA-83609754-1'
 export const GA_TEST_ID = 'UA-83609754-2'
+export const COMSCORE_C2_ID = '24318560'
 
 export const SOCIAL_LINK = {
   AD: 'https://www.mirrormedia.mg/story/ad1018001/index.html?utm_source=mm&utm_medium=footer&utm_campaign=salesteam',
