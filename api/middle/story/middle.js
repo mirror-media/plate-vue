@@ -7,7 +7,7 @@ const superagent = require('superagent')
 const { redisFetching, redisWriting, } = require('../redisHandler')
 const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph } = require('./util')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../config')
-const { DFP_UNITS, DFP_ID, GA_ID } = require('../../../src/constants')
+const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID } = require('../../../src/constants')
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
@@ -129,7 +129,8 @@ const sendArticleData = (req, res, next) => {
       DFP_ID,
       DFPUnits: get(DFP_UNITS, [ get(res.articleData, [ 'sections', 0, '_id' ]), 'AMP' ], {})
     },
-    GA_ID
+    GA_ID,
+    COMSCORE_C2_ID
   }
 
   // Let ejs can use lodash methods
