@@ -80,6 +80,7 @@ import { SECTION_MAP } from '../../constants'
 import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
 import _ from 'lodash'
 import moment from 'moment'
+const MARKETING_CATGORY_ID = '57fca2f5c9b7a70e004e6df9'
 
 export default {
   props: [ 'index', 'initialArticle', 'initialTogglePause' ],
@@ -112,7 +113,11 @@ export default {
       if (this.initialArticle.sections && _.get(this.initialArticle, [ 'sections', 'length' ], 0) > 0) {
         return _.get(this.initialArticle, [ 'sections', '0', 'title' ])
       } else {
-        return _.get(this.initialArticle, [ 'categories', '0', 'title' ])
+        const categoriesLen = _.get(this.initialArticle, 'categories.length', 0)
+        const categoryFirst =  _.get(this.initialArticle, 'categories.0.id')
+        return categoryFirst === MARKETING_CATGORY_ID && categoriesLen > 1
+          ?  _.get(this.initialArticle, 'categories.1.title')
+          :  _.get(this.initialArticle, 'categories.0.title')
       }
     },
     duration () {
