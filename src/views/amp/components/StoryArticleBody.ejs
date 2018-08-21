@@ -45,10 +45,10 @@
     <% default: %>
     <% break; %>
   <% } %>
-  <% if (index === storyContentFirstTwoUnstyledParagraph[0]) { %>
+  <% if (showAMPAds && index === storyContentFirstTwoUnstyledParagraph[0]) { %>
     <%- include('./AppAds', { AMPAds, pos: 'AMPAT1' }) %>
   <% } %>
-  <% if (index === storyContentFirstTwoUnstyledParagraph[1]) { %>
+  <% if (showAMPAds && index === storyContentFirstTwoUnstyledParagraph[1]) { %>
     <%- include('./AppAds', { AMPAds, pos: 'AMPAT2' }) %>
   <% } %>
 <% }) %>
