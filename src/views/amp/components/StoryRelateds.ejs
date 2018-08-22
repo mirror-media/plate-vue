@@ -4,7 +4,7 @@
     <% storyRelateds.forEach(function (related, index) { %>
       <a class="story-relateds__story-title" href="https://www.mirrormedia.mg/story/<%= _.get(related, 'slug', '') %>" target="_blank"><%= _.get(related, 'title', '') %></a>
       <% if (showAMPAds) { %>
-        <% if (index === _.get(AMPAds, [ 'DFPUnits', 'AMPE1' ], 0).showAfterRelatedPost - 1) %>
+        <% if (index === _.get(AMPAds, [ 'DFPUnits', 'AMPE1' ], 0).showAfterRelatedPost - 1) { %>
           <%- include('./AppAds', { AMPAds, pos: 'AMPE1' }) %>
         <% } %>
       <% } %>
