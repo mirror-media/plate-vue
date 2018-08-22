@@ -87,7 +87,7 @@
               :recommends="recommendlist"
               :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
-            <template slot="recommendList">
+            <template v-if="!hiddenAdvertised" slot="recommendList">
               <div><h3>推薦文章</h3></div>
               <div id="matchedContentContainer" class="matchedContentContainer"></div>
             </template>
