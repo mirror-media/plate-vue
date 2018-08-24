@@ -66,7 +66,7 @@
     <%- include('components/AppAnalytics', { GA_ID, COMSCORE_C2_ID }) %>
     <%- include('components/AppHeader') %>
     <article class="story-article">
-      <% if (showAMPAds) { %>
+      <% if (showAMPAds && isAMPAdsExist) { %>
         <%- include('components/AppAds', { AMPAds, pos: 'AMPHD' }) %>
       <% } %>
       <%- include('components/StoryInfo', { storyInfo }) %>
@@ -75,8 +75,10 @@
       <%- include('components/StoryArticleContent', { storyContent, storyContentAnnotation, storyContentFirstTwoUnstyledParagraph, showAMPAds, AMPAds }) %>
     </article>
     <%- include('components/StoryRelateds', { storyRelateds, showAMPAds, AMPAds }) %>
-    <%- include('components/AppMatchedContent', { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT }) %>
     <% if (showAMPAds) { %>
+      <%- include('components/AppMatchedContent', { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT }) %>
+    <% } %>
+    <% if (showAMPAds && isAMPAdsExist) { %>
       <%- include('components/AppAds', { AMPAds, pos: 'AMPFT' }) %>
     <% } %>
     <%- include('components/AppFooter', { storyInfo }) %>
