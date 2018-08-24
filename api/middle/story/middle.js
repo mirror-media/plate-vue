@@ -124,7 +124,8 @@ const sendArticleData = (req, res, next) => {
 
     storyContentAnnotation: composeAnnotation(get(find(get(res.articleData, [ 'content', 'apiData' ], []), [ 'type', 'annotation' ]), [ 'content' ], '')),
     storyRelateds: get(res.articleData, [ 'relateds' ], []),
-    showAMPAds: !get(res.articleData, 'hiddenAdvertised', false) && !isEmpty(get(DFP_UNITS, [ get(res.articleData, [ 'sections', 0, '_id' ]), 'AMP' ], {})),
+    showAMPAds: !get(res.articleData, 'hiddenAdvertised', false),
+    isAMPAdsExist: !isEmpty(get(DFP_UNITS, [ get(res.articleData, [ 'sections', 0, '_id' ]), 'AMP' ], {})),
     AMPAds: {
       DFP_ID,
       DFPUnits: get(DFP_UNITS, [ get(res.articleData, [ 'sections', 0, '_id' ]), 'AMP' ], {})
