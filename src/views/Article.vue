@@ -134,6 +134,7 @@
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
+  import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { consoleLogOnDev, currEnv, getImage, getTruncatedVal, lockJS, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
@@ -639,8 +640,8 @@
         matchedContentContent.setAttribute('class', 'adsbygoogle')
         matchedContentContent.setAttribute('style', 'display:block')
         matchedContentContent.setAttribute('data-ad-format', 'autorelaxed')
-        matchedContentContent.setAttribute('data-ad-client', 'ca-pub-7986335951683342')
-        matchedContentContent.setAttribute('data-ad-slot', '3362911316')
+        matchedContentContent.setAttribute('data-ad-client', MATCHED_CONTENT_AD_CLIENT)
+        matchedContentContent.setAttribute('data-ad-slot', MATCHED_CONTENT_AD_SLOT)
         matchedContentEnd.setAttribute('id', 'matchedContentEnd')
         matchedContentEnd.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`
 

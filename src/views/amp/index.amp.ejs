@@ -58,6 +58,7 @@
       <%- include('styles/StoryRelateds.css') %>
       <%- include('styles/AppFooter.css') %>
       <%- include('styles/AppAds.css') %>
+      <%- include('styles/AppMatchedContent.css') %>
     </style>
     <%- storyAdTrace %>
   </head>
@@ -74,6 +75,7 @@
       <%- include('components/StoryArticleContent', { storyContent, storyContentAnnotation, storyContentFirstTwoUnstyledParagraph, showAMPAds, AMPAds }) %>
     </article>
     <%- include('components/StoryRelateds', { storyRelateds, showAMPAds, AMPAds }) %>
+    <%- include('components/AppMatchedContent', { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT }) %>
     <% if (showAMPAds) { %>
       <%- include('components/AppAds', { AMPAds, pos: 'AMPFT' }) %>
     <% } %>
