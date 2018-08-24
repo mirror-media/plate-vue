@@ -95,46 +95,64 @@ const getArticleData = (req, res, next) => {
 }
 
 const sendArticleData = (req, res, next) => {
-  const articleData = {
-    storyInfo: {
-      sectionName: get(res.articleData, [ 'categories', 0, 'title' ], get(res.articleData, [ 'sections', 0, 'title' ], '')),
-      sectionColorModifier: getSectionColorModifier(get(res.articleData, [ 'sections', 0, '_id' ])),
-      storyDatePublished: getDate(get(res.articleData, [ 'publishedDate' ], '')),
-      storyDateUpdated: getDate(get(res.articleData, [ 'updatedAt' ], '')),
-      storyTitle: get(res.articleData, [ 'title' ], ''),
-      storySlug: get(res.articleData, [ 'slug' ], ''),
-      storyURL: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/${get(res.articleData, [ 'slug' ], '')}`,
-      storyURLAMP: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/amp/${get(res.articleData, [ 'slug' ], '')}`,
-      storyCredits: getCredit(res.articleData)
-    },
-    storyHeroVideo: {
-      src: get(res.articleData, [ 'heroVideo', 'video', 'url' ], '')
-    },
-    storyHeroImage: {
-      src: getStoryHeroImageSrc(res.articleData.heroImage),
-      caption: get(res.articleData, [ 'heroCaption' ], '')
-    },
-    storyBriefs: get(res.articleData, [ 'brief', 'apiData' ], []),
-    storyBriefAnnotation: composeAnnotation(get(find(get(res.articleData, [ 'brief', 'apiData' ], []), [ 'type', 'annotation' ]), [ 'content' ], '')),
-    storyContent: get(res.articleData, [ 'content', 'apiData' ], []),
+  const createArticleData = articleData => {
+    const _sectionTitle =            get(articleData, [ 'sections', 0, 'title' ])
+    const _sectionTitleCategories =  get(articleData, [ 'categories', 0, 'title' ], '')
+    const _sectionId =               get(articleData, [ 'sections', 0, '_id' ])
+    const _sectionDFPUnits =         get(articleData, [ _sectionId, 'AMP' ], {})
+    const _storyPublishedDate =      get(articleData, [ 'publishedDate' ], '')
+    const _storyUpdatedAt =          get(articleData, [ 'updatedAt' ], '')
+    const _storyTitle =              get(articleData, [ 'title' ], '')
+    const _storySlug =               get(articleData, [ 'slug' ], '')
+    const _storyHeroVideoSrc =       get(articleData, [ 'heroVideo', 'video', 'url' ], '')
+    const _storyHeroCaption =        get(articleData, [ 'heroCaption' ], '')
+    const _storyBriefs =             get(articleData, [ 'brief', 'apiData' ], [])
+    const _storyBriefsAnnotation =   get(find(_storyBriefs, [ 'type', 'annotation' ]), [ 'content' ], '')
+    const _storyContent =            get(articleData, [ 'content', 'apiData' ], [])
+    const _storyContentsAnnotation = get(find(_storyContent, [ 'type', 'annotation' ]), [ 'content' ], '')
+    const _storyAdTrace =            get(articleData, 'adTrace', '')
+    const _storyRelateds =           get(articleData, [ 'relateds' ], [])
 
-    // For Ads usage:
-    storyContentFirstTwoUnstyledParagraph: firstTwoUnstyledParagraph(get(res.articleData, [ 'content', 'apiData' ], [])),
-    storyAdTrace: get(res.articleData, 'adTrace', ''),
-
-    storyContentAnnotation: composeAnnotation(get(find(get(res.articleData, [ 'content', 'apiData' ], []), [ 'type', 'annotation' ]), [ 'content' ], '')),
-    storyRelateds: get(res.articleData, [ 'relateds' ], []),
-    showAMPAds: !get(res.articleData, 'hiddenAdvertised', false),
-    isAMPAdsExist: !isEmpty(get(DFP_UNITS, [ get(res.articleData, [ 'sections', 0, '_id' ]), 'AMP' ], {})),
-    AMPAds: {
-      DFP_ID,
-      DFPUnits: get(DFP_UNITS, [ get(res.articleData, [ 'sections', 0, '_id' ]), 'AMP' ], {})
-    },
-    GA_ID,
-    COMSCORE_C2_ID,
-    MATCHED_CONTENT_AD_CLIENT,
-    MATCHED_CONTENT_AD_SLOT,
+    return {
+      storyInfo: {
+        sectionName: _sectionTitle || _sectionTitleCategories,
+        sectionColorModifier: getSectionColorModifier(_sectionId),
+        storyDatePublished: getDate(_storyPublishedDate),
+        storyDateUpdated: getDate(_storyUpdatedAt),
+        storyTitle: _storyTitle,
+        storySlug: _storySlug,
+        storyURL: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/${_storySlug}`,
+        storyURLAMP: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/amp/${_storySlug}`,
+        storyCredits: getCredit(articleData)
+      },
+      storyHeroVideo: {
+        src: _storyHeroVideoSrc
+      },
+      storyHeroImage: {
+        src: getStoryHeroImageSrc(articleData.heroImage),
+        caption: _storyHeroCaption
+      },
+      storyBriefs: _storyBriefs,
+      storyBriefAnnotation: composeAnnotation(_storyBriefsAnnotation),
+      storyContent: _storyContent,
+      storyContentAnnotation: composeAnnotation(_storyContentsAnnotation),
+      storyContentFirstTwoUnstyledParagraph: firstTwoUnstyledParagraph(_storyContent),
+      storyAdTrace: _storyAdTrace,
+      storyRelateds: _storyRelateds,
+      showAMPAds: !get(articleData, 'hiddenAdvertised', false),
+      isAMPAdsExist: !isEmpty(_sectionDFPUnits),
+      AMPAds: {
+        DFP_ID,
+        DFPUnits: _sectionDFPUnits
+      },
+      GA_ID,
+      COMSCORE_C2_ID,
+      MATCHED_CONTENT_AD_CLIENT,
+      MATCHED_CONTENT_AD_SLOT,
+    }
   }
+
+  const articleData = createArticleData(res.articleData)
 
   // Let ejs can use lodash methods
   res.locals._ = _
