@@ -55,7 +55,7 @@ const clientTitleMetaMixin = {
     const meta = metaSet.meta
     const title = metaSet.title
     const url = metaSet.url
-    const link = metaSet.link
+    // const link = metaSet.link
     const adTrace = metaSet.adTrace
     const adTraceScripts = [ ...document.querySelectorAll('*[data-name="ad-trace"]') ]
     debug('adTrace', adTrace)
@@ -64,10 +64,10 @@ const clientTitleMetaMixin = {
     if (title) {
       document.querySelector('title').innerHTML = title
     }
-    if (link) {
-      const amphtml = document.head.querySelector(`link[rel='amphtml']`)
-      amphtml && (amphtml.href = link)
-    }
+    // if (link) {
+    //   const amphtml = document.head.querySelector(`link[rel='amphtml']`)
+    //   amphtml && (amphtml.href = link)
+    // }
     if (url) {
       const alternate = document.head.querySelector(`link[rel='alternate']`)
       alternate && (alternate.href = url)

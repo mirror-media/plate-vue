@@ -295,7 +295,7 @@
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
         `,
-        link: `<link rel="amphtml" href="${SITE_URL}/story/amp/${slug}/" />`,
+        link: `<link rel="amphtml" href="${SITE_URL}/story/amp/${slug}/">`,
         adTrace: adTrace
       }
     },
