@@ -48,6 +48,9 @@
         const lazy_img = document.createElement('img')
         lazy_img.onload = () => {
           debug('virtual img loaded!')
+          while (this.$refs[ 'lazyImg' ].hasChildNodes()) {
+            this.$refs[ 'lazyImg' ].removeChild(this.$refs[ 'lazyImg' ].lastChild)
+          }
           this.isVirtualImgLoaded = true
           this.$refs[ 'lazyImg' ].appendChild(lazy_img)
         }
