@@ -72,6 +72,7 @@ export const DFP_OPTIONS = {
 export const GA_ID = 'UA-83609754-1'
 export const GA_TEST_ID = 'UA-83609754-2'
 export const COMSCORE_C2_ID = '24318560'
+export const ALEXA_ATRK_ACCT = 'JEZvr1zDGU20kU'
 
 export const MATCHED_CONTENT_AD_CLIENT = 'ca-pub-7986335951683342'
 export const MATCHED_CONTENT_AD_SLOT = '3362911316'
