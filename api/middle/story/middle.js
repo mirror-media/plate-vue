@@ -7,7 +7,7 @@ const superagent = require('superagent')
 const { redisFetching, redisWriting, } = require('../redisHandler')
 const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph } = require('./util')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../config')
-const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } = require('../../../src/constants')
+const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT, ALEXA_ATRK_ACCT, SITE_DOMAIN } = require('../../../src/constants')
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
@@ -149,6 +149,8 @@ const sendArticleData = (req, res, next) => {
       COMSCORE_C2_ID,
       MATCHED_CONTENT_AD_CLIENT,
       MATCHED_CONTENT_AD_SLOT,
+      ALEXA_ATRK_ACCT,
+      SITE_DOMAIN,
     }
   }
 
