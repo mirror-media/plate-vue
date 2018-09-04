@@ -117,8 +117,8 @@ const sendArticleData = (req, res, next) => {
       storyInfo: {
         sectionName: _sectionTitle || _sectionTitleCategories,
         sectionColorModifier: getSectionColorModifier(_sectionId),
-        storyDatePublished: getDate(_storyPublishedDate),
-        storyDateUpdated: getDate(_storyUpdatedAt),
+        storyDatePublished: getDate(_storyPublishedDate, 8), // add 8 hours offsets to sending correct date from server
+        storyDateUpdated: getDate(_storyUpdatedAt, 8),
         storyTitle: _storyTitle,
         storySlug: _storySlug,
         storyURL: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/${_storySlug}`,

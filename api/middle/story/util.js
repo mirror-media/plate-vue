@@ -6,9 +6,9 @@ const { get } = require('lodash')
 const { SERVER_PROTOCOL, SERVER_HOST } = require('../../config')
 const { SECTION_MAP } = require('../../../src/constants')
 
-const getDate = (date) => {
+const getDate = (date, offsetHour = 0) => {
   const normalizedDt = new Date(date)
-  const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
+  const datetime = moment(normalizedDt).add(offsetHour, 'hours').format('YYYY.MM.DD HH:mm')
   return {
     dateFormatted: datetime,
     dateISO: normalizedDt.toISOString()
