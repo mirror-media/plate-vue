@@ -99,7 +99,7 @@ const sendArticleData = (req, res, next) => {
     const _sectionTitle =            get(articleData, [ 'sections', 0, 'title' ])
     const _sectionTitleCategories =  get(articleData, [ 'categories', 0, 'title' ], '')
     const _sectionId =               get(articleData, [ 'sections', 0, '_id' ])
-    const _sectionDFPUnits =         get(DFP_UNITS, [ _sectionId, 'AMP' ], {})
+    const _sectionDFPUnits =         get(DFP_UNITS, [ _sectionId, 'AMP' ], get(DFP_UNITS, [ 'other', 'AMP' ], {}))
     const _storyPublishedDate =      get(articleData, [ 'publishedDate' ], '')
     const _storyUpdatedAt =          get(articleData, [ 'updatedAt' ], '')
     const _storyTitle =              get(articleData, [ 'title' ], '')
@@ -117,8 +117,8 @@ const sendArticleData = (req, res, next) => {
       storyInfo: {
         sectionName: _sectionTitle || _sectionTitleCategories,
         sectionColorModifier: getSectionColorModifier(_sectionId),
-        storyDatePublished: getDate(_storyPublishedDate),
-        storyDateUpdated: getDate(_storyUpdatedAt),
+        storyDatePublished: getDate(_storyPublishedDate, 8), // add 8 hours offsets to sending correct date from server
+        storyDateUpdated: getDate(_storyUpdatedAt, 8),
         storyTitle: _storyTitle,
         storySlug: _storySlug,
         storyURL: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/${_storySlug}`,
@@ -140,7 +140,6 @@ const sendArticleData = (req, res, next) => {
       storyAdTrace: _storyAdTrace,
       storyRelateds: _storyRelateds,
       showAMPAds: !get(articleData, 'hiddenAdvertised', false),
-      isAMPAdsExist: !isEmpty(_sectionDFPUnits),
       AMPAds: {
         DFP_ID,
         DFPUnits: _sectionDFPUnits
