@@ -22,17 +22,24 @@
         }
         img.src = this.src
       },
+      checkPos () {
+        return new Promise(resolve => {
+          if (this.isVirtualImgCheckedOut) { return resolve(false) }
+          const deviceHeight = verge.viewportH()
+          const currPosMid = currentYPosition() + deviceHeight / 2
+          const elePos = elmYPosition(`.latest-image.id-${this.id}`)
+          if (currPosMid < elePos + 500 && currPosMid > elePos - 500) { resolve(true) }
+        })
+      },
+      goDoLazyLoad () {
+        this.isVirtualImgCheckedOut = true
+        this.lazyLoad()
+      },
     },
     mounted () {
+      this.checkPos().then(isPassed => (isPassed && this.goDoLazyLoad()))     
       window.addEventListener('scroll', () => {
-        if (this.isVirtualImgCheckedOut) { return }
-        const deviceHeight = verge.viewportH()
-        const currPosMid = currentYPosition() + deviceHeight / 2
-        const elePos = elmYPosition(`.latest-image.id-${this.id}`)
-        if (currPosMid < elePos + 500 && currPosMid > elePos - 500) {
-          this.isVirtualImgCheckedOut = true
-          this.lazyLoad()
-        }
+        this.checkPos().then(isPassed => (isPassed && this.goDoLazyLoad()))
       })
     },
     props: {
