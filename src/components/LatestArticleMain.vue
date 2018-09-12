@@ -38,7 +38,7 @@
 </template>
 <script>
 import _ from 'lodash'
-import { SECTION_MAP } from '../constants'
+import { SECTION_MAP, MARKETING_CATGORY_ID, } from '../constants'
 import { currEnv, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../util/comm'
 import { microAds } from '../constants/microAds'
 import LatestAriticleImg from 'src/components/LatestAriticleImg.vue'
@@ -92,9 +92,15 @@ export default {
       return style
     },
     getLabel (article) {
-      const section = _.get(article, [ 'sections', 0, 'title' ], '')
-      const category = _.get(article, [ 'categories', 0, 'title' ], '')
-      return (section.length > 0) ? section : category
+      const section = _.get(article, 'sections.0.title', '')
+      const categoriesLen = _.get(article, 'categories.length', 0)
+      const categoryFirst =  _.get(article, 'categories.0.id')
+
+      return (section.length > 0)
+        ? section
+        : categoryFirst === MARKETING_CATGORY_ID && categoriesLen > 1
+        ? _.get(article, 'categories.1.title')
+        : _.get(article, 'categories.0.title')
     },
     updateSysStage () {
       this.currEnv = currEnv()
