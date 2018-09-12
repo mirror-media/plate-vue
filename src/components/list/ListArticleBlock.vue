@@ -76,11 +76,10 @@
 
 <script>
 
-import { SECTION_MAP } from '../../constants'
+import { SECTION_MAP, MARKETING_CATGORY_ID, } from '../../constants'
 import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
 import _ from 'lodash'
 import moment from 'moment'
-const MARKETING_CATGORY_ID = '57fca2f5c9b7a70e004e6df9'
 
 export default {
   props: [ 'index', 'initialArticle', 'initialTogglePause' ],

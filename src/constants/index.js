@@ -1,6 +1,7 @@
 'use strict'
 import dfpUnitId from './dfpUnit.js'
 
+export const MARKETING_CATGORY_ID = '57fca2f5c9b7a70e004e6df9'
 export const SECTION_MAP = {
   // news
   '57e1e0e5ee85930e00cad4e9': { 'sectionName': 'news', 'bgcolor': '#30bac8' },
