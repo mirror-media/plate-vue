@@ -97,7 +97,8 @@ function render (req, res, next) {
     next()
     return
   } else if (req.url.indexOf('/404') === 0) {
-    res.status(404).render('404')
+    // res.status(404).render('404')
+    res.setHeader('Cache-Control', 'public, max-age=3600').status(200).render('404')
     return
   }
   const s = Date.now()
@@ -129,7 +130,12 @@ function render (req, res, next) {
       res.redirect(err.url)
     } else if (err && err.code == 404) {
       isPageNotFound = true
-      res.status(404).render('404')
+      // res.status(404).render('404')
+      if (!isPreview) {
+        res.setHeader('Cache-Control', 'public, max-age=3600').status(200).render('404')
+      } else {
+        res.status(404).render('404')
+      }
       console.error('##########REQUEST URL(404)############')
       console.error('REQUEST URL:', req.url)
       console.error(err)
@@ -146,7 +152,12 @@ function render (req, res, next) {
         res.status(403).send('403 | Forbidden')
         return
       } else if ('404' == err.status) {
-        res.status(404).render('404')
+        // res.status(404).render('404')
+        if (!isPreview) {
+          res.setHeader('Cache-Control', 'public, max-age=3600').status(200).render('404')
+        } else {
+          res.status(404).render('404')
+        }
         return
       } else {
         res.status(500).render('500', { err, timestamp: (new Date).toString() })
