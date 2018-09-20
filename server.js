@@ -207,14 +207,15 @@ function render (req, res, next) {
     }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
-
     isProd && redisWriting(req.url, html, null, 300)
   })
 }
 app.use('/story/amp', require('./api/middle/story/index.amp'))
 
-app.use('/api/', require('./api/index'))
-app.use('/', (req, res, next) => {
+app.use('/api', require('./api/index'), () => {
+  /** END */
+})
+app.get('*', (req, res, next) => {
   req.s = Date.now()
   next()
 }, fetchFromRedis, (req, res, next) => {
@@ -223,14 +224,17 @@ app.use('/', (req, res, next) => {
     if (res.redis.length > 3) {
       res.status(200).send(res.redis)
     } else {
-      res.status(res.redis).render(res.redis)
+      if (res.redis != '500') {
+        res.status(res.redis).render(res.redis)
+      } else {
+        res.status(res.redis).render(res.redis, { err: '', timestamp: (new Date).toString() })
+      }
     }
   } else {
     debug('Didnt see any html data.', req.url)
     next()
   }
-})
-app.get('*', isProd ? render : (req, res, next) => {
+}, isProd ? render : (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
 })
 
