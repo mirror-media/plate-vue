@@ -207,7 +207,7 @@ function render (req, res, next) {
     }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
-    isProd && redisWriting(req.url, html, null, 300)
+    isProd && !isPreview && redisWriting(req.url, html, null, 300)
   })
 }
 app.use('/story/amp', require('./api/middle/story/index.amp'))
