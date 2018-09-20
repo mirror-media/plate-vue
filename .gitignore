@@ -1,6 +1,7 @@
 
 dist
 err.log
+out.log
 node_modules
 npm-debug.log*
 debug.log

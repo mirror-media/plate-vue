@@ -1,3 +1,4 @@
+const debug = require('debug')('PLATEVUE:redis')
 const isProd = process.env.NODE_ENV === 'production'
 const isTest = process.env.NODE_ENV === 'test'
 const RedisConnectionPool = require('redis-connection-pool')
@@ -113,15 +114,17 @@ const redisFetching = (url, callback) => {
     timeoutHandler = null
   })
 }
-const redisWriting = (url, data, callback) => {
+const redisWriting = (url, data, callback, timeout) => {
   let timeoutHandler = new TimeoutHandler(callback)
+  debug('Going to Writing things to redis...')
   redisPoolWrite.set(decodeURIComponent(url), data, (err) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if(err) {
       console.log('redis writing in fail. ', decodeURIComponent(url), err)
     } else {
-      redisPoolWrite.expire(decodeURIComponent(url), REDIS_TIMEOUT, function(error, d) {
+      debug('Set timeout as:', timeout || REDIS_TIMEOUT)
+      redisPoolWrite.expire(decodeURIComponent(url), timeout || REDIS_TIMEOUT || 5000, function(error, d) {
         if(error) {
           console.log('failed to set redis expire time. ', decodeURIComponent(url), err)
         } else {
@@ -149,7 +152,8 @@ const insertIntoRedis = (req, res, next) => {
   })
 }
 const fetchFromRedis = (req, res, next) => {
- redisFetching(req.url, ({ error, data }) => {
+  debug('Trying to fetching data from redis...', req.url)
+  redisFetching(req.url, ({ error, data }) => {
     if (!error) {
       res.redis = data
       next()
