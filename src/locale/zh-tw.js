@@ -7,4 +7,7 @@ export default {
   'article': {
     'latest': '最新文章',
   },
+  'HEADER': {
+    'READR': 'READR 讀+',
+  },
 }
