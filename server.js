@@ -112,8 +112,10 @@ function render (req, res, next) {
   if (!isPreview) {
     res.setHeader('Cache-Control', 'public, max-age=3600')
   } else {
+    const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, i => (req.clientIp.indexOf(i) > -1)).length > 0
     console.info('Is there any preview permission limit?', _.get(VALID_PREVIEW_IP_ADD, 'length', 0) > 0)
-    const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, (i) => (req.clientIp.indexOf(i) > -1)).length > 0
+    console.info('Is allowed?', isValidReq)
+    console.ingo(VALID_PREVIEW_IP_ADD)
     res.header("Cache-Control", "no-cache, no-store, must-revalidate")
     res.header("Pragma", "no-cache")
     res.header("Expires", "0")
