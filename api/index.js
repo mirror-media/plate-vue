@@ -261,23 +261,16 @@ router.use('/related_news', function(req, res, next) {
 router.get('*', (req, res, next) => {
   req.startTime = Date.now()
   next()
-},fetchFromRedis, (req, res, next) => {
+}, fetchFromRedis, (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "X-Requested-With")
   if (res.redis) {
-    // debug('Fetch data from Redis.')
-    // debug(req.url)
-    console.error('Fetch data from Redis.', `${Date.now() - req.startTime}ms`) 
-    console.error(decodeURIComponent(req.url)) 
+    console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, decodeURIComponent(req.url))
     const resData = JSON.parse(res.redis)
     res.header('Cache-Control', 'public, max-age=300')
     res.json(resData)
   } else {
-    // debug('Fetch data from Api.')
-    // debug(req.url)
     res.header('Cache-Control', 'public, max-age=300')
-    // console.error(apiHost)
-    // console.error(decodeURIComponent(req.url)) 
     superagent
       .get(apiHost + req.url)
       .timeout(
@@ -292,18 +285,18 @@ router.get('*', (req, res, next) => {
             res_data = JSON.parse(response.text)
           } catch (e) {
             res.send(e)
-            console.error(`>>> Got bad data from api.`)
-            console.error(`>>> ${req.url}`)
-            console.error(e) 
+            console.error(`>>> Got bad data from api.\n`, `>>> ${req.url}\n`, e)
             return 
           }
-          const res_num = _.get(res_data, [ '_meta', 'total' ])
-          if (res_num && res_num > 0) {
+          const res_num = _.get(res_data, '_meta.total')          
+          if ((res_num && res_num > 0) || res_num === 0) {
             res.dataString = response.text
             next()
           }
-          console.error('Fetch data from Api.', `${Date.now() - req.startTime}ms`) 
-          console.error(decodeURIComponent(req.url)) 
+          console.log('Fetch data from Api.',
+            `${Date.now() - req.startTime}ms ${res_num}\n`,
+            `${decodeURIComponent(req.url)}\n`)
+
           res.header('Cache-Control', 'public, max-age=300')
           res.send(res_data)
         } else {
@@ -311,9 +304,7 @@ router.get('*', (req, res, next) => {
           res.header('Cache-Control', 'no-cache')
           res.status(status).send(error)
           if (status !== 404) {
-            console.error(`>>> Error occurred during fetching data from api.`)
-            console.error(`>>> ${req.url}`)
-            console.error(error)  
+            console.error(`>>> Error occurred during fetching data from api.\n`, `>>> ${req.url}\n`, error)
           } else {
             console.error(`Not Found: ${req.url}`)
           }

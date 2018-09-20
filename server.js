@@ -15,6 +15,8 @@ const resolve = file => path.resolve(__dirname, file)
 const uuidv4 = require('uuid/v4')
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
+const { fetchFromRedis, redisWriting } = require('./api/middle/redisHandler') 
+
 
 const formatMem = (bytes) => {
   return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
@@ -27,7 +29,7 @@ const serverInfo =
   `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
 const app = express()
-
+const debug = require('debug')('PLATEVUE:server')
 const template = fs.readFileSync(resolve('./src/index.template.html'), 'utf-8')
 
 function createRenderer (bundle, options) {
@@ -92,15 +94,16 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
  
 
 function render (req, res, next) {
-
-  if (req.url.indexOf('/api/') === 0) {
-    next()
-    return
-  } else if (req.url.indexOf('/404') === 0) {
-    // res.status(404).render('404')
-    res.setHeader('Cache-Control', 'public, max-age=3600').status(200).render('404')
-    return
+  const rendererEjsCB = function (err, html) { 
+    if (!err) {
+      res.status(rendererEjsCB.code).send(html)
+      isProd && redisWriting(req.url, rendererEjsCB.code || 500, null, 300)
+    } else {
+      console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
+      res.status(500).send('Internal Server Error')
+    }
   }
+
   const s = Date.now()
   let isPageNotFound = false
   let isErrorOccurred = false  
@@ -109,13 +112,18 @@ function render (req, res, next) {
   if (!isPreview) {
     res.setHeader('Cache-Control', 'public, max-age=3600')
   } else {
+    console.info('Is there any preview permission limit?', _.get(VALID_PREVIEW_IP_ADD, 'length', 0) > 0)
     const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, (i) => (req.clientIp.indexOf(i) > -1)).length > 0
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate")
+    res.header("Pragma", "no-cache")
+    res.header("Expires", "0")
     if (!isValidReq) {
       res.status(403).send('Forbidden')
-      console.error('Attempted to access draft in fail: 403 Forbidden')
+      console.info('Attempted to access draft in fail: 403 Forbidden')
+      return
     }
   }
-  console.error('request ip:', req.clientIp)
+  console.info('request ip:', req.clientIp)
   res.setHeader("Content-Type", "text/html")
   res.setHeader("Server", serverInfo)
 
@@ -130,37 +138,37 @@ function render (req, res, next) {
       res.redirect(err.url)
     } else if (err && err.code == 404) {
       isPageNotFound = true
-      // res.status(404).render('404')
-      if (!isPreview) {
-        res.setHeader('Cache-Control', 'public, max-age=3600').status(200).render('404')
-      } else {
-        res.status(404).render('404')
-      }
-      console.error('##########REQUEST URL(404)############')
-      console.error('REQUEST URL:', req.url)
-      console.error(err)
-      console.error('######################')
-      console.error('######################')
+      rendererEjsCB.code = 404
+      res.render('404', rendererEjsCB)
+
+      console.error(`##########REQUEST URL(404)############\n`,
+        `ERROR OCCURRED WHEN RUNNING renderToString()\n`,
+        `REQUEST URL: ${req.url}\n`,
+        `REQUEST IP: ${req.clientIp}\n`,
+        `REFERER: ${req.headers.referer}\n`,
+        `${err}\n`, '######################')
+
       return
     } else {
-      console.error(`error during renderToString() error : ${req.url}`)
-      console.error(err)
+      console.error(`ERROR OCCURRED WHEN RUNNING renderToString()\n`,
+        `REQUEST URL: ${req.url}\n`,
+        `REQUEST IP: ${req.clientIp}\n`,
+        `REFERER: ${req.headers.referer}\n`,
+        `${err}`)
+
       isErrorOccurred = true
-      
       err.status = err.status || 500
+
       if ('403' == err.status) {
         res.status(403).send('403 | Forbidden')
         return
       } else if ('404' == err.status) {
-        // res.status(404).render('404')
-        if (!isPreview) {
-          res.setHeader('Cache-Control', 'public, max-age=3600').status(200).render('404')
-        } else {
-          res.status(404).render('404')
-        }
+        rendererEjsCB.code = 404
+        res.render('404', rendererEjsCB)
         return
       } else {
-        res.status(500).render('500', { err, timestamp: (new Date).toString() })
+        rendererEjsCB.code = 500
+        res.render('500', { err, timestamp: (new Date).toString() }, rendererEjsCB)
         return
       }
     } 
@@ -198,18 +206,33 @@ function render (req, res, next) {
       return handleError(err)
     }
     res.send(html)
-    if (!isProd) {
-      console.log(`whole request: ${Date.now() - s}ms`)
-    }
+    !isProd && console.info(`whole request: ${Date.now() - s}ms`)
+
+    isProd && redisWriting(req.url, html, null, 300)
   })
 }
 app.use('/story/amp', require('./api/middle/story/index.amp'))
 
+app.use('/api/', require('./api/index'))
+app.use('/', (req, res, next) => {
+  req.s = Date.now()
+  next()
+}, fetchFromRedis, (req, res, next) => {
+  if (res.redis) {
+    console.log('Fetch page from Redis.', `${Date.now() - req.s}ms\n`, decodeURIComponent(req.url))
+    if (res.redis.length > 3) {
+      res.status(200).send(res.redis)
+    } else {
+      res.status(res.redis).render(res.redis)
+    }
+  } else {
+    debug('Didnt see any html data.', req.url)
+    next()
+  }
+})
 app.get('*', isProd ? render : (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
 })
-
-app.use('/api', require('./api/index'))
 
 const port = process.env.PORT || 8080
 const server = app.listen(port, () => {
@@ -234,7 +257,9 @@ memwatch.on('stats', function(stats) {
   const currBase = formatMem(stats.current_base)
   const min = formatMem(stats.min)
   const max = formatMem(stats.max)
-  console.error(`GC STATs(${moment().format('YYYY-MM-DD HH:mm:SS')}):`, '\n', [
+
+  console.info(`=======================================\n`,
+    `GC STATs(${moment().format('YYYY-MM-DD HH:mm:SS')}):\n`, [
     'num_full_gc ' + stats.num_full_gc,
     'num_inc_gc ' + stats.num_inc_gc,
     'heap_compactions ' + stats.heap_compactions,
@@ -243,7 +268,8 @@ memwatch.on('stats', function(stats) {
     'current_base ' + currBase,
     'min ' + min,
     'max ' + max
-  ].join(', '))
+  ].join(', '), `\n=======================================`)
+
   if (stats.current_base > maxMemUsageLimit) {
     for (let i = 0; i < 10; i += 1) {
       console.error('MEMORY WAS WUNNING OUT')
