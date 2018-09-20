@@ -54,9 +54,14 @@
           <router-link :to="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-menu`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-menu`" />
           <router-link to="/section/topic">更多</router-link>
         </div>
-        <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
-          <img src="/public/icon/mirrorfiction.png" alt="鏡文學"/>
-        </a>
+        <div class="header-menu-wrapper">
+          <a h ref="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
+            <img src="/public/icon/mirrorfiction.png" alt="鏡文學"/>
+          </a>
+          <a h ref="https://www.readr.tw/" id="header-readr-menu" class="header-menu__item readr" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
+            <img src="/public/icon/readrlogo-gary.png" :alt="$t('HEADER.READR')"/>
+          </a>
+        </div>
       </div>
     </nav>
 
@@ -82,6 +87,9 @@
         </div> -->
         <div class="header-sidebar__section mirrorfiction">
           <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-sidebar" target="_blank">鏡文學</a>
+        </div>
+        <div class="header-sidebar__section readr">
+          <a href="https://www.readr.tw/" id="header-readr-sidebar" target="_blank" v-text="$t('HEADER.READR')"></a>
         </div>
       </div>
       <div class="header-sidebar__other">
@@ -302,6 +310,7 @@ $color-culture = #009245
 $color-watch = #c1d16e
 $color-external = #ee5a24
 $color-mirrorfiction = #968375
+$color-readr = #968375
 
 .header
   width 100%
@@ -325,6 +334,14 @@ $color-mirrorfiction = #968375
       &.external
         border-color $color-external
       &.mirrorfiction
+        padding 9.5px 0
+        font-size 0
+        line-height 1
+        border none
+        img
+          width auto
+          height 30px
+      &.readr
         padding 9.5px 0
         font-size 0
         line-height 1
@@ -454,6 +471,11 @@ $color-mirrorfiction = #968375
       background-color $color-external
     &.mirrorfiction
       background-color $color-mirrorfiction
+    &.readr
+      background-color $color-readr
+  &-wrapper
+    display flex
+
   &__item
     &.dropdown
       position relative
@@ -515,6 +537,9 @@ $color-mirrorfiction = #968375
   &.mirrorfiction
     a:hover
       color $color-mirrorfiction
+  &.readr
+    a:hover
+      color $color-readr
 
 .header-sidebar
   position fixed
