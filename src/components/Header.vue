@@ -55,10 +55,10 @@
           <router-link to="/section/topic">更多</router-link>
         </div>
         <div class="header-menu-wrapper">
-          <a h ref="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
+          <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
             <img src="/public/icon/mirrorfiction.png" alt="鏡文學"/>
           </a>
-          <a h ref="https://www.readr.tw/" id="header-readr-menu" class="header-menu__item readr" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
+          <a href="https://www.readr.tw/" id="header-readr-menu" class="header-menu__item readr" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
             <img src="/public/icon/readrlogo-gary.png" :alt="$t('HEADER.READR')"/>
           </a>
         </div>
