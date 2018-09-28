@@ -97,7 +97,7 @@ function render (req, res, next) {
   const rendererEjsCB = function (err, html) { 
     if (!err) {
       res.status(rendererEjsCB.code).send(html)
-      isProd && redisWriting(req.url, rendererEjsCB.code || 500, null, 300)
+      isProd && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
       res.status(500).send('Internal Server Error')
@@ -208,7 +208,7 @@ function render (req, res, next) {
     }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
-    isProd && !isPreview && redisWriting(req.url, html, null, 300)
+    isProd && !isPreview && redisWriting(req.url, html, null, 120)
   })
 }
 app.use('/story/amp', require('./api/middle/story/index.amp'))
