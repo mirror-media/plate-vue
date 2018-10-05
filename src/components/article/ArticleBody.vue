@@ -54,7 +54,7 @@
       </div>
       <div class="split-line"></div>
       <article class="content">
-        <div v-for="(p, index) in contArr">
+        <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`">
           <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
