@@ -1,5 +1,5 @@
 <template>
-  <div class="audioBox">
+  <div class="audioBox" v-click-outside="handleClickOutside">
     <div class="audioBox__action">
       <button :class="{ paused: !isPlaying && !isEnded, playing: isPlaying && !isEnded, ended: isEnded }" @click="handleAudioClick"></button>
     </div>
@@ -29,6 +29,21 @@ import moment from 'moment'
 
 export default {
   name: 'audioBox',
+  directives: {
+    'click-outside': {
+      bind (el, binding, vnode) {
+        el.clickOutsideEvent = function (event) {
+          if (!(el == event.target || el.contains(event.target))) {
+            vnode.context[binding.expression](event)
+          }
+        }
+        document.body.addEventListener('click', el.clickOutsideEvent)
+      },
+      unbind (el) {
+        document.body.removeEventListener('click', el.clickOutsideEvent)
+      }
+    }
+  },
   props: [ 'audio' ],
   data () {
     return {
@@ -70,6 +85,17 @@ export default {
         }
       }
     },
+    handleClickOutside (e) {
+      const parent = e.target.parentNode
+      const parentClassList = [ ...parent.classList ]
+      if (parentClassList.includes('audioBox__action') && this.isPlaying) {
+        const audioEle = this.$refs.audio
+        if (audioEle) {
+          this.isPlaying = false
+          audioEle.pause()
+        }
+      }
+    } ,
     changeProgress (e) {
       const audioEle = this.$refs.audio
       if (!this.isLoaded) {
@@ -99,6 +125,7 @@ export default {
 <style lang="stylus" scoped>
 .audioBox
   position relative
+  margin-bottom 1em
   &__action
     box-sizing content-box
     position relative
@@ -210,11 +237,11 @@ export default {
       padding 1.5em 0 .5em
       > h1
         display block
-        height 3.45rem
+        height 3rem
         margin 0
         padding-left 15%
         color #fff
-        font-size 1.5rem
+        font-size 1.3rem
         text-overflow ellipsis
         overflow hidden
       .progress
