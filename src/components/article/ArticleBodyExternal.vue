@@ -12,17 +12,23 @@
           <div class="article__info--date" v-text="date"></div>
         </div>
         <h1 v-text="title"></h1>
-        <div v-if="credit" class="article__credit">文｜<span v-text="credit"></span></div>
+        <div v-if="credit" class="article__credit">文｜<span v-html="credit"></span></div>
         <main>
           <section class="article__main">
             <p class="article__main--brief" v-text="brief"></p>
-            <div class="article__main--content">
-              <template v-for="(p, index) in content">
-                <p :key="`content-${index}`" v-html="p"></p>
-                <slot v-if="index === 1" name="dfp-AT1"></slot>
-                <slot v-if="index === 4" name="dfp-AT2"></slot>
-              </template>
-            </div>
+            <template v-if="contentWithHtmlTag">
+              <div class="article__main--content" v-html="content">
+              </div>
+            </template>
+            <template v-else>
+              <div class="article__main--content">
+                <template v-for="(p, index) in content">
+                  <p :key="`content-${index}`" v-html="p"></p>
+                  <slot v-if="index === 1" name="dfp-AT1"></slot>
+                  <slot v-if="index === 4" name="dfp-AT2"></slot>
+                </template>
+              </div>
+            </template>
             <p v-if="source" class="article__main--ref">【<strong>本文經</strong><span v-text="partner"></span><strong>授權轉載</strong><a :href="source" target="_blank">看原文</a>】</p>
             <newsletter></newsletter>
             <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
@@ -78,11 +84,15 @@
         return _.get(this.articleData, [ 'brief' ])
       },
       content () {
-        const orig = _.get(this.articleData, [ 'content' ])
-        if (orig.includes('<p>')) {
+        const orig = _.get(this.articleData, 'content')
+        if (this.contentWithHtmlTag) {
           return orig
         }
         return _.split(orig, `\r\n\r\n`)
+      },
+      contentWithHtmlTag () {
+        const orig = _.get(this.articleData, 'content')
+        return orig.includes('<p>')
       },
       credit () {
         const author = _.uniq(_.split(_.get(this.articleData, [ 'extendByline' ]), ','))
@@ -155,6 +165,7 @@
         font-weight normal
     &__main
       margin-top 30px
+      line-height 36px
       a, a:hover, a:link, a:visited
         padding-bottom 5px
         color #3195b3
