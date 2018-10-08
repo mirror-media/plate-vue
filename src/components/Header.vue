@@ -31,20 +31,20 @@
     <nav class="header-menu--section">
       <div class="header-menu">
         <template v-for="item in sections">
-          <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount} )`, borderTopColor: $_header_getColor(item) }">
+          <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }">
             <router-link :id="`header-${item.id}-menu`" :to="`/section/${item.name}`" v-text="item.title"></router-link>
             <div class="dropdown-content" :class="item.name">
               <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-menu-${i}`" />
             </div>
           </div>
-          <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount} )`, borderTopColor: $_header_getColor(item) }"></router-link>
+          <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
         </template>
-        <!-- <div class="header-menu__item dropdown external" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">
-          <a>校園</a>
+        <div class="header-menu__item dropdown external" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">
+          <a>健康醫療</a>
           <div class="dropdown-content external">
             <router-link v-for="p in partners" :id="`header-${p.id}-menu`" :key="`${p.id}-menu`" :to="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></router-link>
           </div>
-        </div> -->
+        </div>
       </div>
     </nav>
 
@@ -79,12 +79,12 @@
             <a :href="`/category/${c.name}`" :id="`header-${c.id}-sidebar`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-sidebar-${i}`"></a>
           </div>
         </div>
-        <!-- <div class="header-sidebar__section external">
-          <a>校園</a>
+        <div class="header-sidebar__section external">
+          <a>健康醫療</a>
           <div class="header-sidebar__categories">
             <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :href="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></a>
           </div>
-        </div> -->
+        </div>
         <div class="header-sidebar__section mirrorfiction">
           <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-sidebar" target="_blank">鏡文學</a>
         </div>
