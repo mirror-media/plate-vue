@@ -34,6 +34,7 @@
         <footer-full :commonData='commonData' :sectionName='sectionName' />
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
+
       <div class="list-view" v-else-if="pageStyle === 'watch101'">
         <watch101-list :viewport="viewport">
           <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' :showLogo="false" class="watch101" slot="header"/>
@@ -42,6 +43,21 @@
           <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="MBHD" :config="props.config" slot="ad-hd" />
           <vue-dfp :is="props.vueDfp" pos="NA1" :config="props.config" slot="ad-na1" />
         </watch101-list>
+      </div>
+
+      <div class="list-view" v-else-if="pageStyle === 'gslecture'">
+        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
+        <list-slider class="gs"></list-slider>
+        <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode"></article-list>
+        <div><vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" :unitId="'mirror_RWD_GS_970250-300250_FT'" /></div>
+        <div><vue-dfp v-if="isMobile" :is="props.vueDfp" pos="LMBFT" :config="props.config" :unitId="'mirror_RWD_GS_970250-300250_FT'" /></div>
+        <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
+          v-show="hasAutoScroll"/>
+        <loading :show="loading" />
+        <section class="footer container">
+          <app-footer />
+        </section>
+        <share :right="`20px`" :bottom="`20px`" />
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'light'">
@@ -135,6 +151,7 @@ import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
 import Leading from '../components/Leading.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
 import ListChoice from '../components/ListChoice.vue'
+import ListSlider from '../components/list/ListSlider.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import MicroAd from '../components/MicroAd.vue'
@@ -150,6 +167,10 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 const MAXRESULT = 12
 const PAGE = 1
 const debug = require('debug')('CLIENT:LIST')
+
+const GS_CATEGORY_NAME = 'gslecture'
+const GS_TAG_ID = '5bbc2069f39162100007c8bc'
+
 const fetchCommonData = (store, route) => {
   return Promise.all([
     store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
@@ -162,6 +183,9 @@ const fetchCommonData = (store, route) => {
       return fetchAuthor(store, route.params.authorId)
     }
     if (_.toUpper(_.split(route.path, '/')[1]) === CATEGORY) {
+      if (route.params.title === GS_CATEGORY_NAME) {
+        fetchImages(store, GS_TAG_ID)
+      }
       return fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(route.path, '/')[2], 'ogImage' ], ''))
     }
   }).catch(err => {
@@ -185,6 +209,14 @@ const fetchCategoryOgImages = (store, uuid) => {
     'type': 'OG'
   })
 }
+
+const fetchImages = (store, uuid) => store.dispatch('FETCH_IMAGES', {
+  uuid: uuid,
+  type: TAG,
+  params: {
+    max_results: 25
+  }
+})
 
 const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = false, pageToken = '') => {
   const page = isLoadMore || PAGE
@@ -472,6 +504,7 @@ export default {
     'leading': Leading,
     'leading-watch': LeadingWatch,
     'list-choice': ListChoice,
+    'list-slider': ListSlider,
     'live-stream': LiveStream,
     'loading': Loading,
     'micro-ad': MicroAd,
@@ -786,7 +819,10 @@ export default {
         case TAG:
           return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
         case CATEGORY:
-          return this.$route.params.title !== 'watch101' ? _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'style' ], 'feature') : 'watch101'
+          if (this.$route.params.title === 'watch101' || this.$route.params.title === GS_CATEGORY_NAME) {
+            return this.$route.params.title
+          }
+          return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'style' ], 'feature')
         case EXTERNALS:
           return 'light'
         default:
