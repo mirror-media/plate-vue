@@ -112,6 +112,7 @@ export default {
     left 0
     display flex
     height 100%
+    transition transform 1s ease-out 0s
   &__item
     display block
     height 100%
@@ -119,14 +120,14 @@ export default {
     background-position center center
     background-repeat no-repeat
   &__nav
-    display flex
+    display none
     align-items center
     position absolute
     left 50%
     bottom 10px
     transform translateX(-50%)
     max-width 115px
-    height 20px
+    height 15px
     overflow hidden
     .nav-container
       display flex
@@ -135,7 +136,6 @@ export default {
       height 15px
       background-color #bbb
       border-radius 15px
-      box-shadow 0px 0px 5px 2px rgba(0,0,0,.2)
       transition background-color .5s ease
       cursor pointer
       & + .dot
@@ -151,4 +151,7 @@ export default {
       .gs-list__slider
           height 600px
           padding-top 0
+  .slider
+    &__nav
+      display flex
 </style>
