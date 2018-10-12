@@ -112,14 +112,18 @@
       <div class="dfpad-set" :class="{ mobile: viewport < 1000 }">
         <slot name="dfpad-set"></slot>
       </div>
-      <slot name="recommendList"></slot>
-      <div class="article_main_pop">
-        <slot name="poplist"></slot>
-      </div>
-      <div class="article_main_proj">
-        <h3 style="margin-top: 0;">專題報導</h3>
-        <proj-list :projects="projlistData" :viewport="viewport" />
-      </div>
+      <template v-if="abIndicator === 'A'">
+        <slot name="recommendList"></slot>
+        <div class="article_main_pop">
+          <slot name="poplist"></slot>
+        </div>
+      </template>
+      <template v-if="abIndicator === 'B'">
+        <div class="article_main_pop">
+          <slot name="poplist"></slot>
+        </div>
+        <slot name="recommendList"></slot>
+      </template>
       <slot name="slot_fb_comment"></slot>
     </main>
     <slot name="aside"></slot>
