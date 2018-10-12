@@ -26,7 +26,7 @@
 <script>
 import { get } from 'lodash'
 
-const GS_TAG_ID = '5bbc2069f39162100007c8bc'
+const GS_TAG_ID = '5bbc2069f39162100007c8bc' // 5bbf08301e598f1000fc8e52
 
 export default {
   name: 'ListSlider',
