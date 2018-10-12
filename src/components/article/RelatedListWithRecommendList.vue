@@ -51,7 +51,7 @@
         for (let i = 0; i < excludingArticlesLen; i += 1) { recommendListHash.remove(_.get(this.relateds[ i ], [ 'slug' ], '')) }
         dqueue.toArray().map((slug) => { recommendListHash.remove(slug) })
         debug(recommendListHash.values())
-        return _.take(recommendListHash.values(), (this.abIndicator === 'A' ? RELATED_LIST_MAX : 15) - excludingArticlesLen)
+        return _.take(recommendListHash.values(), RELATED_LIST_MAX - excludingArticlesLen)
       },
       recommendsHash () {
         const hashtable = new HashTable()
