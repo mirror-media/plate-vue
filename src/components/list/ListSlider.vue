@@ -93,7 +93,7 @@ export default {
   &.gs
     .gs-list__slider
       max-width 1380px
-      padding-top 66.66%
+      padding-top 100%
 .slider
   position relative
   &-container
@@ -110,7 +110,7 @@ export default {
     background-position center center
     background-repeat no-repeat
 
-@media (min-width: 900px)
+@media (min-width: 600px)
   .gs-list
     &.gs
       .gs-list__slider
