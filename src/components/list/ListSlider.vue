@@ -10,16 +10,6 @@
           target="_blank">
         </a>
       </div>
-      <div class="slider__nav">
-        <div class="nav-container" :style="{ width: `${ images.length * 15 + (images.length - 1) * 10 }px` }">
-          <div v-for="(item, index) in images"
-            :key="`btn-${item.id}`"
-            :class="{ active: current === index}"
-            class="dot"
-            @click="current = index">
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 </template>
@@ -103,7 +93,7 @@ export default {
   &.gs
     .gs-list__slider
       max-width 1380px
-      padding-top 43.478%
+      padding-top 66.66%
 .slider
   position relative
   &-container
@@ -119,39 +109,12 @@ export default {
     background-size cover
     background-position center center
     background-repeat no-repeat
-  &__nav
-    display none
-    align-items center
-    position absolute
-    left 50%
-    bottom 10px
-    transform translateX(-50%)
-    max-width 115px
-    height 15px
-    overflow hidden
-    .nav-container
-      display flex
-    .dot
-      width 15px
-      height 15px
-      background-color #bbb
-      border-radius 15px
-      transition background-color .5s ease
-      cursor pointer
-      & + .dot
-        margin-left 10px
-      &:hover
-        background-color rgba(0,0,0,.6)
-      &.active
-        background-color rgba(0,0,0,.6)
 
-@media (min-width: 1400px)
+@media (min-width: 900px)
   .gs-list
     &.gs
       .gs-list__slider
-          height 600px
-          padding-top 0
-  .slider
-    &__nav
-      display flex
+        height 600px
+        padding-top 0
+  
 </style>
