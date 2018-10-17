@@ -8,7 +8,7 @@
       </div>
       <article class="article">
         <div class="article__info">
-          <div class="article__info--section">校園</div>
+          <div class="article__info--section">健康醫療</div>
           <div class="article__info--date" v-text="date"></div>
         </div>
         <h1 v-text="title"></h1>
