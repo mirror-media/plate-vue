@@ -27,9 +27,12 @@
                   :key="`${i}-groupedlist`"
                 />
               </template>
-              <div v-else-if="abIndicator === 'B'" class="focusNewsContainer__latest-mobile-b">
+              <div
+                v-else-if="abIndicator === 'B'"
+                v-show="viewport < 1200"
+                class="focusNewsContainer__latest-mobile-b"
+              >
                 <LatestArticleAsideMobileB
-                  v-show="viewport < 1200"
                   v-for="(o, i) in groupedArticle"
                   :key="`${i}-groupedlist-mobile-b`"
                   :groupedArticle="o"
