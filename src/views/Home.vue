@@ -14,13 +14,27 @@
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2 v-text="$t('homepage.focus')"></h2></div>
             <div class="focusNewsContainer">
-              <LatestArticleAside v-show="viewport < 1200" v-for="(o, i) in groupedArticle" target="_blank"
-                :groupedArticle="o"
-                :viewport="viewport"
-                :needStick="false"
-                :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
-                :class="{ last: i === (groupedArticle.length - 1), first: i === 0}"
-                :key="`${i}-groupedlist`" />
+              <template v-if="abIndicator === 'A'">
+                <LatestArticleAside
+                  v-show="viewport < 1200"
+                  v-for="(o, i) in groupedArticle"
+                  target="_blank"
+                  :groupedArticle="o"
+                  :viewport="viewport"
+                  :needStick="false"
+                  :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
+                  :class="{ last: i === (groupedArticle.length - 1), first: i === 0}"
+                  :key="`${i}-groupedlist`"
+                />
+              </template>
+              <div v-else-if="abIndicator === 'B'" class="focusNewsContainer__latest-mobile-b">
+                <LatestArticleAsideMobileB
+                  v-show="viewport < 1200"
+                  v-for="(o, i) in groupedArticle"
+                  :key="`${i}-groupedlist-mobile-b`"
+                  :groupedArticle="o"
+                />
+              </div>
             </div>
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
@@ -74,6 +88,7 @@ import EditorChoice from '../components/EditorChoice.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
+import LatestArticleAsideMobileB from '../components/LatestArticleAsideMobileB.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
@@ -154,6 +169,7 @@ export default {
     'more': More,
     DfpCover,
     LatestArticleAside,
+    LatestArticleAsideMobileB,
     LatestArticleMain,
     MirrorMediaTVAside,
     PopularArticles,
@@ -582,6 +598,13 @@ section.footer
     top 460px
     right auto
     width calc(1024px * 0.25 - 30px)
+
+.focusNewsContainer
+  &__latest-mobile-b
+    width 90%
+    margin 0 auto
+    padding 14px 18px
+    border solid 2px #224f73
 
 @media (min-width: 600px)
   .list
