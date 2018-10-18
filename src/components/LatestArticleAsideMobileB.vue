@@ -81,8 +81,9 @@ export default {
   &__item
     display inline-block
     padding 10px 0
-    color #4d4d4d
-    font-size 16px
+    color rgba(0, 0, 0, 0.65)
+    font-size 20.8px
+    font-weight 300
     line-height 1.31
     text-align justify
     min-width 100%
