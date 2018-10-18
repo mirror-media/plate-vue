@@ -85,6 +85,7 @@ export default {
     font-size 16px
     line-height 1.31
     text-align justify
+    min-width 100%
     & + &
       border-top solid 2px #d7d7d7
 </style>
