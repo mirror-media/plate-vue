@@ -45,7 +45,8 @@
         </watch101-list>
       </div>
 
-      <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
+      <div class="list-view" v-else-if="pageStyle === 'gslecture'"> 
+      <!-- <div class="list-view" v-else-if="pageStyle === 'grand-seiko2018'">  -->
         <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         <list-slider class="gs"></list-slider>
         <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode"></article-list>
@@ -168,8 +169,8 @@ const MAXRESULT = 12
 const PAGE = 1
 const debug = require('debug')('CLIENT:LIST')
 
-const GS_CATEGORY_NAME = 'grand-seiko-2018' // dev gslecture
-const GS_TAG_ID = '5bbf08301e598f1000fc8e52' // dev 5bbc2069f39162100007c8bc
+const GS_CATEGORY_NAME = 'gslecture' // grand-seiko2018
+const GS_TAG_ID = '5bbc2069f39162100007c8bc' // 5bbf08301e598f1000fc8e52
 
 const fetchCommonData = (store, route) => {
   return Promise.all([

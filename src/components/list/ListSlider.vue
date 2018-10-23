@@ -10,23 +10,13 @@
           target="_blank">
         </a>
       </div>
-      <div class="slider__nav">
-        <div class="nav-container" :style="{ width: `${ images.length * 15 + (images.length - 1) * 10 }px` }">
-          <div v-for="(item, index) in images"
-            :key="`btn-${item.id}`"
-            :class="{ active: current === index}"
-            class="dot"
-            @click="current = index">
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 </template>
 <script>
-import { get, throttle } from 'lodash'
+import { get } from 'lodash'
 
-const GS_TAG_ID = '5bbf08301e598f1000fc8e52' // dev 5bbc2069f39162100007c8bc
+const GS_TAG_ID = '5bbc2069f39162100007c8bc' // 5bbf08301e598f1000fc8e52
 
 export default {
   name: 'ListSlider',
@@ -61,26 +51,26 @@ export default {
     },
     handleSwipe () {
       if (this.touchEndX > this.touchStartX) {
-        if (this.current - 1 > -1) {
-          this.current -= 1
-        } else {
-          this.current = this.images.length - 1
-        }
-      } else {
         if (this.current + 1 < this.images.length) {
           this.current += 1
         } else {
           this.current = 0
         }
+      } else {
+        if (this.current - 1 > -1) {
+          this.current -= 1
+        } else {
+          this.current = this.images.length - 1
+        }
       }
     },
-    handleTouchstart: throttle(function (e) {
+    handleTouchstart (e) {
       this.touchStartX = e.changedTouches[0].screenX
-    }, 1000),
-    handleTouchend: throttle(function (e) {
+    },
+    handleTouchend (e) {
       this.touchEndX = e.changedTouches[0].screenX
       this.handleSwipe()
-    }, 1000),
+    },
     setTimer () {
       this.timer = setInterval(() => {
         if (this.current + 1 < this.images.length) {
@@ -119,31 +109,6 @@ export default {
     background-size cover
     background-position center center
     background-repeat no-repeat
-  &__nav
-    display flex
-    align-items center
-    position absolute
-    left 50%
-    bottom 6px
-    transform translateX(-50%)
-    max-width 115px
-    height 10px
-    overflow hidden
-    .nav-container
-      display flex
-    .dot
-      width 10px
-      height 10px
-      background-color #bbb
-      border-radius 10px
-      transition background-color .5s ease
-      cursor pointer
-      & + .dot
-        margin-left 10px
-      &:hover
-        background-color rgba(0,0,0,.6)
-      &.active
-        background-color rgba(0,0,0,.6)
 
 @media (min-width: 600px)
   .gs-list
@@ -151,11 +116,5 @@ export default {
       .gs-list__slider
         height 600px
         padding-top 0
-  .slider
-    &__nav
-      bottom 10px
-      height 15px
-      .dot
-        width 15px
-        height 15px
+  
 </style>
