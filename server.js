@@ -6,7 +6,7 @@ const express = require('express')
 const favicon = require('serve-favicon')
 const fs = require('fs')
 const maxMemUsageLimit = 1000 * 1024 * 1024
-const memwatch = require('memwatch-next')
+// const memwatch = require('memwatch')
 const moment = require('moment')
 const microcache = require('route-cache')
 const path = require('path')
@@ -251,42 +251,42 @@ module.exports = {
   }
 }
 
-memwatch.on('leak', function(info) {
-  const growth = formatMem(info.growth)
-  const mem = process.memoryUsage()
-  console.error('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
-  console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
-})
-memwatch.on('stats', function(stats) {
-  const estBase = formatMem(stats.estimated_base)
-  const currBase = formatMem(stats.current_base)
-  const min = formatMem(stats.min)
-  const max = formatMem(stats.max)
+// memwatch.on('leak', function(info) {
+//   const growth = formatMem(info.growth)
+//   const mem = process.memoryUsage()
+//   console.error('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
+//   console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
+// })
+// memwatch.on('stats', function(stats) {
+//   const estBase = formatMem(stats.estimated_base)
+//   const currBase = formatMem(stats.current_base)
+//   const min = formatMem(stats.min)
+//   const max = formatMem(stats.max)
 
-  console.info(`=======================================\n`,
-    `GC STATs(${moment().format('YYYY-MM-DD HH:mm:SS')}):\n`, [
-    'num_full_gc ' + stats.num_full_gc,
-    'num_inc_gc ' + stats.num_inc_gc,
-    'heap_compactions ' + stats.heap_compactions,
-    'usage_trend ' + stats.usage_trend,
-    'estimated_base ' + estBase,
-    'current_base ' + currBase,
-    'min ' + min,
-    'max ' + max
-  ].join(', '), `\n=======================================`)
+//   console.info(`=======================================\n`,
+//     `GC STATs(${moment().format('YYYY-MM-DD HH:mm:SS')}):\n`, [
+//     'num_full_gc ' + stats.num_full_gc,
+//     'num_inc_gc ' + stats.num_inc_gc,
+//     'heap_compactions ' + stats.heap_compactions,
+//     'usage_trend ' + stats.usage_trend,
+//     'estimated_base ' + estBase,
+//     'current_base ' + currBase,
+//     'min ' + min,
+//     'max ' + max
+//   ].join(', '), `\n=======================================`)
 
-  if (stats.current_base > maxMemUsageLimit) {
-    for (let i = 0; i < 10; i += 1) {
-      console.error('MEMORY WAS WUNNING OUT')
-    } 
-    /**
-     * kill this process gracefully
-     */
-    const killTimer = setTimeout(() => {
-      process.exit(1)
-    }, 1000)
-    killTimer.unref()
-    server.close()
-    console.error(`GOING TO KILL PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
-  }
-})
+//   if (stats.current_base > maxMemUsageLimit) {
+//     for (let i = 0; i < 10; i += 1) {
+//       console.error('MEMORY WAS WUNNING OUT')
+//     } 
+//     /**
+//      * kill this process gracefully
+//      */
+//     const killTimer = setTimeout(() => {
+//       process.exit(1)
+//     }, 1000)
+//     killTimer.unref()
+//     server.close()
+//     console.error(`GOING TO KILL PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
+//   }
+// })
