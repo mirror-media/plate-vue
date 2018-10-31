@@ -31,13 +31,13 @@
     <nav class="header-menu--section">
       <div class="header-menu">
         <template v-for="item in sections">
-          <div v-if="item.categories.length !== 0" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }">
+          <div v-if="item.categories.length !== 0" :key="`menu-${item.name}`" class="header-menu__item dropdown" :class="item.name" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }">
             <router-link :id="`header-${item.id}-menu`" :to="`/section/${item.name}`" v-text="item.title"></router-link>
             <div class="dropdown-content" :class="item.name">
               <router-link :to="`/category/${c.name}`" :id="`header-${c.id}-menu`" v-for="(c, i) in item.categories" v-text="c.title" :key="`${item.id}-menu-${i}`" />
             </div>
           </div>
-          <router-link v-if="item.categories.length === 0" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
+          <router-link v-else :key="`menu-${item.name}`" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
         </template>
         <div class="header-menu__item dropdown external" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">
           <a>健康醫療</a>
@@ -71,6 +71,7 @@
       </div>
       <div class="header-sidebar__topic">
         <a :href="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-sidebar-${i}`"></a>
+        <a href="/section/topic">更多</a>
       </div>
       <div class="header-sidebar__sections">
         <div class="header-sidebar__section" v-for="(item, i) in sections" :style="{ borderLeftColor: $_header_getColor(item) }" :key="`${item.id}-sidebar-${i}`">
