@@ -4,7 +4,7 @@ workspace:
 pipeline:
   start_slack:
     image: plugins/slack
-    channel: jenkins
+    channel: ground_control
     secrets: [slack_webhook]
     username: plate-vue
     icon_url: https://vuejs.org/images/logo.png
