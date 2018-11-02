@@ -112,18 +112,10 @@
       <div class="dfpad-set" :class="{ mobile: viewport < 1000 }">
         <slot name="dfpad-set"></slot>
       </div>
-      <template v-if="abIndicator === 'A'">
-        <slot name="recommendList"></slot>
-        <div class="article_main_pop">
-          <slot name="poplist"></slot>
-        </div>
-      </template>
-      <template v-if="abIndicator === 'B'">
-        <div class="article_main_pop">
-          <slot name="poplist"></slot>
-        </div>
-        <slot name="recommendList"></slot>
-      </template>
+      <slot name="recommendList"></slot>
+      <div class="article_main_pop">
+        <slot name="poplist"></slot>
+      </div>
       <slot name="slot_fb_comment"></slot>
     </main>
     <slot name="aside"></slot>
