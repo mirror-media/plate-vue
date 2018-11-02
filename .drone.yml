@@ -15,6 +15,16 @@ pipeline:
       event: [push]
       branch: [master, dev, next]
   
+  restore-cache:
+    image: drillster/drone-volume-cache
+    restore: true
+    mount:
+      - ./node_modules
+    volumes:
+      - /tmp/cache:/cache
+    when:
+      branch: [dev, next]
+
   get_config:
     image: gcr.io/mirrormedia-1470651750304/drone-cloud-sdk:latest
     secrets: [google_credentials]
@@ -56,6 +66,16 @@ pipeline:
       deployName: vue-deployment
     when:
       event: [push]
+      branch: [dev, next]
+  
+  rebuild-cache:
+    image: drillster/drone-volume-cache
+    rebuild: true
+    mount:
+      - ./node_modules
+    volumes:
+      - /tmp/cache:/cache
+    when:
       branch: [dev, next]
 
   finish_slack:
