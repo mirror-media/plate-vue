@@ -176,18 +176,20 @@ const fetchCommonData = (store, route) => {
     store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
     fetchPartners(store)
   ]).then(() => {
+    const jobs = []
     if (_.toUpper(_.split(route.path, '/')[1]) === TAG) {
-      return fetchTag(store, route.params.tagId)
+      jobs.push(fetchTag(store, route.params.tagId))
     }
     if (_.toUpper(_.split(route.path, '/')[1]) === AUTHOR) {
-      return fetchAuthor(store, route.params.authorId)
+      jobs.push(fetchAuthor(store, route.params.authorId))
     }
     if (_.toUpper(_.split(route.path, '/')[1]) === CATEGORY) {
       if (route.params.title === GS_CATEGORY_NAME) {
-        fetchImages(store, GS_TAG_ID)
+        jobs.push(fetchImages(store, GS_TAG_ID))
       }
-      return fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(route.path, '/')[2], 'ogImage' ], ''))
+      jobs.push(fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(route.path, '/')[2], 'ogImage' ], '')))
     }
+    return Promise.all(jobs)
   }).catch(err => {
     if (err.status === 404) {
       const e = new Error()
