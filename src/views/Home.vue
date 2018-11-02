@@ -14,22 +14,7 @@
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2 v-text="$t('homepage.focus')"></h2></div>
             <div class="focusNewsContainer">
-              <template v-if="abIndicator === 'A'">
-                <LatestArticleAside
-                  v-show="viewport < 1200"
-                  v-for="(o, i) in groupedArticle"
-                  target="_blank"
-                  :groupedArticle="o"
-                  :viewport="viewport"
-                  :needStick="false"
-                  :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
-                  :class="{ last: i === (groupedArticle.length - 1), first: i === 0}"
-                  :key="`${i}-groupedlist`"
-                />
-              </template>
-              <div
-                v-else-if="abIndicator === 'B'"
-                v-show="viewport < 1200"
+              <div v-show="viewport < 1200"
                 class="focusNewsContainer__latest-mobile-b"
               >
                 <LatestArticleAsideMobileB
@@ -183,12 +168,12 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    const abIndicator = this.abIndicator
+    // const abIndicator = this.abIndicator
     return {
       url: SITE_MOBILE_URL,
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="home${abIndicator}">
+        <meta name="mm-opt" content="home">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -455,13 +440,14 @@ export default {
     })
     this.checkIfLockJS()
     this.updateSysStage()
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
 
     window.addEventListener('scroll', this.detectFixProject)
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {

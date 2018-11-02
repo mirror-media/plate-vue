@@ -266,15 +266,15 @@
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
-      let abIndicator
-      if (process.env.VUE_ENV === 'client') {
-        abIndicator = this.getMmid()
-      }
+      // let abIndicator
+      // if (process.env.VUE_ENV === 'client') {
+      //   abIndicator = this.getMmid()
+      // }
       return {
         url: `${SITE_MOBILE_URL}/story/${slug}/`,
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="article${abIndicator}">
+          <meta name="mm-opt" content="article">
           <meta name="robots" content="${robotsValue}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
@@ -672,13 +672,13 @@
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
-          // window.ga('set', 'contentGroup3', '')
-          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+          window.ga('set', 'contentGroup3', '')
+          // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         } else {
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
-          // window.ga('set', 'contentGroup3', '')
-          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+          window.ga('set', 'contentGroup3', '')
+          // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         }
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
