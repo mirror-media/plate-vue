@@ -4,7 +4,7 @@ workspace:
 pipeline:
   start_slack:
     image: plugins/slack
-    channel: ground_control
+    channel: jenkins
     secrets: [slack_webhook]
     username: plate-vue
     icon_url: https://vuejs.org/images/logo.png
@@ -80,7 +80,7 @@ pipeline:
 
   finish_slack:
     image: plugins/slack
-    channel: ground_control
+    channel: jenkins
     secrets: [slack_webhook]
     username: plate-vue
     icon_url: https://vuejs.org/images/logo.png
@@ -91,7 +91,7 @@ pipeline:
     template: >
       {{#success build.status}}
         Build<${DRONE_BUILD_LINK}|#{{build.number}}> *success* ${DRONE_REPO_NAME}:${DRONE_COMMIT_AUTHOR}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_NUMBER} was well served.
-        Check out our new <https://gcr.io/mirrormedia-1470651750304/plate-vue|plate-vue>
+        Check out our new <http://dev.mirrormedia.mg|plate-vue>
       {{else}}
         Houston, we have a problem. Build <${DRONE_BUILD_LINK}|#{{build.number}}> failed. Fix me please, {{build.author}}
       {{/success}}
