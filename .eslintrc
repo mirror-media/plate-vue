@@ -6,9 +6,6 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "plugins": [
-        "import"
-    ],
     "rules": { 
       "array-bracket-spacing": [ 2, "always" ],
       "camelcase": [ 0, "" ],
