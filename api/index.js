@@ -12,11 +12,11 @@ const Twitter = require('twitter')
 
 const jsonParser = bodyParser.json()
 
-const Logging = require('@google-cloud/logging');
-const loggingClient = Logging({
+const { Logging } = require('@google-cloud/logging')
+const loggingClient = new Logging({
   projectId: config.GCP_PROJECT_ID,
   keyFilename: config.GCP_KEYFILE
-});
+})
 
 const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API_PORT
 

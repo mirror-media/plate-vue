@@ -155,7 +155,6 @@ function loadEvent (params = {}) {
 }
 
 function loadExternals (params = {}) {
-  params.sort = params.sort
   const query = _buildQuery(params)
   let url = `${_host}/api/externals`
   url = `${url}?${query}`
