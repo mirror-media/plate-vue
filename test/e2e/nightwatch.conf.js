@@ -1,4 +1,4 @@
-require('babel-register');
+require("@babel/register");
 
 module.exports = {
   'src_folders' : ['test/e2e/specs'],
