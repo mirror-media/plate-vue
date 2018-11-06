@@ -1,5 +1,5 @@
-require('babel-core/register')
-require('babel-polyfill')
+require("@babel/register")
+require("@babel/polyfill")
 
 const _ = require('lodash')
 const { get, isEmpty, find, } = require('lodash')
