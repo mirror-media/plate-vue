@@ -761,7 +761,7 @@ export default {
       }
     },
     hasDFP () {
-      return !(this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading' || this.$route.params.title === 'topic' || this.$route.params.title === 'videohub')
+      return !(this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading' || this.$route.params.title === 'topic')
     },
     hasEventEmbedded () {
       const _now = moment()
