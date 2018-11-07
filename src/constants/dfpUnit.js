@@ -346,8 +346,8 @@ export default {
     'PCPOP5': { 'aduid': 'mirror_RWD_oth_fluid_NA5_ap', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'pop_item', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'PCPOP7': { 'aduid': 'mirror_RWD_oth_fluid_NA7_ap', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'pop_item', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     // SPCHD, SPCFT : position on listing page
-    'LPCHD': { 'aduid': 'mirror_pc_int_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto 0' ] },
-    'LPCFT': { 'aduid': 'mirror_pc_int_970x250_FT', 'dimensions': '1x1,970x90,970x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0 auto 40px' ] },
+    'LPCHD': { 'aduid': 'mirror_pc_oth_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'width: 970px', 'margin: 20px auto 0' ] },
+    'LPCFT': { 'aduid': 'mirror_pc_oth_970x250_FT', 'dimensions': '1x1,970x90,970x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ 'margin: 0 auto 40px' ] },
     'LPCNA3': { 'aduid': 'mirror_RWD_oth_fluid_NA3', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'nativeDFP', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA5': { 'aduid': 'mirror_RWD_oth_fluid_NA5', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'nativeDFP', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
     'LPCNA9': { 'aduid': 'mirror_RWD_oth_fluid_NA9', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'nativeDFP', 'margin-top-0' ], 'cont-style': [ 'background-color: #f4f1e9' ] },
