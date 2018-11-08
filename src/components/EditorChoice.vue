@@ -29,30 +29,59 @@
         </a>
       </template>
     </div>
-    <div class="editorChoice--mobile">
-      <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
-      <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
-        <template>
-          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style !== 'projects'" :target="target">
-            <LatestAriticleImg class="figure"
-              :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
-              :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
-            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
-          </router-link>
-          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style === 'projects'" :target="target">
-            <LatestAriticleImg class="figure"
-              :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
-              :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
-            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
-          </a>
-        </template>
-        <div class="editorChoice__block--title" :class="getSection(item)">
-          <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></a>
-          </template>
+    <div :class="abIndicator.toLowerCase()" class="editorChoice--mobile">
+      <template v-if="abIndicator === 'B' && editorChoice.length > 0">
+        <div class="slider" @touchstart="handleTouchstart" @touchend="handleTouchend">
+          <div class="slider-container" :style="{ width: `${editorChoice.length * 100}%`, transform: `translateX(-${100 / editorChoice.length * sliderCurrent}%)` }">
+            <a v-for="item in editorChoice"
+              :key="item.slug"
+              :href="`/story/${item.slug}`"
+              :id="`choices-${item.slug}`"
+              :style="{ width: `${100 / editorChoice.length}%`, backgroundImage: `url(${item.heroImage.image.resizedTargets.desktop.url})` }"
+              class="slider__item"
+              target="_blank">
+              <div class="slider__item-curtain"></div>
+              <div v-if="item.sections" :style="getSectionStyle(item.sections[0])" class="slider__item-section" v-text="item.sections[0].title"></div>
+              <p class="slider__item-title" v-text="item.title"></p>
+            </a>
+          </div>
+          <div class="slider__nav">
+            <div class="nav-container" :style="{ width: `${ editorChoice.length * 8 + (editorChoice.length - 1) * 10 }px` }">
+              <div v-for="(item, index) in editorChoice"
+                :key="`btn-${item.slug}`"
+                :class="{ active: sliderCurrent === index}"
+                class="dot"
+                @click="sliderCurrent = index">
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </template>
+      <template v-else>
+        <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
+        <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
+          <template>
+            <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style !== 'projects'" :target="target">
+              <LatestAriticleImg class="figure"
+                :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
+                :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
+              <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
+            </router-link>
+            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style === 'projects'" :target="target">
+              <LatestAriticleImg class="figure"
+                :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
+                :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
+              <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
+            </a>
+          </template>
+          <div class="editorChoice__block--title" :class="getSection(item)">
+            <template>
+              <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></router-link>
+              <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></a>
+            </template>
+          </div>
+        </div>
+      </template>
     </div>
   </section>
 </template>
@@ -71,6 +100,8 @@ export default {
     LatestAriticleImg
   },
   props: {
+    abIndicator: {
+    },
     editorChoice: {
       default: () => { return this.editorChoice }
     },
@@ -79,6 +110,14 @@ export default {
     },
     viewport: {
       default: () => { return undefined }
+    }
+  },
+  data () {
+    return {
+      sliderCurrent: 0,
+      sliderTimer: undefined,
+      sliderTouchEndX: 0,
+      sliderTouchStartX: 0,
     }
   },
   computed: {
@@ -91,6 +130,13 @@ export default {
         onSlideChangeStart: (swiper) => {
           this.updateNavStatus(swiper.activeIndex)
         }
+      }
+    }
+  },
+  watch: {
+    abIndicator (value) {
+      if (value === 'B') {
+        this.setTimer()
       }
     }
   },
@@ -129,6 +175,28 @@ export default {
       }
       return style
     },
+    handleSwipe () {
+      if (this.sliderTouchEndX > this.sliderTouchStartX) {
+        if (this.sliderCurrent - 1 > -1) {
+          this.sliderCurrent -= 1
+        } else {
+          this.sliderCurrent = this.editorChoice.length - 1
+        }
+      } else {
+        if (this.sliderCurrent + 1 < this.editorChoice.length) {
+          this.sliderCurrent += 1
+        } else {
+          this.sliderCurrent = 0
+        }
+      }
+    },
+    handleTouchstart: _.throttle(function (e) {
+      this.sliderTouchStartX = e.changedTouches[0].screenX
+    }, 1000),
+    handleTouchend: _.throttle(function (e) {
+      this.sliderTouchEndX = e.changedTouches[0].screenX
+      this.handleSwipe()
+    }, 1000),
     setHoverEvent () {
       const _targ = document.querySelectorAll('.editorChoice__menu--item')
       const _targChilde = document.querySelectorAll('.editorChoice__menu--item > span')
@@ -142,6 +210,15 @@ export default {
           this.jumpToSlide(e)
         }
       })
+    },
+    setTimer () {
+      this.sliderTimer = setInterval(() => {
+        if (this.sliderCurrent + 1 < this.editorChoice.length) {
+          this.sliderCurrent += 1
+        } else {
+          this.sliderCurrent = 0
+        }
+      }, 5000)
     },
     styleFor1stitem (sect) {
       return {
@@ -164,10 +241,16 @@ export default {
   },
   mounted () {
     this.setHoverEvent()
+    if (this.abIndicator === 'B') {
+      this.setTimer()
+    }
   },
   updated () {
     this.setHoverEvent()
-  }
+  },
+  beforeDestroy () {
+    clearInterval(this.timer)
+  },
 }
 </script>
 <style lang="stylus" scoped>
@@ -192,6 +275,8 @@ export default {
     flex-direction column
     width 90%
     margin 0 auto
+    &.b
+      width 100%
     > div:not(:last-child):not(:first-child)
       margin-bottom 20px
     .editorChoice__block--img
@@ -242,6 +327,76 @@ export default {
         margin-right -100%
         margin-left 10px
         border-top 5px solid #356d9c
+
+.slider
+  position relative
+  width 100%
+  padding-top 66.66%
+  margin 0 auto
+  overflow hidden
+  &-container
+    position absolute
+    top 0
+    left 0
+    display flex
+    height 100%
+    transition transform 1s ease-out 0s
+  &__item
+    position relative
+    display block
+    height 100%
+    background-size cover
+    background-position center center
+    background-repeat no-repeat
+    &-section
+      position absolute
+      top 15px
+      left 15px
+      padding .4em
+      color #fff
+    &-title
+      position absolute
+      left 5%
+      bottom 30px
+      width 90%
+      margin 0
+      color #fff
+      text-align justify
+      font-size 1.375rem
+      font-weight 500
+      line-height 1.3
+    &-curtain
+      position absolute
+      left 0
+      right 0
+      bottom 0
+      height 60%
+      background-image linear-gradient(transparent, rgba(0,0,0,1))
+  &__nav
+    display flex
+    align-items center
+    position absolute
+    left 50%
+    bottom 10px
+    transform translateX(-50%)
+    max-width 115px
+    height 10px
+    overflow hidden
+    .nav-container
+      display flex
+    .dot
+      width 8px
+      height 8px
+      background-color #b5b5b5
+      border-radius 8px
+      transition background-color .5s ease
+      cursor pointer
+      & + .dot
+        margin-left 10px
+      &:hover
+        background-color #fff
+      &.active
+        background-color #fff
 
 @media (min-width: 600px)
   .editorChoice
