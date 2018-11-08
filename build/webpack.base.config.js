@@ -1,14 +1,14 @@
 const path = require('path')
-const webpack = require('webpack')
-const vueConfig = require('./vue-loader.config')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const { PUBLIC_PATH } = require('../api/config')
+const { VueLoaderPlugin } = require('vue-loader')
 
+const NODE_ENV = process.env.NODE_ENV || 'development'
 const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
+  mode: NODE_ENV,
   devtool: isProd
     ? false
     : '#cheap-module-source-map',
@@ -30,7 +30,11 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
-        options: vueConfig
+        options: {
+          compilerOptions: {
+            preserveWhitespace: false
+          }
+        }
       },
       {
         test: /\.js$/,
@@ -47,13 +51,40 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: isProd
-          ? ExtractTextPlugin.extract({
-              use: 'css-loader?minimize',
-              fallback: 'vue-style-loader'
-            })
-          : ['vue-style-loader', 'css-loader']
+        use: [
+          'vue-style-loader',
+          {
+            loader: 'css-loader',
+            options: { minimize: isProd }
+          },
+          'postcss-loader'
+        ]
       },
+      {
+        test: /\.styl(us)?$/,
+        use: [
+          'vue-style-loader',
+          {
+            loader: 'css-loader',
+            options: { minimize: isProd }
+          },
+          'postcss-loader',
+          'stylus-loader'
+        ]
+        // use: isProd
+        //   ? ExtractTextPlugin.extract({
+        //       use: [
+        //         {
+        //           loader: 'css-loader',
+        //           options: { minimize: true }
+        //         },
+        //         'postcss-loader',
+        //         'stylus-loader'
+        //       ],
+        //       fallback: 'vue-style-loader'
+        //     })
+        //   : [ 'vue-style-loader', 'css-loader', 'postcss-loader', 'stylus-loader' ]
+      }
     ]
   },
   performance: {
@@ -62,17 +93,13 @@ module.exports = {
   },
   plugins: isProd
     ? [
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            warnings: false,
-          }
-        }),
-        new webpack.optimize.ModuleConcatenationPlugin(),
-        new ExtractTextPlugin({
+        new VueLoaderPlugin(),
+        new MiniCssExtractPlugin({
           filename: 'common.[chunkhash].css'
         })
       ]
     : [
-        new FriendlyErrorsPlugin()
+        new VueLoaderPlugin(),
+        new FriendlyErrorsWebpackPlugin()
       ]
 }
