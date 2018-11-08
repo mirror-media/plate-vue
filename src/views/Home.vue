@@ -9,7 +9,7 @@
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
         <section class="home-mainContent">
           <main>
-            <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+            <editor-choice :abIndicator="abIndicator" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2 v-text="$t('homepage.focus')"></h2></div>
@@ -168,12 +168,15 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    // const abIndicator = this.abIndicator
+    let abIndicator = ''
+    if (process.env.VUE_ENV === 'client') {
+      abIndicator = this.getMmid()
+    }
     return {
       url: SITE_MOBILE_URL,
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="home">
+        <meta name="mm-opt" content="home${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -440,14 +443,14 @@ export default {
     })
     this.checkIfLockJS()
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
+    this.abIndicator = this.getMmid()
 
     window.addEventListener('scroll', this.detectFixProject)
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
+    // window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {

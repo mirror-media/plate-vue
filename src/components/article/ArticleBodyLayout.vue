@@ -114,7 +114,22 @@
             text-decoration none
             cursor pointer
             border-bottom none
-                
+        &.b
+          padding 0
+          margin-top 1.5em
+          > p
+            margin 1em 0 .5em
+            color #a0a0a0
+          .tags 
+            &::before
+              content none
+            a, a:hover, a:link, a:visited
+              display inline-block
+              margin 0 .5em .6em 0
+              padding .2em .4em
+              color #fff
+              background-color #c8c8c8
+
       .brief 
         margin-top 30px
         line-height 36px
@@ -629,6 +644,8 @@
           padding-right 0
           &.article_main_tags
             padding-left 32px
+            &.b
+              padding-left 0
 
   @media (min-width 0px) and (max-width 767px)
     .article_body
