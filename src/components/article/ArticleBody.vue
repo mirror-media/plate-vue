@@ -94,7 +94,8 @@
       </div>
       <newsletter></newsletter>
       <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
-      <div class="article_main_tags">
+      <div :class="abIndicator.toLowerCase()" class="article_main_tags">
+        <p v-if="abIndicator === 'B'">相關關鍵字：</p>
         <div class="tags" v-html="tags" v-if="tags.length > 0"></div>
       </div>
       <div class="split-line"></div>
@@ -223,9 +224,8 @@ export default {
     },
     tags () {
       const { tags = [] } = this.articleData
-      return tags.map((o) => {
-        return `<a href=\"/tag/${_.get(o, [ 'id' ], '')}\" id=\"tag-${_.get(o, [ 'id' ], '')}\">${_.get(o, [ 'name' ], '')}</a>`
-      }).join('、')
+      const separator = this.abIndicator === 'B' ? '' : '、'
+      return tags.map(tag => `<a href=\"/tag/${_.get(tag, 'id', '')}\" id=\"tag-${_.get(tag, 'id', '')}\">${_.get(tag, 'name', '')}</a>`).join(separator)
     },
     firstTwoUnstyledParagraph () {
       const { content } = this.articleData
