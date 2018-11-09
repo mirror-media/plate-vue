@@ -16,6 +16,7 @@ const Activity = () => import('../views/Activity.vue')
 const Article = () => import('../views/Article.vue')
 const ArticleM = () => import('../views/ArticleM.vue')
 const External = () => import('../views/External.vue')
+const Headline = () => import('../views/Headline.vue')
 const Home = () => import('../views/Home.vue')
 const List = () => import('../views/List.vue')
 const NotFound = () => import('../views/404.vue')
@@ -49,6 +50,7 @@ export function createRouter () {
         // } ]
       },
       { path: '/app/:slug', component: ArticleM },
+      { path: '/headlinenews', component: Headline },
       { path: '/project-list/:style?', component: Project },
       // { path: '/homeb', component: HomeB },
       { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
