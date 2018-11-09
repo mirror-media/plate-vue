@@ -21,6 +21,7 @@ const serverTitleMetaMixin = {
     const title = metaSet.title
     const url = metaSet.url
     const adTrace = metaSet.adTrace
+    this.$ssrContext.custom = metaSet.custom || ''
     if (title) {
       this.$ssrContext.title = title
     }

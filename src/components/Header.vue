@@ -6,7 +6,7 @@
       <div class="headerContainer__logo">
         <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img src="/public/logo.svg" alt="鏡週刊 Mirror Media"></router-link>
         <a v-show="logoEventImg && !showDfpHeaderLogo" class="headerContainer__logo--event" :href="logoEventHref" target="_blank"><img :src="logoEventImg"></a>
-        <vue-dfp ref="logoDfp" class="headerContainer__logo--dfp" :is="props.vueDfp" pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
+        <vue-dfp :is="props.vueDfp" v-if="props" ref="logoDfp" class="headerContainer__logo--dfp"  pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
       </div>
       <div class="headerContainer__search--mobile" @click="$_header_openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></div>
       <div class="headerContainer__search--desktop">
