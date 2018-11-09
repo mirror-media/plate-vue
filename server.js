@@ -246,6 +246,10 @@ app.get('*', (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
 })
 
+process.on('unhandledRejection', error => {
+  console.log('[unhandledRejection] ', error.message);
+});
+
 const port = process.env.PORT || 8080
 const server = app.listen(port, () => {
   console.log(`server started at localhost:${port}`)
