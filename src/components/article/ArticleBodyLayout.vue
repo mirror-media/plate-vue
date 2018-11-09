@@ -573,6 +573,8 @@
           padding-right 25px
           &.article_main_tags
             padding-left 60px
+            &.b
+              padding 0 25px
 
       .article_basic-info
         .category
@@ -645,7 +647,7 @@
           &.article_main_tags
             padding-left 32px
             &.b
-              padding-left 0
+              padding 0
 
   @media (min-width 0px) and (max-width 767px)
     .article_body
