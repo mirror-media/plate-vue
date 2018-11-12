@@ -10,7 +10,7 @@
   import { mmLog } from './util/comm.js'
   import { visibleTracking } from './util/visibleTracking'
   import Tap from 'tap.js'
-
+  const debug = require('debug')('CLIENT:App')
   export default {
     computed: {
       currPath () {
@@ -29,12 +29,13 @@
           category: 'whole-site',
           description: '',
           eventType: 'click',
-          target: event.target
-        }).then((log) => {
+          target: event.target,
+        }).then(log => {
+          debug('log', log)
           return this.$store.dispatch('LOG_CLIENT', { params: {
             clientInfo: log
           }})
-        }).catch((err) => {
+        }).catch(err => {
           console.log(err)
         })
       },
