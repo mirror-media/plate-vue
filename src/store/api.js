@@ -161,11 +161,6 @@ function loadExternals (params = {}) {
   return _doFetch(url)
 }
 
-function loadHotWatch () {
-  const url = `${_host}/api/hotwatches`
-  return _doFetch(url)
-}
-
 function loadImages (uuid = '', type = '', params = {}) {
   switch (type) {
     case SECTION:
@@ -214,11 +209,6 @@ function loadPartners (params = {}) {
   let url = `${_host}/api/partners`
   url = `${url}?${query}`
   return _doFetch(url)
-}
-
-function loadQuestionnaire (id) {
-  const apiHost = `${_host}/api/questionnaire?file=${id}/${id}.json`
-  return _doFetch(apiHost)
 }
 
 function loadSearch (keyword = '', params = {}) {
@@ -316,10 +306,6 @@ export function fetchExternals (params = {}) {
   return loadExternals(params)
 }
 
-export function fetchHotWatch (params = {}) {
-  return loadHotWatch(params)
-}
-
 export function fetchImage (uuid = '') {
   return loadImage(uuid)
 }
@@ -334,10 +320,6 @@ export function fetchLatestArticle (params = {}) {
 
 export function fetchNodes (params = {}) {
   return loadNodes(params)
-}
-
-export function fetchQuestionnaire (id) {
-  return loadQuestionnaire(id)
 }
 
 export function fetchPartners (params = {}) {
@@ -366,18 +348,6 @@ export function fetchTimeline (slug = '') {
 
 export function fetchTopic (params = {}) {
   return loadTopic(params)
-}
-
-export function fetchWatch (params = {}) {
-  return loadData(params, 'watches')
-}
-
-export function fetchWatchBrands (params = {}) {
-  return loadData(params, 'watchbrands')
-}
-
-export function fetchWatchFunctions (params) {
-  return loadData(params, 'watchfunctions')
 }
 
 export function fetchYoutubePlaylist (limit = {}, pageToken = '') {

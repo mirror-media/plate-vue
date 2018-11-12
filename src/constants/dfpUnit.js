@@ -617,12 +617,4 @@ export default {
       'AMPE1': { 'aduid': 'mirror_AMP_wat_300x250_E1', 'dimensions': { 'width': 300, 'height': 250 }, 'showAfterRelatedPost': 7 }
     }
   },
-  'watch101': { // watch101
-    'PCHD': { 'aduid': 'mirror_pc_watyearbook_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
-    'MBHD': { 'aduid': 'mirror_m_watyearbook_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ 'margin-top: 0' ] },
-    'NA1': { 'aduid': 'mirror_RWD_watyearbook_fluid_NA', 'dimensions': 'fluid', 'cont-class': [ 'ad-container', 'nativeDFP', 'margin-top-0' ], 'cont-style': [ '' ] },
-    'LMBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
-    'LMBCVR2': { 'aduid': 'mirror_m_ros_320x480_AD2', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
-    'LMBCVR3': { 'aduid': 'mirror_m_ros_320x480_innity', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
-  }
 }

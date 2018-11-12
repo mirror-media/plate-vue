@@ -18,33 +18,6 @@
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
 
-      <div class="listFull-view" v-else-if="pageStyle === 'full'">
-        <!--div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCHD" :config="props.config" /></div-->
-        <!--div v-if="isMobile"><vue-dfp :is="props.vueDfp" pos="SMBHD" :config="props.config" /></div-->
-        <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
-        <article-leading :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'"/>
-        <editorChoice-full :sectionfeatured='sectionfeatured' v-if="type === 'SECTION'"/>
-        <latestArticle-full :articles='articles' :isMobile="isMobile" :props="props" v-if="type === 'SECTION'" />
-        <leading-watch v-if="type == 'TAG'" :tag='tag' :type='type'/>
-        <article-list-full :articles='articles' v-if="type === 'TAG'" />
-        <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore" />
-        <loading :show="loading" />
-        <div v-if="!isMobile"><vue-dfp :is="props.vueDfp" pos="SPCFT" :config="props.config" /></div>
-        <div v-if="isMobile" :style="{ width: '100%' }"><vue-dfp :is="props.vueDfp" pos="SMBFT" :config="props.config" /></div>
-        <footer-full :commonData='commonData' :sectionName='sectionName' />
-        <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-      </div>
-
-      <div class="list-view" v-else-if="pageStyle === 'watch101'">
-        <watch101-list :viewport="viewport">
-          <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' :showLogo="false" class="watch101" slot="header"/>
-          <footer-full :commonData='commonData' :sectionName='sectionName' slot="footer" />
-          <vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="PCHD" :config="props.config" slot="ad-hd"/>
-          <vue-dfp v-if="isMobile" :is="props.vueDfp" pos="MBHD" :config="props.config" slot="ad-hd" />
-          <vue-dfp :is="props.vueDfp" pos="NA1" :config="props.config" slot="ad-na1" />
-        </watch101-list>
-      </div>
-
       <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
         <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         <list-slider class="gs"></list-slider>
@@ -129,27 +102,20 @@ import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, unLockJS, sendAdCo
 import { getRole } from '../util/mmABRoleAssign'
 import { microAds } from '../constants/microAds'
 import _ from 'lodash'
-import ArticleLeading from '../components/ArticleLeading.vue'
 import ArticleList from '../components/ArticleList.vue'
-import ArticleListFull from '../components/ArticleListFull.vue'
 import ArticleListLight from '../components/ArticleListLight.vue'
 import AudioList from '../components/AudioList.vue'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
-import EditorChoiceFull from '../components/EditorChoiceFull.vue'
 import EditorChoiceFoodTravel from '../components/EditorChoiceFoodTravel.vue'
 import FeaturedStoryFoodTravel from '../components/FeaturedStoryFoodTravel.vue'
 import Footer from '../components/Footer.vue'
-import FooterFull from '../components/FooterFull.vue'
 import FooterFoodTravel from '../components/FooterFoodTravel.vue'
 import Header from '../components/Header.vue'
-import HeaderFull from '../components/HeaderFull.vue'
 import HeaderFoodTravel from '../components/HeaderFoodTravel.vue'
 import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
-import LatestArticleFull from '../components/LatestArticleFull.vue'
 import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
 import Leading from '../components/Leading.vue'
-import LeadingWatch from '../components/LeadingWatch.vue'
 import ListChoice from '../components/ListChoice.vue'
 import ListSlider from '../components/list/ListSlider.vue'
 import LiveStream from '../components/LiveStream.vue'
@@ -160,7 +126,6 @@ import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
 import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import Watch101 from '../components/watch101/Watch101.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
 
@@ -266,7 +231,6 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
       }
     case SECTION:
       switch (pageStyle) {
-        case 'full':
         case 'video':
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
@@ -488,23 +452,16 @@ export default {
   components: {
     'app-footer': Footer,
     'app-header': Header,
-    'article-leading': ArticleLeading,
     'article-list': ArticleList,
-    'article-list-full': ArticleListFull,
     'article-list-light': ArticleListLight,
     'audio-list': AudioList,
     'editor-foodtravel': EditorChoiceFoodTravel,
-    'editorChoice-full': EditorChoiceFull,
     'featuredStory-foodtravel': FeaturedStoryFoodTravel,
-    'footer-full': FooterFull,
     'footer-foodtravel': FooterFoodTravel,
-    'header-full': HeaderFull,
     'header-foodtravel': HeaderFoodTravel,
     'heroImage-foodtravel': HeroImageFoodTravel,
-    'latestArticle-full': LatestArticleFull,
     'latestArticle-foodtravel': LatestArticleFoodTravel,
     'leading': Leading,
-    'leading-watch': LeadingWatch,
     'list-choice': ListChoice,
     'list-slider': ListSlider,
     'live-stream': LiveStream,
@@ -515,7 +472,6 @@ export default {
     'share': Share,
     'video-list': VideoList,
     'vue-dfp-provider': VueDfpProvider,
-    'watch101-list': Watch101,
     DfpCover
   },
   asyncData ({ store, route }) {
@@ -821,7 +777,7 @@ export default {
         case TAG:
           return _.get(this.$store.state, [ 'tag', 'style' ], 'feature')
         case CATEGORY:
-          if (this.$route.params.title === 'watch101' || this.$route.params.title === GS_CATEGORY_NAME) {
+          if (this.$route.params.title === GS_CATEGORY_NAME) {
             return this.$route.params.title
           }
           return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'style' ], 'feature')
@@ -860,13 +816,9 @@ export default {
       let _sectionId
       switch (this.type) {
         case CATEGORY:
-          if (this.$route.params.title !== 'watch101') {
-            _sectionId = _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
-              return _.find(s.categories, { 'id': this.uuid })
-            }), [ 'id' ])
-          } else {
-            _sectionId = 'watch101'
-          }
+          _sectionId = _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), (s) => {
+            return _.find(s.categories, { 'id': this.uuid })
+          }), [ 'id' ])
           break
         case SECTION:
           _sectionId = _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { 'name': this.$route.params.title }), [ 'id' ])

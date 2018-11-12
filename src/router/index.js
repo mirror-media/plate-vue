@@ -21,7 +21,6 @@ const Home = () => import('../views/Home.vue')
 const List = () => import('../views/List.vue')
 const NotFound = () => import('../views/404.vue')
 const Project = () => import('../views/Project.vue')
-const Questionnaire = () => import('../views/Questionnaire.vue')
 const Search = () => import('../views/Search.vue')
 const TimelineView = () => import('../views/TimelineView.vue')
 const Topic = () => import('../views/Topic.vue')
@@ -53,7 +52,6 @@ export function createRouter () {
       { path: '/headlinenews', component: Headline },
       { path: '/project-list/:style?', component: Project },
       // { path: '/homeb', component: HomeB },
-      { path: '/q/:questionnaireId/:resultId?', component: Questionnaire },
       { path: '/search/:keyword', component: Search },
       { path: '/section/:title', component: List, alias: [ '/category/:title', '/externals/:title' ] },
       { path: '/timeline/:title', component: TimelineView },
