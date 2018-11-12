@@ -1,18 +1,57 @@
-
-dist
-err.log
-out.log
-node_modules
+# Logs
+logs
+*.log
 npm-debug.log*
-debug.log
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage directory
+coverage
+coverage/
+test/unit/coverage/*
+
+# Test report
+test/e2e/reports/*
+
+# Dependency directories
+node_modules/
+
+# Vim
+*.swp
+
+# VisualStudioCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+*.lnk
+
+# Other
+dist/
 .idea
 api/config.js
 /tmp
-src/utils/jquery.dfp.min.js
-src/utils/swiper/
 gcskeyfile.json
 archives
-selenium-debug.log
-test/unit/coverage/*
-test/e2e/reports/*
+src/utils/jquery.dfp.min.js
+src/utils/swiper/

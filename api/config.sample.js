@@ -9,8 +9,6 @@ module.exports = {
   LOCAL_PROTOCOL: 'http',
   LOCAL_HOST: 'localhost',
   LOCAL_PORT: '8080',
-  QUESTIONNAIRE_PROTOCOL: 'http',
-  QUESTIONNAIRE_HOST: 'www.mirrormedia.mg',
   REDIS_HOST: '',
   REDIS_PORT: '',
   REDIS_AUTH: '',

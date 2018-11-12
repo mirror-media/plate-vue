@@ -54,10 +54,6 @@ router.use('/grouped', function(req, res, next) {
   fetchStaticJson(req, res, next, 'grouped')
 });
 
-router.use('/hotwatches', function(req,res, next) {
-  fetchStaticJson(req, res, next, 'popularwatches')
-})
-
 router.use('/poplist', function(req, res, next) {
   fetchStaticJson(req, res, next, 'popularlist')
 });
@@ -134,36 +130,6 @@ router.use('/playlist', function(req, res, next) {
       })
     }
   })
-});
-
-router.use('/questionnaire', function(req, res, next) {
-  const query = req.query
-  const url = `${config.SERVER_PROTOCOL}://${config.SERVER_HOST}/questionnaire/${query.file}`
-  if (!('file' in query) || query.file === '') {
-    res.send('empty file')
-  } else {
-    redisFetching(url, ({ err, data }) => {
-      if (!err && data) {
-        res.json(JSON.parse(data))
-      } else {
-        superagent
-        .get(url)
-        .end((e, response) => {
-          if (!e && response) {
-            redisWriting(url, response.text)
-            res.json(JSON.parse(response.text))
-          } else {
-            const status = _.get(response, 'status') || _.get(e, 'status') || 500
-            res.status(status).send('{\'error\':' + e + '}')
-            // res.status(500).end('Internal Error 500')
-            console.error(`error during fetch data from questionnaire : ${req.url}`)
-            console.error(e)   
-          }
-        })
-      }
-    })
-  }
-
 });
 
 router.use('/search', function(req, res, next) {
