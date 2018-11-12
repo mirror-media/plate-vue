@@ -250,8 +250,8 @@ export function getClientOS () {
   return os
 }
 
-export function mmLog ({ category, eventType, target, description }) {
-  return _normalizeLog({ category, eventType, target, description })
+export function mmLog ({ category, eventType, target, description, referrer, ...rest }) {
+  return _normalizeLog({ category, eventType, target, description, referrer, ...rest })
 }
 
 export function isDescendant (child, { classname = 'none' }) {
@@ -276,7 +276,7 @@ function _isAlinkDescendant (child) {
   return { isAlink: false, href: '' }
 }
 
-function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer }) {
+function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer, ...rest }) {
   return new Promise((resolve) => {
     const cookieId = Cookie.get('mmid')
     const targ = target
@@ -284,6 +284,9 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
     const clientOs = getClientOS()
     const innerText = targ.innerText ? sanitizeHtml(targ.innerText, { allowedTags: [ '' ] }) : ''
     const isAlinkCheck = targ.tagName === 'A' ? { isAlink: true, href: targ.href } : _isAlinkDescendant(targ)
+
+    const exp_related = /^related/g
+    const exp_recoommend = /^recommend/g
 
     const log = {
       'browser': {
@@ -300,7 +303,9 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       'datetime': moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),
       'description': description,
       'event-type': eventType,
-      'redirect-to': isAlinkCheck.href,
+      'redirect-to': isAlinkCheck.isAlink ? isAlinkCheck.href : undefined,
+      'referrer': isAlinkCheck.isAlink ? referrer || location.href : undefined,
+      'rref': isAlinkCheck.isAlink ? exp_related.test(target.id) ? 'related' : exp_recoommend.test(target.id) ? 'recommend' : undefined : undefined,
       'target-tag-name': targ.tagName,
       'target-tag-class': targ.className,
       'target-tag-id': targ.id,
@@ -308,7 +313,8 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       'target-window-size': {
         width: document.documentElement.clientWidth || document.body.clientWidth,
         height: document.documentElement.clientWidth || document.body.clientWidth
-      }
+      },
+      ...rest
     }
     if (!cookieId) {
       const dt = Date.now()
@@ -316,14 +322,12 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       log['client-id'] = thisId
       log['current-runtime-id'] = thisId
       log['current-runtime-start'] = moment(dt).format('YYYY.MM.DD HH:mm:ss')
-      log['referrer'] = document.referrer
       window.mmThisRuntimeClientId = thisId
       window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
       resolve(log)
     } else {
       const dt = Date.now()
       log['client-id'] = cookieId
-      log['referrer'] = referrer
       if (!window.mmThisRuntimeClientId) {
         window.mmThisRuntimeClientId = uuidv4()
         window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
