@@ -181,7 +181,7 @@ function render (req, res, next) {
       }
     } 
   }
-
+  
   const context = {
     title: '',
     meta: '',    
@@ -190,7 +190,7 @@ function render (req, res, next) {
     adTrace: '',
     custom: '',
   }
-
+  
   res.on('finish', function () {
     const mem = process.memoryUsage()
     console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
