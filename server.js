@@ -188,6 +188,7 @@ function render (req, res, next) {
     url: req.url,
     link: '',
     adTrace: '',
+    custom: '',
   }
 
   res.on('finish', function () {
