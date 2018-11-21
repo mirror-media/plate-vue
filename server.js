@@ -6,7 +6,7 @@ const express = require('express')
 const favicon = require('serve-favicon')
 const fs = require('fs')
 const maxMemUsageLimit = 1000 * 1024 * 1024
-// const memwatch = require('memwatch')
+const memwatch = require('node-memwatch')
 const moment = require('moment')
 const microcache = require('route-cache')
 const path = require('path')
@@ -104,6 +104,24 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
  
 
 function render (req, res, next) {
+  const checkoutMem = () => {
+    const mem = process.memoryUsage()
+    console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
+    if (mem.heapUsed > maxMemUsageLimit) {
+      for (let i = 0; i < 10; i += 1) {
+        console.error('MEMORY WAS WUNNING OUT')
+      } 
+      console.error(`KILLING PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
+      process.exit(1)
+    }
+    if (isPageNotFound || isErrorOccurred) {
+      try {
+        global.gc()
+      } catch (e) {
+        // process.exit(1)
+      }
+    }    
+  }  
   const rendererEjsCB = function (err, html) { 
     if (!err) {
       res.status(rendererEjsCB.code).send(html)
@@ -112,6 +130,7 @@ function render (req, res, next) {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
       res.status(500).send('Internal Server Error')
     }
+    checkoutMem()
   }
 
   const s = Date.now()
@@ -143,7 +162,6 @@ function render (req, res, next) {
   if (!mmid) {
     cookies.set('mmid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
   }
-  
   const handleError = err => {
     if (err.url) {
       res.redirect(err.url)
@@ -195,22 +213,7 @@ function render (req, res, next) {
   }
   
   res.on('finish', function () {
-    const mem = process.memoryUsage()
-    console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
-    if (mem.heapUsed > maxMemUsageLimit) {
-      for (let i = 0; i < 10; i += 1) {
-        console.error('MEMORY WAS WUNNING OUT')
-      } 
-      console.error(`KILLING PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
-      process.exit(1)
-    }
-    if (isPageNotFound || isErrorOccurred) {
-      try {
-        global.gc()
-      } catch (e) {
-        // process.exit(1)
-      }
-    }
+    checkoutMem()
   })
 
   renderer.renderToString(context, (err, html) => {
@@ -266,42 +269,42 @@ module.exports = {
   }
 }
 
-// memwatch.on('leak', function(info) {
-//   const growth = formatMem(info.growth)
-//   const mem = process.memoryUsage()
-//   console.error('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
-//   console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
-// })
-// memwatch.on('stats', function(stats) {
-//   const estBase = formatMem(stats.estimated_base)
-//   const currBase = formatMem(stats.current_base)
-//   const min = formatMem(stats.min)
-//   const max = formatMem(stats.max)
+memwatch.on('leak', function(info) {
+  const growth = formatMem(info.growth)
+  const mem = process.memoryUsage()
+  console.error('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
+  console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
+})
+memwatch.on('stats', function(stats) {
+  const estBase = formatMem(stats.estimated_base)
+  const currBase = formatMem(stats.current_base)
+  const min = formatMem(stats.min)
+  const max = formatMem(stats.max)
 
-//   console.info(`=======================================\n`,
-//     `GC STATs(${moment().format('YYYY-MM-DD HH:mm:SS')}):\n`, [
-//     'num_full_gc ' + stats.num_full_gc,
-//     'num_inc_gc ' + stats.num_inc_gc,
-//     'heap_compactions ' + stats.heap_compactions,
-//     'usage_trend ' + stats.usage_trend,
-//     'estimated_base ' + estBase,
-//     'current_base ' + currBase,
-//     'min ' + min,
-//     'max ' + max
-//   ].join(', '), `\n=======================================`)
+  console.info(`=======================================\n`,
+    `GC STATs(${moment().format('YYYY-MM-DD HH:mm:SS')}):\n`, [
+    'num_full_gc ' + stats.num_full_gc,
+    'num_inc_gc ' + stats.num_inc_gc,
+    'heap_compactions ' + stats.heap_compactions,
+    'usage_trend ' + stats.usage_trend,
+    'estimated_base ' + estBase,
+    'current_base ' + currBase,
+    'min ' + min,
+    'max ' + max
+  ].join(', '), `\n=======================================`)
 
-//   if (stats.current_base > maxMemUsageLimit) {
-//     for (let i = 0; i < 10; i += 1) {
-//       console.error('MEMORY WAS WUNNING OUT')
-//     } 
-//     /**
-//      * kill this process gracefully
-//      */
-//     const killTimer = setTimeout(() => {
-//       process.exit(1)
-//     }, 1000)
-//     killTimer.unref()
-//     server.close()
-//     console.error(`GOING TO KILL PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
-//   }
-// })
+  if (stats.current_base > maxMemUsageLimit) {
+    for (let i = 0; i < 10; i += 1) {
+      console.error('MEMORY WAS WUNNING OUT')
+    } 
+    /**
+     * kill this process gracefully
+     */
+    const killTimer = setTimeout(() => {
+      process.exit(1)
+    }, 1000)
+    killTimer.unref()
+    server.close()
+    console.error(`GOING TO KILL PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
+  }
+})
