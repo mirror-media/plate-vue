@@ -1,11 +1,11 @@
 <template>
   <div class="content-image" :class="`img-${id}`" @click="openLightBox">
-    <span class="thumbnail" v-show="!isVirtualImgLoaded"><img src="/public/icon/loading.gif" :alt="caption"></span>
+    <span class="thumbnail" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="caption"></span>
     <span class="thumbnail" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
     <div class="caption" v-text="caption"></div>
     <div class="lightbox" v-show="isLightboxActive">
       <div class="lightbox-close" @click="closeLightBox"></div>
-      <img class="lightbox-img" :class="{ loading: !isLightboxImgLoaded }" src="/public/icon/loading.gif" ref="lightboxImg">
+      <img class="lightbox-img" :class="{ loading: !isLightboxImgLoaded }" src="/assets/mirrormedia/icon/loading.gif" ref="lightboxImg">
     </div>
   </div>
 </template>
@@ -40,10 +40,10 @@
       },       
       constructImages () {
         return {
-          desktop: get(this.image, 'desktop.url', get(this.image, 'image.url', '/public/notImage.png')),
-          tablet: get(this.image, 'tablet.url', get(this.image, 'image.url', '/public/notImage.png')),
-          mobile: get(this.image, 'mobile.url', get(this.image, 'image.url', '/public/notImage.png')),
-          tiny: get(this.image, 'tiny.url', get(this.image, 'image.url', '/public/notImage.png')),
+          desktop: get(this.image, 'desktop.url', get(this.image, 'image.url', '/assets/mirrormedia/notImage.png')),
+          tablet: get(this.image, 'tablet.url', get(this.image, 'image.url', '/assets/mirrormedia/notImage.png')),
+          mobile: get(this.image, 'mobile.url', get(this.image, 'image.url', '/assets/mirrormedia/notImage.png')),
+          tiny: get(this.image, 'tiny.url', get(this.image, 'image.url', '/assets/mirrormedia/notImage.png')),
         }
       },
       get,
@@ -149,7 +149,7 @@
         width 20%
 
     &-close
-      background-image url(/public/icon/close.png)
+      background-image url(/assets/mirrormedia/icon/close.png)
       background-size contain
       position absolute
       top 10px

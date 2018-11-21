@@ -22,7 +22,7 @@
             <div class="datetime-top mobile-only" v-text="moment(item.created_at).format('mm/dd HH:MM')"></div>
             <div class="heroImg">
               <a :href="`https://twitter.com/MirrorWatchTW/status/${getValue(item, [ 'id_str' ], '')}`">
-                <img :src="getValue(item, [ 'extended_entities', 'media', 0, 'media_url_https' ], '/public/notImage.png')" 
+                <img :src="getValue(item, [ 'extended_entities', 'media', 0, 'media_url_https' ], '/assets/mirrormedia/notImage.png')" 
                     v-if="getValue(item, [ 'extended_entities', 'media', 0, 'media_url_https' ])"  />
               </a>
             </div>

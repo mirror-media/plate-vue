@@ -8,12 +8,12 @@
       <div><span><a id="footer-auth" href="https://www.mirrormedia.mg/story/webauthorize/" target="_blank">內容授權</a></span></div>
     </div>
     <div class="follow mobile-hide">
-      <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" target="_blank"><img src="/public/icon/line@2x.png" alt="Line" class="footer-icon line" /></a>
-      <a class="item" id="footer-weibo" :href="SOCIAL_LINK.WEIBO" target="_blank"><img src="/public/icon/weibo@2x.png" alt="微博" class="footer-icon weibo" /></a>
-      <a class="item" id="footer-fb" :href="SOCIAL_LINK.FACEBOOK" target="_blank"><img src="/public/icon/facebook@2x.png" alt="Facebook" class="footer-icon facebook" /></a>
-      <a class="item" id="footer-ig" :href="SOCIAL_LINK.INSTAGRAM" target="_blank"><img src="/public/icon/instagram@2x.png" alt="Instagram" class="footer-icon instagram" /></a>
-      <a class="item" id="footer-feed" :href="SOCIAL_LINK.FEED" target="_blank"><img src="/public/icon/feed@2x.png" alt="RSS" class="footer-icon feed" /></a>
-      <a class="item" id="footer-email" :href="SOCIAL_LINK.EMAIL" target="_blank"><img src="/public/icon/mail@2x.png" alt="聯絡我們" class="footer-icon mail" /></a>
+      <a class="item" id="footer-line" :href="SOCIAL_LINK.LINE" target="_blank"><img src="/assets/mirrormedia/icon/line@2x.png" alt="Line" class="footer-icon line" /></a>
+      <a class="item" id="footer-weibo" :href="SOCIAL_LINK.WEIBO" target="_blank"><img src="/assets/mirrormedia/icon/weibo@2x.png" alt="微博" class="footer-icon weibo" /></a>
+      <a class="item" id="footer-fb" :href="SOCIAL_LINK.FACEBOOK" target="_blank"><img src="/assets/mirrormedia/icon/facebook@2x.png" alt="Facebook" class="footer-icon facebook" /></a>
+      <a class="item" id="footer-ig" :href="SOCIAL_LINK.INSTAGRAM" target="_blank"><img src="/assets/mirrormedia/icon/instagram@2x.png" alt="Instagram" class="footer-icon instagram" /></a>
+      <a class="item" id="footer-feed" :href="SOCIAL_LINK.FEED" target="_blank"><img src="/assets/mirrormedia/icon/feed@2x.png" alt="RSS" class="footer-icon feed" /></a>
+      <a class="item" id="footer-email" :href="SOCIAL_LINK.EMAIL" target="_blank"><img src="/assets/mirrormedia/icon/mail@2x.png" alt="聯絡我們" class="footer-icon mail" /></a>
     </div>
     <div class="mobile-follow mobile-only">
       <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a> - 
@@ -154,15 +154,15 @@
             height 100%
 
           .line
-            background-image url(/public/icon/line_white.png)
+            background-image url(/assets/mirrormedia/icon/line_white.png)
             background-size 30%
 
           .facebook
-            background-image url(/public/icon/facebook_white.png)
+            background-image url(/assets/mirrormedia/icon/facebook_white.png)
             background-size 12%
 
           .google-plus
-            background-image url(/public/icon/google-plus.png)
+            background-image url(/assets/mirrormedia/icon/google-plus.png)
             background-size 23%
 
         &.show

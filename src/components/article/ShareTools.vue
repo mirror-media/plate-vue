@@ -79,25 +79,25 @@
       cursor pointer
 
       &.line
-        background-image url(/public/icon/line_white.png)
+        background-image url(/assets/mirrormedia/icon/line_white.png)
         background-repeat no-repeat
         background-position center center
         background-size 85%
       
       &.facebook
-        background-image url(/public/icon/facebook_white.png)
+        background-image url(/assets/mirrormedia/icon/facebook_white.png)
         background-repeat no-repeat
         background-position center center
         background-size 35%        
       
       &.g-plus
-        background-image url(/public/icon/google-plus.png)
+        background-image url(/assets/mirrormedia/icon/google-plus.png)
         background-repeat no-repeat
         background-position center center
         background-size 70%        
 
       &.mm-icon
-        background-image url(/public/icon/mirrorlogo-2017.jpg)
+        background-image url(/assets/mirrormedia/icon/mirrorlogo-2017.jpg)
         background-repeat no-repeat
         background-position center center
         background-size cover   

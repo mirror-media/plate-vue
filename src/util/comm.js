@@ -89,30 +89,30 @@ export function getImage (article, size) {
   }
   switch (size) {
     case 'desktop':
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/assets/mirrormedia/notImage.png')
     case 'mobile':
-      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'mobile', 'url' ], '/assets/mirrormedia/notImage.png')
     case 'tablet':
-      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tablet', 'url' ], '/assets/mirrormedia/notImage.png')
     case 'tiny':
-      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tiny', 'url' ], '/assets/mirrormedia/notImage.png')
     default:
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/assets/mirrormedia/notImage.png')
   }
 }
 
 export function getImageCertain (image, size) {
   switch (size) {
     case 'desktop':
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/assets/mirrormedia/notImage.png')
     case 'mobile':
-      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'mobile', 'url' ], '/assets/mirrormedia/notImage.png')
     case 'tablet':
-      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tablet', 'url' ], '/assets/mirrormedia/notImage.png')
     case 'tiny':
-      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'tiny', 'url' ], '/assets/mirrormedia/notImage.png')
     default:
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, [ 'desktop', 'url' ], '/assets/mirrormedia/notImage.png')
   }
 }
 

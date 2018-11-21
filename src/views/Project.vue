@@ -81,9 +81,9 @@ body
     > .slide-nav-btn
       opacity 0.75    
       &.prev
-        background-image url(/public/icon/B-left-white.png)
+        background-image url(/assets/mirrormedia/icon/B-left-white.png)
       &.next
-        background-image url(/public/icon/B-right-white.png)
+        background-image url(/assets/mirrormedia/icon/B-right-white.png)
       &:hover
         opacity 1
 

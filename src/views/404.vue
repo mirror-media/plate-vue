@@ -1,8 +1,8 @@
 <template>
   <div class="notFound-view">
     <figure class="notFound__img">
-      <img class="notFound__img--mobile" src="/public/404-mobile.png" alt="404 Not Found">
-      <img class="notFound__img--desktop" src="/public/404-desktop.png" alt="404 Not Found">
+      <img class="notFound__img--mobile" src="/assets/mirrormedia/404-mobile.png" alt="404 Not Found">
+      <img class="notFound__img--desktop" src="/assets/mirrormedia/404-desktop.png" alt="404 Not Found">
       <div class="notFound__img--textBox">
         <h1>404</h1>
         <h2>抱歉！<br>找不到這個網址</h2>

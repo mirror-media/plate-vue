@@ -17,7 +17,7 @@
 
         <template v-else-if="topicType === 'timeline'">
           <a href="/" class="topicTimeline__logo">
-            <img src="/public/icon/logo_black@3x.png" :alt="siteTitle">
+            <img src="/assets/mirrormedia/icon/logo_black@3x.png" :alt="siteTitle">
           </a>
           <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`"></share>
           <timeline-headline :initialTimeline="timeline"></timeline-headline>

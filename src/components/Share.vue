@@ -1,10 +1,10 @@
 <template>
   <div class="share" :class="direction"
     :style="[isTimeline ? { display: 'block' } : {}, { top: `${top}`, right: `${right}`, bottom: `${bottom}`, left: `${left}` } ]">
-    <a class="share__icon share--toggle" @click="toggleShare()" :style="{ backgroundColor: `${color}` }" ><img :src="isOpen ? '/public/icon/close_white.png' : '/public/icon/share-white.png'" :alt="isOpen ? '關閉' : '開啟'"></a>
-    <a id="share-line" class="share__icon share__icon--list share--line" :class="[isOpen ? 'open' : '']" @click="shareLine"><img src="/public/icon/line_white_v2.png" alt="Line"></a>
-    <a id="share-fb" class="share__icon share__icon--list share--fb" :class="[isOpen ? 'open' : '']" @click="shareFacebook"><img src="/public/icon/facebook_white.png" alt="Facebook"></a>
-    <a id="share-google" class="share__icon share__icon--list share--google" :class="[isOpen ? 'open' : '']" @click="shareGooglePlus"><img src="/public/icon/google-plus.png" alt="Google Plus"></a>
+    <a class="share__icon share--toggle" @click="toggleShare()" :style="{ backgroundColor: `${color}` }" ><img :src="isOpen ? '/assets/mirrormedia/icon/close_white.png' : '/assets/mirrormedia/icon/share-white.png'" :alt="isOpen ? '關閉' : '開啟'"></a>
+    <a id="share-line" class="share__icon share__icon--list share--line" :class="[isOpen ? 'open' : '']" @click="shareLine"><img src="/assets/mirrormedia/icon/line_white_v2.png" alt="Line"></a>
+    <a id="share-fb" class="share__icon share__icon--list share--fb" :class="[isOpen ? 'open' : '']" @click="shareFacebook"><img src="/assets/mirrormedia/icon/facebook_white.png" alt="Facebook"></a>
+    <a id="share-google" class="share__icon share__icon--list share--google" :class="[isOpen ? 'open' : '']" @click="shareGooglePlus"><img src="/assets/mirrormedia/icon/google-plus.png" alt="Google Plus"></a>
   </div>
 </template>
 

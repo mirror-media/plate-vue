@@ -373,7 +373,7 @@ export default {
       z-index 100002
 
     &-close
-      background-image url(/public/icon/close.png)
+      background-image url(/assets/mirrormedia/icon/close.png)
       background-size contain
       // display block
       position absolute
@@ -515,7 +515,7 @@ export default {
         margin-top 3em
 
         .tags_icon 
-          background-image url(/public/icon/sprite@3x.png)
+          background-image url(/assets/mirrormedia/icon/sprite@3x.png)
           background-position -733px -741px
           background-repeat no-repeat
           background-size 866px 862px
@@ -701,7 +701,7 @@ export default {
         margin 3em 0
 
         i 
-          background-image url(/public/icon/quote.png)
+          background-image url(/assets/mirrormedia/icon/quote.png)
           width 45px
           height 45px
           background-repeat no-repeat

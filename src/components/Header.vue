@@ -4,18 +4,18 @@
     <section class="headerContainer">
       <div id="menubar" class="headerContainer__menu" @click="$_header_openSideBar"></div>
       <div class="headerContainer__logo">
-        <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img src="/public/logo.svg" alt="鏡週刊 Mirror Media"></router-link>
+        <router-link id="header-logo" class="headerContainer__logo--orig" :to="'/'"><img src="/assets/mirrormedia/logo.svg" alt="鏡週刊 Mirror Media"></router-link>
         <a v-show="logoEventImg && !showDfpHeaderLogo" class="headerContainer__logo--event" :href="logoEventHref" target="_blank"><img :src="logoEventImg"></a>
         <vue-dfp :is="props.vueDfp" v-if="props" ref="logoDfp" class="headerContainer__logo--dfp"  pos="LOGO" :dfpUnits="props.dfpUnits" :section="props.section" :dfpId="props.dfpId" :config="props.config"/>
       </div>
-      <div class="headerContainer__search--mobile" @click="$_header_openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></div>
+      <div class="headerContainer__search--mobile" @click="$_header_openSearchBar"><img src="/assets/mirrormedia/icon/search.svg" alt="開啟搜尋列"></div>
       <div class="headerContainer__search--desktop">
         <input type="search" v-model="searchVal" @input="$_header_searchValueChange" @keyup.enter="$_header_searchDesktop(searchVal)" placeholder="">
         <button @click="$_header_searchDesktop(searchVal)">
-          <img class="" src="/public/icon/search.svg" alt="搜尋"/>
+          <img class="" src="/assets/mirrormedia/icon/search.svg" alt="搜尋"/>
         </button>
         <div class="headerContainer__more" @click.prevent="$_header_openMoreService">
-          <img src="/public/icon/more_grey@2x.png" alt="更多">
+          <img src="/assets/mirrormedia/icon/more_grey@2x.png" alt="更多">
           <div ref="moreServiceList">
             <a class="headerContainer__more--item" :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>
             <a class="headerContainer__more--item" :href="socialLink.MAGAZINE" target="_blank">訂閱電子雜誌</a>
@@ -56,10 +56,10 @@
         </div>
         <div class="header-menu-wrapper">
           <a href="https://www.mirrorfiction.com/" id="header-mirrorfiction-menu" class="header-menu__item mirrorfiction" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
-            <img src="/public/icon/mirrorfiction.png" alt="鏡文學"/>
+            <img src="/assets/mirrormedia/icon/mirrorfiction.png" alt="鏡文學"/>
           </a>
           <a href="https://www.readr.tw/" id="header-readr-menu" class="header-menu__item readr" target="_blank" :style="{ width: `calc( 100% / ${headerAmount} )` }">
-            <img src="/public/icon/readrlogo-gary.png" :alt="$t('HEADER.READR')"/>
+            <img src="/assets/mirrormedia/icon/readrlogo-gary.png" :alt="$t('HEADER.READR')"/>
           </a>
         </div>
       </div>
@@ -67,7 +67,7 @@
 
     <nav class="header-sidebar" :class="{ open: openSide }">
       <div class="header-sidebar__close">
-        <img @click="$_header_closeSideBar" src="/public/icon/close_white@2x.png" alt="關閉側邊欄" >
+        <img @click="$_header_closeSideBar" src="/assets/mirrormedia/icon/close_white@2x.png" alt="關閉側邊欄" >
       </div>
       <div class="header-sidebar__topic">
         <a :href="`/topic/${getValue(item, [ 'id' ])}`" :id="`header-${item.id}-sidebar`" v-for="(item, i) in topics" v-text="item.name" :key="`${item.id}-sidebar-${i}`"></a>
@@ -102,12 +102,12 @@
         <a :href="socialLink.DOWNLOADAPP" target="_blank">下載APP</a>
       </div>
       <div class="header-sidebar__socialMedia">
-        <a id="footer-line-sidebar" :href="socialLink.LINE" target="_blank"><img class="sprite sprite-line" src="/public/transperent.png" alt="Line"></a>
-        <a id="footer-weibo-sidebar" :href="socialLink.WEIBO" target="_blank"><img class="sprite sprite-weibo" src="/public/transperent.png" alt="微博"></a>
-        <a id="footer-fb-sidebar" :href="socialLink.FACEBOOK" target="_blank"><img class="sprite sprite-facebook" src="/public/transperent.png" alt="Facebook"></a>
-        <a id="footer-ig-sidebar" :href="socialLink.INSTAGRAM" target="_blank"><img class="sprite sprite-instagram" src="/public/transperent.png" alt="Instagram"></a>
-        <a id="footer-feed-sidebar" :href="socialLink.FEED" target="_blank"><img class="sprite sprite-rss" src="/public/transperent.png" alt="RSS"></a>
-        <a id="footer-mail-sidebar" :href="socialLink.EMAIL" target="_blank"><img class="sprite sprite-mail" src="/public/transperent.png" alt="Email"></a>
+        <a id="footer-line-sidebar" :href="socialLink.LINE" target="_blank"><img class="sprite sprite-line" src="/assets/mirrormedia/transperent.png" alt="Line"></a>
+        <a id="footer-weibo-sidebar" :href="socialLink.WEIBO" target="_blank"><img class="sprite sprite-weibo" src="/assets/mirrormedia/transperent.png" alt="微博"></a>
+        <a id="footer-fb-sidebar" :href="socialLink.FACEBOOK" target="_blank"><img class="sprite sprite-facebook" src="/assets/mirrormedia/transperent.png" alt="Facebook"></a>
+        <a id="footer-ig-sidebar" :href="socialLink.INSTAGRAM" target="_blank"><img class="sprite sprite-instagram" src="/assets/mirrormedia/transperent.png" alt="Instagram"></a>
+        <a id="footer-feed-sidebar" :href="socialLink.FEED" target="_blank"><img class="sprite sprite-rss" src="/assets/mirrormedia/transperent.png" alt="RSS"></a>
+        <a id="footer-mail-sidebar" :href="socialLink.EMAIL" target="_blank"><img class="sprite sprite-mail" src="/assets/mirrormedia/transperent.png" alt="Email"></a>
       </div>
     </nav>
 
@@ -115,13 +115,13 @@
       <form action="." v-on:submit.prevent="$_header_searchMobile(searchVal)" >
         <input type="search" v-model="searchVal" @input="$_header_searchValueChange" @focusout="$_header_searchMobile(searchVal)" placeholder="搜尋">
       </form>
-      <a @click="$_header_closeSearchBar"><img src="/public/icon/close.png" alt="關閉搜尋列"></a>
+      <a @click="$_header_closeSearchBar"><img src="/assets/mirrormedia/icon/close.png" alt="關閉搜尋列"></a>
     </section>
     <section class="header-scrolled mobile-only" v-show="isScrolled">
-      <a @click="$_header_openSideBar"><img src="/public/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
+      <a @click="$_header_openSideBar"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
       <div>
-        <a href="/"><img src="/public/icon/logo@2x.png" alt="鏡週刊 Mirror Media"></a>
-        <a @click="$_header_openSearchBar"><img src="/public/icon/search.svg" alt="開啟搜尋列"></a>
+        <a href="/"><img src="/assets/mirrormedia/icon/logo@2x.png" alt="鏡週刊 Mirror Media"></a>
+        <a @click="$_header_openSearchBar"><img src="/assets/mirrormedia/icon/search.svg" alt="開啟搜尋列"></a>
       </div>
     </section>
   </header>
@@ -410,7 +410,7 @@ $color-readr = #968375
     display inline-block
     width 34px
     height 34px
-    background-image url('/public/icon/hamburger@2x.png')
+    background-image url('/assets/mirrormedia/icon/hamburger@2x.png')
     background-repeat no-repeat
     background-size 24px 24px
     background-position center center
@@ -626,7 +626,7 @@ $color-readr = #968375
     padding 0 .5em
 
 .sprite
-  background-image url('/public/icon/socialMedia_white@2x.png')
+  background-image url('/assets/mirrormedia/icon/socialMedia_white@2x.png')
   background-repeat no-repeat
   background-size 126px 120px
   display block

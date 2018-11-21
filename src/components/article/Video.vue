@@ -22,11 +22,11 @@
       },
       poster () {
         const poster = get(this.video, [ 'poster' ])
-        return !poster ? poster : '/public/transperent.png'
+        return !poster ? poster : '/assets/mirrormedia/transperent.png'
       },
       posterStyle () {
         return !this.played ? {
-          backgroundImage: `url(${get(this.video, 'poster', '/public/notImage.png')})`,
+          backgroundImage: `url(${get(this.video, 'poster', '/assets/mirrormedia/notImage.png')})`,
         } : {
           backgroundColor: '#000'
         }
@@ -162,11 +162,11 @@
       border-radius 50%
 
       &.play
-        background-image url('/public/icon/play-btn@2x.png')
+        background-image url('/assets/mirrormedia/icon/play-btn@2x.png')
         opacity 1
         
       &.pause
-        background-image url('/public/icon/pause-btn@2x.png')
+        background-image url('/assets/mirrormedia/icon/pause-btn@2x.png')
         // animation fade-out 0.5s
         opacity 0
 

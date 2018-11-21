@@ -20,9 +20,9 @@
         <a :href="socialLink.SUBSCRIBE" target="_blank" id="footer-subscribe">訂閱鏡週刊</a> - <a :href="socialLink.AD">廣告合作</a>
       </div>
       <div class="footer-foodtravel__link--socialMedia">
-        <a :href="socialLink.FACEBOOK" target="_blank" id="footer-facebook"><img class="facebook" src="/public/icon/facebook_white.png" alt="Facebook"></a>
-        <a :href="socialLink.LINE" target="_blank" id="footer-line"><img class="line" src="/public/icon/line_white.png" alt="Line"></a>
-        <a :href="socialLink.WEIBO" target="_blank" id="footer-weibo"><img class="weibo" src="/public/icon/weibo_white.png" alt="微博"></a>
+        <a :href="socialLink.FACEBOOK" target="_blank" id="footer-facebook"><img class="facebook" src="/assets/mirrormedia/icon/facebook_white.png" alt="Facebook"></a>
+        <a :href="socialLink.LINE" target="_blank" id="footer-line"><img class="line" src="/assets/mirrormedia/icon/line_white.png" alt="Line"></a>
+        <a :href="socialLink.WEIBO" target="_blank" id="footer-weibo"><img class="weibo" src="/assets/mirrormedia/icon/weibo_white.png" alt="微博"></a>
       </div>
     </div>
     

@@ -81,7 +81,7 @@
           > .icon
             width 32px
             height 32px
-            background-image url(/public/icon/close_white.png)
+            background-image url(/assets/mirrormedia/icon/close_white.png)
             background-repeat no-repeat
             background-size contain
             background-position center center

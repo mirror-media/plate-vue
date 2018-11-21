@@ -4,7 +4,7 @@
     <span class='part-2 tooltip' :class="isActive" @mouseover="mouseover" @mouseout="mouseout" @touchstart="touchstart" @touchend="touchend">
       <span v-text="annotationPart2"></span>
       <span class="tooltiptext" v-text="annotationText" :style="annotationTextStyle"></span>
-      <img src='/public/icon/info.png' style="height: 1.3rem; margin-left: 3px;">
+      <img src='/assets/mirrormedia/icon/info.png' style="height: 1.3rem; margin-left: 3px;">
     </span>
     <span v-if="!isPart3HasAnnotation" class='part-3' v-text="annotationPart3"></span>
     <annotation v-if="isPart3HasAnnotation" class="recursive-annotation" :annotationStr="annotationPart3"></annotation>
