@@ -1,5 +1,5 @@
 <template>
-  <div class="latest-image" :class="[ isVirtualImgLoaded ? '' : 'loading', `id-${id}`, ]" style="background-image: url(/public/icon/loading.gif);"></div>
+  <div class="latest-image" :class="[ isVirtualImgLoaded ? '' : 'loading', `id-${id}`, ]" style="background-image: url(/assets/mirrormedia/icon/loading.gif);"></div>
 </template>
 <script>
   import { currentYPosition, elmYPosition, } from 'kc-scroll'
@@ -48,7 +48,7 @@
     },
     watch: {
       src () {
-        this.$el.setAttribute('style', 'background-image: url(/public/icon/loading.gif);')
+        this.$el.setAttribute('style', 'background-image: url(/assets/mirrormedia/icon/loading.gif);')
         this.isVirtualImgLoaded = false
         this.isVirtualImgCheckedOut = false        
         this.lazyLoad()       

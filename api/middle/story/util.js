@@ -31,10 +31,10 @@ const getCredit = ({ cameraMan = [], designers = [], engineers = [], extendBylin
 
 const getStoryHeroImageSrc = (heroImage) => {
   const dimensions = {
-    desktop: get(heroImage, 'image.resizedTargets.desktop.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/public/notImage.png`)),
-    tablet: get(heroImage, 'image.resizedTargets.tablet.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/public/notImage.png`)),
-    mobile: get(heroImage, 'image.resizedTargets.mobile.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/public/notImage.png`)),
-    tiny: get(heroImage, 'image.resizedTargets.tiny.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/public/notImage.png`)),
+    desktop: get(heroImage, 'image.resizedTargets.desktop.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
+    tablet: get(heroImage, 'image.resizedTargets.tablet.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
+    mobile: get(heroImage, 'image.resizedTargets.mobile.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
+    tiny: get(heroImage, 'image.resizedTargets.tiny.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
   }
   return get(dimensions, 'mobile')
 }

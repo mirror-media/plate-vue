@@ -22,10 +22,10 @@
       </template>
     </div>
     <div class="activityTimeline__arrow left" @click="goToPrev()" v-show="hasPrev">
-      <img src="/public/icon/arrow-left_white.png" />
+      <img src="/assets/mirrormedia/icon/arrow-left_white.png" />
     </div>
     <div class="activityTimeline__arrow right" @click="goToNext()" v-show="hasNext">
-      <img src="/public/icon/arrow-right_white.png" />
+      <img src="/assets/mirrormedia/icon/arrow-right_white.png" />
     </div>
   </section>
 </template>
@@ -287,19 +287,19 @@ export default {
     
     &.text
       .activityTimeline__imageBlock--textIcon
-        background-image url("/public/icon/timelineText@2x.png")
+        background-image url("/assets/mirrormedia/icon/timelineText@2x.png")
       &:hover
         h2
           color #fff
     &.image
       .activityTimeline__imageBlock--textIcon
-        background-image url("/public/icon/camera@2x.png")
+        background-image url("/assets/mirrormedia/icon/camera@2x.png")
       &:hover
         .activityTimeline__imageBlock--text
           display none
     &.video
       .activityTimeline__imageBlock--textIcon
-        background-image url("/public/icon/video_gray@2x.png")
+        background-image url("/assets/mirrormedia/icon/video_gray@2x.png")
       &:hover
         .activityTimeline__imageBlock--text
           display none

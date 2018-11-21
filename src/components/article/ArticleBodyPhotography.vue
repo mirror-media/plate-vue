@@ -536,7 +536,7 @@
       &.mm-icon
         width 48px
         height 48px
-        background-image url(/public/favicon-48x48.png)
+        background-image url(/assets/mirrormedia/favicon-48x48.png)
         background-size contain
         background-position center center
         background-repeat no-repeat
@@ -563,24 +563,24 @@
 
             &.share
               margin-left 0
-              background-image url(/public/icon/share-white.png)
+              background-image url(/assets/mirrormedia/icon/share-white.png)
               background-size 50%
             
             &.facebook
-              background-image url(/public/icon/facebook_white.png)
+              background-image url(/assets/mirrormedia/icon/facebook_white.png)
               background-size 35%
               -webkit-transition-delay 50ms
               transition-delay 20ms
               
             &.line
-              background-image url(/public/icon/line_white.png)
+              background-image url(/assets/mirrormedia/icon/line_white.png)
               background-size 70%
               background-color #20b22c   
               -webkit-transition-delay 75ms
               transition-delay 40ms
 
             &.g-plus
-              background-image url(/public/icon/google-plus.png)
+              background-image url(/assets/mirrormedia/icon/google-plus.png)
               background-size 70%
               background-color #c00   
               -webkit-transition-delay 75ms
@@ -635,17 +635,17 @@
       display none
 
     &.on
-      background-image url(/public/icon/caption-on.png)
+      background-image url(/assets/mirrormedia/icon/caption-on.png)
       opacity 0.65
       
     &.off
-      background-image url(/public/icon/caption-off.png)
+      background-image url(/assets/mirrormedia/icon/caption-off.png)
       
     &.hide
       display none
 
     &:hover
-      background-image url(/public/icon/caption-on.png)
+      background-image url(/assets/mirrormedia/icon/caption-on.png)
       opacity 1
 
       .hint
@@ -737,7 +737,7 @@
       height 35px
       bottom 20px
       background-color rgba(218, 218, 218, 0.37)
-      background-image url(/public/icon/continue.png)
+      background-image url(/assets/mirrormedia/icon/continue.png)
       background-repeat no-repeat
       background-size contain
       background-position center center

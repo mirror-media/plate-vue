@@ -202,7 +202,7 @@ button:focus {
       right -16px
       width 32px
       height 32px
-      background-image url(/public/icon/close-btn.png)
+      background-image url(/assets/mirrormedia/icon/close-btn.png)
       background-repeat no-repeat
       background-size contain
       background-position center center

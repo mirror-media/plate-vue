@@ -149,9 +149,9 @@
       
     
     .swiper-button-prev
-      background-image url(/public/icon/arrow1-2017.png)
+      background-image url(/assets/mirrormedia/icon/arrow1-2017.png)
     
     .swiper-button-next
-      background-image url(/public/icon/arrow2-2017.png)
+      background-image url(/assets/mirrormedia/icon/arrow2-2017.png)
   
 </style>

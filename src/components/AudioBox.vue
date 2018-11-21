@@ -154,12 +154,12 @@ export default {
       box-shadow 0 0 10px 1px rgba(0,0,0,.4) inset
       cursor pointer
       &.paused
-        background-image url(/public/icon/play-btn_blue@2x.png)
+        background-image url(/assets/mirrormedia/icon/play-btn_blue@2x.png)
         background-position 60% 50%
       &.ended
-        background-image url(/public/icon/replay-btn_blue@2x.png)
+        background-image url(/assets/mirrormedia/icon/replay-btn_blue@2x.png)
       &.playing
-        background-image url(/public/icon/pause-btn_blue@2x.png)
+        background-image url(/assets/mirrormedia/icon/pause-btn_blue@2x.png)
   &__info
     display flex
     flex-direction column

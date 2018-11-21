@@ -2,7 +2,7 @@
   <div class="liveStream" v-if="showLiveStream" ref="pop">
     <div class="liveStream__curtain" :id="`${type}_curtain`" v-show="!hasZoomIn" @click="toggleZoomIn()"></div>
     <div class="liveStream-container" :class="{ zoomIn: hasZoomIn }" :id="`${type}__container`" v-html="mediaDataEmbed" @click="toggleZoomIn()"></div>
-    <img class="liveStream__close" src="/public/icon/close-btn.png"  :id="`${type}__close`"  alt="關閉" v-show="!hasZoomIn" @click="closeLiveStream()">
+    <img class="liveStream__close" src="/assets/mirrormedia/icon/close-btn.png"  :id="`${type}__close`"  alt="關閉" v-show="!hasZoomIn" @click="closeLiveStream()">
     <span class="liveStream__prompt" v-show="!hasZoomIn" v-if="type === 'live'">LIVE</span>
   </div>
 </template>

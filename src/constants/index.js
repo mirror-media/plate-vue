@@ -138,7 +138,7 @@ export const SITE_DESCRIPTION = '鏡傳媒以台灣為基地，是一跨平台�
 
 export const SITE_KEYWORDS = '鏡週刊,mirror media,新聞人物,娛樂焦點,美食旅遊,瑪法達'
 
-export const SITE_OGIMAGE = 'https://www.mirrormedia.mg/public/notImage.png'
+export const SITE_OGIMAGE = 'https://www.mirrormedia.mg/assets/mirrormedia/notImage.png'
 
 export const SITE_TITLE = '鏡週刊 Mirror Media'
 
