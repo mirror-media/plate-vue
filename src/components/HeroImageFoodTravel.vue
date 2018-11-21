@@ -1,7 +1,7 @@
 <template>
   <div class="heroimageFoodTravel">
     <div class="heroimage-container">
-      <!--<img class="heroimage" src="../../public/foodtravelheroimg.jpg" alt="">-->
+      <!--<img class="heroimage" src="../../assets/mirrormedia/foodtravelheroimg.jpg" alt="">-->
       <img class="heroimage" :src="getValue(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])" alt="">
     </div>
     <img class="section-title" :src="getSectionLogoUrl()" alt="">

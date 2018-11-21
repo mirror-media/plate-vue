@@ -1114,7 +1114,7 @@ export default {
     background-color #f5f5f5
 
 .foodtravel-redesign
-  background-image url("/public/foodtravelbg.jpg")
+  background-image url("/assets/mirrormedia/foodtravelbg.jpg")
 
 @media (min-width: 600px)
   .list

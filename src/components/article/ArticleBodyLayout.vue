@@ -104,7 +104,7 @@
             background-position -410px -405px
             background-repeat no-repeat
             background-size 488px 467px
-            background-image url(/public/icon/sprite@3x.png)
+            background-image url(/assets/mirrormedia/icon/sprite@3x.png)
             width 25px
             height 20px
             display block
@@ -290,7 +290,7 @@
         margin 3em 0
 
         i 
-          background-image url(/public/icon/quote.png)
+          background-image url(/assets/mirrormedia/icon/quote.png)
           width 45px
           height 45px
           background-repeat no-repeat

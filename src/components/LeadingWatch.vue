@@ -6,7 +6,7 @@
         <h3 class="leadingWatchImg-headline__zhName"></h3>
         <div class="leadingWatchImg-intro">
           <span class="leadingWatchImg-intro__title"></span>
-          <img src="/public/icon/tag-arrow.png"/>
+          <img src="/assets/mirrormedia/icon/tag-arrow.png"/>
         </div>
       </div>
     </div>

@@ -26,11 +26,11 @@
     </template>
     <template v-else-if="articleType === 'audio'">
       <figure class="listArticleBlock__figure">
-        <img v-lazy="getValue(article, [ 'coverPhoto', 'image', 'resizedTargets', 'mobile', 'url' ], '/public/notImage.png')" :alt="getValue(article, [ 'title' ])" />
+        <img v-lazy="getValue(article, [ 'coverPhoto', 'image', 'resizedTargets', 'mobile', 'url' ], '/assets/mirrormedia/notImage.png')" :alt="getValue(article, [ 'title' ])" />
         <div class="listArticleBlock__figure--audioControl">
-          <img v-lazy="`/public/icon/play-btn@2x.png`" @click="audioPlay()" v-show="!isPlaying && !isEnded" />
-          <img v-lazy="`/public/icon/pause-btn@2x.png`" @click="audioPause()" v-show="isPlaying && !isEnded" />
-          <img v-lazy="`/public/icon/replay-btn@2x.png`" @click="audioReplay()" v-show="isEnded" />
+          <img v-lazy="`/assets/mirrormedia/icon/play-btn@2x.png`" @click="audioPlay()" v-show="!isPlaying && !isEnded" />
+          <img v-lazy="`/assets/mirrormedia/icon/pause-btn@2x.png`" @click="audioPause()" v-show="isPlaying && !isEnded" />
+          <img v-lazy="`/assets/mirrormedia/icon/replay-btn@2x.png`" @click="audioReplay()" v-show="isEnded" />
         </div>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }">Audio</div>
       </figure>

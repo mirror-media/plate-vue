@@ -2,7 +2,7 @@
   <section class="ActivityLightbox" :style="[ isLightboxMenuOpen ? { overflow: 'hidden' } : {} ]">
     <h1 v-text="getValue(activity, [ 'name' ])" />
     <figure class="ActivityLightbox__close" @click="closeLightbox()">
-      <img v-lazy="`/public/icon/timelineClose@2x.png`" />
+      <img v-lazy="`/assets/mirrormedia/icon/timelineClose@2x.png`" />
     </figure>
     <div class="ActivityLightbox__slider" v-if="currentContentStyle !== 'text'" v-on:touchstart="touchstart" v-on:touchend="touchend">
       <div class="ActivityLightbox__slider--arrow left" v-show="nodeContentMoreThanOne" @click="goToPrev()" />
@@ -15,7 +15,7 @@
       <p v-text="currentContentCredit" />
       <div class="ActivityLightbox__slideshowInfoAmountBox">
         <span>{{ currentContentIndex + 1 }} | {{ getValue(currentNodeContents, [ 'length' ]) }}</span>
-        <img v-lazy="`/public/icon/square_gray@2x.png`" v-show="nodeContentMoreThanOne" @click="openLightboxMenu()" />
+        <img v-lazy="`/assets/mirrormedia/icon/square_gray@2x.png`" v-show="nodeContentMoreThanOne" @click="openLightboxMenu()" />
       </div>
     </div>
     <div class="ActivityLightbox__content" :class="currentContentStyle">
@@ -23,7 +23,7 @@
       <h2 v-text="getValue(nodes, [ currentNodeIndex, 'name' ])" />
       <p v-text="getValue(nodes, [ currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])" />
       <figure @click="share()" id="activity-share">
-        <img v-lazy="`/public/icon/facebook_white.png`" />
+        <img v-lazy="`/assets/mirrormedia/icon/facebook_white.png`" />
       </figure>
     </div>
     <activity-lightboxMenu :currentNodeContents="currentNodeContents" :initialActivity="activity" :viewport="viewport" 

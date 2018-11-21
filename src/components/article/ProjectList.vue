@@ -217,11 +217,11 @@
 
     &.prev
       left 0
-      background-image url(/public/icon/B-left.png)
+      background-image url(/assets/mirrormedia/icon/B-left.png)
     
     &.next
       right 0
-      background-image url(/public/icon/B-right.png)
+      background-image url(/assets/mirrormedia/icon/B-right.png)
 
 
 @media (min-width 0px) and (max-width 499px)

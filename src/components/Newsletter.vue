@@ -239,7 +239,7 @@ $duration = 1.4s
     left 1em
     width 80px
     height 60px
-    background-image url(/public/icon/newsletter.png)
+    background-image url(/assets/mirrormedia/icon/newsletter.png)
     background-repeat no-repeat
     background-size contain
     background-position 50% 50%

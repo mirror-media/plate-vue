@@ -85,9 +85,12 @@ const serve = (path, cache) => express.static(resolve(path), {
 })
 
 app.use(compression({ threshold: 0 }))
-app.use(favicon('./public/favicon-48x48.png'))
+app.use(favicon('./assets/mirrormedia/favicon-48x48.png'))
 app.use('/dist', serve('./dist', true))
-app.use('/public', serve('./public', true))
+app.use('/assets', serve('./assets', true))
+app.use('/public', (req, res) => {
+  res.redirect('/assets/mirrormedia' + req.url)
+})
 app.use('/manifest.json', serve('./manifest.json', true))
 app.use('/service-worker.js', serve('./dist/service-worker.js'))
 

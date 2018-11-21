@@ -7,8 +7,8 @@ Vue.use(Router)
 Vue.use(VueLazyload, {
   lazyComponent: true,
   preLoad: 1.3,
-  error: '/public/notImage.png',
-  loading: '/public/icon/loading.gif',
+  error: '/assets/mirrormedia/notImage.png',
+  loading: '/assets/mirrormedia/icon/loading.gif',
   attempt: 1
 })
 

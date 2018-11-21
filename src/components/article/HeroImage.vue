@@ -13,12 +13,12 @@
         <div class="hero-info-heroCaption" v-text="heroCaption"></div>
       </div>
       <div v-if="heroImage && heroImage.image" class="hero-img">
-        <span class="img" v-show="!isVirtualImgLoaded"><img src="/public/icon/loading.gif" :alt="heroCaption"></span>
+        <span class="img" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="heroCaption"></span>
         <span class="img" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
       </div>
     </template>
     <template v-else-if="viewport">
-      <span class="heroimg" v-show="!isVirtualImgLoaded"><img src="/public/icon/loading.gif" :alt="heroCaption"></span>
+      <span class="heroimg" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="heroCaption"></span>
       <span class="heroimg" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
       <div class="heroimg-caption" v-text="heroCaption" v-show="heroCaption && heroCaption.length > 0"></div>
     </template>
@@ -38,10 +38,10 @@
     methods: {
       constructImages () {
         return {
-          desktop: get(this.heroImage, 'image.resizedTargets.desktop.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
-          tablet: get(this.heroImage, 'image.resizedTargets.tablet.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
-          mobile: get(this.heroImage, 'image.resizedTargets.mobile.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
-          tiny: get(this.heroImage, 'image.resizedTargets.tiny.url', get(this.heroImage, 'image.url', '/public/notImage.png')),
+          desktop: get(this.heroImage, 'image.resizedTargets.desktop.url', get(this.heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
+          tablet: get(this.heroImage, 'image.resizedTargets.tablet.url', get(this.heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
+          mobile: get(this.heroImage, 'image.resizedTargets.mobile.url', get(this.heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
+          tiny: get(this.heroImage, 'image.resizedTargets.tiny.url', get(this.heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
         }
       },
       lazyLoad () {
