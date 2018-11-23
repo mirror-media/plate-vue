@@ -77,6 +77,7 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
+            <RelatedListInContent v-if="abIndicator === 'B'" slot="relatedListInContent" :relateds="relateds" />
             <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
               slot="relatedlistBottom" 
               :abIndicator="abIndicator"
@@ -156,6 +157,7 @@
   import MicroAd from '../components/MicroAd.vue'
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
+  import RelatedListInContent from '../components/article/RelatedListInContent.vue'
   import RelatedListWithRecommendList from '../components/article/RelatedListWithRecommendList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -349,6 +351,7 @@
       DfpCover,
       HeroImage,
       HeroVideo,
+      RelatedListInContent,
       RelatedListWithRecommendList
     },
     data () {
