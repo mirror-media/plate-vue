@@ -87,6 +87,7 @@
           <div v-else v-html="paragraphComposer(p)"></div>
           <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
+          <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
         </div>
       </article>
       <div class="article_main_related_bottom">
@@ -94,8 +95,8 @@
       </div>
       <newsletter></newsletter>
       <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
-      <div :class="abIndicator.toLowerCase()" class="article_main_tags">
-        <p v-if="abIndicator === 'B'">相關關鍵字：</p>
+      <div class="article_main_tags">
+        <p>相關關鍵字：</p>
         <div class="tags" v-html="tags" v-if="tags.length > 0"></div>
       </div>
       <div class="split-line"></div>
@@ -224,7 +225,7 @@ export default {
     },
     tags () {
       const { tags = [] } = this.articleData
-      const separator = this.abIndicator === 'B' ? '' : '、'
+      const separator = ''
       return tags.map(tag => `<a href=\"/tag/${_.get(tag, 'id', '')}\" id=\"tag-${_.get(tag, 'id', '')}\">${_.get(tag, 'name', '')}</a>`).join(separator)
     },
     firstTwoUnstyledParagraph () {
@@ -242,6 +243,15 @@ export default {
         index++
       }
       return records
+    },
+    lastUnstyledParagraph () {
+      let last = this.contArr.length - 1
+      this.contArr.map((content, index) => {
+        if (content.type === 'unstyled') {
+          last = index
+        }
+      })
+      return last
     }
   },
   data () {

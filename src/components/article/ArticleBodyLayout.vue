@@ -88,48 +88,28 @@
       
       .article_main_tags 
         clear both
-        margin-top 3em
-        padding-left 32px
-        
+        margin-top 1.5em
+        padding 0
+        > p
+          margin 1em 0 .5em
+          color #a0a0a0
+
         .tags 
           display inline-block
           color rgba(2, 2, 2, 0.5)
           font-size 18px
           position relative
-          &::before
-            content ''
-            position absolute
-            top 0
-            left -35px
-            background-position -410px -405px
-            background-repeat no-repeat
-            background-size 488px 467px
-            background-image url(/assets/mirrormedia/icon/sprite@3x.png)
-            width 25px
-            height 20px
-            display block
 
           a, a:hover, a:link, a:visited 
-            color rgba(2, 2, 2, 0.5)
+            display inline-block
+            margin 0 .5em .6em 0
+            padding .2em .4em
+            color #fff
             text-decoration none
-            cursor pointer
+            background-color #c8c8c8
             border-bottom none
-        &.b
-          padding 0
-          margin-top 1.5em
-          > p
-            margin 1em 0 .5em
-            color #a0a0a0
-          .tags 
-            &::before
-              content none
-            a, a:hover, a:link, a:visited
-              display inline-block
-              margin 0 .5em .6em 0
-              padding .2em .4em
-              color #fff
-              background-color #c8c8c8
-
+            cursor pointer
+        
       .brief 
         margin-top 30px
         line-height 36px
@@ -572,10 +552,8 @@
           padding-left 25px
           padding-right 25px
           &.article_main_tags
-            padding-left 60px
-            &.b
-              padding 0 25px
-
+            padding 0 25px
+           
       .article_basic-info
         .category
           font-size 1.3rem
@@ -645,9 +623,7 @@
           padding-left 0
           padding-right 0
           &.article_main_tags
-            padding-left 32px
-            &.b
-              padding 0
+            padding 0
 
   @media (min-width 0px) and (max-width 767px)
     .article_body

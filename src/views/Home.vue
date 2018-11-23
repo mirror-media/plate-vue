@@ -7,9 +7,10 @@
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
-        <section class="home-mainContent">
+        <section :class="abIndicator.toLowerCase()" class="home-mainContent">
+          <editor-choice v-if="abIndicator === 'B'" :abIndicator="abIndicator" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
           <main>
-            <editor-choice :abIndicator="abIndicator" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
+            <editor-choice v-if="abIndicator === 'A'" :abIndicator="abIndicator" :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2 v-text="$t('homepage.focus')"></h2></div>
@@ -547,6 +548,8 @@ export default {
 
 .home-mainContent
   width 100%
+  &.b
+    flex-wrap wrap
   .latest-main-container
     width 90%
     margin 0 auto
