@@ -185,6 +185,13 @@ function loadImages (uuid = '', type = '', params = {}) {
   return _doFetch(url)
 }
 
+function loadImagesById (params = {}) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/images`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadImage (uuid = '') {
   const url = `${_host}/api/images/${uuid}`
   return _doFetch(url)
@@ -312,6 +319,10 @@ export function fetchImage (uuid = '') {
 
 export function fetchImages (uuid = '', type = '', params = {}) {
   return loadImages(uuid, type, params)
+}
+
+export function fetchImagesById (params = {}) {
+  return loadImagesById(params)
 }
 
 export function fetchLatestArticle (params = {}) {
