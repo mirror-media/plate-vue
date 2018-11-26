@@ -18,6 +18,7 @@ import { fetchActivities,
   fetchExternals,
   fetchImage,
   fetchImages,
+  fetchImagesById,
   fetchLatestArticle,
   fetchNodes,
   fetchPartners,
@@ -61,6 +62,7 @@ export function createStore () {
       fbPagesId: FB_PAGES_ID,
       highlightNodes: {},
       images: {},
+      imagesById: [],
       latestArticle: {},
       latestArticles: {},
       nodes: {},
@@ -201,6 +203,12 @@ export function createStore () {
         }
         return fetchImages(uuid, type, params).then(images => {
           commit('SET_IMAGES', { uuid, images })
+        })
+      },
+
+      FETCH_IMAGES_BY_ID: ({ commit, state }, { ids }) => {
+        return fetchImagesById({ where: { _id: { $in: ids }}}).then(images => {
+          commit('SET_IMAGES_BY_ID', { images: images.items })
         })
       },
 
@@ -401,6 +409,10 @@ export function createStore () {
 
       SET_IMAGES: (state, { uuid, images }) => {
         Vue.set(state['images'], uuid, images)
+      },
+
+      SET_IMAGES_BY_ID: (state, { images }) => {
+        state['imagesById'] = images
       },
 
       SET_LATESTARTICLE: (state, { latestArticle }) => {

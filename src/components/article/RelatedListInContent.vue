@@ -2,16 +2,16 @@
   <section class="relateds-in-content">
     <div v-for="related in relateds" :key="related.id" class="related">
       <div class="related__title">
-        <a :id="`related-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
+        <a :id="`related-title-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
       </div>
-      <!-- <a :href="getHref(related)" class="related__img" target="_blank">
-        <img src="" alt="">
-      </a> -->
+      <a v-if="getImage(related.heroImage)" :id="`related-img-${related.slug}`" :href="getHref(related)" class="related__img" target="_blank">
+        <img :src="getImage(related.heroImage)" :alt="related.title">
+      </a>
     </div>
   </section>
 </template>
 <script>
-
+import { get } from 'lodash'
 import { getHref } from '../../util/comm'
 
 export default {
@@ -25,7 +25,12 @@ export default {
     }
   },
   methods: {
-    getHref
+    getHref,
+    getImage (id) {
+      const item = this.$store.state.imagesById.find(image => image.id === id)
+      const image = get(item, 'image.resizedTargets.mobile.url') || get(item, 'image.url')
+      return image ? image : undefined
+    }
   }
 }
 </script>
@@ -68,9 +73,6 @@ export default {
       position relative
       width 33% 
       padding 0 !important
-      // background-size cover 
-      // background-position center center 
-      // background-repeat no-repeat
       border-bottom none !important
       &::after
         content ''
