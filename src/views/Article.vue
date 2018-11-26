@@ -227,6 +227,10 @@
     return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
   }
 
+  const fetchImages = (store, ids = []) => store.dispatch('FETCH_IMAGES_BY_ID', {
+    ids: ids
+  })
+
   export default {
     name: 'article-view',
     preFetch: fetchData,
@@ -760,10 +764,14 @@
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
       },
-      articleData: function () {
+      articleData: function (value) {
         if (!this.hasSentFirstEnterGA) {
           this.sendGA(this.articleData)
           this.hasSentFirstEnterGA = true
+        }
+        if (this.abIndicator === 'B' && value.relateds && value.relateds.length > 0) {
+          const relatedImages = value.relateds.map(related => related.heroImage)
+          fetchImages(this.$store, relatedImages)
         }
         this.updateJSONLDScript()
       }
