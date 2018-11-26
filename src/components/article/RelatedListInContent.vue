@@ -2,7 +2,7 @@
   <section class="relateds-in-content">
     <div v-for="related in relateds" :key="related.id" class="related">
       <div class="related__title">
-        <a :href="getHref(related)" target="_blank" v-text="related.title"></a>
+        <a :id="`related-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
       </div>
       <!-- <a :href="getHref(related)" class="related__img" target="_blank">
         <img src="" alt="">
