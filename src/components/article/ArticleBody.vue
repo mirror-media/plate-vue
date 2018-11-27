@@ -247,7 +247,7 @@ export default {
     lastUnstyledParagraph () {
       let last = this.contArr.length - 1
       this.contArr.map((content, index) => {
-        if (content.type === 'unstyled') {
+        if (content.type === 'unstyled' && content.content[0]) {
           last = index
         }
       })
