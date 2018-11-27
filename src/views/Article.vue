@@ -278,7 +278,7 @@
       }
       return {
         url: `${SITE_MOBILE_URL}/story/${slug}/`,
-        title: `${title} - ${SITE_TITLE_SHORT}`,
+        title: title,
         meta: `
           <meta name="mm-opt" content="article${abIndicator}">
           <meta name="robots" content="${robotsValue}">
