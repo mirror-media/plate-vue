@@ -36,6 +36,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .relateds-in-content
+  margin-bottom 20px
   .related
     display flex
     position relative
@@ -102,6 +103,7 @@ export default {
 
 @media (min-width 900px)
   .relateds-in-content
+    margin-bottom 0
     .related
       &__img
         width 20%
