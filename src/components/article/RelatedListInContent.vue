@@ -37,6 +37,7 @@ export default {
 <style lang="stylus" scoped>
 .relateds-in-content
   margin-bottom 20px
+  clear both
   .related
     display flex
     position relative
