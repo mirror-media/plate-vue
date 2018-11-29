@@ -1,6 +1,12 @@
 <template>
   <ArticleBodyLayout class="article_body" v-if="!isArticleEmpty()" :class="styleForCurrArticle">
-    <template v-if="viewport < 1200">
+    <template v-if="viewport >= 1200">
+      <div class="article__basic-info">
+        <div class="article__credit" v-html="credit"></div>
+        <div class="article__date" v-text="date"></div>
+      </div>
+    </template>
+    <template v-else>
       <div class="article_basic-info">
         <div class="category">
           <span v-if="!isAd" class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
@@ -10,12 +16,6 @@
       <div class="article_title"><h1 v-text="title"></h1></div>
       <div v-if="subtitle.length > 0" class="article_subtitle" ><h2 v-text="subtitle"></h2></div>
       <div class="article_credit" v-html="credit"></div>
-    </template>
-    <template v-else>
-      <div class="article__basic-info">
-        <div class="article__credit" v-html="credit"></div>
-        <div class="article__date" v-text="date"></div>
-      </div>
     </template>
     <main class="article_main">
       <div class="brief fb-quotable">
