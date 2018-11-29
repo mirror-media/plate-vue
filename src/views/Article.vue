@@ -566,7 +566,8 @@
         return _.get(this.$store, [ 'state', 'articlesRecommendList', 'relatedNews' ], [])
       },
       relateds () {
-        return _.get(this.articleData, [ 'relateds' ], [])
+        const items = _.get(this.articleData, [ 'relateds' ], []) || []
+        return items.filter(item => item)
       },
       sectionId () {
         const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
@@ -770,7 +771,7 @@
           this.hasSentFirstEnterGA = true
         }
         if (this.abIndicator === 'B' && value.relateds && value.relateds.length > 0) {
-          const relatedImages = value.relateds.map(related => related.heroImage)
+          const relatedImages = value.relateds.filter(related => related).map(related => related.heroImage)
           fetchImages(this.$store, relatedImages)
         }
         this.updateJSONLDScript()
