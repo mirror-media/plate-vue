@@ -87,7 +87,7 @@
           <div v-else v-html="paragraphComposer(p)"></div>
           <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
-          <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
+          <slot v-if="index === lastUnstyledParagraph - (abIndicator === 'A' ? 1 : 2)" name="relatedListInContent"></slot>
         </div>
       </article>
       <div class="article_main_related_bottom">
