@@ -770,7 +770,7 @@
           this.sendGA(this.articleData)
           this.hasSentFirstEnterGA = true
         }
-        if (this.abIndicator === 'B' && value.relateds && value.relateds.length > 0) {
+        if (value.relateds && value.relateds.length > 0) {
           const relatedImages = value.relateds.filter(related => related).map(related => related.heroImage)
           fetchImages(this.$store, relatedImages)
         }
