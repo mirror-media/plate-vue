@@ -331,7 +331,7 @@ export default {
     position absolute
     top 20px
     left 20px
-    z-index 10
+    z-index 1
     margin 0
     color #fff
     font-size 1rem
