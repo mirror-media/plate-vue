@@ -382,7 +382,7 @@ export function createStore () {
       },
 
       SET_EXTERNAL: (state, { external }) => {
-        Vue.set(state['external'], external.items[0].name, external.items[0])
+        Vue.set(state['external'], _.get(external, 'items.0.name', ''), external.items[0])
       },
 
       SET_EXTERNALS: (state, { externals }) => {
