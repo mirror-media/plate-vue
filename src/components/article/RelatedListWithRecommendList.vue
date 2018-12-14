@@ -1,15 +1,15 @@
 <template>
   <div class="related-list">
-    <div v-if="!(abIndicator === 'B' && filteredRecommends.length < 1)" class="related-list__list" :style="containerStyle()">
+    <div v-if="!(filteredRecommends.length < 1)" class="related-list__list" :style="containerStyle()">
       <div class="related-list__list__title"><h4 :style="titleStyle()">相關文章</h4></div>
-      <template v-for="o in relateds" v-if="abIndicator !== 'B'">
+      <!-- <template v-for="o in relateds" v-if="abIndicator !== 'B'">
         <div v-if="o" :key="`relateds-${o.id}`" class="related-list__list__item">
           <div class="title">
             <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related-${getValue(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
             <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related-${getValue(o, [ 'slug' ], Date.now())}`" v-else></a>
           </div>
         </div>
-      </template>
+      </template> -->
       <template v-if="!isAd">
         <template v-for="o in filteredRecommends">
           <div v-if="o" class="related-list__list__item">
