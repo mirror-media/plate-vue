@@ -78,7 +78,7 @@
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
             <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
-            <!-- <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+            <RelatedListWithRecommendList v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
               slot="relatedlistBottom" 
               :abIndicator="abIndicator"
               :isAd="isAd"
@@ -86,7 +86,7 @@
               :relateds="relateds"
               :currArticleId="currArticleId"
               :recommends="recommendlist"
-              :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList> -->
+              :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template v-if="!hiddenAdvertised" slot="recommendList">
               <div><h3>推薦文章</h3></div>
