@@ -29,7 +29,17 @@
             <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
-            <RelatedListWithRecommendList :isApp="true" v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)" slot="relatedlistBottom" :isAd="isAd" :sectionId="sectionId" :relateds="relateds" :recommends="recommendlist" :excludingArticle="routeUpateReferrerSlug"></RelatedListWithRecommendList>
+            <RelatedListWithRecommendList
+              :isApp="true"
+              v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+              slot="relatedlistBottom"
+              :isAd="isAd"
+              :sectionId="sectionId"
+              :relateds="relateds"
+              :currArticleId="currArticleId"
+              :recommends="recommendlist"
+              :excludingArticle="routeUpateReferrerSlug"
+            />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
               <div><h3>推薦文章</h3></div>
@@ -71,7 +81,8 @@
 <script>
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID } from '../constants'
-  import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
+  import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
+  import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd, sendAdCoverGA, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
@@ -322,6 +333,9 @@
       }
     },
     computed: {
+      currArticleId () {
+        return _.get(_.find(_.get(this.$store, 'state.articles.items'), { 'slug': this.$store.state.route.params.slug }), 'id', '')
+      },
       articleUrl () {
         return `${SITE_URL}/story/${this.currArticleSlug}/`
       },
@@ -617,6 +631,48 @@
       updateSysStage () {
         this.dfpMode = currEnv()
       },
+      insertMatchedContentScript () {
+        const matchedContentStart = document.createElement('script')
+        const matchedContentContent = document.createElement('ins')
+        const matchedContentEnd = document.createElement('script')
+        matchedContentStart.setAttribute('id', 'matchedContentStart')
+        matchedContentStart.setAttribute('async', 'true')
+        matchedContentStart.setAttribute('src', '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js')
+        matchedContentContent.setAttribute('id', 'matchedContentContent')
+        matchedContentContent.setAttribute('class', 'adsbygoogle')
+        matchedContentContent.setAttribute('style', 'display:block')
+        matchedContentContent.setAttribute('data-ad-format', 'autorelaxed')
+        matchedContentContent.setAttribute('data-ad-client', MATCHED_CONTENT_AD_CLIENT)
+        matchedContentContent.setAttribute('data-ad-slot', MATCHED_CONTENT_AD_SLOT)
+        matchedContentEnd.setAttribute('id', 'matchedContentEnd')
+        matchedContentEnd.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`
+
+        /**/
+        /* photography article may not have this container */
+        const container = document.querySelector('#matchedContentContainer')
+        /**/
+
+        if (!document.querySelector('#matchedContentStart')) {
+          container && container.appendChild(matchedContentStart)
+        }
+        if (!document.querySelector('#matchedContentContent')) {
+          container && container.appendChild(matchedContentContent)
+        }
+        if (!document.querySelector('#matchedContentEnd')) {
+          container && container.appendChild(matchedContentEnd)
+        }
+      },
+      updateMatchedContentScript () {
+        const matchedContentStart = document.querySelector('#matchedContentStart')
+        const matchedContentContent = document.querySelector('#matchedContentContent')
+        const matchedContentEnd = document.querySelector('#matchedContentEnd')
+        if (matchedContentStart) {
+          document.querySelector('#matchedContentContainer').removeChild(matchedContentStart)
+          document.querySelector('#matchedContentContainer').removeChild(matchedContentContent)
+          document.querySelector('#matchedContentContainer').removeChild(matchedContentEnd)
+        }
+        this.insertMatchedContentScript()
+      },
     },
     mounted () {
       this.initializeFBComments()
@@ -630,6 +686,12 @@
       this.updateSysStage()
       this.abIndicator = this.getMmid()
       this.sendGA(this.articleData)
+
+      const scrollTriggerRegister = new ScrollTriggerRegister([
+        { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
+        { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
+      ])
+      scrollTriggerRegister.init()
     },
     updated () {
       this.updateSysStage()
@@ -643,6 +705,7 @@
         })
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
+        this.updateMatchedContentScript()
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
       },
