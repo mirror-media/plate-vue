@@ -762,7 +762,11 @@ export default {
             font-size 25px
             margin-bottom 15px
           
-          .info-box-body 
+          .info-box-body
+            ol
+              list-style decimal
+            ul
+              list-style disc 
             p, li 
               color rgba(0, 0, 0, 0.64)
               font-size 16px
