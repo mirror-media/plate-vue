@@ -13,7 +13,7 @@
     "e2e": "node test/e2e/runner.js",
     "lint": "eslint --ext .js,.vue src --color",
     "npm-forever": "forever -o out.log -e err.log -c 'node --expose-gc' serverCluster.js",
-    "test": "jest",
+    "test": "jest tests/api/meta.test.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "unit-watch": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js",
     "validate": "npm ls"
@@ -69,7 +69,7 @@
     "route-cache": "^0.4.4",
     "sanitize-html": "^1.19.1",
     "serve-favicon": "^2.5.0",
-    "superagent": "^3.8.3",
+    "superagent": "^4.0.0",
     "tap.js": "^2.2.0",
     "truncate": "^2.0.1",
     "twitter": "^1.7.0",
