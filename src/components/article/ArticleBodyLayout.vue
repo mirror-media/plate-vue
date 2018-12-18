@@ -368,7 +368,7 @@
         letter-spacing 0.3px
         color rgba(0, 0, 0, 0.701961)
         padding-left 45px
-        text-indent -26px
+        // text-indent -26px
         margin-left 16px
         list-style none
 
