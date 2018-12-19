@@ -50,6 +50,7 @@
                     <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
                   </blockquote>
                 </div>
+                <ArticleAsideReadrLatest class="readr-latest" slot="readrLatest"/>
                 <pop-list-vert :pop="popularlist" slot="popListVert">
                   <micro-ad v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                     :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
@@ -167,6 +168,7 @@
   import sanitizeHtml from 'sanitize-html'
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
+  import ArticleAsideReadrLatest from '../components/article/ArticleAsideReadrLatest.vue'
 
   const debug = require('debug')('CLIENT:VIEWS:article')
   const fetchArticles = (store, slug) => {
@@ -358,7 +360,8 @@
       HeroImage,
       HeroVideo,
       RelatedListInContent,
-      RelatedListWithRecommendList
+      RelatedListWithRecommendList,
+      ArticleAsideReadrLatest
     },
     data () {
       return {
@@ -834,6 +837,9 @@
 
     a, a:hover, a:link, a:visited
       display inline
+
+  .readr-latest
+    margin 0 0 10px 0
 
   @media (min-width 0px) and (max-width 499px)
     .article-container
