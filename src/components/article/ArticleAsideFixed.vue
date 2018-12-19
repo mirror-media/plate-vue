@@ -2,6 +2,7 @@
   <section ref="articleAsideFixed" class="articleAsideFixed">
     <slot name="dfpR2"></slot>
     <slot name="fbPage"></slot>
+    <slot name="readrLatest"></slot>
     <slot name="popListVert"></slot>
   </section>
 </template>
