@@ -225,7 +225,7 @@ function render (req, res, next) {
     isProd && !isPreview && redisWriting(req.url, html, null, 120)
   })
 }
-app.use('/story/amp', require('./api/middle/story/index.amp'))
+app.use('/story/amp', require('./amp/service/api'))
 
 app.use('/api', require('./api/index'), () => {
   /** END */
