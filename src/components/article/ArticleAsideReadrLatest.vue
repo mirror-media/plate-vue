@@ -11,7 +11,22 @@ export default {
   directives: {
     'resize': {
       inserted () {
-        iFrameResize({ checkOrigin: [ 'https://www.readr.tw' ] }, '.readr-latest__iframe')
+        iFrameResize({
+          // receive postMessage from checked origin
+          checkOrigin: [ 'https://www.readr.tw' ],
+          messageCallback ({ message, }) {
+            const {
+              messageType,
+              action,
+              category,
+              label,
+            } = message
+
+            if (messageType === 'GA') {
+              window.ga('send', 'event', category, action, label)
+            }
+          }
+        }, '.readr-latest__iframe')
       }
     }
   },
