@@ -148,7 +148,12 @@ function render (req, res, next) {
     res.header("Pragma", "no-cache")
     res.header("Expires", "0")
     if (!isValidReq) {
-      res.status(403).send('Forbidden')
+
+      rendererEjsCB.code = 404
+      res.render('404', rendererEjsCB)
+      // response 404 instead of 403 to avoid this page be indexed by search engin.
+      // res.status(403).send('Forbidden')
+
       console.info('Attempted to access draft in fail: 403 Forbidden')
       return
     }
