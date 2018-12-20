@@ -1,21 +1,39 @@
 <template>
-  <div class="heroimage-container">
+  <div :class="[ 'heroimage-container', `heroimage-container--${abIndicator.toLowerCase()}` ]">
     <template v-if="viewport > 1199">
-      <div class="hero-info">
-        <div class="hero-info-category-container">
-          <div class="hero-info-category"
-            v-if="!isAd"
-            v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"
-            :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"></div>
-          <h1 v-text="get(articleData, [ 'title' ])"></h1>
-          <h2 v-if="get(articleData, [ 'subtitle' ])" v-text="get(articleData, [ 'subtitle' ])"></h2>
+      <template v-if="abIndicator === 'A'">
+        <div class="hero-info">
+          <div class="hero-info-category-container">
+            <div class="hero-info-category"
+              v-if="!isAd"
+              v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"
+              :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"></div>
+            <h1 v-text="get(articleData, [ 'title' ])"></h1>
+            <h2 v-if="get(articleData, [ 'subtitle' ])" v-text="get(articleData, [ 'subtitle' ])"></h2>
+          </div>
+          <div class="hero-info-heroCaption" v-text="heroCaption"></div>
         </div>
-        <div class="hero-info-heroCaption" v-text="heroCaption"></div>
-      </div>
-      <div v-if="heroImage && heroImage.image" class="hero-img">
-        <span class="img" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="heroCaption"></span>
-        <span class="img" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
-      </div>
+        <div v-if="heroImage && heroImage.image" class="hero-img">
+          <span class="img" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="heroCaption"></span>
+          <span class="img" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
+        </div>
+      </template>
+      <template v-if="abIndicator === 'B'">
+        <div v-if="heroImage && heroImage.image" class="hero-img-b">
+          <span class="img" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="heroCaption"></span>
+          <span class="img" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
+        </div>
+        <p class="hero-img-b-subtitle" v-text="heroCaption"></p>
+        <div
+          class="hero-info-category hero-info-category--b"
+          v-if="!isAd"
+          v-text="get(articleData, [ 'categories', 0, 'title' ], get(articleData, [ 'sections', 0, 'title' ], ''))"
+          :style="{ borderLeftColor: get(sectionMap, [ sectionId, 'bgcolor' ]) }"
+        >
+        </div>
+        <h1 class="hero-title-b" v-text="get(articleData, [ 'title' ])"></h1>
+        <h2 v-if="get(articleData, [ 'subtitle' ])" v-text="get(articleData, [ 'subtitle' ])"></h2>
+      </template>
     </template>
     <template v-else-if="viewport">
       <span class="heroimg" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="heroCaption"></span>
@@ -89,6 +107,10 @@
     position relative
     display flex
     justify-content space-between
+    &--b
+      margin 0
+      flex-direction column
+      justify-content flex-start
   .hero-info
     display flex 
     flex-direction column
@@ -121,6 +143,8 @@
     color #000 
     font-size 21px 
     border-left 7px solid #989898 
+    &--b
+      margin 30px 0 0 0
   .hero-info-heroCaption 
     position relative 
     padding 10px 10% 
@@ -159,6 +183,26 @@
         height 100% 
         object-fit cover 
         object-position 50% 50% 
+
+  .hero-img-b
+    width 100%
+    height 458.7px
+    & >>> img
+      width 100%
+      height 100%
+      object-fit cover
+  .hero-img-b-subtitle
+    font-size 16px
+    line-height 1.5
+    margin 8px 0
+    color #6e6e6e
+    text-align justify
+  .hero-title-b
+    margin 15px 0 25px 0
+    text-align justify
+    line-height 1.5
+    color black
+
   @media (max-width: 1200px)
     .heroimg
       display block
