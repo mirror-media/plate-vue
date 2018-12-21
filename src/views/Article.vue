@@ -8,8 +8,19 @@
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
-        <div class="article-heromedia" v-if="heroVideo" >
-          <HeroVideo
+        <template v-if="viewport < 1200 || (viewport >= 1200 && abIndicator === 'A')">
+          <div class="article-heromedia" v-if="heroVideo" >
+            <HeroVideo
+              :abIndicator="abIndicator"
+              :isAd="isAd"
+              :viewport="viewport"
+              :sectionMap="sectionMap"
+              :sectionId="sectionId"
+              :articleData="articleData"
+              :heroCaption="heroCaption"
+              :video="heroVideo"></HeroVideo>
+          </div>
+          <HeroImage v-else
             :abIndicator="abIndicator"
             :isAd="isAd"
             :viewport="viewport"
@@ -17,17 +28,8 @@
             :sectionId="sectionId"
             :articleData="articleData"
             :heroCaption="heroCaption"
-            :video="heroVideo"></HeroVideo>
-        </div>
-        <HeroImage v-else
-          :abIndicator="abIndicator"
-          :isAd="isAd"
-          :viewport="viewport"
-          :sectionMap="sectionMap"
-          :sectionId="sectionId"
-          :articleData="articleData"
-          :heroCaption="heroCaption"
-          :heroImage="heroImage"></HeroImage>
+            :heroImage="heroImage"></HeroImage>
+        </template>
         <div class="article" v-if="articleData">
           <article-body
             :abIndicator="abIndicator"
@@ -36,6 +38,28 @@
             :poplistData="popularlist"
             :projlistData="projectlist"
             :viewport="viewport">
+            <template v-if="viewport >= 1200 && abIndicator === 'B'" slot="heroB">
+              <div class="article-heromedia" v-if="heroVideo" >
+                <HeroVideo
+                  :abIndicator="abIndicator"
+                  :isAd="isAd"
+                  :viewport="viewport"
+                  :sectionMap="sectionMap"
+                  :sectionId="sectionId"
+                  :articleData="articleData"
+                  :heroCaption="heroCaption"
+                  :video="heroVideo"></HeroVideo>
+              </div>
+              <HeroImage v-else
+                :abIndicator="abIndicator"
+                :isAd="isAd"
+                :viewport="viewport"
+                :sectionMap="sectionMap"
+                :sectionId="sectionId"
+                :articleData="articleData"
+                :heroCaption="heroCaption"
+                :heroImage="heroImage"></HeroImage>
+            </template>
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list
@@ -73,7 +97,7 @@
             </template>
             <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :config="props.config"/>
-            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
+            <pop-list :abIndicator="abIndicator" :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
