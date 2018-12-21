@@ -1,6 +1,6 @@
 <template>
   <section id="editorChoice" class="editorChoice">
-    <template v-if="abIndicator === 'B' && editorChoice.length > 0">
+    <template v-if="abIndicator === 'A' && editorChoice.length > 0">
       <div class="slider">
         <h2>編輯精選</h2>
         <div class="slider-container" :style="{ width: `${editorChoice.length * 100}%`, transform: `translateX(-${100 / editorChoice.length * sliderCurrent}%)` }">
