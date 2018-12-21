@@ -537,6 +537,14 @@
     display flex
     justify-content space-between
     width 695px
+    &--hero-b
+      flex-direction column
+      .article__basic-info-wrapper
+        display flex
+        justify-content space-between
+        .blue
+          border-bottom none !important
+
   .article__credit
     a.blue:hover, a.blue:link, a.blue:visited 
       color #74afd2
