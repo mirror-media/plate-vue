@@ -103,7 +103,7 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
+            <RelatedListInContent slot="relatedListInContent" :abIndicator="abIndicator" :relateds="relateds" />
             <RelatedListWithRecommendList
               v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
               slot="relatedlistBottom" 

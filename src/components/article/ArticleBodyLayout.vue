@@ -77,6 +77,8 @@
       display inline-block
       max-width 695px
       overflow hidden
+      &--b
+        overflow visible
 
       // .innerImg 
 

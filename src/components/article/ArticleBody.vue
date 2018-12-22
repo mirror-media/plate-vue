@@ -17,7 +17,7 @@
       <div v-if="subtitle.length > 0" class="article_subtitle" ><h2 v-text="subtitle"></h2></div>
       <div class="article_credit" v-html="credit"></div>
     </template>
-    <main class="article_main">
+    <main :class="`article_main article_main--${abIndicator.toLowerCase()}`">
       <div class="article__basic-info article__basic-info--hero-b" v-if="viewport >= 1200 && abIndicator === 'B'">
         <slot name="heroB"></slot>
         <div class="article__basic-info-wrapper">
