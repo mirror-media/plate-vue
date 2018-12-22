@@ -1,7 +1,9 @@
 <template>
-  <div :class="[ 'heroimage-container', `heroimage-container--${abIndicator.toLowerCase()}` ]">
+  <!-- <div :class="[ 'heroimage-container', `heroimage-container--${abIndicator.toLowerCase()}` ]"> -->
+  <div class="heroimage-container">
     <template v-if="viewport > 1199">
-      <template v-if="abIndicator === 'A'">
+      <!-- <template v-if="abIndicator === 'A'"> -->
+      <template>
         <div class="hero-info">
           <div class="hero-info-category-container">
             <div class="hero-info-category"
@@ -17,7 +19,7 @@
           <ArticleVideo v-if="video" :video="video" class="heroimg"></ArticleVideo>
         </div>
       </template>
-      <template v-if="abIndicator === 'B'">
+      <!-- <template v-if="abIndicator === 'B'">
         <ArticleVideo v-if="video" :video="video" class="heroimg"></ArticleVideo>
         <p class="hero-img-b-subtitle" v-text="heroCaption"></p>
         <div
@@ -29,7 +31,7 @@
         </div>
         <h1 class="hero-title-b" v-text="get(articleData, [ 'title' ])"></h1>
         <h2 v-if="get(articleData, [ 'subtitle' ])" v-text="get(articleData, [ 'subtitle' ])"></h2>
-      </template>
+      </template> -->
     </template>
     <template v-else-if="viewport">
       <ArticleVideo v-if="video" :video="video" class="heroimg"></ArticleVideo>

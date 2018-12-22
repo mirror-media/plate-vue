@@ -1,13 +1,42 @@
 <template>
   <section class="relateds-in-content">
-    <div v-for="related in relateds" :key="related.id" class="related">
-      <div class="related__title">
-        <a :id="`related-title-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
+    <template v-if="abIndicator === 'A'">
+      <div v-for="related in relateds" :key="related.id" class="related">
+        <div class="related__title">
+          <a :id="`related-title-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
+        </div>
+        <a v-if="getImage(related.heroImage)" :id="`related-img-${related.slug}`" :href="getHref(related)" class="related__img" target="_blank">
+          <img :src="getImage(related.heroImage)" :alt="related.title">
+        </a>
       </div>
-      <a v-if="getImage(related.heroImage)" :id="`related-img-${related.slug}`" :href="getHref(related)" class="related__img" target="_blank">
-        <img :src="getImage(related.heroImage)" :alt="related.title">
-      </a>
-    </div>
+    </template>
+    <template v-if="abIndicator === 'B'">
+      <div class="relateds-b">
+        <div
+          v-for="related in relateds"
+          :key="related.id"
+          class="relateds-b__related-b related-b"
+        >
+          <a
+            v-if="getImage(related.heroImage)"
+            class="related-b__img"
+            :id="`related-img-${related.slug}`"
+            :href="getHref(related)"
+            target="_blank"
+          >
+            <img :src="getImage(related.heroImage)" :alt="related.title">
+          </a>
+          <a
+            class="related-b__title"
+            :id="`related-title-${related.slug}`"
+            :href="getHref(related)"
+            target="_blank"
+            v-text="related.title"
+          >
+          </a>
+        </div>
+      </div>
+    </template>
   </section>
 </template>
 <script>
@@ -22,6 +51,10 @@ export default {
       default () {
         return []
       }
+    },
+    abIndicator: {
+      type: String,
+      default: 'A'
     }
   },
   methods: {
@@ -94,6 +127,48 @@ export default {
         object-fit cover
         object-position center center
 
+.relateds-b
+  position relative
+  left -25px
+  width 100vw
+  background-color #eeeeee
+  display flex
+  flex-wrap nowrap
+  padding 14px 0 0 14px
+  overflow-x scroll
+  -webkit-overflow-scrolling touch
+  &__related-b
+    margin 0 12px 23px 0
+    &:last-child
+      padding 0 14px 0 0
+.related-b
+  display flex
+  flex-direction column
+  &__img
+    display block
+    width 158px
+    height 119px
+    text-decoration none !important
+    border-bottom none !important
+    padding 0 !important
+    img
+      width 100%
+      height 100%
+      object-fit cover
+  &__title
+    display block
+    width 158px
+    margin 15px 0 0 0
+    font-size 18px
+    font-weight 300
+    line-height 1.44
+    color #808080 !important
+    text-align justify
+    text-decoration none !important
+    border-bottom none !important
+    padding 0 !important
+
+
 @media (min-width 767px)
   .relateds-in-content
     .related
@@ -108,4 +183,12 @@ export default {
     .related
       &__img
         width 20%
+
+  .relateds-b
+    position static
+    width auto
+    flex-wrap wrap
+    &__related-b
+      &:last-child
+        padding 0
 </style>
