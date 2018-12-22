@@ -8,7 +8,8 @@
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
-        <template v-if="viewport < 1200 || (viewport >= 1200 && abIndicator === 'A')">
+        <!-- <template v-if="viewport < 1200 || (viewport >= 1200 && abIndicator === 'A')"> -->
+        <template>
           <div class="article-heromedia" v-if="heroVideo" >
             <HeroVideo
               :abIndicator="abIndicator"
@@ -38,7 +39,7 @@
             :poplistData="popularlist"
             :projlistData="projectlist"
             :viewport="viewport">
-            <template v-if="viewport >= 1200 && abIndicator === 'B'" slot="heroB">
+            <!-- <template v-if="viewport >= 1200 && abIndicator === 'B'" slot="heroB">
               <div class="article-heromedia" v-if="heroVideo" >
                 <HeroVideo
                   :abIndicator="abIndicator"
@@ -59,7 +60,7 @@
                 :articleData="articleData"
                 :heroCaption="heroCaption"
                 :heroImage="heroImage"></HeroImage>
-            </template>
+            </template> -->
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list
@@ -102,7 +103,7 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
+            <RelatedListInContent slot="relatedListInContent" :abIndicator="abIndicator" :relateds="relateds" />
             <RelatedListWithRecommendList
               v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
               slot="relatedlistBottom" 
