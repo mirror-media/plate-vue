@@ -75,7 +75,7 @@
                     <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
                   </blockquote>
                 </div>
-                <ArticleAsideReadrLatest class="readr-latest" slot="readrLatest"/>
+                <ArticleAsideReadrLatest v-if="abIndicator === 'B'" class="readr-latest" slot="readrLatest"/>
                 <pop-list-vert :pop="popularlist" slot="popListVert">
                   <micro-ad v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                     :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
