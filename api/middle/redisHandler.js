@@ -1,6 +1,6 @@
 const debug = require('debug')('PLATEVUE:redis')
 const isProd = process.env.NODE_ENV === 'production'
-// const isTest = process.env.NODE_ENV === 'test'
+const isTest = process.env.NODE_ENV === 'test'
 const RedisConnectionPool = require('redis-connection-pool')
 
 const { 
@@ -154,10 +154,9 @@ const insertIntoRedis = (req, res, next) => {
 const fetchFromRedis = (req, res, next) => {
   debug('Trying to fetching data from redis...', req.url)
   redisFetching(req.url, ({ error, data }) => {
-    if (!error && data) {
-      console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, decodeURIComponent(req.url))
-      res.header('Cache-Control', 'public, max-age=300')
-      res.json(JSON.parse(data))
+    if (!error) {
+      res.redis = data
+      next()
     } else {
       console.error('>>> Fetch data from Redis in fail')
       console.error('>>>', req.url)
