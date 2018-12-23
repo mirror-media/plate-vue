@@ -1,9 +1,11 @@
-const { get } = require('lodash')
+const _ = require('lodash')
 const { fetchFromRedis, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/redisHandler') 
 const config = require('./config')
 const bodyParser = require('body-parser')
 const debug = require('debug')('PLATEVUE:api')
 const express = require('express')
+const isProd = process.env.NODE_ENV === 'production'
+const RedisConnectionPool = require('redis-connection-pool')
 const router = express.Router()
 const superagent = require('superagent')
 const Twitter = require('twitter')
@@ -18,9 +20,12 @@ const loggingClient = new Logging({
 
 const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API_PORT
 
-const fetchStaticJson = (req, res, fileName) => {
-  debug(`Abt to fetch ${fileName} json file.`)
-  const url = `${config.SERVER_PROTOCOL}://${config.SERVER_HOST}/json/${fileName}.json`
+router.all('/', function(req, res, next) {
+  next()
+});
+
+const fetchStaticJson = (req, res, next, jsonFileName) => {
+  const url = `${config.SERVER_PROTOCOL}://${config.SERVER_HOST}/json/${jsonFileName}.json`
   redisFetching(url, ({ err, data }) => {
     if (!err && data) {
       debug('Fetch static json file from Redis.', url)
@@ -28,101 +33,80 @@ const fetchStaticJson = (req, res, fileName) => {
     } else {
       superagent
       .get(url)
-      .timeout(
-        {
-          response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
-        }
-      )
-      .then(response => {
+      .end((e, response) => {
         debug('Fetch static json file from api.', url)
-        if (response) {
+        if (!e && response) {
           redisWriting(url, response.text)
-          res.header('Cache-Control', 'public, max-age=300')
           res.json(JSON.parse(response.text))
         } else {
-          res.header('Cache-Control', 'no-cache')
-          res.status(500).send(response)
+          const status = _.get(response, 'status') || _.get(e, 'status') || 500
+          res.status(status).send('{\'error\':' + e + '}')
+          console.error(`error during fetch data from ${jsonFileName} : ${url}`)
+          console.error(e)  
         }
-      })
-      .catch(error => {
-        const status = get(error, 'status') || 500
-        const info = JSON.parse(get(error, 'response.text')) || error
-        console.error(`error during fetch data from ${fileName} : ${url}`)
-        console.error(error)
-        res.header('Cache-Control', 'no-cache')
-        res.status(status).send(info)
       })
     }
   })
 }
 
-router.use('/grouped', (req, res) => {
-  fetchStaticJson(req, res, 'grouped')
-})
+router.use('/grouped', function(req, res, next) {
+  debug('Abt to fetch grouped json file.')
+  fetchStaticJson(req, res, next, 'grouped')
+});
 
-router.use('/poplist', (req, res) => {
-  fetchStaticJson(req, res, 'popularlist')
-})
+router.use('/poplist', function(req, res, next) {
+  fetchStaticJson(req, res, next, 'popularlist')
+});
 
-router.get('/newsletter/:userEmail', async (req, res) => {
-  const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user/${req.params.userEmail}`
-  try {
-    if (!regex.test(String(req.params.userEmail).toLowerCase())) {
-      throw { status: 400, response: { text: "{\"_error\": {\"code\": 400, \"message\": \"email format error.\"}}" }}
-    }
-    const response = await superagent
-      .get(url)
-      .timeout(
-        {
-          response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+router.get('/newsletter/:userEmail', function(req, res, next) {
+  if (req && req.params && req.params.userEmail) {
+    const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user/${req.params.userEmail}`
+    superagent
+    .get(url)
+    .end((err, response) => {
+      if (!err && response) {
+        return res.json(JSON.parse(response.text))
+      } else {
+        if (err.status === 404) {
+          return res.status(404).json({ error: 'Not Found.' })
         }
-      )
-    res.json(JSON.parse(response.text))
-  } catch (error) {
-    const status = get(error, 'status') || 500
-    const info = JSON.parse(get(error, 'response.text')) || error
-    console.error(`error during fetch data from newsletter GET : ${url}`)
-    console.error(error)
-    res.header('Cache-Control', 'no-cache')
-    res.status(status).send(info)
-  }
-})
-
-router.post('/newsletter', jsonParser, async (req, res) => {
-  const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user`
-  try {
-    if (req && req.body && req.body.user && req.body.item) {
-      if (!regex.test(req.body.user)) {
-        throw { status: 400, response: { text: "{\"_error\": {\"code\": 400, \"message\": \"Bad request.\"}}" }}
+        console.error(`error during fetch data from newsletter GET : ${url}`)
+        console.error(err)  
+        return res.status(500).json({ error: 'Error.' })
       }
-      const response = await superagent
-        .post(url)
-        .send({ user: req.body.user, item: req.body.item })
-        .timeout(
-          {
-            response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-            deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
-          }
-        )
-      res.status(200).json({ user: response.body.user, item: response.body.result })
-    } else {
-      throw { status: 400, response: { text: "{\"_error\": {\"code\": 400, \"message\": \"Bad request.\"}}" }}
-    }
-  } catch (error) {
-    const status = get(error, 'status') || 500
-    const info = JSON.parse(get(error, 'response.text')) || error
-    console.error(`error during fetch data from newsletter POST : ${url}`)
-    console.error(error)
-    res.header('Cache-Control', 'no-cache')
-    res.status(status).send(info)
+    })
+  } else {
+    return res.status(404).json({ error: 'Not Found.' })
   }
 })
 
-router.use('/playlist', (req, res) => {
+router.post('/newsletter', jsonParser, function(req, res, next) {
+  if (req && req.body && req.body.user && req.body.item) {
+    const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user`
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const userEmail = req.body.user
+    if (re.test(userEmail)) {
+      superagent
+      .post(url)
+      .send({ user: userEmail, item: req.body.item })
+      .end((err, response) => {
+        if (!err && response) {
+          return res.status(200).json({ user: response.body.user, item: response.body.result })
+        } else {
+          console.error(`error during fetch data from newsletter post : ${url} ${userEmail}`)
+          console.error(err)
+          return res.status(500).json({ error: 'Error.' })
+        }
+      })
+    } else {
+      return res.status(404).json({ error: 'Not Found.' })
+    }
+  } else {
+    return res.status(404).json({ error: 'Not Found.' })
+  }
+})
+
+router.use('/playlist', function(req, res, next) {
   let query = req.query
   let url = `${config.YOUTUBE_PROTOCOL}://${config.YOUTUBE_HOST}?part=snippet&playlistId=${config.YOUTUBE_PLAYLIST_ID}&key=${config.YOUTUBE_API_KEY}`
   redisFetching(`${url}?${req.url}`, ({ err, data }) => {
@@ -133,23 +117,22 @@ router.use('/playlist', (req, res) => {
       .get(url)
       .timeout(config.YOUTUBE_API_TIMEOUT)
       .query(query)
-      .then(response => {
-        redisWriting(`${url}?${req.url}`, JSON.stringify(response.body))
-        res.json(response.body)
-      })
-      .catch(error => {
-        const status = get(error, 'status') || 500
-        const info = JSON.parse(get(error, 'response.text')) || error
-        res.header('Cache-Control', 'no-cache')
-        res.status(status).send(info)
-        console.error(`error during fetch data from playlist : ${req.url}`)
-        console.error(err)
+      .end(function(err, response) {
+        if (err) {
+          res.status(500).send(err)
+          // res.status(500).end('Internal Error 500')
+          console.error(`error during fetch data from playlist : ${req.url}`)
+          console.error(err)    
+        } else {
+          redisWriting(`${url}?${req.url}`, JSON.stringify(response.body))
+          res.json(response.body)
+        }
       })
     }
   })
-})
+});
 
-router.use('/search', (req, res) => {
+router.use('/search', function(req, res, next) {
   let query = req.query
   let url = `${config.SEARCH_PROTOCOL}://${config.SEARCH_HOST}${config.SEARCH_ENDPOINT}`
   redisFetching(`${url}?${req.url}`, ({ err, data }) => {
@@ -162,60 +145,67 @@ router.use('/search', (req, res) => {
       .set('X-Algolia-API-Key', config.SEARCH_API_KEY)
       .set('X-Algolia-Application-Id', config.SEARCH_API_APPID)
       .query(query)
-      .then(response => {
-        redisWriting(`${url}?${req.url}`, JSON.stringify(response.body))
-        res.json(response.body)
-      })
-      .catch(error => {
-        const status = get(error, 'status') || 500
-        const info = JSON.parse(get(error, 'response.text')) || error
-        res.header('Cache-Control', 'no-cache')
-        res.status(status).send(info)
-        console.error(`error during fetch data from playlist : ${req.url}`)
-        console.error(err)
+      .end(function(e, response) {
+        if (e) {
+          const status = _.get(response, 'status') || _.get(e, 'status') || 500
+          res.status(status).send('{\'error\':' + e + '}')
+          // res.status(500).end('Internal Error 500')
+          console.error(`error during fetch data from search : ${req.url}`)
+          console.error(e)    
+        } else {
+          redisWriting(`${url}?${req.url}`, JSON.stringify(response.body))
+          res.json(response.body)
+        }
       })
     }
   })
-})
+});
 
-router.use('/twitter', (req, res) => {
+router.use('/twitter', function(req, res, next) {
   const query = req.query
-  const client = new Twitter(config.TWITTER_API)
-
+  let client = new Twitter(config.TWITTER_API)
   if (!('screen_name' in query) || query.screen_name === '') {
-    res.status(400).send('empty screen_name')
+      res.send('empty screen_name')
   } else {
-    client.get('statuses/user_timeline', query, (err, data) => {
-      if (err) {
-        res.status(500).send(err)
-        console.error(`error during fetch data from twitter : ${req.url}`)
-        console.error(err) 
-      } else {
-        res.json(data)
-      }
-    })
+      client.get('statuses/user_timeline', query, function(err, data) {
+        if (err) {
+          res.status(500).send(err)
+          // res.status(500).end('Internal Error 500')
+          console.error(`error during fetch data from twitter : ${req.url}`)
+          console.error(err) 
+        } else {
+          res.json(data)
+        }
+      })
   }
-})
 
-router.use('/tracking', async (req, res) => {
-  try {
-    const query = req.query
-    const log = loggingClient.log(config.GCP_STACKDRIVER_LOG_NAME)
-    const metadata = { resource: { type: 'global' } }
-    query['ip'] = req.clientIp
-    const entry = log.entry(metadata, query)
-    await log.write(entry)
+});
+
+router.use('/tracking', function(req, res, next) {
+  const query = req.query
+  const log = loggingClient.log(config.GCP_STACKDRIVER_LOG_NAME)
+  const metadata = { resource: { type: 'global' } }
+  query['ip'] = req.clientIp
+
+  const entry = log.entry(metadata, query)
+
+  log.write(entry).then(() => {
     res.send({ msg: 'Logging successfully.' })
-  } catch (error) {
-    console.error('Client info logging error occurred:', error)
-    res.status(500).send(error)
-  }
+  })
+  .catch((err) => {
+    console.error('Client info logging error occurred:', err)
+    res.status(500).send(err)
+  }) 
 })
 
-router.use('/related_news', (req, res) => {
+router.use('/drafts', function(req, res, next) {
+  next()
+})
+
+router.use('/related_news', function(req, res, next) {
   const query = req.query
   debug('/related_news', req.url)
-  redisFetchingRecommendNews( get(query, 'id', '').split(',').map( id => 'related-news-v2-' + id ), ({ err, data }) => {
+  redisFetchingRecommendNews( _.get(query, [ 'id' ], '').split(',').map( id => 'related-news-v2-' + id ), ({ err, data }) => {
     if (!err && data) {
       let parsed
       try {
@@ -226,8 +216,8 @@ router.use('/related_news', (req, res) => {
       res.json(parsed)
     } else {
       if (err) {
-        console.error('Error occurred when fetching data from related-newsredis.')
-        console.error(err)
+        console.log('Error occurred when fetching data from related-newsredis.')
+        console.log(err)
       }
       res.json({ count: 0, result: [] })
     }
@@ -236,43 +226,56 @@ router.use('/related_news', (req, res) => {
 
 router.get('*', (req, res, next) => {
   req.startTime = Date.now()
+  next()
+}, fetchFromRedis, (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "X-Requested-With")
-  next()
-}, fetchFromRedis, async (req, res, next) => {
-  try {
-    const response = await superagent
+  if (res.redis) {
+    console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, decodeURIComponent(req.url))
+    const resData = JSON.parse(res.redis)
+    res.header('Cache-Control', 'public, max-age=300')
+    res.json(resData)
+  } else {
+    res.header('Cache-Control', 'public, max-age=300')
+    superagent
       .get(apiHost + req.url)
       .timeout(
         {
           response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
           deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
         }
-      )
-    const data = JSON.parse(response.text)
-    const dataAmount = get(data, '_meta.total')
-    console.log('Fetch data from Api.',
-      `${Date.now() - req.startTime}ms ${dataAmount}\n`,
-      `${decodeURIComponent(req.url)}\n`)
-    
-    if ((data._items || data._endpoints) && dataAmount >= 0) {
-      res.dataString = response.text
-      next()
-    }
+      ).end((error, response) => {
+        if (!error && response) {
+          let res_data
+          try {
+            res_data = JSON.parse(response.text)
+          } catch (e) {
+            res.send(e)
+            console.error(`>>> Got bad data from api.\n`, `>>> ${req.url}\n`, e)
+            return 
+          }
+          const res_num = _.get(res_data, '_meta.total')          
+          if ((res_num && res_num > 0) || res_num === 0) {
+            res.dataString = response.text
+            next()
+          }
+          console.log('Fetch data from Api.',
+            `${Date.now() - req.startTime}ms ${res_num}\n`,
+            `${decodeURIComponent(req.url)}\n`)
 
-    res.header('Cache-Control', 'public, max-age=300')
-    res.send(data)
-  } catch (error) {
-    const status = get(error, 'status') || 500
-    const info = JSON.parse(get(error, 'response.text')) || error
-    if (status !== 404) {
-      console.error(`>>> Error occurred during fetching data from api.\n`, `>>> ${req.url}\n`, info)
-    } else {
-      console.error(`Not Found: ${req.url}`)
-    }
-
-    res.header('Cache-Control', 'no-cache')
-    res.status(status).send(info)
+          res.header('Cache-Control', 'public, max-age=300')
+          res.send(res_data)
+        } else {
+          const status = _.get(response, 'status') || _.get(error, 'status') || 500
+          res.header('Cache-Control', 'no-cache')
+          res.status(status).send(error)
+          if (status !== 404) {
+            console.error(`>>> Error occurred during fetching data from api.\n`, `>>> ${req.url}\n`, error)
+          } else {
+            console.error(`Not Found: ${req.url}`)
+          }
+        }
+      })
   }
 }, insertIntoRedis)
 

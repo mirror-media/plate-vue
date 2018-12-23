@@ -3,8 +3,8 @@ require("@babel/polyfill")
 
 const moment = require('moment')
 const { get } = require('lodash')
-const { SERVER_PROTOCOL, SERVER_HOST } = require('../../api/config')
-const { SECTION_MAP } = require('../../src/constants')
+const { SERVER_PROTOCOL, SERVER_HOST } = require('../../config')
+const { SECTION_MAP } = require('../../../src/constants')
 
 const getDate = (date, offsetHour = 0) => {
   const normalizedDt = new Date(date)
