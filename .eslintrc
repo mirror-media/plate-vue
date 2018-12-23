@@ -6,7 +6,6 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "plugins": ["jest"],
     "rules": { 
       "array-bracket-spacing": [ 2, "always" ],
       "camelcase": [ 0, "" ],
@@ -21,6 +20,6 @@
     },
     "env": {
       "node": true,
-      "jest/globals": true
+      "jasmine": true
     }
 }
