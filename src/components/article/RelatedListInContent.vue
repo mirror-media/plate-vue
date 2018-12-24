@@ -11,7 +11,7 @@
       </div>
     </template>
     <template v-if="abIndicator === 'B'">
-      <div class="relateds-b">
+      <div v-if="relateds && relateds.length > 0" class="relateds-b">
         <div
           v-for="related in relateds"
           :key="related.id"
