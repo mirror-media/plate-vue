@@ -1,7 +1,8 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'other'">
     <template slot-scope="props" slot="dfpPos">
-      <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header>
+      <HeaderR :props="props" />
+      <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header> -->
       <article-body-external :articleData="articleData">
         <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" :dfpId="props.dfpId" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
         <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" :dfpId="props.dfpId" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
@@ -78,6 +79,7 @@
   import DfpCover from '../components/DfpCover.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
+  import HeaderR from '../components/HeaderR.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
@@ -172,7 +174,8 @@
       'proj-list': ProjectList,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
-      DfpCover
+      DfpCover,
+      HeaderR
     },
     mixins: [ titleMetaMixin ],
     metaSet () {
