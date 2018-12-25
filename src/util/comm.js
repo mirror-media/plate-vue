@@ -304,7 +304,7 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       'description': description,
       'event-type': eventType,
       'redirect-to': isAlinkCheck.isAlink ? isAlinkCheck.href : undefined,
-      'referrer': isAlinkCheck.isAlink ? referrer || location.href : undefined,
+      'referrer': referrer || (isAlinkCheck.isAlink ? location.href : undefined),
       'rref': isAlinkCheck.isAlink ? exp_related.test(target.id) ? 'related' : exp_recoommend.test(target.id) ? 'recommend' : undefined : undefined,
       'target-tag-name': targ.tagName,
       'target-tag-class': targ.className,
