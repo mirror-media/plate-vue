@@ -75,10 +75,6 @@ export function createStore () {
       topic: {},
       topics: {},
       uuid: '',
-      viewport: {
-        height: 0,
-        width: 0
-      },
     },
 
     actions: {
@@ -145,18 +141,16 @@ export function createStore () {
       },
 
       FETCH_COMMONDATA: ({ commit, state }, { endpoints = [] }) => {
-        const endpointsNeedFetch = endpoints.filter(endpoint => !state.commonData[endpoint])
-        return endpointsNeedFetch.length < 1
-          ? Promise.resolve(state.commonData)
-          : fetchCommonData(endpointsNeedFetch).then(commonData => {
-            const orig = state.commonData
-            Object.keys(commonData).map(endpoint => orig[endpoint] = commonData[endpoint])
-            _.get(state, 'latestArticles.items.length', 0) !== 0 ? null : commit('SET_POSTVUE', { commonData })
-            const _latestArticles = _.get(commonData, 'postsVue')
-            _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
-            _latestArticles ? commit('SET_TAGS', _latestArticles) : null
-            return commit('SET_COMMONDATA', { commonData: orig })
+        return fetchCommonData(endpoints).then(commonData => {
+          _.map(Object.keys(state.commonData), (e) => {
+            commonData[ e ] = state.commonData[ e ]
           })
+          commit('SET_COMMONDATA', { commonData })
+          _.get(state, [ 'latestArticles', 'items', 'length' ], 0) !== 0 ? null : commit('SET_POSTVUE', { commonData })
+          const _latestArticles = _.get(commonData, [ 'postsVue' ])
+          _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
+          _latestArticles ? commit('SET_TAGS', _latestArticles) : null
+        })
       },
 
       FETCH_CONTACT: ({ commit, state }, { params }) => {
@@ -212,8 +206,8 @@ export function createStore () {
         })
       },
 
-      FETCH_IMAGES_BY_ID: ({ commit, state }, { ids }) => {
-        return fetchImagesById({ where: { _id: { $in: ids }}}).then(images => {
+      FETCH_IMAGES_BY_ID: ({ commit }, { ids, max_results }) => {
+        return fetchImagesById({ max_results: max_results, where: { _id: { $in: ids }}}).then(images => {
           commit('SET_IMAGES_BY_ID', { images: images.items })
         })
       },
@@ -309,10 +303,6 @@ export function createStore () {
             playlist[ 'items' ] = _.concat(orig, _.get(playlist, [ 'items' ]))
             commit('SET_YOUTUBE_PLAY_LIST', { playlist })
           })
-      },
-
-      UPDATE_VIEWPORT: ({ commit }, viewport) => {
-        commit('SET_VIEWPORT', viewport)
       },
 
     },
@@ -486,10 +476,6 @@ export function createStore () {
 
       SET_UUID: (state, { uuid }) => {
         Vue.set(state, 'uuid', uuid)
-      },
-
-      SET_VIEWPORT: (state, viewport) => {
-        Vue.set(state, 'viewport', viewport)
       },
 
       SET_YOUTUBE_PLAY_LIST: (state, { playlist }) => {

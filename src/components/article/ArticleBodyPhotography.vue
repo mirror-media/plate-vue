@@ -6,7 +6,6 @@
         <div class="icon share"></div>
         <div class="icon facebook" @click="shareFacebook"></div>
         <div class="icon line" @click="shareLine"></div>
-        <div class="icon g-plus" @click="shareGooglePlus"></div>
       </div>
     </div>
     <div class="btn-toggle-description" :class="switchStatus" @click="toggleDesc">

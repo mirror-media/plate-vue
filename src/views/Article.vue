@@ -2,8 +2,7 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <section style="width: 100%;">
-        <HeaderR :props="props" />
-        <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header> -->
+        <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header>
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
@@ -179,7 +178,6 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
-  import HeaderR from '../components/HeaderR.vue'
   import HeroImage from '../components/article/HeroImage.vue'
   import HeroVideo from '../components/article/HeroVideo.vue'
   import LatestList from '../components/article/LatestList.vue'
@@ -258,8 +256,9 @@
     return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
   }
 
-  const fetchImages = (store, ids = []) => store.dispatch('FETCH_IMAGES_BY_ID', {
-    ids: ids
+  const fetchImages = (store, { ids = [], max_results = 10 }) => store.dispatch('FETCH_IMAGES_BY_ID', {
+    ids,
+    max_results
   })
 
   export default {
@@ -319,7 +318,7 @@
           <meta name="category-name" content="${categorieName}">
           <meta name="topic-id" content="${topicId}">
           <meta name="twitter:card" content="summary_large_image">
-          <meta name="twitter:title" content="${(ogTitle.length > 0) ? ogTitle + ' - ' + SITE_TITLE_SHORT : title + ' - ' + SITE_TITLE_SHORT}">
+          <meta name="twitter:title" content="${(ogTitle.length > 0) ? ogTitle : title}">
           <meta name="twitter:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta name="twitter:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
           <meta property="fb:app_id" content="${FB_APP_ID}">
@@ -327,7 +326,7 @@
           <meta property="og:site_name" content="${SITE_TITLE}">
           <meta property="og:locale" content="zh_TW">
           <meta property="og:type" content="article">
-          <meta property="og:title" content="${(ogTitle.length > 0) ? ogTitle + ' - ' + SITE_TITLE_SHORT : title + ' - ' + SITE_TITLE_SHORT}">
+          <meta property="og:title" content="${(ogTitle.length > 0) ? ogTitle : title}">
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
@@ -384,7 +383,6 @@
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
-      HeaderR,
       HeroImage,
       HeroVideo,
       RelatedListInContent,
@@ -805,7 +803,7 @@
         }
         if (value.relateds && value.relateds.length > 0) {
           const relatedImages = value.relateds.filter(related => related).map(related => related.heroImage)
-          fetchImages(this.$store, relatedImages)
+          fetchImages(this.$store, { ids: relatedImages, max_results: relatedImages.length  })
         }
         this.updateJSONLDScript()
       }
