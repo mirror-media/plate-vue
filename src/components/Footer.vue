@@ -23,7 +23,6 @@
     <div class="share-mobile" :class="ifShowShareBottom" v-if="ifShare">
       <a class="share-mobile_btn" id="share-line"><i class="icon line" @click="shareLine"></i></a>
       <a class="share-mobile_btn" id="share-fb"><i class="icon facebook" @click="shareFacebook"></i></a>
-      <a class="share-mobile_btn" id="share-googleplus"><i class="icon google-plus" @click="shareGooglePlus"></i></a>
     </div>
   </footer>
 </template>

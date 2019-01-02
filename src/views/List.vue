@@ -19,8 +19,7 @@
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
-        <HeaderR :props="props" />
-        <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
+        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         <list-slider class="gs"></list-slider>
         <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode"></article-list>
         <div><vue-dfp v-if="!isMobile" :is="props.vueDfp" pos="LPCFT" :config="props.config" :unitId="'mirror_RWD_GS_970250-300250_FT'" /></div>
@@ -35,8 +34,7 @@
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'light'">
-        <HeaderR :props="props" />
-        <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
+        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
         <div class="list-title container" >
@@ -55,8 +53,7 @@
       </div>
 
       <div class="list-view" v-else>
-        <HeaderR :props="props" />
-        <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
+        <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
         <!--<list-choice v-if="type === `SECTION` && sectionfeatured && title !== 'Topic' && title !== '影音'" :abIndicator="abIndicator" :initialSection="section" :initialSectionfeatured="sectionfeatured" :viewport="viewport" />-->
@@ -116,7 +113,6 @@ import Footer from '../components/Footer.vue'
 import FooterFoodTravel from '../components/FooterFoodTravel.vue'
 import Header from '../components/Header.vue'
 import HeaderFoodTravel from '../components/HeaderFoodTravel.vue'
-import HeaderR from '../components/HeaderR.vue'
 import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
 import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
 import Leading from '../components/Leading.vue'
@@ -476,8 +472,7 @@ export default {
     'share': Share,
     'video-list': VideoList,
     'vue-dfp-provider': VueDfpProvider,
-    DfpCover,
-    HeaderR
+    DfpCover
   },
   asyncData ({ store, route }) {
     return fetchCommonData(store, route)
@@ -1027,6 +1022,18 @@ export default {
         }
         window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
       }
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    if (from.matched.length !== 0) { // check whether first time
+      next(vm => {
+        return Promise.all([
+          vm.$store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
+          fetchListData(vm.$store, vm.type, vm.pageStyle, getUUID(vm.$store, vm.type, to), false, false)
+        ])
+      })
+    } else {
+      next()
     }
   },
   beforeRouteUpdate (to, from, next) {
