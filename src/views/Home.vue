@@ -3,8 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <HeaderR :props="props" />
-          <!-- <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
+          <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
         <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
@@ -77,7 +76,6 @@ import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
-import HeaderR from '../components/HeaderR.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleAsideMobileB from '../components/LatestArticleAsideMobileB.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
@@ -164,8 +162,7 @@ export default {
     LatestArticleMain,
     MirrorMediaTVAside,
     PopularArticles,
-    VueDfpProvider,
-    HeaderR
+    VueDfpProvider
   },
   asyncData ({ store }) {
     return fetchSSRData(store)
