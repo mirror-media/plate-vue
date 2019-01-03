@@ -56,7 +56,7 @@
           <div v-else-if="p.type === 'annotation'">
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div>
-          <div v-else v-html="paragraphComposer(p)"></div>
+          <div v-else :style="{ backgroundColor: category.color || '#bcbcbc' }" v-html="paragraphComposer(p)"></div>
         </div>        
       </div>
       <div class="split-line"></div>
@@ -172,7 +172,8 @@ export default {
       const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ], sectionTitle)
       const shouldShow = !_.get(this.articleData, [ 'isAdvertised' ], false) ? {} : { display: 'none;' }
       const style = { borderLeft: `7px solid ${_.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')}` }
-      return { categoryId, categoryTitle, style: Object.assign(style, shouldShow) }
+      const color = _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
+      return { categoryId, categoryTitle, style: Object.assign(style, shouldShow), color }
     },
     contArr () {
       return _.get(this.articleData, [ 'content', 'apiData' ], [])

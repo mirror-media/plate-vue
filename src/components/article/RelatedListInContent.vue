@@ -163,7 +163,6 @@ export default {
     font-weight 300
     line-height 1.44
     color #808080 !important
-    text-align justify
     text-decoration none !important
     border-bottom none !important
     padding 0 !important
