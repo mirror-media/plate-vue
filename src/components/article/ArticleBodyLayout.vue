@@ -119,8 +119,9 @@
         color rgba(65, 65, 65, 0.61)
 
         p 
+          padding 1em 2em
           text-align justify
-          color #08639e
+          color #fff
           font-weight bold
           font-size 1.2rem
           strong 
