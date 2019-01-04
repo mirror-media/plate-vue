@@ -548,8 +548,7 @@ export default {
 
 .home-mainContent
   width 100%
-  &.a, &.b
-    flex-wrap wrap
+  flex-wrap wrap
   .latest-main-container
     width 90%
     margin 0 auto
