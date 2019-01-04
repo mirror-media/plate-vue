@@ -1,9 +1,7 @@
 <template>
-  <!-- <div :class="[ 'heroimage-container', `heroimage-container--${abIndicator.toLowerCase()}` ]"> -->
-  <div class="heroimage-container">
+  <div :class="[ 'heroimage-container', `heroimage-container--${abIndicator.toLowerCase()}` ]">
     <template v-if="viewport > 1199">
-      <!-- <template v-if="abIndicator === 'A'"> -->
-      <template>
+      <template v-if="abIndicator === 'A'">
         <div class="hero-info">
           <div class="hero-info-category-container">
             <div class="hero-info-category"
@@ -20,7 +18,7 @@
           <span class="img" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
         </div>
       </template>
-      <!-- <template v-if="abIndicator === 'B'">
+      <template v-if="abIndicator === 'B'">
         <div v-if="heroImage && heroImage.image" class="hero-img-b">
           <span class="img" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="heroCaption"></span>
           <span class="img" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
@@ -35,7 +33,7 @@
         </div>
         <h1 class="hero-title-b" v-text="get(articleData, [ 'title' ])"></h1>
         <h2 v-if="get(articleData, [ 'subtitle' ])" v-text="get(articleData, [ 'subtitle' ])"></h2>
-      </template> -->
+      </template>
     </template>
     <template v-else-if="viewport">
       <span class="heroimg" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="heroCaption"></span>

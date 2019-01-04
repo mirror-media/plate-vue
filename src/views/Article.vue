@@ -8,8 +8,7 @@
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="split-line"></div>
-        <!-- <template v-if="viewport < 1200 || (viewport >= 1200 && abIndicator === 'A')"> -->
-        <template>
+        <template v-if="viewport < 1200 || (viewport >= 1200 && abIndicator === 'A')">
           <div class="article-heromedia" v-if="heroVideo" >
             <HeroVideo
               :abIndicator="abIndicator"
@@ -39,7 +38,7 @@
             :poplistData="popularlist"
             :projlistData="projectlist"
             :viewport="viewport">
-            <!-- <template v-if="viewport >= 1200 && abIndicator === 'B'" slot="heroB">
+            <template v-if="viewport >= 1200 && abIndicator === 'B'" slot="heroB">
               <div class="article-heromedia" v-if="heroVideo" >
                 <HeroVideo
                   :abIndicator="abIndicator"
@@ -60,7 +59,7 @@
                 :articleData="articleData"
                 :heroCaption="heroCaption"
                 :heroImage="heroImage"></HeroImage>
-            </template> -->
+            </template>
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list
@@ -75,7 +74,7 @@
                     <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
                   </blockquote>
                 </div>
-                <ArticleAsideReadrLatest v-if="abIndicator === 'B'" class="readr-latest" slot="readrLatest"/>
+                <ArticleAsideReadrLatest class="readr-latest" slot="readrLatest"/>
                 <pop-list-vert :pop="popularlist" slot="popListVert">
                   <micro-ad v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                     :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
@@ -103,7 +102,7 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <RelatedListInContent slot="relatedListInContent" :abIndicator="abIndicator" :relateds="relateds" />
+            <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
             <RelatedListWithRecommendList
               v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
               slot="relatedlistBottom" 

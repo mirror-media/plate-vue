@@ -1,8 +1,7 @@
 <template>
   <div class="poplist-container" v-if="(pop.length > 0)">
     <div class="pop_title"><h3>熱門文章</h3></div>
-    <!-- <div :class="`pop_list pop_list--${abIndicator.toLowerCase()}`"> -->
-    <div class="pop_list">
+    <div :class="`pop_list pop_list--${abIndicator.toLowerCase()}`">
       <template v-for="(o, i) in popArticles">
         <div class="pop_item">
           <figure>
