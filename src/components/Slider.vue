@@ -146,16 +146,18 @@
       width 30px
       height 40px
       margin-top -50px
-      background-image url(/assets/mirrormedia/icon/arrow-slideshow-blue.png)
-      background-repeat no-repeat
       background-color #f5f5f5
       background-size 15px auto
       background-position 45% 50%
+      background-repeat no-repeat
       border-radius 4px
 
       &:hover
-        background-image url(/assets/mirrormedia/icon/arrow-slideshow-white.png)
         background-color #064f77
+        &.swiper-button-prev
+          background-image url(/assets/mirrormedia/icon/arrow-slideshow-white-left.png)
+        &.swiper-button-next
+          background-image url(/assets/mirrormedia/icon/arrow-slideshow-white-right.png)
 
       &.enabled
         display block
@@ -163,11 +165,12 @@
     
     .swiper-button-prev
       left 5px
+      background-image url(/assets/mirrormedia/icon/arrow-slideshow-blue-left.png)
     //   background-image url(/assets/mirrormedia/icon/arrow1-2017.png)
     
     .swiper-button-next
       right 5px
-      transform: rotateY(180deg)
+      background-image url(/assets/mirrormedia/icon/arrow-slideshow-blue-right.png)
     //   background-image url(/assets/mirrormedia/icon/arrow2-2017.png)
 
 @media (min-width 900px)
