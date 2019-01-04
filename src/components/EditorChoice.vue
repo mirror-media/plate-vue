@@ -1,69 +1,43 @@
 <template>
-  <section id="editorChoice" class="editorChoice">
-    <template v-if="abIndicator === 'A' && editorChoice.length > 0">
-      <div class="slider">
-        <h2>編輯精選</h2>
-        <div class="slider-container" :style="{ width: `${editorChoice.length * 100}%`, transform: `translateX(-${100 / editorChoice.length * sliderCurrent}%)` }">
-          <a v-for="item in editorChoice"
-            :key="item.slug"
-            :href="`/story/${item.slug}`"
-            :id="`choices-${item.slug}`"
-            :style="{ width: `${100 / editorChoice.length}%`, backgroundImage: `url(${item.heroImage.image.resizedTargets.desktop.url})` }"
-            class="slider__item"
-            target="_blank">
-            <div class="slider__item-curtain"></div>
-            <p class="slider__item-title" v-text="item.title"></p>
-          </a>
-        </div>
-        <div class="slider__nav">
-          <div class="nav-container" :style="{ width: `${ editorChoice.length * 8 + (editorChoice.length - 1) * 10 }px` }">
-            <div v-for="(item, index) in editorChoice"
-              :key="`btn-${item.slug}`"
-              :class="{ active: sliderCurrent === index}"
-              class="dot"
-              @click="sliderCurrent = index">
-            </div>
+  <section id="editorChoice" :class="[ 'editorChoice', `${abIndicator.toLowerCase()}` ]">
+    <div class="slider">
+      <h2>編輯精選</h2>
+      <div class="slider-container" :style="{ width: `${editorChoice.length * 100}%`, transform: `translateX(-${100 / editorChoice.length * sliderCurrent}%)` }">
+        <a v-for="item in editorChoice"
+          :key="item.slug"
+          :href="`/story/${item.slug}`"
+          :id="`choices-${item.slug}`"
+          :style="{ width: `${100 / editorChoice.length}%`, backgroundImage: `url(${item.heroImage.image.resizedTargets.desktop.url})` }"
+          class="slider__item"
+          target="_blank">
+          <div class="slider__item-curtain"></div>
+          <p class="slider__item-title" v-text="item.title"></p>
+        </a>
+      </div>
+      <div class="slider__nav">
+        <div class="nav-container" :style="{ width: `${ editorChoice.length * 8 + (editorChoice.length - 1) * 10 }px` }">
+          <div v-for="(item, index) in editorChoice"
+            :key="`btn-${item.slug}`"
+            :class="{ active: sliderCurrent === index}"
+            class="dot"
+            @click="sliderCurrent = index">
           </div>
         </div>
-        <div class="slider__arrow next" @click="handleNextSlider">
-          <img src="/assets/mirrormedia/icon/arrow2-2017.png" alt="下一則" >
-        </div>
-        <div class="slider__arrow previous" @click="handlePrevSlider">
-          <img src="/assets/mirrormedia/icon/arrow1-2017.png" alt="上一則" >
-        </div>
       </div>
-    </template>
-    <template v-else>
-      <h2>編輯精選</h2>
-      <app-slider class="editorChoice__slides" slideId="editorChoiceSlider" :option="sliderOption" v-if="viewport > 1199">
-        <template slot-scope="props">
-          <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
-            <template>
-              <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target">
-                <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
-                </div>
-              </router-link>
-              <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target">
-                <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
-                </div>
-              </a>
-            </template>
-          </swiper-slide>
-        </template>
-      </app-slider>
-      <div class="editorChoice__menu">
-        <template v-for="(item, index) in editorChoice">
-          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
-            @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
-            <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
-          </router-link>
-          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
-            @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
-            <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
-          </a>
-        </template>
+      <div class="slider__arrow next" @click="handleNextSlider">
+        <img src="/assets/mirrormedia/icon/arrow2-2017.png" alt="下一則" >
       </div>
-    </template>
+      <div class="slider__arrow previous" @click="handlePrevSlider">
+        <img src="/assets/mirrormedia/icon/arrow1-2017.png" alt="上一則" >
+      </div>
+    </div>
+    <a
+      v-if="abIndicator === 'B'"
+      :href="`/story/${editorChoice[sliderCurrent].slug}`"
+      class="editorChoice__title"
+      target="_blank"
+      v-text="editorChoice[sliderCurrent].title">
+    </a>
     <div class="editorChoice--mobile">
       <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
@@ -408,6 +382,10 @@ export default {
     &.previous
       left 15px
 
+.editorChoice.b
+  .editorChoice__title
+    display none
+
 @media (min-width: 600px)
   .editorChoice
     &--mobile
@@ -471,5 +449,24 @@ export default {
       
   .slider
     display block
+  
+  .editorChoice.b
+    display flex
+    .slider
+      flex 1
+      width 66.66%
+      margin 0
+      .slider__item-title
+        display none
+    .editorChoice__title
+      display flex
+      justify-content center
+      align-items center
+      width 33.34%
+      padding 0 40px
+      color #fff
+      font-size 2.5625rem
+      line-height 1.4
+      background-color #074f77
 
 </style>
