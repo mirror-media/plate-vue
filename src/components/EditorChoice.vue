@@ -33,6 +33,7 @@
     </div>
     <a
       v-if="abIndicator === 'B'"
+      :id="`choices-${item.slug}-title`"
       :href="`/story/${editorChoice[sliderCurrent].slug}`"
       class="editorChoice__title"
       target="_blank"
