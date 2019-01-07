@@ -6,9 +6,10 @@
         <a v-for="item in editorChoice"
           :key="item.slug"
           :href="`/story/${item.slug}`"
-          :id="`choices-${item.slug}`"
           :style="{ width: `${100 / editorChoice.length}%`, backgroundImage: `url(${item.heroImage.image.resizedTargets.desktop.url})` }"
           class="slider__item"
+          data-gtm-category="home"
+          data-gtm="choice"
           target="_blank">
           <div class="slider__item-curtain"></div>
           <p class="slider__item-title" v-text="item.title"></p>
@@ -33,9 +34,10 @@
     </div>
     <a
       v-if="abIndicator === 'B'"
-      :id="`choices-${item.slug}-title`"
       :href="`/story/${editorChoice[sliderCurrent].slug}`"
       class="editorChoice__title"
+      data-gtm-category="home"
+      data-gtm="choice"
       target="_blank"
       v-text="editorChoice[sliderCurrent].title">
     </a>
@@ -43,13 +45,25 @@
       <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
         <template>
-          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style !== 'projects'" :target="target">
+          <router-link
+            v-if="item.style !== 'projects'"
+            :to="getHref(item)"
+            :target="target"
+            class="editorChoice__block--img"
+            data-gtm-category="home"
+            data-gtm="choice">
             <LatestAriticleImg class="figure"
               :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
               :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
             <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           </router-link>
-          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style === 'projects'" :target="target">
+          <a
+            v-if="item.style === 'projects'"
+            :href="`https://www.mirrormedia.mg${getHref(item)}`"
+            :target="target"
+            class="editorChoice__block--img"
+            data-gtm-category="home"
+            data-gtm="choice">
             <LatestAriticleImg class="figure"
               :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
               :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
@@ -58,8 +72,22 @@
         </template>
         <div class="editorChoice__block--title" :class="getSection(item)">
           <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></a>
+            <router-link
+              v-if="item.style !== 'projects'"
+              :to="getHref(item)"
+              :target="target"
+              data-gtm-category="home"
+              data-gtm="choice">
+              <h2 v-text="getTitle(item, 24)"></h2>
+            </router-link>
+            <a
+              v-if="item.style === 'projects'"
+              :href="`https://www.mirrormedia.mg${getHref(item)}`"
+              :target="target"
+              data-gtm-category="home"
+              data-gtm="choice">
+              <h2 v-text="getTitle(item, 24)"></h2>
+            </a>
           </template>
         </div>
       </div>
