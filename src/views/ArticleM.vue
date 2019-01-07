@@ -29,6 +29,7 @@
             <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
+            <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
             <RelatedListWithRecommendList
               :isApp="true"
               v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
@@ -98,6 +99,7 @@
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import PopList from '../components/article/PopList.vue'
+  import RelatedListInContent from '../components/article/RelatedListInContent.vue'
   import RelatedListWithRecommendList from '../components/article/RelatedListWithRecommendList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -164,6 +166,11 @@
       return fetchRecommendList(store, id)
     }) ])
   }
+
+  const fetchImages = (store, { ids = [], max_results = 10 }) => store.dispatch('FETCH_IMAGES_BY_ID', {
+    ids,
+    max_results
+  })
 
   export default {
     name: 'article-view',
@@ -311,6 +318,7 @@
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
+      RelatedListInContent,
       RelatedListWithRecommendList
     },
     data () {
@@ -514,7 +522,8 @@
         return _.get(this.$store, [ 'state', 'articlesRecommendList', 'relatedNews' ], [])
       },
       relateds () {
-        return _.get(this.articleData, [ 'relateds' ], [])
+        const items = _.get(this.articleData, [ 'relateds' ], []) || []
+        return items.filter(item => item)
       },
       sectionId () {
         const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
@@ -709,7 +718,11 @@
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
       },
-      articleData: function () {
+      articleData: function (value) {
+        if (value.relateds && value.relateds.length > 0) {
+          const relatedImages = value.relateds.filter(related => related).map(related => related.heroImage)
+          fetchImages(this.$store, { ids: relatedImages, max_results: relatedImages.length  })
+        }
         this.updateJSONLDScript()
       }
     }

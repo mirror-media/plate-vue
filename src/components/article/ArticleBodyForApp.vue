@@ -72,6 +72,7 @@
           <div v-else v-html="paragraphComposer(p)"></div>
           <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
+          <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
         </div>
       </article>
       <div class="article_main_related_bottom">
@@ -200,6 +201,16 @@ export default {
         index++
       }
       return records
+    },
+    lastUnstyledParagraph () {
+      const regex = /^<\s*a[^>]*>/
+      let last = this.contArr.length - 1
+      this.contArr.map((content, index) => {
+        if (content.type === 'unstyled' && content.content[0] && !content.content[0].match(regex)) {
+          last = index
+        }
+      })
+      return last
     }
   },
   data () {
