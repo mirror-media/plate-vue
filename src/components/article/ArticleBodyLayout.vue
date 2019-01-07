@@ -119,6 +119,7 @@
         color rgba(65, 65, 65, 0.61)
 
         p 
+          margin 0
           padding 1em 2em
           text-align justify
           color #fff
