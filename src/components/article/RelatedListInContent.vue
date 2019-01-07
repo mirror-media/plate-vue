@@ -1,5 +1,6 @@
 <template>
   <section class="relateds-in-content">
+    <h3>往下繼續閱讀</h3>
     <div v-for="related in relateds" :key="related.id" class="related">
       <div class="related__title">
         <a :id="`related-title-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
@@ -38,6 +39,11 @@ export default {
 .relateds-in-content
   margin-bottom 20px
   clear both
+  > h3
+    margin 0 0 .6em
+    color #000
+    font-size 1.25rem
+    font-weight 600
   .related
     display flex
     position relative

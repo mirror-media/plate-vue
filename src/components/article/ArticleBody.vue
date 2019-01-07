@@ -163,7 +163,11 @@ export default {
       return _.get(this.articleData, [ 'style' ], '')
     },
     briefArr () {
-      return _.get(this.articleData, [ 'brief', 'apiData' ], [])
+      return _.filter(_.get(this.articleData, [ 'brief', 'apiData' ], []), p => {
+        const content = p.content || []
+        const reduce = _.reduce(content, (sum, n) => sum + n.trim(), '')
+        return reduce ? p : undefined
+      })
     },
     category () {
       const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ], '')
@@ -253,9 +257,10 @@ export default {
       return records
     },
     lastUnstyledParagraph () {
+      const regex = /^<\s*a[^>]*>/
       let last = this.contArr.length - 1
       this.contArr.map((content, index) => {
-        if (content.type === 'unstyled' && content.content[0]) {
+        if (content.type === 'unstyled' && content.content[0] && !content.content[0].match(regex)) {
           last = index
         }
       })
