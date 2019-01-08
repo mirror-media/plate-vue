@@ -3,7 +3,8 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="search-view">
         <section style="width: 100%;">
-          <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/>
+          <HeaderR :props="props" />
+          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         </section>
         <div class="search-title container">
           <span class="search-title__text" v-text="title"></span>
@@ -34,6 +35,7 @@ import ArticleList from '../components/ArticleList.vue'
 import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
+import HeaderR from '../components/HeaderR.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -98,7 +100,8 @@ export default {
     'article-list': ArticleList,
     'loading': Loading,
     'more': More,
-    'vue-dfp-provider': VueDfpProvider
+    'vue-dfp-provider': VueDfpProvider,
+    HeaderR
   },
   asyncData ({ store }) {
     return fetchData(store)

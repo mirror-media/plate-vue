@@ -2,7 +2,8 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <section style="width: 100%;">
-        <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header>
+        <HeaderR :props="props" />
+        <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header> -->
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
@@ -177,6 +178,7 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
+  import HeaderR from '../components/HeaderR.vue'
   import HeroImage from '../components/article/HeroImage.vue'
   import HeroVideo from '../components/article/HeroVideo.vue'
   import LatestList from '../components/article/LatestList.vue'
@@ -382,6 +384,7 @@
       'vue-dfp-provider': VueDfpProvider,
       ArticleVideo,
       DfpCover,
+      HeaderR,
       HeroImage,
       HeroVideo,
       RelatedListInContent,

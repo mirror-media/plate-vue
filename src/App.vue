@@ -10,18 +10,44 @@
   import { mmLog } from './util/comm.js'
   import { visibleTracking } from './util/visibleTracking'
   import Tap from 'tap.js'
+  
   const debug = require('debug')('CLIENT:App')
+
+  const updateViewport = (store) => {
+    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    const viewport = { width: width, height: height }
+    return store.dispatch('UPDATE_VIEWPORT', viewport)
+  }
+
   export default {
-    computed: {
-      currPath () {
-        return this.$route.fullPath
-      }
-    },
     data () {
       return {
         doc: {},
         globalTapevent: {}
       }
+    },
+    computed: {
+      currPath () {
+        return this.$route.fullPath
+      }
+    },
+    watch: {
+      currPath: function () {
+        this.setUpVisibleTracking()
+      }
+    },
+    beforeMount () {
+      updateViewport(this.$store)
+    },
+    mounted () {
+      this.doc = document
+      this.launchLogger()
+      this.setUpVisibleTracking()
+      window.addEventListener('resize', this.updateViewport)
+    },
+    beforeDestroy () {
+      window.removeEventListener('resize', this.updateViewport)
     },
     methods: {
       doLog (event) {
@@ -57,18 +83,11 @@
           ]
         )
       },
+      updateViewport () {
+        updateViewport(this.$store)
+      },
       visibleTracking
     },
-    mounted () {
-      this.doc = document
-      this.launchLogger()
-      this.setUpVisibleTracking()
-    },
-    watch: {
-      currPath: function () {
-        this.setUpVisibleTracking()
-      }
-    }
   }
 </script>
 
