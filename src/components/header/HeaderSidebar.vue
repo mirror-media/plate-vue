@@ -3,11 +3,9 @@
     <button class="header-sidebar__close" data-gtm="menu close" data-gtm-category="header" @click="$emit('closeSidebar')"><img src="/assets/mirrormedia/icon/close_white@2x.png" :alt="$t('HEADER.CLOSE')"></button>
     <div v-if="topics.length > 0" class="topics">
       <router-link
-        v-for="topic in topics"
-        v-if="topic.id"
+        v-for="topic in activeTopics"
         :key="`sidebar-topic-${topic.id}`"
         :to="`/topic/${topic.id}`"
-        class="topic"
         :data-gtm="`topic ${topic.name}`"
         data-gtm-category="header"
         v-text="topic.name">
@@ -16,16 +14,14 @@
     </div>
     <div class="sections">
       <div
-        v-for="section in sections"
-        v-if="section.id"
+        v-for="section in activeSections"
         :key="`sidebar-section-${section.id}`"
         :style="{ borderLeftColor: getColor(section) }"
         class="section">
         <router-link :to="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></router-link>
         <div v-if="section.categories.length > 0" class="categories">
           <router-link
-            v-for="category in section.categories"
-            v-if="category.id"
+            v-for="category in filterSectionCategories(section)"
             :key="`sidebar-category-${category.id}`"
             :to="`/category/${section.name}`"
             :data-gtm="`category ${category.name}`"
@@ -38,8 +34,7 @@
         <a v-text="$t('HEADER.EXTERNAL')"></a>
         <div v-if="partners.length > 0" class="categories">
           <router-link
-            v-for="partner in partners"
-            v-if="partner.id"
+            v-for="partner in activePartners"
             :key="`sidebar-partner-${partner.id}`"
             :to="`/externals/${partner.name}`"
             :data-gtm="`external ${partner.name}`"
@@ -105,7 +100,22 @@ export default {
       SOCIAL_LINK
     }
   },
+  computed: {
+    activePartners () {
+      return this.partners.filter(partner => partner.id && partner.display)
+    },
+    activeSections () {
+      return this.sections.filter(section => section.id && section.name)
+    },
+    activeTopics () {
+      return this.topics.filter(topic => topic.id && topic.name)
+    }
+  },
   methods: {
+    filterSectionCategories (section) {
+      const categories = section.categories || []
+      return categories.filter(category => category.id && category.title)
+    },
     getColor (section) {
       return get(SECTION_MAP, [ section.id, 'bgcolor' ]) 
     }
