@@ -90,18 +90,12 @@
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleBody from '../components/article/ArticleBodyForApp.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotographyForApp.vue'
-  import ArticleVideo from '../components/article/Video.vue'
   import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
-  import Footer from '../components/Footer.vue'
-  import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
-  import LiveStream from '../components/LiveStream.vue'
-  import PopList from '../components/article/PopList.vue'
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
   import RelatedListWithRecommendList from '../components/article/RelatedListWithRecommendList.vue'
-  import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
@@ -308,15 +302,9 @@
       'adult-content-alert': AdultContentAlert,
       'article-body': ArticleBody,
       'article-body-photography': ArticleBodyPhotography,
-      'app-footer': Footer,
-      'app-header': Header,
       'dfp-fixed': DfpFixed,
       'latest-list': LatestList,
-      'live-stream': LiveStream,
-      'pop-list': PopList,
-      'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
-      ArticleVideo,
       DfpCover,
       RelatedListInContent,
       RelatedListWithRecommendList
