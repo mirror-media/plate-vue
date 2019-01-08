@@ -87,7 +87,7 @@
         background-image url(/assets/mirrormedia/icon/facebook_white.png)
         background-repeat no-repeat
         background-position center center
-        background-size 35%        
+        background-size 25%        
       
       &.g-plus
         background-image url(/assets/mirrormedia/icon/google-plus.png)
