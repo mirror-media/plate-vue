@@ -43,7 +43,6 @@
           :key="`topic-${topic.id}`"
           :to="`/topic/${topic.id}`"
           :data-gtm="`topic ${topic.name}`"
-          class="topic"
           data-gtm-category="header"
           v-text="topic.name">
         </router-link>
@@ -92,13 +91,13 @@ export default {
     }
   },
   methods: {
-    getColor (section) {
-      return get(SECTION_MAP, [ section.id, 'bgcolor' ]) 
-    },
     filterSectionCategories (section) {
       const categories = section.categories || []
       return categories.filter(category => category.id && category.title)
     },
+    getColor (section) {
+      return get(SECTION_MAP, [ section.id, 'bgcolor' ]) 
+    }
   }
 }
 </script>
