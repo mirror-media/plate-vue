@@ -75,7 +75,6 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
-import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import HeaderR from '../components/HeaderR.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
@@ -84,8 +83,6 @@ import LatestArticleMain from '../components/LatestArticleMain.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
-import More from '../components/More.vue'
-import PopularArticles from '../components/PopularArticles.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
@@ -152,18 +149,15 @@ const fetchLatestArticle = (store, page) => {
 export default {
   name: 'home-view',
   components: {
-    'app-footer': Footer,
     'app-Header': Header,
     'editor-choice': EditorChoice,
     'live-stream': LiveStream,
     'loading': Loading,
-    'more': More,
     DfpCover,
     LatestArticleAside,
     LatestArticleAsideMobileB,
     LatestArticleMain,
     MirrorMediaTVAside,
-    PopularArticles,
     VueDfpProvider,
     HeaderR
   },

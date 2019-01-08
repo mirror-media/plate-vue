@@ -172,7 +172,6 @@
   import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
-  import ArticleVideo from '../components/article/Video.vue'
   import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
@@ -382,7 +381,6 @@
       'pop-list-vert': PopListVert,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
-      ArticleVideo,
       DfpCover,
       HeaderR,
       HeroImage,

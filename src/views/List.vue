@@ -107,7 +107,6 @@ import { microAds } from '../constants/microAds'
 import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListLight from '../components/ArticleListLight.vue'
-import AudioList from '../components/AudioList.vue'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoiceFoodTravel from '../components/EditorChoiceFoodTravel.vue'
@@ -119,16 +118,13 @@ import HeaderFoodTravel from '../components/HeaderFoodTravel.vue'
 import HeaderR from '../components/HeaderR.vue'
 import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
 import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
-import Leading from '../components/Leading.vue'
 import ListChoice from '../components/ListChoice.vue'
 import ListSlider from '../components/list/ListSlider.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import MicroAd from '../components/MicroAd.vue'
-import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
-import VideoList from '../components/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
@@ -458,23 +454,19 @@ export default {
     'app-header': Header,
     'article-list': ArticleList,
     'article-list-light': ArticleListLight,
-    'audio-list': AudioList,
     'editor-foodtravel': EditorChoiceFoodTravel,
     'featuredStory-foodtravel': FeaturedStoryFoodTravel,
     'footer-foodtravel': FooterFoodTravel,
     'header-foodtravel': HeaderFoodTravel,
     'heroImage-foodtravel': HeroImageFoodTravel,
     'latestArticle-foodtravel': LatestArticleFoodTravel,
-    'leading': Leading,
     'list-choice': ListChoice,
     'list-slider': ListSlider,
     'live-stream': LiveStream,
     'loading': Loading,
     'micro-ad': MicroAd,
-    'more': More,
     'more-full': MoreFull,
     'share': Share,
-    'video-list': VideoList,
     'vue-dfp-provider': VueDfpProvider,
     DfpCover,
     HeaderR
