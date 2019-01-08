@@ -92,6 +92,7 @@
       display none
     &__image
       position relative
+      width 100%
       font-size 0
       figure
         margin 0
