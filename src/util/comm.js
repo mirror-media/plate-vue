@@ -36,7 +36,8 @@ export function getBrief (article, count = 30, allowed_tags = '') {
   if (_.split(_.get(article, [ 'href' ]), '/')[1] === 'topic') {
     brief = _.get(article, [ 'ogDescription' ])
   } else {
-    brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], _.get(article, [ 'brief' ])), { allowedTags: [ allowed_tags ] })
+    const rawBrief = _.get(article, 'brief.html')
+    brief = (sanitizeHtml(rawBrief, { allowedTags: [ allowed_tags ] }) === 'undefined' ?  undefined : sanitizeHtml(rawBrief, { allowedTags: [ allowed_tags ] })) || _.get(article, 'ogDescription')
   }
   return truncate(brief, count)
 }

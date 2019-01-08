@@ -126,7 +126,6 @@
           font-weight bold
           font-size 1.2rem
           strong 
-            color rgba(65, 65, 65, 0.61)
             font-weight bold
 
           em
