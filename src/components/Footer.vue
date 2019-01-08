@@ -158,7 +158,7 @@
 
           .facebook
             background-image url(/assets/mirrormedia/icon/facebook_white.png)
-            background-size 12%
+            background-size auto 24px
 
           .google-plus
             background-image url(/assets/mirrormedia/icon/google-plus.png)
