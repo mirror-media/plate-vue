@@ -112,7 +112,6 @@ import HeaderR from '../components/HeaderR.vue'
 import Leading from '../components/Leading.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
-import More from '../components/More.vue'
 import MoreFull from '../components/MoreFull.vue'
 import PortraitWallList from '../components/PortraitWallList.vue'
 import ProjectList from '../components/article/ProjectList.vue'
@@ -254,7 +253,6 @@ export default {
     'leading': Leading,
     'leading-watch': LeadingWatch,
     'loading': Loading,
-    'more': More,
     'more-full': MoreFull,
     'portraitWall-list': PortraitWallList,
     'share': Share,
