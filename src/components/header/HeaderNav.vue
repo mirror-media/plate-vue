@@ -81,7 +81,7 @@ export default {
   },
   computed: {
     activePartners () {
-      return this.partners.filter(partner => partner.id && partner.display)
+      return this.partners.filter(partner => partner.public && partner.id && partner.display)
     },
     activeSections () {
       return this.sections.filter(section => section.id && section.name)
