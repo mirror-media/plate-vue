@@ -48,6 +48,7 @@ $RECYCLE.BIN/
 
 # Other
 dist/
+assets/
 .idea
 api/config.js
 /tmp
