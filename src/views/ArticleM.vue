@@ -30,7 +30,7 @@
             <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config"/>
             <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
-            <RelatedListWithRecommendList
+            <RecommendList
               :isApp="true"
               v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
               slot="relatedlistBottom"
@@ -95,7 +95,7 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import LatestList from '../components/article/LatestList.vue'
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
-  import RelatedListWithRecommendList from '../components/article/RelatedListWithRecommendList.vue'
+  import RecommendList from '../components/article/RecommendList.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
@@ -307,7 +307,7 @@
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
       RelatedListInContent,
-      RelatedListWithRecommendList
+      RecommendList
     },
     data () {
       return {
