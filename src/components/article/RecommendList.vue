@@ -2,14 +2,6 @@
   <div class="related-list">
     <div v-if="!(filteredRecommends.length < 1)" class="related-list__list" :style="containerStyle()">
       <div class="related-list__list__title"><h4 :style="titleStyle()">相關文章</h4></div>
-      <!-- <template v-for="o in relateds" v-if="abIndicator !== 'B'">
-        <div v-if="o" :key="`relateds-${o.id}`" class="related-list__list__item">
-          <div class="title">
-            <router-link :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related-${getValue(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
-            <a :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`related-${getValue(o, [ 'slug' ], Date.now())}`" v-else></a>
-          </div>
-        </div>
-      </template> -->
       <template v-if="!isAd">
         <template v-for="o in filteredRecommends">
           <div v-if="o" class="related-list__list__item">
@@ -30,7 +22,7 @@
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
 
-  const debug = require('debug')('CLIENT:RelatedListWithRecommendList')
+  const debug = require('debug')('CLIENT:RecommendList')
   const fetchRecommendList = (store, id) => {
     debug('id', id)
     return store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
@@ -123,11 +115,8 @@
         document.querySelector('.relatedBtmStyle').innerHTML = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
       },
     },
-    name: 'related-list',
+    name: 'RecommendList',
     props: {
-      abIndicator: {
-        default: () => ('')
-      },
       excludingArticle: {
         default: () => ('N/A')
       },

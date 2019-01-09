@@ -104,7 +104,7 @@
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
             <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
-            <RelatedListWithRecommendList
+            <RecommendList
               v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
               slot="relatedlistBottom" 
               :abIndicator="abIndicator"
@@ -186,7 +186,7 @@
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
-  import RelatedListWithRecommendList from '../components/article/RelatedListWithRecommendList.vue'
+  import RecommendList from '../components/article/RecommendList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
@@ -386,7 +386,7 @@
       HeroImage,
       HeroVideo,
       RelatedListInContent,
-      RelatedListWithRecommendList,
+      RecommendList,
       ArticleAsideReadrLatest
     },
     data () {
