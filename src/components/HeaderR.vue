@@ -171,6 +171,7 @@ export default {
       display inline-block
       width 95px
       height 50px
+      overflow hidden
       & + .logo
         margin-left 5px
       &.dfp
