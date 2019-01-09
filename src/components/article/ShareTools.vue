@@ -7,41 +7,57 @@
 </template>
 <script>
   import { currentYPosition, elmYPosition } from 'kc-scroll'
-  import { shareGooglePlus, shareLine, shareFacebook } from '../../util/comm'
+  import { shareLine, shareFacebook } from '../../util/comm'
   export default {
+    name: 'ShareTools',
+    data () {
+      return {
+        articleEle: undefined,
+        headerEle: undefined,
+        shareBoxEle: undefined,
+      }
+    },
+    mounted () {
+      this.articleEle = document.querySelector('.article')
+      this.headerEle = document.querySelector('.header')
+      this.shareBoxEle = document.querySelector('.share-toolbox')
+
+      window.shareBoxTop = undefined
+      window.shareBoxLeft = undefined
+
+      window.addEventListener('scroll', this.handleScroll)
+      window.addEventListener('resize', this.handleResize)
+    },
+    beforeDestroy () {
+      window.removeEventListener('scroll', this.handleScroll)
+      window.removeEventListener('resize', this.handleResize)
+    },
     methods: {
-      fixToolBox () {
-        const article = document.querySelector('.article')
-        const header = document.querySelector('.header')
-        const headerLogo = document.querySelector('.headerContainer')
-        const shareBox = document.querySelector('.share-toolbox')
-        const sbLoo = document.querySelector('.share-toolbox .mm-icon')
-        window.addEventListener('scroll', () => {
-          const currTop = currentYPosition()
-          const headerLogoBtm = elmYPosition('.headerContainer') + headerLogo.clientHeight
-          if (currTop > headerLogoBtm) {
-            sbLoo.setAttribute('class', 'item mm-icon active')
-          } else {
-            sbLoo.setAttribute('class', 'item mm-icon')
-          }
-          if (!window.shareBoxLeft || !window.shareBoxTop) {
-            window.shareBoxTop = header.offsetTop + header.offsetHeight
-            window.shareBoxLeft = article.offsetLeft - shareBox.offsetWidth
-            shareBox.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)
-          }
-        })
-        window.addEventListener('resize', () => {
-          shareBox.removeAttribute('styel')
-          window.shareBoxTop = header.offsetTop + header.offsetHeight
-          window.shareBoxLeft = article.offsetLeft - shareBox.offsetWidth
-          shareBox.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)
-        })
-      },
       goHome () {
         window.location.href = '/'
       },
-      shareGooglePlus () {
-        shareGooglePlus({ route: this.$route.path })
+      handleResize () {
+        this.shareBoxEle.removeAttribute('styel')
+        window.shareBoxTop = this.headerEle.offsetTop + this.headerEle.offsetHeight
+        window.shareBoxLeft = this.articleEle.offsetLeft - this.shareBoxEle.offsetWidth
+        this.shareBoxEle.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)
+      },
+      handleScroll () {
+        const headerLogo = document.querySelector('.header__logo-layer')
+        const sbLoo = document.querySelector('.share-toolbox .mm-icon')
+
+        const currTop = currentYPosition()
+        const headerLogoBtm = elmYPosition('.header__logo-layer') + headerLogo.clientHeight
+        if (currTop > headerLogoBtm) {
+          sbLoo.setAttribute('class', 'item mm-icon active')
+        } else {
+          sbLoo.setAttribute('class', 'item mm-icon')
+        }
+        if (!window.shareBoxLeft || !window.shareBoxTop) {
+          window.shareBoxTop = this.headerEle.offsetTop + this.headerEle.offsetHeight
+          window.shareBoxLeft = this.articleEle.offsetLeft - this.shareBoxEle.offsetWidth
+          this.shareBoxEle.setAttribute('style', `left: ${window.shareBoxLeft}px; top: ${window.shareBoxTop}px; display: block; opacity: 1;`)
+        }
       },
       shareLine () {
         shareLine({
@@ -52,13 +68,7 @@
       shareFacebook () {
         shareFacebook({ route: this.$route.path })
       }
-    },
-    mounted () {
-      window.shareBoxTop = undefined
-      window.shareBoxLeft = undefined
-      this.fixToolBox()
-    },
-    name: 'share-tools'
+    }
   }
 </script>
 <style lang="stylus" scoped>
@@ -87,13 +97,7 @@
         background-image url(/assets/mirrormedia/icon/facebook_white.png)
         background-repeat no-repeat
         background-position center center
-        background-size 25%        
-      
-      &.g-plus
-        background-image url(/assets/mirrormedia/icon/google-plus.png)
-        background-repeat no-repeat
-        background-position center center
-        background-size 70%        
+        background-size 30%        
 
       &.mm-icon
         background-image url(/assets/mirrormedia/icon/mirrorlogo-2017.jpg)
