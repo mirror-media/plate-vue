@@ -23,7 +23,7 @@
           <router-link
             v-for="category in filterSectionCategories(section)"
             :key="`sidebar-category-${category.id}`"
-            :to="`/category/${section.name}`"
+            :to="`/category/${category.name}`"
             :data-gtm="`category ${category.name}`"
             data-gtm-category="header"
             v-text="category.title">
