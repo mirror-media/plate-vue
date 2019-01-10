@@ -110,6 +110,12 @@ export default {
   beforeDestroy () {
     window.removeEventListener('scroll', this.handleScroll)
   },
+  watch: {
+    '$route.fullPath' () {
+      this.openSidebar = false
+      this.openSearchBar = false
+    }
+  },
   methods: {
     getColor (section) {
       return get(SECTION_MAP, [ section.id, 'bgcolor' ]) 
