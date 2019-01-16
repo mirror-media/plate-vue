@@ -14,7 +14,7 @@
     <link rel="canonical" href="<%= storyInfo.storyURL %>">
     <meta property="og:title" content="<%= storyInfo.storyTitle %> - 鏡週刊" >
     <meta property="og:url" content="<%= storyInfo.storyURLAMP %>">
-    <meta property="og:image" content="<%= storyHeroImage.src %>">
+    <meta property="og:image" content="<%= _.get(storyHeroImage, [ 'src', 'desktop' ], '') %>">
     <meta property="og:type" content="website">
     <script type="application/ld+json">
       {
@@ -38,12 +38,7 @@
             "height": 49
           }
         },
-        "image": {
-          "@type": "ImageObject",
-          "url": "<%= storyHeroImage.src %>",
-          "height": 217,
-          "width": 320
-        }
+        "image": <%- JSON.stringify(_.values(storyHeroImage.src)) %>
       }
     </script>
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">

@@ -36,7 +36,7 @@ const getStoryHeroImageSrc = (heroImage) => {
     mobile: get(heroImage, 'image.resizedTargets.mobile.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
     tiny: get(heroImage, 'image.resizedTargets.tiny.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
   }
-  return get(dimensions, 'mobile')
+  return dimensions
 }
 
 const annotationTextTagStart = '<!--__ANNOTATION__='
