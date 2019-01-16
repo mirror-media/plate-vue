@@ -6,7 +6,7 @@
       height="1"
       layout="responsive"
       src="<%= storyHeroVideo.src %>"
-      poster="<%= storyHeroImage.src %>"
+      poster="<%= _.get(storyHeroImage, [ 'src', 'mobile' ], '') %>"
     >
       <div fallback>
         <p>This browser does not support the video element.</p>
@@ -14,7 +14,7 @@
     </amp-video>
   <% } else { %>
     <amp-img
-      src="<%= storyHeroImage.src %>"
+      src="<%= _.get(storyHeroImage, [ 'src', 'mobile' ], '') %>"
       width="1.47"
       height="1"
       layout="responsive"
