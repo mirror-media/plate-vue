@@ -38,7 +38,11 @@
             "height": 49
           }
         },
-        "image": <%- JSON.stringify(_.values(storyHeroImage.src)) %>
+        "image": {
+          "@type": "ImageObject",
+          "url": "<%= _.get(storyHeroImage, [ 'src', 'desktop' ], '') %>",
+          "width": 1200
+        }
       }
     </script>
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
