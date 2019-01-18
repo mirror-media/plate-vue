@@ -88,7 +88,7 @@
               </swiper-slide>
             </template>
           </div>
-          <div v-else-if="p.type === 'annotation'">
+          <div v-else-if="p.type === 'annotation'" class="content--annotation">
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div>
           <div v-else v-html="paragraphComposer(p)"></div>
