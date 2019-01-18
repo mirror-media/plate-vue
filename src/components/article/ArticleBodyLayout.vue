@@ -82,7 +82,9 @@
 
       // .innerImg 
 
-
+      .content--annotation
+        position relative
+        z-index 10
         
       .article_main_pop 
         clear both

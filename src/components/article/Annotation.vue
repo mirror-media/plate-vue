@@ -1,12 +1,12 @@
 <template>
   <div class="annotation">
-    <span class='part-1' v-text="annotationPart1"></span>
+    <span class='part-1' v-html="annotationPart1"></span>
     <span class='part-2 tooltip' :class="isActive" @mouseover="mouseover" @mouseout="mouseout" @touchstart="touchstart" @touchend="touchend">
-      <span v-text="annotationPart2"></span>
-      <span class="tooltiptext" v-text="annotationText" :style="annotationTextStyle"></span>
+      <span v-html="annotationPart2"></span>
+      <span class="tooltiptext" v-html="annotationText" :style="annotationTextStyle"></span>
       <img src='/assets/mirrormedia/icon/info.png' style="height: 1.3rem; margin-left: 3px;">
     </span>
-    <span v-if="!isPart3HasAnnotation" class='part-3' v-text="annotationPart3"></span>
+    <span v-if="!isPart3HasAnnotation" class='part-3' v-html="annotationPart3"></span>
     <annotation v-if="isPart3HasAnnotation" class="recursive-annotation" :annotationStr="annotationPart3"></annotation>
   </div>
 </template>
@@ -129,6 +129,7 @@ export default {
       z-index 1
       line-height 1.6rem
       font-size 1rem
+      word-break break-word
     
     &.active
       -webkit-touch-callout none
