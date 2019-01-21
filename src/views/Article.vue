@@ -8,58 +8,24 @@
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
-        <div class="split-line"></div>
-        <template v-if="viewport < 1200 || (viewport >= 1200 && abIndicator === 'A')">
-          <div class="article-heromedia" v-if="heroVideo" >
-            <HeroVideo
-              :abIndicator="abIndicator"
-              :isAd="isAd"
-              :viewport="viewport"
-              :sectionMap="sectionMap"
-              :sectionId="sectionId"
-              :articleData="articleData"
-              :heroCaption="heroCaption"
-              :video="heroVideo"></HeroVideo>
-          </div>
-          <HeroImage v-else
-            :abIndicator="abIndicator"
-            :isAd="isAd"
-            :viewport="viewport"
-            :sectionMap="sectionMap"
-            :sectionId="sectionId"
-            :articleData="articleData"
-            :heroCaption="heroCaption"
-            :heroImage="heroImage"></HeroImage>
-        </template>
         <div class="article" v-if="articleData">
           <article-body
-            :abIndicator="abIndicator"
             :articleData="articleData"
             :isAd="isAd"
             :poplistData="popularlist"
             :projlistData="projectlist"
             :viewport="viewport">
-            <template v-if="viewport >= 1200 && abIndicator === 'B'" slot="heroB">
-              <div class="article-heromedia" v-if="heroVideo" >
+            <template slot="hero">
+              <div v-if="heroVideo" class="article-heromedia">
                 <HeroVideo
-                  :abIndicator="abIndicator"
-                  :isAd="isAd"
-                  :viewport="viewport"
-                  :sectionMap="sectionMap"
-                  :sectionId="sectionId"
-                  :articleData="articleData"
                   :heroCaption="heroCaption"
-                  :video="heroVideo"></HeroVideo>
+                  :video="heroVideo">
+                </HeroVideo>
               </div>
               <HeroImage v-else
-                :abIndicator="abIndicator"
-                :isAd="isAd"
-                :viewport="viewport"
-                :sectionMap="sectionMap"
-                :sectionId="sectionId"
-                :articleData="articleData"
                 :heroCaption="heroCaption"
-                :heroImage="heroImage"></HeroImage>
+                :heroImage="heroImage">
+              </HeroImage>
             </template>
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
@@ -98,7 +64,7 @@
             </template>
             <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :config="props.config"/>
-            <pop-list :abIndicator="abIndicator" :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
+            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
@@ -107,7 +73,6 @@
             <RecommendList
               v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
               slot="relatedlistBottom" 
-              :abIndicator="abIndicator"
               :isAd="isAd"
               :sectionId="sectionId"
               :relateds="relateds"
@@ -893,7 +858,10 @@
   @media (min-width 768px) and (max-width 1199px)
     .article-container      
       .article
-        padding 100px 50px 0
+        padding 0
+        .article_footer
+          width 645px
+          margin 0 auto
 
 .ad-fit
   position relative

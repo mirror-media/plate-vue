@@ -1,7 +1,7 @@
 <template>
   <div class="poplist-container" v-if="(pop.length > 0)">
     <div class="pop_title"><h3>熱門文章</h3></div>
-    <div :class="`pop_list pop_list--${abIndicator.toLowerCase()}`">
+    <div class="pop_list">
       <template v-for="(o, i) in popArticles">
         <div class="pop_item">
           <figure>
@@ -25,7 +25,7 @@
   import _ from 'lodash'
   export default {
     name: 'pop-list',
-    props: [ 'abIndicator', 'pop', 'currEnv' ],
+    props: [ 'pop', 'currEnv' ],
     computed: {
       popArticles () {
         return _.take(this.pop, 6)
@@ -57,6 +57,7 @@
       align-content flex-start
       flex-wrap wrap
       justify-content space-between
+      
 
       .pop_item 
         width 31%
@@ -119,28 +120,24 @@
               color rgba(0, 0, 0, 0.49)
               font-weight normal
               border none
-
-    .pop_list
-      &--b
-        & >>> .pop_item, & >>> #compass-fit-widget-content
+      & >>> .pop_item, & >>> #compass-fit-widget-content
+        display flex
+        flex-direction row
+        align-items center
+        figure
+          width 33vw
+          min-width 33vw
+          min-height calc(33vw * 0.68)
+          padding-top 0 !important
+        a
+          margin 0 !important
+          min-height calc(33vw * 0.68)
           display flex
-          flex-direction row
           align-items center
-          figure
-            width 33vw
-            min-width 33vw
-            min-height calc(33vw * 0.68)
-            padding-top 0 !important
-          a
-            margin 0 !important
-            min-height calc(33vw * 0.68)
-            display flex
-            align-items center
-        & >>> .pop_item
-          margin 0 0 20px 0
-        & >>> .pop_item_title
-          width 100%
-
+      & >>> .pop_item
+        margin 0 0 20px 0
+      & >>> .pop_item_title
+        width 100%
 
   @media (min-width 0px) and (max-width 499px)
     .poplist-container 
