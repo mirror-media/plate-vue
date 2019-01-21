@@ -21,6 +21,7 @@
       display flex
       margin-top 20px
       justify-content space-between
+      align-items flex-end
 
       .category 
         font-size 21px
@@ -54,9 +55,9 @@
         text-align justify
 
     .article_subtitle  
-      width 695px
+      // width 695px
       display inline-block
-      max-width 695px
+      // max-width 695px
       margin 0 0 15px
 
       h2
@@ -65,22 +66,30 @@
         margin 0
 
     .article_credit 
-      width 695px
+      // width 695px
       display inline-block
-      max-width 695px
+      // max-width 695px
 
       a.blue:hover, a.blue:link, a.blue:visited 
         color #74afd2
     
     .article_main 
-      width 695px
+      // width 695px
       display inline-block
-      max-width 695px
-      overflow hidden
-      &--b
-        overflow visible
-
-      // .innerImg 
+      // max-width 695px
+      overflow visible
+      > h1, > h2
+        color #000
+        text-align justify
+        line-height 1.5
+      > h1
+        margin 15px 0 0
+        font-size 2rem
+        & + div
+          margin-top 25px
+      > h2
+        margin 5px 0 25px 0
+        font-size 1.5rem
 
       .content--annotation
         position relative
@@ -359,9 +368,6 @@
 
           .info-box 
             width 95%
-          
-      h2 
-        font-size 32px
       
       h3 
         font-size 26px
@@ -540,15 +546,14 @@
   
   .article__basic-info
     display flex
+    flex-direction column
     justify-content space-between
-    width 695px
-    &--hero-b
-      flex-direction column
-      .article__basic-info-wrapper
-        display flex
-        justify-content space-between
-        .blue
-          border-bottom none !important
+    // width 695px
+    .article__basic-info-wrapper
+      // display flex
+      // justify-content space-between
+      .blue
+        border-bottom none !important
 
   .article__credit
     a.blue:hover, a.blue:link, a.blue:visited 
@@ -683,46 +688,58 @@
   
   @media (max-width 899px) and (min-width 768px)
     .article_body
-      .article_basic-info, .article_credit, .article_main, .article_subtitle
-        width 645px
-        max-width 645px
-        margin 0 auto
-        
+      // .article_basic-info, .article_credit, .article_main, .article_subtitle
+      //   width 645px
+      //   max-width 645px
+      //   margin 0 auto
+      
       .article_title
-        width 645px
-        max-width 645px
+        // width 645px
+        // max-width 645px
         margin 15px auto
 
       .article_subtitle
-        width 645px
-        max-width 645px
+        // width 645px
+        // max-width 645px
         margin 0 auto 15px
+      .article_main
+        > *
+          width 645px
+          margin-left auto !important
+          margin-right auto !important
       
   @media (min-width 900px) and (max-width 1199px)
     .article_body
-      .article_basic-info
-        width 695px
-        max-width 695px
-        margin 0 auto
+      // .article_basic-info
+      //   width 695px
+      //   max-width 695px
+      //   margin 0 auto
 
       .article_credit, .article_main
-        width 695px
-        max-width 695px
+        // width 695px
+        // max-width 695px
         margin 0 auto
       .article_title
-        width 695px
-        max-width 695px
+        // width 695px
+        // max-width 695px
         margin 15px auto
 
       .article_subtitle
-        width 695px
-        max-width 695px
+        // width 695px
+        // max-width 695px
         margin 0 auto 15px
+      .article_main
+        > *
+          width 695px
+          margin-left auto !important
+          margin-right auto !important
 
   @media (max-width 1199px)
     .article_body
       .article_main, .article_credit, .article_subtitle
         display block
+      .article_basic-info
+        margin-top 50px
     .fbPagePlugin
       display block
     .herbsapi
@@ -739,6 +756,9 @@
                 width 70%
                 padding 8px
                 text-align center
-    
-
+                
+  @media (min-width 1200px)
+    .article_body
+      .article_main
+        width 695px
 </style>
