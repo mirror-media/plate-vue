@@ -1,5 +1,5 @@
 <template>
-  <section id="editorChoice" :class="[ 'editorChoice', `${abIndicator.toLowerCase()}` ]">
+  <section id="editorChoice" class="editorChoice">
     <div class="slider">
       <h2>編輯精選</h2>
       <div class="slider-container" :style="{ width: `${editorChoice.length * 100}%`, transform: `translateX(-${100 / editorChoice.length * sliderCurrent}%)` }">
@@ -32,16 +32,7 @@
         <img src="/assets/mirrormedia/icon/arrow1-2017.png" alt="上一則" >
       </div>
     </div>
-    <a
-      v-if="abIndicator === 'B'"
-      :href="`/story/${editorChoice[sliderCurrent].slug}`"
-      class="editorChoice__title"
-      data-gtm-category="home"
-      data-gtm="choice"
-      target="_blank"
-      v-text="editorChoice[sliderCurrent].title">
-    </a>
-    <div class="editorChoice--mobile">
+    <div :class="abIndicator.toLowerCase()" class="editorChoice--mobile">
       <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
         <template>
@@ -71,6 +62,7 @@
           </a>
         </template>
         <div class="editorChoice__block--title" :class="getSection(item)">
+          <div v-if="abIndicator === 'B'" :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           <template>
             <router-link
               v-if="item.style !== 'projects'"
@@ -139,13 +131,6 @@ export default {
         onSlideChangeStart: (swiper) => {
           this.updateNavStatus(swiper.activeIndex)
         }
-      }
-    }
-  },
-  watch: {
-    abIndicator (value) {
-      if (value === 'B') {
-        this.setTimer()
       }
     }
   },
@@ -238,9 +223,7 @@ export default {
   },
   mounted () {
     this.setHoverEvent()
-    if (this.abIndicator === 'B') {
-      this.setTimer()
-    }
+    this.setTimer()
   },
   updated () {
     this.setHoverEvent()
@@ -411,10 +394,51 @@ export default {
     &.previous
       left 15px
 
-.editorChoice.b
-  .editorChoice__title
-    display none
+.editorChoice--mobile.b
+  .editorChoice__block--title
+    > div
+      display none
 
+@media (max-width: 599px)
+  .editorChoice--mobile.b
+    width 100%
+    > div
+      &:not(:last-child):not(:first-child)
+        margin 0
+        border-bottom 1px solid #fff
+    .editorChoice__eyebrow
+      width 90%
+      margin 0 auto 10px
+      h2
+        &::after
+          content none
+    .editorChoice__block
+      position relative
+    .editorChoice__block--img
+      > div
+        &:not(.figure)
+          display none
+      .figure
+        padding-top 56.25%
+    .editorChoice__block--title
+      position absolute
+      bottom 0
+      left 5%
+      width 90%
+      > div
+        display inline-flex
+        justify-content center
+        align-items center
+        width 50px
+        height 30px
+        padding 0 .2em
+        color #fff
+        font-size 1rem
+        white-space nowrap
+      h2
+        margin-top 5px
+        color #fff
+        text-shadow 1.4px 1.4px 1.9px rgba(0, 0, 0, 0.2)
 @media (min-width: 600px)
   .editorChoice
     &--mobile
@@ -428,7 +452,7 @@ export default {
         width calc( (100% - 30px)/2 )
       .editorChoice__block--title
         height 65px
-
+    
 @media (min-width: 1200px)
   .editorChoice
     display block
@@ -478,24 +502,5 @@ export default {
       
   .slider
     display block
-  
-  .editorChoice.b
-    display flex
-    .slider
-      flex 1
-      width 66.66%
-      margin 0
-      .slider__item-title
-        display none
-    .editorChoice__title
-      display flex
-      justify-content center
-      align-items center
-      width 33.34%
-      padding 0 40px
-      color #fff
-      font-size 2.5625rem
-      line-height 1.4
-      background-color #074f77
 
 </style>
