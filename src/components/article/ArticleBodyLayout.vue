@@ -78,6 +78,20 @@
       display inline-block
       // max-width 695px
       overflow visible
+      &.b
+        display inline-flex
+        flex-direction column
+        .article_basic-info
+          order -3
+        > h1
+          order -2
+          & + div
+            margin-top 15px
+        .article__basic-info
+          order -1
+        .hero-image
+          margin-top 25px
+
       > h1, > h2
         color #000
         text-align justify

@@ -1,6 +1,6 @@
 <template>
   <ArticleBodyLayout class="article_body" v-if="!isArticleEmpty()" :class="styleForCurrArticle">
-    <main class="article_main">
+    <main :class="abIndicator.toLowerCase()" class="article_main">
       <slot name="hero"></slot>
       <div class="article_basic-info">
         <div class="category">
@@ -10,7 +10,7 @@
       </div>
       <h1 v-text="title"></h1>
       <h2 v-if="subtitle.length > 0" v-text="subtitle"></h2>
-      <div class="article__basic-info article__basic-info--hero-b">
+      <div class="article__basic-info">
         <div class="article__basic-info-wrapper">
           <div class="article__credit" v-html="credit"></div>
         </div>
@@ -347,6 +347,10 @@ export default {
   },
   name: 'article-body',
   props: {
+    abIndicator: {
+      type: String,
+      default: 'A'
+    },
     articleData: {
       default: () => { return {} }
     },
