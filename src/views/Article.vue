@@ -10,6 +10,7 @@
         <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
         <div class="article" v-if="articleData">
           <article-body
+            :abIndicator="abIndicator"
             :articleData="articleData"
             :isAd="isAd"
             :poplistData="popularlist"
