@@ -13,6 +13,7 @@
       <div class="article__basic-info">
         <div class="article__basic-info-wrapper">
           <div class="article__credit" v-html="credit"></div>
+          <ShareLight />
         </div>
       </div>
       <div class="brief fb-quotable">
@@ -133,6 +134,7 @@ import AudioBox from '../../components/AudioBox.vue'
 import ArticleImg from 'src/components/article/ArticleImg.vue'
 import Newsletter from '../../components/Newsletter.vue'
 import ProjectList from './ProjectList.vue'
+import ShareLight from 'src/components/share/ShareLight.vue'
 import Slider from '../Slider.vue'
 import moment from 'moment'
 
@@ -147,6 +149,7 @@ export default {
     ArticleBodyLayout,
     ArticleVideo,
     ArticleImg,
+    ShareLight
   },
   computed: {
     articleStyle () {

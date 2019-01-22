@@ -429,9 +429,8 @@ export default {
         display inline-flex
         justify-content center
         align-items center
-        width 50px
         height 30px
-        padding 0 .2em
+        padding 0 .5em
         color #fff
         font-size 1rem
         white-space nowrap
