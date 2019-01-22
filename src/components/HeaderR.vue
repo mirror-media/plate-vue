@@ -21,6 +21,7 @@
       </div>
       <button v-show="mounted" class="btn--search" data-gtm="search open" data-gtm-category="header" @click="handleSearchBtn"><img src="/assets/mirrormedia/icon/search.svg" alt=""></button>
       <input v-model="keyword" class="search" type="search" @keyup.enter="search(keyword)">
+      <ShareLight class="share"/>
     </section>
     <HeaderNav v-show="!isMobile" :partners="partners" :sections="sections" :topics="topics" />
     <HeaderSidebar :class="{ open: openSidebar }" :partners="partners" :sections="sections" :topics="topics" class="header__sidebar" @closeSidebar="openSidebar = false" />
@@ -31,6 +32,7 @@
 import HeaderNav from '../components/header/HeaderNav.vue'
 import HeaderSearchBar from '../components/header/HeaderSearchBar.vue'
 import HeaderSidebar from '../components/header/HeaderSidebar.vue'
+import ShareLight from '../components/share/ShareLight.vue'
 import { SECTION_MAP, SITE_TITLE, SOCIAL_LINK } from '../constants/index'
 import { get, } from 'lodash'
 
@@ -40,6 +42,7 @@ export default {
     HeaderNav,
     HeaderSearchBar,
     HeaderSidebar,
+    ShareLight,
   },
   directives: {
     'click-outside': {
@@ -207,6 +210,8 @@ export default {
         display none
     .btn--more
       display none
+    .share
+      display none
   &__sidebar
     transform translateX(-100%)
     transition transform .5s ease
@@ -236,10 +241,20 @@ export default {
       .logo
         width 30px
         height 30px
-        margin-right 10px
+        margin 0 auto 0 10px
+        &.dfp, &.event
+          display none
+      .share
+        order 4
+        display flex
+        margin-left 20px
+        >>> button
+          width 30px
+          height 30px
       .btn--menu
         width 30px
         height 30px
+        margin 0
       .btn--search
         top 0
         width 30px

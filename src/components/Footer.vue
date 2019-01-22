@@ -20,74 +20,18 @@
       <router-link to="/story/ad1018001" target="_blank">廣告合作</router-link> - 
       <router-link to="/category/campaign" target="_blank">活動專區</router-link>
     </div>
-    <div class="share-mobile" :class="ifShowShareBottom" v-if="ifShare">
-      <a class="share-mobile_btn" id="share-line"><i class="icon line" @click="shareLine"></i></a>
-      <a class="share-mobile_btn" id="share-fb"><i class="icon facebook" @click="shareFacebook"></i></a>
-    </div>
   </footer>
 </template>
 <script>
   import { SOCIAL_LINK } from '../constants'
-  import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-  import { shareGooglePlus, shareLine, shareFacebook } from '../util/comm'
 
   export default {
     name: 'AppFooter',
-    computed: {
-      ifShowShareBottom () {
-        return {
-          show: (this.scrollDirection !== 'up')
-        }
-      }
-    },
     data () {
       return {
-        scrollDirection: 'up',
-        SOCIAL_LINK: SOCIAL_LINK
+        SOCIAL_LINK
       }
     },
-    methods: {
-      currentYPosition,
-      elmYPosition,
-      shareFacebook () {
-        shareFacebook({ route: this.$route.path })
-      },
-      shareLine () {
-        shareLine({
-          route: this.$route.path,
-          title: document.querySelector('meta[property="og:title"]').getAttribute('content')
-        })
-      },
-      shareGooglePlus () {
-        shareGooglePlus({ route: this.$route.path })
-      },
-      smoothScroll
-    },
-    mounted () {
-      window.addEventListener('wheel', (e) => {
-        const _derection = e.wheelDelta
-        if (_derection <= 0) {
-          this.scrollDirection = 'down'
-        } else {
-          this.scrollDirection = 'up'
-        }
-      })
-      window.addEventListener('touchmove', (e) => {
-        const _currTouchClientY = e.touches[ 0 ].clientY
-        const _lastTouchClientY = window.touchClientY || _currTouchClientY
-        if (_currTouchClientY <= _lastTouchClientY) {
-          this.scrollDirection = 'down'
-        } else {
-          this.scrollDirection = 'up'
-        }
-        window.touchClientY = _currTouchClientY
-      })
-    },
-    props: {
-      ifShare: {
-        default: () => { return true }
-      }
-    }
   }
 </script>
 <style lang="stylus" scoped>
@@ -122,55 +66,6 @@
       width 100%
       padding 1rem 2rem 0
       margin-bottom 40px
-      
-      .share-mobile
-        display flex
-        width 100vw
-        height 100%
-        position fixed 
-        bottom -50px
-        left 0
-        height 50px
-        padding 0
-        margin 0
-        background-color #064f77
-        z-index 99
-        transition bottom 0.25s
-
-        &_btn
-          height 100%
-          flex 1
-          cursor pointer
-
-          &:not(:last-child)
-            border-right 1px solid #fff
-
-          .icon
-            background-position center center
-            background-repeat no-repeat
-            display block
-            width 100%
-            height 100%
-
-          .line
-            background-image url(/assets/mirrormedia/icon/line_white.png)
-            background-size 30%
-
-          .facebook
-            background-image url(/assets/mirrormedia/icon/facebook_white.png)
-            background-size auto 24px
-
-          .google-plus
-            background-image url(/assets/mirrormedia/icon/google-plus.png)
-            background-size 23%
-
-        &.show
-          bottom 0
-
-  @media (min-width 768px)
-    footer
-      .share-mobile
-        display none
 
   @media (min-width 0px) and (max-width 1199px)
     .mobile-hide

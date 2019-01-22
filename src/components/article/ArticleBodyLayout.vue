@@ -89,6 +89,7 @@
             margin-top 15px
         .article__basic-info
           order -1
+          
         .hero-image
           margin-top 25px
 
@@ -108,7 +109,15 @@
       .content--annotation
         position relative
         z-index 10
-        
+
+      .article__basic-info
+        .article__basic-info-wrapper
+          display flex
+          .article__credit
+            flex 1
+          .share-light
+            justify-content flex-end
+            margin-left 20px
       .article_main_pop 
         clear both
         margin-top 20px
@@ -150,6 +159,9 @@
           color #fff
           font-weight bold
           font-size 1.2rem
+          a
+            color #fff
+            border-bottom-color #fff
           strong 
             font-weight bold
 
@@ -605,6 +617,8 @@
           font-size 1.7rem
 
       .article_main
+        > h1, h2
+          padding 0 25px
         .article_main_tags
           .tags
             line-height 1.6rem
@@ -660,6 +674,9 @@
           padding-right 0
           &.article_main_tags
             padding 0
+      .article_main
+        > h1, h2
+          padding 0
 
   @media (min-width 0px) and (max-width 767px)
     .article_body
@@ -700,6 +717,15 @@
     .article_fb_comment
       margin-bottom 60px!important
   
+  @media (max-width 899px)
+    .article_body
+      .article_main
+        .article__basic-info
+          .article__basic-info-wrapper
+            display block
+            .share-light
+              margin 0
+
   @media (max-width 899px) and (min-width 768px)
     .article_body
       // .article_basic-info, .article_credit, .article_main, .article_subtitle

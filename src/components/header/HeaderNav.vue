@@ -111,7 +111,7 @@ $color-international = #911f27
 $color-foodtravel = #eac151
 $color-mafalda = #662d8e
 $color-culture = #009245
-$color-carandwatch = #c1d16e
+$color-carandwatch = #003153
 $color-external = #ee5a24
 
 .header-nav
@@ -205,56 +205,56 @@ $color-external = #ee5a24
         background-color $color-news
         .dropdown
           > a:hover
-            color $color-news
+            background-color $color-news
       &.entertainment
         background-color $color-entertainment
         .dropdown
           > a:hover
-            color $color-entertainment
+            background-color $color-entertainment
       &.businessmoney
         background-color $color-businessmoney
         .dropdown
           > a:hover
-            color $color-businessmoney
+            background-color $color-businessmoney
       &.people
         background-color $color-people
         .dropdown
           > a:hover
-            color $color-people
+            background-color $color-people
       &.videohub
         background-color $color-videohub
         .dropdown
           > a:hover
-            color $color-videohub
+            background-color $color-videohub
       &.international
         background-color $color-international
         .dropdown
           > a:hover
-            color $color-international
+            background-color $color-international
       &.foodtravel
         background-color $color-foodtravel
         .dropdown
           > a:hover
-            color $color-foodtravel
+            background-color $color-foodtravel
       &.mafalda
         background-color $color-mafalda
         .dropdown
           > a:hover
-            color $color-mafalda
+            background-color $color-mafalda
       &.culture
         background-color $color-culture
         .dropdown
           > a:hover
-            color $color-culture
+            background-color $color-culture
       &.carandwatch
         background-color $color-carandwatch
         .dropdown
           > a:hover
-            color $color-carandwatch
+            background-color $color-carandwatch
       &.external
         background-color $color-external
         .dropdown
           > a:hover
-            color $color-external
+            background-color $color-external
           
 </style>
