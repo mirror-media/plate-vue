@@ -139,7 +139,7 @@
       & >>> .pop_item_title
         width 100%
 
-  @media (min-width 0px) and (max-width 499px)
+  @media (min-width 0px) and (max-width 1199px)
     .poplist-container 
       .pop_list 
         .pop_item
@@ -160,12 +160,5 @@
           .pop_item_title
             font-size 1.2rem
             line-height 1.5rem          
-
-  @media (min-width 500px) and (max-width 767px)
-    .poplist-container 
-      .pop_list 
-        .pop_item
-          width 45%
-  
           
 </style>

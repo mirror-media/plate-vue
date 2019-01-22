@@ -23,7 +23,7 @@ export const SECTION_MAP = {
   // culture
   '5964418a4bbe120f002a3198': { 'sectionName': 'culture', 'bgcolor': '#009245' },
   // watch
-  '57dfe3b0ee85930e00cad4d7': { 'sectionName': 'watch', 'bgcolor': '#c1d16e' },
+  '57dfe3b0ee85930e00cad4d7': { 'sectionName': 'watch', 'bgcolor': '#003153' },
   // external
   'external': { 'sectionName': 'external', 'bgcolor': '#ee5a24' }
 }
