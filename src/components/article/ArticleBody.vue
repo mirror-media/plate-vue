@@ -13,7 +13,7 @@
       <div class="article__basic-info">
         <div class="article__basic-info-wrapper">
           <div class="article__credit" v-html="credit"></div>
-          <ShareLight />
+          <ShareLight :gtmCategory="'article'" />
         </div>
       </div>
       <div class="brief fb-quotable">
