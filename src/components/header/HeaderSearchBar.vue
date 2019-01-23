@@ -3,7 +3,7 @@
     <form action="" @submit.prevent="search" @focusout="search">
       <input v-model="keyword" type="search" :placeholder="$t('HEADER.SEARCH')">
     </form>
-    <button data-gtm="search close" data-gtm-category="header" @click="$emit('closeSearchBar')"><img src="/assets/mirrormedia/icon/close.png" :alt="$t('HEADER.CLOSE')"></button>
+    <button @click="$emit('closeSearchBar')"><img src="/assets/mirrormedia/icon/close.png" :alt="$t('HEADER.CLOSE')" data-gtm="search close" data-gtm-category="header"></button>
   </section>
 </template>
 <script>

@@ -18,6 +18,7 @@
             :key="`dropdown-${category.id}`"
             :to="`/category/${category.name}`"
             :data-gtm="`category ${category.name}`"
+            data-gtm-category="header"
             v-text="category.title"></router-link>
         </div>
       </div>
