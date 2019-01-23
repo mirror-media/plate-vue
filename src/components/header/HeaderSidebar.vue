@@ -1,6 +1,6 @@
 <template>
   <section class="header-sidebar">
-    <button class="header-sidebar__close" data-gtm="menu close" data-gtm-category="header" @click="$emit('closeSidebar')"><img src="/assets/mirrormedia/icon/close_white@2x.png" :alt="$t('HEADER.CLOSE')"></button>
+    <button class="header-sidebar__close" @click="$emit('closeSidebar')"><img src="/assets/mirrormedia/icon/close_white@2x.png" :alt="$t('HEADER.CLOSE')" data-gtm="menu close" data-gtm-category="header"></button>
     <div v-if="topics.length > 0" class="topics">
       <router-link
         v-for="topic in activeTopics"

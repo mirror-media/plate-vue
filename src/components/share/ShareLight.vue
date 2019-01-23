@@ -1,7 +1,7 @@
 <template>
   <div class="share-light">
-    <button @click="shareFacebook"><img src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook"></button>
-    <button @click="shareLine"><img src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line"></button>
+    <button @click="shareFacebook"><img src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook" data-gtm="share fb" :data-gtm-category="gtmCategory"></button>
+    <button @click="shareLine"><img src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line" data-gtm="share line" :data-gtm-category="gtmCategory" ></button>
   </div>
 </template>
 <script>
@@ -10,6 +10,12 @@ import { shareLine, shareFacebook } from '../../util/comm'
 
 export default {
   name: 'ShareLight',
+  props: {
+    gtmCategory: {
+      type: String,
+      default: 'header'
+    }
+  },
   methods: {
     shareFacebook () {
       shareFacebook({ route: this.$route.path })

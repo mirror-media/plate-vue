@@ -1,15 +1,15 @@
 <template>
   <header :class="{ scrolled: isScrolled }" class="header">
     <section class="header__logo-layer">
-      <button class="btn--menu" data-gtm="menu open" data-gtm-category="header" @click="openSidebar = true"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt=""></button>
+      <button class="btn--menu" @click="openSidebar = true"><img src="/assets/mirrormedia/icon/hamburger@2x.png" data-gtm="menu open" data-gtm-category="header" alt=""></button>
       <!-- logo -->
       <router-link v-show="!isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/logo.svg" :alt="SITE_TITLE"></router-link>
       <router-link v-show="isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/icon/logo@2x.png" :alt="SITE_TITLE"></router-link>
-      <a v-if="logoFromEvent" v-show="!isScrolled && !hasLogoDfp" class="logo event" data-gtm="logo event" data-gtm-category="header" target="_blank"><img :src="logoFromEvent"></a>
+      <a v-if="logoFromEvent" v-show="!isScrolled && !hasLogoDfp" class="logo event"  data-gtm="logo event" data-gtm-category="header" target="_blank"><img :src="logoFromEvent"></a>
       <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" class="logo dfp" data-gtm="logo dfp" data-gtm-category="header" pos="LOGO" />
       <!-- search and more -->
       <div :class="{ open: openMore }" class="more" v-click-outside="handleClickMoreOutside">
-        <button class="btn--more" data-gtm="more open" data-gtm-category="header" @click="openMore = true"><img src="/assets/mirrormedia/icon/more_grey@2x.png" alt=""></button>
+        <button class="btn--more" @click="openMore = true"><img src="/assets/mirrormedia/icon/more_grey@2x.png" data-gtm="more open" data-gtm-category="header" alt=""></button>
         <div class="others">
           <a :href="SOCIAL_LINK.SUBSCRIBE" data-gtm="more subscribe" data-gtm-category="header" target="_blank" v-text="$t('HEADER.SUBSCRIBE')"></a>
           <a :href="SOCIAL_LINK.MAGAZINE" data-gtm="more magazine" data-gtm-category="header" target="_blank" v-text="$t('HEADER.MAGAZINE')"></a>
@@ -19,7 +19,7 @@
           <a :href="SOCIAL_LINK.DOWNLOADAPP" data-gtm="more download" data-gtm-category="header" target="_blank" v-text="$t('HEADER.DOWNLOADAPP')"></a>
         </div>     
       </div>
-      <button v-show="mounted" class="btn--search" data-gtm="search open" data-gtm-category="header" @click="handleSearchBtn"><img src="/assets/mirrormedia/icon/search.svg" alt=""></button>
+      <button v-show="mounted" class="btn--search" @click="handleSearchBtn"><img src="/assets/mirrormedia/icon/search.svg" data-gtm="search open" data-gtm-category="header" alt=""></button>
       <input v-model="keyword" class="search" type="search" @keyup.enter="search(keyword)">
       <ShareLight class="share"/>
     </section>
