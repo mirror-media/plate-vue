@@ -783,7 +783,7 @@
     background-color #414141
 
     .article-heromedia
-      margin 0 auto
+      margin 30px auto 0
       background-color #fff
       max-width 1160px
       position relative
