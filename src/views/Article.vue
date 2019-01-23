@@ -108,6 +108,9 @@
         </article-body-photography>
       </div>
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+      <DfpST :props="props">
+        <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+      </DfpST>
       <DfpCover v-if="!hiddenAdvertised" v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
@@ -141,6 +144,7 @@
   import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
+  import DfpST from '../components/DfpST.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import HeaderR from '../components/HeaderR.vue'
@@ -348,6 +352,7 @@
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
+      DfpST,
       HeaderR,
       HeroImage,
       HeroVideo,

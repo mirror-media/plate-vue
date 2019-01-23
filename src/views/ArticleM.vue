@@ -62,6 +62,9 @@
           </div>
         </article-body-photography>
       </div>
+      <DfpST :props="props">
+        <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+      </DfpST>
       <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
@@ -93,6 +96,7 @@
   import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
+  import DfpST from '../components/DfpST.vue'
   import LatestList from '../components/article/LatestList.vue'
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
   import RecommendList from '../components/article/RecommendList.vue'
@@ -306,6 +310,7 @@
       'latest-list': LatestList,
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
+      DfpST,
       RelatedListInContent,
       RecommendList
     },
