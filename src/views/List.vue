@@ -80,7 +80,9 @@
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <share :right="`20px`" :bottom="`20px`" />
       </div>
-      
+      <DfpST :props="props">
+        <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+      </DfpST>
       <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
@@ -109,6 +111,7 @@ import ArticleList from '../components/ArticleList.vue'
 import ArticleListLight from '../components/ArticleListLight.vue'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
+import DfpST from '../components/DfpST.vue'
 import EditorChoiceFoodTravel from '../components/EditorChoiceFoodTravel.vue'
 import FeaturedStoryFoodTravel from '../components/FeaturedStoryFoodTravel.vue'
 import Footer from '../components/Footer.vue'
@@ -469,6 +472,7 @@ export default {
     'share': Share,
     'vue-dfp-provider': VueDfpProvider,
     DfpCover,
+    DfpST,
     HeaderR
   },
   asyncData ({ store, route }) {
