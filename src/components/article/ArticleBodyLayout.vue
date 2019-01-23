@@ -778,6 +778,9 @@
     .article_body
       .article_main, .article_credit, .article_subtitle
         display block
+      .article_main
+        &.b
+          display block
       .article_basic-info
         margin-top 50px
     .fbPagePlugin
