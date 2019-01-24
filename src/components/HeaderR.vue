@@ -5,7 +5,7 @@
       <!-- logo -->
       <router-link v-show="!isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/logo.svg" :alt="SITE_TITLE"></router-link>
       <router-link v-show="isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/icon/logo@2x.png" :alt="SITE_TITLE"></router-link>
-      <a v-if="logoFromEvent" v-show="!isScrolled && !hasLogoDfp" class="logo event"  data-gtm="logo event" data-gtm-category="header" target="_blank"><img :src="logoFromEvent"></a>
+      <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo" class="logo event"  data-gtm="logo event" data-gtm-category="header" target="_blank"><img :src="logoFromEvent"></a>
       <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" class="logo dfp" data-gtm="logo dfp" data-gtm-category="header" pos="LOGO" />
       <!-- search and more -->
       <div :class="{ open: openMore }" class="more" v-click-outside="handleClickMoreOutside">
@@ -63,12 +63,15 @@ export default {
     props: {
       type: Object
     },
+    showDfpHeaderLogo: {
+      type: Boolean
+    }
   },
   data () {
     return {
       SITE_TITLE,
       SOCIAL_LINK,
-      hasLogoDfp: false,
+      // hasLogoDfp: false,
       isScrolled: false,
       keyword: '',
       mounted: false,
@@ -104,11 +107,11 @@ export default {
   },
   mounted () {
     this.mounted = true
-    const logoDfp = document.querySelector('.logo.dfp')
-    if (logoDfp) {
-      const logoDfpDisplay = logoDfp.style.display || window.getComputedStyle(logoDfp , null ).display
-      logoDfpDisplay === 'none' ? this.hasLogoDfp = false : this.hasLogoDfp = true
-    }
+    // const logoDfp = document.querySelector('.logo.dfp')
+    // if (logoDfp) {
+    //   const logoDfpDisplay = logoDfp.style.display || window.getComputedStyle(logoDfp , null ).display
+    //   logoDfpDisplay === 'none' ? this.hasLogoDfp = false : this.hasLogoDfp = true
+    // }
   },
   beforeDestroy () {
     window.removeEventListener('scroll', this.handleScroll)
