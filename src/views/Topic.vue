@@ -85,7 +85,7 @@
           <share :right="`20px`" :bottom="`20px`"></share>
         </template>
         
-        <DfpST :props="props">
+        <DfpST v-if="(viewport < 550)" :props="props">
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
       </div>

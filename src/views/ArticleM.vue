@@ -62,7 +62,7 @@
           </div>
         </article-body-photography>
       </div>
-      <DfpST :props="props">
+      <DfpST v-if="(viewport < 550)" :props="props">
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
       </DfpST>
       <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199"> 
