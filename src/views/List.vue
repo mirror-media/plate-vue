@@ -80,7 +80,7 @@
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <share :right="`20px`" :bottom="`20px`" />
       </div>
-      <DfpST :props="props">
+      <DfpST v-if="(viewport < 550)" :props="props">
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
       </DfpST>
       <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
