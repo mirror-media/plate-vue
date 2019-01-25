@@ -87,11 +87,47 @@ const firstTwoUnstyledParagraph = (apiData) => {
   return records
 }
 
+const getTweetIdFromURL = (url) => {
+  if (!url.includes('twitter')) { return url }
+
+  if (url.includes('?')) {
+    url = url.split('?')[0]
+  }
+  
+  url = url.replace('https://', '').split('/')
+  return url[url.length - 1]
+}
+
+const getTweetIdFromEmbeddedCode = (code) => {
+  if (code === '') { return '' }
+
+  const regex = /href=["']([^"']*)["']/g
+  let m
+  let matchs = []
+  
+  while ((m = regex.exec(code)) !== null) {
+    // This is necessary to avoid infinite loops with zero-width matches
+    if (m.index === regex.lastIndex) {
+      regex.lastIndex++
+    }
+    
+    // The result can be accessed through the `m`-variable.
+    m.forEach((match, groupIndex) => {
+      if (groupIndex === 1) {
+        matchs.push(match)
+      }
+    })
+  }
+
+  return getTweetIdFromURL(matchs[matchs.length - 1])
+}
+
 module.exports = {
   getDate,
   getSectionColorModifier,
   getCredit,
   getStoryHeroImageSrc,
   composeAnnotation,
-  firstTwoUnstyledParagraph
+  firstTwoUnstyledParagraph,
+  getTweetIdFromEmbeddedCode
 }

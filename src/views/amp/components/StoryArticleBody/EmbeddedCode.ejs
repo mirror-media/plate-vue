@@ -1,11 +1,14 @@
-<figure class="story-body-embeddedcode">
-  <amp-iframe
-    class="story-body-embeddedcode__iframe"
-    src="<%= _.get(new RegExp(/src=["']([^"']*)["']/).exec(_.get(item, [ 'content', 0, 'embeddedCode' ], '')), 1, '') %>"
-    sandbox="allow-scripts allow-same-origin allow-popups"
-    height="<%= _.get(item, [ 'content', 0, 'height' ], 0) %>"
-    layout="fixed-height"
-  >
-  </amp-iframe>
-  <figcaption><%- _.get(item, [ 'content', 0, 'caption' ], '') %></figcaption>
-</figure>
+<% if (_.get(new RegExp(/src=["']([^"']*)["']/).exec(_.get(item, [ 'content', 0, 'embeddedCode' ], '')), 1, '').includes('twitter')) { %>
+  <%- include('./EmbeddedCodeTwitter', { item }) %>
+<% } else if (_.get(new RegExp(/src=["']([^"']*)["']/).exec(_.get(item, [ 'content', 0, 'embeddedCode' ], '')), 1, '') !== '') { %>
+  <figure class="story-body-embeddedcode">
+    <amp-iframe
+      class="story-body-embeddedcode__iframe"
+      src="<%= _.get(new RegExp(/src=["']([^"']*)["']/).exec(_.get(item, [ 'content', 0, 'embeddedCode' ], '')), 1, '') %>"
+      sandbox="allow-scripts allow-same-origin allow-popups"
+      layout="fill"
+    >
+    </amp-iframe>
+    <figcaption><%- _.get(item, [ 'content', 0, 'caption' ], '') %></figcaption>
+  </figure>
+<% } %>
