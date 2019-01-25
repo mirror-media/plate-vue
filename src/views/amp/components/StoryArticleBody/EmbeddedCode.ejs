@@ -1,6 +1,6 @@
 <% if (_.get(new RegExp(/src=["']([^"']*)["']/).exec(_.get(item, [ 'content', 0, 'embeddedCode' ], '')), 1, '').includes('twitter')) { %>
   <%- include('./EmbeddedCodeTwitter', { item }) %>
-<% } else { %>
+<% } else if (_.get(new RegExp(/src=["']([^"']*)["']/).exec(_.get(item, [ 'content', 0, 'embeddedCode' ], '')), 1, '') !== '') { %>
   <figure class="story-body-embeddedcode">
     <amp-iframe
       class="story-body-embeddedcode__iframe"
