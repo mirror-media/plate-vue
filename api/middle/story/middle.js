@@ -5,7 +5,7 @@ const _ = require('lodash')
 const { get, isEmpty, find, } = require('lodash')
 const superagent = require('superagent')
 const { redisFetching, redisWriting, } = require('../redisHandler')
-const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph } = require('./util')
+const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph, getTweetIdFromEmbeddedCode } = require('./util')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../config')
 const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT, ALEXA_ATRK_ACCT, SITE_DOMAIN } = require('../../../src/constants')
 
@@ -157,6 +157,7 @@ const sendArticleData = (req, res, next) => {
 
   // Let ejs can use lodash methods
   res.locals._ = _
+  res.locals.getTweetIdFromEmbeddedCode = getTweetIdFromEmbeddedCode
   
   res.status(200).render('amp/index.amp.ejs', articleData)
 }
