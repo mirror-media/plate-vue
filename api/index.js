@@ -106,6 +106,102 @@ router.post('/newsletter', jsonParser, function(req, res, next) {
   }
 })
 
+router.get('/video/:id', fetchFromRedis, (req, res, next) => {
+  if (res.redis) {
+    console.log('Fetch data from Redis.')
+    const resData = JSON.parse(res.redis)
+    res.header('Cache-Control', 'public, max-age=300')
+    res.json(resData)
+  } else {
+    const url = `${config.OATH_PROTOCOL}://${config.OATH_HOST}/${config.OATH_COMPANY_KEY}/video/${req.params.id}`
+    superagent
+    .get(url)
+    .timeout(config.API_TIMEOUT)
+    .query({ show_transcript: false, show_renditions: false, show_number_of_videos: true })
+    .end((e, response) => {
+      console.log('Fetch from oath api.', url)
+      if (!e && response) {
+        res.dataString = response.text
+        res.json(JSON.parse(response.text))
+        next()
+      } else {
+        console.log('------ /video/:id', e)
+        const status = e.status || e.statusCode || 500
+        // const message = _.get(JSON.parse(e.response.text), 'failureCause.message')
+        // res.status(status).send(message)
+        res.status(status).send(e)
+        console.error(`error during fetch data from ${req.url}`)
+        console.error(e)
+      }
+    })
+  }
+}, insertIntoRedis)
+
+router.get('/video/playlist/:playlistId', fetchFromRedis, (req, res, next) => {
+  if (res.redis) {
+    console.log('Fetch data from Redis.')
+    const resData = JSON.parse(res.redis)
+    res.header('Cache-Control', 'public, max-age=300')
+    res.json(resData)
+  } else {
+    const limit = req.query.max_results || 4
+    const offset = req.query.offset || 0
+    const url = `${config.OATH_PROTOCOL}://${config.OATH_HOST}/${config.OATH_COMPANY_KEY}/${req.params.playlistId}`
+    superagent
+    .get(url)
+    .timeout(config.API_TIMEOUT)
+    .query({ limit: limit, offset: offset, show_transcript: false, show_renditions: false, show_number_of_videos: true })
+    .end((e, response) => {
+      console.log('Fetch from oath api.', url)
+      if (!e && response) {
+        res.dataString = response.text
+        res.json(JSON.parse(response.text))
+        next()
+      } else {
+        console.log('------ /video/playlist/:playlistId', e)
+        const status = e.status || e.statusCode || 500
+        // const message = _.get(JSON.parse(e.response.text), 'failureCause.message')
+        // res.status(status).send(message)
+        res.status(status).send(e)
+        console.error(`error during fetch data from ${req.url}`)
+        console.error(e)
+      }
+    })
+  }
+}, insertIntoRedis)
+
+router.get('/playlistng/:ids', fetchFromRedis, (req, res, next) => {
+  if (res.redis) {
+    console.log('Fetch data from Redis.')
+    const resData = JSON.parse(res.redis)
+    res.header('Cache-Control', 'public, max-age=300')
+    res.json(resData)
+  } else {
+    const limit = req.query.max_results || 10
+    const url = `${config.OATH_PROTOCOL}://${config.OATH_HOST}/${config.OATH_COMPANY_KEY}/playlistng/${req.params.ids}`
+    superagent
+    .get(url)
+    .timeout(config.API_TIMEOUT)
+    .query({ limit: limit })
+    .end((e, response) => {
+      console.log('Fetch from oath api.', url)
+      if (!e && response) {
+        res.dataString = response.text
+        res.json(JSON.parse(response.text))
+        next()
+      } else {
+        console.log('------ /playlistng/:ids', e)
+        const status = e.status || e.statusCode || 500
+        // const message = _.get(JSON.parse(e.response.text), 'failureCause.message')
+        // res.status(status).send(message)
+        res.status(status).send(e)
+        console.error(`error during fetch data from ${req.url}`)
+        console.error(e)
+      }
+    })
+  }
+}, insertIntoRedis)
+
 router.use('/playlist', function(req, res, next) {
   let query = req.query
   let url = `${config.YOUTUBE_PROTOCOL}://${config.YOUTUBE_HOST}?part=snippet&playlistId=${config.YOUTUBE_PLAYLIST_ID}&key=${config.YOUTUBE_API_KEY}`
