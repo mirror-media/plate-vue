@@ -1,9 +1,11 @@
 <template>
   <section class="single-video">
+    <slot name="PCHD"></slot>
+    <slot name="MBHD"></slot>
     <div class="single-video__video">
       <div id="oathSingleVideoPlayer" ref="oathSingleVideoPlayer" class="single-video__video-player"></div>
       <div class="single-video__video-info">
-        <div v-if="playlistFiltered" v-text="playlistFiltered.name"></div>
+        <div v-if="playlist[0]" v-text="playlist[0].name"></div>
         <p class="small" v-text="moment(video.publishDate).format('YYYY. MM. DD')"></p>
       </div>
       <h1 v-text="video.name"></h1>
@@ -12,7 +14,13 @@
     <template v-if="relateds.length > 0">
       <div class="single-video__relateds">
         <h3>相關影音</h3>
-        <a v-for="video in relateds" :key="video.id" :href="`/video/${video.id}`" class="related" target="_blank">
+        <a v-for="video in relateds"
+          :key="video.id"
+          :href="`/video/${video.id}`"
+          class="related"
+          data-gtm-category="article"
+          data-gtm="video related"
+          target="_blank">
           <figure>
               <img :src="getThumbnails(video)" :alt="video.name">
           </figure>
@@ -23,6 +31,8 @@
     <div class="single-video__comments">
       <div :href="`${SITE_URL}/video/${$route.params.slug}`" class="fb-comments" data-numposts="5" data-width="100%"></div>
     </div>
+    <slot name="PCFT"></slot>
+    <slot name="MBFT"></slot>
   </section>
 </template>
 <script>
@@ -45,35 +55,17 @@ export default {
     },
     videos: {
       type: Array,
-      // default () {
-      //   return []
-      // }
     }
   },
   data () {
     return {
       SITE_URL,
-      // COPMANY_ID,
-      // PLAYER_ID,
     }
   },
   computed: {
-    playlistFiltered () {
-      const video = this.videos.find(video => video.id === this.video.id)
-      const playlistId = video ? video.playlistId : ''
-      return playlistId ? this.playlist.find(playlist => playlist.id === playlistId) : ''
-    },
     relateds () {
-      const playlistId = this.playlistFiltered ? this.playlistFiltered.id : ''
+      const playlistId = this.playlist[0] ? this.playlist[0].id : ''
       return playlistId ? this.$store.state.playlist[playlistId].filter(video => video.id !== this.$route.params.slug).slice(0, 7) : []
-    }
-  },
-  watch: {
-    '$route.fullPath' () {
-      this.$refs.oathSingleVideoPlayer.innerHTML = ''
-    },
-    video (value) {
-      this.embedDynamicPlayer(value.id)
     }
   },
   mounted () {

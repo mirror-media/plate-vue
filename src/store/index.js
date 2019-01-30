@@ -285,6 +285,10 @@ export function createStore () {
             video.playlistId = id
             return video
           })
+          if (params.offset) {
+            const orig = _.values(state.playlist[id])
+            videos = _.concat(orig, videos)
+          }
           commit('SET_OATH_VIDEO_BY_PLAYLIST', { id, videos })
         })
       },

@@ -2,17 +2,28 @@
   <section class="video-list">
     <h2 v-text="playlist.name"></h2>
     <div class="video-list__list">
-      <a v-for="item in items" :key="item.id" :href="`/video/${item.id}`" class="video-list__block" target="_blank">
-        <figure>
-          <img :src="getThumbnails(item)" :alt="item.name">
-        </figure>
-        <h3 v-text="item.name"></h3>
-      </a>
+      <template v-for="(item, index) in itemsFiltered">
+        <a :key="item.id"
+          :href="`/video/${item.id}`"
+          class="video-list__block"
+          data-gtm-category="listing"
+          data-gtm="video latest"
+          target="_blank">
+          <figure>
+            <img :src="getThumbnails(item)" :alt="item.name">
+          </figure>
+          <h3 v-text="item.name"></h3>
+        </a>
+        <slot v-if="index === 11" name="LPCFT"></slot>
+        <slot v-if="index === 11" name="LMBFT"></slot>
+      </template>
     </div>
     <slot name="more"></slot>
   </section>
 </template>
 <script>
+import { take } from 'lodash'
+
 export default {
   name: 'VideoList',
   props: {
@@ -23,9 +34,44 @@ export default {
       type: Object
     }
   },
+  data () {
+    return {
+      loading: false
+    }
+  },
+  computed: {
+    hasMore () {
+      return this.$route.fullPath.match(/\/category\//) && (this.itemsFiltered.length < this.playlist.videoCount)
+    },
+    itemsFiltered () {
+      if (this.$route.fullPath.match(/\/section\//)) {
+        return take(this.items, 4)
+      }
+      return this.items
+    }
+  },
+  watch: {
+    itemsFiltered () {
+      this.loading = false
+    }
+  },
+  beforeMount () {
+    window.addEventListener('scroll', this.handleLoadmore)
+  },
+  beforeDestroy () {
+    window.removeEventListener('scroll', this.handleLoadmore)
+  },
   methods: {
     getThumbnails (video) {
       return video.systemThumbnails.length > 0 ? video.systemThumbnails[video.systemThumbnails.length - 1].url : ''
+    },
+    handleLoadmore () {
+      const items = document.querySelectorAll('.video-list__block')
+      const lastItem = items[items.length - 1]
+      if (this.hasMore && !this.loading && (lastItem.getBoundingClientRect().top < this.$store.state.viewport.height)) {
+        this.$emit('loadmore', { id: this.playlist.id, offset: this.itemsFiltered.length })
+        this.loading = true
+      }
     }
   }
 }
@@ -92,9 +138,8 @@ export default {
     &__list
       justify-content flex-start
       flex-direction row
+      margin-top 0
     &__block
       max-width calc((100% - 80px) / 4)
-      margin 0 10px
-      & + .video-list__block
-        margin-top 0
+      margin 20px 10px 0
 </style>

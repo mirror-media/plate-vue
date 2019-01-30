@@ -1,19 +1,31 @@
 <template>
-  <!-- <VueDfpProvider :dfpid="DFP_ID" :dfpUnits="DFP_UNITS" :options="dfpOptions" :section="section.id" :mode="currEnv()"> -->
-  <VueDfpProvider :dfpid="DFP_ID" :dfpUnits="DFP_UNITS" :options="dfpOptions" :mode="currEnv()">
+  <VueDfpProvider :dfpid="DFP_ID" :dfpUnits="DFP_UNITS" :options="dfpOptions" :mode="currEnv()" section="5975ab2de531830d00e32b2f">
     <template slot-scope="props" slot="dfpPos">
       <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <template v-if="isSingleVideo">
-        <SingleVideoBody :playlist="playlist" :video="video" :videos="videos"></SingleVideoBody>
+        <SingleVideoBody :playlist="playlist" :video="video" :videos="videos">
+          <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCHD" :config="props.config" class="dfp" pos="PCHD" />
+          <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
+          <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCFT" :config="props.config" class="dfp" pos="PCFT" />
+          <vue-dfp :is="props.vueDfp" v-else slot="MBFT" :config="props.config" class="dfp" pos="MBFT" />
+        </SingleVideoBody>
       </template>
       <template v-else>
         <VideoLeading>
           <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="LPCHD" :config="props.config" class="dfp" pos="LPCHD" />
           <vue-dfp :is="props.vueDfp" v-else slot="LMBHD" :config="props.config" class="dfp" pos="LMBHD" />
         </VideoLeading>
-        <VideoList v-for="item in playlist" :key="item.id" :items="take($store.state.playlist[item.id], 4)" :playlist="item">
-          <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
-        </VideoList>
+        <template v-for="(item, index) in playlist">
+          <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
+            <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
+            <vue-dfp :is="props.vueDfp" v-if="isCategoryPage && viewport >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
+            <vue-dfp :is="props.vueDfp" v-else-if="isCategoryPage" :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" />
+          </VideoList>
+          <template v-if="!isCategoryPage && index === 2">
+            <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" :key="`${index}-LPCFT`" :config="props.config" class="dfp" pos="LPCFT" />
+            <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" />
+          </template>
+        </template>
       </template>
       <section class="footer container">
         <Footer />
@@ -38,7 +50,7 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, OATH_PLAYLIST } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
 import { consoleLogOnDev, currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
-import { chunk, get, take, truncate, } from 'lodash'
+import { chunk, get, truncate, } from 'lodash'
 
 const debug = require('debug')('CLIENT:VIEWS:video')
 
@@ -73,11 +85,23 @@ const fetchPlaylist = (store, { ids, params = {} }) => {
     ids,
     params
   })
+  .catch(() => {
+    const e = new Error()
+    e.massage = 'Page Not Found'
+    e.code = '404'
+    throw e
+  })
 }
 
 const fetchVideo = (store, { id }) => {
   return store.dispatch('FETCH_OATH_VIDEO', {
     id,
+  })
+  .catch(() => {
+    const e = new Error()
+    e.massage = 'Page Not Found'
+    e.code = '404'
+    throw e
   })
 }
 
@@ -111,18 +135,25 @@ export default {
     VueDfpProvider,
   },
   asyncData ({ store, route }) {
-    // const playlist = Object.keys(OATH_PLAYLIST).reduce((acc, cur, index) => index === 0 ? cur : `${acc},${cur}`, '')
     const jobs = [
       fetchCommonData(store),
-      fetchEvent(store, 'embedded'),
-      fetchEvent(store, 'logo'),
       fetchPartners(store),
     ]
     route.fullPath.match(/\/video\//) ? jobs.push(fetchVideo(store, { id: route.fullPath.split('/')[2] })) : ''
-    const playlist = chunk(Object.keys(OATH_PLAYLIST), 4)
-    playlist.map(list => {
+    const playlist = Object.keys(OATH_PLAYLIST)
+    const playlistSplit = chunk(playlist, 4)
+    playlistSplit.map(list => {
       const ids = list.reduce((acc, cur, index) => index === 0 ? cur : `${acc},${cur}`, '')
       jobs.push(fetchPlaylist(store, { ids: ids }))
+    })
+    playlist.map(id => {
+      let maxResults = 4
+      if (route.fullPath.match(/\/category\//)) {
+        const playlistInfo = Object.entries(OATH_PLAYLIST).find(item => item[1].categoryName === route.fullPath.split('/')[2])
+        const playlistId = playlistInfo[0]
+        maxResults = id === playlistId ? 12 : maxResults
+      }
+      jobs.push(fetchVideoByPlaylist(store, { id: id, params: { max_results: maxResults }}))
     })
     return Promise.all(jobs)
   },
@@ -132,19 +163,34 @@ export default {
     const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
     const sections = get(this.$store, 'state.commonData.sections.items', []) || []
     const videohub = sections.filter(section => section.name === 'videohub')[0]
+    
     let title
-    let description
-    let image
-
-    if (videohub) {
-      title = videohub.ogTitle || videohub.title
-      description = videohub.ogDescription || videohub.description
-      image = videohub.ogImage || videohub.image
-    }
-
-    title = title ? `${title} - ${SITE_TITLE}` : SITE_TITLE
+    let description = get(videohub, 'ogDescription') || get(videohub, 'description')
+    let image = get(videohub, 'ogImage') || get(videohub, 'image')
     description = description ? truncate(description, { length: 197 }) : SITE_DESCRIPTION
     image = image ? get(image, 'image.resizedTargets.desktop.url') : SITE_OGIMAGE
+
+    switch (true) {
+      case /\/category\//.test(this.$route.fullPath):
+        title = get(this.playlist[0], 'name')
+        break
+      case /\/video\//.test(this.$route.fullPath):
+        title = get(this.video, 'name')
+        break
+      default:
+        title = get(videohub, 'ogTitle') || get(videohub, 'title')
+    }
+
+    if (!title && process.env.VUE_ENV === 'server') {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    }
+
+    if (this.$route.fullPath.match(/(\/category\/|\/video\/)/)) {
+      title = `${title} - ${SITE_TITLE}`
+    }
 
     return {
       url: relUrl,
@@ -262,12 +308,19 @@ export default {
     isCategoryPage () {
       return this.$route.fullPath.match(/category/)
     },
+    isSingleVideoPage () {
+      return this.$route.fullPath.match(/\/video\//)
+    },
     playlist () {
       const playlist = this.$store.state.playlist.info || []
       if (this.isCategoryPage) {
         const category = this.$route.fullPath.split('/')[2]
         const playlistInfo = Object.entries(OATH_PLAYLIST).find(item => item[1].categoryName === category)
         return playlist.filter(item => item.id === playlistInfo[0])
+      } else if (this.isSingleVideoPage) {
+        const video = this.videos.find(video => video.id === this.video.id)
+        const playlistId = video ? video.playlistId : ''
+        return playlistId ? playlist.filter(item => item.id === playlistId) : ''
       } else {
         const filtered = playlist.filter(item => this.$store.state.playlist[item.id] && this.$store.state.playlist[item.id].length > 0)
         return filtered.sort((a, b) => OATH_PLAYLIST[a.id].order - OATH_PLAYLIST[b.id].order)
@@ -277,8 +330,17 @@ export default {
       const sections = get(this.$store, 'state.commonData.sections.items') || []
       return sections.filter(section => section.name === 'videohub')[0]
     },
+    title () {
+      if (this.isCategoryPage) {
+        return `${this.playlist[0].name} - ${SITE_TITLE}`
+      } else if (this.isSingleVideoPage) {
+        return this.video.name
+      } else {
+        return `${this.section.title} - ${SITE_TITLE}`
+      }
+    },
     video () {
-      if (this.$route.fullPath.match(/\/video\//)) {
+      if (this.isSingleVideoPage) {
         const id = this.$route.fullPath.split('/')[2]
         return this.$store.state.videos[id]
       }
@@ -294,18 +356,37 @@ export default {
       return videos
     }
   },
+  watch: {
+    '$route.fullPath' () {
+      this.sendGA()
+    }
+  },
   beforeMount () {
-    const playlist = Object.keys(OATH_PLAYLIST)
-    playlist.map(id => fetchVideoByPlaylist(this.$store, { id: id }))
+    fetchEvent(this.$store, 'embedded'),
+    fetchEvent(this.$store, 'logo'),
     this.updateViewport()
     window.addEventListener('resize', this.updateViewport)
+  },
+  mounted () {
+    this.sendGA()
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.updateViewport)
   },
   methods: {
     currEnv,
-    take,
+    handleLoadmore ({ id, offset }) {
+      fetchVideoByPlaylist(this.$store, { id: id, params: { max_results: 12, offset: offset }})
+    },
+    sendGA () {
+      const categoryLabel = this.$route.fullPath.match(/section/)
+        ? ``
+        : Object.entries(OATH_PLAYLIST).find(item => item[0] === this.playlist[0].id)[1].categoryName
+      window.ga('set', 'contentGroup1', this.section.name)
+      window.ga('set', 'contentGroup2', categoryLabel)
+      window.ga('set', 'contentGroup3', '')
+      window.ga('send', 'pageview', { title: this.title, location: document.location.href })
+    },
     updateViewport () {
       this.viewport = document.documentElement.clientWidth || document.body.clientWidth
     }
