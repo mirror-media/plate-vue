@@ -4,6 +4,7 @@
       <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <template v-if="isSingleVideo">
         <SingleVideoBody :playlist="playlist" :video="video" :videos="videos">
+          <ShareLight slot="share" :gtmCategory="'article'" />
           <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCHD" :config="props.config" class="dfp" pos="PCHD" />
           <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
           <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCFT" :config="props.config" class="dfp" pos="PCFT" />
@@ -31,7 +32,7 @@
         <Footer />
       </section>
       <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
-      <Share right="20px" bottom="20px" />
+      <Share v-if="!isSingleVideoPage" left="20px" bottom="20px" />
     </template>
   </VueDfpProvider>
 </template>
@@ -42,6 +43,7 @@ import HeaderR from '../components/HeaderR.vue'
 import LiveStream from '../components/LiveStream.vue'
 import SingleVideoBody from '../components/video/SingleVideoBody.vue'
 import Share from '../components/Share.vue'
+import ShareLight from '../components/share/ShareLight.vue'
 import VideoLeading from '../components/video/VideoLeading.vue'
 import VideoList from '../components/video/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -130,6 +132,7 @@ export default {
     LiveStream,
     SingleVideoBody,
     Share,
+    ShareLight,
     VideoLeading,
     VideoList,
     VueDfpProvider,
@@ -147,7 +150,7 @@ export default {
       jobs.push(fetchPlaylist(store, { ids: ids }))
     })
     playlist.map(id => {
-      let maxResults = 4
+      let maxResults = 8
       if (route.fullPath.match(/\/category\//)) {
         const playlistInfo = Object.entries(OATH_PLAYLIST).find(item => item[1].categoryName === route.fullPath.split('/')[2])
         const playlistId = playlistInfo[0]

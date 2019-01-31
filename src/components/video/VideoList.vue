@@ -1,6 +1,6 @@
 <template>
   <section class="video-list">
-    <h2 v-text="playlist.name"></h2>
+    <h2><router-link :to="`/category/${OATH_PLAYLIST[playlist.id].categoryName}`" v-text="playlist.name"></router-link></h2>
     <div class="video-list__list">
       <template v-for="(item, index) in itemsFiltered">
         <a :key="item.id"
@@ -22,6 +22,8 @@
   </section>
 </template>
 <script>
+
+import { OATH_PLAYLIST } from '../../constants'
 import { take } from 'lodash'
 
 export default {
@@ -36,6 +38,7 @@ export default {
   },
   data () {
     return {
+      OATH_PLAYLIST,
       loading: false
     }
   },

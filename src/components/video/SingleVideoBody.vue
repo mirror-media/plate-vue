@@ -8,7 +8,10 @@
         <div v-if="playlist[0]" v-text="playlist[0].name"></div>
         <p class="small" v-text="moment(video.publishDate).format('YYYY. MM. DD')"></p>
       </div>
-      <h1 v-text="video.name"></h1>
+      <div class="single-video__video-title">
+        <h1 v-text="video.name"></h1>
+        <slot name="share"></slot>
+      </div>
       <p v-text="video.description"></p>
     </div>
     <template v-if="relateds.length > 0">
@@ -93,11 +96,11 @@ export default {
 <style lang="stylus" scoped>
 .single-video
   &__video
-    > h1, > p
+    > p
       width 90%
       margin 0 auto
     h1
-      margin-top .5em
+      margin 0
       color #064f77
       text-align justify
       font-size 1.1875rem
@@ -136,6 +139,9 @@ export default {
     > p
       display inline-block
       margin 0
+  &__video-title
+    width 90%
+    margin 1em auto 0
   &__relateds
     width 90%
     margin 40px auto 0
@@ -179,7 +185,7 @@ export default {
         width 60%
       h1
         font-size 1.375rem
-    &__video-info, &__relateds, &__comments
+    &__video-info, &__video-title, &__relateds, &__comments
       width 60%
     &__relateds
       .related
@@ -202,12 +208,20 @@ export default {
       width 66.67%
       > h1, > p
         width 100%
+      h1
+        margin-right 2em
       p.small
         font-size .875rem
     &__video-info
       width 100%
       > div
         font-size .875rem
+    &__video-title
+      display flex
+      align-items flex-start
+      width 100%
+      > div
+        margin 0 0 0 auto
     &__relateds
       width calc(33.33% - 50px)
       margin 0 0 0 50px

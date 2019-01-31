@@ -29,15 +29,15 @@ export const SECTION_MAP = {
 }
 
 export const OATH_PLAYLIST = {
-  '5c4151124d981a0001477e0e': { order: 1, name: '鏡封面', categoryName: 'video_coverstory' },
-  '5c41528dbd70380001962364': { order: 2, name: '娛樂大頭條', categoryName: 'video_ent_headline' },
-  '5c4152a184dc1c0001266e49': { order: 3, name: '鏡即時影音', categoryName: 'video_latest' },
-  '5c4150842274b40001ccc6a8': { order: 4, name: '鏡食旅', categoryName: 'video_foodtravel' },
-  '5c4152b1bd70380001962365': { order: 5, name: '鏡人物', categoryName: 'video_people' },
-  '5c4152bd84dc1c0001266e4a': { order: 6, name: '鏡調查', categoryName: 'video_investigation' },
-  '5c4151d0b1d38a000134ef53': { order: 7, name: '鏡理財', categoryName: 'video_finance' },
-  '5c4152dd84dc1c0001266e4b': { order: 8, name: '娛樂透視', categoryName: 'video_ent_perspective' },
-  '5c50116a4d981a0001477ead': { order: 9, name: '汽車鐘錶', categoryName: 'video_carandwatch'  }
+  '5c4151124d981a0001477e0e': { order: 1, name: '鏡封面', categoryName: 'video_coverstory', id: '5c4151124d981a0001477e0e' },
+  '5c41528dbd70380001962364': { order: 2, name: '娛樂大頭條', categoryName: 'video_ent_headline', id: '5c41528dbd70380001962364' },
+  '5c4152a184dc1c0001266e49': { order: 3, name: '鏡即時影音', categoryName: 'video_latest', id: '5c4152a184dc1c0001266e49' },
+  '5c4150842274b40001ccc6a8': { order: 4, name: '鏡食旅', categoryName: 'video_foodtravel', id: '5c4150842274b40001ccc6a8' },
+  '5c4152b1bd70380001962365': { order: 5, name: '鏡人物', categoryName: 'video_people', id: '5c4152b1bd70380001962365' },
+  '5c4152bd84dc1c0001266e4a': { order: 6, name: '鏡調查', categoryName: 'video_investigation', id: '5c4152bd84dc1c0001266e4a' },
+  '5c4151d0b1d38a000134ef53': { order: 7, name: '鏡理財', categoryName: 'video_finance', id: '5c4151d0b1d38a000134ef53' },
+  '5c4152dd84dc1c0001266e4b': { order: 8, name: '娛樂透視', categoryName: 'video_ent_perspective', id: '5c4152dd84dc1c0001266e4b' },
+  '5c50116a4d981a0001477ead': { order: 9, name: '汽車鐘錶', categoryName: 'video_carandwatch', id: '5c50116a4d981a0001477ead'  }
 }
 
 export const DFP_SIZE_MAPPING = {
