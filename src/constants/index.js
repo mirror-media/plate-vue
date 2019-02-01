@@ -39,6 +39,7 @@ export const OATH_PLAYLIST = {
   '5c4152dd84dc1c0001266e4b': { order: 8, name: '娛樂透視', categoryName: 'video_ent_perspective', id: '5c4152dd84dc1c0001266e4b' },
   '5c50116a4d981a0001477ead': { order: 9, name: '汽車鐘錶', categoryName: 'video_carandwatch', id: '5c50116a4d981a0001477ead'  }
 }
+
 export const OATH_COPMANY_ID = '5bffb44aa00f3047dec33787'
 
 export const OATH_HOME_PLAYER_DESKTOP_ID = '5c0f55eddbaab306353048ec'
@@ -46,7 +47,6 @@ export const OATH_HOME_PLAYER_MOBILE_ID = '5c4e7cc9f79c4150001f2b08'
 
 export const OATH_ARTICLE_PLAYER_DESKTOP_ID = '5c4e8789600c9a7e62ade71a'
 export const OATH_ARTICLE_PLAYER_MOBILE_ID = '5c51889d023e750d08904cac'
-
 
 export const DFP_SIZE_MAPPING = {
   'default': [
