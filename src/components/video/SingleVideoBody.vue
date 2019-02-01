@@ -41,11 +41,12 @@
 <script>
 
 import moment from 'moment'
-import { SITE_URL } from '../../constants'
-
-
-const PLAYER_ID = '5c4e8789600c9a7e62ade71a'
-const COPMANY_ID = '5bffb44aa00f3047dec33787'
+import {
+  OATH_COPMANY_ID,
+  OATH_ARTICLE_PLAYER_DESKTOP_ID,
+  OATH_ARTICLE_PLAYER_MOBILE_ID,
+  SITE_URL
+} from '../../constants'
 
 export default {
   name: 'SingleVideoBody',
@@ -78,10 +79,11 @@ export default {
   },
   methods: {
     embedDynamicPlayer (vidoeId) {
+      const playerId = this.$store.state.viewport.width > 768 ? OATH_ARTICLE_PLAYER_DESKTOP_ID : OATH_ARTICLE_PLAYER_MOBILE_ID
       const script = document.createElement("script")
       script.innerHTML = `var player = vidible.player('oathSingleVideoPlayer').setup({
-        pid: '${PLAYER_ID}',
-        bcid: '${COPMANY_ID}',
+        pid: '${playerId}',
+        bcid: '${OATH_COPMANY_ID}',
         videos: [ '${vidoeId}' ]
       }).load();`
       document.querySelector('.single-video__video').appendChild(script)

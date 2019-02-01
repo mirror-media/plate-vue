@@ -127,9 +127,9 @@ router.get('/video/:id', fetchFromRedis, (req, res, next) => {
       } else {
         console.log('------ /video/:id', e)
         const status = e.status || e.statusCode || 500
-        // const message = _.get(JSON.parse(e.response.text), 'failureCause.message')
-        // res.status(status).send(message)
-        res.status(status).send(e)
+        let message = _.get(e, 'response.text')
+        message = message ? _.get(JSON.parse(message), 'failureCause.message') : e
+        res.status(status).send(message)
         console.error(`error during fetch data from ${req.url}`)
         console.error(e)
       }
@@ -160,9 +160,9 @@ router.get('/video/playlist/:playlistId', fetchFromRedis, (req, res, next) => {
       } else {
         console.log('------ /video/playlist/:playlistId', e)
         const status = e.status || e.statusCode || 500
-        // const message = _.get(JSON.parse(e.response.text), 'failureCause.message')
-        // res.status(status).send(message)
-        res.status(status).send(e)
+        let message = _.get(e, 'response.text')
+        message = message ? _.get(JSON.parse(message), 'failureCause.message') : e
+        res.status(status).send(message)
         console.error(`error during fetch data from ${req.url}`)
         console.error(e)
       }

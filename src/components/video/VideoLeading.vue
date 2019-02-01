@@ -9,11 +9,12 @@
 </template>
 <script>
 
-import { OATH_PLAYLIST } from '../../constants'
-
-const PLAYER_ID_DESKTOP = '5c0f55eddbaab306353048ec'
-const PLAYER_ID_MOBILE = '5c4e7cc9f79c4150001f2b08'
-const COPMANY_ID = '5bffb44aa00f3047dec33787'
+import {
+  OATH_COPMANY_ID,
+  OATH_HOME_PLAYER_DESKTOP_ID,
+  OATH_HOME_PLAYER_MOBILE_ID,
+  OATH_PLAYLIST
+} from '../../constants'
 
 export default {
   name: 'VideoLeading',
@@ -36,12 +37,12 @@ export default {
         ? Object.entries(OATH_PLAYLIST).find(item => item[1].categoryName === this.$route.fullPath.split('/')[2])
         : ''
       const playlistId = playlistInfo ? playlistInfo[0] : ''
-      const playerId = this.$store.state.viewport.width > 768 ? PLAYER_ID_DESKTOP : PLAYER_ID_MOBILE
+      const playerId = this.$store.state.viewport.width > 768 ? OATH_HOME_PLAYER_DESKTOP_ID : OATH_HOME_PLAYER_MOBILE_ID
 
       const script = document.createElement("script")
       script.innerHTML = `var player = vidible.player('oathPlayer').setup({
         pid: '${playerId}',
-        bcid: '${COPMANY_ID}',
+        bcid: '${OATH_COPMANY_ID}',
         bid: '${playlistId}'
       }).load();`
       document.querySelector('.video-leading__player').appendChild(script)
