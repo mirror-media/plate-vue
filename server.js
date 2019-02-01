@@ -102,7 +102,6 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'))
   // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
   // app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
  
-const exp_homepage = /^\/$|^\/\?/
 function render (req, res, next) {
   const checkoutMem = () => {
     const mem = process.memoryUsage()
@@ -226,7 +225,7 @@ function render (req, res, next) {
     }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
-    isProd && !isPreview && !exp_homepage.test(req.url) && redisWriting(req.url, html, null, 120)
+    isProd && !isPreview && redisWriting(req.url, html, null, 120)
   })
 }
 app.use('/story/amp', require('./api/middle/story/index.amp'))
@@ -236,6 +235,9 @@ app.use('/api', require('./api/index'), () => {
 })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
+  req.originUrl = req.url
+  req.url = req.hostname + req.url
+  console.log('req.url', req.url)
   next()
 }, fetchFromRedis, (req, res, next) => {
   if (res.redis) {
@@ -250,7 +252,8 @@ app.get('*', (req, res, next) => {
       }
     }
   } else {
-    debug('Didnt see any html data.', req.url)
+    req.url = req.originUrl
+    console.log('Didnt see any html data.', req.url)
     next()
   }
 }, isProd ? render : (req, res, next) => {
