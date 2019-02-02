@@ -235,9 +235,6 @@ app.use('/api', require('./api/index'), () => {
 })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
-  req.originUrl = req.url
-  req.url = req.hostname + req.url
-  console.log('req.url', req.url)
   next()
 }, fetchFromRedis, (req, res, next) => {
   if (res.redis) {
@@ -252,7 +249,6 @@ app.get('*', (req, res, next) => {
       }
     }
   } else {
-    req.url = req.originUrl
     console.log('Didnt see any html data.', req.url)
     next()
   }
