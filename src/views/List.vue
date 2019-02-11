@@ -19,7 +19,7 @@
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
-        <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         <list-slider class="gs"></list-slider>
         <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode"></article-list>
@@ -35,7 +35,7 @@
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'light'">
-        <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
@@ -55,7 +55,7 @@
       </div>
 
       <div class="list-view" v-else>
-        <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
         <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" /></div>
@@ -556,6 +556,7 @@ export default {
       articleListAutoScrollHeight: 0,
       canScrollLoadMord: true,
       dfpid: DFP_ID,
+      dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       isVponSDKLoaded: false,
@@ -681,11 +682,10 @@ export default {
                 }
                 break                   
             case 'LOGO':
-              if (adDisplayStatus === 'none') {
-                this.showDfpHeaderLogo = false
-              } else {
+              if (adDisplayStatus !== 'none') {
                 this.showDfpHeaderLogo = true
               }
+              this.dfpHeaderLogoLoaded = true
               break
           }
         },
