@@ -2,7 +2,7 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <section style="width: 100%;">
-        <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header> -->
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
@@ -365,6 +365,7 @@
         abIndicator: '',
         clientSideFlag: false,
         dfpid: DFP_ID,
+        dfpHeaderLogoLoaded: false,
         dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
         hasSentFirstEnterGA: false,
@@ -450,11 +451,10 @@
                 this.showDfpFixedBtn = !(adDisplayStatus === 'none')
                 break
               case 'LOGO':
-                if (adDisplayStatus === 'none') {
-                  this.showDfpHeaderLogo = false
-                } else {
+                if (adDisplayStatus !== 'none') {
                   this.showDfpHeaderLogo = true
                 }
+                this.dfpHeaderLogoLoaded = true
                 break
             }
           },

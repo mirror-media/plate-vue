@@ -5,7 +5,7 @@
       <!-- logo -->
       <router-link v-show="!isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/logo.svg" :alt="SITE_TITLE"></router-link>
       <router-link v-show="isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/icon/logo@2x.png" :alt="SITE_TITLE"></router-link>
-      <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo" :href="get(logoFromEvent, 'link', '/')" class="logo event"  data-gtm="logo event" data-gtm-category="header" target="_blank"><img :src="get(logoFromEvent, 'image.image.resizedTargets.tablet.url')"></a>
+      <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded" :href="get(logoFromEvent, 'link', '/')" class="logo event"  data-gtm="logo event" data-gtm-category="header" target="_blank"><img :src="get(logoFromEvent, 'image.image.resizedTargets.tablet.url')"></a>
       <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" class="logo dfp" data-gtm="logo dfp" data-gtm-category="header" pos="LOGO" />
       <!-- search and more -->
       <div :class="{ open: openMore }" class="more" v-click-outside="handleClickMoreOutside">
@@ -60,6 +60,9 @@ export default {
     }
   },
   props: {
+    dfpHeaderLogoLoaded: {
+      type: Boolean
+    },
     props: {
       type: Object
     },
