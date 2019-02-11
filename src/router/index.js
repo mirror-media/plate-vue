@@ -1,4 +1,4 @@
-import { GA_ID } from '../constants/index'
+import { GA_ID, OATH_PLAYLIST } from '../constants/index'
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueLazyload from 'vue-lazyload'
@@ -24,6 +24,9 @@ const Project = () => import('../views/Project.vue')
 const Search = () => import('../views/Search.vue')
 const TimelineView = () => import('../views/TimelineView.vue')
 const Topic = () => import('../views/Topic.vue')
+const Video = () => import('../views/Video.vue')
+
+const oathCategories = Object.values(OATH_PLAYLIST).map(item => `/category/${item.categoryName}`)
 
 export function createRouter () {
   if (process.env.VUE_ENV === 'client') {
@@ -53,10 +56,12 @@ export function createRouter () {
       { path: '/project-list/:style?', component: Project },
       // { path: '/homeb', component: HomeB },
       { path: '/search/:keyword', component: Search },
+      { path: '/section/videohub', component: Video, alias: oathCategories },
       { path: '/section/:title', component: List, alias: [ '/category/:title', '/externals/:title' ] },
       { path: '/timeline/:title', component: TimelineView },
       { path: '/tag/:tagId', component: List },
       { path: '/topic/:topicId', component: Topic },
+      { path: '/video/:slug', component: Video, props: { isSingleVideo: true } },
       { path: '/404', component: NotFound },
       { path: '/', component: Home },
     ]
