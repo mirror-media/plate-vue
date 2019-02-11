@@ -30,7 +30,7 @@
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
-          <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
@@ -48,7 +48,7 @@
         </template>
 
         <template v-else-if="topicType === 'group'">
-          <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
@@ -65,7 +65,7 @@
         </template>
 
         <template v-else>
-          <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
@@ -323,6 +323,7 @@ export default {
       canScrollLoadMord: true,
       commonData: this.$store.state.commonData,
       dfpid: DFP_ID,
+      dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       isVponSDKLoaded: false,
@@ -395,11 +396,10 @@ export default {
               }
               break
             case 'LOGO':
-              if (adDisplayStatus === 'none') {
-                this.showDfpHeaderLogo = false
-              } else {
+              if (adDisplayStatus !== 'none') {
                 this.showDfpHeaderLogo = true
               }
+              this.dfpHeaderLogoLoaded = true
               break
           }
         },

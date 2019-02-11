@@ -3,7 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         </section>
         <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
@@ -198,6 +198,7 @@ export default {
     return {
       abIndicator: '',
       dfpid: DFP_ID,
+      dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
       isVponSDKLoaded: false,
@@ -264,11 +265,10 @@ export default {
               }
               break
             case 'LOGO':
-              if (adDisplayStatus === 'none') {
-                this.showDfpHeaderLogo = false
-              } else {
+              if (adDisplayStatus !== 'none') {
                 this.showDfpHeaderLogo = true
               }
+              this.dfpHeaderLogoLoaded = true
               break
           }
         },

@@ -1,7 +1,7 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'other'">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header> -->
       <article-body-external :articleData="articleData">
         <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" :dfpId="props.dfpId" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
@@ -230,6 +230,7 @@
         abIndicator: '',
         clientSideFlag: false,
         dfpid: DFP_ID,
+        dfpHeaderLogoLoaded: false,
         dfpMode: 'prod',
         dfpUnits: DFP_UNITS,
         hasSentFirstEnterGA: false,
@@ -304,11 +305,10 @@
                 this.showDfpFixedBtn = !(adDisplayStatus === 'none')
                 break
               case 'LOGO':
-                if (adDisplayStatus === 'none') {
-                  this.showDfpHeaderLogo = false
-                } else {
+                if (adDisplayStatus !== 'none') {
                   this.showDfpHeaderLogo = true
                 }
+                this.dfpHeaderLogoLoaded = true
                 break
             }
           },
