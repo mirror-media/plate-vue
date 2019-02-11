@@ -48,7 +48,7 @@
         </template>
 
         <template v-else-if="topicType === 'group'">
-          <HeaderR :props="props" />
+          <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
@@ -65,7 +65,7 @@
         </template>
 
         <template v-else>
-          <HeaderR :props="props" />
+          <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
