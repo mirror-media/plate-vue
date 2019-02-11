@@ -92,7 +92,7 @@
         <slot name="relatedlistBottom"></slot>
       </div>
       <newsletter></newsletter>
-      <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
+      <div>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>、<a :href="socialLink.AUTH" target="_blank">了解內容授權資訊</a>。</div>
       <div class="article_main_tags">
         <p>相關關鍵字：</p>
         <div class="tags" v-html="tags" v-if="tags.length > 0"></div>

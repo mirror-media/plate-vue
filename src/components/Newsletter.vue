@@ -225,8 +225,9 @@ $duration = 1.4s
   flex-direction column
   justify-content center
   position relative
+  width calc(100% - 50px)
   min-height 70px
-  margin-top calc(1em + 30px)
+  margin calc(1em + 30px) auto 1em
   padding 1em 1em
   border 1px solid #eaeaea
   border-top 20px solid #0c5a80
@@ -346,9 +347,14 @@ $duration = 1.4s
       font-size .9rem
       line-height 1.3
 
+@media (min-width: 321px)
+  .newsletter
+    width 100%
+
 @media (min-width: 600px)
   .newsletter
-    margin 1em 0 0 2em
+    width calc(100% - 2em)
+    margin 1em 0 1em 2em
     padding 1em 2em .5em 3em
     border-top none
     border-bottom none
@@ -395,6 +401,14 @@ $duration = 1.4s
         display block
       p
         display block
+
+@media (min-width: 768px)
+  .newsletter
+    width 645px
+
+@media (min-width: 1200px)
+  .newsletter
+    width calc(100% - 2em)
 
 .spinner
   transition opacity .15s ease
