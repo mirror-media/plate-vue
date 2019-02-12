@@ -1,16 +1,14 @@
 <template>
   <section class="video-leading">
+    <OathPlayer :playerId="playerId" :playlistId="playlistId" class="video-leading__player"></OathPlayer>
     <slot name="LPCHD"></slot>
     <slot name="LMBHD"></slot>
-    <div class="video-leading__player">
-      <div id="oathPlayer" ref="oathPlayer"></div>
-    </div>
   </section>
 </template>
 <script>
 
+import OathPlayer from './OathPlayer.vue'
 import {
-  OATH_COPMANY_ID,
   OATH_HOME_PLAYER_DESKTOP_ID,
   OATH_HOME_PLAYER_MOBILE_ID,
   OATH_PLAYLIST
@@ -18,52 +16,26 @@ import {
 
 export default {
   name: 'VideoLeading',
-  data () {
-    return {
-    }
+  components: {
+    OathPlayer
   },
-  watch: {
-    '$route.fullPath' () {
-      this.$refs.oathPlayer.innerHTML = ''
-      this.embedDynamicPlayer()
-    }
-  },
-  mounted () {
-    this.embedDynamicPlayer()
-  },
-  methods: {
-    embedDynamicPlayer () {
+  computed: {
+    playerId () {
+      return this.$store.state.viewport.width > 768 ? OATH_HOME_PLAYER_DESKTOP_ID : OATH_HOME_PLAYER_MOBILE_ID
+    },
+    playlistId () {
       const playlistInfo = this.$route.fullPath.match(/category/)
         ? Object.entries(OATH_PLAYLIST).find(item => item[1].categoryName === this.$route.fullPath.split('/')[2])
         : ''
-      const playlistId = playlistInfo ? playlistInfo[0] : ''
-      const playerId = this.$store.state.viewport.width > 768 ? OATH_HOME_PLAYER_DESKTOP_ID : OATH_HOME_PLAYER_MOBILE_ID
-
-      const script = document.createElement("script")
-      script.innerHTML = `var player = vidible.player('oathPlayer').setup({
-        pid: '${playerId}',
-        bcid: '${OATH_COPMANY_ID}',
-        bid: '${playlistId}'
-      }).load();`
-      document.querySelector('.video-leading__player').appendChild(script)
+      return playlistInfo ? playlistInfo[0] : ``
     }
-  }
+  },
 }
 </script>
 <style lang="stylus" scoped>
 .video-leading
   text-align center
   background-color #000
-  &__player
-    position relative
-    padding-top 56.25%
-    > div
-      position absolute
-      top 0
-      left 0
-      right 0
-      bottom 0
-      width 100%
 
 @media (min-width: 1200px)
   .video-leading

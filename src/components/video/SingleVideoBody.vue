@@ -3,26 +3,25 @@
     <slot name="PCHD"></slot>
     <slot name="MBHD"></slot>
     <div class="single-video__video">
-      <div id="oathSingleVideoPlayer" ref="oathSingleVideoPlayer" class="single-video__video-player"></div>
+      <OathPlayer :playerId="playerId" :vidoeId="video.id"></OathPlayer>
+      <h1 v-text="video.name"></h1>
       <div class="single-video__video-info">
-        <div v-if="playlist[0]" v-text="playlist[0].name"></div>
         <p class="small" v-text="moment(video.publishDate).format('YYYY. MM. DD')"></p>
-      </div>
-      <div class="single-video__video-title">
-        <h1 v-text="video.name"></h1>
         <slot name="share"></slot>
       </div>
       <p v-text="video.description"></p>
     </div>
-    <template v-if="relateds.length > 0">
-      <div class="single-video__relateds">
-        <h3>相關影音</h3>
-        <a v-for="video in relateds"
+    <template v-if="latest.length > 0">
+      <div class="single-video__latest">
+        <slot name="PCR1"></slot>
+        <slot name="MBAR1"></slot>
+        <h3>最新影音</h3>
+        <a v-for="video in latest"
           :key="video.id"
           :href="`/video/${video.id}`"
-          class="related"
+          class="latest"
           data-gtm-category="article"
-          data-gtm="video related"
+          data-gtm="video latest"
           target="_blank">
           <figure>
               <img :src="getThumbnails(video)" :alt="video.name">
@@ -32,7 +31,7 @@
       </div>
     </template>
     <div class="single-video__comments">
-      <div :href="`${SITE_URL}/video/${$route.params.slug}`" class="fb-comments" data-numposts="5" data-width="100%"></div>
+      <div v-if="mounted" :href="`${SITE_URL}/video/${$route.params.slug}`" class="fb-comments" data-numposts="5" data-width="100%"></div>
     </div>
     <slot name="PCFT"></slot>
     <slot name="MBFT"></slot>
@@ -40,9 +39,9 @@
 </template>
 <script>
 
+import OathPlayer from './OathPlayer.vue'
 import moment from 'moment'
 import {
-  OATH_COPMANY_ID,
   OATH_ARTICLE_PLAYER_DESKTOP_ID,
   OATH_ARTICLE_PLAYER_MOBILE_ID,
   SITE_URL
@@ -51,9 +50,6 @@ import {
 export default {
   name: 'SingleVideoBody',
   props: {
-    playlist: {
-      type: Array,
-    },
     video: {
       type: Object
     },
@@ -61,33 +57,27 @@ export default {
       type: Array,
     }
   },
+  components: {
+    OathPlayer
+  },
   data () {
     return {
       SITE_URL,
+      mounted: false
     }
   },
   computed: {
-    relateds () {
-      const playlistId = this.playlist[0] ? this.playlist[0].id : ''
-      return playlistId ? this.$store.state.playlist[playlistId].filter(video => video.id !== this.$route.params.slug).slice(0, 7) : []
-    }
+    latest () {
+      return this.videos.filter(video => video.id !== this.$route.params.slug).slice(0, 7)
+    },
+    playerId () {
+      return this.$store.state.viewport.width > 768 ? OATH_ARTICLE_PLAYER_DESKTOP_ID : OATH_ARTICLE_PLAYER_MOBILE_ID
+    },
   },
   mounted () {
-    if (this.video) {
-      this.embedDynamicPlayer(this.video.id)
-    }
+    this.mounted = true
   },
   methods: {
-    embedDynamicPlayer (vidoeId) {
-      const playerId = this.$store.state.viewport.width > 768 ? OATH_ARTICLE_PLAYER_DESKTOP_ID : OATH_ARTICLE_PLAYER_MOBILE_ID
-      const script = document.createElement("script")
-      script.innerHTML = `var player = vidible.player('oathSingleVideoPlayer').setup({
-        pid: '${playerId}',
-        bcid: '${OATH_COPMANY_ID}',
-        videos: [ '${vidoeId}' ]
-      }).load();`
-      document.querySelector('.single-video__video').appendChild(script)
-    },
     getThumbnails (video) {
       return video.systemThumbnails.length > 0 ? video.systemThumbnails[video.systemThumbnails.length - 1].url : ''
     },
@@ -102,7 +92,8 @@ export default {
       width 90%
       margin 0 auto
     h1
-      margin 0
+      width 90%
+      margin 1em auto 0
       color #064f77
       text-align justify
       font-size 1.1875rem
@@ -114,37 +105,15 @@ export default {
       &.small
         color #a0a0a0
         font-size .75rem
-  &__video-player
-    position relative
-    padding-top 56.25%
-    background-color #000
-    >>> .o2-script-api-wrapper
-      position absolute
-      top 0
-      left 0
-      right 0
-      bottom 0
-      width 100%
   &__video-info
     display flex
     justify-content space-between
     width 90%
     margin 15px auto 0
-    > div
-      display flex
-      align-items center
-      padding .2em .5em
-      color #fff
-      font-size .75rem
-      background-color #f19149
-      border-radius 2px
     > p
       display inline-block
       margin 0
-  &__video-title
-    width 90%
-    margin 1em auto 0
-  &__relateds
+  &__latest
     width 90%
     margin 40px auto 0
     h3
@@ -152,7 +121,7 @@ export default {
       color #2a597d
       font-size 1rem
       font-weight 600
-    .related
+    .latest
       display block
       margin-top 20px
       figure
@@ -179,6 +148,8 @@ export default {
   &__comments
     width 90%
     margin 40px auto 0
+    >>> iframe
+      width 100%
 
 @media (min-width: 768px)
   .single-video
@@ -187,10 +158,10 @@ export default {
         width 60%
       h1
         font-size 1.375rem
-    &__video-info, &__video-title, &__relateds, &__comments
+    &__video-info, &__latest, &__comments
       width 60%
-    &__relateds
-      .related
+    &__latest
+      .latest
         display flex
         figure
           width 50%
@@ -216,20 +187,12 @@ export default {
         font-size .875rem
     &__video-info
       width 100%
-      > div
-        font-size .875rem
-    &__video-title
-      display flex
-      align-items flex-start
-      width 100%
-      > div
-        margin 0 0 0 auto
-    &__relateds
+    &__latest
       width calc(33.33% - 50px)
       margin 0 0 0 50px
       h3
         font-size 1.25rem
-      .related
+      .latest
         figure
           width 40%
           padding-top 22.5%
