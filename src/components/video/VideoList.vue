@@ -14,7 +14,7 @@
           </figure>
           <h3 v-text="item.name"></h3>
         </a>
-        <slot v-if="index === 11" name="LPCFT"></slot>
+        <slot v-if="index === 19" name="LPCFT"></slot>
         <slot v-if="index === 11" name="LMBFT"></slot>
       </template>
     </div>
@@ -130,7 +130,7 @@ export default {
       font-size 1.375rem
     &__block
       > h3
-        margin-top 20px
+        margin-top 15px
         font-size 1rem
 
 @media (min-width: 1200px)

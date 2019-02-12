@@ -1,14 +1,22 @@
 <template>
   <VueDfpProvider :dfpid="DFP_ID" :dfpUnits="DFP_UNITS" :options="dfpOptions" :mode="currEnv()" section="5975ab2de531830d00e32b2f">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <template v-if="isSingleVideo">
-        <SingleVideoBody :playlist="playlist" :video="video" :videos="videos">
+        <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
           <ShareLight slot="share" :gtmCategory="'article'" />
-          <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCHD" :config="props.config" class="dfp" pos="PCHD" />
-          <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
-          <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCFT" :config="props.config" class="dfp" pos="PCFT" />
-          <vue-dfp :is="props.vueDfp" v-else slot="MBFT" :config="props.config" class="dfp" pos="MBFT" />
+          <template>
+            <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCHD" :config="props.config" class="dfp" pos="PCHD" />
+            <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
+          </template>
+          <template>
+            <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCFT" :config="props.config" class="dfp" pos="PCFT" />
+            <vue-dfp :is="props.vueDfp" v-else slot="MBFT" :config="props.config" class="dfp" pos="MBFT" />
+          </template>
+          <template>
+            <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCR1" :config="props.config" class="dfp" pos="PCR1" style="margin-top: 0;" />
+            <vue-dfp :is="props.vueDfp" v-else slot="MBAR1" :config="props.config" class="dfp" pos="MBAR1" />
+          </template>
         </SingleVideoBody>
       </template>
       <template v-else>
@@ -19,13 +27,15 @@
         <template v-for="(item, index) in playlist">
           <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
             <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
-            <vue-dfp :is="props.vueDfp" v-if="isCategoryPage && viewport >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
-            <vue-dfp :is="props.vueDfp" v-else-if="isCategoryPage" :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" />
+            <!-- <template v-if="isCategoryPage">
+              <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
+              <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" />
+            </template> -->
           </VideoList>
-          <template v-if="!isCategoryPage && index === 2">
-            <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" :key="`${index}-LPCFT`" :config="props.config" class="dfp" pos="LPCFT" />
-            <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" />
-          </template>
+          <!-- <template v-if="!isCategoryPage">
+            <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200 && index === 4" :key="`${index}-LPCFT`" :config="props.config" class="dfp" pos="LPCFT" />
+            <vue-dfp :is="props.vueDfp" v-if="viewport < 1200 && index === 2" :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" />
+          </template> -->
         </template>
       </template>
       <section class="footer container">
@@ -49,7 +59,7 @@ import VideoList from '../components/video/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, OATH_PLAYLIST } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
 import { consoleLogOnDev, currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
 import { chunk, get, truncate, } from 'lodash'
@@ -142,22 +152,27 @@ export default {
       fetchCommonData(store),
       fetchPartners(store),
     ]
-    route.fullPath.match(/\/video\//) ? jobs.push(fetchVideo(store, { id: route.fullPath.split('/')[2] })) : ''
-    const playlist = Object.keys(OATH_PLAYLIST)
-    const playlistSplit = chunk(playlist, 4)
-    playlistSplit.map(list => {
-      const ids = list.reduce((acc, cur, index) => index === 0 ? cur : `${acc},${cur}`, '')
-      jobs.push(fetchPlaylist(store, { ids: ids }))
-    })
-    playlist.map(id => {
-      let maxResults = 8
-      if (route.fullPath.match(/\/category\//)) {
-        const playlistInfo = Object.entries(OATH_PLAYLIST).find(item => item[1].categoryName === route.fullPath.split('/')[2])
-        const playlistId = playlistInfo[0]
-        maxResults = id === playlistId ? 12 : maxResults
-      }
-      jobs.push(fetchVideoByPlaylist(store, { id: id, params: { max_results: maxResults }}))
-    })
+    
+    if (route.fullPath.match(/\/video\//)) {
+      jobs.push(fetchVideo(store, { id: route.fullPath.split('/')[2] }))
+      jobs.push(fetchVideoByPlaylist(store, { id: OATH_ALL_VIDEO_PLAYLIST_ID, params: { max_results: 8 }}))
+    } else {
+      const playlist = Object.keys(OATH_PLAYLIST)
+      const playlistSplit = chunk(playlist, 4)
+      playlistSplit.map(list => {
+        const ids = list.reduce((acc, cur, index) => index === 0 ? cur : `${acc},${cur}`, '')
+        jobs.push(fetchPlaylist(store, { ids: ids }))
+      })
+      playlist.map(id => {
+        let maxResults = 8
+        if (route.fullPath.match(/\/category\//)) {
+          const playlistInfo = Object.entries(OATH_PLAYLIST).find(item => item[1].categoryName === route.fullPath.split('/')[2])
+          const playlistId = playlistInfo[0]
+          maxResults = id === playlistId ? 12 : maxResults
+        }
+        jobs.push(fetchVideoByPlaylist(store, { id: id, params: { max_results: maxResults }}))
+      })
+    }
     return Promise.all(jobs)
   },
   mixins: [ titleMetaMixin ],
@@ -191,7 +206,7 @@ export default {
       throw e
     }
 
-    if (this.$route.fullPath.match(/(\/category\/|\/video\/)/)) {
+    if (this.$route.fullPath.match(/(\/section\/|\/category\/)/)) {
       title = `${title} - ${SITE_TITLE}`
     }
 
@@ -224,7 +239,9 @@ export default {
     return {
       DFP_ID,
       DFP_UNITS,
+      OATH_ALL_VIDEO_PLAYLIST_ID,
       OATH_PLAYLIST,
+      dfpHeaderLogoLoaded: false,
       showDfpHeaderLogo: false,
       viewport: 0,
     }
@@ -282,11 +299,10 @@ export default {
                 }
                 break                   
             case 'LOGO':
-              if (adDisplayStatus === 'none') {
-                this.showDfpHeaderLogo = false
-              } else {
+              if (adDisplayStatus !== 'none') {
                 this.showDfpHeaderLogo = true
               }
+              this.dfpHeaderLogoLoaded = true
               break
           }
         },
@@ -320,10 +336,6 @@ export default {
         const category = this.$route.fullPath.split('/')[2]
         const playlistInfo = Object.entries(OATH_PLAYLIST).find(item => item[1].categoryName === category)
         return playlist.filter(item => item.id === playlistInfo[0])
-      } else if (this.isSingleVideoPage) {
-        const video = this.videos.find(video => video.id === this.video.id)
-        const playlistId = video ? video.playlistId : ''
-        return playlistId ? playlist.filter(item => item.id === playlistId) : ''
       } else {
         const filtered = playlist.filter(item => this.$store.state.playlist[item.id] && this.$store.state.playlist[item.id].length > 0)
         return filtered.sort((a, b) => OATH_PLAYLIST[a.id].order - OATH_PLAYLIST[b.id].order)
@@ -361,8 +373,9 @@ export default {
   },
   watch: {
     '$route.fullPath' () {
+      this.$forceUpdate()
       this.sendGA()
-    }
+    },
   },
   beforeMount () {
     fetchEvent(this.$store, 'embedded'),
@@ -382,9 +395,9 @@ export default {
       fetchVideoByPlaylist(this.$store, { id: id, params: { max_results: 12, offset: offset }})
     },
     sendGA () {
-      const categoryLabel = this.$route.fullPath.match(/section/)
-        ? ``
-        : Object.entries(OATH_PLAYLIST).find(item => item[0] === this.playlist[0].id)[1].categoryName
+      const categoryLabel = this.$route.fullPath.match(/category/)
+        ? Object.entries(OATH_PLAYLIST).find(item => item[0] === this.playlist[0].id)[1].categoryName
+        : ``
       window.ga('set', 'contentGroup1', this.section.name)
       window.ga('set', 'contentGroup2', categoryLabel)
       window.ga('set', 'contentGroup3', '')
