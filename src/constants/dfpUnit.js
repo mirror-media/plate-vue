@@ -326,7 +326,7 @@ export default {
     'MBHD': { 'aduid': 'mirror_m_video_300x250_HD', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'MBAR1': { 'aduid': 'mirror_m_oth_300x250_AT1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBAR2': { 'aduid': 'mirror_m_oth_300x250_AT2', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ '' ] },
-    'MBE1': { 'aduid': 'mirror_m_oth_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
+    'MBE1': { 'aduid': 'mirror_m_video_300x250_E1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_video_300x250_FT', 'dimensions': '1x1,300x250,320x100', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'MBCVR2': { 'aduid': 'mirror_m_ros_320x480_AD2', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
@@ -341,7 +341,7 @@ export default {
     'LMBCVR3': { 'aduid': 'mirror_m_ros_320x480_innity', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     // PCHD, PCR1, PCR2, PCAR, PCE1, PCE2, PCFT : position on article page
     'PCHD': { 'aduid': 'mirror_pc_video_970x250_HD', 'dimensions': '1x1,970x250,970x90', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'PCR1': { 'aduid': 'mirror_pc_oth_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
+    'PCR1': { 'aduid': 'mirror_pc_video_300x250_R1', 'dimensions': '1x1,300x250', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'PCR2': { 'aduid': 'mirror_pc_oth_300x600_R2', 'dimensions': '1x1,300x250,300x600', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'PCR2B': { 'aduid': 'mirror_pc_ros_300x600_R2', 'dimensions': '1x1,300x250,300x600', 'cont-class': [ 'ad-container', 'center' ], 'cont-style': [ '' ] },
     'PCAR': { 'aduid': 'mirror_pc_oth_640x390_AT1', 'dimensions': '1x1,640x390', 'cont-class': [ 'ad-container', 'margin-top-0', 'center' ], 'cont-style': [ 'clear: both' ] },

@@ -5,17 +5,17 @@
       <template v-if="isSingleVideo">
         <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
           <ShareLight slot="share" :gtmCategory="'article'" />
-          <template>
+          <template v-if="mounted">
             <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCHD" :config="props.config" class="dfp" pos="PCHD" />
             <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
           </template>
-          <template>
+          <template v-if="mounted">
             <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCFT" :config="props.config" class="dfp" pos="PCFT" />
             <vue-dfp :is="props.vueDfp" v-else slot="MBFT" :config="props.config" class="dfp" pos="MBFT" />
           </template>
-          <template>
+          <template v-if="mounted">
             <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" slot="PCR1" :config="props.config" class="dfp" pos="PCR1" style="margin-top: 0;" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBAR1" :config="props.config" class="dfp" pos="MBAR1" />
+            <vue-dfp :is="props.vueDfp" v-else slot="MBE1" :config="props.config" class="dfp" pos="MBE1" />
           </template>
         </SingleVideoBody>
       </template>
@@ -27,15 +27,15 @@
         <template v-for="(item, index) in playlist">
           <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
             <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
-            <!-- <template v-if="isCategoryPage">
+            <template v-if="mounted && isCategoryPage">
               <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
               <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" />
-            </template> -->
+            </template>
           </VideoList>
-          <!-- <template v-if="!isCategoryPage">
+          <template v-if="mounted && !isCategoryPage">
             <vue-dfp :is="props.vueDfp" v-if="viewport >= 1200 && index === 4" :key="`${index}-LPCFT`" :config="props.config" class="dfp" pos="LPCFT" />
             <vue-dfp :is="props.vueDfp" v-if="viewport < 1200 && index === 2" :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" />
-          </template> -->
+          </template>
         </template>
       </template>
       <section class="footer container">
@@ -242,6 +242,7 @@ export default {
       OATH_ALL_VIDEO_PLAYLIST_ID,
       OATH_PLAYLIST,
       dfpHeaderLogoLoaded: false,
+      mounted: false,
       showDfpHeaderLogo: false,
       viewport: 0,
     }
@@ -384,6 +385,7 @@ export default {
     window.addEventListener('resize', this.updateViewport)
   },
   mounted () {
+    this.mounted = true
     this.sendGA()
   },
   beforeDestroy () {

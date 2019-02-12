@@ -14,7 +14,7 @@
     <template v-if="latest.length > 0">
       <div class="single-video__latest">
         <slot name="PCR1"></slot>
-        <slot name="MBAR1"></slot>
+        <slot name="MBE1"></slot>
         <h3>最新影音</h3>
         <a v-for="video in latest"
           :key="video.id"
