@@ -40,6 +40,8 @@ export const OATH_PLAYLIST = {
   '5c50116a4d981a0001477ead': { order: 9, name: '汽車鐘錶', categoryName: 'video_carandwatch', id: '5c50116a4d981a0001477ead'  }
 }
 
+export const OATH_ALL_VIDEO_PLAYLIST_ID = '5c418881b1d38a000134ef54'
+
 export const OATH_COPMANY_ID = '5bffb44aa00f3047dec33787'
 
 export const OATH_HOME_PLAYER_DESKTOP_ID = '5c0f55eddbaab306353048ec'
