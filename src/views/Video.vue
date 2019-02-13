@@ -2,7 +2,7 @@
   <VueDfpProvider :dfpid="DFP_ID" :dfpUnits="DFP_UNITS" :options="dfpOptions" :mode="currEnv()" section="5975ab2de531830d00e32b2f">
     <template slot-scope="props" slot="dfpPos">
       <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-      <template v-if="isSingleVideo">
+      <template v-if="isSingleVideoPage">
         <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
           <ShareLight slot="share" :gtmCategory="'article'" />
           <template v-if="mounted">
@@ -152,7 +152,6 @@ export default {
       fetchCommonData(store),
       fetchPartners(store),
     ]
-    
     if (route.fullPath.match(/\/video\//)) {
       jobs.push(fetchVideo(store, { id: route.fullPath.split('/')[2] }))
       jobs.push(fetchVideoByPlaylist(store, { id: OATH_ALL_VIDEO_PLAYLIST_ID, params: { max_results: 8 }}))
@@ -245,12 +244,6 @@ export default {
       mounted: false,
       showDfpHeaderLogo: false,
       viewport: 0,
-    }
-  },
-  props: {
-    isSingleVideo: {
-      type: Boolean,
-      default: false
     }
   },
   computed: {
