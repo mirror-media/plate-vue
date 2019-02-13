@@ -56,12 +56,11 @@ export function createRouter () {
       { path: '/project-list/:style?', component: Project },
       // { path: '/homeb', component: HomeB },
       { path: '/search/:keyword', component: Search },
-      { path: '/section/videohub', component: Video, alias: oathCategories },
+      { path: '/section/videohub', component: Video, alias: [ ...oathCategories, '/video/:slug' ] },
       { path: '/section/:title', component: List, alias: [ '/category/:title', '/externals/:title' ] },
       { path: '/timeline/:title', component: TimelineView },
       { path: '/tag/:tagId', component: List },
       { path: '/topic/:topicId', component: Topic },
-      { path: '/video/:slug', component: Video, props: { isSingleVideo: true } },
       { path: '/404', component: NotFound },
       { path: '/', component: Home },
     ]
