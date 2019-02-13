@@ -3,7 +3,7 @@
     <slot name="PCHD"></slot>
     <slot name="MBHD"></slot>
     <div class="single-video__video">
-      <OathPlayer :playerId="playerId" :vidoeId="video.id"></OathPlayer>
+      <OathPlayer></OathPlayer>
       <h1 v-text="video.name"></h1>
       <div class="single-video__video-info">
         <p class="small" v-text="moment(video.publishDate).format('YYYY. MM. DD')"></p>
@@ -41,11 +41,7 @@
 
 import OathPlayer from './OathPlayer.vue'
 import moment from 'moment'
-import {
-  OATH_ARTICLE_PLAYER_DESKTOP_ID,
-  OATH_ARTICLE_PLAYER_MOBILE_ID,
-  SITE_URL
-} from '../../constants'
+import { SITE_URL } from '../../constants'
 
 export default {
   name: 'SingleVideoBody',
@@ -69,9 +65,6 @@ export default {
   computed: {
     latest () {
       return this.videos.filter(video => video.id !== this.$route.params.slug).slice(0, 7)
-    },
-    playerId () {
-      return this.$store.state.viewport.width > 768 ? OATH_ARTICLE_PLAYER_DESKTOP_ID : OATH_ARTICLE_PLAYER_MOBILE_ID
     },
   },
   mounted () {

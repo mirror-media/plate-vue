@@ -31,7 +31,7 @@ export const SECTION_MAP = {
 export const OATH_PLAYLIST = {
   '5c4151124d981a0001477e0e': { order: 1, name: '鏡封面', categoryName: 'video_coverstory', id: '5c4151124d981a0001477e0e' },
   '5c41528dbd70380001962364': { order: 2, name: '鏡娛樂', categoryName: 'video_ent_headline', id: '5c41528dbd70380001962364' },
-  '5c4152a184dc1c0001266e49': { order: 3, name: '鏡社會', categoryName: 'video-society', id: '5c4152a184dc1c0001266e49' },
+  '5c4152a184dc1c0001266e49': { order: 3, name: '鏡社會', categoryName: 'video_society', id: '5c4152a184dc1c0001266e49' },
   '5c4150842274b40001ccc6a8': { order: 4, name: '鏡食旅', categoryName: 'video_foodtravel', id: '5c4150842274b40001ccc6a8' },
   '5c4152b1bd70380001962365': { order: 5, name: '鏡人物', categoryName: 'video_people', id: '5c4152b1bd70380001962365' },
   '5c4152bd84dc1c0001266e4a': { order: 6, name: '鏡調查', categoryName: 'video_investigation', id: '5c4152bd84dc1c0001266e4a' },
@@ -44,11 +44,54 @@ export const OATH_ALL_VIDEO_PLAYLIST_ID = '5c418881b1d38a000134ef54'
 
 export const OATH_COPMANY_ID = '5bffb44aa00f3047dec33787'
 
-export const OATH_HOME_PLAYER_DESKTOP_ID = '5c0f55eddbaab306353048ec'
-export const OATH_HOME_PLAYER_MOBILE_ID = '5c4e7cc9f79c4150001f2b08'
-
-export const OATH_ARTICLE_PLAYER_DESKTOP_ID = '5c4e8789600c9a7e62ade71a'
-export const OATH_ARTICLE_PLAYER_MOBILE_ID = '5c51889d023e750d08904cac'
+export const OATH_PLAYER_LIST = {
+  singleVideo: {
+    mobile: '5c51889d023e750d08904cac',
+    desktop: '5c4e8789600c9a7e62ade71a'
+  },
+  section: {
+    mobile: '5c4e7cc9f79c4150001f2b08',
+    desktop: '5c0f55eddbaab306353048ec'
+  },
+  category: {
+    'video_coverstory': {
+      mobile: '5c637faf0ca7c818a67f5666',
+      desktop: '5c637bf6655b6811301dc253'
+    },
+    'video_ent_headline': {
+      mobile: '5c637fdfbc03933c303087e7',
+      desktop: '5c637c3ffcd67b64d6bcb72a'
+    },
+    'video_society': {
+      mobile: '5c638012901437133811e74f',
+      desktop: '5c637c63f79c416e58c84bf4'
+    },
+    'video_foodtravel': {
+      mobile: '5c638048f674e0279ef0da2e',
+      desktop: '5c637c8a47e8a27bc1c5ff6f'
+    },
+    'video_people': {
+      mobile: '5c63807c0822e834ba8786c3',
+      desktop: '5c637ca6367f6d2729a33334'
+    },
+    'video_investigation': {
+      mobile: '5c6380b3f344784fcf660775',
+      desktop: '5c637cce0822e834ba8785af'
+    },
+    'video_finance': {
+      mobile: '5c6381350ca7c818a67f56db',
+      desktop: '5c637cf1f79c416e58c84c1e'
+    },
+    'video_ent_perspective': {
+      mobile: '5c63817b600c9a19e8d49eb5',
+      desktop: '5c637d27cd15ef2e5cdfcc97'
+    },
+    'video_carandwatch': {
+      mobile: '5c63817b497fa178dc9bcfeb',
+      desktop: '5c637d4e98f45d75d802f77d'
+    }
+  }
+}
 
 export const DFP_SIZE_MAPPING = {
   'default': [

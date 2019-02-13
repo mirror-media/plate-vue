@@ -1,47 +1,60 @@
 <template>
   <div class="oath-player">
-    <div id="oathPlayer" ref="oathPlayer" class="oath-player__player"></div>
+    <div :class="[ 'vdb_player', `vdb_${combinedId}` ]"></div>
   </div>
 </template>
 <script>
 
-import { OATH_COPMANY_ID } from '../../constants'
+import { OATH_COPMANY_ID, OATH_PLAYER_LIST } from '../../constants'
 
 export default {
   naem: 'OathPlayer',
-  props: {
-    playerId: {
-      type: String,
-      required: true
+  data () {
+    return {
+      OATH_COPMANY_ID,
+      OATH_PLAYER_LIST,
+      combinedId: ``
+    }
+  },
+  computed: {
+    playerId () {
+      const path = this.$route.fullPath
+      const type = this.$store.state.viewport.width > 768 ? 'desktop' : 'mobile'
+      if (path.match(/\/section\//)) {
+        return OATH_PLAYER_LIST.section[type]
+      } else if (path.match(/\/category\//)) {
+        const categoryName = path.split('/')[2]
+        return OATH_PLAYER_LIST.category[categoryName][type]
+      } else {
+        return OATH_PLAYER_LIST.singleVideo[type]
+      }
     },
-    playlistId: {
-      type: String,
-      default: ``
-    },
-    vidoeId: {
-      type: String,
-      default: ``
+    scriptSrc () {
+      const path = this.$route.fullPath
+      if (path.match(/\/video\//)) {
+        const videoId = path.split('/')[2]
+        return `//delivery.vidible.tv/jsonp/pid=${this.playerId}/vid=${videoId}/${OATH_COPMANY_ID}.js`
+      }
+      return `//delivery.vidible.tv/jsonp/pid=${this.playerId}/${OATH_COPMANY_ID}.js`
     }
   },
   watch: {
-    '$route.fullPath' () {
-      this.embedDynamicPlayer()
+    playerId (value) {
+      this.combinedId = `${value}${OATH_COPMANY_ID}`
+      this.embedScript()
     }
   },
   mounted () {
-    this.embedDynamicPlayer()
+    this.combinedId = `${this.playerId}${OATH_COPMANY_ID}`
+    this.embedScript()
   },
   methods: {
-    embedDynamicPlayer () {
-      document.querySelector('.oath-player__player').innerHTML = ''
+    embedScript () {
+      document.querySelector('.vdb_player').innerHTML = ''
       const script = document.createElement("script")
-      script.innerHTML = `var player = vidible.player('oathPlayer').setup({
-        pid: '${this.playerId}',
-        bcid: '${OATH_COPMANY_ID}',
-        bid: '${this.playlistId}',
-        videos: [ '${this.vidoeId}' ]
-      }).load();`
-      document.querySelector('.oath-player').appendChild(script)
+      script.setAttribute('type', 'text/javascript')
+      script.setAttribute('src', this.scriptSrc)
+      document.querySelector('.vdb_player').appendChild(script)
     }
   }
 }
@@ -51,7 +64,7 @@ export default {
   position relative
   padding-top 56.25%
   background-color #000
-  &__player
+  .vdb_player
     position absolute
     top 0
     left 0
