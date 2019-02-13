@@ -42,7 +42,7 @@ export const OATH_PLAYLIST = {
 
 export const OATH_ALL_VIDEO_PLAYLIST_ID = '5c418881b1d38a000134ef54'
 
-export const OATH_COPMANY_ID = '5bffb44aa00f3047dec33787'
+export const OATH_COPMANY_ID = '5bffbccda00f3047dec3381c'
 
 export const OATH_PLAYER_LIST = {
   singleVideo: {
