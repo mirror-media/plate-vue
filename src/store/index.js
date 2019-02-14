@@ -21,9 +21,6 @@ import { fetchActivities,
   fetchImagesById,
   fetchLatestArticle,
   fetchNodes,
-  fetchOathPlaylist,
-  fetchOathVideo,
-  fetchOathVideoByPlaylist,
   fetchPartners,
   fetchSearch,
   fetchTag,
@@ -31,7 +28,6 @@ import { fetchActivities,
   fetchTopic,
   fetchYoutubePlaylist,
   logClient } from './api'
-import { OATH_PLAYLIST } from '../constants'
 
 Vue.use(Vuex)
 
@@ -71,9 +67,7 @@ export function createStore () {
       latestArticles: {},
       nodes: {},
       ogimage: {},
-      playlist: {
-        info: []
-      },
+      playlist: {},
       searchResult: {},
       tag: {},
       tags: [],
@@ -81,7 +75,6 @@ export function createStore () {
       topic: {},
       topics: {},
       uuid: '',
-      videos: {},
       viewport: {
         height: 0,
         width: 0
@@ -257,39 +250,6 @@ export function createStore () {
             return moment(new Date(o.nodeDate))
           } ])
           commit('SET_NODES', { nodes })
-        })
-      },
-      
-      FETCH_OATH_PLAYLIST: ({ commit, state }, { ids, params }) => {
-        const playlistAmount = Object.keys(OATH_PLAYLIST).length || 0
-        return fetchOathPlaylist({ ids, params }).then(playlist => {
-          if (state.playlist.info.length > 0) {
-            const orig = _.values(state.playlist.info)
-            playlist.data = _.concat(orig, playlist.data)
-          }
-          state.playlist.info.length < playlistAmount ? commit('SET_OATH_PLAYLIST', { playlist: playlist.data }) : ''
-        })
-      },
-      
-      FETCH_OATH_VIDEO: ({ commit, state }, { id }) => {
-        return state.videos.id
-          ? Promise.resolve(state.videos[id])
-          : fetchOathVideo({ id }).then(video => {
-            commit('SET_OATH_VIDEO', { id, video: video[0] })
-          })
-      },
-
-      FETCH_OATH_VIDEO_BY_PLAYLIST: ({ commit, state }, { id, params }) => {
-        return fetchOathVideoByPlaylist({ id, params }).then(videos => {
-          videos.map(video => {
-            video.playlistId = id
-            return video
-          })
-          if (params.offset) {
-            const orig = _.values(state.playlist[id])
-            videos = _.concat(orig, videos)
-          }
-          commit('SET_OATH_VIDEO_BY_PLAYLIST', { id, videos })
         })
       },
 
@@ -475,18 +435,6 @@ export function createStore () {
 
       SET_NODES: (state, { nodes }) => {
         Vue.set(state, 'nodes', nodes)
-      },
-
-      SET_OATH_PLAYLIST: (state, { playlist }) => {
-        Vue.set(state.playlist, 'info', playlist)
-      },
-      
-      SET_OATH_VIDEO: (state, { id, video }) => {
-        Vue.set(state.videos, id, video)
-      },
-
-      SET_OATH_VIDEO_BY_PLAYLIST: (state, { id, videos }) => {
-        Vue.set(state.playlist, id, videos)
       },
 
       SET_POSTVUE: (state, { commonData }) => {

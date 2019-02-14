@@ -12,28 +12,15 @@
           data-gtm-category="header">
           <span v-text="section.title"></span>
         </router-link>
-        <template v-if="section.name === 'videohub'">
-          <div class="dropdown">
-            <router-link
-              v-for="category in oathCategories"
-              :key="`dropdown-${category.categoryName}`"
-              :to="`/category/${category.categoryName}`"
-              :data-gtm="`category ${category.categoryName}`"
-              data-gtm-category="header"
-              v-text="category.name"></router-link>
-          </div>
-        </template>
-        <template v-else-if="filterSectionCategories(section).length > 0">
-          <div class="dropdown">
-            <router-link
-              v-for="category in filterSectionCategories(section)"
-              :key="`dropdown-${category.id}`"
-              :to="`/category/${category.name}`"
-              :data-gtm="`category ${category.name}`"
-              data-gtm-category="header"
-              v-text="category.title"></router-link>
-          </div>
-        </template>
+        <div class="dropdown">
+          <router-link
+            v-for="category in filterSectionCategories(section)"
+            :key="`dropdown-${category.id}`"
+            :to="`/category/${category.name}`"
+            :data-gtm="`category ${category.name}`"
+            data-gtm-category="header"
+            v-text="category.title"></router-link>
+        </div>
       </div>
       <div :style="{ minWidth: `calc(100% / ${sections.length + 1})` }" class="section external">
         <a>
@@ -68,7 +55,7 @@
   </section>
 </template>
 <script>
-import { OATH_PLAYLIST, SECTION_MAP } from '../../constants'
+import { SECTION_MAP } from '../../constants/index'
 import { get, } from 'lodash'
 
 export default {
@@ -102,9 +89,6 @@ export default {
     },
     activeTopics () {
       return this.topics.filter(topic => topic.id && topic.name)
-    },
-    oathCategories () {
-      return Object.values(OATH_PLAYLIST).sort((a, b) => a.order - b.order)
     }
   },
   methods: {
