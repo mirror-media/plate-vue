@@ -19,31 +19,16 @@
         :style="{ borderLeftColor: getColor(section) }"
         class="section">
         <router-link :to="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></router-link>
-        <template v-if="section.name === 'videohub'">
-          <div class="categories">
-            <router-link
-              v-for="category in oathCategories"
-              :key="`sidebar-category-${category.categoryName}`"
-              :to="`/category/${category.categoryName}`"
-              :data-gtm="`category ${category.categoryName}`"
-              data-gtm-category="header"
-              v-text="category.name">
-            </router-link>
-          </div>
-        </template>
-        <template v-else-if="section.categories.length > 0">
-          <div class="categories">
-            <router-link
-              v-for="category in filterSectionCategories(section)"
-              :key="`sidebar-category-${category.id}`"
-              :to="`/category/${category.name}`"
-              :data-gtm="`category ${category.name}`"
-              data-gtm-category="header"
-              v-text="category.title">
-            </router-link>
-          </div>
-        </template>
-        
+        <div v-if="section.categories.length > 0" class="categories">
+          <router-link
+            v-for="category in filterSectionCategories(section)"
+            :key="`sidebar-category-${category.id}`"
+            :to="`/category/${category.name}`"
+            :data-gtm="`category ${category.name}`"
+            data-gtm-category="header"
+            v-text="category.title">
+          </router-link>
+        </div>
       </div>
       <div class="section external">
         <a v-text="$t('HEADER.EXTERNAL')"></a>
@@ -85,7 +70,7 @@
 </template>
 <script>
 
-import { OATH_PLAYLIST, SECTION_MAP, SOCIAL_LINK } from '../../constants'
+import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
 import { get, } from 'lodash'
 
 export default {
@@ -124,9 +109,6 @@ export default {
     },
     activeTopics () {
       return this.topics.filter(topic => topic.id && topic.name)
-    },
-    oathCategories () {
-      return Object.values(OATH_PLAYLIST).sort((a, b) => a.order - b.order)
     }
   },
   methods: {
