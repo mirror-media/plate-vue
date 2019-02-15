@@ -122,9 +122,6 @@ export default {
     },
     viewport: {
       default: () => { return undefined }
-    },
-    abIndicator: {
-      default: () => ''
     }
   }
 }
