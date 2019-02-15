@@ -42,7 +42,8 @@
         color #a1a1a1
         font-weight normal
       
-
+    .hero-image
+      margin-top 20px
     
     .article_title 
       width 100%
@@ -78,20 +79,6 @@
       display inline-block
       // max-width 695px
       overflow visible
-      &.b
-        display inline-flex
-        flex-direction column
-        .article_basic-info
-          order -3
-        > h1
-          order -2
-          & + div
-            margin-top 15px
-        .article__basic-info
-          order -1
-          
-        .hero-image
-          margin-top 25px
 
       > h1, > h2
         color #000
@@ -112,12 +99,17 @@
 
       .article__basic-info
         .article__basic-info-wrapper
-          display flex
-          .article__credit
-            flex 1
-          .share-light
-            justify-content flex-end
-            margin-left 20px
+          .article__share
+            display flex
+            align-items center
+            margin-top .5em
+            p
+              flex 1
+              margin 0
+            .share-light
+              justify-content flex-end
+              align-items flex-start
+              margin 0 0 0 auto
       .article_main_pop 
         clear both
         margin-top 20px
@@ -716,15 +708,6 @@
 
     .article_fb_comment
       margin-bottom 60px!important
-  
-  @media (max-width 899px)
-    .article_body
-      .article_main
-        .article__basic-info
-          .article__basic-info-wrapper
-            display block
-            .share-light
-              margin 0
 
   @media (max-width 899px) and (min-width 768px)
     .article_body
@@ -778,11 +761,9 @@
     .article_body
       .article_main, .article_credit, .article_subtitle
         display block
-      .article_main
-        &.b
-          display block
       .article_basic-info
-        margin-top 50px
+        margin-top 0
+      
     .fbPagePlugin
       display block
     .herbsapi

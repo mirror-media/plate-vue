@@ -1,7 +1,6 @@
 <template>
   <ArticleBodyLayout class="article_body" v-if="!isArticleEmpty()" :class="styleForCurrArticle">
-    <main :class="abIndicator.toLowerCase()" class="article_main">
-      <slot name="hero"></slot>
+    <main class="article_main">
       <div class="article_basic-info">
         <div class="category">
           <span v-if="!isAd" class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
@@ -13,9 +12,13 @@
       <div class="article__basic-info">
         <div class="article__basic-info-wrapper">
           <div class="article__credit" v-html="credit"></div>
-          <ShareLight :gtmCategory="'article'" />
+          <div class="article__share">
+            <p v-if="abIndicator === 'B' && getArticleReadTime(contArr)">閱讀時間：{{ getArticleReadTime(contArr) }}分鐘</p>
+            <ShareLight :gtmCategory="'article'" />
+          </div>
         </div>
       </div>
+      <slot name="hero"></slot>
       <div class="brief fb-quotable">
         <div v-for="p in briefArr">
           <ArticleImg v-if="p.type === 'image'"
@@ -124,7 +127,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
-import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+import { getArticleReadTime, getHref, getTruncatedVal, getValue } from '../../util/comm'
 // import { getRole } from '../../util/mmABRoleAssign'
 import ArticleBodyLayout from 'src/components/article/ArticleBodyLayout.vue'
 import Annotation from './Annotation.vue'
@@ -266,6 +269,7 @@ export default {
     }
   },
   methods: {
+    getArticleReadTime,
     getHref,
     getTruncatedVal,
     getValue,
