@@ -230,7 +230,7 @@ function render (req, res, next) {
     isProd && !isPreview && redisWriting(req.url, html, null, 120)
   })
 }
-app.use('/story/amp', require('./api/middle/story/index.amp'))
+app.use('/story/amp', require('./amp/service/api'))
 
 app.use('/api', require('./api/index'), () => {
   /** END */
@@ -258,8 +258,9 @@ app.get('*', (req, res, next) => {
   readyPromise.then(() => render(req, res, next))
 })
 
-process.on('unhandledRejection', error => {
-  console.log('[unhandledRejection] ', error.message);
+process.on('unhandledRejection', reason => {
+  console.error(`\n[Unhandled Rejection]`)
+  console.error(`${reason}\n`)
 });
 
 const port = process.env.PORT || 8080
