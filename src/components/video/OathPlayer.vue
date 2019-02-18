@@ -1,60 +1,40 @@
 <template>
   <div class="oath-player">
-    <div :class="[ 'vdb_player', `vdb_${combinedId}` ]"></div>
+    <div class="vdb_player"></div>
   </div>
 </template>
 <script>
 
-import { OATH_COPMANY_ID, OATH_PLAYER_LIST } from '../../constants'
-
 export default {
   naem: 'OathPlayer',
-  data () {
-    return {
-      OATH_COPMANY_ID,
-      OATH_PLAYER_LIST,
-      combinedId: ``
-    }
-  },
-  computed: {
-    playerId () {
-      const path = this.$route.fullPath
-      const type = this.$store.state.viewport.width > 768 ? 'desktop' : 'mobile'
-      if (path.match(/\/section\//)) {
-        return OATH_PLAYER_LIST.section[type]
-      } else if (path.match(/\/category\//)) {
-        const categoryName = path.split('/')[2]
-        return OATH_PLAYER_LIST.category[categoryName][type]
-      } else {
-        return OATH_PLAYER_LIST.singleVideo[type]
-      }
+  props: {
+    combinedId: {
+      type: String,
+      required: true
     },
-    scriptSrc () {
-      const path = this.$route.fullPath
-      if (path.match(/\/video\//)) {
-        const videoId = path.split('/')[2]
-        return `//delivery.vidible.tv/jsonp/pid=${this.playerId}/vid=${videoId}/${OATH_COPMANY_ID}.js`
-      }
-      return `//delivery.vidible.tv/jsonp/pid=${this.playerId}/${OATH_COPMANY_ID}.js`
+    scriptSrc: {
+      type: String,
+      required: true
     }
   },
   watch: {
-    playerId (value) {
-      this.combinedId = `${value}${OATH_COPMANY_ID}`
+    combinedId (newValue, oldValue) {
+      document.querySelector('.vdb_player').classList.remove(`vdb_${oldValue}`)
       this.embedScript()
     }
   },
-  mounted () {
-    this.combinedId = `${this.playerId}${OATH_COPMANY_ID}`
+  beforeMount () {
     this.embedScript()
   },
   methods: {
     embedScript () {
-      document.querySelector('.vdb_player').innerHTML = ''
+      const container = document.querySelector('.vdb_player')
+      container.innerHTML = ''
+      container.classList.add(`vdb_${this.combinedId}`)
       const script = document.createElement("script")
       script.setAttribute('type', 'text/javascript')
       script.setAttribute('src', this.scriptSrc)
-      document.querySelector('.vdb_player').appendChild(script)
+      container.appendChild(script)
     }
   }
 }

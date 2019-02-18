@@ -72,7 +72,7 @@ export function createStore () {
       nodes: {},
       ogimage: {},
       playlist: {
-        info: []
+        info: {}
       },
       searchResult: {},
       tag: {},
@@ -260,14 +260,16 @@ export function createStore () {
         })
       },
       
-      FETCH_OATH_PLAYLIST: ({ commit, state }, { ids, params }) => {
+      FETCH_OATH_PLAYLIST: ({ commit, state }, { id, params }) => {
         const playlistAmount = Object.keys(OATH_PLAYLIST).length || 0
-        return fetchOathPlaylist({ ids, params }).then(playlist => {
-          if (state.playlist.info.length > 0) {
-            const orig = _.values(state.playlist.info)
-            playlist.data = _.concat(orig, playlist.data)
-          }
-          state.playlist.info.length < playlistAmount ? commit('SET_OATH_PLAYLIST', { playlist: playlist.data }) : ''
+        return fetchOathPlaylist({ id, params }).then(playlist => {
+          // console.log('--- playlist', playlist)
+          commit('SET_OATH_PLAYLIST', { id: id, playlist: playlist.data[0] })
+          // if (state.playlist.info.length > 0) {
+          //   const orig = _.values(state.playlist.info)
+          //   playlist.data = _.concat(orig, playlist.data)
+          // }
+          // state.playlist.info.length < playlistAmount ? commit('SET_OATH_PLAYLIST', { playlist: playlist.data }) : ''
         })
       },
       
@@ -477,8 +479,8 @@ export function createStore () {
         Vue.set(state, 'nodes', nodes)
       },
 
-      SET_OATH_PLAYLIST: (state, { playlist }) => {
-        Vue.set(state.playlist, 'info', playlist)
+      SET_OATH_PLAYLIST: (state, { id, playlist }) => {
+        Vue.set(state['playlist']['info'], id, playlist)
       },
       
       SET_OATH_VIDEO: (state, { id, video }) => {

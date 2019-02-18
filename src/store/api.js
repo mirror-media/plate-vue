@@ -211,10 +211,12 @@ function loadNodes (params = {}) {
   return _doFetch(url)
 }
 
-function loadOathPlaylist ({ ids, params }) {
-  const query = _buildQuery(params)
-  let url = `${_host}/api/playlistng/${ids}`
-  url = `${url}?${query}`
+function loadOathPlaylist ({ id, params }) {
+  let url = `${_host}/api/playlistng/${id}`
+  if (params) {
+    const query = _buildQuery(params)
+    url = `${url}?${query}`
+  }
   return _doFetch(url)
 }
 
@@ -355,8 +357,8 @@ export function fetchNodes (params = {}) {
   return loadNodes(params)
 }
 
-export function fetchOathPlaylist ({ ids = '', params = {} }) {
-  return loadOathPlaylist({ ids, params })
+export function fetchOathPlaylist ({ id = '', params }) {
+  return loadOathPlaylist({ id, params })
 }
 
 export function fetchOathVideo ({ id = '', params = {} }) {

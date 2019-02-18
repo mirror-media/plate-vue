@@ -3,13 +3,16 @@
     <slot name="PCHD"></slot>
     <slot name="MBHD"></slot>
     <div class="single-video__video">
-      <OathPlayer></OathPlayer>
+      <OathPlayer :combinedId="combinedId" :scriptSrc="scriptSrc"></OathPlayer>
       <h1 v-text="video.name"></h1>
       <div class="single-video__video-info">
         <p class="small" v-text="moment(video.publishDate).format('YYYY. MM. DD')"></p>
         <slot name="share"></slot>
       </div>
       <p v-text="video.description"></p>
+      <div class="single-video__comments">
+        <div v-if="mounted" :href="`${SITE_URL}/video/${video.id}`" class="fb-comments" data-numposts="5" data-width="100%"></div>
+      </div>
     </div>
     <template v-if="latest.length > 0">
       <div class="single-video__latest">
@@ -30,9 +33,7 @@
         </a>
       </div>
     </template>
-    <div class="single-video__comments">
-      <div v-if="mounted" :href="`${SITE_URL}/video/${$route.params.slug}`" class="fb-comments" data-numposts="5" data-width="100%"></div>
-    </div>
+    
     <slot name="PCFT"></slot>
     <slot name="MBFT"></slot>
   </section>
@@ -41,6 +42,7 @@
 
 import OathPlayer from './OathPlayer.vue'
 import moment from 'moment'
+import { OATH_COPMANY_ID, OATH_PLAYER_LIST } from '../../constants'
 import { SITE_URL } from '../../constants'
 
 export default {
@@ -63,9 +65,20 @@ export default {
     }
   },
   computed: {
-    latest () {
-      return this.videos.filter(video => video.id !== this.$route.params.slug).slice(0, 7)
+    combinedId () {
+      return `${this.playerId}${OATH_COPMANY_ID}`
     },
+    latest () {
+      return this.videos.filter(video => video.id !== video.id).slice(0, 7)
+    },
+    playerId () {
+      const type = this.$store.state.viewport.width > 768 ? 'desktop' : 'mobile'
+      return OATH_PLAYER_LIST.singleVideo[type]
+    },
+    scriptSrc () {
+      const videoId = this.$route.fullPath.split('/')[2]
+      return `//delivery.vidible.tv/jsonp/pid=${this.playerId}/vid=${videoId}/${OATH_COPMANY_ID}.js`
+    }
   },
   mounted () {
     this.mounted = true
@@ -142,7 +155,7 @@ export default {
     width 90%
     margin 40px auto 0
     >>> iframe
-      width 100%
+      width 100% !important 
 
 @media (min-width: 768px)
   .single-video
@@ -195,6 +208,5 @@ export default {
           &:hover
             color #064f77
     &__comments
-      width 66.67%
-      margin 40px auto 0 0
+      width 100%
 </style>
