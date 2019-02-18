@@ -1,6 +1,6 @@
 <template>
   <section class="video-leading">
-    <OathPlayer class="video-leading__player"></OathPlayer>
+    <OathPlayer :combinedId="combinedId" :scriptSrc="scriptSrc" class="video-leading__player"></OathPlayer>
     <slot name="LPCHD"></slot>
     <slot name="LMBHD"></slot>
   </section>
@@ -8,11 +8,30 @@
 <script>
 
 import OathPlayer from './OathPlayer.vue'
+import { OATH_COPMANY_ID, OATH_PLAYER_LIST } from '../../constants'
 
 export default {
   name: 'VideoLeading',
   components: {
     OathPlayer
+  },
+  computed: {
+    combinedId () {
+      return `${this.playerId}${OATH_COPMANY_ID}`
+    },
+    playerId () {
+      const path = this.$route.fullPath
+      const type = this.$store.state.viewport.width > 768 ? 'desktop' : 'mobile'
+      if (path.match(/\/section\//)) {
+        return OATH_PLAYER_LIST.section[type]
+      } else if (path.match(/\/category\//)) {
+        const categoryName = path.split('/')[2]
+        return OATH_PLAYER_LIST.category[categoryName][type]
+      }
+    },
+    scriptSrc () {
+      return `//delivery.vidible.tv/jsonp/pid=${this.playerId}/${OATH_COPMANY_ID}.js`
+    }
   },
 }
 </script>
