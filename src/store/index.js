@@ -264,16 +264,16 @@ export function createStore () {
           })
       },
 
-      FETCH_SEARCH: ({ commit, state }, { keyword, params }) => {
+      FETCH_SEARCH: async ({ commit, state }, { params }) => {
         const orig = _.values(state.searchResult[ 'items' ])
-        return state.searchResult.items && (params.page > 1)
-          ? fetchSearch(keyword, params).then(searchResult => {
-            searchResult[ 'items' ] = _.concat(orig, _.get(searchResult, [ 'hits' ]))
-            commit('SET_SEARCH', { searchResult })
-          }) : fetchSearch(keyword, params).then(searchResult => {
-            searchResult[ 'items' ] = _.get(searchResult, [ 'hits' ])
-            commit('SET_SEARCH', { searchResult })
-          })
+        const searchResult = await fetchSearch(params).catch(err => ({}))
+        if (state.searchResult.items && (params.page > 1)) {
+          searchResult.items = _.concat(orig, _.get(searchResult, 'hits.hits'))
+          return commit('SET_SEARCH', { searchResult })
+        } else {
+          searchResult.items = _.get(searchResult, 'hits.hits')
+          return commit('SET_SEARCH', { searchResult })
+        }
       },
 
       FETCH_TAG: ({ commit, state }, { id }) => {
@@ -499,6 +499,12 @@ export function createStore () {
     },
 
     getters: {
+      searchResultNormalized: state => {
+        return _.map(state.searchResult.items, item => Object.assign({ id: _.get(item, 'id') }, _.get(item, 'source')))
+      },
+      searchResultTotalCount: state => {
+        return _.get(state.searchResult, 'hits.total', 0)
+      },
       topic: state => {
         return state.topic
       },

@@ -10,7 +10,7 @@ const _host = getHost()
 
 function _buildQuery (params = {}) {
   let query = {}
-  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id' ]
+  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id', 'keyword' ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where' || ele === 'embedded') {
@@ -218,9 +218,10 @@ function loadPartners (params = {}) {
   return _doFetch(url)
 }
 
-function loadSearch (keyword = '', params = {}) {
+function loadSearch (params = {}) {
+  const query = _buildQuery(params)
   let url = `${_host}/api/search`
-  url = `${url}?query=${encodeURIComponent(`"${keyword}"`)}&hitsPerPage=${params.max_results}&page=${params.page - 1}`
+  url = `${url}?${query}`
   return _doFetch(url)
 }
 
@@ -341,8 +342,8 @@ export function fetchRecommendList (params = {}) {
   return loadData(params, 'related_news')
 }
 
-export function fetchSearch (keyword = '', params = {}) {
-  return loadSearch(keyword, params)
+export function fetchSearch (params = {}) {
+  return loadSearch(params)
 }
 
 export function fetchSectionList () {
