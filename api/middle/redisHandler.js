@@ -1,6 +1,6 @@
 const debug = require('debug')('PLATEVUE:redis')
 const isProd = process.env.NODE_ENV === 'production'
-const isTest = process.env.NODE_ENV === 'test'
+// const isTest = process.env.NODE_ENV === 'test'
 const RedisConnectionPool = require('redis-connection-pool')
 
 const { 
@@ -121,12 +121,14 @@ const redisWriting = (url, data, callback, timeout) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if(err) {
-      console.log('redis writing in fail. ', decodeURIComponent(url), err)
+      console.error(`\n[ERROR] Write data to Redis in fail. ${decodeURIComponent(url)}`)
+      console.error(`${err}\n`)
     } else {
       debug('Set timeout as:', timeout || REDIS_TIMEOUT)
       redisPoolWrite.expire(decodeURIComponent(url), timeout || REDIS_TIMEOUT || 5000, function(error, d) {
         if(error) {
-          console.log('failed to set redis expire time. ', decodeURIComponent(url), err)
+          console.error(`\n[ERROR] Set redis expire time in fail. ${decodeURIComponent(url)}`)
+          console.error(`${err}\n`)
         } else {
           callback && callback()
         }
@@ -151,6 +153,7 @@ const insertIntoRedis = (req, res, next) => {
     // next()
   })
 }
+
 const fetchFromRedis = (req, res, next) => {
   debug('Trying to fetching data from redis...', req.url)
   redisFetching(req.url, ({ error, data }) => {
@@ -165,8 +168,24 @@ const fetchFromRedis = (req, res, next) => {
   })
 }
 
+const fetchFromRedisForAPI = (req, res, next) => {
+  debug('Trying to fetching data from redis...', req.url)
+  redisFetching(req.url, ({ error, data }) => {
+    if (!error && data) {
+      debug('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, decodeURIComponent(req.url))
+      res.header('Cache-Control', 'public, max-age=300')
+      res.json(JSON.parse(data))
+    } else {
+      console.error(`\n[ERROR] Fetch data from Redis in fail.`)
+      console.error(`${req.url}\n`)
+      next(error)
+    }
+  })
+}
+
 module.exports = {
   fetchFromRedis,
+  fetchFromRedisForAPI,
   insertIntoRedis,
   redisFetching,
   redisFetchingRecommendNews,
