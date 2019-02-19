@@ -3,7 +3,7 @@
     <slot name="PCHD"></slot>
     <slot name="MBHD"></slot>
     <div class="single-video__video">
-      <OathPlayer :combinedId="combinedId" :scriptSrc="scriptSrc"></OathPlayer>
+      <OathPlayer :combinedId="combinedId" :playerId="playerId" :scriptSrc="scriptSrc" :videoId="video.id"></OathPlayer>
       <h1 v-text="video.name"></h1>
       <div class="single-video__video-info">
         <p class="small" v-text="moment(video.publishDate).format('YYYY. MM. DD')"></p>
@@ -69,7 +69,7 @@ export default {
       return `${this.playerId}${OATH_COPMANY_ID}`
     },
     latest () {
-      return this.videos.filter(video => video.id !== video.id).slice(0, 7)
+      return this.videos.filter(video => video.id !== this.video.id).slice(0, 7)
     },
     playerId () {
       const type = this.$store.state.viewport.width > 768 ? 'desktop' : 'mobile'

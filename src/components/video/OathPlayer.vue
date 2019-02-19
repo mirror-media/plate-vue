@@ -1,9 +1,11 @@
 <template>
   <div class="oath-player">
-    <div class="vdb_player"></div>
+    <div id="vdbPlayer" class="vdb_player"></div>
   </div>
 </template>
 <script>
+
+import { OATH_COPMANY_ID } from '../../constants'
 
 export default {
   naem: 'OathPlayer',
@@ -12,30 +14,56 @@ export default {
       type: String,
       required: true
     },
+    playerId: {
+      type: String,
+      required: true
+    },
     scriptSrc: {
       type: String,
       required: true
+    },
+    videoId: {
+      type: String,
+      default: ``
     }
   },
   watch: {
-    combinedId (newValue, oldValue) {
-      document.querySelector('.vdb_player').classList.remove(`vdb_${oldValue}`)
-      this.embedScript()
-    }
+    '$route.fullPath' () {
+      this.embedPlayer()
+    },
+    // combinedId (newValue, oldValue) {
+    //   document.querySelector('.vdb_player').classList.remove(`vdb_${oldValue}`)
+    //   this.embedScript()
+    // }
   },
   beforeMount () {
-    this.embedScript()
+    // this.embedScript()
+    this.embedPlayer()
+    console.log('beforeMount', window)
+  },
+  mounted ( ){
+    console.log('mounted', window)
   },
   methods: {
-    embedScript () {
+    embedPlayer () {
       const container = document.querySelector('.vdb_player')
       container.innerHTML = ''
-      container.classList.add(`vdb_${this.combinedId}`)
-      const script = document.createElement("script")
-      script.setAttribute('type', 'text/javascript')
-      script.setAttribute('src', this.scriptSrc)
-      container.appendChild(script)
-    }
+      /*global vidible:true*/
+      vidible.player('vdbPlayer').setup({
+        bcid: `${OATH_COPMANY_ID}`,
+        pid: `${this.playerId}`,
+        videos: [ `${this.videoId}` ]
+      }).load()
+    },
+    // embedScript () {
+    //   const container = document.querySelector('.vdb_player')
+    //   container.innerHTML = ''
+    //   container.classList.add(`vdb_${this.combinedId}`)
+    //   const script = document.createElement("script")
+    //   script.setAttribute('type', 'text/javascript')
+    //   script.setAttribute('src', this.scriptSrc)
+    //   container.appendChild(script)
+    // }
   }
 }
 </script>
