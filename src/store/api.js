@@ -10,7 +10,7 @@ const _host = getHost()
 
 function _buildQuery (params = {}) {
   let query = {}
-  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id', 'keyword' ]
+  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id', 'keyword', 'offset' ]
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where' || ele === 'embedded') {
@@ -211,6 +211,30 @@ function loadNodes (params = {}) {
   return _doFetch(url)
 }
 
+function loadOathPlaylist ({ id, params }) {
+  let url = `${_host}/api/playlistng/${id}`
+  if (params) {
+    const query = _buildQuery(params)
+    url = `${url}?${query}`
+  }
+  return _doFetch(url)
+}
+
+
+function loadOathVideo ({ id, params }) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/video/${id}`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
+function loadOathVideoByPlaylist ({ id, params }) {
+  const query = _buildQuery(params)
+  let url = `${_host}/api/video/playlist/${id}`
+  url = `${url}?${query}`
+  return _doFetch(url)
+}
+
 function loadPartners (params = {}) {
   const query = _buildQuery(params)
   let url = `${_host}/api/partners`
@@ -332,6 +356,18 @@ export function fetchLatestArticle (params = {}) {
 
 export function fetchNodes (params = {}) {
   return loadNodes(params)
+}
+
+export function fetchOathPlaylist ({ id = '', params }) {
+  return loadOathPlaylist({ id, params })
+}
+
+export function fetchOathVideo ({ id = '', params = {} }) {
+  return loadOathVideo({ id, params })
+}
+
+export function fetchOathVideoByPlaylist ({ id = '', params = {} }) {
+  return loadOathVideoByPlaylist({ id, params })
 }
 
 export function fetchPartners (params = {}) {

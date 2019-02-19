@@ -18,17 +18,32 @@
         :key="`sidebar-section-${section.id}`"
         :style="{ borderLeftColor: getColor(section) }"
         class="section">
-        <router-link :to="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></router-link>
-        <div v-if="section.categories.length > 0" class="categories">
-          <router-link
-            v-for="category in filterSectionCategories(section)"
-            :key="`sidebar-category-${category.id}`"
-            :to="`/category/${category.name}`"
-            :data-gtm="`category ${category.name}`"
-            data-gtm-category="header"
-            v-text="category.title">
-          </router-link>
-        </div>
+        <router-link v-if="section.name !== 'videohub'" :to="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></router-link>
+        <a v-else :href="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></a>
+        <template v-if="section.name === 'videohub'">
+          <div class="categories">
+            <a
+              v-for="category in oathCategories"
+              :key="`sidebar-category-${category.categoryName}`"
+              :href="`/category/${category.categoryName}`"
+              :data-gtm="`category ${category.categoryName}`"
+              data-gtm-category="header"
+              v-text="category.name">
+            </a>
+          </div>
+        </template>
+        <template v-else-if="section.categories.length > 0">
+          <div class="categories">
+            <router-link
+              v-for="category in filterSectionCategories(section)"
+              :key="`sidebar-category-${category.id}`"
+              :to="`/category/${category.name}`"
+              :data-gtm="`category ${category.name}`"
+              data-gtm-category="header"
+              v-text="category.title">
+            </router-link>
+          </div>
+        </template>
       </div>
       <div class="section external">
         <a v-text="$t('HEADER.EXTERNAL')"></a>
@@ -70,7 +85,7 @@
 </template>
 <script>
 
-import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
+import { OATH_PLAYLIST, SECTION_MAP, SOCIAL_LINK } from '../../constants'
 import { get, } from 'lodash'
 
 export default {
@@ -109,6 +124,9 @@ export default {
     },
     activeTopics () {
       return this.topics.filter(topic => topic.id && topic.name)
+    },
+    oathCategories () {
+      return Object.values(OATH_PLAYLIST).sort((a, b) => a.order - b.order)
     }
   },
   methods: {
