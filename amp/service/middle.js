@@ -4,10 +4,10 @@ require("@babel/polyfill")
 const _ = require('lodash')
 const { get, isEmpty, find, } = require('lodash')
 const superagent = require('superagent')
-const { redisFetching, redisWriting, } = require('../redisHandler')
+const { redisFetching, redisWriting, } = require('../../api/middle/redisHandler')
 const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph, getTweetIdFromEmbeddedCode } = require('./util')
-const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../config')
-const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT, ALEXA_ATRK_ACCT, SITE_DOMAIN } = require('../../../src/constants')
+const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../api/config')
+const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT, ALEXA_ATRK_ACCT, SITE_DOMAIN } = require('../../src/constants')
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
