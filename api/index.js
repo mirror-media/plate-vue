@@ -1,4 +1,4 @@
-const { get } = require('lodash')
+const { get, isString, toNumber } = require('lodash')
 const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/redisHandler') 
 const config = require('./config')
 const bodyParser = require('body-parser')
@@ -28,18 +28,18 @@ const isValidJSONString = str => {
   return true
 }
 const handlerError = (err, res) => {
-  const text = _.get(res, 'text') || _.get(err, 'message', '{}')
+  const text = get(res, 'text') || get(err, 'message', '{}')
   return {
-    status: (typeof(_.get(res, 'status')) === 'number' && _.get(res, 'status')) || _.get(err, 'status') || 500,
+    status: (typeof(get(res, 'status')) === 'number' && get(res, 'status')) || get(err, 'status') || 500,
     text: !isValidJSONString(text)
-      ? _.isString(text)
+      ? isString(text)
       ? `{message:${text}}`
       : `{}`
       : text
   }
 }
 
-router.all('/', function(req, res, next) {
+router.all('/', (req, res, next) => {
   next()
 });
 
@@ -147,39 +147,34 @@ router.post('/newsletter', jsonParser, async (req, res) => {
   }
 })
 
-router.get('/video/:id', fetchFromRedis, (req, res, next) => {
+router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
   if (res.redis) {
-    console.log('Fetch data from Redis.')
     const resData = JSON.parse(res.redis)
     res.header('Cache-Control', 'public, max-age=300')
     res.json(resData)
   } else {
     const url = `${config.OATH_PROTOCOL}://${config.OATH_HOST}/${config.OATH_COMPANY_KEY}/video/${req.params.id}`
-    superagent
-    .get(url)
-    .timeout(config.API_TIMEOUT)
-    .query({ show_transcript: false, show_renditions: false, show_number_of_videos: true })
-    .end((e, response) => {
-      console.log('Fetch from oath api.', url)
-      if (!e && response) {
-        res.dataString = response.text
-        res.json(JSON.parse(response.text))
-        next()
-      } else {
-        const status = e.status || e.statusCode || 500
-        let message = _.get(e, 'response.text')
-        message = message ? _.get(JSON.parse(message), 'failureCause.message') : e
-        res.status(status).send(message)
-        console.error(`error during fetch data from ${req.url}`)
-        console.error(e)
-      }
-    })
+    try {
+      const response = await superagent
+        .get(url)
+        .timeout(config.API_TIMEOUT)
+        .query({ show_transcript: false, show_renditions: false, show_number_of_videos: true })
+      res.dataString = response.text
+      res.json(JSON.parse(response.text))
+      next()
+    } catch (error) {
+      const status = error.status || error.statusCode || 500
+      let message = get(error, 'response.text')
+      message = message ? get(JSON.parse(message), 'failureCause.message') : error
+      res.status(status).send(message)
+      console.error(`\n[ERROR] GET oath api.`, url)
+      console.error(`${error}\n`)
+    }
   }
 }, insertIntoRedis)
 
-router.get('/video/playlist/:playlistId', fetchFromRedis, (req, res, next) => {
+router.get('/video/playlist/:playlistId', fetchFromRedisForAPI, async (req, res, next) => {
   if (res.redis) {
-    console.log('Fetch data from Redis.')
     const resData = JSON.parse(res.redis)
     res.header('Cache-Control', 'public, max-age=300')
     res.json(resData)
@@ -187,59 +182,53 @@ router.get('/video/playlist/:playlistId', fetchFromRedis, (req, res, next) => {
     const limit = req.query.max_results || 4
     const offset = req.query.offset || 0
     const url = `${config.OATH_PROTOCOL}://${config.OATH_HOST}/${config.OATH_COMPANY_KEY}/${req.params.playlistId}`
-    superagent
-    .get(url)
-    .timeout(config.API_TIMEOUT)
-    .query({ limit: limit, offset: offset, show_transcript: false, show_renditions: false, show_number_of_videos: true })
-    .end((e, response) => {
-      console.log('Fetch from oath api.', url)
-      if (!e && response) {
-        res.dataString = response.text
-        res.json(JSON.parse(response.text))
-        next()
-      } else {
-        const status = e.status || e.statusCode || 500
-        let message = _.get(e, 'response.text')
-        message = message ? _.get(JSON.parse(message), 'failureCause.message') : e
-        res.status(status).send(message)
-        console.error(`error during fetch data from ${req.url}`)
-        console.error(e)
-      }
-    })
+    try {
+      const response = await superagent
+        .get(url)
+        .timeout(config.API_TIMEOUT)
+        .query({ limit: limit, offset: offset, show_transcript: false, show_renditions: false, show_number_of_videos: true })
+      res.dataString = response.text
+      res.json(JSON.parse(response.text))
+      next()
+    } catch (error) {
+      const status = error.status || error.statusCode || 500
+      let message = get(error, 'response.text')
+      message = message ? get(JSON.parse(message), 'failureCause.message') : error
+      res.status(status).send(message)
+      console.error(`\n[ERROR] GET oath api.`, url)
+      console.error(`${error}\n`)
+    }
   }
 }, insertIntoRedis)
 
-router.get('/playlistng/:ids', fetchFromRedis, (req, res, next) => {
+router.get('/playlistng/:ids', fetchFromRedisForAPI, async (req, res, next) => {
   if (res.redis) {
-    console.log('Fetch data from Redis.')
     const resData = JSON.parse(res.redis)
     res.header('Cache-Control', 'public, max-age=300')
     res.json(resData)
   } else {
     const limit = req.query.max_results || 10
     const url = `${config.OATH_PROTOCOL}://${config.OATH_HOST}/${config.OATH_COMPANY_KEY}/playlistng/${req.params.ids}`
-    superagent
-    .get(url)
-    .timeout(config.API_TIMEOUT)
-    .query({ limit: limit })
-    .end((e, response) => {
-      console.log('Fetch from oath api.', url)
-      if (!e && response) {
-        res.dataString = response.text
-        res.json(JSON.parse(response.text))
-        next()
-      } else {
-        const status = e.status || e.statusCode || 500
-        let message = _.get(e, 'response.text')
-        message = message ? _.get(JSON.parse(message), 'failureCause.message') : e
-        res.status(status).send(message)
-        console.error(`error during fetch data from ${req.url}`)
-        console.error(e)
-      }
-    })
+    try {
+      const response = await superagent
+        .get(url)
+        .timeout(config.API_TIMEOUT)
+        .query({ limit: limit })
+      res.dataString = response.text
+      res.json(JSON.parse(response.text))
+      next()
+    } catch (error) {
+      const status = error.status || error.statusCode || 500
+      let message = get(error, 'response.text')
+      message = message ? get(JSON.parse(message), 'failureCause.message') : error
+      res.status(status).send(message)
+      console.error(`\n[ERROR] GET oath api.`, url)
+      console.error(`${error}\n`)
+    }
   }
 }, insertIntoRedis)
 
+// deprecated
 router.get('/playlist', (req, res) => {
   let query = req.query
   let url = `${config.YOUTUBE_PROTOCOL}://${config.YOUTUBE_HOST}?part=snippet&playlistId=${config.YOUTUBE_PLAYLIST_ID}&key=${config.YOUTUBE_API_KEY}`
@@ -269,42 +258,43 @@ router.get('/playlist', (req, res) => {
   })
 })
 
-router.use('/search', function(req, res, next) {
+router.use('/search', (req, res) => {
   const esSearch_url = `${config.SEARCH_PROTOCOL}://${config.SEARCH_HOST}:${config.SEARCH_PORT || 9200}${config.SEARCH_ENDPOINT}`
   redisFetching(`/search${req.url}`, ({ err, data }) => {
     if (!err && data) {
       res.json(JSON.parse(data))
     } else {
-      console.error(`\n[ERROR] Fetch data from Redis in fail.`, `${url}?${req.url}`)
+      console.error(`\n[ERROR] Fetch data from Redis in fail.`, `/search${req.url}`)
       console.error(`${err}\n`)
-      superagent
-      .post(esSearch_url)
-      .timeout({ response: config.SEARCH_TIMEOUT, deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, })
-      .set('Content-Type', 'application/json')
-      .send({
-        'from': (_.toNumber(_.get(req, 'query.page', 1)) - 1) * _.toNumber(_.get(req, 'query.max_results', 12)),
-        'size': _.toNumber(_.get(req, 'query.max_results', 12)),
+      const test = {
+        'from': (toNumber(get(req, 'query.page', 1)) - 1) * toNumber(get(req, 'query.max_results', 12)),
+        'size': toNumber(get(req, 'query.max_results', 12)),
         'query': {
           'multi_match' : {
-            'query': _.get(req, 'query.keyword', ''),
+            'query': get(req, 'query.keyword', ''),
             'type': 'phrase',
             'fields': [ 'title', 'brief' ]
           }
         }
+      }
+      superagent
+      .post(esSearch_url)
+      .timeout({ response: config.SEARCH_TIMEOUT, deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, })
+      .set('Content-Type', 'application/json')
+      .send(test)
+      .then(response => {
+        redisWriting(`/search${req.url}`, JSON.stringify(response.body))
+        res.json(response.body)
       })
-      .end((error, response) => {
-        if (!error) {
-          redisWriting(`/search${req.url}`, JSON.stringify(response.body))
-          res.json(response.body)
-        } else {
-          const errWrapped = handlerError(error)
-          res.status(errWrapped.status).send({
-            status: errWrapped.status,
-            text: errWrapped.text
-          })
-          console.error('Error occurred during fetching data from ', `/search${req.url}`)
-          console.error(error)
-        }
+      .catch(error => {
+        const errWrapped = handlerError(error)
+        res.status(errWrapped.status).send({
+          status: errWrapped.status,
+          text: errWrapped.text
+        })
+        console.error(`\n[ERROR] POST elastic search api`, esSearch_url)
+        console.error(test)
+        console.error(`${error}\n`)
       })
     }
   })
