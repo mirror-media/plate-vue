@@ -3,7 +3,7 @@
     <slot name="PCHD"></slot>
     <slot name="MBHD"></slot>
     <div class="single-video__video">
-      <OathPlayer :combinedId="combinedId" :playerId="playerId" :scriptSrc="scriptSrc" :videoId="video.id"></OathPlayer>
+      <OathPlayer :playerId="playerId" :videoId="video.id"></OathPlayer>
       <h1 v-text="video.name"></h1>
       <div class="single-video__video-info">
         <p class="small" v-text="moment(video.publishDate).format('YYYY. MM. DD')"></p>
@@ -42,7 +42,7 @@
 
 import OathPlayer from './OathPlayer.vue'
 import moment from 'moment'
-import { OATH_COPMANY_ID, OATH_PLAYER_LIST } from '../../constants'
+import { OATH_PLAYER_LIST } from '../../constants'
 import { SITE_URL } from '../../constants'
 
 export default {
@@ -65,19 +65,12 @@ export default {
     }
   },
   computed: {
-    combinedId () {
-      return `${this.playerId}${OATH_COPMANY_ID}`
-    },
     latest () {
       return this.videos.filter(video => video.id !== this.video.id).slice(0, 7)
     },
     playerId () {
       const type = this.$store.state.viewport.width > 768 ? 'desktop' : 'mobile'
       return OATH_PLAYER_LIST.singleVideo[type]
-    },
-    scriptSrc () {
-      const videoId = this.$route.fullPath.split('/')[2]
-      return `//delivery.vidible.tv/jsonp/pid=${this.playerId}/vid=${videoId}/${OATH_COPMANY_ID}.js`
     }
   },
   mounted () {
