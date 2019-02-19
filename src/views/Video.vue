@@ -5,37 +5,37 @@
       <template v-if="isSingleVideoPage">
         <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
           <ShareLight slot="share" :gtmCategory="'article'" />
-          <!-- <template v-if="mounted">
+          <template v-if="mounted">
             <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCHD" :config="props.config" class="dfp" pos="PCHD" />
             <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
-          </template> -->
-          <!-- <template v-if="mounted">
+          </template>
+          <template v-if="mounted">
             <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCFT" :config="props.config" class="dfp" pos="PCFT" />
             <vue-dfp :is="props.vueDfp" v-else slot="MBFT" :config="props.config" class="dfp" pos="MBFT" />
-          </template> -->
-          <!-- <template v-if="mounted">
+          </template>
+          <template v-if="mounted">
             <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCR1" :config="props.config" class="dfp" pos="PCR1" style="margin-top: 0;" />
             <vue-dfp :is="props.vueDfp" v-else slot="MBE1" :config="props.config" class="dfp" pos="MBE1" />
-          </template> -->
+          </template>
         </SingleVideoBody>
       </template>
       <template v-else>
         <VideoLeading>
-          <!-- <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="LPCHD" :config="props.config" class="dfp" pos="LPCHD" />
-          <vue-dfp :is="props.vueDfp" v-else slot="LMBHD" :config="props.config" class="dfp" pos="LMBHD" /> -->
+          <vue-dfp :is="props.vueDfp" v-if="mounted && viewportWidth >= 1200" slot="LPCHD" :config="props.config" class="dfp" pos="LPCHD" />
+          <vue-dfp :is="props.vueDfp" v-if="mounted && viewportWidth < 1200" slot="LMBHD" :config="props.config" class="dfp" pos="LMBHD" />
         </VideoLeading>
         <template v-for="(item, index) in playlist">
           <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
             <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
-            <!-- <template v-if="mounted && isCategoryPage">
+            <template v-if="mounted && isCategoryPage">
               <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
               <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" />
-            </template> -->
+            </template>
           </VideoList>
-          <!-- <template v-if="mounted && !isCategoryPage">
+          <template v-if="mounted && !isCategoryPage">
             <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200 && index === 4" :key="`${index}-LPCFT`" :config="props.config" class="dfp" pos="LPCFT" />
             <vue-dfp :is="props.vueDfp" v-if="viewportWidth < 1200 && index === 2" :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" />
-          </template> -->
+          </template>
         </template>
       </template>
       <section class="footer container">
@@ -43,6 +43,15 @@
       </section>
       <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
       <Share v-if="!isSingleVideoPage" left="20px" bottom="20px" />
+      <DfpCover v-show="showDfpCoverAdFlag && viewportWidth < 1199">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
+      </DfpCover>
+      <DfpCover v-if="showDfpCoverAd2Flag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
+      </DfpCover>
+      <DfpCover v-if="showDfpCoverInnityFlag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
+        <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewviewportWidthport < 550)" :config="props.config" slot="ad-cover" />
+      </DfpCover>
     </template>
   </VueDfpProvider>
 </template>
@@ -253,8 +262,10 @@ export default {
       OATH_PLAYLIST,
       dfpHeaderLogoLoaded: false,
       mounted: false,
+      showDfpCoverAdFlag: false,
+      showDfpCoverAd2Flag: false,
+      showDfpCoverInnityFlag: false,
       showDfpHeaderLogo: false,
-      // viewport: 0,
     }
   },
   computed: {
@@ -376,7 +387,7 @@ export default {
       return videos
     },
     viewportWidth () {
-      return this.$store.state.viewport
+      return this.$store.state.viewport.width
     }
   },
   watch: {
@@ -393,22 +404,15 @@ export default {
   },
   beforeMount () {
     const jobs = [ fetchEvent(this.$store, 'embedded'), fetchEvent(this.$store, 'logo') ]
-
     if (this.$route.fullPath.match(/\/section\//)) {
       fetchFullPlaylist(this.$store, jobs)
     }
-
     Promise.all(jobs)
-    // this.updateViewport()
-    // window.addEventListener('resize', this.updateViewport)
   },
   mounted () {
     this.mounted = true
     this.sendGA()
   },
-  // beforeDestroy () {
-  //   window.removeEventListener('resize', this.updateViewport)
-  // },
   methods: {
     currEnv,
     handleLoadmore ({ id, offset }) {
@@ -422,10 +426,7 @@ export default {
       window.ga('set', 'contentGroup2', categoryLabel)
       window.ga('set', 'contentGroup3', '')
       window.ga('send', 'pageview', { title: this.title, location: document.location.href })
-    },
-    // updateViewport () {
-    //   this.viewport = document.documentElement.clientWidth || document.body.clientWidth
-    // }
+    }
   }
 }
 </script>
