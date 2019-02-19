@@ -18,17 +18,18 @@
         :key="`sidebar-section-${section.id}`"
         :style="{ borderLeftColor: getColor(section) }"
         class="section">
-        <router-link :to="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></router-link>
+        <router-link v-if="section.name !== 'videohub'" :to="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></router-link>
+        <a v-else :href="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></a>
         <template v-if="section.name === 'videohub'">
           <div class="categories">
-            <router-link
+            <a
               v-for="category in oathCategories"
               :key="`sidebar-category-${category.categoryName}`"
-              :to="`/category/${category.categoryName}`"
+              :href="`/category/${category.categoryName}`"
               :data-gtm="`category ${category.categoryName}`"
               data-gtm-category="header"
               v-text="category.name">
-            </router-link>
+            </a>
           </div>
         </template>
         <template v-else-if="section.categories.length > 0">
@@ -43,7 +44,6 @@
             </router-link>
           </div>
         </template>
-        
       </div>
       <div class="section external">
         <a v-text="$t('HEADER.EXTERNAL')"></a>

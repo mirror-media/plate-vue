@@ -43,13 +43,13 @@
       </section>
       <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
       <Share v-if="!isSingleVideoPage" left="20px" bottom="20px" />
-      <DfpCover v-show="showDfpCoverAdFlag && viewportWidth < 1199">
+      <DfpCover v-if="mounted && showDfpCoverAdFlag && viewportWidth < 1199">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
-      <DfpCover v-if="showDfpCoverAd2Flag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
+      <DfpCover v-if="mounted && showDfpCoverAd2Flag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
-      <DfpCover v-if="showDfpCoverInnityFlag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
+      <DfpCover v-if="mounted && showDfpCoverInnityFlag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewviewportWidthport < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
     </template>
@@ -389,18 +389,6 @@ export default {
     viewportWidth () {
       return this.$store.state.viewport.width
     }
-  },
-  watch: {
-    '$route.fullPath' () {
-      this.$forceUpdate() // update meta
-      this.sendGA()
-    },
-  },
-  beforeRouteUpdate (to, from, next) {
-    if (to.fullPath.match(/\/section\//)) {
-      Promise.all(fetchFullPlaylist(this.$store))
-    }
-    next()
   },
   beforeMount () {
     const jobs = [ fetchEvent(this.$store, 'embedded'), fetchEvent(this.$store, 'logo') ]

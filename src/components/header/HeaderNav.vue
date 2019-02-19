@@ -7,20 +7,28 @@
         :style="{ minWidth: `calc(100% / ${sections.length + 1})`,borderTopColor: getColor(section) }"
         :class="[ section.name, 'section' ]">
         <router-link
+          v-if="section.name !== 'videohub'"
           :to="`/section/${section.name}`"
           :data-gtm="`section ${section.name}`"
           data-gtm-category="header">
           <span v-text="section.title"></span>
         </router-link>
+        <a
+          v-else
+          :href="`/section/${section.name}`"
+          :data-gtm="`section ${section.name}`"
+          data-gtm-category="header">
+          <span v-text="section.title"></span>
+        </a>
         <template v-if="section.name === 'videohub'">
           <div class="dropdown">
-            <router-link
+            <a
               v-for="category in oathCategories"
               :key="`dropdown-${category.categoryName}`"
-              :to="`/category/${category.categoryName}`"
+              :href="`/category/${category.categoryName}`"
               :data-gtm="`category ${category.categoryName}`"
               data-gtm-category="header"
-              v-text="category.name"></router-link>
+              v-text="category.name"></a>
           </div>
         </template>
         <template v-else-if="filterSectionCategories(section).length > 0">

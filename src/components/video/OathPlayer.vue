@@ -10,30 +10,28 @@ import { OATH_COPMANY_ID } from '../../constants'
 export default {
   naem: 'OathPlayer',
   props: {
+    combinedId: {
+      type: String,
+      required: true
+    },
     playerId: {
+      type: String,
+      required: true
+    },
+    scriptSrc: {
       type: String,
       required: true
     },
     videoId: {
       type: String,
       default: ``
-    }
-  },
-  watch: {
-    '$route.fullPath' () {
-      this.embedPlayer()
     },
   },
   beforeMount () {
-    this.embedPlayer()
-  },
-  mounted ( ){
-    if (!document.querySelector('.o2-script-api-wrapper')) {
-      this.embedPlayer()
-    }
+    this.embedScript()
   },
   methods: {
-    embedPlayer () {
+    embedPlayer () { // dynamic player
       const container = document.querySelector('.vdb_player')
       container ? container.innerHTML = '' : ''
       /*global vidible:true*/
@@ -42,6 +40,15 @@ export default {
         pid: `${this.playerId}`,
         videos: [ `${this.videoId}` ]
       }).load()
+    },
+    embedScript () {
+      const container = document.querySelector('.vdb_player')
+      container.innerHTML = ''
+      container.classList.add(`vdb_${this.combinedId}`)
+      const script = document.createElement("script")
+      script.setAttribute('type', 'text/javascript')
+      script.setAttribute('src', this.scriptSrc)
+      container.appendChild(script)
     }
   }
 }
