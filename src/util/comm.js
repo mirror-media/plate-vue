@@ -9,6 +9,29 @@ import uuidv4 from 'uuid/v4'
 
 const debug = require('debug')('CLIENT:comm')
 
+export function getArticleReadTime (paragraphs = []) {
+  const REGEX_ONLY_CHINESE = /[\u4E00-\u9FFF]+/g
+  const REGEX_NOT_EN_AND_NUMBER = /([^A-Za-z0-9])/g
+
+  const WPM_ENGLISH = 265
+  const WPM_CHINESE = 250
+
+  const textContents = paragraphs
+    .filter(paragraph => paragraph.type === 'unstyled')
+    .filter(paragraph => paragraph.content[0])
+    .map(paragraph => paragraph.content[0])
+  const combined = textContents.join(' ')
+  const countChinese = combined.match(REGEX_ONLY_CHINESE).join('').length
+  const countEnglishAndNumber = combined
+    .replace(REGEX_ONLY_CHINESE, ' ')
+    .replace(REGEX_NOT_EN_AND_NUMBER, ' ')
+    .split(' ')
+    .filter(word => word).length
+
+  const min = Math.round((countChinese / WPM_CHINESE) + (countEnglishAndNumber / WPM_ENGLISH))
+  return min
+}
+
 export function getAuthor (article, option = '', delimiter = '｜') {
   const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
     ? `文${delimiter}` + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, [ 'name' ], null) + '</a>' }).join('、') : ''
@@ -36,7 +59,8 @@ export function getBrief (article, count = 30, allowed_tags = '') {
   if (_.split(_.get(article, [ 'href' ]), '/')[1] === 'topic') {
     brief = _.get(article, [ 'ogDescription' ])
   } else {
-    const rawBrief = _.get(article, 'brief.html')
+    const metaBrief =  _.get(article, 'brief')
+    const rawBrief = !_.isString(metaBrief) ? _.get(metaBrief, 'html') : metaBrief
     brief = (sanitizeHtml(rawBrief, { allowedTags: [ allowed_tags ] }) === 'undefined' ?  undefined : sanitizeHtml(rawBrief, { allowedTags: [ allowed_tags ] })) || _.get(article, 'ogDescription')
   }
   return truncate(brief, count)

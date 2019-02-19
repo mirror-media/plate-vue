@@ -4,8 +4,7 @@ const config = require('./config')
 const bodyParser = require('body-parser')
 const debug = require('debug')('PLATEVUE:api')
 const express = require('express')
-const isProd = process.env.NODE_ENV === 'production'
-const RedisConnectionPool = require('redis-connection-pool')
+// const isProd = process.env.NODE_ENV === 'production'
 const router = express.Router()
 const superagent = require('superagent')
 const Twitter = require('twitter')
@@ -19,6 +18,26 @@ const loggingClient = new Logging({
 })
 
 const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API_PORT
+
+const isValidJSONString = str => {
+  try {
+    JSON.parse(str)
+  } catch (e) {
+    return false
+  }
+  return true
+}
+const handlerError = (err, res) => {
+  const text = _.get(res, 'text') || _.get(err, 'message', '{}')
+  return {
+    status: (typeof(_.get(res, 'status')) === 'number' && _.get(res, 'status')) || _.get(err, 'status') || 500,
+    text: !isValidJSONString(text)
+      ? _.isString(text)
+      ? `{message:${text}}`
+      : `{}`
+      : text
+  }
+}
 
 router.all('/', function(req, res, next) {
   next()
@@ -226,33 +245,43 @@ router.use('/playlist', function(req, res, next) {
 });
 
 router.use('/search', function(req, res, next) {
-  let query = req.query
-  let url = `${config.SEARCH_PROTOCOL}://${config.SEARCH_HOST}${config.SEARCH_ENDPOINT}`
-  redisFetching(`${url}?${req.url}`, ({ err, data }) => {
+  const esSearch_url = `${config.SEARCH_PROTOCOL}://${config.SEARCH_HOST}:${config.SEARCH_PORT || 9200}${config.SEARCH_ENDPOINT}`
+  redisFetching(`/search${req.url}`, ({ err, data }) => {
     if (!err && data) {
       res.json(JSON.parse(data))
     } else {
       superagent
-      .get(url)
-      .timeout(config.SEARCH_API_TIMEOUT)
-      .set('X-Algolia-API-Key', config.SEARCH_API_KEY)
-      .set('X-Algolia-Application-Id', config.SEARCH_API_APPID)
-      .query(query)
-      .end(function(e, response) {
-        if (e) {
-          const status = _.get(response, 'status') || _.get(e, 'status') || 500
-          res.status(status).send('{\'error\':' + e + '}')
-          // res.status(500).end('Internal Error 500')
-          console.error(`error during fetch data from search : ${req.url}`)
-          console.error(e)    
-        } else {
-          redisWriting(`${url}?${req.url}`, JSON.stringify(response.body))
+      .post(esSearch_url)
+      .timeout({ response: config.SEARCH_TIMEOUT, deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, })
+      .set('Content-Type', 'application/json')
+      .send({
+        'from': (_.toNumber(_.get(req, 'query.page', 1)) - 1) * _.toNumber(_.get(req, 'query.max_results', 12)),
+        'size': _.toNumber(_.get(req, 'query.max_results', 12)),
+        'query': {
+          'multi_match' : {
+            'query': _.get(req, 'query.keyword', ''),
+            'type': 'phrase',
+            'fields': [ 'title', 'brief' ]
+          }
+        }
+      })
+      .end((error, response) => {
+        if (!error) {
+          redisWriting(`/search${req.url}`, JSON.stringify(response.body))
           res.json(response.body)
+        } else {
+          const errWrapped = handlerError(error)
+          res.status(errWrapped.status).send({
+            status: errWrapped.status,
+            text: errWrapped.text
+          })
+          console.error('Error occurred during fetching data from ', `/search${req.url}`)
+          console.error(error)
         }
       })
     }
   })
-});
+})
 
 router.use('/twitter', function(req, res, next) {
   const query = req.query

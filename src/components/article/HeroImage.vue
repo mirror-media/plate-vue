@@ -98,7 +98,6 @@
 
 @media (min-width: 1200px)
   .hero-image
-    margin 0 auto
     figure
       width 100% 
       height auto

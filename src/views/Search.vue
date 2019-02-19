@@ -10,7 +10,7 @@
           <span class="search-title__text" v-text="title"></span>
           <div class="search-title__colorBlock"></div>
         </div>
-        <article-list :articles='articles.items' />
+        <article-list :articles='articles' />
         <loading :show="loading" />
         <section class="container">
           <more v-if="hasMore" v-on:loadMore="loadMore" />
@@ -48,19 +48,15 @@ const fetchCommonData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
 }
 
-const fetchSearch = (store, keyword, params) => {
-  return store.dispatch('FETCH_SEARCH', {
-    'keyword': keyword,
-    'params': params
-  })
-}
+const fetchSearch = (store, params) => store.dispatch('FETCH_SEARCH', { params, })
 
-const fetchData = (store) => {
+const fetchData = (store, route) => {
   return Promise.all([
     fetchCommonData(store),
-    fetchSearch(store, store.state.route.params.keyword, {
+    fetchSearch(store, {
       page: PAGE,
-      max_results: MAXRESULT
+      max_results: MAXRESULT,
+      keyword: route.params.keyword
     }),
     fetchPartners(store)
   ])
@@ -103,8 +99,8 @@ export default {
     'vue-dfp-provider': VueDfpProvider,
     HeaderR
   },
-  asyncData ({ store }) {
-    return fetchData(store)
+  asyncData ({ store, route }) {
+    return fetchData(store, route)
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
@@ -135,23 +131,6 @@ export default {
       `
     }
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      fetchSearch(vm.$store, to.params.keyword, {
-        page: PAGE,
-        max_results: MAXRESULT
-      })
-    })
-  },
-  beforeRouteUpdate (to, from, next) {
-    this.page = PAGE
-    fetchSearch(this.$store, to.params.keyword, {
-      page: PAGE,
-      max_results: MAXRESULT
-    }).then(() => {
-      next()
-    })
-  },
   data () {
     return {
       abIndicator: 'A',
@@ -172,13 +151,13 @@ export default {
   },
   computed: {
     articles () {
-      return this.$store.state.searchResult
+      return _.get(this.$store, 'getters.searchResultNormalized', [])
     },
     eventLogo () {
-      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+      return _.get(this.$store.state.eventLogo, 'items.0')
     },
     hasMore () {
-      return _.get(this.articles, [ 'items', 'length' ], 0) < _.get(this.articles, [ 'nbHits' ], 0)
+      return _.get(this.articles, 'length', 0) < _.get(this.$store, 'getters.searchResultTotalCount', 0)
     },
     title () {
       return this.$route.params.keyword
@@ -238,9 +217,10 @@ export default {
     loadMore () {
       this.page += 1
       this.loading = true
-      fetchSearch(this.$store, this.$route.params.keyword, {
+      fetchSearch(this.$store, {
         page: this.page,
-        max_results: MAXRESULT
+        max_results: MAXRESULT,
+        keyword: this.$route.params.keyword
       }).then(() => {
         this.loading = false
       })
@@ -255,7 +235,7 @@ export default {
     }
   },
   beforeMount () {
-    fetchEvent(this.$store, 'logo')
+    fetchEvent(this.$store, 'logo') 
   },
   mounted () {
     this.checkIfLockJS()
@@ -278,6 +258,7 @@ export default {
     title: function () {
       if (process.env.VUE_ENV === 'client') {
         window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
+        this.$forceUpdate()
       }
     }
   }
