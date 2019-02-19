@@ -10,15 +10,7 @@ import { OATH_COPMANY_ID } from '../../constants'
 export default {
   naem: 'OathPlayer',
   props: {
-    combinedId: {
-      type: String,
-      required: true
-    },
     playerId: {
-      type: String,
-      required: true
-    },
-    scriptSrc: {
       type: String,
       required: true
     },
@@ -31,39 +23,26 @@ export default {
     '$route.fullPath' () {
       this.embedPlayer()
     },
-    // combinedId (newValue, oldValue) {
-    //   document.querySelector('.vdb_player').classList.remove(`vdb_${oldValue}`)
-    //   this.embedScript()
-    // }
   },
   beforeMount () {
-    // this.embedScript()
     this.embedPlayer()
-    console.log('beforeMount', window)
   },
   mounted ( ){
-    console.log('mounted', window)
+    if (!document.querySelector('.o2-script-api-wrapper')) {
+      this.embedPlayer()
+    }
   },
   methods: {
     embedPlayer () {
       const container = document.querySelector('.vdb_player')
-      container.innerHTML = ''
+      container ? container.innerHTML = '' : ''
       /*global vidible:true*/
       vidible.player('vdbPlayer').setup({
         bcid: `${OATH_COPMANY_ID}`,
         pid: `${this.playerId}`,
         videos: [ `${this.videoId}` ]
       }).load()
-    },
-    // embedScript () {
-    //   const container = document.querySelector('.vdb_player')
-    //   container.innerHTML = ''
-    //   container.classList.add(`vdb_${this.combinedId}`)
-    //   const script = document.createElement("script")
-    //   script.setAttribute('type', 'text/javascript')
-    //   script.setAttribute('src', this.scriptSrc)
-    //   container.appendChild(script)
-    // }
+    }
   }
 }
 </script>
