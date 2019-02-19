@@ -1,8 +1,8 @@
 <template>
   <section class="video-leading">
-    <OathPlayer :combinedId="combinedId" :playerId="playerId" :scriptSrc="scriptSrc" class="video-leading__player"></OathPlayer>
     <slot name="LPCHD"></slot>
     <slot name="LMBHD"></slot>
+    <OathPlayer :combinedId="combinedId" :playerId="playerId" :scriptSrc="scriptSrc" class="video-leading__player"></OathPlayer>
   </section>
 </template>
 <script>
