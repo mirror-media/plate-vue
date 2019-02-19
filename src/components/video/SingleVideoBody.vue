@@ -113,16 +113,18 @@ export default {
       display inline-block
       margin 0
   &__latest
-    width 90%
+    width 100%
     margin 40px auto 0
     h3
-      margin 0
+      width 90%
+      margin 0 auto
       color #2a597d
       font-size 1rem
       font-weight 600
     .latest
       display block
-      margin-top 20px
+      width 90%
+      margin 20px auto 0
       figure
         position relative
         padding-top 56.25%
@@ -160,8 +162,11 @@ export default {
     &__video-info, &__latest, &__comments
       width 60%
     &__latest
+      h3
+        width auto
       .latest
         display flex
+        width auto
         figure
           width 50%
           padding-top 28.125%
