@@ -44,7 +44,7 @@
     },
     props: {
       src: String,
-      id: String,
+      id: [ String, Number ],
     },
     watch: {
       src () {

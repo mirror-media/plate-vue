@@ -28,9 +28,19 @@
             <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
             <LatestArticleMain id="latestArticle" target="_blank"
-              :latestList="latestArticle" 
+              :abIndicator="abIndicator"
+              :latestList="latestArticle"
               :viewport="viewport">
             </LatestArticleMain>
+            <template v-if="abIndicator === 'B' && viewport >= 1200 && latestArticlesBySection">
+              <LatestArticleBySection
+                v-for="item in latestArticlesBySection"
+                :key="`latest-news-${item.id}`"
+                :section="item"
+                class="latest-news">
+              </LatestArticleBySection>
+            </template>
+            
           </main>
           <aside v-show="viewport >= 1200">
             <div>
@@ -48,6 +58,7 @@
           </aside>
         </section>
         <loading :show="loading" />
+        <Footer v-if="abIndicator === 'B' && viewport >= 1200" class="footer" />
         <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
         <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
         <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
@@ -74,10 +85,12 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
+import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import HeaderR from '../components/HeaderR.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleAsideMobileB from '../components/LatestArticleAsideMobileB.vue'
+import LatestArticleBySection from '../components/LatestArticleBySection.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
@@ -119,6 +132,10 @@ const fetchArticlesGroupedList = (store) => {
   return store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
 }
 
+const fetchLatestNewsFromJson = (store) => {
+  return store.dispatch('FETCH_LATEST_NEWS_FROM_JSON')
+}
+
 const fetchPartners = (store) => {
   const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
   return store.dispatch('FETCH_PARTNERS', {
@@ -153,8 +170,10 @@ export default {
     'live-stream': LiveStream,
     'loading': Loading,
     DfpCover,
+    Footer,
     LatestArticleAside,
     LatestArticleAsideMobileB,
+    LatestArticleBySection,
     LatestArticleMain,
     MirrorMediaTVAside,
     VueDfpProvider,
@@ -165,15 +184,15 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    // let abIndicator = ''
-    // if (process.env.VUE_ENV === 'client') {
-    //   abIndicator = this.getMmid()
-    // }
+    let abIndicator = ''
+    if (process.env.VUE_ENV === 'client') {
+      abIndicator = this.getMmid()
+    }
     return {
       url: SITE_MOBILE_URL,
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="home">
+        <meta name="mm-opt" content="home${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -310,6 +329,14 @@ export default {
     latestArticlesList () {
       return _.get(this.$store.state, [ 'latestArticles', 'items' ])
     },
+    latestArticlesBySection () {
+      const latestArticlesBySection = Object.values(_.get(this.$store.state, 'latestNewsFromJson.sections', {})) || []
+      return latestArticlesBySection.sort((a, b) => {
+        const sortPrev = this.$store.state.commonData.sections.items.find(section => section.id === a.id).sortOrder || 0
+        const sortNext = this.$store.state.commonData.sections.items.find(section => section.id === b.id).sortOrder || 0
+        return sortPrev - sortNext
+      })
+    },
     latestEndIndex () {
       return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
     },
@@ -334,7 +361,9 @@ export default {
         return _.includes(choicesAndGrouped_slugs, o.slug)
       })
 
-      if (this.notFirstPageNow) {
+      if (this.abIndicator === 'B' && this.viewport >= 1200) {
+        return this.$store.state.latestNewsFromJson.latest
+      } else if (this.notFirstPageNow) {
         return latest
       } else {
         return latestFirstPage
@@ -402,14 +431,16 @@ export default {
       this.dfpMode = currEnv()
     },
     loadMore () {
-      window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
-      this.page += 1
-      this.loading = true
+      if (!(this.abIndicator === 'B' && this.viewport >= 1200)) {
+        window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
+        this.page += 1
+        this.loading = true
 
-      fetchLatestArticle(this.$store, this.page).then(() => {
-        this.hasScrollLoadMore = false
-        this.loading = false
-      })
+        fetchLatestArticle(this.$store, this.page).then(() => {
+          this.hasScrollLoadMore = false
+          this.loading = false
+        })
+      }
     },
     handleScroll () {
       window.onscroll = () => {
@@ -426,11 +457,14 @@ export default {
     },
   },
   beforeMount () {
-    return Promise.all([
+    this.abIndicator = this.getMmid()
+    const jobs = [
       fetchEvent(this.$store, 'embedded'),
       fetchEvent(this.$store, 'logo'),
-      fetchEvent(this.$store, 'mod')
-    ])
+      fetchEvent(this.$store, 'mod'),
+    ]
+    this.abIndicator === 'B' ? jobs.push(fetchLatestNewsFromJson(this.$store)) : ''
+    Promise.all(jobs)
   },
   mounted () {
     this.handleScroll()
@@ -440,14 +474,13 @@ export default {
     })
     this.checkIfLockJS()
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
 
     window.addEventListener('scroll', this.detectFixProject)
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
+    // window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {
@@ -571,7 +604,10 @@ export default {
         margin-right -100%
         margin-left 10px
         border-top 5px solid #356d9c
-
+  .latest-news
+    margin-top 85px
+    & + .latest-news
+      margin-top 30px
 section.footer
   width 100%
 
@@ -665,7 +701,9 @@ section.footer
         font-weight 400
     .project-title--mobile
       display none
-        
+    .footer
+      width 1024px
+      margin 70px auto 0 
   .list
     &.container
       width 1024px

@@ -102,9 +102,9 @@ export function getHrefFull (relAritlcle = {}) {
 
 export function getImage (article, size) {
   let image
-  if (article.heroImage && article.heroImage.image) {
+  if (article.heroImage) {
     debug('get heroimage')
-    image = _.get(article, [ 'heroImage', 'image', 'resizedTargets' ])
+    image = article.heroImage.image ? _.get(article, [ 'heroImage', 'image', 'resizedTargets' ]) : _.get(article, 'heroImage')
   } else if (article.ogImage) {
     debug('get ogImage')
     image = _.get(article, [ 'ogImage', 'image', 'resizedTargets' ])

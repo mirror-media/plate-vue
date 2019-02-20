@@ -82,6 +82,38 @@ const fetchStaticJson = (req, res, fileName) => {
   })
 }
 
+const fetchJson = (fileName) => (req, res) => {
+  debug(`Abt to fetch ${fileName} json file.`)
+  const url = `${config.SERVER_PROTOCOL}://${config.SERVER_HOST}/json/${fileName}.json`
+  superagent
+    .get(url)
+    .timeout(
+      {
+        response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
+        deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+      }
+    )
+    .then(response => {
+      debug('Fetch static json file from api.', url)
+      if (response) {
+        redisWriting(url, response.text)
+        res.header('Cache-Control', 'public, max-age=300')
+        res.json(JSON.parse(response.text))
+      } else {
+        res.header('Cache-Control', 'no-cache')
+        res.status(500).send(response)
+      }
+    })
+    .catch(error => {
+      const status = get(error, 'status') || 500
+      const info = JSON.parse(get(error, 'response.text')) || error
+      console.error(`error during fetch data from ${fileName} : ${url}`)
+      console.error(error)
+      res.header('Cache-Control', 'no-cache')
+      res.status(status).send(info)
+    })
+}
+
 router.use('/grouped', (req, res) => {
   fetchStaticJson(req, res, 'grouped')
 })
@@ -89,6 +121,8 @@ router.use('/grouped', (req, res) => {
 router.use('/poplist', (req, res) => {
   fetchStaticJson(req, res, 'popularlist')
 })
+
+router.get('/latestNews', fetchJson('latest_news'))
 
 router.get('/newsletter/:userEmail', async (req, res) => {
   const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
