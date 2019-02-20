@@ -20,6 +20,7 @@ import { fetchActivities,
   fetchImages,
   fetchImagesById,
   fetchLatestArticle,
+  fetchLatestNewsFromJson,
   fetchNodes,
   fetchOathPlaylist,
   fetchOathVideo,
@@ -69,6 +70,7 @@ export function createStore () {
       imagesById: [],
       latestArticle: {},
       latestArticles: {},
+      latestNewsFromJson: {},
       nodes: {},
       ogimage: {},
       playlist: {
@@ -243,6 +245,12 @@ export function createStore () {
             latestArticles[ 'items' ] = _.concat(orig, _.get(latestArticles, [ 'items' ]))
             commit('SET_LATESTARTICLES', { latestArticles })
           })
+      },
+
+      FETCH_LATEST_NEWS_FROM_JSON: ({ commit, state }) => {
+        return state.latestNewsFromJson.latest && state.latestNewsFromJson.sections
+        ? Promise.resolve(state.latestNewsFromJson)
+        : fetchLatestNewsFromJson().then(latestNewsFromJson => commit('SET_LATEST_NEWS_FROM_JSON', { latestNewsFromJson }))
       },
 
       FETCH_NODES: ({ commit, state }, { params }) => {
@@ -473,6 +481,10 @@ export function createStore () {
 
       SET_LATESTARTICLES: (state, { latestArticles }) => {
         Vue.set(state, 'latestArticles', latestArticles)
+      },
+
+      SET_LATEST_NEWS_FROM_JSON: (state, { latestNewsFromJson }) => {
+        Vue.set(state, 'latestNewsFromJson', latestNewsFromJson)
       },
 
       SET_NODES: (state, { nodes }) => {
