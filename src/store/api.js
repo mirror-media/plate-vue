@@ -204,6 +204,11 @@ function loadLatestArticle (params = {}) {
   return _doFetch(url)
 }
 
+function loadLatestNewsFromJson () {
+  const url = `${_host}/api/latestNews`
+  return _doFetch(url)
+}
+
 function loadNodes (params = {}) {
   const query = _buildQuery(params)
   let url = `${_host}/api/nodes`
@@ -352,6 +357,10 @@ export function fetchImagesById (params = {}) {
 
 export function fetchLatestArticle (params = {}) {
   return loadLatestArticle(params)
+}
+
+export function fetchLatestNewsFromJson () {
+  return loadLatestNewsFromJson()
 }
 
 export function fetchNodes (params = {}) {
