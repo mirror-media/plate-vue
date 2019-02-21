@@ -68,6 +68,7 @@ export function createStore () {
       highlightNodes: {},
       images: {},
       imagesById: [],
+      isTimeToShowAdCover: false,
       latestArticle: {},
       latestArticles: {},
       latestNewsFromJson: {},
@@ -353,6 +354,10 @@ export function createStore () {
           })
       },
 
+      SHOW_AD_COVER: ({ commit }) => {
+        return commit('SET_AD_COVER_FLAG')
+      },
+
       UPDATE_VIEWPORT: ({ commit }, viewport) => {
         commit('SET_VIEWPORT', viewport)
       },
@@ -360,6 +365,9 @@ export function createStore () {
     },
 
     mutations: {
+      SET_AD_COVER_FLAG: (state) => {
+        state[ 'isTimeToShowAdCover' ] = true
+      },
 
       SET_ACTIVITIES: (state, { activities }) => {
         Vue.set(state, 'activities', activities)
