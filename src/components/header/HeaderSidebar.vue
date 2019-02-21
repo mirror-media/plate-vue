@@ -20,20 +20,18 @@
         class="section">
         <router-link v-if="section.name !== 'videohub'" :to="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></router-link>
         <a v-else :href="`/section/${section.name}`" :data-gtm="`section ${section.name}`" data-gtm-category="header" v-text="section.title"></a>
-        <template v-if="section.name === 'videohub'">
-          <div class="categories">
+        <div class="categories">
+          <template v-if="section.name === 'videohub'">
             <a
-              v-for="category in oathCategories"
-              :key="`sidebar-category-${category.categoryName}`"
-              :href="`/category/${category.categoryName}`"
-              :data-gtm="`category ${category.categoryName}`"
+              v-for="category in filterSectionCategories(section)"
+              :key="`sidebar-category-${category.id}`"
+              :href="`/category/${category.name}`"
+              :data-gtm="`category ${category.name}`"
               data-gtm-category="header"
-              v-text="category.name">
+              v-text="category.title">
             </a>
-          </div>
-        </template>
-        <template v-else-if="section.categories.length > 0">
-          <div class="categories">
+          </template>
+          <template v-else>
             <router-link
               v-for="category in filterSectionCategories(section)"
               :key="`sidebar-category-${category.id}`"
@@ -42,8 +40,8 @@
               data-gtm-category="header"
               v-text="category.title">
             </router-link>
-          </div>
-        </template>
+          </template>
+        </div>
       </div>
       <div class="section external">
         <a v-text="$t('HEADER.EXTERNAL')"></a>
@@ -85,7 +83,7 @@
 </template>
 <script>
 
-import { OATH_PLAYLIST, SECTION_MAP, SOCIAL_LINK } from '../../constants'
+import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
 import { get, } from 'lodash'
 
 export default {
@@ -124,9 +122,6 @@ export default {
     },
     activeTopics () {
       return this.topics.filter(topic => topic.id && topic.name)
-    },
-    oathCategories () {
-      return Object.values(OATH_PLAYLIST).sort((a, b) => a.order - b.order)
     }
   },
   methods: {
