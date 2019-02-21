@@ -111,7 +111,7 @@
       <DfpST v-if="(viewport < 550)" :props="props">
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
       </DfpST>
-      <DfpCover v-if="!hiddenAdvertised" v-show="showDfpCoverAdFlag && viewport < 1199"> 
+      <DfpCover v-if="!hiddenAdvertised && (isTimeToShowAdCover || dfpMode === 'prod')" v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
       <DfpCover v-if="!hiddenAdvertised && showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
@@ -134,7 +134,7 @@
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
-  import { consoleLogOnDev, currEnv, getImage, getTruncatedVal, lockJS, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
+  import { currEnv, getImage, getTruncatedVal, lockJS, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
@@ -166,6 +166,7 @@
   import ArticleAsideReadrLatest from '../components/article/ArticleAsideReadrLatest.vue'
 
   const debug = require('debug')('CLIENT:VIEWS:article')
+  const debugDFP = require('debug')('CLIENT:DFP')
   const fetchArticles = (store, slug) => {
     debug('Going to fetch article data.', slug)
     return store.dispatch('FETCH_ARTICLES', {
@@ -405,16 +406,16 @@
       },
       dfpOptions () {
         return Object.assign({}, DFP_OPTIONS, {
-          afterEachAdLoaded: (event) => {
+          afterEachAdLoaded: event => {
             const dfpCurrAd = document.querySelector(`#${event.slot.getSlotElementId()}`)
             const position = dfpCurrAd.getAttribute('pos')
 
             const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
             const loadInnityAd = () => {
-              debug('Event "noad2" is detected!!')
+              debugDFP('Event "noad2" is detected!!')
               if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
                 sendAdCoverGA('innity')
-                debug('noad2 detected and go innity')
+                debugDFP('noad2 detected and go innity')
                 this.showDfpCoverInnityFlag = true
               }
             }
@@ -423,29 +424,26 @@
             switch (position) {
               case 'MBCVR':
                 sendAdCoverGA('dfp')
+                debugDFP('MBCVR LOADED.')
                 if (adDisplayStatus === 'none') {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  updateCookie({ currEnv: this.dfpMode }).then(isVisited => {
                     this.showDfpCoverAd2Flag = !isVisited
                   })
                 } else {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  updateCookie({ currEnv: this.dfpMode }).then(isVisited => {
                     this.showDfpCoverAdFlag = !isVisited
                   })
                 }
                 break
               case 'MBCVR2':
-                consoleLogOnDev({ msg: 'ad2 loaded' })
+                debugDFP('ad2 loaded')
                 sendAdCoverGA('ad2')
-                if (adDisplayStatus === 'none') {
-                  consoleLogOnDev({ msg: 'dfp response no ad2' })
-                }
+                adDisplayStatus === 'none' &&  debugDFP('dfp response no ad2')
                 break
               case 'MBCVR3':
-                debug('adInnity loaded')
+                debugDFP('adInnity loaded')
                 sendAdCoverGA('innity')
-                if (adDisplayStatus === 'none') {
-                  debug('dfp response no innity')
-                }
+                adDisplayStatus === 'none' && debugDFP('dfp response no innity')
                 break                
               case 'PCFF':
                 this.showDfpFixedBtn = !(adDisplayStatus === 'none')
@@ -525,6 +523,9 @@
       },
       isAd () {
         return _.get(this.articleData, [ 'isAdvertised' ], false)
+      },
+      isTimeToShowAdCover () {
+        return _.get(this.$store, 'state.isTimeToShowAdCover', false)
       },
       jsonLDBreadcrumbList () {
         return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",
@@ -777,7 +778,10 @@
           fetchImages(this.$store, { ids: relatedImages, max_results: relatedImages.length  })
         }
         this.updateJSONLDScript()
-      }
+      },
+      isTimeToShowAdCover () {
+        debugDFP('MUTATION DETECTED: isTimeToShowAdCover:', this.isTimeToShowAdCover)
+      },
     }
   }
 

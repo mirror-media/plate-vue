@@ -1,5 +1,5 @@
 <template>
-  <section class="relateds-in-content">
+  <section class="relateds-in-content" id="relateds-in-content">
     <h3>往下繼續閱讀</h3>
     <div v-for="related in relateds" :key="related.id" class="related">
       <div class="related__title">
@@ -12,11 +12,19 @@
   </section>
 </template>
 <script>
+import verge from 'verge'
+import { currentYPosition, elmYPosition, } from 'kc-scroll'
 import { get } from 'lodash'
 import { getHref } from '../../util/comm'
-
+const showAdCover = store => store.dispatch('SHOW_AD_COVER')
+const debugDFP = require('debug')('CLIENT:DFP')
 export default {
   name: 'RelatedListInContent',
+  data () {
+    return {
+      isAdCoverCalledYet: false,
+    }
+  },
   props: {
     relateds: {
       type: Array,
@@ -31,7 +39,25 @@ export default {
       const item = this.$store.state.imagesById.find(image => image.id === id)
       const image = get(item, 'image.resizedTargets.mobile.url') || get(item, 'image.url')
       return image ? image : undefined
+    },
+    scrollEventHandler () {
+      if (this.isAdCoverCalledYet) { return }
+      const currentTop = currentYPosition()
+      const eleTop = elmYPosition('#relateds-in-content.relateds-in-content')
+      const device_height = verge.viewportH()
+      if (currentTop + (device_height / 2) > eleTop) {
+        debugDFP('SHOW ADCOVER!')
+        showAdCover(this.$store)
+        this.isAdCoverCalledYet = true
+        window.removeEventListener('scroll', this.scrollEventHandler)
+      }
+    },
+    async setupEventHandler () {
+      window.addEventListener('scroll', this.scrollEventHandler)
     }
+  },
+  mounted () {
+    this.setupEventHandler()
   }
 }
 </script>
