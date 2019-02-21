@@ -4,26 +4,26 @@ import dfpUnitId from './dfpUnit.js'
 export const MARKETING_CATGORY_ID = '57fca2f5c9b7a70e004e6df9'
 export const SECTION_MAP = {
   // news
-  '57e1e0e5ee85930e00cad4e9': { 'sectionName': 'news', 'bgcolor': '#30bac8' },
+  '57e1e0e5ee85930e00cad4e9': { 'sectionName': 'news', 'bgcolor': '#30bac8', 'latestNewsOrder': 1 },
   // entertainment
-  '57e1e11cee85930e00cad4ea': { 'sectionName': 'entertainment', 'bgcolor': '#bf3284' },
+  '57e1e11cee85930e00cad4ea': { 'sectionName': 'entertainment', 'bgcolor': '#bf3284', 'latestNewsOrder': 2 },
   // businessmoney category-business-money
-  '596441d04bbe120f002a319a': { 'sectionName': 'businessmoney', 'bgcolor': '#009045' },
+  '596441d04bbe120f002a319a': { 'sectionName': 'businessmoney', 'bgcolor': '#009045', 'latestNewsOrder': 3 },
   'category-business-money': { 'sectionName': 'businessmoney', 'bgcolor': '#009045' },
   // people
-  '596441604bbe120f002a3197': { 'sectionName': 'people', 'bgcolor': '#efa256' },
+  '596441604bbe120f002a3197': { 'sectionName': 'people', 'bgcolor': '#efa256' , 'latestNewsOrder': 4 },
   // videohub
   '5975ab2de531830d00e32b2f': { 'sectionName': 'videohub', 'bgcolor': '#969696' },
   // international
-  '5964400d4bbe120f002a3191': { 'sectionName': 'international', 'bgcolor': '#911f27' },
+  '5964400d4bbe120f002a3191': { 'sectionName': 'international', 'bgcolor': '#911f27', 'latestNewsOrder': 5 },
   // foodtravel
-  '57dfe399ee85930e00cad4d6': { 'sectionName': 'foodtravel', 'bgcolor': '#eac151' },
+  '57dfe399ee85930e00cad4d6': { 'sectionName': 'foodtravel', 'bgcolor': '#eac151', 'latestNewsOrder': 6 },
   // mafalda
-  '5971aa8ce531830d00e32812': { 'sectionName': 'mafalda', 'bgcolor': '#662d8e' },
+  '5971aa8ce531830d00e32812': { 'sectionName': 'mafalda', 'bgcolor': '#662d8e', 'latestNewsOrder': 9 },
   // culture
-  '5964418a4bbe120f002a3198': { 'sectionName': 'culture', 'bgcolor': '#009245' },
+  '5964418a4bbe120f002a3198': { 'sectionName': 'culture', 'bgcolor': '#009245', 'latestNewsOrder': 7 },
   // watch
-  '57dfe3b0ee85930e00cad4d7': { 'sectionName': 'watch', 'bgcolor': '#003153' },
+  '57dfe3b0ee85930e00cad4d7': { 'sectionName': 'watch', 'bgcolor': '#003153', 'latestNewsOrder': 8 },
   // external
   'external': { 'sectionName': 'external', 'bgcolor': '#ee5a24' }
 }

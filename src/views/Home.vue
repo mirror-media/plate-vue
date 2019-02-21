@@ -77,7 +77,7 @@
 
 <script>
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { SECTION_MAP, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
@@ -331,11 +331,7 @@ export default {
     },
     latestArticlesBySection () {
       const latestArticlesBySection = Object.values(_.get(this.$store.state, 'latestNewsFromJson.sections', {})) || []
-      return latestArticlesBySection.sort((a, b) => {
-        const sortPrev = this.$store.state.commonData.sections.items.find(section => section.id === a.id).sortOrder || 0
-        const sortNext = this.$store.state.commonData.sections.items.find(section => section.id === b.id).sortOrder || 0
-        return sortPrev - sortNext
-      })
+      return latestArticlesBySection.sort((a, b) => (_.get(SECTION_MAP, [ a.id, 'latestNewsOrder' ]) || 10) - (_.get(SECTION_MAP, [ b.id, 'latestNewsOrder' ]) || 10))
     },
     latestEndIndex () {
       return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
