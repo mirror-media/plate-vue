@@ -90,7 +90,7 @@ app.use('/dist', serve('./dist', true), staticNotFound)
 app.use('/assets', serve('./assets', true), staticNotFound)
 app.use('/public', (req, res) => {
   res.redirect('/assets/mirrormedia' + req.url)
-}, staticNotFound)
+})
 app.use('/manifest.json', serve('./manifest.json', true), staticNotFound)
 app.use('/service-worker.js', serve('./dist/service-worker.js'), staticNotFound)
 
