@@ -270,15 +270,7 @@ export function createStore () {
       
       FETCH_OATH_PLAYLIST: ({ commit, state }, { id, params }) => {
         const playlistAmount = Object.keys(OATH_PLAYLIST).length || 0
-        return fetchOathPlaylist({ id, params }).then(playlist => {
-          // console.log('--- playlist', playlist)
-          commit('SET_OATH_PLAYLIST', { id: id, playlist: playlist.data[0] })
-          // if (state.playlist.info.length > 0) {
-          //   const orig = _.values(state.playlist.info)
-          //   playlist.data = _.concat(orig, playlist.data)
-          // }
-          // state.playlist.info.length < playlistAmount ? commit('SET_OATH_PLAYLIST', { playlist: playlist.data }) : ''
-        })
+        return fetchOathPlaylist({ id, params }).then(playlist => commit('SET_OATH_PLAYLIST', { id: id, playlist: playlist.data[0] }))
       },
       
       FETCH_OATH_VIDEO: ({ commit, state }, { id }) => {
