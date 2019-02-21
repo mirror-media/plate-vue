@@ -4,7 +4,12 @@
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
         <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
-          <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-1`" v-if="shouldShowItem(o)" :target="target">
+          <router-link :to="getHref(o)"
+            v-if="shouldShowItem(o)"
+            :id="isBVersion ? '' : `latest-${getValue(o, [ 'slug' ], Date.now())}-1`" 
+            :target="target"
+            :data-gtm-category="isBVersion ? 'home' : ''"
+            :data-gtm="isBVersion ? 'latest_article' : ''">
             <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="getValue(o, [ 'heroImage', 'id' ], Date.now())" :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </router-link>
@@ -14,7 +19,13 @@
           </a>
           <div class="latest-list_item_title">
             <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
-            <router-link :to="getHref(o)" :id="`latest-${getValue(o, [ 'slug' ], Date.now())}-2`" v-if="shouldShowItem(o)" :target="target">
+            <router-link
+              v-if="shouldShowItem(o)"
+              :id="isBVersion ? '' : `latest-${getValue(o, [ 'slug' ], Date.now())}-2`"
+              :to="getHref(o)"
+              :data-gtm-category="isBVersion ? 'home' : ''"
+              :data-gtm="isBVersion ? 'latest_article' : ''"
+              :target="target">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
             </router-link>
@@ -50,6 +61,9 @@ export default {
   computed: {
     currUrl () {
       return this.$route.fullPath
+    },
+    isBVersion () {
+      return this.abIndicator === 'B' && this.viewport >= 1200
     },
     latestListBeforeDFPNA3 () {
       return _.take(this.latestList, 2)

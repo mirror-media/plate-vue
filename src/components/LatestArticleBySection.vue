@@ -2,11 +2,25 @@
   <section class="latest-article-by-section">
     <h3 :style="{ borderLeftColor: sectionColor }" v-text="section.title"></h3>
     <div class="latest-article-by-section-container">
-      <a class="latest-article-by-section__img" :href="`/story/${highlight.slug}`" target="_blank"><img :src="highlightImage" :alt="highlight.title"></a>
+      <a
+        :href="`/story/${highlight.slug}`"
+        class="latest-article-by-section__img"
+        data-gtm-category="home"
+        data-gtm="latest_category"
+        target="_blank">
+        <img :src="highlightImage" :alt="highlight.title">
+      </a>
       <div class="latest-article-by-section__articles">
         <div v-for="(article, index) in articles" :key="article.id" class="article">
           <span v-text="index + 1"></span>
-          <h3 ><a :href="`/story/${article.slug}`" v-text="article.title" target="_blank"></a></h3>
+          <h3>
+            <a
+              :href="`/story/${article.slug}`"
+              data-gtm-category="home"
+              data-gtm="latest_category"
+              target="_blank"
+              v-text="article.title" ></a>
+          </h3>
         </div>
       </div>
     </div>
