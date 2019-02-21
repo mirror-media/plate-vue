@@ -81,29 +81,33 @@ if (isProd) {
 }
 
 const serve = (path, cache) => express.static(resolve(path), {
-  maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0
+  maxAge: cache && isProd ? 1000 * 60 * 60 : 0
 })
-
+const staticNotFound = (req, res) => res.status(404).send('404 | Not Found')
 app.use(compression({ threshold: 0 }))
 app.use(favicon('./assets/mirrormedia/favicon-48x48.png'))
-app.use('/dist', serve('./dist', true))
-app.use('/assets', serve('./assets', true))
+app.use('/dist', serve('./dist', true), staticNotFound)
+app.use('/assets', serve('./assets', true), staticNotFound)
 app.use('/public', (req, res) => {
   res.redirect('/assets/mirrormedia' + req.url)
 })
-app.use('/manifest.json', serve('./manifest.json', true))
-app.use('/service-worker.js', serve('./dist/service-worker.js'))
+app.use('/manifest.json', serve('./manifest.json', true), staticNotFound)
+app.use('/service-worker.js', serve('./dist/service-worker.js'), staticNotFound)
 
- // since this app has no user-specific content, every page is micro-cacheable.
-  // if your app involves user-specific content, you need to implement custom
-  // logic to determine whether a request is cacheable based on its url and
-  // headers.
-  // 1-second microcache.
-  // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
-  // app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
+// since this app has no user-specific content, every page is micro-cacheable.
+// if your app involves user-specific content, you need to implement custom
+// logic to determine whether a request is cacheable based on its url and
+// headers.
+// 1-second microcache.
+// https://www.nginx.com/blog/benefits-of-microcaching-nginx/
+// app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
  
-
+const exp_preview_mode = /\b(preview=true)\b/
 function render (req, res, next) {
+  const s = Date.now()
+  let isPageNotFound = false
+  let isErrorOccurred = false  
+
   const checkoutMem = () => {
     const mem = process.memoryUsage()
     console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
@@ -133,11 +137,7 @@ function render (req, res, next) {
     checkoutMem()
   }
 
-  const s = Date.now()
-  let isPageNotFound = false
-  let isErrorOccurred = false  
-
-  const isPreview = req.url.indexOf('preview=true') > -1
+  const isPreview = exp_preview_mode.test(req.url)
   if (!isPreview) {
     res.setHeader('Cache-Control', 'public, max-age=3600')
   } else {
@@ -158,9 +158,9 @@ function render (req, res, next) {
       return
     }
   }
-  console.info('request ip:', req.clientIp)
-  res.setHeader("Content-Type", "text/html")
-  res.setHeader("Server", serverInfo)
+  console.info(`request target: ${req.url} (from ${req.clientIp})`)
+  res.setHeader('Content-Type', 'text/html')
+  res.setHeader('Server', serverInfo)
 
   const cookies = new Cookies( req, res, {} )
   const mmid = cookies.get('mmid')
@@ -222,9 +222,7 @@ function render (req, res, next) {
   })
 
   renderer.renderToString(context, (err, html) => {
-    if (err) {
-      return handleError(err)
-    }
+    if (err) { return handleError(err) }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
     isProd && !isPreview && redisWriting(req.url, html, null, 120)
@@ -232,9 +230,7 @@ function render (req, res, next) {
 }
 app.use('/story/amp', require('./amp/service/api'))
 
-app.use('/api', require('./api/index'), () => {
-  /** END */
-})
+app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
   next()
@@ -261,12 +257,10 @@ app.get('*', (req, res, next) => {
 process.on('unhandledRejection', reason => {
   console.error(`\n[Unhandled Rejection]`)
   console.error(`${reason}\n`)
-});
+})
 
 const port = process.env.PORT || 8080
-const server = app.listen(port, () => {
-  console.log(`server started at localhost:${port}`)
-})
+const server = app.listen(port, () => console.log(`server started at localhost:${port}`))
 
 module.exports = {
   ready: readyPromise,
