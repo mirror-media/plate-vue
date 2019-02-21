@@ -81,26 +81,26 @@ if (isProd) {
 }
 
 const serve = (path, cache) => express.static(resolve(path), {
-  maxAge: cache && isProd ? 1000 * 60 * 60 * 24 * 30 : 0
+  maxAge: cache && isProd ? 1000 * 60 * 60 : 0
 })
-
+const staticNotFound = (req, res) => res.status(404).send('Not Found')
 app.use(compression({ threshold: 0 }))
 app.use(favicon('./assets/mirrormedia/favicon-48x48.png'))
-app.use('/dist', serve('./dist', true))
-app.use('/assets', serve('./assets', true))
+app.use('/dist', serve('./dist', true), staticNotFound)
+app.use('/assets', serve('./assets', true), staticNotFound)
 app.use('/public', (req, res) => {
   res.redirect('/assets/mirrormedia' + req.url)
-})
-app.use('/manifest.json', serve('./manifest.json', true))
-app.use('/service-worker.js', serve('./dist/service-worker.js'))
+}, staticNotFound)
+app.use('/manifest.json', serve('./manifest.json', true), staticNotFound)
+app.use('/service-worker.js', serve('./dist/service-worker.js'), staticNotFound)
 
- // since this app has no user-specific content, every page is micro-cacheable.
-  // if your app involves user-specific content, you need to implement custom
-  // logic to determine whether a request is cacheable based on its url and
-  // headers.
-  // 1-second microcache.
-  // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
-  // app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
+// since this app has no user-specific content, every page is micro-cacheable.
+// if your app involves user-specific content, you need to implement custom
+// logic to determine whether a request is cacheable based on its url and
+// headers.
+// 1-second microcache.
+// https://www.nginx.com/blog/benefits-of-microcaching-nginx/
+// app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
  
 
 function render (req, res, next) {
