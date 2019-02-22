@@ -3,9 +3,8 @@
     <div class="title"><h4 v-text="$t('article.latest')"></h4></div>
     <div class="list">
       <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
-        <div class="thumbnail"
-              v-lazy:background-image="getImage(o, 'tiny')"
-              :title="getValue(o, [ 'title' ])">
+        <div class="thumbnail">
+          <LazyImage :src="getImage(o, 'tiny')" :alt="getValue(o, [ 'title' ])"/>
           <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'"></router-link>
           <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style === 'projects'"></a>
         </div>
@@ -24,6 +23,7 @@
   </div>
 </template>
 <script>
+  import LazyImage from 'src/components/common/LazyImage.vue'
   import { SITE_URL } from '../../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import _ from 'lodash'
@@ -34,6 +34,9 @@
   }
 
   export default {
+    components: {
+      LazyImage,
+    },
     computed: {
       site_url () {
         return SITE_URL
@@ -111,9 +114,14 @@
         height 100px
         min-width 100px
         min-height 100px
-        background-size cover
-        background-repeat no-repeat
-        background-position center center
+        position relative
+        img
+          position absolute
+          left 0
+          top 0
+          width 100%
+          height 100%
+          object-fit cover
       
       .content 
         padding 0 0 0 12px
