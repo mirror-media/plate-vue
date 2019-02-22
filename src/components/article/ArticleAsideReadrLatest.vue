@@ -1,6 +1,6 @@
 <template>
   <div class="readr-latest" :id="`readr-latest-${this.id}`">
-    <iframe class="readr-latest__iframe" v-if="isReadyToShow"
+    <iframe class="readr-latest__iframe" v-show="isReadyToShow"
       src="https://www.readr.tw/plugins/latest" frameborder="0" v-resize></iframe>
   </div>
 </template>
@@ -49,7 +49,7 @@ export default {
       const deviceHeight = verge.viewportH()
       const currPosBottom = currentYPosition() + deviceHeight
       const thisEleTop = elmYPosition(`#readr-latest-${this.id}`)
-      if (thisEleTop - 500 < currPosBottom) {
+      if (thisEleTop - deviceHeight < currPosBottom) {
         debug('OPEN IT')
         this.isReadyToShow = true
         window.removeEventListener('scroll', handler)

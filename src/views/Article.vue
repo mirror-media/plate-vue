@@ -30,11 +30,7 @@
             </template>
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <latest-list
-                v-if="ifRenderAside"
-                :latest="latestList"
-                :currArticleSlug="currArticleSlug"
-                :sectionId="getValue(articleData, [ 'sections', 0, 'id' ])"></latest-list>
+              <latest-list v-if="isRenderAside" v-show="isReadyToRenderLatest" :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
               <article-aside-fixed :projects="projectlist">
                 <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
                 <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
@@ -65,22 +61,23 @@
             </template>
             <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :config="props.config"/>
             <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :config="props.config"/>
-            <pop-list :pop="popularlist" slot="poplist" v-if="ifShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
+            <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
-            <RecommendList
-              v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
-              slot="relatedlistBottom" 
-              :isAd="isAd"
-              :sectionId="sectionId"
-              :relateds="relateds"
-              :currArticleId="currArticleId"
-              :recommends="recommendlist"
-              :excludingArticle="routeUpateReferrerSlug"
-            />
+            <LazyItemWrapper slot="relatedListInContent"><RelatedListInContent :relateds="relateds" /></LazyItemWrapper>
+            <LazyItemWrapper slot="relatedlistBottom" >
+              <RecommendList
+                v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+                :isAd="isAd"
+                :sectionId="sectionId"
+                :relateds="relateds"
+                :currArticleId="currArticleId"
+                :recommends="recommendlist"
+                :excludingArticle="routeUpateReferrerSlug"
+              />            
+            </LazyItemWrapper>
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template v-if="!hiddenAdvertised" slot="recommendList">
               <div><h3>推薦文章</h3></div>
@@ -151,6 +148,7 @@
   import HeroImage from '../components/article/HeroImage.vue'
   import HeroVideo from '../components/article/HeroVideo.vue'
   import LatestList from '../components/article/LatestList.vue'
+  import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
   import PopList from '../components/article/PopList.vue'
@@ -167,6 +165,7 @@
 
   const debug = require('debug')('CLIENT:VIEWS:article')
   const debugDFP = require('debug')('CLIENT:DFP')
+  const debugDataLoad = require('debug')('CLIENT:DATALOAD')
   const fetchArticles = (store, slug) => {
     debug('Going to fetch article data.', slug)
     return store.dispatch('FETCH_ARTICLES', {
@@ -223,10 +222,21 @@
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
   }
 
-  const fetchData = (store) => {
-    return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug) ])
+  const fetchData = async store => {    
+    const [ ssrData, article ] = await Promise.all([
+      fetchSSRData(store),
+      fetchArticles(store, store.state.route.params.slug),
+      fetchPartners(store),
+      fetchCommonData(store)
+    ])
+    debug('ssrData', ssrData)
+    const sectionId = _.get(article, 'sections.0.id')
+    return fetchLatestArticle(store, {
+      sort: '-publishedDate',
+      where: { 'sections': sectionId }
+    })
   }
-
+  const fetchLatestArticle = (store, params) => store.dispatch('FETCH_LATESTARTICLE', { params: params })
   const fetchImages = (store, { ids = [], max_results = 10 }) => store.dispatch('FETCH_IMAGES_BY_ID', {
     ids,
     max_results
@@ -331,11 +341,6 @@
     },
     beforeMount () {
       debug('beforeMount')
-      fetchPop(this.$store)
-      fetchCommonData(this.$store)
-      fetchPartners(this.$store)
-      fetchEvent(this.$store, 'embedded')
-      fetchEvent(this.$store, 'logo')
     },
     components: {
       'adult-content-alert': AdultContentAlert,
@@ -357,6 +362,7 @@
       HeaderR,
       HeroImage,
       HeroVideo,
+      LazyItemWrapper,
       RelatedListInContent,
       RecommendList,
       ArticleAsideReadrLatest
@@ -372,6 +378,8 @@
         hasSentFirstEnterGA: false,
         isVponSDKLoaded: false,
         isYahooAdLoaded: false,
+        isReadyToRenderLatest: false,
+        isLowPriorityDataLoaded: false,
         microAds,
         routeUpateReferrerSlug: 'N/A',
         sectionMap: SECTION_MAP,
@@ -503,7 +511,7 @@
       ifLockJS () {
         return _.get(this.articleData, [ 'lockJS' ])
       },
-      ifRenderAside () {
+      isRenderAside () {
         return this.viewport >= 1200
       },
       ifRenderRelatedAside () {
@@ -512,11 +520,11 @@
         }
         return this.viewport >= 1200
       },
-      ifShowPoplist () {
-        return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
+      isShowPoplist () {
+        return _.get(SECTION_MAP, [ this.sectionId, 'isShowPoplist' ], true)
       },
       ifSingleCol () {
-        return (this.articleStyle === 'wide' || !this.ifRenderAside)
+        return (this.articleStyle === 'wide' || !this.isRenderAside)
       },
       isAdultContent () {
         return _.get(this.articleData, [ 'isAdult' ], false)
@@ -750,6 +758,24 @@
         this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
       }
+
+      /**
+       * Data's supposed to be loaded later.
+       */
+      const lowPriorityDataLoader = () => {
+        if (this.isLowPriorityDataLoaded) { return }        
+        debugDataLoad('GO LOAD DATA!')
+        this.isLowPriorityDataLoaded = true
+        this.isReadyToRenderLatest = true
+        Promise.all([
+          fetchPop(this.$store),
+          fetchEvent(this.$store, 'embedded'),
+          fetchEvent(this.$store, 'logo') ,
+        ]).then(() => {
+          window.removeEventListener('scroll', lowPriorityDataLoader)
+        })
+       }
+       window.addEventListener('scroll', lowPriorityDataLoader)
     },
     updated () {
       this.updateSysStage()
@@ -782,6 +808,14 @@
       isTimeToShowAdCover () {
         debugDFP('MUTATION DETECTED: isTimeToShowAdCover:', this.isTimeToShowAdCover)
       },
+      sectionId: function () {
+        fetchLatestArticle(this.$store, {
+          sort: '-publishedDate',
+          where: {
+            'sections': this.sectionId
+          }
+        })
+      }      
     }
   }
 
