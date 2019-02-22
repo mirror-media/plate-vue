@@ -6,8 +6,8 @@
         <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header> -->
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
+        <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/-->
+        <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/-->
         <div class="article" v-if="articleData">
           <article-body
             :abIndicator="abIndicator"
@@ -29,10 +29,10 @@
               </HeroImage>
             </template>
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
-              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
+              <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp-->
               <latest-list v-if="isRenderAside" v-show="isReadyToRenderLatest" :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
               <article-aside-fixed :projects="projectlist">
-                <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
+                <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp-->
                 <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
                   <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
                     <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
@@ -46,11 +46,11 @@
                 </pop-list-vert>
               </article-aside-fixed>
             </aside>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441604bbe120f002a3197'" pos="PCAROOP" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config" />
-            <vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config"  />
+            <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/-->
+            <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/-->
+            <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :config="props.config"/-->
+            <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441604bbe120f002a3197'" pos="PCAROOP" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config" /-->
+            <!--vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config"  /-->
             <template slot="dfpad-AR1">
               <span id="innity-custom-adnetwork-span-63518"></span>
               <span id="innity-custom-premium-span-12738"></span>            
@@ -59,8 +59,8 @@
               <span id="innity-custom-adnetwork-span-68557"></span>
               <span id="innity-custom-premium-span-12739"></span>           
             </template>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :config="props.config"/>
+            <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :config="props.config"/-->
+            <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :config="props.config"/-->
             <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
@@ -83,9 +83,9 @@
             </template>
           </article-body>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441d04bbe120f002a319a'" pos="MBFTOOP" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
-            <vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
+            <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCFT" extClass="mobile-hide" :config="props.config"/-->
+            <!--vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441d04bbe120f002a319a'" pos="MBFTOOP" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" /-->
+            <!--vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" /-->
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
@@ -97,26 +97,26 @@
         <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <div v-if="!hiddenAdvertised" slot="slot_dfpFT">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 767" />
+            <!--vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/-->
+            <!--vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 767" /-->
           </div>
         </article-body-photography>
       </div>
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       <DfpST v-if="(viewport < 550)" :props="props">
-        <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        <!--vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" /-->
       </DfpST>
       <DfpCover v-if="!hiddenAdvertised && (isTimeToShowAdCover || dfpMode === 'prod')" v-show="showDfpCoverAdFlag && viewport < 1199"> 
-        <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
+        <!--vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /--> 
       </DfpCover> 
       <DfpCover v-if="!hiddenAdvertised && showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
-        <vue-dfp :is="props.vueDfp" pos="MBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
+        <!--vue-dfp :is="props.vueDfp" pos="MBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /--> 
       </DfpCover>
       <DfpCover v-if="!hiddenAdvertised && showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="MBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+        <!--vue-dfp :is="props.vueDfp" pos="MBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /-->
       </DfpCover>      
       <dfp-fixed v-if="!hiddenAdvertised && hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
-        <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/>
+        <!--vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/-->
       </dfp-fixed>
       <adult-content-alert v-if="isAdultContent" />
       <div class="fb-quote"></div>
