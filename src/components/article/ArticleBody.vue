@@ -55,7 +55,7 @@
       </div>
       <div class="split-line"></div>
       <article class="content" id="article-body-content">
-        <LazyItemWrapper v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`">
+        <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`">
           <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
@@ -89,37 +89,29 @@
           <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
           <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
-        </LazyItemWrapper>
+        </div>
       </article>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
       </div>
-      <LazyItemWrapper>
-        <newsletter></newsletter>
-        <div>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>、<a :href="socialLink.AUTH" target="_blank">了解內容授權資訊</a>。</div>
-      </LazyItemWrapper>
-      <LazyItemWrapper>
-        <div class="article_main_tags">
-          <p>相關關鍵字：</p>
-          <div class="tags" v-html="tags" v-if="tags.length > 0"></div>
+      <newsletter></newsletter>
+      <div>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>、<a :href="socialLink.AUTH" target="_blank">了解內容授權資訊</a>。</div>
+      <div class="article_main_tags">
+        <p>相關關鍵字：</p>
+        <div class="tags" v-html="tags" v-if="tags.length > 0"></div>
+      </div>
+      <div class="split-line"></div>
+      <div class="fbPagePlugin">
+        <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
+          <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
+            <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
+          </blockquote>
         </div>
-        <div class="split-line"></div>
-      </LazyItemWrapper>
-      <LazyItemWrapper> 
-        <div class="fbPagePlugin">
-          <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-            <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-              <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-            </blockquote>
-          </div>
-        </div>
-      </LazyItemWrapper>
-      <LazyItemWrapper>    
-        <div class="herbsapi">
-          <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
-          <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
-        </div>
-      </LazyItemWrapper>
+      </div>
+      <div class="herbsapi">
+        <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
+        <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
+      </div>
       <div class="dfpad-set" :class="{ mobile: viewport < 1000 }">
         <slot name="dfpad-set"></slot>
       </div>
@@ -144,7 +136,6 @@ import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
 // import Cookie from 'vue-cookie'
 import ArticleImg from 'src/components/article/ArticleImg.vue'
-import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import Newsletter from '../../components/Newsletter.vue'
 import ProjectList from './ProjectList.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
@@ -165,7 +156,6 @@ export default {
     ArticleBodyLayout,
     ArticleVideo,
     ArticleImg,
-    LazyItemWrapper,
     ShareLight
   },
   computed: {

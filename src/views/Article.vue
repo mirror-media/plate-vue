@@ -66,18 +66,16 @@
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <LazyItemWrapper slot="relatedListInContent"><RelatedListInContent :relateds="relateds" /></LazyItemWrapper>
-            <LazyItemWrapper slot="relatedlistBottom" >
-              <RecommendList
-                v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
-                :isAd="isAd"
-                :sectionId="sectionId"
-                :relateds="relateds"
-                :currArticleId="currArticleId"
-                :recommends="recommendlist"
-                :excludingArticle="routeUpateReferrerSlug"
-              />            
-            </LazyItemWrapper>
+            <RelatedListInContent :relateds="relateds" slot="relatedListInContent" />
+            <RecommendList slot="relatedlistBottom" 
+              v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+              :isAd="isAd"
+              :sectionId="sectionId"
+              :relateds="relateds"
+              :currArticleId="currArticleId"
+              :recommends="recommendlist"
+              :excludingArticle="routeUpateReferrerSlug"
+            />            
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template v-if="!hiddenAdvertised" slot="recommendList">
               <div><h3>推薦文章</h3></div>
@@ -148,7 +146,6 @@
   import HeroImage from '../components/article/HeroImage.vue'
   import HeroVideo from '../components/article/HeroVideo.vue'
   import LatestList from '../components/article/LatestList.vue'
-  import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
   import PopList from '../components/article/PopList.vue'
@@ -362,7 +359,6 @@
       HeaderR,
       HeroImage,
       HeroVideo,
-      LazyItemWrapper,
       RelatedListInContent,
       RecommendList,
       ArticleAsideReadrLatest
@@ -766,7 +762,6 @@
         if (this.isLowPriorityDataLoaded) { return }        
         debugDataLoad('GO LOAD DATA!')
         this.isLowPriorityDataLoaded = true
-        this.isReadyToRenderLatest = true
         Promise.all([
           fetchPop(this.$store),
           fetchEvent(this.$store, 'embedded'),
@@ -776,6 +771,7 @@
         })
        }
        window.addEventListener('scroll', lowPriorityDataLoader)
+       this.isReadyToRenderLatest = true
     },
     updated () {
       this.updateSysStage()

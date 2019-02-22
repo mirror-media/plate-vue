@@ -41,6 +41,7 @@
     },
     mounted () {
       window.addEventListener('scroll', this.handler)      
+      this.handler()
     },
     props: {
       caption: {},
