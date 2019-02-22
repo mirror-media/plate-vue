@@ -6,12 +6,13 @@
         <a :id="`related-title-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
       </div>
       <a v-if="getImage(related.heroImage)" :id="`related-img-${related.slug}`" :href="getHref(related)" class="related__img" target="_blank">
-        <img :src="getImage(related.heroImage)" :alt="related.title">
+        <LazyImage :src="getImage(related.heroImage)" :alt="related.title" />
       </a>
     </div>
   </section>
 </template>
 <script>
+import LazyImage from 'src/components/common/LazyImage.vue'
 import verge from 'verge'
 import { currentYPosition, elmYPosition, } from 'kc-scroll'
 import { get } from 'lodash'
@@ -20,6 +21,9 @@ const showAdCover = store => store.dispatch('SHOW_AD_COVER')
 const debugDFP = require('debug')('CLIENT:DFP')
 export default {
   name: 'RelatedListInContent',
+  components: {
+    LazyImage,
+  },
   data () {
     return {
       isAdCoverCalledYet: false,

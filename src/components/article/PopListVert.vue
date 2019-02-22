@@ -4,9 +4,11 @@
     <div class="popListVert-list">
       <template v-for="(o, i) in popArticles">
         <div class="popListVert-list__item" :key="`popListVert${i}`">
-          <router-link :to="o.slug" :id="`popular-${i}-popVertImg`" class="popListVert-list__item--img"><img v-lazy="getImage(o, 'mobile')" :alt="getValue(o, [ 'title' ])"></router-link>
+          <router-link :to="o.slug" :id="`popular-${i}-popVertImg`" class="popListVert-list__item--img">
+            <LazyImage :src="getImage(o, 'mobile')" :alt="get(o, 'title')" />
+          </router-link>
           <div class="popListVert-list__item--text">
-            <div :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])"></div>
+            <div :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')"></div>
             <h2><router-link :to="o.slug" :id="`popular-${i}-popVertTitle`" v-text="getTruncatedVal(o.title, 12)"></router-link></h2>
           </div>
         </div>
@@ -19,10 +21,10 @@
 </template>
 
 <script>
-
+import LazyImage from 'src/components/common/LazyImage.vue'
 import { SECTION_MAP } from '../../constants'
-import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
-import _ from 'lodash'
+import { getHref, getImage, getTruncatedVal, } from '../../util/comm'
+import { get, take } from 'lodash'
 
 export default {
   name: 'popListVert',
@@ -32,19 +34,22 @@ export default {
       default: []
     }
   },
+  components: {
+    LazyImage,
+  },
   computed: {
     popArticles () {
-      return _.take(this.pop, 6)
+      return take(this.pop, 6)
     }
   },
   methods: {
     getHref,
     getImage,
     getTruncatedVal,
-    getValue,
+    get,
     getSectionStyle (sect) {
-      const sectionId = _.get(sect, [ 'id' ])
-      const style = { backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc') }
+      const sectionId = get(sect, 'id')
+      const style = { backgroundColor: get(SECTION_MAP, `${sectionId}.bgcolor`, '#bcbcbc') }
       return style
     }
   }
