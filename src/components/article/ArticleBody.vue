@@ -161,7 +161,7 @@ export default {
     briefArr () {
       return _.filter(_.get(this.articleData, [ 'brief', 'apiData' ], []), p => {
         const content = p.content || []
-        const reduce = _.reduce(content, (sum, n) => sum + n.trim(), '')
+        const reduce = _.reduce(content, (sum, n) => sum + _.isObject(n) ? '(OBJECT)' : n.trim(), '')
         return reduce ? p : undefined
       })
     },
