@@ -54,7 +54,7 @@
         </div>        
       </div>
       <div class="split-line"></div>
-      <article class="content">
+      <article class="content" id="article-body-content">
         <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`">
           <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
@@ -127,6 +127,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
+import { currentYPosition, elmYPosition, } from 'kc-scroll'
 import { getArticleReadTime, getHref, getTruncatedVal, getValue } from '../../util/comm'
 // import { getRole } from '../../util/mmABRoleAssign'
 import ArticleBodyLayout from 'src/components/article/ArticleBodyLayout.vue'
@@ -140,8 +141,11 @@ import ProjectList from './ProjectList.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
 import Slider from '../Slider.vue'
 import moment from 'moment'
+import verge from 'verge'
 
 // const debug = require('debug')('CLIENT:ArticleBody')
+const showAdCover = store => store.dispatch('SHOW_AD_COVER')
+const debugDFP = require('debug')('CLIENT:DFP')
 export default {
   components: {
     'app-slider': Slider,
@@ -265,6 +269,7 @@ export default {
   },
   data () {
     return {
+      isAdCoverCalledYet: false,
       renderingStartTime: undefined
     }
   },
@@ -343,13 +348,28 @@ export default {
           return
       }
     },
+    scrollEventHandler () {
+      if (this.isAdCoverCalledYet) { return }
+      const currentTop = currentYPosition()
+      const eleTop = elmYPosition('#article-body-content')
+      const device_height = verge.viewportH()
+      if (currentTop + device_height > eleTop) {
+        debugDFP('SHOW ADCOVER!')
+        showAdCover(this.$store)
+        this.isAdCoverCalledYet = true
+        window.removeEventListener('scroll', this.scrollEventHandler)
+      }
+    },
+    async setupEventHandler () {
+      window.addEventListener('scroll', this.scrollEventHandler)
+    }    
   },
   mounted () {
+    this.setupEventHandler()
+
     /*global twttr*/
     window.addEventListener('load', () => {
-      if (window.twttr) {
-        twttr.widgets.load() 
-      }
+      window.twttr && twttr.widgets.load() 
     })
   },
   name: 'article-body',
