@@ -21,24 +21,18 @@
     mounted () {
       const uuid = uuidv4()
       this.id = uuid
-      let currPosTop = currentYPosition()
-      let deviceHeight = verge.viewportH()
-      let eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
       const handler = () => {
         if (this.isVisibleYet) { return }
-        currPosTop = currentYPosition()
-        deviceHeight = verge.viewportH()
-        eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
+        const currPosTop = currentYPosition()
+        const deviceHeight = verge.viewportH()
+        const eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
         if (eleTop - deviceHeight * 1.5 < currPosTop) {
           this.isVisibleYet = true
           window.removeEventListener('scroll', handler)
         }
       }
-      if (eleTop - deviceHeight * 1.5 < currPosTop) {
-        this.isVisibleYet = true
-      } else {
-        window.addEventListener('scroll', handler)
-      }
+      window.addEventListener('scroll', handler)
+      this.handler()
     },
   }
 </script>
