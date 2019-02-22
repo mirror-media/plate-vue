@@ -28,10 +28,7 @@
   import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import _ from 'lodash'
 
-  const debug = require('debug')('CLIENT:LatestList')
-  const fetchLatestArticle = (store, params) => {
-    return store.dispatch('FETCH_LATESTARTICLE', { params: params })
-  }
+  // const debug = require('debug')('CLIENT:LatestList')
 
   export default {
     components: {
@@ -55,32 +52,10 @@
       getValue
     },
     name: 'LatestList',
-    beforeMount () {
-      fetchLatestArticle(this.$store, {
-        sort: '-publishedDate',
-        where: {
-          'sections': this.sectionId
-        }
-      })
-    },
     props: {
       currArticleSlug: {
         default: ''
       },
-      sectionId: {
-        default: () => ''
-      }
-    },
-    watch: {
-      sectionId: function () {
-        debug('sectionId changed detected.')
-        fetchLatestArticle(this.$store, {
-          sort: '-publishedDate',
-          where: {
-            'sections': this.sectionId
-          }
-        })
-      }
     }
   }
 </script>

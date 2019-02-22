@@ -1,5 +1,5 @@
 <template>
-  <img src="/assets/mirrormedia/icon/loading.gif" :alt="caption" class="play-vue-lazy-image" :id="`img-${id}`">
+  <img src="/assets/mirrormedia/icon/loading.gif" :alt="caption" class="plate-vue-lazy-image" :id="`img-${id}`">
 </template>
 <script>
   import uuidv4 from 'uuid/v4'
