@@ -29,7 +29,7 @@ import _ from 'lodash'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
-import { consoleLogOnDev, currEnv, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
+import { currEnv, unLockJS } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
 import Cookie from 'vue-cookie'
@@ -171,25 +171,6 @@ export default {
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
 
           switch (position) {
-            case 'LMBCVR':
-              sendAdCoverGA('dfp')
-              if (adDisplayStatus === 'none') {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAd2Flag = !isVisited
-                })
-              } else {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAdFlag = !isVisited
-                })
-              }
-              break
-            case 'LMBCVR2':
-              consoleLogOnDev({ msg: 'ad2 loaded' })
-              sendAdCoverGA('ad2')
-              if (adDisplayStatus === 'none') {
-                consoleLogOnDev({ msg: 'dfp response no ad2' })
-              }
-              break
             case 'LOGO':
               if (adDisplayStatus !== 'none') {
                 this.showDfpHeaderLogo = true
