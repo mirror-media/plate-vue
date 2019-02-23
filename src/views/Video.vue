@@ -43,7 +43,7 @@
       </section>
       <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
       <Share v-if="!isSingleVideoPage" left="20px" bottom="20px" />
-      <DfpCover v-if="mounted && showDfpCoverAdFlag && viewportWidth < 1199">
+      <DfpCover v-if="mounted && showDfpCoverAdFlag && viewportWidth < 1199 && (isTimeToShowAdCover || dfpMode === 'prod')">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
       <DfpCover v-if="mounted && showDfpCoverAd2Flag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
@@ -345,6 +345,9 @@ export default {
     },
     isSingleVideoPage () {
       return this.$route.fullPath.match(/\/video\//)
+    },
+    isTimeToShowAdCover () {
+      return get(this.$store, 'state.isTimeToShowAdCover', false)
     },
     playlist () {
       const playlist = Object.values(this.$store.state.playlist.info) || []

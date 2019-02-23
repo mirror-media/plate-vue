@@ -99,7 +99,7 @@ import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { camelize } from 'humps'
-import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
+import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { getRole } from '../util/mmABRoleAssign'
 import _ from 'lodash'
@@ -376,25 +376,6 @@ export default {
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
 
           switch (position) {
-            case 'LMBCVR':
-              sendAdCoverGA('dfp')
-              if (adDisplayStatus === 'none') {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAd2Flag = !isVisited
-                })
-              } else {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAdFlag = !isVisited
-                })
-              }
-              break
-            case 'LMBCVR2':
-              consoleLogOnDev({ msg: 'ad2 loaded' })
-              sendAdCoverGA('ad2')
-              if (adDisplayStatus === 'none') {
-                consoleLogOnDev({ msg: 'dfp response no ad2' })
-              }
-              break
             case 'LOGO':
               if (adDisplayStatus !== 'none') {
                 this.showDfpHeaderLogo = true
