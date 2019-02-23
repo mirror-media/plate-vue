@@ -13,6 +13,7 @@
   
   const debug = require('debug')('CLIENT:App')
 
+  const resetAdCoverFlag = store => store.dispatch('RESET_AD_COVER')
   const updateViewport = (store) => {
     const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
     const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
@@ -35,6 +36,7 @@
     watch: {
       currPath: function () {
         this.setUpVisibleTracking()
+        resetAdCoverFlag(this.$store)
       }
     },
     beforeMount () {

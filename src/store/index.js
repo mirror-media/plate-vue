@@ -354,8 +354,11 @@ export function createStore () {
           })
       },
 
+      RESET_AD_COVER: ({ commit }) => {
+        return commit('SET_AD_COVER_FLAG', false)
+      },
       SHOW_AD_COVER: ({ commit }) => {
-        return commit('SET_AD_COVER_FLAG')
+        return commit('SET_AD_COVER_FLAG', true)
       },
 
       UPDATE_VIEWPORT: ({ commit }, viewport) => {
@@ -365,8 +368,8 @@ export function createStore () {
     },
 
     mutations: {
-      SET_AD_COVER_FLAG: (state) => {
-        state[ 'isTimeToShowAdCover' ] = true
+      SET_AD_COVER_FLAG: (state, flag) => {
+        state[ 'isTimeToShowAdCover' ] = flag
       },
 
       SET_ACTIVITIES: (state, { activities }) => {
