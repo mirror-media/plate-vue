@@ -26,13 +26,17 @@
         const currPosTop = currentYPosition()
         const deviceHeight = verge.viewportH()
         const eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
-        if (eleTop - deviceHeight * 1.5 < currPosTop) {
+        const offset = this.offset || 0
+        if (eleTop - offset < currPosTop + deviceHeight) {
           this.isVisibleYet = true
           window.removeEventListener('scroll', handler)
         }
       }
       window.addEventListener('scroll', handler)
-      this.handler()
+      handler()
+    },
+    props: {
+      offset: {}
     },
   }
 </script>

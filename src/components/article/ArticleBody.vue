@@ -55,41 +55,43 @@
       </div>
       <div class="split-line"></div>
       <article class="content" id="article-body-content">
-        <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`">
-          <ArticleImg v-if="p.type === 'image'"
-            :viewport="viewport"
-            :image="getValue(p, [ 'content', 0 ])"
-            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>
-          <div v-else-if="p.type === 'video'" is="article-video" 
-            :id="'latest-'+ p.id" 
-            :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
-          <div v-else-if="p.type === 'audio'" is="audio-box" 
-            :id="'latest-'+ p.id" 
-            :audio="getValue(p, [ 'content', 0], {})"></div>
-          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
-            <template slot-scope="props">
-              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
-                <div>
-                  <div class="slideshowImg">
-                    <img :alt="getValue(o, [ 'description' ], '')"
-                          :src="getValue(o, [ 'url' ], '')"
-                          :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
-                                      ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
-                                      ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
-                    <div class="img-caption" v-text="getValue(o, [ 'description' ], '')"></div>
+        <LazyItemWrapper>
+          <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`">
+            <ArticleImg v-if="p.type === 'image'"
+              :viewport="viewport"
+              :image="getValue(p, [ 'content', 0 ])"
+              :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>
+            <div v-else-if="p.type === 'video'" is="article-video" 
+              :id="'latest-'+ p.id" 
+              :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
+            <div v-else-if="p.type === 'audio'" is="audio-box" 
+              :id="'latest-'+ p.id" 
+              :audio="getValue(p, [ 'content', 0], {})"></div>
+            <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
+              <template slot-scope="props">
+                <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
+                  <div>
+                    <div class="slideshowImg">
+                      <img :alt="getValue(o, [ 'description' ], '')"
+                            :src="getValue(o, [ 'url' ], '')"
+                            :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
+                                        ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
+                                        ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
+                      <div class="img-caption" v-text="getValue(o, [ 'description' ], '')"></div>
+                    </div>
                   </div>
-                </div>
-              </swiper-slide>
-            </template>
+                </swiper-slide>
+              </template>
+            </div>
+            <div v-else-if="p.type === 'annotation'" class="content--annotation">
+              <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
+            </div>
+            <div v-else v-html="paragraphComposer(p)"></div>
+            <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
+            <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
+            <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
           </div>
-          <div v-else-if="p.type === 'annotation'" class="content--annotation">
-            <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
-          </div>
-          <div v-else v-html="paragraphComposer(p)"></div>
-          <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
-          <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
-          <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
-        </div>
+        </LazyItemWrapper>
       </article>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
@@ -136,6 +138,7 @@ import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
 // import Cookie from 'vue-cookie'
 import ArticleImg from 'src/components/article/ArticleImg.vue'
+import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import Newsletter from '../../components/Newsletter.vue'
 import ProjectList from './ProjectList.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
@@ -156,6 +159,7 @@ export default {
     ArticleBodyLayout,
     ArticleVideo,
     ArticleImg,
+    LazyItemWrapper,
     ShareLight
   },
   computed: {
