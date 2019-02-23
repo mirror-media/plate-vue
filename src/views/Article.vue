@@ -32,7 +32,9 @@
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               <latest-list v-if="isRenderAside" v-show="isReadyToRenderLatest" :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
               <article-aside-fixed :projects="projectlist">
-                <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
+                <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+                  <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
+                </LazyItemWrapper>
                 <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
                   <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
                     <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
@@ -46,21 +48,29 @@
                 </pop-list-vert>
               </article-aside-fixed>
             </aside>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441604bbe120f002a3197'" pos="PCAROOP" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config" />
-            <vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :config="props.config"  />
-            <template slot="dfpad-AR1">
-              <span id="innity-custom-adnetwork-span-63518"></span>
-              <span id="innity-custom-premium-span-12738"></span>            
-            </template>
-            <template slot="dfpad-AR2">
-              <span id="innity-custom-adnetwork-span-68557"></span>
-              <span id="innity-custom-premium-span-12739"></span>           
-            </template>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :config="props.config"/>
+            <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-set" :strict="true" :style="{ width: '100%' }">
+              <div :style="{ display: 'flex', justifyContent: 'space-around' }">
+                <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE1" extClass="mobile-hide" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE2" extClass="mobile-hide" :config="props.config" :style="{ marginLeft: '10px' }"/>
+                <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" :config="props.config"/>
+              </div>
+            </LazyItemWrapper>
+            <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-AR1" :strict="true">
+              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441604bbe120f002a3197'" pos="PCAROOP" extClass="mobile-hide" :config="props.config" />
+              <vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="PCAR" extClass="mobile-hide" :config="props.config"  />
+              <template>
+                <span id="innity-custom-adnetwork-span-63518"></span>
+                <span id="innity-custom-premium-span-12738"></span>            
+              </template>
+              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" :config="props.config"/>
+            </LazyItemWrapper>
+            <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-AR2" :strict="true">
+              <template>
+                <span id="innity-custom-adnetwork-span-68557"></span>
+                <span id="innity-custom-premium-span-12739"></span>           
+              </template>
+              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config"/>
+            </LazyItemWrapper>
             <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
@@ -83,9 +93,11 @@
             </template>
           </article-body>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441d04bbe120f002a319a'" pos="MBFTOOP" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
-            <vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
+            <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441d04bbe120f002a319a'" pos="MBFTOOP" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
+              <vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
+            </LazyItemWrapper>
             <div style="width: 100%; height: 100%;">
               <app-footer />
             </div>
@@ -136,6 +148,7 @@
   import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
   import ArticleBody from '../components/article/ArticleBody.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
+  import ArticleAsideReadrLatest from '../components/article/ArticleAsideReadrLatest.vue'
   import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
@@ -146,6 +159,7 @@
   import HeroImage from '../components/article/HeroImage.vue'
   import HeroVideo from '../components/article/HeroVideo.vue'
   import LatestList from '../components/article/LatestList.vue'
+  import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
   import PopList from '../components/article/PopList.vue'
@@ -158,7 +172,7 @@
   import sanitizeHtml from 'sanitize-html'
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
-  import ArticleAsideReadrLatest from '../components/article/ArticleAsideReadrLatest.vue'
+  import verge from 'verge'
 
   const debug = require('debug')('CLIENT:VIEWS:article')
   const debugDFP = require('debug')('CLIENT:DFP')
@@ -361,7 +375,8 @@
       HeroVideo,
       RelatedListInContent,
       RecommendList,
-      ArticleAsideReadrLatest
+      ArticleAsideReadrLatest,
+      LazyItemWrapper
     },
     data () {
       return {
@@ -385,7 +400,8 @@
         showDfpFixedBtn: false,
         showDfpHeaderLogo: false,
         state: {},
-        viewport: undefined
+        viewport: undefined,
+        verge
       }
     },
     computed: {

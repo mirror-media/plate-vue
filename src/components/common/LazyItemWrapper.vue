@@ -1,6 +1,6 @@
 <template>
   <div class="plate-vue-lazy-item-wrapper" :id="`lazyitemwrp-${id}`">
-    <div v-show="isVisibleYet">
+    <div v-show="isVisibleYet" v-if="isVisibleYet || !strict">
       <slot></slot>
     </div>
   </div>
@@ -26,13 +26,22 @@
         const currPosTop = currentYPosition()
         const deviceHeight = verge.viewportH()
         const eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
-        if (eleTop - deviceHeight * 1.5 < currPosTop) {
+        const offset = this.offset || 0
+        const checkPoint = this.position || (eleTop - offset)
+        if (checkPoint < currPosTop + deviceHeight) {
           this.isVisibleYet = true
           window.removeEventListener('scroll', handler)
         }
       }
       window.addEventListener('scroll', handler)
-      this.handler()
+      handler()
+    },
+    props: {
+      offset: {},
+      position: {},
+      strict: {
+        default: false
+      },
     },
   }
 </script>
