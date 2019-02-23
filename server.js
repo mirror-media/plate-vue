@@ -103,6 +103,7 @@ app.use('/service-worker.js', serve('./dist/service-worker.js'), staticNotFound)
 // app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
  
 const exp_preview_mode = /\b(preview=true)\b/
+const exp_dev = /^(dev|localhost)\b/
 function render (req, res, next) {
   const s = Date.now()
   let isPageNotFound = false
@@ -233,6 +234,7 @@ app.use('/story/amp', require('./amp/service/api'))
 app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
+  console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
   next()
 }, fetchFromRedis, (req, res, next) => {
   if (res.redis) {

@@ -14,7 +14,7 @@
             <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2 v-text="$t('homepage.focus')"></h2></div>
-            <div class="focusNewsContainer">
+            <div class="focusNewsContainer" id="homepage-focus-news">
               <div v-show="viewport < 1200"
                 class="focusNewsContainer__latest-mobile-b"
               >
@@ -61,7 +61,7 @@
         <Footer v-if="abIndicator === 'B' && viewport >= 1200" class="footer" />
         <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
         <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
-        <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199">
+        <DfpCover v-if="isTimeToShowAdCover || dfpMode === 'prod'" v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
         <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw">
@@ -98,9 +98,12 @@ import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
+import verge from 'verge'
 
 // const MAXRESULT = 20
 // const PAGE = 1
+const showAdCover = store => store.dispatch('SHOW_AD_COVER')
+const debugDFP = require('debug')('CLIENT:DFP')
 const debug = require('debug')('CLIENT:Home')
 const fetchSSRData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] }).then(() => {
@@ -219,9 +222,10 @@ export default {
       dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
-      isVponSDKLoaded: false,
-      loading: false,
       hasScrollLoadMore: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE) > 1,
+      isVponSDKLoaded: false,
+      isAdCoverCalledYet: false,
+      loading: false,
       page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
@@ -365,6 +369,9 @@ export default {
         return latestFirstPage
       }
     },
+    isTimeToShowAdCover () {
+      return _.get(this.$store, 'state.isTimeToShowAdCover', false)
+    },
     notFirstPageNow () {
       return _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], 1) !== 1
     },
@@ -438,7 +445,7 @@ export default {
         })
       }
     },
-    handleScroll () {
+    handleScrollForLoadmore () {
       window.onscroll = () => {
         const _latestArticleDiv = document.querySelector('#latestArticle')
         if (!_latestArticleDiv) { return }
@@ -451,6 +458,18 @@ export default {
         }
       }
     },
+    scrollEventHandlerForAd () {
+      if (this.isAdCoverCalledYet) { return }
+      const currentTop = currentYPosition()
+      const eleTop = elmYPosition('#homepage-focus-news')
+      const device_height = verge.viewportH()
+      if (currentTop + device_height > eleTop) {
+        debugDFP('SHOW ADCOVER!')
+        showAdCover(this.$store)
+        this.isAdCoverCalledYet = true
+        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
+      }
+    }, 
   },
   beforeMount () {
     this.abIndicator = this.getMmid()
@@ -463,7 +482,7 @@ export default {
     Promise.all(jobs)
   },
   mounted () {
-    this.handleScroll()
+    this.handleScrollForLoadmore()
     this.updateViewport()
     window.addEventListener('resize', () => {
       this.updateViewport()
@@ -473,6 +492,11 @@ export default {
 
     window.addEventListener('scroll', this.detectFixProject)
 
+    /**
+     * Have ad-cover be rendered as soon as #homepage-focus-news gets visible.
+     */
+    window.addEventListener('scroll', this.scrollEventHandlerForAd)
+
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
     // window.ga('set', 'contentGroup3', '')
@@ -481,7 +505,7 @@ export default {
   },
   updated () {
     this.initHasScrollLoadMore()
-    this.handleScroll()
+    this.handleScrollForLoadmore()
     this.updateSysStage()
   },
   destroyed () {

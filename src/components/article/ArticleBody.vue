@@ -348,7 +348,7 @@ export default {
           return
       }
     },
-    scrollEventHandler () {
+    scrollEventHandlerForAd () {
       if (this.isAdCoverCalledYet) { return }
       const currentTop = currentYPosition()
       const eleTop = elmYPosition('#article-body-content')
@@ -357,15 +357,15 @@ export default {
         debugDFP('SHOW ADCOVER!')
         showAdCover(this.$store)
         this.isAdCoverCalledYet = true
-        window.removeEventListener('scroll', this.scrollEventHandler)
+        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
       }
-    },
-    async setupEventHandler () {
-      window.addEventListener('scroll', this.scrollEventHandler)
-    }    
+    },  
   },
   mounted () {
-    this.setupEventHandler()
+    /**
+     * Have ad-cover be rendered as soon as #article-body-content gets visible.
+     */
+    window.addEventListener('scroll', this.scrollEventHandlerForAd)
 
     /*global twttr*/
     window.addEventListener('load', () => {
