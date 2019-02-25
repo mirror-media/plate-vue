@@ -1,6 +1,6 @@
 <template>
   <div class="plate-vue-lazy-item-wrapper" :id="`lazyitemwrp-${id}`">
-    <div v-show="isVisibleYet" v-if="isSupposedToRenderOnSS || isVisibleYet || !strict">
+    <div v-show="isVisibleYet" v-if="isVisibleYet || !strict">
       <slot></slot>
     </div>
   </div>
@@ -12,11 +12,6 @@
   // const debug = require('debug')('CLIENT:LAZYITEM')
   export default {
     name: 'LazyItemWrapper',
-    computed: {
-      isSupposedToRenderOnSS () {
-        return this.ssr && process.env.VUE_ENV === 'server'
-      }
-    },
     data () {
       return {
         id: '',
@@ -44,10 +39,8 @@
     props: {
       offset: {},
       position: {},
-      ssr: {
-        default: false
-      },
       strict: {
+        // on strict mode, content won't be rendered on server-side
         default: false
       },
     },

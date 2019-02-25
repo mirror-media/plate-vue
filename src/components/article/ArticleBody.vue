@@ -55,7 +55,7 @@
       </div>
       <div class="split-line"></div>
       <article class="content" id="article-body-content">
-        <LazyItemWrapper :ssr="true" :strict="true">
+        <LazyItemWrapper>
           <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`">
             <ArticleImg v-if="p.type === 'image'"
               :viewport="viewport"

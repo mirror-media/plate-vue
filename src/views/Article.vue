@@ -146,8 +146,6 @@
   import { microAds } from '../constants/microAds'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
-  import ArticleBody from '../components/article/ArticleBody.vue'
-  import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import ArticleAsideReadrLatest from '../components/article/ArticleAsideReadrLatest.vue'
   import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
@@ -173,6 +171,9 @@
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
   import verge from 'verge'
+
+  const ArticleBody = () => import('../components/article/ArticleBody.vue')
+  const ArticleBodyPhotography = () => import('../components/article/ArticleBodyPhotography.vue')
 
   const debug = require('debug')('CLIENT:VIEWS:article')
   const debugDFP = require('debug')('CLIENT:DFP')
