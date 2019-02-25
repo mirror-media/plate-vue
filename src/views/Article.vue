@@ -30,7 +30,9 @@
             </template>
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
-              <latest-list v-if="isRenderAside" v-show="isReadyToRenderLatest" :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
+              <LazyItemWrapper :position="verge.viewportH() / 2" :strict="true">
+                <latest-list v-if="isRenderAside" :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
+              </LazyItemWrapper>
               <article-aside-fixed :projects="projectlist">
                 <LazyItemWrapper :position="verge.viewportH()" :strict="true">
                   <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
@@ -40,7 +42,9 @@
                     <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
                   </blockquote>
                 </div>
-                <ArticleAsideReadrLatest class="readr-latest" slot="readrLatest"/>
+                <LazyItemWrapper :position="verge.viewportH()" slot="readrLatest" :strict="true">
+                  <ArticleAsideReadrLatest class="readr-latest" />
+                </LazyItemWrapper>
                 <pop-list-vert :pop="popularlist" slot="popListVert">
                   <micro-ad v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                     :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
@@ -144,6 +148,8 @@
   import { currEnv, getImage, getTruncatedVal, lockJS, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
+  import ArticleBody from '../components/article/ArticleBody.vue'
+  import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
   import ArticleAsideReadrLatest from '../components/article/ArticleAsideReadrLatest.vue'
@@ -172,8 +178,8 @@
   import truncate from 'truncate'
   import verge from 'verge'
 
-  const ArticleBody = () => import('../components/article/ArticleBody.vue')
-  const ArticleBodyPhotography = () => import('../components/article/ArticleBodyPhotography.vue')
+  // const ArticleBody = () => import('../components/article/ArticleBody.vue')
+  // const ArticleBodyPhotography = () => import('../components/article/ArticleBodyPhotography.vue')
 
   const debug = require('debug')('CLIENT:VIEWS:article')
   const debugDFP = require('debug')('CLIENT:DFP')
@@ -390,7 +396,6 @@
         hasSentFirstEnterGA: false,
         isVponSDKLoaded: false,
         isYahooAdLoaded: false,
-        isReadyToRenderLatest: false,
         isLowPriorityDataLoaded: false,
         microAds,
         routeUpateReferrerSlug: 'N/A',
@@ -788,7 +793,6 @@
         })
        }
        window.addEventListener('scroll', lowPriorityDataLoader)
-       this.isReadyToRenderLatest = true
     },
     updated () {
       this.updateSysStage()
