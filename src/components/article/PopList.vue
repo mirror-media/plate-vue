@@ -6,7 +6,7 @@
         <div class="pop_item">
           <figure>
             <router-link :to="o.slug" :id="'popular-' + i">
-              <img v-lazy="getImage(o, 'mobile')" :alt="getValue(o, [ 'title' ])" />
+              <LazyImage :src="getImage(o, 'mobile')" :caption="getValue(o, [ 'title' ])" />
             </router-link>
             <div class="pop_item--colorBlock" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])" />
           </figure>
@@ -20,12 +20,16 @@
   </div>
 </template>
 <script>
+  import LazyImage from 'src/components/common/LazyImage.vue'
   import { SECTION_MAP } from '../../constants'
   import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import _ from 'lodash'
   export default {
     name: 'pop-list',
     props: [ 'pop', 'currEnv' ],
+    components: {
+      LazyImage,
+    },
     computed: {
       popArticles () {
         return _.take(this.pop, 6)

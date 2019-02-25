@@ -9,7 +9,7 @@
     name: 'LazyImage',
     data () {
       return {
-        id: `${uuidv4()}`,
+        id: '',
         isVirtualImgLoaded: false,
         isVirtualImgCheckedOut: false
       }
@@ -41,6 +41,10 @@
     },
     mounted () {
       window.addEventListener('scroll', this.handler)      
+      this.id = uuidv4()
+      this.$forceUpdate()
+    },
+    updated () {
       this.handler()
     },
     props: {

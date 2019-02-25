@@ -1,6 +1,6 @@
 <template>
   <div class="plate-vue-lazy-item-wrapper" :id="`lazyitemwrp-${id}`">
-    <div v-show="isVisibleYet">
+    <div v-show="isVisibleYet" v-if="isVisibleYet || !strict">
       <slot></slot>
     </div>
   </div>
@@ -15,25 +15,54 @@
     data () {
       return {
         id: '',
-        isVisibleYet: false
+        isVisibleYet: false,
+        handler: {}
       }
     },
     mounted () {
-      const uuid = uuidv4()
-      this.id = uuid
-      const handler = () => {
-        if (this.isVisibleYet) { return }
-        const currPosTop = currentYPosition()
-        const deviceHeight = verge.viewportH()
-        const eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
-        if (eleTop - deviceHeight * 1.5 < currPosTop) {
+      if (!this.loadAfterPageLoaded) {
+        this.handler = () => {
+          if (this.isVisibleYet) { return }
+          const currPosTop = currentYPosition()
+          const deviceHeight = verge.viewportH()
+          const eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
+          const offset = this.offset || 0
+          const checkPoint = this.position || (eleTop - offset)
+          if (checkPoint < currPosTop + deviceHeight) {
+            this.isVisibleYet = true
+            window.removeEventListener('scroll', this.handler)
+            this.handler = null
+          }
+        }
+        window.addEventListener('scroll', this.handler)
+      } else {
+        this.handler = () => {
           this.isVisibleYet = true
-          window.removeEventListener('scroll', handler)
+          window.removeEventListener('load', this.handler)
+          this.handler = null
+        }
+        window.addEventListener('load', this.handler)
+      }
+      this.id = uuidv4()
+    },
+    props: {
+      offset: {},
+      position: {},
+      loadAfterPageLoaded: {
+        default: false
+      },
+      strict: {
+        // on strict mode, content won't be rendered on server-side
+        default: false
+      },
+    },
+    watch: {
+      id () {
+        if (!this.loadAfterPageLoaded) {
+          this.handler()
         }
       }
-      window.addEventListener('scroll', handler)
-      this.handler()
-    },
+    }
   }
 </script>
 <style lang="stylus" scoped></style>

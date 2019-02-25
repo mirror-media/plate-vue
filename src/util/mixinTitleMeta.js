@@ -1,6 +1,9 @@
 import _ from 'lodash'
+import { alexa, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
+let isScriptLoaded = false
+let isDomContentLoadedHandlerSetup = false
 
 function getMetaSet (vm) {
   const { metaSet } = vm.$options
@@ -40,63 +43,68 @@ const serverTitleMetaMixin = {
   }
 }
 
+const updateMeta = metaInfo => {
+  const { title, meta, url, adTrace } = metaInfo
+  const adTraceScripts = [ ...document.querySelectorAll('*[data-name="ad-trace"]') ]
+  adTraceScripts.map(node => node.remove())
+  
+  if (title) {
+    document.querySelector('title').innerHTML = title
+  }
+  if (url) {
+    const alternate = document.head.querySelector(`link[rel='alternate']`)
+    alternate && (alternate.href = url)
+  }
+  if (adTrace) {
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(adTrace, "text/html")
+    const scripts = [ ...doc.querySelectorAll('*[data-name="ad-trace"]') ]
+    debug('adTrace scripts', scripts)
+    scripts.map(node => document.head.appendChild(node))
+  }
+  if (meta) {
+    const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')
+    const newMeta = _.split(meta, '>')
+    _.forEach(dynamicMeta, (node) => {
+      document.head.removeChild(node)
+    })
+    _.forEach(newMeta, (m) => {
+      const node = document.createElement('div')
+      node.innerHTML = `${m}>`
+      const updateMeta = node.querySelector('meta')
+      if (updateMeta) {
+        document.head.appendChild(updateMeta)
+      }
+    })
+  }
+}
+
 const clientTitleMetaMixin = {
   mounted () {
     const metaSet = getMetaSet(this)
-    if (!metaSet) { return }
-    // const meta = metaSet.meta
-    const title = metaSet.title
-    if (title) {
-      document.querySelector('title').innerHTML = title
-    }
+    metaSet && updateMeta(metaSet, this)
   },
   updated () {
     const metaSet = getMetaSet(this)
-    if (!metaSet) { return }
-    const meta = metaSet.meta
-    const title = metaSet.title
-    const url = metaSet.url
-    // const link = metaSet.link
-    const adTrace = metaSet.adTrace
-    const adTraceScripts = [ ...document.querySelectorAll('*[data-name="ad-trace"]') ]
-    debug('adTrace', adTrace)
-    adTraceScripts.map(node => node.remove())
-    
-    if (title) {
-      document.querySelector('title').innerHTML = title
-    }
-    // if (link) {
-    //   const amphtml = document.head.querySelector(`link[rel='amphtml']`)
-    //   amphtml && (amphtml.href = link)
-    // }
-    if (url) {
-      const alternate = document.head.querySelector(`link[rel='alternate']`)
-      alternate && (alternate.href = url)
-    }
-    if (adTrace) {
-      const parser = new DOMParser()
-      const doc = parser.parseFromString(adTrace, "text/html")
-      const scripts = [ ...doc.querySelectorAll('*[data-name="ad-trace"]') ]
-      debug('adTrace scripts', scripts)
-      scripts.map(node => document.head.appendChild(node))
-    }
-    if (meta) {
-      const dynamicMeta = document.querySelectorAll('head meta:not([fixed="true"])')
-      const newMeta = _.split(meta, '>')
-      _.forEach(dynamicMeta, (node) => {
-        document.head.removeChild(node)
-      })
-      _.forEach(newMeta, (m) => {
-        const node = document.createElement('div')
-        node.innerHTML = `${m}>`
-        const updateMeta = node.querySelector('meta')
-        if (updateMeta) {
-          document.head.appendChild(updateMeta)
-        }
-      })
-    }
+    metaSet && updateMeta(metaSet, this)
   }
 }
+process.env.VUE_ENV === 'client' && !isDomContentLoadedHandlerSetup && window.addEventListener('load', () => {
+  console.log('PAGE LOADED.')
+  if (!isScriptLoaded) {
+    const insertCodes = async codes => {
+      const script = document.createElement('script')
+      script.innerHTML = codes
+      document.head.appendChild(script)
+    }
+    isScriptLoaded = Promise.all([
+      insertCodes(gtm_mirrormedia).then(() => insertCodes(gtm_likr)),
+      insertCodes(fb_sdk),
+      insertCodes(scorecardresearch).then(() => insertCodes(alexa)),
+    ]).then(() => true).catch(() => false)
+  }
+  isDomContentLoadedHandlerSetup = true
+})
 
 export default process.env.VUE_ENV === 'server'
   ? serverTitleMetaMixin

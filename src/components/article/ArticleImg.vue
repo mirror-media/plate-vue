@@ -16,6 +16,7 @@
   import { get, } from 'lodash'
   
   const debug = require('debug')('CLIENT:ArticleImg')
+  // const debugLazy = require('debug')('CLIENT:LAZYIMAGE')
   export default {
     name: 'ArticleImg',
     computed: {
@@ -81,7 +82,7 @@
         const deviceHeight = verge.viewportH()
         const currPosMid = currentYPosition() + deviceHeight / 2
         const this_ele = elmYPosition(`.content-image.img-${this.id}`)
-        if (currPosMid < this_ele + 500 && currPosMid > this_ele - 500) {
+        if (this_ele > 0 && currPosMid < this_ele + 500 && currPosMid > this_ele - 500) {
           this.isVirtualImgCheckedOut = true
           this.lazyLoad()
         }
