@@ -15,14 +15,13 @@
     data () {
       return {
         id: '',
-        isVisibleYet: false
+        isVisibleYet: false,
+        handler: {}
       }
     },
     mounted () {
-      const uuid = uuidv4()
-      this.id = uuid
       if (!this.loadAfterPageLoaded) {
-        const handler = () => {
+        this.handler = () => {
           if (this.isVisibleYet) { return }
           const currPosTop = currentYPosition()
           const deviceHeight = verge.viewportH()
@@ -31,18 +30,20 @@
           const checkPoint = this.position || (eleTop - offset)
           if (checkPoint < currPosTop + deviceHeight) {
             this.isVisibleYet = true
-            window.removeEventListener('scroll', handler)
+            window.removeEventListener('scroll', this.handler)
+            this.handler = null
           }
         }
-        window.addEventListener('scroll', handler)
-        handler()
+        window.addEventListener('scroll', this.handler)
       } else {
-        const handler = () => {
+        this.handler = () => {
           this.isVisibleYet = true
-          window.removeEventListener('load', handler)
+          window.removeEventListener('load', this.handler)
+          this.handler = null
         }
-        window.addEventListener('load', handler)
+        window.addEventListener('load', this.handler)
       }
+      this.id = uuidv4()
     },
     props: {
       offset: {},
@@ -55,6 +56,13 @@
         default: false
       },
     },
+    watch: {
+      id () {
+        if (!this.loadAfterPageLoaded) {
+          this.handler()
+        }
+      }
+    }
   }
 </script>
 <style lang="stylus" scoped></style>
