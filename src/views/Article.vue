@@ -6,8 +6,10 @@
         <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header> -->
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
-        <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
+        <LazyItemWrapper :loadAfterPageLoaded="true">
+          <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
+        </LazyItemWrapper>
         <div class="article" v-if="articleData">
           <article-body
             :abIndicator="abIndicator"
@@ -29,7 +31,9 @@
               </HeroImage>
             </template>
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
-              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
+              <LazyItemWrapper :loadAfterPageLoaded="true">
+                <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
+              </LazyItemWrapper>
               <LazyItemWrapper :position="verge.viewportH() / 2" :strict="true">
                 <latest-list v-if="isRenderAside" :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
               </LazyItemWrapper>

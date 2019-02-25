@@ -21,24 +21,33 @@
     mounted () {
       const uuid = uuidv4()
       this.id = uuid
-      const handler = () => {
-        if (this.isVisibleYet) { return }
-        const currPosTop = currentYPosition()
-        const deviceHeight = verge.viewportH()
-        const eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
-        const offset = this.offset || 0
-        const checkPoint = this.position || (eleTop - offset)
-        if (checkPoint < currPosTop + deviceHeight) {
-          this.isVisibleYet = true
-          window.removeEventListener('scroll', handler)
+      if (!this.loadAfterPageLoaded) {
+        const handler = () => {
+          if (this.isVisibleYet) { return }
+          const currPosTop = currentYPosition()
+          const deviceHeight = verge.viewportH()
+          const eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
+          const offset = this.offset || 0
+          const checkPoint = this.position || (eleTop - offset)
+          if (checkPoint < currPosTop + deviceHeight) {
+            this.isVisibleYet = true
+            window.removeEventListener('scroll', handler)
+          }
+          handler()
         }
+        window.addEventListener('scroll', handler)
+      } else {
+        window.addEventListener('load', () => {
+          this.isVisibleYet = true
+        })
       }
-      window.addEventListener('scroll', handler)
-      handler()
     },
     props: {
       offset: {},
       position: {},
+      loadAfterPageLoaded: {
+        default: false
+      },
       strict: {
         // on strict mode, content won't be rendered on server-side
         default: false
