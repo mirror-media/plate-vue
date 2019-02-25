@@ -1,8 +1,8 @@
 import _ from 'lodash'
-import { gtm_mirrormedia, gtm_likr } from './dynamicScript'
+import { alexa, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
-let isGTMLoaded = false
+let isScriptLoaded = false
 let isDomContentLoadedHandlerSetup = false
 
 function getMetaSet (vm) {
@@ -43,7 +43,7 @@ const serverTitleMetaMixin = {
   }
 }
 
-const updateMeta = (metaInfo, vm) => {
+const updateMeta = metaInfo => {
   const { title, meta, url, adTrace } = metaInfo
   const adTraceScripts = [ ...document.querySelectorAll('*[data-name="ad-trace"]') ]
   adTraceScripts.map(node => node.remove())
@@ -89,21 +89,19 @@ const clientTitleMetaMixin = {
     metaSet && updateMeta(metaSet, this)
   }
 }
-
-process.env.VUE_ENV === 'client' && !isDomContentLoadedHandlerSetup && document.addEventListener('DOMContentLoaded', () => {
-  console.log('DOMContentLoaded')
-  if (!isGTMLoaded) {
-    console.log('isGTMLoaded', isGTMLoaded)
+process.env.VUE_ENV === 'client' && !isDomContentLoadedHandlerSetup && window.addEventListener('load', () => {
+  console.log('PAGE LOADED.')
+  if (!isScriptLoaded) {
     const insertCodes = async codes => {
       const script = document.createElement('script')
       script.innerHTML = codes
       document.head.appendChild(script)
     }
-    isGTMLoaded = Promise.all([
-      insertCodes(gtm_mirrormedia),
-      insertCodes(gtm_likr),
+    isScriptLoaded = Promise.all([
+      insertCodes(gtm_mirrormedia).then(() => insertCodes(gtm_likr)),
+      insertCodes(fb_sdk),
+      insertCodes(scorecardresearch).then(() => insertCodes(alexa)),
     ]).then(() => true).catch(() => false)
-    console.log('isGTMLoaded', isGTMLoaded)
   }
   isDomContentLoadedHandlerSetup = true
 })
