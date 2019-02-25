@@ -1,7 +1,7 @@
 <template>
   <div class="hero-image">
     <figure v-if="heroImage" >
-      <img v-show="loading" src="/assets/mirrormedia/icon/loading.gif">
+      <img v-show="loading" :src="get(heroImage, 'image.resizedTargets.tiny.url', '/assets/mirrormedia/icon/loading.gif')">
       <img
         v-show="!loading"
         id="hero-image"
@@ -33,6 +33,9 @@
         images: {},
         loading: false
       }
+    },
+    methods: {
+      get,
     },
     watch: {
       '$route.fullPath' () {
