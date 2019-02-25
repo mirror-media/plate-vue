@@ -19,41 +19,37 @@
             :projlistData="projectlist"
             :viewport="viewport">
             <template slot="hero">
-              <div v-if="heroVideo" class="article-heromedia">
-                <HeroVideo
-                  :heroCaption="heroCaption"
-                  :video="heroVideo">
-                </HeroVideo>
-              </div>
-              <HeroImage v-else
-                :heroCaption="heroCaption"
-                :heroImage="heroImage">
-              </HeroImage>
+              <div v-if="heroVideo" class="article-heromedia"><HeroVideo :heroCaption="heroCaption" :video="heroVideo" /></div>
+              <HeroImage v-else :heroCaption="heroCaption" :heroImage="heroImage" />
             </template>
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
-              <LazyItemWrapper :loadAfterPageLoaded="true">
-                <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
+              <LazyItemWrapper :loadAfterPageLoaded="true" v-if="!hiddenAdvertised">
+                <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               </LazyItemWrapper>
-              <LazyItemWrapper :position="verge.viewportH() / 2" :strict="true">
-                <latest-list v-if="isRenderAside" :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
+              <LazyItemWrapper :position="verge.viewportH() / 2" :strict="true" v-if="isRenderAside" >
+                <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
               </LazyItemWrapper>
               <article-aside-fixed :projects="projectlist">
-                <LazyItemWrapper :position="verge.viewportH()" :strict="true">
-                  <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
+                <LazyItemWrapper :position="verge.viewportH()" :strict="true" v-if="!hiddenAdvertised">
+                  <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
                 </LazyItemWrapper>
-                <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-                  <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-                    <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-                  </blockquote>
-                </div>
+                <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+                  <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
+                    <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
+                      <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
+                    </blockquote>
+                  </div>
+                </LazyItemWrapper>
                 <LazyItemWrapper :position="verge.viewportH()" slot="readrLatest" :strict="true">
                   <ArticleAsideReadrLatest class="readr-latest" />
                 </LazyItemWrapper>
-                <pop-list-vert :pop="popularlist" slot="popListVert">
-                  <micro-ad v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-                    :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-                    class="popListVert-list__item" :slot="`microAd${getValue(a, [ 'pos' ])}`"></micro-ad>
-                </pop-list-vert>
+                <LazyItemWrapper :position="verge.viewportH()" slot="popListVert" :strict="true">
+                  <pop-list-vert :pop="popularlist">
+                    <micro-ad v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
+                      :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
+                      class="popListVert-list__item" :slot="`microAd${getValue(a, [ 'pos' ])}`"></micro-ad>
+                  </pop-list-vert>
+                </LazyItemWrapper>
               </article-aside-fixed>
             </aside>
             <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-set" :strict="true" :style="{ width: '100%' }">

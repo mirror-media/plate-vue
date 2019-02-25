@@ -33,13 +33,15 @@
             this.isVisibleYet = true
             window.removeEventListener('scroll', handler)
           }
-          handler()
         }
         window.addEventListener('scroll', handler)
+        handler()
       } else {
-        window.addEventListener('load', () => {
+        const handler = () => {
           this.isVisibleYet = true
-        })
+          window.removeEventListener('load', handler)
+        }
+        window.addEventListener('load', handler)
       }
     },
     props: {
