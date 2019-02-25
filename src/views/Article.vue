@@ -180,6 +180,8 @@
 
   // const ArticleBody = () => import('../components/article/ArticleBody.vue')
   // const ArticleBodyPhotography = () => import('../components/article/ArticleBodyPhotography.vue')
+  // const RecommendList = () => import('../components/article/RecommendList.vue')
+  // const RelatedListInContent = () => import('../components/article/RelatedListInContent.vue')
 
   const debug = require('debug')('CLIENT:VIEWS:article')
   const debugDFP = require('debug')('CLIENT:DFP')

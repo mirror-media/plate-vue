@@ -68,12 +68,17 @@
         </router-link>
       </div>
       <router-link to="/section/topic" :data-gtm="`topic ${$t('HEADER.MORE')}`" class="more" data-gtm-category="header" v-text="$t('HEADER.MORE')"></router-link>
-      <a href="https://www.mirrorfiction.com/" class="link--external mirrorfiction" data-gtm="section mirrorfiction" data-gtm-category="header" target="_blank"><img src="/assets/mirrormedia/icon/mirrorfiction.png" :alt="$t('HEADER.MIRRORFICTION')"/></a>
-      <a href="https://www.readr.tw/" class="link--external readr" data-gtm="section readr" data-gtm-category="header" target="_blank"><img src="/assets/mirrormedia/icon/readrlogo-gary.png" :alt="$t('HEADER.READR')"/></a>
+      <a href="https://www.mirrorfiction.com/" class="link--external mirrorfiction" data-gtm="section mirrorfiction" data-gtm-category="header" target="_blank">
+        <LazyImage src="/assets/mirrormedia/icon/mirrorfiction.png" :caption="$t('HEADER.MIRRORFICTION')" />
+      </a>
+      <a href="https://www.readr.tw/" class="link--external readr" data-gtm="section readr" data-gtm-category="header" target="_blank">
+        <LazyImage src="/assets/mirrormedia/icon/readrlogo-gary.png" :caption="$t('HEADER.READR')" />
+      </a>
     </nav>
   </section>
 </template>
 <script>
+import LazyImage from 'src/components/common/LazyImage.vue'
 import { SECTION_MAP } from '../../constants'
 import { get, } from 'lodash'
 
@@ -98,6 +103,9 @@ export default {
         return []
       }
     }
+  },
+  components: {
+    LazyImage,
   },
   computed: {
     activePartners () {
