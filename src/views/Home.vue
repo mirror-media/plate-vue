@@ -239,7 +239,8 @@ export default {
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
       showDfpHeaderLogo: false,
-      viewport: undefined
+      viewport: undefined,
+      verge
     }
   },
   computed: {

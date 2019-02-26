@@ -3,7 +3,7 @@
     <template v-if="articleType === 'campaign' || articleType === 'projects' || articleType === 'readr'">
       <figure class="listArticleBlock__figure">
         <a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
+          <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'title' ])" />
         </a>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
@@ -50,7 +50,7 @@
     <template v-else-if="articleType === 'topic'">
       <figure class="listArticleBlock__figure">
         <router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-img`" target="_blank">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'name' ])" />
+          <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'name' ])" />
         </router-link>
       </figure>
       <div class="listArticleBlock__content">
@@ -61,7 +61,7 @@
     <template v-else>
       <figure class="listArticleBlock__figure">
         <router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
+          <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'title' ])" />
         </router-link>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
@@ -79,6 +79,7 @@
 import { SECTION_MAP, MARKETING_CATGORY_ID, } from '../../constants'
 import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
 import _ from 'lodash'
+import LazyImage from 'src/components/common/LazyImage.vue'
 import moment from 'moment'
 
 export default {
@@ -91,6 +92,9 @@ export default {
       isPlaying: false,
       progress: 0
     }
+  },
+  components: {
+    LazyImage,
   },
   computed: {
     article () {
