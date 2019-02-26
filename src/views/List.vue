@@ -115,6 +115,7 @@ import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORAL
   FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
+import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { consoleLogOnDev, currEnv, getTruncatedVal, getValue, unLockJS, sendAdCoverGA, updateCookie } from '../util/comm'
@@ -706,6 +707,12 @@ export default {
               this.dfpHeaderLogoLoaded = true
               break
           }
+          adtracker({
+            el: dfpCover,
+            slot: event.slot.getSlotElementId(),
+            position,
+            isAdEmpty: adDisplayStatus === 'none'
+          })   
         },
         setCentering: true
       })

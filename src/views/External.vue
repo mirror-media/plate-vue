@@ -54,7 +54,7 @@
       <DfpST v-if="(viewport < 550)" :props="props">
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
       </DfpST>
-      <DfpCover v-if="isTimeToShowAdCover || dfpMode === 'prod'" v-show="showDfpCoverAdFlag && viewport < 1199"> 
+      <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR" :config="props.config"></vue-dfp>
       </DfpCover> 
       <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
@@ -72,6 +72,7 @@
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
+  import { adtracker } from 'src/util/adtracking'
   import { consoleLogOnDev, currEnv, getValue, sendAdCoverGA, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
@@ -311,6 +312,12 @@
                 this.dfpHeaderLogoLoaded = true
                 break
             }
+            adtracker({
+              el: dfpCurrAd,
+              slot: event.slot.getSlotElementId(),
+              position,
+              isAdEmpty: adDisplayStatus === 'none'
+            })  
           },
           setCentering: true,
           sizeMapping: DFP_SIZE_MAPPING

@@ -145,6 +145,7 @@
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
+  import { adtracker } from 'src/util/adtracking'
   import { currEnv, getImage, getTruncatedVal, lockJS, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
@@ -483,6 +484,12 @@
                 this.dfpHeaderLogoLoaded = true
                 break
             }
+            adtracker({
+              el: dfpCurrAd,
+              slot: event.slot.getSlotElementId(),
+              position,
+              isAdEmpty: adDisplayStatus === 'none'
+            }) 
           },
           setCentering: true,
           sizeMapping: DFP_SIZE_MAPPING
