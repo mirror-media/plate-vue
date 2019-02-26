@@ -90,6 +90,7 @@
   import { consoleLogOnDev, currEnv, getTruncatedVal, lockJS, unLockJS, insertMicroAd, sendAdCoverGA, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
+  import { adtracker } from 'src/util/adtracking'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleBody from '../components/article/ArticleBodyForApp.vue'
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotographyForApp.vue'
@@ -401,6 +402,12 @@
                 this.showDfpFixedBtn = !(adDisplayStatus === 'none')
                 break
             }
+            adtracker({
+              el: dfpCurrAd,
+              slot: event.slot.getSlotElementId(),
+              position,
+              isAdEmpty: adDisplayStatus === 'none'
+            })  
           },
           setCentering: true,
           sizeMapping: DFP_SIZE_MAPPING

@@ -7,7 +7,7 @@
           <!-- <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         </section>
         <LazyItemWrapper :loadAfterPageLoaded="true">
-          <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)" :config="props.config"/>
           <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
         </LazyItemWrapper>
         <section class="home-mainContent">
@@ -89,6 +89,7 @@ import { SECTION_MAP, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGI
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
+import { adtracker } from 'src/util/adtracking'
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
@@ -304,6 +305,12 @@ export default {
               this.dfpHeaderLogoLoaded = true
               break
           }
+          adtracker({
+            el: dfpCover,
+            slot: event.slot.getSlotElementId(),
+            position,
+            isAdEmpty: adDisplayStatus === 'none'
+          })         
         },
         setCentering: true
       })

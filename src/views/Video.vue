@@ -70,6 +70,7 @@ import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
+import { adtracker } from 'src/util/adtracking'
 import { consoleLogOnDev, currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
 import { get, truncate, } from 'lodash'
 
@@ -321,6 +322,12 @@ export default {
               this.dfpHeaderLogoLoaded = true
               break
           }
+          adtracker({
+            el: dfpCover,
+            slot: event.slot.getSlotElementId(),
+            position,
+            isAdEmpty: adDisplayStatus === 'none'
+          }) 
         },
         setCentering: true
       })
