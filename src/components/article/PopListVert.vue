@@ -5,7 +5,7 @@
       <template v-for="(o, i) in popArticles">
         <div class="popListVert-list__item" :key="`popListVert${i}`">
           <router-link :to="o.slug" :id="`popular-${i}-popVertImg`" class="popListVert-list__item--img">
-            <LazyImage :src="getImage(o, 'mobile')" :alt="get(o, 'title')" />
+            <LazyImage :src="getImage(o, 'tiny')" :alt="get(o, 'title')" />
           </router-link>
           <div class="popListVert-list__item--text">
             <div :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')"></div>

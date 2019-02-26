@@ -6,7 +6,7 @@
         v-show="!loading"
         id="hero-image"
         :src="images.mobile || heroImage.image.url"
-        :srcset="`${images.mobile} 800w, ${images.tablet} 1200w, ${images.desktop} 2000w`"
+        :srcset="`${images.mobile} 800w, ${images.tablet} 1200w`"
         :alt="heroCaption">
       <figcaption v-text="heroCaption"></figcaption>
     </figure>
