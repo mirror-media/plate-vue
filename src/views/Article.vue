@@ -23,15 +23,15 @@
               <HeroImage v-else :heroCaption="heroCaption" :heroImage="heroImage" />
             </template>
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
-              <LazyItemWrapper :loadAfterPageLoaded="true" v-if="!hiddenAdvertised">
+              <LazyItemWrapper :loadAfterPageLoaded="true" v-if="!hiddenAdvertised" :style="{ minHeight: '250px', backgroundColor: '#f5f5f5' }">
                 <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
               </LazyItemWrapper>
               <LazyItemWrapper :position="verge.viewportH() / 2" :strict="true" v-if="isRenderAside" >
                 <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
               </LazyItemWrapper>
               <article-aside-fixed :projects="projectlist">
-                <LazyItemWrapper :position="verge.viewportH()" :strict="true" v-if="!hiddenAdvertised">
-                  <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
+                <LazyItemWrapper :position="verge.viewportH()" :strict="true" v-if="!hiddenAdvertised" slot="dfpR2" :style="{ minHeight: '250px', backgroundColor: '#f5f5f5' }">
+                  <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
                 </LazyItemWrapper>
                 <LazyItemWrapper :position="verge.viewportH()" :strict="true">
                   <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">

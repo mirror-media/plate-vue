@@ -35,6 +35,7 @@ export default {
 <style lang="stylus" scoped>
 .readr-latest
   width 100%
+  margin-top 20px!important
   &__iframe
     min-width 100%
 </style>
