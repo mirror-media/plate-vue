@@ -24,30 +24,35 @@
         handler: {}
       }
     },
-    mounted () {
-      if (!this.loadAfterPageLoaded) {
-        this.handler = () => {
-          if (this.isVisibleYet) { return }
-          const currPosTop = currentYPosition()
-          const deviceHeight = verge.viewportH()
-          const eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
-          const offset = this.offset || 0
-          const checkPoint = this.position || (eleTop - offset)
-          if (checkPoint < currPosTop + deviceHeight) {
+    methods: {
+      setupEventListener () {
+        if (!this.loadAfterPageLoaded) {
+          this.handler = () => {
+            if (this.isVisibleYet) { return }
+            const currPosTop = currentYPosition()
+            const deviceHeight = verge.viewportH()
+            const eleTop = elmYPosition(`#lazyitemwrp-${this.id}`)
+            const offset = this.offset || 0
+            const checkPoint = this.position || (eleTop - offset)
+            if (checkPoint < currPosTop + deviceHeight) {
+              this.isVisibleYet = true
+              window.removeEventListener('scroll', this.handler)
+              this.handler = null
+            }
+          }
+          window.addEventListener('scroll', this.handler)
+        } else {
+          this.handler = () => {
             this.isVisibleYet = true
-            window.removeEventListener('scroll', this.handler)
+            window.removeEventListener('load', this.handler)
             this.handler = null
           }
+          window.addEventListener('load', this.handler)
         }
-        window.addEventListener('scroll', this.handler)
-      } else {
-        this.handler = () => {
-          this.isVisibleYet = true
-          window.removeEventListener('load', this.handler)
-          this.handler = null
-        }
-        window.addEventListener('load', this.handler)
       }
+    },
+    mounted () {
+      this.setupEventListener()
       this.id = uuidv4()
     },
     props: {
@@ -65,6 +70,16 @@
       id () {
         if (!this.loadAfterPageLoaded) {
           this.handler()
+        }
+      },
+      '$route.fullPath': function () {
+        window.removeEventListener('load', this.handler)
+        if (!this.loadAfterPageLoaded) {
+          this.isVisibleYet = false
+          this.setupEventListener()
+          this.handler()
+        } else {
+          this.isVisibleYet = true
         }
       }
     }
