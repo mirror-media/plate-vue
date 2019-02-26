@@ -65,8 +65,10 @@
         </section>
         <loading :show="loading" />
         <Footer v-if="abIndicator === 'B' && viewport >= 1200" class="footer" />
-        <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
-        <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
+        <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+          <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
+          <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
+        </LazyItemWrapper>
         <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
