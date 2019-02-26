@@ -1,5 +1,8 @@
 <template>
-  <img src="/assets/mirrormedia/icon/loading.gif" :alt="caption" class="plate-vue-lazy-image" :id="`img-${id}`">
+  <img src="/assets/mirrormedia/icon/loading.gif" class="plate-vue-lazy-image" 
+    :class="{ loading: !isVirtualImgLoaded }"
+    :alt="caption"
+    :id="`img-${id}`">
 </template>
 <script>
   import uuidv4 from 'uuid/v4'
@@ -54,4 +57,10 @@
     },
   }
 </script>
-<style lang="stylus" scoped></style>
+<style lang="stylus" scoped>
+  img.loading
+    max-width 100px
+    width 100%
+    object-fit contain!important
+    margin 0 auto
+</style>

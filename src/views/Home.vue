@@ -6,12 +6,16 @@
           <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         </section>
-        <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
-        <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
+        <LazyItemWrapper :loadAfterPageLoaded="true">
+          <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)"  :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
+        </LazyItemWrapper>
         <section class="home-mainContent">
           <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
           <main>
-            <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
+            <LazyItemWrapper :loadAfterPageLoaded="true">
+              <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
+            </LazyItemWrapper>
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2 v-text="$t('homepage.focus')"></h2></div>
             <div class="focusNewsContainer" id="homepage-focus-news">
@@ -25,8 +29,10 @@
                 />
               </div>
             </div>
-            <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
+            <LazyItemWrapper :loadAfterPageLoaded="true">
+              <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
+            </LazyItemWrapper>
             <LatestArticleMain id="latestArticle" target="_blank"
               :abIndicator="abIndicator"
               :latestList="latestArticle"
@@ -61,7 +67,7 @@
         <Footer v-if="abIndicator === 'B' && viewport >= 1200" class="footer" />
         <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
         <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
-        <DfpCover v-if="isTimeToShowAdCover || dfpMode === 'prod'" v-show="showDfpCoverAdFlag && viewport < 1199">
+        <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199">
           <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
         </DfpCover>
         <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw">
@@ -92,6 +98,7 @@ import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleAsideMobileB from '../components/LatestArticleAsideMobileB.vue'
 import LatestArticleBySection from '../components/LatestArticleBySection.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
+import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import LiveStream from '../components/LiveStream.vue'
 import Loading from '../components/Loading.vue'
 import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
@@ -178,6 +185,7 @@ export default {
     LatestArticleAsideMobileB,
     LatestArticleBySection,
     LatestArticleMain,
+    LazyItemWrapper,
     MirrorMediaTVAside,
     VueDfpProvider,
     HeaderR
@@ -231,7 +239,8 @@ export default {
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
       showDfpHeaderLogo: false,
-      viewport: undefined
+      viewport: undefined,
+      verge
     }
   },
   computed: {

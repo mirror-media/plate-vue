@@ -6,7 +6,7 @@
         <a v-for="item in editorChoice"
           :key="item.slug"
           :href="`/story/${item.slug}`"
-          :style="{ width: `${100 / editorChoice.length}%`, backgroundImage: `url(${item.heroImage.image.resizedTargets.desktop.url})` }"
+          :style="{ width: `${100 / editorChoice.length}%`, backgroundImage: `url(${item.heroImage.image.resizedTargets.tablet.url})` }"
           class="slider__item"
           data-gtm-category="home"
           data-gtm="choice"
