@@ -97,7 +97,7 @@
       <DfpST v-if="(viewport < 550)" :props="props">
         <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
       </DfpST>
-      <DfpCover v-if="isTimeToShowAdCover || dfpMode === 'prod'" v-show="showDfpCoverAdFlag && viewport < 1199">
+      <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
       <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw">
