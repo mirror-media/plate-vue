@@ -8,7 +8,7 @@
         data-gtm-category="home"
         data-gtm="latest_category"
         target="_blank">
-        <img :src="highlightImage" :alt="highlight.title">
+        <LazyImage :src="highlightImage" :caption="highlight.title" />
       </a>
       <div class="latest-article-by-section__articles">
         <div v-for="(article, index) in articles" :key="article.id" class="article">
@@ -27,6 +27,7 @@
   </section>
 </template>
 <script>
+import LazyImage from 'src/components/common/LazyImage.vue'
 import { SECTION_MAP } from '../constants'
 import { get } from 'lodash'
 
@@ -39,6 +40,9 @@ export default {
         return {}
       }
     }
+  },
+  components: {
+    LazyImage,
   },
   computed: {
     articles () {
