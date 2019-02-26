@@ -5,8 +5,12 @@
       <!-- logo -->
       <router-link v-show="!isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/logo.svg" :alt="SITE_TITLE"></router-link>
       <router-link v-show="isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/icon/logo@2x.png" :alt="SITE_TITLE"></router-link>
-      <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded" :href="get(logoFromEvent, 'link', '/')" class="logo event"  data-gtm="logo event" data-gtm-category="header" target="_blank"><img :src="get(logoFromEvent, 'image.image.resizedTargets.tablet.url')"></a>
-      <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" class="logo dfp" data-gtm="logo dfp" data-gtm-category="header" pos="LOGO" />
+      <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded" :href="get(logoFromEvent, 'link', '/')" class="logo event"  data-gtm="logo event" data-gtm-category="header" target="_blank">
+        <LazyImage :src="get(logoFromEvent, 'image.image.resizedTargets.mobile.url')" />
+      </a>
+      <LazyItemWrapper :loadAfterPageLoaded="true">
+        <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" class="logo dfp" data-gtm="logo dfp" data-gtm-category="header" pos="LOGO" />
+      </LazyItemWrapper>
       <!-- search and more -->
       <div :class="{ open: openMore }" class="more" v-click-outside="handleClickMoreOutside">
         <button class="btn--more" @click="openMore = true"><img src="/assets/mirrormedia/icon/more_grey@2x.png" data-gtm="more open" data-gtm-category="header" alt=""></button>
@@ -32,6 +36,8 @@
 import HeaderNav from '../components/header/HeaderNav.vue'
 import HeaderSearchBar from '../components/header/HeaderSearchBar.vue'
 import HeaderSidebar from '../components/header/HeaderSidebar.vue'
+import LazyImage from 'src/components/common/LazyImage.vue'
+import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import ShareLight from '../components/share/ShareLight.vue'
 import { SECTION_MAP, SITE_TITLE, SOCIAL_LINK } from '../constants/index'
 import { get, } from 'lodash'
@@ -42,6 +48,8 @@ export default {
     HeaderNav,
     HeaderSearchBar,
     HeaderSidebar,
+    LazyImage,
+    LazyItemWrapper,
     ShareLight,
   },
   directives: {
