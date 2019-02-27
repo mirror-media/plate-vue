@@ -147,6 +147,7 @@ import Share from '../components/Share.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
+import uuidv4 from 'uuid/v4'
 import verge from 'verge'
 
 const MAXRESULT = 12
@@ -580,6 +581,7 @@ export default {
       isVponSDKLoaded: false,
       loading: false,
       microAds,
+      sectionTempId: `listing-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
@@ -656,18 +658,27 @@ export default {
       }
     },
     dfpOptions () {
+      const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
-        afterEachAdLoaded: (event) => {
+        sectionTempId: this.sectionTempId,
+        afterEachAdLoaded: function (event) {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
 
+          /**
+           * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+           * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
+           */
+          const sectionTempId = dfpCover.getAttribute('sectionTempId')
+          if (currentInstance.sectionTempId !== sectionTempId) { return }
+          
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
           const loadInnityAd = () => {
             debug('Event "noad2" is detected!!')
-            if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+            if (currentInstance.showDfpCoverAd2Flag && !currentInstance.showDfpCoverInnityFlag) {
               sendAdCoverGA('innity')
               debug('noad2 detected and go innity')
-              this.showDfpCoverInnityFlag = true
+              currentInstance.showDfpCoverInnityFlag = true
             }
           }
           window.addEventListener('noad2', loadInnityAd)
@@ -677,12 +688,12 @@ export default {
             case 'LMBCVR':
               sendAdCoverGA('dfp')
               if (adDisplayStatus === 'none') {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAd2Flag = !isVisited
+                updateCookie({ currEnv: currentInstance.dfpMode }).then((isVisited) => {
+                  currentInstance.showDfpCoverAd2Flag = !isVisited
                 })
               } else {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                  this.showDfpCoverAdFlag = !isVisited
+                updateCookie({ currEnv: currentInstance.dfpMode }).then((isVisited) => {
+                  currentInstance.showDfpCoverAdFlag = !isVisited
                 })
               }
               break
@@ -702,9 +713,9 @@ export default {
                 break                   
             case 'LOGO':
               if (adDisplayStatus !== 'none') {
-                this.showDfpHeaderLogo = true
+                currentInstance.showDfpHeaderLogo = true
               }
-              this.dfpHeaderLogoLoaded = true
+              currentInstance.dfpHeaderLogoLoaded = true
               break
           }
           adtracker({

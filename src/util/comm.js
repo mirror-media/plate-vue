@@ -279,6 +279,19 @@ export function mmLog ({ category, eventType, target, description, referrer, ...
   return _normalizeLog({ category, eventType, target, description, referrer, ...rest })
 }
 
+export function isEleFixed (ele) {
+  let node = ele
+  
+  while (node !== null && node !== undefined && node !== document) {
+    const position = node.currentStyle ? node.currentStyle.position : window.getComputedStyle(node, null).position
+    if (position === 'fixed') {
+      return true
+    }
+    node = node.parentNode
+  }
+  return false  
+}
+
 export function isDescendant (child, { classname = 'none' }) {
   let node = child.parentNode
   while (node !== null && node !== undefined) {
@@ -370,18 +383,20 @@ export function setMmCookie () {
   return uuid
 }
 
-export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
-  if (process.env.VUE_ENV === 'client' && microAdLoded === false) {
+export async function insertMicroAd ({ adId, currEnv, vm }) {
+  if (process.env.VUE_ENV === 'client' && !vm.microAdLoded) {
     const _lgy_lw = document.createElement('script')
+    _lgy_lw.onload = () => {
+      currEnv === 'dev' && console.log('microad', adId, 'loaded')
+      vm.microAdLoded = true
+    }
     _lgy_lw.type = 'text/javascript'
     _lgy_lw.charset = 'UTF-8'
     _lgy_lw.async = true
     _lgy_lw.src = ((document.location.protocol === 'https:') ? 'https://' : 'http://') + `nt.compass-fit.jp/lift_widget.js?adspot_id=${adId}`
     const _lgy_lw_0 = document.getElementsByTagName('script')[0]
     _lgy_lw_0.parentNode.insertBefore(_lgy_lw, _lgy_lw_0)
-    if (currEnv === 'dev') { console.log('microad', adId, 'loaded') }
   }
-  return true
 }
 
 // Vpon ad is abandoned 20180810 BY KC

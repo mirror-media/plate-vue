@@ -2,7 +2,9 @@
   <div :id="`compass-fit-${id}`"></div>
 </template>
 <script>
+  import { adtracker } from 'src/util/adtracking'
   import { insertMicroAd } from '../util/comm'
+  const debug = require('debug')('CLIENT:MICROAD')
   export default {
     name: 'micro-ad',
     props: [ 'id', 'currEnv', 'currUrl' ],
@@ -13,7 +15,7 @@
     },
     methods: {
       runMicroAd () {
-        this.microAdLoded = insertMicroAd({ adId: this.id, currEnv: this.currEnv, microAdLoded: this.microAdLoded })
+        insertMicroAd({ adId: this.id, currEnv: this.currEnv, vm: this })
         return true
       }
     },
@@ -21,9 +23,18 @@
       this.runMicroAd()
     },
     watch: {
-      currUrl: function () {
+      currUrl () {
         this.microAdLoded = false
-        this.microAdLoded = insertMicroAd({ adId: this.id, currEnv: this.currEnv, microAdLoded: this.microAdLoded })
+        insertMicroAd({ adId: this.id, currEnv: this.currEnv, vm: this })
+      },
+      microAdLoded () {
+        debug('this.microAdLoded', this.microAdLoded)
+        this.microAdLoded && adtracker({
+          el: this.$el,
+          slot: `compass-fit-${this.id}`,
+          position: this.id,
+          isAdEmpty: false
+        }) 
       }
     }
   }
