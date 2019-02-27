@@ -203,7 +203,7 @@ export default {
     const videohub = sections.filter(section => section.name === 'videohub')[0]
     
     let title
-    let description = get(videohub, 'ogDescription') || get(videohub, 'description')
+    let description = get(this.video, 'description') || get(videohub, 'ogDescription') || get(videohub, 'description')
     let image = get(videohub, 'ogImage') || get(videohub, 'image')
     description = description ? truncate(description, { length: 197 }) : SITE_DESCRIPTION
     image = image ? get(image, 'image.resizedTargets.desktop.url') : SITE_OGIMAGE
@@ -214,6 +214,7 @@ export default {
         break
       case /\/video\//.test(this.$route.fullPath):
         title = get(this.video, 'name')
+        image = get(this.video, 'feedThumbnail.url') || image
         break
       default:
         title = get(videohub, 'ogTitle') || get(videohub, 'title')
