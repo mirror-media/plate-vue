@@ -177,6 +177,7 @@
   import sanitizeHtml from 'sanitize-html'
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
+  import uuidv4 from 'uuid/v4'
   import verge from 'verge'
 
   // const ArticleBody = () => import('../components/article/ArticleBody.vue')
@@ -403,6 +404,7 @@
         microAds,
         routeUpateReferrerSlug: 'N/A',
         sectionMap: SECTION_MAP,
+        sectionTempId: `article-${uuidv4()}`,
         showDfpCoverAdFlag: false,
         showDfpCoverAd2Flag: false,
         showDfpCoverInnityFlag: false,        
@@ -434,10 +436,20 @@
         return this.$store.state.commonData
       },
       dfpOptions () {
+        const currentInstance = this
         return Object.assign({}, DFP_OPTIONS, {
+          sectionTempId: this.sectionTempId,
           afterEachAdLoaded: event => {
             const dfpCurrAd = document.querySelector(`#${event.slot.getSlotElementId()}`)
             const position = dfpCurrAd.getAttribute('pos')
+
+            /**
+             * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+             * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
+             */
+            const sectionTempId = dfpCurrAd.getAttribute('sectionTempId')
+            if (currentInstance.sectionTempId !== sectionTempId) { return }
+
 
             const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
             const loadInnityAd = () => {

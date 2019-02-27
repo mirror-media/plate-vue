@@ -1,5 +1,5 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions" :mode="dfpMode">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions" :mode="dfpMode" :key="`homepage`">
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
@@ -108,6 +108,7 @@ import MirrorMediaTVAside from '../components/MirrorMediaTVAside.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
+import uuidv4 from 'uuid/v4'
 import verge from 'verge'
 
 // const MAXRESULT = 20
@@ -238,6 +239,7 @@ export default {
       isAdCoverCalledYet: false,
       loading: false,
       page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
+      sectionTempId: `homepage-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
@@ -254,10 +256,18 @@ export default {
       return this.$store.state.commonData
     },
     dfpOptions () {
+      const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
+        sectionTempId: this.sectionTempId,
         afterEachAdLoaded: (event) => {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
+
+          /**
+           * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+           * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.*/
+          const sectionTempId = dfpCover.getAttribute('sectionTempId')
+          if (currentInstance.sectionTempId !== sectionTempId) { return }
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
           const loadInnityAd = () => {
