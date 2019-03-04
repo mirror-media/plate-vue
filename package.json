@@ -13,7 +13,7 @@
     "e2e": "node test/e2e/runner.js",
     "lint": "eslint --ext .js,.vue src --color",
     "npm-forever": "forever -o out.log -e err.log -c 'node --expose-gc' serverCluster.js",
-    "test": "jest tests/api/meta.test.js",
+    "test": "jest tests/unit/util/comm.test.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "unit-watch": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js",
     "validate": "npm ls"
