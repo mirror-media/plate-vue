@@ -16,19 +16,24 @@ export function getArticleReadTime (paragraphs = []) {
   const WPM_ENGLISH = 265
   const WPM_CHINESE = 250
 
-  const textContents = paragraphs
+  const textContents = Array.isArray(paragraphs) ? paragraphs : []
+  const textContentsFiltered = textContents
     .filter(paragraph => paragraph.type === 'unstyled')
-    .filter(paragraph => paragraph.content[0])
+    .filter(paragraph => paragraph.content[0].trim())
     .map(paragraph => paragraph.content[0])
-  const combined = textContents.join(' ')
-  const countChinese = combined.match(REGEX_ONLY_CHINESE).join('').length
-  const countEnglishAndNumber = combined
-    .replace(REGEX_ONLY_CHINESE, ' ')
-    .replace(REGEX_NOT_EN_AND_NUMBER, ' ')
-    .split(' ')
-    .filter(word => word).length
-
-  const min = Math.round((countChinese / WPM_CHINESE) + (countEnglishAndNumber / WPM_ENGLISH))
+  
+  let min = 0
+  if (textContentsFiltered.length > 0) {
+    const combined = textContentsFiltered.join(' ')
+    const countChinese = combined.match(REGEX_ONLY_CHINESE).join('').length
+    const countEnglishAndNumber = combined
+      .replace(REGEX_ONLY_CHINESE, ' ')
+      .replace(REGEX_NOT_EN_AND_NUMBER, ' ')
+      .split(' ')
+      .filter(word => word).length
+    const readTime = Math.round((countChinese / WPM_CHINESE) + (countEnglishAndNumber / WPM_ENGLISH))
+    min = readTime > 0 ? readTime : 1
+  }
   return min
 }
 
