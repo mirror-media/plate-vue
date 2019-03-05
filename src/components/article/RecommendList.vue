@@ -59,7 +59,6 @@
       }
     },
     methods: {
-      getHref,
       getHrefFull,
       getValue,
       containerStyle () {

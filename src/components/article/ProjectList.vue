@@ -34,7 +34,7 @@
 <script>
   import _ from 'lodash'
   import { SECTION_MAP, SITE_URL } from '../../constants'
-  import { getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
+  import { getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
   import ProjectListNavBtn from './ProjectListNavBtn.vue'
   import Slider from '../Slider.vue'
   import sanitizeHtml from 'sanitize-html'
@@ -83,7 +83,6 @@
           borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
         }
       },
-      getHref,
       getHrefFull,
       getImage,
       getTruncatedVal,

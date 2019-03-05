@@ -61,24 +61,25 @@ export function getAuthorHref (author = {}) {
 
 export function getBrief (article, count = 30, allowedTags = []) {
   const metaBrief =  _.get(article, 'brief')
-  let brief = _.isString(metaBrief) ? metaBrief : (_.get(article, 'brief.html') || _.get(article, [ 'ogDescription' ]))
+  let brief = _.isString(metaBrief) ? metaBrief : (_.get(article, 'brief.html') || _.get(article, [ 'ogDescription' ]) || '')
   brief = sanitizeHtml(brief, { allowedTags: allowedTags })
   return truncate(brief, count)
 }
 
 export function getHref (relAritlcle = {}) {
-  const { href, style = '', slug } = relAritlcle
+  const { style = '', slug } = relAritlcle
+  
   switch (style) {
     case 'campaign':
       return `/campaigns/${slug}`
     case 'projects':
       return `/projects/${slug}`
     default:
-      if (_.split(href, '/')[1] === 'topic') {
-        return href
-      } else {
-        return `/story/${slug}/`
-      }
+      // if (_.split(href, '/')[1] === 'topic') {
+      //   return href
+      // } else {
+      return `/story/${slug}/`
+      // }
   }
 }
 

@@ -130,7 +130,7 @@
 import _ from 'lodash'
 import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
 import { currentYPosition, elmYPosition, } from 'kc-scroll'
-import { getArticleReadTime, getHref, getTruncatedVal, getValue } from '../../util/comm'
+import { getArticleReadTime, getValue } from '../../util/comm'
 // import { getRole } from '../../util/mmABRoleAssign'
 import ArticleBodyLayout from 'src/components/article/ArticleBodyLayout.vue'
 import Annotation from './Annotation.vue'
@@ -279,8 +279,6 @@ export default {
   },
   methods: {
     getArticleReadTime,
-    getHref,
-    getTruncatedVal,
     getValue,
     isArticleEmpty () {
       return _.isEmpty(this.articleData)
