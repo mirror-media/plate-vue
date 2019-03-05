@@ -10,7 +10,7 @@
 <script>
 
 import { TOPIC_PROTEST_ID } from '../constants/index'
-import { shareGooglePlus, shareLine, shareFacebook } from '../util/comm'
+import { shareLine, shareFacebook } from '../util/comm'
 import _ from 'lodash'
 
 export default {
@@ -53,9 +53,6 @@ export default {
     }
   },
   methods: {
-    shareGooglePlus () {
-      shareGooglePlus({ route: this.link })
-    },
     shareLine () {
       shareLine({
         route: this.link,
