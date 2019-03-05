@@ -50,10 +50,8 @@ export default {
     }
   },
   methods: {
-    getHref,
-    getHrefFull,
     _getHref (group) {
-      return this.shouldGetHrefFull ? this.getHrefFull(group) : this.getHref(group)
+      return this.shouldGetHrefFull ? getHrefFull(group) : getHref(group)
     },
 
     getImage,

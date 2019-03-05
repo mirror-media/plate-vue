@@ -101,7 +101,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../../constants'
-import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+import { getValue } from '../../util/comm'
 import Annotation from './Annotation.vue'
 import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
@@ -219,8 +219,6 @@ export default {
     }
   },
   methods: {
-    getHref,
-    getTruncatedVal,
     getValue,
     isArticleEmpay () {
       return _.isEmpty(this.articleData)

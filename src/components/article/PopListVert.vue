@@ -23,7 +23,7 @@
 <script>
 import LazyImage from 'src/components/common/LazyImage.vue'
 import { SECTION_MAP } from '../../constants'
-import { getHref, getImage, getTruncatedVal, } from '../../util/comm'
+import { getImage, getTruncatedVal, } from '../../util/comm'
 import { get, take } from 'lodash'
 
 export default {
@@ -43,7 +43,6 @@ export default {
     }
   },
   methods: {
-    getHref,
     getImage,
     getTruncatedVal,
     get,

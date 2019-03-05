@@ -3,6 +3,7 @@ import {
   getAuthor,
   getAuthorHref,
   getBrief,
+  getHref,
 } from '../../../src/util/comm.js'
 
 describe('getArticleReadTime', () => {
@@ -100,6 +101,9 @@ describe('getBrief', () => {
   const article_only_ogDescription = {
     ogDescription: '台灣獨立遊戲《還願》因被眼尖玩家發現藏有暗諷中國國家主席習近平的場景素材，導致中國官方全面封殺。有中國媒體工作者評論，《還願》上市前盛大的ARG（Alternate reality game，另類實境遊戲）活動，也是引爆這次事件的遠因之一。 '
   }
+
+  const article_empty = {}
+
   test('use article brief html to return truncated brief', () => {
     expect(getBrief(article)).toBeString()
     expect(getBrief(article).length).toEqual(31)
@@ -113,5 +117,36 @@ describe('getBrief', () => {
   test('use article ogDescription to return truncated brief', () => {
     expect(getBrief(article_only_ogDescription)).toBeString()
     expect(getBrief(article_only_ogDescription).length).toEqual(31)
+  })
+
+  test('return empty brief', () => {
+    expect(getBrief(article_empty)).toBeString()
+    expect(getBrief(article_empty).length).toEqual(0)
+  })
+})
+
+describe('getHref', () => {
+  const article = {
+    style: 'article',
+    slug: "20190304gamearg",
+  }
+
+  const article_campaign = {
+    style: 'campaign',
+    slug: "20190304gamearg",
+  }
+
+  const article_projects = {
+    style: 'projects',
+    slug: "20190304gamearg",
+  }
+
+  test('return href', () => {
+    expect(getHref(article)).toBeString()
+    expect(getHref(article)).toEqual('/story/20190304gamearg/')
+    expect(getHref(article_campaign)).toBeString()
+    expect(getHref(article_campaign)).toEqual('/campaigns/20190304gamearg')
+    expect(getHref(article_projects)).toBeString()
+    expect(getHref(article_projects)).toEqual('/projects/20190304gamearg')
   })
 })

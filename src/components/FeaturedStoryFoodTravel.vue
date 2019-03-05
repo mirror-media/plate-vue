@@ -28,7 +28,7 @@
 <script>
   import ItemsTitleRect from './ItemsTitleRect.vue'
   import { SECTION_MAP, SITE_URL } from '../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
+  import { getImage } from '../util/comm'
   import Slider from './Slider.vue'
   import sanitizeHtml from 'sanitize-html'
 
@@ -77,10 +77,7 @@
           borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
         }
       },
-      getHref,
       getImage,
-      getTruncatedVal,
-      getValue,
       goPrev () {
         window.refs[ this.sliderId ].slidePrev()
       },

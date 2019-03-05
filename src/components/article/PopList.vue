@@ -22,7 +22,7 @@
 <script>
   import LazyImage from 'src/components/common/LazyImage.vue'
   import { SECTION_MAP } from '../../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
+  import { getImage, getTruncatedVal, getValue } from '../../util/comm'
   import _ from 'lodash'
   export default {
     name: 'pop-list',
@@ -36,7 +36,6 @@
       }
     },
     methods: {
-      getHref,
       getImage,
       getTruncatedVal,
       getValue,
