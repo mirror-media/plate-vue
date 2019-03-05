@@ -59,15 +59,10 @@ export function getAuthorHref (author = {}) {
   return '/author/' + author.id
 }
 
-export function getBrief (article, count = 30, allowed_tags = '') {
-  let brief
-  if (_.split(_.get(article, [ 'href' ]), '/')[1] === 'topic') {
-    brief = _.get(article, [ 'ogDescription' ])
-  } else {
-    const metaBrief =  _.get(article, 'brief')
-    const rawBrief = !_.isString(metaBrief) ? _.get(metaBrief, 'html') : metaBrief
-    brief = (sanitizeHtml(rawBrief, { allowedTags: [ allowed_tags ] }) === 'undefined' ?  undefined : sanitizeHtml(rawBrief, { allowedTags: [ allowed_tags ] })) || _.get(article, 'ogDescription')
-  }
+export function getBrief (article, count = 30, allowedTags = []) {
+  const metaBrief =  _.get(article, 'brief')
+  let brief = _.isString(metaBrief) ? metaBrief : (_.get(article, 'brief.html') || _.get(article, [ 'ogDescription' ]))
+  brief = sanitizeHtml(brief, { allowedTags: allowedTags })
   return truncate(brief, count)
 }
 
