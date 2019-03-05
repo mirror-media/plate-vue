@@ -4,7 +4,11 @@ import {
   getAuthorHref,
   getBrief,
   getHref,
+  getHrefFull,
+  getImage,
+  getSection,
 } from '../../../src/util/comm.js'
+import { SITE_URL, SITE_PROJ_URL, } from '../../../src/constants'
 
 describe('getArticleReadTime', () => {
   test('should return 0 min', () => {
@@ -148,5 +152,138 @@ describe('getHref', () => {
     expect(getHref(article_campaign)).toEqual('/campaigns/20190304gamearg')
     expect(getHref(article_projects)).toBeString()
     expect(getHref(article_projects)).toEqual('/projects/20190304gamearg')
+  })
+})
+
+describe('getHrefFull', () => {
+  const article = {
+    style: 'article',
+    slug: "20190304gamearg",
+  }
+
+  const article_campaign = {
+    style: 'campaign',
+    slug: "20190304gamearg",
+  }
+
+  const article_projects = {
+    style: 'projects',
+    slug: "20190304gamearg",
+  }
+
+  const article_readr = {
+    style: 'readr',
+    slug: "20190304gamearg",
+  }
+
+  test('return href', () => {
+    expect(getHrefFull(article)).toBeString()
+    expect(getHrefFull(article)).toEqual(`${SITE_URL}/story/20190304gamearg/`)
+    expect(getHrefFull(article_campaign)).toBeString()
+    expect(getHrefFull(article_campaign)).toEqual(`${SITE_URL}/campaigns/20190304gamearg`)
+    expect(getHrefFull(article_projects)).toBeString()
+    expect(getHrefFull(article_projects)).toEqual(`${SITE_URL}/projects/20190304gamearg`)
+    expect(getHrefFull(article_readr)).toBeString()
+    expect(getHrefFull(article_readr)).toEqual(`${SITE_PROJ_URL}/project/20190304gamearg`)
+  })
+})
+
+describe('getImage', () => {
+  const article = {
+    heroImage: {
+      image: {
+        resizedTargets: {
+          desktop: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-desktop.png' },
+          mobile: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-mobile.png' },
+          tablet: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-tablet.png' },
+          tiny: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-tiny.png' },
+        }
+      }
+    }
+  }
+
+  const article_ogImage = {
+    ogImage: {
+      image: {
+        resizedTargets: {
+          desktop: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-desktop.png' },
+          mobile: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-mobile.png' },
+          tablet: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-tablet.png' },
+          tiny: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-tiny.png' },
+        }
+      }
+    }
+  }
+
+  const article_heroVideo = {
+    heroVideo: {
+      coverPhoto: {
+        image: {
+          resizedTargets: {
+            desktop: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-desktop.png' },
+            mobile: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-mobile.png' },
+            tablet: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-tablet.png' },
+            tiny: { url: 'https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-tiny.png' },
+          }
+        }
+      }
+    }
+  }
+
+  const article_notImage = {}
+
+  test('return hero image url', () => {
+    expect(getImage(article)).toBeString()
+    expect(getImage(article)).toEqual('https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-desktop.png')
+  })
+  test('return og image url', () => {
+    expect(getImage(article_ogImage)).toBeString()
+    expect(getImage(article_ogImage)).toEqual('https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-desktop.png')
+  })
+  test('return hero video cover photo url', () => {
+    expect(getImage(article_heroVideo)).toBeString()
+    expect(getImage(article_heroVideo)).toEqual('https://www.mirrormedia.com.tw/assets/images/20190304110037-5c9ca8da1b98d124699617535e34cefb-desktop.png')
+  })
+  test('return not image url', () => {
+    expect(getImage(article_notImage)).toBeString()
+    expect(getImage(article_notImage)).toEqual('/assets/mirrormedia/notImage.png')
+  })
+})
+
+describe('getSection', () => {
+  const article = {
+    style: "article",
+    sections: [
+      {
+        name: "news"
+      }
+    ]
+  }
+
+  const articleWithoutSection = {
+    style: "article",
+  }
+
+  const article_projects = {
+    style: "projects",
+  }
+
+  const article_empty = null
+
+  test('return article section', () => {
+    expect(getSection(article)).toBeString()
+    expect(getSection(article)).toEqual('news')
+  })
+  test('return empty section', () => {
+    expect(getSection(articleWithoutSection)).toBeString()
+    expect(getSection(articleWithoutSection)).toEqual('')
+  })
+  test('return projects', () => {
+    expect(getSection(article_projects)).toBeString()
+    expect(getSection(article_projects)).toEqual('projects')
+  })
+  test('return other', () => {
+    expect(getSection(article_empty)).toBeString()
+    expect(getSection(article_empty)).toEqual('other')
   })
 })

@@ -58,7 +58,6 @@
   import { OnePageScroller } from 'kc-scroll'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
   import { getValue, addClass, removeClass } from '../../util/comm'
-  import { shareGooglePlus, shareLine, shareFacebook } from '../../util/comm'
   import _ from 'lodash'
   import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
 
@@ -297,18 +296,6 @@
         })
       },
       smoothScroll,
-      shareGooglePlus () {
-        shareGooglePlus({ route: this.$route.path })
-      },
-      shareLine () {
-        shareLine({
-          route: this.$route.path,
-          title: document.querySelector('meta[property="og:title"]').getAttribute('content')
-        })
-      },
-      shareFacebook () {
-        shareFacebook({ route: this.$route.path })
-      },
       sideProgressHandler (action, index) {
         return new Promise(() => {
           const _targContainer = document.querySelector('.stick-container')

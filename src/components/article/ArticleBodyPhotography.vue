@@ -70,7 +70,7 @@
   import { OnePageScroller } from 'kc-scroll'
   import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
   import { getClientOS, getValue, addClass, removeClass } from '../../util/comm'
-  import { shareGooglePlus, shareLine, shareFacebook } from '../../util/comm'
+  import { shareLine, shareFacebook } from '../../util/comm'
   import _ from 'lodash'
   import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
   import verge from 'verge'
@@ -297,9 +297,6 @@
         })
       },
       smoothScroll,
-      shareGooglePlus () {
-        shareGooglePlus({ route: this.$route.path })
-      },
       shareLine () {
         shareLine({
           route: this.$route.path,

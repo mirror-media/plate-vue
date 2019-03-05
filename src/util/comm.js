@@ -84,7 +84,7 @@ export function getHref (relAritlcle = {}) {
 }
 
 export function getHrefFull (relAritlcle = {}) {
-  const { href, style = '', slug } = relAritlcle
+  const { style = '', slug } = relAritlcle
   switch (style) {
     case 'campaign':
       return `${SITE_URL}/campaigns/${slug}`
@@ -93,11 +93,11 @@ export function getHrefFull (relAritlcle = {}) {
     case 'readr':
       return `${SITE_PROJ_URL}/project/${slug}`
     default:
-      if (_.split(href, '/')[1] === 'topic') {
-        return href
-      } else {
-        return `${SITE_URL}/story/${slug}/`
-      }
+      // if (_.split(href, '/')[1] === 'topic') {
+      //   return href
+      // } else {
+      return `${SITE_URL}/story/${slug}/`
+      // }
   }
 }
 
@@ -127,29 +127,10 @@ export function getImage (article, size) {
   }
 }
 
-export function getImageCertain (image, size) {
-  switch (size) {
-    case 'desktop':
-      return _.get(image, [ 'desktop', 'url' ], '/assets/mirrormedia/notImage.png')
-    case 'mobile':
-      return _.get(image, [ 'mobile', 'url' ], '/assets/mirrormedia/notImage.png')
-    case 'tablet':
-      return _.get(image, [ 'tablet', 'url' ], '/assets/mirrormedia/notImage.png')
-    case 'tiny':
-      return _.get(image, [ 'tiny', 'url' ], '/assets/mirrormedia/notImage.png')
-    default:
-      return _.get(image, [ 'desktop', 'url' ], '/assets/mirrormedia/notImage.png')
-  }
-}
-
-export function getName (article) {
-  return _.get(article, [ 'name' ])
-}
-
 export function getSection (article) {
   switch (_.get(article, [ 'style' ])) {
     case 'article':
-      return _.get(article, 'sections[0].name') ? _.get(article, 'sections[0].name') : ''
+      return _.get(article, 'sections[0].name') || ''
     case 'projects':
       return 'projects'
     default:
@@ -157,14 +138,8 @@ export function getSection (article) {
   }
 }
 
-export function shareGooglePlus ({ route, shared }) {
-  window.open(`https://plus.google.com/share?url=${SITE_URL}${route}`)
-  shared && shared()
-}
-
-export function shareLine ({ title, route, shared }) {
+export function shareLine ({ title, route }) {
   window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(title)}%0D%0A${encodeURIComponent(SITE_URL + route)}`)
-  shared && shared()
 }
 
 export function shareFacebook ({ route, shared }) {

@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { getAuthor, getBrief, getHref, getImage, getSection, getTruncatedVal, getValue } from '../util/comm'
+import { getAuthor, getBrief, getHref, getImage, getValue } from '../util/comm'
 import moment from 'moment'
 
 export default {
@@ -37,8 +37,6 @@ export default {
     getBrief,
     getHref,
     getImage,
-    getSection,
-    getTruncatedVal,
     getValue,
     moment
   }
