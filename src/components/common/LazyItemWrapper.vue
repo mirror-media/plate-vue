@@ -73,12 +73,13 @@
         }
       },
       '$route.fullPath': function () {
-        window.removeEventListener('load', this.handler)
         if (!this.loadAfterPageLoaded) {
+          window.removeEventListener('scroll', this.handler)
           this.isVisibleYet = false
           this.setupEventListener()
           this.handler()
         } else {
+          window.removeEventListener('load', this.handler)
           this.isVisibleYet = true
         }
       }
