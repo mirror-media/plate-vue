@@ -57,7 +57,7 @@
     },
     watch: {
       '$route.fullPath': function () {
-        window.removeEventListener('load', this.handler)
+        window.removeEventListener('scroll', this.handler)
         this.isVisibleYet = false
         this.isVirtualImgCheckedOut = false
         window.addEventListener('scroll', this.handler)     

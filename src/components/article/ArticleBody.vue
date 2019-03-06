@@ -129,7 +129,6 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
-import { currentYPosition, elmYPosition, } from 'kc-scroll'
 import { getArticleReadTime, getValue } from '../../util/comm'
 // import { getRole } from '../../util/mmABRoleAssign'
 import ArticleBodyLayout from 'src/components/article/ArticleBodyLayout.vue'
@@ -144,11 +143,8 @@ import ProjectList from './ProjectList.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
 import Slider from '../Slider.vue'
 import moment from 'moment'
-import verge from 'verge'
 
 // const debug = require('debug')('CLIENT:ArticleBody')
-const showAdCover = store => store.dispatch('SHOW_AD_COVER')
-const debugDFP = require('debug')('CLIENT:DFP')
 export default {
   components: {
     'app-slider': Slider,
@@ -350,25 +346,8 @@ export default {
           return
       }
     },
-    scrollEventHandlerForAd () {
-      if (this.isAdCoverCalledYet) { return }
-      const currentTop = currentYPosition()
-      const eleTop = elmYPosition('#article-body-content')
-      const device_height = verge.viewportH()
-      if (currentTop + device_height > eleTop) {
-        debugDFP('SHOW ADCOVER!')
-        showAdCover(this.$store)
-        this.isAdCoverCalledYet = true
-        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
-      }
-    },  
   },
   mounted () {
-    /**
-     * Have ad-cover be rendered as soon as #article-body-content gets visible.
-     */
-    window.addEventListener('scroll', this.scrollEventHandlerForAd)
-
     /*global twttr*/
     window.addEventListener('load', () => {
       window.twttr && twttr.widgets.load() 

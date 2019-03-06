@@ -805,10 +805,14 @@
         if (this.isLowPriorityDataLoaded) { return }        
         debugDataLoad('GO LOAD DATA!')
         this.isLowPriorityDataLoaded = true
+        if (this.articleData.relateds && this.articleData.relateds.length > 0) {
+          const relatedImages = this.articleData.relateds.filter(related => related).map(related => related.heroImage)
+          fetchImages(this.$store, { ids: relatedImages, max_results: relatedImages.length  })
+        }        
         Promise.all([
           fetchPop(this.$store),
           fetchEvent(this.$store, 'embedded'),
-          fetchEvent(this.$store, 'logo') ,
+          fetchEvent(this.$store, 'logo'),
         ]).then(() => {
           window.removeEventListener('scroll', lowPriorityDataLoader)
         })
