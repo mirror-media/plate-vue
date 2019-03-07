@@ -1,7 +1,7 @@
 <template>
   <VueDfpProvider :dfpid="DFP_ID" :dfpUnits="DFP_UNITS" :options="dfpOptions" :mode="currEnv()" section="5975ab2de531830d00e32b2f">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="videohub" />
       <template v-if="isSingleVideoPage">
         <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
           <ShareLight slot="share" :gtmCategory="'article'" />
@@ -56,6 +56,7 @@
   </VueDfpProvider>
 </template>
 <script>
+import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import Footer from '../components/Footer.vue'
 import HeaderR from '../components/HeaderR.vue'
@@ -74,6 +75,7 @@ import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TI
 import { adtracker } from 'src/util/adtracking'
 import { consoleLogOnDev, currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
 import { get, truncate, } from 'lodash'
+import { getRole } from '../util/mmABRoleAssign'
 
 const debug = require('debug')('CLIENT:VIEWS:video')
 
@@ -263,6 +265,7 @@ export default {
       DFP_UNITS,
       OATH_ALL_VIDEO_PLAYLIST_ID,
       OATH_PLAYLIST,
+      abIndicator: 'A',
       dfpHeaderLogoLoaded: false,
       mounted: false,
       sectionTempId: `video-${uuidv4()}`,
@@ -413,6 +416,7 @@ export default {
     }
   },
   beforeMount () {
+    this.abIndicator = this.getMmid()
     const jobs = [ fetchEvent(this.$store, 'embedded'), fetchEvent(this.$store, 'logo') ]
     if (this.$route.fullPath.match(/\/section\//)) {
       fetchFullPlaylist(this.$store, jobs)
@@ -425,6 +429,18 @@ export default {
   },
   methods: {
     currEnv,
+    getMmid () {
+      const mmid = Cookie.get('mmid')
+      let assisgnedRole = get(this.$route, [ 'query', 'ab' ])
+      if (assisgnedRole) {
+        assisgnedRole = assisgnedRole.toUpperCase()
+      }
+      const role = getRole({ mmid, distribution: [
+        { id: 'A', weight: 50 },
+        { id: 'B', weight: 50 } ]
+      })
+      return assisgnedRole || role
+    },
     handleLoadmore ({ id, offset }) {
       fetchVideoByPlaylist(this.$store, { id: id, params: { max_results: 12, offset: offset }})
     },
@@ -434,7 +450,7 @@ export default {
         : ``
       window.ga('set', 'contentGroup1', this.section.name)
       window.ga('set', 'contentGroup2', categoryLabel)
-      window.ga('set', 'contentGroup3', '')
+      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
       window.ga('send', 'pageview', { title: this.title, location: document.location.href })
     }
   }

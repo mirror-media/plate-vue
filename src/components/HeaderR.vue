@@ -8,8 +8,8 @@
       <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded" :href="get(logoFromEvent, 'link', '/')" class="logo event"  data-gtm="logo event" data-gtm-category="header" target="_blank">
         <LazyImage :src="get(logoFromEvent, 'image.image.resizedTargets.mobile.url')" />
       </a>
-      <LazyItemWrapper :loadAfterPageLoaded="true">
-        <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" class="logo dfp" data-gtm="logo dfp" data-gtm-category="header" pos="LOGO" />
+      <LazyItemWrapper :loadAfterPageLoaded="true" class="logo dfp">
+        <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" data-gtm="logo dfp" data-gtm-category="header" pos="LOGO" />
       </LazyItemWrapper>
       <!-- search and more -->
       <div :class="{ open: openMore }" class="more" v-click-outside="handleClickMoreOutside">
@@ -26,6 +26,15 @@
       <button v-show="mounted" class="btn--search" @click="handleSearchBtn"><img src="/assets/mirrormedia/icon/search.svg" data-gtm="search open" data-gtm-category="header" alt=""></button>
       <input v-model="keyword" class="search" type="search" @keyup.enter="search(keyword)">
       <ShareLight class="share"/>
+    </section>
+    <section v-if="abIndicator === 'B'" class="header__section-layer">
+      <div>
+        <router-link :class="{ active: activeSection === 'home' }" to="/">首頁</router-link>
+        <template v-for="section in activeSections">
+          <a v-if="section.name === 'videohub'" :key="`section-layer-${section.id}`" :class="{ active: activeSection === section.name }" href="/section/videohub" v-text="section.title"></a>
+          <router-link v-else :key="`section-layer-${section.id}`" :class="{ active: activeSection === section.name }" :to="`/section/${section.name}`" v-text="section.title"></router-link>
+        </template>
+      </div>
     </section>
     <HeaderNav v-show="!isMobile" :partners="partners" :sections="sections" :topics="topics" />
     <HeaderSidebar :class="{ open: openSidebar }" :partners="partners" :sections="sections" :topics="topics" class="header__sidebar" @closeSidebar="openSidebar = false" />
@@ -68,6 +77,12 @@ export default {
     }
   },
   props: {
+    abIndicator: {
+      type: String
+    },
+    activeSection: {
+      type: String
+    },
     dfpHeaderLogoLoaded: {
       type: Boolean
     },
@@ -92,6 +107,9 @@ export default {
     }
   },
   computed: {
+    activeSections () {
+      return this.sections.filter(section => section.isFeatured && section.id && section.name)
+    },
     isMobile () {
       return this.$store.state.viewport.width < 1200
     },
@@ -200,7 +218,8 @@ export default {
       & + .logo
         margin-left 5px
       &.dfp
-        margin-top 0
+        .ad-container
+          margin-top 0
       img
         width 100%
         height 100%
@@ -228,6 +247,39 @@ export default {
       display none
     .share
       display none
+  &__section-layer
+    width 100%
+    display flex
+    height 28px
+    background-color #f5f5f5
+    overflow hidden
+    white-space nowrap
+    box-shadow 0px 2px 1px rgba(0,0,0,.2)
+    > div
+      display flex
+      height 48px
+      margin 0 auto
+      overflow-x auto
+      &::-webkit-scrollbar
+        display none
+    a
+      position relative
+      display block
+      padding .5em .8em calc(20px + .4em)
+      color #808080
+      font-size .875rem
+      &::after
+        content ''
+        position absolute
+        left .8em
+        bottom 20px
+        width calc(100% - 1.6em)
+        height 3px
+      &.active
+        color #34495e
+        &::after
+          background-color #34495e
+
   &__sidebar
     transform translateX(-100%)
     transition transform .5s ease
@@ -352,7 +404,7 @@ export default {
           height 20px
           object-fit contain
           object-position center center
-    &__sidebar, &__search-bar
+    &__section-layer, &__sidebar, &__search-bar
       display none
   
 </style>

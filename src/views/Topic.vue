@@ -30,7 +30,7 @@
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
@@ -48,7 +48,7 @@
         </template>
 
         <template v-else-if="topicType === 'group'">
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
@@ -65,7 +65,7 @@
         </template>
 
         <template v-else>
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
@@ -517,18 +517,18 @@ export default {
       }
       fetchTopicAllImages(this.$store, this.uuid)
     }
+    this.abIndicator = this.getMmid()
   },
   mounted () {
     this.updateViewport()
     this.insertCustomizedMarkup()
     this.checkIfLockJS()
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    // window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', `topic${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
 
     window.addEventListener('resize', this.updateViewport)
@@ -544,11 +544,15 @@ export default {
     elmYPosition,
     getMmid () {
       const mmid = Cookie.get('mmid')
+      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      if (assisgnedRole) {
+        assisgnedRole = assisgnedRole.toUpperCase()
+      }
       const role = getRole({ mmid, distribution: [
         { id: 'A', weight: 50 },
         { id: 'B', weight: 50 } ]
       })
-      return role
+      return assisgnedRole || role
     },
     getTruncatedVal,
     getValue,

@@ -13,7 +13,6 @@
         <div class="article__basic-info-wrapper">
           <div class="article__credit" v-html="credit"></div>
           <div class="article__share">
-            <p v-if="abIndicator === 'B' && getArticleReadTime(contArr)">閱讀時間：{{ getArticleReadTime(contArr) }}分鐘</p>
             <ShareLight :gtmCategory="'article'" />
           </div>
         </div>
@@ -129,7 +128,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
-import { getArticleReadTime, getValue } from '../../util/comm'
+import { getValue } from '../../util/comm'
 // import { getRole } from '../../util/mmABRoleAssign'
 import ArticleBodyLayout from 'src/components/article/ArticleBodyLayout.vue'
 import Annotation from './Annotation.vue'
@@ -274,7 +273,6 @@ export default {
     }
   },
   methods: {
-    getArticleReadTime,
     getValue,
     isArticleEmpty () {
       return _.isEmpty(this.articleData)
@@ -355,10 +353,6 @@ export default {
   },
   name: 'article-body',
   props: {
-    abIndicator: {
-      type: String,
-      default: 'A'
-    },
     articleData: {
       default: () => { return {} }
     },

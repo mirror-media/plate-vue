@@ -9,7 +9,7 @@ import uuidv4 from 'uuid/v4'
 
 const debug = require('debug')('CLIENT:comm')
 
-export function getArticleReadTime (paragraphs = []) {
+export function getArticleReadTime (paragraphs = []) { // deprecated
   const REGEX_ONLY_CHINESE = /[\u4E00-\u9FFF]+/g
   const REGEX_NOT_EN_AND_NUMBER = /([^A-Za-z0-9])/g
 

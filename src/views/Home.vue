@@ -3,7 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
           <!-- <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         </section>
         <LazyItemWrapper :loadAfterPageLoaded="true">
@@ -38,14 +38,6 @@
               :latestList="latestArticle"
               :viewport="viewport">
             </LatestArticleMain>
-            <template v-if="abIndicator === 'B' && viewport >= 1200 && latestArticlesBySection">
-              <LatestArticleBySection
-                v-for="item in latestArticlesBySection"
-                :key="`latest-news-${item.id}`"
-                :section="item"
-                class="latest-news">
-              </LatestArticleBySection>
-            </template>
             
           </main>
           <aside v-show="viewport >= 1200">
@@ -64,7 +56,6 @@
           </aside>
         </section>
         <loading :show="loading" />
-        <Footer v-if="abIndicator === 'B' && viewport >= 1200" class="footer" />
         <LazyItemWrapper :position="verge.viewportH()" :strict="true">
           <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
           <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
@@ -94,7 +85,6 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
-import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import HeaderR from '../components/HeaderR.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
@@ -146,9 +136,9 @@ const fetchArticlesGroupedList = (store) => {
   return store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
 }
 
-const fetchLatestNewsFromJson = (store) => {
-  return store.dispatch('FETCH_LATEST_NEWS_FROM_JSON')
-}
+// const fetchLatestNewsFromJson = (store) => {
+//   return store.dispatch('FETCH_LATEST_NEWS_FROM_JSON')
+// }
 
 const fetchPartners = (store) => {
   const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
@@ -184,7 +174,6 @@ export default {
     'live-stream': LiveStream,
     'loading': Loading,
     DfpCover,
-    Footer,
     LatestArticleAside,
     LatestArticleAsideMobileB,
     LatestArticleBySection,
@@ -389,9 +378,7 @@ export default {
         return _.includes(choicesAndGrouped_slugs, o.slug)
       })
 
-      if (this.abIndicator === 'B' && this.viewport >= 1200) {
-        return this.$store.state.latestNewsFromJson.latest
-      } else if (this.notFirstPageNow) {
+      if (this.notFirstPageNow) {
         return latest
       } else {
         return latestFirstPage
@@ -437,14 +424,13 @@ export default {
       }
     },
     get: _.get,
-    getRole,
     getMmid () {
       const mmid = Cookie.get('mmid')
       let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
-      const role = this.getRole({ mmid, distribution: [
+      const role = getRole({ mmid, distribution: [
         { id: 'A', weight: 50 },
         { id: 'B', weight: 50 } ]
       })
@@ -462,16 +448,14 @@ export default {
       this.dfpMode = currEnv()
     },
     loadMore () {
-      if (!(this.abIndicator === 'B' && this.viewport >= 1200)) {
-        window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
-        this.page += 1
-        this.loading = true
+      window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
+      this.page += 1
+      this.loading = true
 
-        fetchLatestArticle(this.$store, this.page).then(() => {
-          this.hasScrollLoadMore = false
-          this.loading = false
-        })
-      }
+      fetchLatestArticle(this.$store, this.page).then(() => {
+        this.hasScrollLoadMore = false
+        this.loading = false
+      })
     },
     handleScrollForLoadmore () {
       window.onscroll = () => {
@@ -506,7 +490,6 @@ export default {
       fetchEvent(this.$store, 'logo'),
       fetchEvent(this.$store, 'mod'),
     ]
-    this.abIndicator === 'B' ? jobs.push(fetchLatestNewsFromJson(this.$store)) : ''
     Promise.all(jobs)
   },
   mounted () {

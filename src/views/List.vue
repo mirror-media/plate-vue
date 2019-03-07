@@ -21,7 +21,7 @@
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
-        <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         <list-slider class="gs"></list-slider>
         <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode"></article-list>
@@ -39,7 +39,7 @@
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'light'">
-        <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
@@ -63,7 +63,7 @@
       </div>
 
       <div class="list-view" v-else>
-        <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
@@ -953,15 +953,18 @@ export default {
       unLockJS()
     },
     elmYPosition,
-    getRole,
     getTruncatedVal,
     getMmid () {
       const mmid = Cookie.get('mmid')
-      const role = this.getRole({ mmid, distribution: [
+      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      if (assisgnedRole) {
+        assisgnedRole = assisgnedRole.toUpperCase()
+      }
+      const role = getRole({ mmid, distribution: [
         { id: 'A', weight: 50 },
         { id: 'B', weight: 50 } ]
       })
-      return role
+      return assisgnedRole || role
     },
     getValue,
     insertCustomizedMarkup () {
@@ -1084,6 +1087,7 @@ export default {
     fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
     fetchEvent(this.$store, 'embedded')
     fetchEvent(this.$store, 'logo')
+    this.abIndicator = this.getMmid()
   },
   mounted () {
     this.updateViewport()
@@ -1092,21 +1096,21 @@ export default {
     this.checkIfLockJS()
     this.insertCustomizedMarkup()
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
     if (this.type === EXTERNALS) {
       window.ga('set', 'contentGroup1', 'external')
       window.ga('set', 'contentGroup2', this.uuid)
-      window.ga('set', 'contentGroup3', '')
-      // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+      // window.ga('set', 'contentGroup3', '')
+      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     } else if (this.sectionName === 'other') {
       window.ga('set', 'contentGroup1', '')
       window.ga('set', 'contentGroup2', '')
-      window.ga('set', 'contentGroup3', '')
+      // window.ga('set', 'contentGroup3', '')
+      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     } else {
       window.ga('set', 'contentGroup1', this.sectionName)
       window.ga('set', 'contentGroup2', '')
-      window.ga('set', 'contentGroup3', '')
-      // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+      // window.ga('set', 'contentGroup3', '')
+      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
     }
     window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
   },

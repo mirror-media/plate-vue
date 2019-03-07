@@ -107,6 +107,7 @@ export function createStore () {
           commit('SET_ARTICLES', { articles })
           commit('SET_AUTHORS', articles)
           commit('SET_TAGS', articles)
+          return articles
         })
       },
       FETCH_ARTICLES_BY_UUID: ({ commit, state }, { uuid, type, params }) => {

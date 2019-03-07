@@ -52,7 +52,7 @@ export function createRouter () {
         // } ]
       },
       { path: '/app/:slug', component: ArticleM },
-      { path: '/headlinenews', component: Headline },
+      { path: '/headlinenews', component: Headline }, // 禾多推播用頁面
       { path: '/project-list/:style?', component: Project },
       // { path: '/homeb', component: HomeB },
       { path: '/search/:keyword', component: Search },
