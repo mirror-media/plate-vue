@@ -197,16 +197,15 @@
       const category = _.get(partner, [ 'name' ], '')
       const ogDescription = truncate(brief, 197) || SITE_DESCRIPTION
       const imageUrl = thumb || SITE_OGIMAGE
-      let abIndicator
-      if (process.env.VUE_ENV === 'client') {
-        abIndicator = this.$_external_getMmid()
-      }
+      // let abIndicator
+      // if (process.env.VUE_ENV === 'client') {
+      //   abIndicator = this.$_external_getMmid()
+      // }
 
       return {
         url: `${SITE_MOBILE_URL}/external/${name}/`,
         title: `${title} - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="external${abIndicator}">
           <meta name="robots" content="index">
           <meta name="description" content="${ogDescription}">
           <meta name="section-name" content="externals">
@@ -224,7 +223,7 @@
           <meta property="og:description" content="${ogDescription}">
           <meta property="og:url" content="${SITE_URL}/external/${name}/">
           <meta property="og:image" content="${imageUrl}">
-        `
+        ` // <meta name="mm-opt" content="external${abIndicator}">
       }
     },
     data () {

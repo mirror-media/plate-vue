@@ -188,15 +188,14 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    let abIndicator = ''
-    if (process.env.VUE_ENV === 'client') {
-      abIndicator = this.getMmid()
-    }
+    // let abIndicator = ''
+    // if (process.env.VUE_ENV === 'client') {
+    //   abIndicator = this.getMmid()
+    // }
     return {
       url: SITE_MOBILE_URL,
       title: SITE_TITLE,
       meta: `
-        <meta name="mm-opt" content="home${abIndicator}">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${SITE_DESCRIPTION}">
@@ -213,7 +212,7 @@ export default {
         <meta property="og:description" content="${SITE_DESCRIPTION}">
         <meta property="og:url" content="${SITE_URL}">
         <meta property="og:image" content="${SITE_OGIMAGE}">
-      `
+      ` // <meta name="mm-opt" content="home${abIndicator}">
     }
   },
   data () {

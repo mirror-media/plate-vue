@@ -27,12 +27,34 @@
       <input v-model="keyword" class="search" type="search" @keyup.enter="search(keyword)">
       <ShareLight class="share"/>
     </section>
+    <!-- scrollable header -->
     <section v-if="mounted && abIndicator === 'B'" class="header__section-layer">
       <div>
-        <router-link :class="{ active: activeSection === 'home' }" to="/">首頁</router-link>
+        <router-link
+          :class="{ active: activeSection === 'home' }"
+          to="/"
+          data-gtm="section home"
+          data-gtm-category="header">首頁
+        </router-link>
         <template v-for="section in activeSections">
-          <a v-if="section.name === 'videohub'" :key="`section-layer-${section.id}`" :class="{ active: activeSection === section.name }" href="/section/videohub" v-text="section.title"></a>
-          <router-link v-else :key="`section-layer-${section.id}`" :class="{ active: activeSection === section.name }" :to="`/section/${section.name}`" v-text="section.title"></router-link>
+          <a
+            v-if="section.name === 'videohub'"
+            :key="`section-layer-${section.id}`"
+            :class="{ active: activeSection === section.name }"
+            href="/section/videohub"
+            data-gtm="section videohub"
+            data-gtm-category="header"
+            v-text="section.title">
+          </a>
+          <router-link
+            v-else
+            :key="`section-layer-${section.id}`"
+            :class="{ active: activeSection === section.name }"
+            :to="`/section/${section.name}`"
+            :data-gtm="`section ${section.name}`"
+            data-gtm-category="header"
+            v-text="section.title">
+          </router-link>
         </template>
       </div>
     </section>

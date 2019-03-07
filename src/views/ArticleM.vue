@@ -207,16 +207,15 @@
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
 
-      let abIndicator
-      if (process.env.VUE_ENV === 'client') {
-        abIndicator = this.getMmid()
-      }
+      // let abIndicator
+      // if (process.env.VUE_ENV === 'client') {
+      //   abIndicator = this.getMmid()
+      // }
 
       return {
         url: `${SITE_MOBILE_URL}/story/${slug}/`,
         title: truncate(title, 21) + ` - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="mm-opt" content="article${abIndicator}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
           <meta name="section-name" content="${sectionName}">
@@ -235,7 +234,7 @@
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
-        `,
+        `, // <meta name="mm-opt" content="article${abIndicator}">
         link: `<link rel="canonical" href="${SITE_URL}/story/${slug}/" />`
       }
     },
