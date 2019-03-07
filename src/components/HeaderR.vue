@@ -1,5 +1,5 @@
 <template>
-  <header :class="{ scrolled: isScrolled }" class="header">
+  <header :class="[{ scrolled: isScrolled }, abIndicator.toLowerCase()]" class="header">
     <section class="header__logo-layer">
       <button class="btn--menu" @click="openSidebar = true"><img src="/assets/mirrormedia/icon/hamburger@2x.png" data-gtm="menu open" data-gtm-category="header" alt=""></button>
       <!-- logo -->
@@ -350,6 +350,15 @@ export default {
         width 30px
         height 30px
         margin 0
+    .header__section-layer
+      position fixed
+      top 50px
+      z-index 500
+
+    &.b
+      .header__logo-layer
+        background-color #f5f5f5
+        box-shadow none
 
 @media (max-width: 599px)
   .header.scrolled
