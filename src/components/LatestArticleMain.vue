@@ -6,10 +6,9 @@
         <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
           <router-link :to="getHref(o)"
             v-if="shouldShowItem(o)"
-            :id="isBVersion ? '' : `latest-${getValue(o, [ 'slug' ], Date.now())}-1`" 
-            :target="target"
-            :data-gtm-category="isBVersion ? 'home' : ''"
-            :data-gtm="isBVersion ? 'latest_article' : ''">
+            data-gtm-category="home"
+            data-gtm="latest"
+            :target="target">
             <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="getValue(o, [ 'heroImage', 'id' ], Date.now())" :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </router-link>
@@ -21,11 +20,10 @@
             <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
             <router-link
               v-if="shouldShowItem(o)"
-              :id="isBVersion ? '' : `latest-${getValue(o, [ 'slug' ], Date.now())}-2`"
               :to="getHref(o)"
-              :data-gtm-category="isBVersion ? 'home' : ''"
-              :data-gtm="isBVersion ? 'latest_article' : ''"
-              :target="target">
+              :target="target"
+              data-gtm-category="home"
+              data-gtm="latest">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
             </router-link>
@@ -61,9 +59,6 @@ export default {
   computed: {
     currUrl () {
       return this.$route.fullPath
-    },
-    isBVersion () {
-      return this.abIndicator === 'B' && this.viewport >= 1200
     },
     latestListBeforeDFPNA3 () {
       return _.take(this.latestList, 2)
@@ -106,11 +101,6 @@ export default {
       return style
     },
     getLabel (article) {
-      if (this.abIndicator === 'B' && this.viewport >= 1200) {
-        const sectionId = article.sections[0]
-        const section = this.$store.state.commonData.sections.items.find(section => section.id === sectionId)
-        return section.title
-      }
       const section = _.get(article, 'sections.0.title', '')
       const categoriesLen = _.get(article, 'categories.length', 0)
       const categoryFirst =  _.get(article, 'categories.0.id')
@@ -375,7 +365,7 @@ export default {
         padding 0
         > a
           .latest-list_item_label
-            display none
+            display none !important
         &_title
           position absolute
           left 0

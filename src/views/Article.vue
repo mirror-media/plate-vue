@@ -2,7 +2,7 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <section style="width: 100%;">
-        <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header> -->
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
@@ -12,7 +12,6 @@
         </LazyItemWrapper>
         <div class="article" v-if="articleData">
           <article-body
-            :abIndicator="abIndicator"
             :articleData="articleData"
             :isAd="isAd"
             :poplistData="popularlist"
@@ -245,14 +244,13 @@
   }
 
   const fetchData = async store => {    
-    const [ ssrData, article ] = await Promise.all([
-      fetchSSRData(store),
+    const [ article ] = await Promise.all([
       fetchArticles(store, store.state.route.params.slug),
+      fetchSSRData(store),
       fetchPartners(store),
       fetchCommonData(store)
     ])
-    debug('ssrData', ssrData)
-    const sectionId = _.get(article, 'sections.0.id')
+    const sectionId = _.get(article, 'items.0.sections.0.id')
     return fetchLatestArticle(store, {
       sort: '-publishedDate',
       where: { 'sections': sectionId }
@@ -618,6 +616,9 @@
       relateds () {
         const items = _.get(this.articleData, [ 'relateds' ], []) || []
         return items.filter(item => item)
+      },
+      sectionName () {
+        return _.get(this.articleData, [ 'sections', 0, 'name' ])
       },
       sectionId () {
         const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])

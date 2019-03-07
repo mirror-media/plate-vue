@@ -103,9 +103,6 @@
             display flex
             align-items center
             margin-top .5em
-            p
-              flex 1
-              margin 0
             .share-light
               justify-content flex-end
               align-items flex-start
