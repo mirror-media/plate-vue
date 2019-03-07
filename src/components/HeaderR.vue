@@ -27,7 +27,7 @@
       <input v-model="keyword" class="search" type="search" @keyup.enter="search(keyword)">
       <ShareLight class="share"/>
     </section>
-    <section v-if="abIndicator === 'B'" class="header__section-layer">
+    <section v-if="mounted && abIndicator === 'B'" class="header__section-layer">
       <div>
         <router-link :class="{ active: activeSection === 'home' }" to="/">首頁</router-link>
         <template v-for="section in activeSections">
