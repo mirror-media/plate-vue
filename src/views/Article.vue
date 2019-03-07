@@ -303,15 +303,14 @@
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
-      let abIndicator = ''
-      if (process.env.VUE_ENV === 'client') {
-        abIndicator = this.getMmid()
-      }
+      // let abIndicator = ''
+      // if (process.env.VUE_ENV === 'client') {
+      //   abIndicator = this.getMmid()
+      // }
       return {
         url: `${SITE_MOBILE_URL}/story/${slug}/`,
         title: title,
         meta: `
-          <meta name="mm-opt" content="article${abIndicator}">
           <meta name="robots" content="${robotsValue}">
           <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
@@ -331,7 +330,7 @@
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
-        `,
+        `, // <meta name="mm-opt" content="article${abIndicator}">
         link: `<link rel="amphtml" href="${SITE_URL}/story/amp/${slug}/">`,
         adTrace: adTrace
       }

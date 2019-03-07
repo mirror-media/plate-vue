@@ -149,7 +149,6 @@ export default {
       url: `${SITE_MOBILE_URL}/activity/${this.$route.params.activityId}`,
       title: `${_.get(this.activity, [ 'name' ])} - ${SITE_TITLE}`,
       meta: `
-        <meta name="mm-opt" content="">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${description}">

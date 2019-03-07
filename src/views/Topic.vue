@@ -298,7 +298,6 @@ export default {
       url: relUrl,
       title: `${metaTitle} - ${SITE_TITLE}`,
       meta: `
-        <meta name="mm-opt" content="">
         <meta name="robots" content="index">
         <meta name="keywords" content="${SITE_KEYWORDS}">
         <meta name="description" content="${metaDescription}">
@@ -315,7 +314,7 @@ export default {
         <meta property="og:description" content="${metaDescription}">
         <meta property="og:url" content="${ogUrl}">
         <meta property="og:image" content="${metaImage}">
-      `
+      ` // <meta name="mm-opt" content="">
     }
   },
   data () {
