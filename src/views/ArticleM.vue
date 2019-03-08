@@ -32,7 +32,7 @@
             <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
             <RecommendList
               :isApp="true"
-              v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+              v-if="recommendlist.length > 0 && !isAd"
               slot="relatedlistBottom"
               :isAd="isAd"
               :sectionId="sectionId"
