@@ -81,7 +81,7 @@
             </pop-list>
             <RelatedListInContent :relateds="relateds" slot="relatedListInContent" />
             <RecommendList slot="relatedlistBottom" 
-              v-if="relateds.length > 0 || (recommendlist.length > 0 && !isAd)"
+              v-if="recommendlist.length > 0 && !isAd"
               :isAd="isAd"
               :sectionId="sectionId"
               :relateds="relateds"
