@@ -45,11 +45,11 @@ export function createRouter () {
       // { path: '/externals/:name', component: List },
       {
         path: '/story/:slug',
-        component: Article
-        // children: [ {
-        //   path: 'index.html',
-        //   component: Article
-        // } ]
+        component: Article,
+        children: [ {
+          path: 'index.html',
+          component: Article
+        } ]
       },
       { path: '/app/:slug', component: ArticleM },
       { path: '/headlinenews', component: Headline }, // 禾多推播用頁面
