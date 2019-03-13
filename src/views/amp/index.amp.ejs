@@ -9,6 +9,7 @@
     <script async custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"></script>
     <script async custom-element="amp-iframe" src="https://cdn.ampproject.org/v0/amp-iframe-0.1.js"></script>
     <script async custom-element="amp-ad" src="https://cdn.ampproject.org/v0/amp-ad-0.1.js"></script>
+    <script async custom-element="amp-sticky-ad" src="https://cdn.ampproject.org/v0/amp-sticky-ad-1.0.js"></script>
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
     <script async custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js"></script>
     <title><%= storyInfo.storyTitle %></title>
@@ -81,5 +82,10 @@
       <%- include('components/AppAds', { AMPAds, pos: 'AMPFT' }) %>
     <% } %>
     <%- include('components/AppFooter', { storyInfo }) %>
+    <% if (showAMPAds) { %>
+      <amp-sticky-ad layout="nodisplay">
+        <%- include('components/AppAds', { AMPAds, pos: 'AMPST' }) %>
+      </amp-sticky-ad>
+    <% } %>
   </body>
 </html>
