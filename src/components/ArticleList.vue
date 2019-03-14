@@ -54,9 +54,13 @@ export default {
   },
   mounted () {
     /**
-     * Have ad-cover be rendered as soon as #list-item-${index} gets visible.
+     *  Have ad-cover be rendered as soon as #list-item-${index} gets visible.
      */
-    window.addEventListener('scroll', this.scrollEventHandlerForAd)    
+    /** 
+     *  Dont show ad cover on listing page for now.
+     *  window.addEventListener('scroll', this.scrollEventHandlerForAd) 
+     */
+     
   }
 }
 </script>

@@ -505,7 +505,10 @@ export default {
     /**
      * Have ad-cover be rendered as soon as #homepage-focus-news gets visible.
      */
-    window.addEventListener('scroll', this.scrollEventHandlerForAd)
+    /** 
+     *  Dont show ad cover on listing page for now.     
+     *  window.addEventListener('scroll', this.scrollEventHandlerForAd)
+     */
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
