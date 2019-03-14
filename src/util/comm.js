@@ -147,15 +147,11 @@ export function shareFacebook ({ route, shared }) {
   shared && shared()
 }
 
-export function getTitle (article, count = 30) {
-  return truncate(_.get(article, [ 'title' ]), count)
-}
-
-export function getTruncatedVal (oVal, count) {
+export function getTruncatedVal (oVal, count) { // considered deprecated
   return truncate(oVal, count)
 }
 
-export function getValue (o = {}, p = [], d = '') {
+export function getValue (o = {}, p = [], d = '') { // considered deprecated
   return _.get(o, p, d)
 }
 
@@ -268,7 +264,7 @@ export function isEleFixed (ele) {
   return false  
 }
 
-export function isDescendant (child, { classname = 'none' }) {
+export function isDescendant (child, { classname = 'none' }) { // deprecated
   let node = child.parentNode
   while (node !== null && node !== undefined) {
     if (node.className && node.className.indexOf(classname) > -1) {
@@ -386,7 +382,7 @@ export async function insertMicroAd ({ adId, currEnv, vm }) {
 //   return true
 // }
 
-export function trim (str) {
+export function trim (str) { // considered deprecated
   return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 }
 
@@ -439,7 +435,7 @@ export function sendAdCoverGA (label) {
   })
 }
 
-export function extractSlugFromreferrer (referrer = '') {
+export function extractSlugFromReferrer (referrer = '') {
   const filteredReferrer = referrer.replace(/^https?:\/\//, '').replace(/\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*$/, '')
   const referrerArr = filteredReferrer.split('/')
   if ((referrerArr[ 0 ].indexOf(SITE_DOMAIN) > -1 || referrerArr[ 0 ].indexOf('localhost') > -1) && referrerArr[ 1 ] === 'story') {

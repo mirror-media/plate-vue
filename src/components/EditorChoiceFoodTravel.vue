@@ -50,17 +50,16 @@ export default {
       if (this.viewport < 587) {
         return title
       } else if (this.viewport < 900) {
-        return this.getTruncatedVal(title, 19)
+        return getTruncatedVal(title, 19)
       } else if (this.viewport < 1300) {
-        return this.getTruncatedVal(title, 14)
+        return getTruncatedVal(title, 14)
       } else {
-        return this.getTruncatedVal(title, 19)
+        return getTruncatedVal(title, 19)
       }
     },
     getBrief,
     getHref,
     getImage,
-    getTruncatedVal,
     getValue
   }
 }

@@ -18,7 +18,7 @@
 <script>
   import _ from 'lodash'
   import { SECTION_MAP, RELATED_LIST_MAX, RECOMM_HITORY_MAX_IN_LOCALSTORAGE } from '../../constants'
-  import { extractSlugFromreferrer, getHref, getHrefFull, getValue } from '../../util/comm'
+  import { extractSlugFromReferrer, getHref, getHrefFull, getValue } from '../../util/comm'
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
 
@@ -103,7 +103,7 @@
       custCss.setAttribute('class', 'relatedBtmStyle')
       custCss.appendChild(document.createTextNode(customCSS))
       document.querySelector('body').appendChild(custCss)
-      this.referrerSlug = extractSlugFromreferrer(document.referrer)
+      this.referrerSlug = extractSlugFromReferrer(document.referrer)
     },
     watch: {
       currArticleId: function () {

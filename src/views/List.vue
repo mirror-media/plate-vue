@@ -511,13 +511,13 @@ export default {
         sectionName = this.sectionName
         const imageURL = _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ], null) ? _.get(this.section, [ 'ogImage', 'image', 'resizedTargets', 'desktop', 'url' ]) : _.get(this.section, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], null)
         ogImage = imageURL || SITE_OGIMAGE
-        ogTitle = _.get(this.section, [ 'ogTitle' ]) ? this.getTruncatedVal(_.get(this.section, [ 'ogTitle' ]), 11) : this.getTruncatedVal(_.get(this.section, [ 'title' ], this.title), 11)
-        ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? this.getTruncatedVal(_.get(this.section, [ 'ogDescription' ]), 197) : _.get(this.section, [ 'description' ])
-        ogDescription !== '' ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
+        ogTitle = _.get(this.section, [ 'ogTitle' ]) ? getTruncatedVal(_.get(this.section, [ 'ogTitle' ]), 11) : getTruncatedVal(_.get(this.section, [ 'title' ], this.title), 11)
+        ogDescription = _.get(this.section, [ 'ogDescription' ], null) ? getTruncatedVal(_.get(this.section, [ 'ogDescription' ]), 197) : _.get(this.section, [ 'description' ])
+        ogDescription !== '' ? getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
         break
       case CATEGORY:
         sectionName = this.sectionName
-        ogTitle = this.getTruncatedVal(this.title, 11)
+        ogTitle = getTruncatedVal(this.title, 11)
         const ogDesc = _.get(_.find(_.get(this.commonData, [ 'categories' ]), { 'name': this.$route.params.title }), [ 'ogDescription' ])
         const ogImg = _.get(this.$store, [ 'state', 'ogimage', 'image', 'resizedTargets', 'desktop', 'url' ])
         ogImage = ogImg || SITE_OGIMAGE
@@ -525,12 +525,12 @@ export default {
         break
       case EXTERNALS:
         sectionName = ''
-        ogTitle = this.getTruncatedVal(this.title, 11)
+        ogTitle = getTruncatedVal(this.title, 11)
         ogImage = SITE_OGIMAGE
         ogDescription = SITE_DESCRIPTION
         break
       default:
-        ogTitle = this.getTruncatedVal(this.title, 11) || ''
+        ogTitle = getTruncatedVal(this.title, 11) || ''
         ogImage = SITE_OGIMAGE
         ogDescription = SITE_DESCRIPTION
     }
@@ -952,7 +952,6 @@ export default {
       unLockJS()
     },
     elmYPosition,
-    getTruncatedVal,
     getMmid () {
       const mmid = Cookie.get('mmid')
       let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
