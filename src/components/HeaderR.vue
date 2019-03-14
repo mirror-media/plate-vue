@@ -196,7 +196,7 @@ export default {
     search (keyword) {
       if (keyword) {
         this.openSearchBar = false
-        this.$router.push(`/search/${keyword}`)
+        this.$router.push(`/search/${keyword.replace(/\s+/g, ',')}`)
       }
     }
   }

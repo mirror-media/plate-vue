@@ -1,4 +1,4 @@
-const { get, isString, toNumber } = require('lodash')
+const { get, map, isString, toNumber } = require('lodash')
 const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/redisHandler') 
 const config = require('./config')
 const bodyParser = require('body-parser')
@@ -270,15 +270,23 @@ router.use('/search', (req, res) => {
     } else {
       console.error(`\n[ERROR] Fetch data from Redis in fail.`, `/search${req.url}`)
       console.error(`${err}\n`)
+      const keywords = get(req, 'query.keyword', '').split(',')
       const test = {
         'from': (toNumber(get(req, 'query.page', 1)) - 1) * toNumber(get(req, 'query.max_results', 12)),
         'size': toNumber(get(req, 'query.max_results', 12)),
         'query': {
-          'multi_match' : {
-            'query': get(req, 'query.keyword', ''),
-            'type': 'phrase',
-            'fields': [ 'title', 'brief' ]
+          'bool': {
+            'must': map(keywords, k => ({
+              'multi_match' : {
+                'query': k,
+                'type': 'phrase',
+                'fields': [ 'title', 'brief' ]
+              }
+            }))
           }
+        },
+        'sort' : {
+          'publishedDate': { 'order': 'desc' }
         }
       }
       superagent
