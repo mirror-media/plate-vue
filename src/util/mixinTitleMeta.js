@@ -3,7 +3,7 @@ import { alexa, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './d
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
 let isScriptLoaded = false
-let isDomContentLoadedHandlerSetup = false
+let isWindowLoadedHandlerSetup = false
 
 function getMetaSet (vm) {
   const { metaSet } = vm.$options
@@ -89,7 +89,7 @@ const clientTitleMetaMixin = {
     metaSet && updateMeta(metaSet, this)
   }
 }
-process.env.VUE_ENV === 'client' && !isDomContentLoadedHandlerSetup && window.addEventListener('load', () => {
+process.env.VUE_ENV === 'client' && !isWindowLoadedHandlerSetup && window.addEventListener('load', () => {
   console.log('PAGE LOADED.')
   if (!isScriptLoaded) {
     const insertCodes = async codes => {
@@ -103,7 +103,7 @@ process.env.VUE_ENV === 'client' && !isDomContentLoadedHandlerSetup && window.ad
       insertCodes(scorecardresearch).then(() => insertCodes(alexa)),
     ]).then(() => true).catch(() => false)
   }
-  isDomContentLoadedHandlerSetup = true
+  isWindowLoadedHandlerSetup = true
 })
 
 export default process.env.VUE_ENV === 'server'
