@@ -70,7 +70,7 @@
               :target="target"
               data-gtm-category="home"
               data-gtm="choice">
-              <h2 v-text="getTitle(item, 24)"></h2>
+              <h2 v-text="getTitle(item)"></h2>
             </router-link>
             <a
               v-if="item.style === 'projects'"
@@ -78,7 +78,7 @@
               :target="target"
               data-gtm-category="home"
               data-gtm="choice">
-              <h2 v-text="getTitle(item, 24)"></h2>
+              <h2 v-text="getTitle(item)"></h2>
             </a>
           </template>
         </div>
@@ -89,9 +89,10 @@
 <script>
 
 import { SECTION_MAP } from 'src/constants'
-import { getHref, getImage, getSection, getTitle, getTruncatedVal, getValue } from 'src/util/comm'
+import { getHref, getImage, getSection, getValue } from 'src/util/comm'
 import LatestAriticleImg from 'src/components/LatestAriticleImg.vue'
 import Slider from 'src/components/Slider.vue'
+import truncate from 'truncate'
 import _ from 'lodash'
 
 export default {
@@ -157,8 +158,9 @@ export default {
     },
     getImage,
     getSection,
-    getTitle,
-    getTruncatedVal,
+    getTitle (article) {
+      return truncate(_.get(article, 'title'), 24)
+    },
     getValue,
     getSectionStyle (sect) {
       const sectionId = _.get(sect, [ 'id' ])

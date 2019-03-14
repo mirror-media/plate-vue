@@ -50,7 +50,7 @@
 </template>
 <script>
 
-import { getAuthor, getBrief, getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
+import { getAuthor, getBrief, getHref, getImage, getValue } from '../util/comm'
 import _ from 'lodash'
 import moment from 'moment'
 import objectFitImages from 'object-fit-images'
@@ -63,7 +63,6 @@ export default {
     getBrief,
     getHref,
     getImage,
-    getTruncatedVal,
     getValue,
     moment,
     hasRelated (article) {

@@ -286,7 +286,7 @@ export default {
     } = this.topic
 
     const metaTitle = ogTitle || name
-    const metaDescription = ogDescription ? this.getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
+    const metaDescription = ogDescription ? getTruncatedVal(ogDescription, 50) : SITE_DESCRIPTION
     const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
     const ogUrl = `${SITE_URL}${this.$route.fullPath}`
     const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
@@ -553,7 +553,6 @@ export default {
       })
       return assisgnedRole || role
     },
-    getTruncatedVal,
     getValue,
     insertCustomizedMarkup () {
       const custCss = document.createElement('style')
