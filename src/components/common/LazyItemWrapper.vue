@@ -47,7 +47,12 @@
             window.removeEventListener('load', this.handler)
             this.handler = null
           }
-          window.addEventListener('load', this.handler)
+          if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            this.isVisibleYet = true
+            this.handler = null            
+          } else {
+            window.addEventListener('load', this.handler)
+          }
         }
       }
     },
@@ -81,6 +86,7 @@
         } else {
           window.removeEventListener('load', this.handler)
           this.isVisibleYet = true
+          this.handler = null
         }
       }
     }
