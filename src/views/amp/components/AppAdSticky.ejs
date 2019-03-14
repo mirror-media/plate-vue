@@ -1,0 +1,8 @@
+<amp-sticky-ad layout="nodisplay">
+  <amp-ad
+    width="<%= _.get(AMPAds, [ 'DFPUnits', pos, 'dimensions', 'width' ], 0) %>"
+    height="<%= _.get(AMPAds, [ 'DFPUnits', pos, 'dimensions', 'height' ], 0) %>"
+    type="doubleclick"
+    data-slot="/<%= AMPAds.DFP_ID %>/<%= _.get(AMPAds, [ 'DFPUnits', pos, 'aduid' ], '') %>">
+  </amp-ad>
+</amp-sticky-ad>

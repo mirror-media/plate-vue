@@ -83,9 +83,7 @@
     <% } %>
     <%- include('components/AppFooter', { storyInfo }) %>
     <% if (showAMPAds) { %>
-      <amp-sticky-ad layout="nodisplay">
-        <%- include('components/AppAds', { AMPAds, pos: 'AMPST' }) %>
-      </amp-sticky-ad>
+      <%- include('components/AppAdSticky', { AMPAds, pos: 'AMPST' }) %>
     <% } %>
   </body>
 </html>
