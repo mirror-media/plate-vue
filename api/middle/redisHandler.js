@@ -172,7 +172,7 @@ const fetchFromRedisForAPI = (req, res, next) => {
   debug('Trying to fetching data from redis...', req.url)
   redisFetching(req.url, ({ error, data }) => {
     if (!error && data) {
-      debug('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, decodeURIComponent(req.url))
+      console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, decodeURIComponent(req.url))
       res.header('Cache-Control', 'public, max-age=300')
       res.json(JSON.parse(data))
     } else {

@@ -387,18 +387,19 @@ router.get('*', (req, res, next) => {
     res.header('Cache-Control', 'public, max-age=300')
     res.send(data)
   } catch (error) {
-    const status = get(error, 'status') || 500
-    const info = JSON.parse(get(error, 'response.text')) || error
-    
-    if (status !== 404) {
+    const errWrapped = handlerError(error)
+    if (errWrapped.status !== 404) {
       console.error(`\n[ERROR] Fetch data from from api.`, req.url)
-      console.error(`${info}\n`)
+      console.error(`${errWrapped.text}\n`)
     } else {
       console.error(`\n[ERROR] Not Found.`, req.url)
     }
 
     res.header('Cache-Control', 'no-cache')
-    res.status(status).send(info)
+    res.status(errWrapped.status).send({
+      status: errWrapped.status,
+      text: errWrapped.text
+    })
   }
 }, insertIntoRedis)
 
