@@ -26,19 +26,10 @@ function _buildQuery (params = {}) {
   return query
 }
 
-function _doFetch (url) {
-  return new Promise((resolve, reject) => {
-    superagent
+async function _doFetch (url) {
+  return await superagent
     .get(url)
-    // .query('')
-    .end(function (err, res) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(camelizeKeys(res.body))
-      }
-    })
-  })
+    .then(res => camelizeKeys(res.body))
 }
 
 function _logClient (params = {}) {
