@@ -7,10 +7,10 @@ const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 const config = merge(base, {
   entry: [ './src/entry-client.js' ],
   optimization: {
-    providedExports: true,
-    usedExports: true,
-    sideEffects: true,
-    concatenateModules: true,
+    // providedExports: true,
+    // usedExports: true,
+    // sideEffects: true,
+    // concatenateModules: true,
     // extract webpack runtime & manifest to avoid vendor chunk hash changing
     // on every build.
     runtimeChunk: {
