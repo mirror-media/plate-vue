@@ -385,11 +385,11 @@
               case 'MBCVR':
                 sendAdCoverGA('dfp')
                 if (adDisplayStatus === 'none') {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  updateCookie().then((isVisited) => {
                     this.showDfpCoverAd2Flag = !isVisited
                   })
                 } else {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  updateCookie().then((isVisited) => {
                     this.showDfpCoverAdFlag = !isVisited
                   })
                 }
