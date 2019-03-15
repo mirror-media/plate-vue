@@ -18,9 +18,9 @@ const config = merge(base, {
     },
     // extract vendor chunks for better caching
     splitChunks: {
-      chunks: 'initial',
-      minSize: 10000,
-      maxSize: 250000,  
+      chunks: 'all',
+      // minSize: 10000,
+      // maxSize: 500000,
       cacheGroups: {
         vendor: {
           name: 'vendor',
