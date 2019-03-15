@@ -14,13 +14,8 @@
 <script>
 import LazyImage from 'src/components/common/LazyImage.vue'
 import uuidv4 from 'uuid/v4'
-import verge from 'verge'
-import { currentYPosition, elmYPosition, } from 'kc-scroll'
 import { get } from 'lodash'
 import { getHref } from '../../util/comm'
-
-const showAdCover = store => store.dispatch('SHOW_AD_COVER')
-const debugDFP = require('debug')('CLIENT:DFP')
 
 export default {
   name: 'RelatedListInContent',
@@ -30,7 +25,6 @@ export default {
   data () {
     return {
       id: '',
-      isAdCoverCalledYet: false,
     }
   },
   props: {
@@ -48,33 +42,10 @@ export default {
       const image = get(item, 'image.resizedTargets.mobile.url') || get(item, 'image.url')
       return image ? image : undefined
     },
-    scrollEventHandlerForAd () {
-      if (this.isAdCoverCalledYet) { return }
-      const currentTop = currentYPosition()
-      const eleTop = elmYPosition(`#relateds-in-content-${this.id}`)
-      const device_height = verge.viewportH()
-      if (currentTop + device_height > eleTop && eleTop > 0) {
-        debugDFP('SHOW ADCOVER!')
-        showAdCover(this.$store)
-        this.isAdCoverCalledYet = true
-        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
-      }
-    },
   },
   mounted () {
     this.id = uuidv4()
-    /**
-     * Have ad-cover be rendered as soon as #article-body-content gets visible.
-     */
-    window.addEventListener('scroll', this.scrollEventHandlerForAd)
   },
-  watch: {
-    '$route.fullPath': function () {
-      window.removeEventListener('scroll', this.scrollEventHandlerForAd)
-      this.isAdCoverCalledYet = false
-      window.addEventListener('scroll', this.scrollEventHandlerForAd)     
-    }    
-  }
 }
 </script>
 <style lang="stylus" scoped>

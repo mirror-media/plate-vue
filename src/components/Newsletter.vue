@@ -31,8 +31,9 @@
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import superagent from 'superagent'
-
+import { currentYPosition, elmYPosition, } from 'kc-scroll'
 const API_TIMEOUT = 3000
+const showAdCover = store => store.dispatch('SHOW_AD_COVER')
 
 function fetchNewsletter (url) {
   return new Promise((resolve, reject) => {
@@ -56,6 +57,7 @@ export default {
       checkboxDisabled: false,
       email: '',
       emailInputDisabled: false,
+      isAdCoverCalledYet: false,
       loading: false
     }
   },
@@ -194,6 +196,17 @@ export default {
     focusoutEvent () {
       window.removeEventListener('touchstart', this.detectKeyboard)
     },
+    scrollEventHandlerForAd () {
+      if (this.isAdCoverCalledYet) { return }
+      const currentTop = currentYPosition()
+      const eleTop = elmYPosition('.newsletter')
+      const device_height = this.$store.state.viewport.height
+      if (currentTop + device_height > eleTop && eleTop > 0) {
+        showAdCover(this.$store)
+        this.isAdCoverCalledYet = true
+        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
+      }
+    },    
     updateInfo (cookie) {
       if (cookie) {
         const mail = _.split(cookie, ';')[0]
@@ -211,6 +224,18 @@ export default {
   mounted () {
     const cookie = Cookie.get('mm-newsletter')
     this.updateInfo(cookie)
+
+    /**
+     * Have ad-cover be rendered as soon as #article-body-content gets visible.
+     */
+    window.addEventListener('scroll', this.scrollEventHandlerForAd)
+  },
+  watch: {
+    '$route.fullPath': function () {
+      window.removeEventListener('scroll', this.scrollEventHandlerForAd)
+      this.isAdCoverCalledYet = false
+      window.addEventListener('scroll', this.scrollEventHandlerForAd)     
+    }    
   }
 }
 
