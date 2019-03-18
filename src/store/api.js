@@ -25,28 +25,6 @@ function buildQuery (params = {}) {
   return query
 }
 
-async function doFetch (url) {
-  return await superagent
-    .get(url)
-    .then(res => camelizeKeys(res.body))
-}
-
-function setupWhereInParam (type, value, params = {}) {
-  const convertedType = convertTypeForQuery(type)
-  params = params || {}
-  value = Array.isArray(value) ? value : [ value ]
-  const where = {}
-  if (convertedType && value.length > 0) {
-    _.merge(where, params.where, {
-      [convertedType]: {
-        '$in': value
-      }
-    })
-  }
-  params.where = where
-  return params
-}
-
 function buildUrlWithQuery ({ endpoint, params = {} }) {
   let url = `${_host}/api/${endpoint}`
   const hasParams = params && Object.keys(params).length
@@ -67,9 +45,26 @@ function convertTypeForQuery (type) {
   return typeList[type]
 }
 
-export const logClient = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'tracking', params: params })
-  return doFetch(url)
+function setupWhereInParam (type, value, params = {}) {
+  const convertedType = convertTypeForQuery(type)
+  params = params || {}
+  value = Array.isArray(value) ? value : [ value ]
+  const where = {}
+  if (convertedType && value.length > 0) {
+    _.merge(where, params.where, {
+      [convertedType]: {
+        '$in': value
+      }
+    })
+  }
+  params.where = where
+  return params
+}
+
+async function doFetch (url) {
+  return await superagent
+    .get(url)
+    .then(res => camelizeKeys(res.body))
 }
 
 export const fetchActivities = (params = {}) => {
@@ -229,5 +224,10 @@ export const fetchTopic = (params = {}) => {
 
 export const fetchYoutubePlaylist = (limit = 12, pageToken = '') => {
   const url = `${_host}/api/playlist?maxResults=${limit}&pageToken=${pageToken}`
+  return doFetch(url)
+}
+
+export const logClient = (params = {}) => {
+  const url = buildUrlWithQuery({ endpoint: 'tracking', params: params })
   return doFetch(url)
 }
