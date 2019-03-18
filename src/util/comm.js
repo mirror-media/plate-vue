@@ -157,7 +157,7 @@ export function getValue (o = {}, p = [], d = '') { // considered deprecated
 
 export function getHost () {
   const browser = typeof window !== 'undefined'
-  if (browser) {
+  if (browser && process.env.VUE_ENV !== 'server') {
     return `//${location.host}`
   } else {
     const host = process.env.HOST || 'localhost'
