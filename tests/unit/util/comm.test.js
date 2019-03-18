@@ -374,8 +374,12 @@ describe('getValue', () => {
 })
 
 describe('getHost', () => {
-  test('return localhost', () => {
+  test('in client', () => {
     expect(getHost()).toEqual('//localhost')
+  })
+  test('in server', () => {
+    process.env.VUE_ENV = 'server'
+    expect(getHost()).toEqual('localhost:8080')
   })
 })
 
