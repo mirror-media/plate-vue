@@ -129,6 +129,12 @@
   height: 80%;
 }
 
+.story-body-carousel__figcaption {
+  padding: .2em 0;
+  color: rgba(59, 55, 55, 0.498);
+  font-size: 14px;
+}
+
 .story-body-infobox__icon {
   position: relative;
   top: 34px;
