@@ -1,11 +1,10 @@
-// this is aliased in webpack config based on server/client build
-import { camelizeKeys } from 'humps'
-import { getHost } from '../util/comm'
-import _ from 'lodash'
 import qs from 'qs'
+import { camelizeKeys } from 'humps'
+import { get, merge } from 'lodash'
+import { getHost } from '../util/comm'
 
 const superagent = require('superagent')
-const _host = getHost()
+const host = getHost()
 
 function buildQuery (params = {}) {
   let query = {}
@@ -26,7 +25,7 @@ function buildQuery (params = {}) {
 }
 
 function buildUrlWithQuery ({ endpoint, params = {} }) {
-  let url = `${_host}/api/${endpoint}`
+  let url = `${host}/api/${endpoint}`
   const hasParams = params && Object.keys(params).length
   if (hasParams) {
     const query = buildQuery(params)
@@ -51,7 +50,7 @@ function setupWhereInParam (type, value, params = {}) {
   value = Array.isArray(value) ? value : [ value ]
   const where = {}
   if (convertedType && value.length > 0) {
-    _.merge(where, params.where, {
+    merge(where, params.where, {
       [convertedType]: {
         '$in': value
       }
@@ -68,13 +67,13 @@ async function doFetch (url) {
 }
 
 export const fetchActivities = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'activities', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'activities', params })
   return doFetch(url)
 }
 
 export const fetchArticles = (params = {}, preview) => {
   const endpoint = !preview ? 'posts' : 'drafts'
-  const url = buildUrlWithQuery({ endpoint: endpoint, params: params })
+  const url = buildUrlWithQuery({ endpoint, params })
   return doFetch(url)
 }
 
@@ -83,31 +82,31 @@ export const fetchArticlesByUuid = (uuid = '', type = '', params = {}) => {
   params.related ? (params.useMetaEndpoint = true) : ''
   params.sort = params.sort || '-publishedDate'
   const endpoint = params.useMetaEndpoint ? 'meta' : 'listing'
-  const url = buildUrlWithQuery({ endpoint: endpoint, params: params })
+  const url = buildUrlWithQuery({ endpoint, params })
   return doFetch(url)
 }
 
 export const fetchArticlesGroupedList = () => {
-  const apiHost = `${_host}/api/grouped`
+  const apiHost = `${host}/api/grouped`
   return doFetch(apiHost)
 }
 
 export const fetchArticlesPopList = () => {
-  const url = `${_host}/api/poplist`
+  const url = `${host}/api/poplist`
   return doFetch(url)
 }
 
 export const fetchAudios = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'audios', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'audios', params })
   return doFetch(url)
 }
 
 export const fetchCommonData = (endpoints = []) => {
   const comboParams = endpoints.map(endpoint => `endpoint=${endpoint}`).join('&')
-  let url = `${_host}/api/combo?`
+  let url = `${host}/api/combo?`
   url = url + comboParams
   return doFetch(url).then(data => {
-    Object.keys(_.get(data, 'endpoints', {})).map(endpoint => {
+    Object.keys(get(data, 'endpoints', {})).map(endpoint => {
       if (endpoint === 'sections') { // get categories data from sections
         data.endpoints.categories = {}
         data.endpoints[endpoint].items.map(section => {
@@ -122,112 +121,112 @@ export const fetchCommonData = (endpoints = []) => {
 }
 
 export const fetchContacts = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'contacts', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'contacts', params })
   return doFetch(url)
 }
 
 export const fetchEditorChoice = () => {
-  const url = `${_host}/api/combo?endpoint=choices`
+  const url = `${host}/api/combo?endpoint=choices`
   return doFetch(url)
 }
 
 export const fetchEvent = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'event', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'event', params })
   return doFetch(url)
 }
 
 export const fetchExternals = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'externals', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'externals', params })
   return doFetch(url)
 }
 
 export const fetchImage = (uuid = '') => {
-  const url = `${_host}/api/images/${uuid}`
+  const url = `${host}/api/images/${uuid}`
   return doFetch(url)
 }
 
 export const fetchImages = (uuid = '', type = '', params = {}) => {
   params = setupWhereInParam(type, [ uuid ], params)
-  const url = buildUrlWithQuery({ endpoint: 'images', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'images', params })
   return doFetch(url)
 }
 
 export const fetchImagesById = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'images', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'images', params })
   return doFetch(url)
 }
 
 export const fetchLatestArticle = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'listing', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'listing', params })
   return doFetch(url)
 }
 
 export const fetchLatestNewsFromJson = () => {
-  const url = `${_host}/api/latestNews`
+  const url = `${host}/api/latestNews`
   return doFetch(url)
 }
 
 export const fetchNodes = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'nodes', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'nodes', params })
   return doFetch(url)
 }
 
 export const fetchOathPlaylist = ({ id = '', params }) => {
-  const url = buildUrlWithQuery({ endpoint: `playlistng/${id}`, params: params })
+  const url = buildUrlWithQuery({ endpoint: `playlistng/${id}`, params })
   return doFetch(url)
 }
 
 export const fetchOathVideo = ({ id = '', params = {} }) => {
-  const url = buildUrlWithQuery({ endpoint: `video/${id}`, params: params })
+  const url = buildUrlWithQuery({ endpoint: `video/${id}`, params })
   return doFetch(url)
 }
 
 export const fetchOathVideoByPlaylist = ({ id = '', params = {} }) => {
-  const url = buildUrlWithQuery({ endpoint: `video/playlist/${id}`, params: params })
+  const url = buildUrlWithQuery({ endpoint: `video/playlist/${id}`, params })
   return doFetch(url)
 }
 
 export const fetchPartners = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'partners', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'partners', params })
   return doFetch(url)
 }
 
 export const fetchRecommendList = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'related_news', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'related_news', params })
   return doFetch(url)
 }
 
 export const fetchSearch = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'search', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'search', params })
   return doFetch(url)
 }
 
 export const fetchSectionList = () => {
-  const url = `${_host}/api/combo?endpoint=sections`
+  const url = `${host}/api/combo?endpoint=sections`
   return doFetch(url)
 }
 
 export const fetchTag = (slug = '') => {
-  const url = `${_host}/api/tags/${slug}`
+  const url = `${host}/api/tags/${slug}`
   return doFetch(url)
 }
 
 export const fetchTimeline = (slug = '') => {
-  const url = `${_host}/api/timeline/${slug}`
+  const url = `${host}/api/timeline/${slug}`
   return doFetch(url)
 }
 
 export const fetchTopic = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'topics', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'topics', params })
   return doFetch(url)
 }
 
 export const fetchYoutubePlaylist = (limit = 12, pageToken = '') => {
-  const url = `${_host}/api/playlist?maxResults=${limit}&pageToken=${pageToken}`
+  const url = `${host}/api/playlist?maxResults=${limit}&pageToken=${pageToken}`
   return doFetch(url)
 }
 
 export const logClient = (params = {}) => {
-  const url = buildUrlWithQuery({ endpoint: 'tracking', params: params })
+  const url = buildUrlWithQuery({ endpoint: 'tracking', params })
   return doFetch(url)
 }
