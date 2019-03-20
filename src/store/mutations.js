@@ -183,10 +183,6 @@ export default {
     Vue.set(state, 'topics', topics)
   },
 
-  SET_USER: (state, { user }) => {
-    Vue.set(state.users, user.id, user)
-  },
-
   SET_UUID: (state, { uuid }) => {
     Vue.set(state, 'uuid', uuid)
   },

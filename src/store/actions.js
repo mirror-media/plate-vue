@@ -108,11 +108,6 @@ export default {
   FETCH_CONTACT: ({ commit, state }, { params }) => {
     return fetchContacts(params).then(contact => commit('SET_CONTACT', { contact }))
   },
-  FETCH_EDITORCHOICE: ({ commit, state }, { params }) => {
-    return state.editorChoice.items
-      ? Promise.resolve(state.editorChoice)
-      : fetchEditorChoice().then(editorChoice => commit('SET_EDITORCHOICE', { editorChoice }))
-  },
   FETCH_EVENT: ({ commit, state }, { params }) => {
     return fetchEvent(params).then(event => {
       commit('SET_EVENT', { event })

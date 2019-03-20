@@ -35,7 +35,6 @@ const {
   SET_TIMELINE,
   SET_TOPIC_BY_UUID,
   SET_TOPICS,
-  SET_USER,
   SET_UUID,
   SET_VIEWPORT,
   SET_YOUTUBE_PLAY_LIST,
@@ -290,12 +289,6 @@ describe('mutations', () => {
     const state = { topics: {} }
     SET_TOPICS(state, { topics: { items: [] }})
     expect(state.topics).toContainKey('items')
-  })
-
-  test('SET_USER', () => {
-    const state = { users: {} }
-    SET_USER(state, { user: { id: '20190227edi004' }})
-    expect(state.users).toContainKey('20190227edi004')
   })
 
   test('SET_UUID', () => {
