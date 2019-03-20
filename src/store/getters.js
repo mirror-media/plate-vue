@@ -7,10 +7,10 @@ export default {
   searchResultTotalCount: state => {
     return _.get(state.searchResult, 'hits.total', 0)
   },
-  topic: state => {
+  topic: state => { // considered deprecated
     return state.topic
   },
-  topics: state => {
+  topics: state => { // considered deprecated
     return state.topics
   }
 }
