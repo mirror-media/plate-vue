@@ -1,11 +1,11 @@
-import _ from 'lodash'
+import { get } from 'lodash'
 
 export default {
   searchResultNormalized: state => {
-    return _.map(state.searchResult.items, item => Object.assign({ id: _.get(item, 'id') }, _.get(item, 'source')))
+    return (state.searchResult.items || []).map(item => Object.assign({ id: item.id }, item.source))
   },
   searchResultTotalCount: state => {
-    return _.get(state.searchResult, 'hits.total', 0)
+    return get(state.searchResult, 'hits.total') || 0
   },
   topic: state => { // considered deprecated
     return state.topic

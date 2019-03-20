@@ -347,10 +347,10 @@ export default {
       })
     },
     eventEmbedded () {
-      return get(this.$store, 'state.eventEmbedded.items.0')
+      return get(this.$store, 'state.event.embedded.items.0')
     },
     eventLogo () {
-      return get(this.$store, 'state.eventLogo.items.0')
+      return get(this.$store, 'state.event.logo.items.0')
     },
     hasEventEmbedded () {
       const _now = moment()
