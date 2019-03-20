@@ -18,6 +18,27 @@ const {
   SET_EXTERNALS,
   SET_HIGHLIGHTNODES,
   SET_IMAGE,
+  SET_IMAGES,
+  SET_IMAGES_BY_ID,
+  SET_LATEST_NEWS_FROM_JSON,
+  SET_LATESTARTICLE,
+  SET_LATESTARTICLES,
+  SET_NODES,
+  SET_OATH_PLAYLIST,
+  SET_OATH_VIDEO,
+  SET_OATH_VIDEO_BY_PLAYLIST,
+  SET_POSTVUE,
+  SET_PARTNERS,
+  SET_SEARCH,
+  SET_TAG,
+  SET_TAGS,
+  SET_TIMELINE,
+  SET_TOPIC_BY_UUID,
+  SET_TOPICS,
+  SET_USER,
+  SET_UUID,
+  SET_VIEWPORT,
+  SET_YOUTUBE_PLAY_LIST,
 } = mutations
 
 describe('mutations', () => {
@@ -157,6 +178,143 @@ describe('mutations', () => {
     const state = { images: {}, ogimage: {} }
     SET_IMAGE(state, { image: { items: [] } })
     expect(state.images.length).toEqual(1)
+  })
+
+  test('SET_IMAGES', () => {
+    const state = { images: {} }
+    SET_IMAGES(state, { uuid: '20190227edi004', images: { items: [] } })
+    expect(state.images).toContainKey('20190227edi004')
+    expect(state.images['20190227edi004']).toContainKey('items')
+  })
+
+  test('SET_IMAGES_BY_ID', () => {
+    const state = { imagesById: [] }
+    SET_IMAGES_BY_ID(state, { images: [
+      { id: '1' },
+      { id: '2' }
+    ] })
+    expect(state.imagesById.length).toEqual(2)
+  })
+
+  test('SET_LATEST_NEWS_FROM_JSON', () => {
+    const state = { latestNewsFromJson: {} }
+    SET_LATEST_NEWS_FROM_JSON(state, { latestNewsFromJson: { items: [] } })
+    expect(state.latestNewsFromJson).toContainKey('items')
+  })
+
+  test('SET_LATESTARTICLE', () => {
+    const state = { latestArticle: {} }
+    SET_LATESTARTICLE(state, { latestArticle: { items: [] } })
+    expect(state.latestArticle).toContainKey('items')
+  })
+
+  test('SET_LATESTARTICLES', () => {
+    const state = { latestArticles: {} }
+    SET_LATESTARTICLES(state, { latestArticles: { items: [] } })
+    expect(state.latestArticles).toContainKey('items')
+  })
+
+  test('SET_NODES', () => {
+    const state = { nodes: {} }
+    SET_NODES(state, { nodes: { items: [] } })
+    expect(state.nodes).toContainKey('items')
+  })
+
+  test('SET_OATH_PLAYLIST', () => {
+    const state = { playlist: { info: {} } }
+    SET_OATH_PLAYLIST(state, { id: '20190227edi004', playlist: { items: [] } })
+    expect(state.playlist.info).toContainKey('20190227edi004')
+    expect(state.playlist.info['20190227edi004']).toContainKey('items')
+  })
+
+  test('SET_OATH_VIDEO', () => {
+    const state = { videos: {} }
+    SET_OATH_VIDEO(state, { id: '20190227edi004', video: { items: [] } })
+    expect(state.videos).toContainKey('20190227edi004')
+    expect(state.videos['20190227edi004']).toContainKey('items')
+  })
+
+  test('SET_OATH_VIDEO_BY_PLAYLIST', () => {
+    const state = { playlist: { info: {} } }
+    SET_OATH_VIDEO_BY_PLAYLIST(state, { id: '20190227edi004', videos: { items: [] } })
+    expect(state.playlist).toContainKey('20190227edi004')
+    expect(state.playlist['20190227edi004']).toContainKey('items')
+  })
+
+  test('SET_POSTVUE', () => {
+    const state = { latestArticles: {} }
+    SET_POSTVUE(state, { commonData: { postsVue: { items: [] }}})
+    expect(state.latestArticles).toContainKey('items')
+  })
+
+  test('SET_PARTNERS', () => {
+    const state = { commonData: {} }
+    SET_PARTNERS(state, { partners: { items: [] }})
+    expect(state.commonData.partners).toContainKey('items')
+  })
+
+  test('SET_SEARCH', () => {
+    const state = { searchResult: {} }
+    SET_SEARCH(state, { searchResult: { items: [] }})
+    expect(state.searchResult).toContainKey('items')
+  })
+
+  test('SET_TAG', () => {
+    const state = { tag: {} }
+    SET_TAG(state, { tag: { items: [] }})
+    expect(state.tag).toContainKey('items')
+  })
+
+  test('SET_TAGS', () => {
+    const state = { tags: [] }
+    SET_TAGS(state, { items: [
+      { tags: [ { id: '5c418d9f315ec510009058fe' }, { id: '58084765aa39ed0d00bfd131' } ] },
+      { tags: [ { id: '587c3dd13c1f950d00ce3b0b' } ] }
+    ] })
+    expect(state.tags.length).toEqual(3)
+  })
+
+  test('SET_TIMELINE', () => {
+    const state = { timeline: {} }
+    SET_TIMELINE(state, { timeline: { items: [] }})
+    expect(state.timeline).toContainKey('items')
+  })
+
+  test('SET_TOPIC_BY_UUID', () => {
+    const state = { topic: {} }
+    SET_TOPIC_BY_UUID(state, { topic: { items: [] }})
+    expect(state.topic).toContainKey('items')
+  })
+
+  test('SET_TOPICS', () => {
+    const state = { topics: {} }
+    SET_TOPICS(state, { topics: { items: [] }})
+    expect(state.topics).toContainKey('items')
+  })
+
+  test('SET_USER', () => {
+    const state = { users: {} }
+    SET_USER(state, { user: { id: '20190227edi004' }})
+    expect(state.users).toContainKey('20190227edi004')
+  })
+
+  test('SET_UUID', () => {
+    const state = { uuid: '' }
+    SET_UUID(state, { uuid: '20190227edi004' })
+    expect(state.uuid).toEqual('20190227edi004')
+  })
+
+  test('SET_VIEWPORT', () => {
+    const state = { viewport: { height: 0, width: 0 }}
+    SET_VIEWPORT(state, { height: 10, width: 20 })
+    expect(state.viewport.width).toEqual(20)
+    expect(state.viewport.height).toEqual(10)
+  })
+
+  test('SET_YOUTUBE_PLAY_LIST', () => {
+    const state = { playlist: {} }
+    SET_YOUTUBE_PLAY_LIST(state, { playlist: { items: [] } })
+    expect(state.playlist).toContainKey('items')
   })
 
 })
