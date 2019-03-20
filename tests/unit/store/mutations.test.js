@@ -138,13 +138,13 @@ describe('mutations', () => {
   })
 
   test('SET_EVENT', () => {
-    const state = { eventEmbedded: {}, eventLogo: {}, eventMod: {} }
+    const state = { event: { embedded: {}, logo: {}, mod: {} } }
     SET_EVENT(state, { event: { items: [ { eventType: 'mod' } ] }})
     SET_EVENT(state, { event: { items: [ { eventType: 'embedded' } ] }})
     SET_EVENT(state, { event: { items: [ { eventType: 'logo' } ] }})
-    expect(state.eventMod).toContainKey('items')
-    expect(state.eventEmbedded).toContainKey('items')
-    expect(state.eventLogo).toContainKey('items')
+    expect(state.event.mod).toContainKey('items')
+    expect(state.event.embedded).toContainKey('items')
+    expect(state.event.logo).toContainKey('items')
   })
 
   test('SET_EXTERNAL', () => {

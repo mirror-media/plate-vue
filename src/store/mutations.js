@@ -1,9 +1,9 @@
-import _ from 'lodash'
 import Vue from 'vue'
+import { concat, get, uniqBy, values } from 'lodash'
 
 export default {
   SET_AD_COVER_FLAG: (state, flag) => {
-    state[ 'isTimeToShowAdCover' ] = flag
+    state.isTimeToShowAdCover = flag
   },
 
   SET_ACTIVITIES: (state, { activities }) => {
@@ -15,7 +15,7 @@ export default {
   },
 
   SET_ARTICLES_BY_UUID: (state, { articles, type, uuid }) => {
-    Vue.set(state['articlesByUUID'][type], uuid, articles)
+    Vue.set(state.articlesByUUID[type], uuid, articles)
   },
 
   SET_ARTICLES_GROUPED_LIST: (state, { articlesGroupedList }) => {
@@ -36,23 +36,23 @@ export default {
 
   SET_AUTHORS: (state, articles) => {
     let authors = []
-    const origAuthors = _.values(state.authors)
-    _.map(_.get(articles, [ 'items' ]), (article) => {
+    const origAuthors = values(state.authors)
+    const items = get(articles, 'items') || []
+    items.map(article => {
       const { cameraMan, designers, engineers, photographers, writers } = article
-      _.map(_.concat(cameraMan, designers, engineers, photographers, writers), (o) => {
-        if (o) {
-          authors.push(o)
-        }
+      const concatAuthors = concat(cameraMan, designers, engineers, photographers, writers)
+      concatAuthors.filter(author => author).map(author => {
+        authors.push(author)
       })
     })
-    authors = _.concat(origAuthors, authors)
-    Vue.set(state, 'authors', _.uniqBy(authors, 'id'))
+    authors = concat(origAuthors, authors)
+    Vue.set(state, 'authors', uniqBy(authors, 'id'))
   },
 
   SET_COMMONDATA: (state, { commonData }) => {
     Vue.set(state, 'commonData', commonData)
     Vue.set(state, 'topics', commonData.topics)
-    _.get(commonData, [ 'choices' ], false) ? Vue.set(state, 'editorChoice', _.get(commonData, [ 'choices' ])) : ''
+    commonData.choices ? Vue.set(state, 'editorChoice', commonData.choices) : ''
   },
 
   SET_CONTACT: (state, { contact }) => {
@@ -64,30 +64,20 @@ export default {
   },
 
   SET_EVENT: (state, { event }) => {
-    const eventType = _.get(event, [ 'items', '0', 'eventType' ])
-    switch (eventType) {
-      case 'embedded':
-        Vue.set(state, 'eventEmbedded', event)
-        break
-      case 'logo':
-        Vue.set(state, 'eventLogo', event)
-        break
-      case 'mod':
-        Vue.set(state, 'eventMod', event)
-        break
-    }
+    const eventType = get(event, 'items.0.eventType')
+    eventType ? Vue.set(state.event, eventType, event) : ''
   },
 
   SET_EXTERNAL: (state, { external }) => {
-    Vue.set(state['external'], _.get(external, 'items.0.name', ''), external.items[0])
+    Vue.set(state.external, get(external, 'items.0.name', ''), external.items[0])
   },
 
   SET_EXTERNALS: (state, { externals }) => {
-    const items = _.get(externals, [ 'items' ])
-    items.forEach((e) => {
-      Vue.set(state['external'], e.name, e)
-    })
+    const items = get(externals, 'items') || []
     Vue.set(state, 'externals', externals)
+    items.filter(item => item.name).forEach(item => {
+      Vue.set(state.external, item.name, item)
+    })
   },
 
   SET_HIGHLIGHTNODES: (state, { nodes }) => {
@@ -98,18 +88,18 @@ export default {
     if (type === 'OG') {
       Vue.set(state, 'ogimage', image)
     } else {
-      const origImages = _.values(state.images)
+      const origImages = values(state.images)
       origImages.push(image)
       Vue.set(state, 'images', origImages)
     }
   },
 
   SET_IMAGES: (state, { uuid, images }) => {
-    Vue.set(state['images'], uuid, images)
+    Vue.set(state.images, uuid, images)
   },
 
   SET_IMAGES_BY_ID: (state, { images }) => {
-    state['imagesById'] = images
+    state.imagesById = images
   },
 
   SET_LATESTARTICLE: (state, { latestArticle }) => {
@@ -129,7 +119,7 @@ export default {
   },
 
   SET_OATH_PLAYLIST: (state, { id, playlist }) => {
-    Vue.set(state['playlist']['info'], id, playlist)
+    Vue.set(state.playlist.info, id, playlist)
   },
   
   SET_OATH_VIDEO: (state, { id, video }) => {
@@ -141,11 +131,11 @@ export default {
   },
 
   SET_POSTVUE: (state, { commonData }) => {
-    Vue.set(state, 'latestArticles', _.get(commonData, [ 'postsVue' ]))
+    Vue.set(state, 'latestArticles', get(commonData, 'postsVue'))
   },
 
   SET_PARTNERS: (state, { partners }) => {
-    Vue.set(state['commonData'], 'partners', partners)
+    Vue.set(state.commonData, 'partners', partners)
   },
 
   SET_SEARCH: (state, { searchResult }) => {
@@ -158,17 +148,16 @@ export default {
 
   SET_TAGS: (state, articles) => {
     let _tags = []
-    const origTags = _.values(state.tags)
-    _.map(_.get(articles, [ 'items' ]), (article) => {
-      const { tags } = article
-      _.map(tags, (o) => {
-        if (o) {
-          _tags.push(o)
-        }
+    const origTags = values(state.tags)
+    const items = get(articles, 'items') || []
+    items.map(article => {
+      const { tags = [] } = article
+      tags.filter(tag => tag).map(tag => {
+        _tags.push(tag)
       })
     })
-    _tags = _.concat(origTags, _tags)
-    Vue.set(state, 'tags', _.uniqBy(_tags, 'id'))
+    _tags = concat(origTags, _tags)
+    Vue.set(state, 'tags', uniqBy(_tags, 'id'))
   },
 
   SET_TIMELINE: (state, { timeline }) => {

@@ -26,9 +26,11 @@ const state = {
   contact: {},
   dfpId: DFPID,
   editorChoice: {},
-  eventEmbedded: {},
-  eventLogo: {},
-  eventMod: {},
+  event: {
+    embedded: {},
+    logo: {},
+    mod: {}
+  },
   external: {},
   externals: {},
   fbAppId: FB_APP_ID,
