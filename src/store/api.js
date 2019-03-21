@@ -61,10 +61,8 @@ function setupWhereInParam (type, value, params = {}) {
 }
 
 async function doFetch (url) {
-  const response = !process.browser && 3000
   return await superagent
     .get(url)
-    .timeout({ response, })
     .then(res => camelizeKeys(res.body))
 }
 
