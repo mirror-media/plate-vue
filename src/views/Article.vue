@@ -39,11 +39,8 @@
                     </blockquote>
                   </div>
                 </LazyItemWrapper>
-                <LazyItemWrapper :position="verge.viewportH()" slot="readrLatest" :strict="true">
-                  <ArticleAsideReadrLatest class="readr-latest" />
-                </LazyItemWrapper>
                 <LazyItemWrapper :position="verge.viewportH()" slot="popListVert" :strict="true">
-                  <pop-list-vert :pop="popularlist">
+                  <pop-list-vert :pop="popularlist" class="article_aside_popList">
                     <micro-ad v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                       :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                       class="popListVert-list__item" :slot="`microAd${getValue(a, [ 'pos' ])}`"></micro-ad>
@@ -153,7 +150,6 @@
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
-  import ArticleAsideReadrLatest from '../components/article/ArticleAsideReadrLatest.vue'
   import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
@@ -384,7 +380,6 @@
       HeroVideo,
       RelatedListInContent,
       RecommendList,
-      ArticleAsideReadrLatest,
       LazyItemWrapper
     },
     data () {
@@ -888,6 +883,8 @@
         &_fbPage
           width 300px
           margin 20px 5px 15px
+        &_popList
+          margin 10px 0 0
       
       .article_footer
         text-align center
@@ -914,9 +911,6 @@
 
     a, a:hover, a:link, a:visited
       display inline
-
-  .readr-latest
-    margin 0 0 10px 0
 
   @media (min-width 0px) and (max-width 499px)
     .article-container

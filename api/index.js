@@ -240,8 +240,8 @@ router.get('/playlist', (req, res) => {
     if (!err && data) {
       res.json(JSON.parse(data))
     } else {
-      console.error(`\n[ERROR] Fetch data from Redis in fail.`, `${url}?${req.url}`)
-      console.error(`${err}\n`)
+      console.warn(`\n[WARN] Fetch data from Redis in fail.`, `${url}?${req.url}`)
+      console.warn(`${err}\n`)
       superagent
       .get(url)
       .timeout(config.YOUTUBE_API_TIMEOUT)
@@ -268,8 +268,8 @@ router.use('/search', (req, res) => {
     if (!err && data) {
       res.json(JSON.parse(data))
     } else {
-      console.error(`\n[ERROR] Fetch data from Redis in fail.`, `/search${req.url}`)
-      console.error(`${err}\n`)
+      console.warn(`\n[WARN] Fetch data from Redis in fail.`, `/search${req.url}`)
+      console.warn(`${err}\n`)
       const keywords = get(req, 'query.keyword', '').split(',')
       const test = {
         'from': (toNumber(get(req, 'query.page', 1)) - 1) * toNumber(get(req, 'query.max_results', 12)),
