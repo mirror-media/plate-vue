@@ -192,7 +192,7 @@ export function consoleLogOnDev ({ msg }) {
 
 export function currEnv () {
   if (process.env.VUE_ENV === 'client') {
-    if (location.host.indexOf(SITE_DOMAIN) === 0 || location.host.indexOf(`www.${SITE_DOMAIN}`) === 0) {
+    if (location.host.indexOf(SITE_DOMAIN) === 0 || location.host.indexOf(`www.${SITE_DOMAIN}`) === 0 || location.host.indexOf(`m.${SITE_DOMAIN}`) === 0) {
       return 'prod'
     } else {
       return 'dev'
