@@ -1,6 +1,6 @@
 <figure class="story-body-youtube">
   <amp-youtube
-    data-videoid="<%= _.get(item, [ 'content', 0, 'youtubeId' ], '').split('?')[0] %>"
+    data-videoid="<%= _.get(item, [ 'content', 0, 'youtubeId' ], '').replace(/^\//, '').split('?')[0] %>"
     layout="responsive"
     width="1.48"
     height="1"
