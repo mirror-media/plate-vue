@@ -3,10 +3,12 @@
     <form action="" @submit.prevent="search" @focusout="search">
       <input v-model="keyword" type="search" :placeholder="$t('HEADER.SEARCH')">
     </form>
-    <button @click="$emit('closeSearchBar')"><img src="/assets/mirrormedia/icon/close.png" :alt="$t('HEADER.CLOSE')" data-gtm="search close" data-gtm-category="header"></button>
+    <button @click="closeSearchBar()"><img src="/assets/mirrormedia/icon/close.png" :alt="$t('HEADER.CLOSE')"></button>
   </section>
 </template>
 <script>
+import { sendGaClickEvent } from '../../util/comm'
+
 export default {
   name: 'HeaderSearchBar',
   data () {
@@ -15,6 +17,10 @@ export default {
     }
   },
   methods: {
+    closeSearchBar () {
+      this.$emit('closeSearchBar')
+      sendGaClickEvent('header', `search close`)
+    },
     search () {
       this.$emit('search', this.keyword)
       this.keyword = ''

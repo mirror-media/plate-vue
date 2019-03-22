@@ -23,9 +23,8 @@
           :key="video.id"
           :href="`/video/${video.id}`"
           class="latest"
-          data-gtm-category="article"
-          data-gtm="video latest"
-          target="_blank">
+          target="_blank"
+          @click="sendGaClickEvent('article', 'video latest')">
           <figure>
               <img :src="getThumbnails(video)" :alt="video.name">
           </figure>
@@ -44,6 +43,7 @@ import OathPlayer from './OathPlayer.vue'
 import moment from 'moment'
 import { OATH_COPMANY_ID, OATH_PLAYER_LIST } from '../../constants'
 import { SITE_URL } from '../../constants'
+import { sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'SingleVideoBody',
@@ -87,7 +87,8 @@ export default {
     getThumbnails (video) {
       return video.systemThumbnails.length > 0 ? video.systemThumbnails[video.systemThumbnails.length - 1].url : ''
     },
-    moment
+    moment,
+    sendGaClickEvent
   }
 }
 </script>

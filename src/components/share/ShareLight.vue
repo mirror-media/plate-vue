@@ -1,12 +1,12 @@
 <template>
   <div class="share-light">
-    <button @click="shareFacebook"><img src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook" data-gtm="share fb" :data-gtm-category="gtmCategory"></button>
-    <button @click="shareLine"><img src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line" data-gtm="share line" :data-gtm-category="gtmCategory" ></button>
+    <button @click="shareFacebook"><img src="/assets/mirrormedia/icon/share-fb.png" alt="分享至 Facebook"></button>
+    <button @click="shareLine"><img src="/assets/mirrormedia/icon/share-line.png" alt="分享至 Line"></button>
   </div>
 </template>
 <script>
 
-import { shareLine, shareFacebook } from '../../util/comm'
+import { sendGaClickEvent, shareLine, shareFacebook } from '../../util/comm'
 
 export default {
   name: 'ShareLight',
@@ -19,12 +19,14 @@ export default {
   methods: {
     shareFacebook () {
       shareFacebook({ route: this.$route.path })
+      sendGaClickEvent(this.gtmCategory, 'share fb')
     },
     shareLine () {
       shareLine({
         route: this.$route.path,
         title: document.querySelector('meta[property="og:title"]').getAttribute('content')
       })
+      sendGaClickEvent(this.gtmCategory, 'share line')
     },
   }
 }

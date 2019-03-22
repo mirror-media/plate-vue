@@ -2,20 +2,20 @@
   <div class="group">
     <a
       class="group__hero-image"
-      :id="createId(groupedArticle, true)"
       :href="_getHref(groupedArticle)"
       target="_blank"
       rel="noopener"
+      @click="sendGaClickEvent('home', 'group')"
     >
       <img v-lazy="getImage(groupedArticle, 'mobile')" alt="">
     </a>
     <div class="group__articles articles">
       <a
         class="articles__item"
-        :id="createId(groupedArticle)"
         :href="_getHref(groupedArticle)"
         target="_blank"
         rel="noopener"
+        @click="sendGaClickEvent('home', 'group')"
         v-text="getTruncatedVal(groupedArticle.title, 22)"
       >
       </a>
@@ -23,10 +23,10 @@
         v-for="(article, i) in getValue(groupedArticle, [ 'relateds' ]).slice(0, 3)"
         :key="i"
         class="articles__item"
-        :id="createId(article)"
         :href="_getHref(article)"
         target="_blank"
         rel="noopener"
+        @click="sendGaClickEvent('home', 'group')"
         v-text="getTruncatedVal(article.title, 22)"
       >
       </a>
@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../util/comm'
+import { getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../util/comm'
 
 export default {
   props: {
@@ -57,9 +57,7 @@ export default {
     getImage,
     getTruncatedVal,
     getValue,
-    createId (article, isImg = false) {
-      return `group-latest-0-${getValue(article, [ 'slug' ], Date.now())}${isImg ? '-img' : ''}-mobile-b`
-    }
+    sendGaClickEvent
   }
 }
 </script>

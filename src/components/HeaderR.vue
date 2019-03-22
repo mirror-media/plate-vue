@@ -1,29 +1,29 @@
 <template>
   <header :class="[{ scrolled: isScrolled }, abIndicator.toLowerCase()]" class="header">
     <section class="header__logo-layer">
-      <button class="btn--menu" @click="openSidebar = true"><img src="/assets/mirrormedia/icon/hamburger@2x.png" data-gtm="menu open" data-gtm-category="header" alt=""></button>
+      <button class="btn--menu" @click="openSidebar = true"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt="" @click="sendGaClickEvent('header', 'menu open')"></button>
       <!-- logo -->
-      <router-link v-show="!isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/logo.svg" :alt="SITE_TITLE"></router-link>
-      <router-link v-show="isScrolled" :to="'/'" class="logo" data-gtm="logo" data-gtm-category="header"><img src="/assets/mirrormedia/icon/logo@2x.png" :alt="SITE_TITLE"></router-link>
-      <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded" :href="get(logoFromEvent, 'link', '/')" class="logo event"  data-gtm="logo event" data-gtm-category="header" target="_blank">
+      <router-link v-show="!isScrolled" :to="'/'" class="logo" @click.native="sendGaClickEvent('header', 'logo')"><img src="/assets/mirrormedia/logo.svg" :alt="SITE_TITLE"></router-link>
+      <router-link v-show="isScrolled" :to="'/'" class="logo" @click.native="sendGaClickEvent('header', 'logo')"><img src="/assets/mirrormedia/icon/logo@2x.png" :alt="SITE_TITLE"></router-link>
+      <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded" :href="get(logoFromEvent, 'link', '/')" class="logo event" target="_blank" @click.native="sendGaClickEvent('header', 'logo event')">
         <LazyImage :src="get(logoFromEvent, 'image.image.resizedTargets.mobile.url')" />
       </a>
       <LazyItemWrapper :loadAfterPageLoaded="true" class="logo dfp">
-        <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" data-gtm="logo dfp" data-gtm-category="header" pos="LOGO" />
+        <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" pos="LOGO" @click.native="sendGaClickEvent('header', 'logo dfp')" />
       </LazyItemWrapper>
       <!-- search and more -->
       <div :class="{ open: openMore }" class="more" v-click-outside="handleClickMoreOutside">
-        <button class="btn--more" @click="openMore = true"><img src="/assets/mirrormedia/icon/more_grey@2x.png" data-gtm="more open" data-gtm-category="header" alt=""></button>
+        <button class="btn--more" @click="openMore = true"><img src="/assets/mirrormedia/icon/more_grey@2x.png" alt="" @click="sendGaClickEvent('header', 'more open')"></button>
         <div class="others">
-          <a :href="SOCIAL_LINK.SUBSCRIBE" data-gtm="more subscribe" data-gtm-category="header" target="_blank" v-text="$t('HEADER.SUBSCRIBE')"></a>
-          <a :href="SOCIAL_LINK.MAGAZINE" data-gtm="more magazine" data-gtm-category="header" target="_blank" v-text="$t('HEADER.MAGAZINE')"></a>
-          <a :href="SOCIAL_LINK.AUTH" data-gtm="more auth" data-gtm-category="header" target="_blank" v-text="$t('HEADER.AUTH')"></a>
-          <a :href="SOCIAL_LINK.AD" data-gtm="more ad" data-gtm-category="header" target="_blank" v-text="$t('HEADER.AD')"></a>
-          <a href="/category/campaign" data-gtm="more campaign" data-gtm-category="header" target="_blank" v-text="$t('HEADER.CAMPAIGN')"></a>
-          <a :href="SOCIAL_LINK.DOWNLOADAPP" data-gtm="more download" data-gtm-category="header" target="_blank" v-text="$t('HEADER.DOWNLOADAPP')"></a>
+          <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('header', 'more subscribe')" v-text="$t('HEADER.SUBSCRIBE')"></a>
+          <a :href="SOCIAL_LINK.MAGAZINE" target="_blank" @click="sendGaClickEvent('header', 'more magazine')" v-text="$t('HEADER.MAGAZINE')"></a>
+          <a :href="SOCIAL_LINK.AUTH" target="_blank" @click="sendGaClickEvent('header', 'more auth')" v-text="$t('HEADER.AUTH')"></a>
+          <a :href="SOCIAL_LINK.AD" target="_blank" @click="sendGaClickEvent('header', 'more ad')" v-text="$t('HEADER.AD')"></a>
+          <a href="/category/campaign" target="_blank" @click="sendGaClickEvent('header', 'more campaign')" v-text="$t('HEADER.CAMPAIGN')"></a>
+          <a :href="SOCIAL_LINK.DOWNLOADAPP" target="_blank" @click="sendGaClickEvent('header', 'more download')" v-text="$t('HEADER.DOWNLOADAPP')"></a>
         </div>     
       </div>
-      <button v-show="mounted" class="btn--search" @click="handleSearchBtn"><img src="/assets/mirrormedia/icon/search.svg" data-gtm="search open" data-gtm-category="header" alt=""></button>
+      <button v-show="mounted" class="btn--search" @click="handleSearchBtn"><img src="/assets/mirrormedia/icon/search.svg" alt="" @click="sendGaClickEvent('header', 'search')"></button>
       <input v-model="keyword" class="search" type="search" @keyup.enter="search(keyword)">
       <ShareLight class="share"/>
     </section>
@@ -33,8 +33,7 @@
         <router-link
           :class="{ active: activeSection === 'home' }"
           to="/"
-          data-gtm="section home"
-          data-gtm-category="header">首頁
+          @click.native="sendGaClickEvent('header', 'section home out')">首頁
         </router-link>
         <template v-for="section in activeSections">
           <a
@@ -42,8 +41,7 @@
             :key="`section-layer-${section.id}`"
             :class="{ active: activeSection === section.name }"
             href="/section/videohub"
-            data-gtm="section videohub"
-            data-gtm-category="header"
+            @click="sendGaClickEvent('header', 'section videohub out')"
             v-text="section.title">
           </a>
           <router-link
@@ -51,8 +49,7 @@
             :key="`section-layer-${section.id}`"
             :class="{ active: activeSection === section.name }"
             :to="`/section/${section.name}`"
-            :data-gtm="`section ${section.name}`"
-            data-gtm-category="header"
+            @click.native="sendGaClickEvent('header', `section ${section.name} out`)"
             v-text="section.title">
           </router-link>
         </template>
@@ -72,6 +69,7 @@ import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import ShareLight from '../components/share/ShareLight.vue'
 import { SECTION_MAP, SITE_TITLE, SOCIAL_LINK } from '../constants/index'
 import { get, } from 'lodash'
+import { sendGaClickEvent } from '../util/comm'
 
 export default {
   naem: 'AppHeader',
@@ -198,7 +196,8 @@ export default {
         this.openSearchBar = false
         this.$router.push(`/search/${keyword.replace(/\s+/g, ',')}`)
       }
-    }
+    },
+    sendGaClickEvent
   }
 }
 </script>

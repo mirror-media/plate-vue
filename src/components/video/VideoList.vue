@@ -6,9 +6,8 @@
         <a :key="item.id"
           :href="`/video/${item.id}`"
           class="video-list__block"
-          data-gtm-category="listing"
-          data-gtm="video latest"
-          target="_blank">
+          target="_blank"
+          @click="sendGaClickEvent('listing', 'video latest')">
           <figure>
             <img :src="getThumbnails(item)" :alt="item.name">
           </figure>
@@ -24,6 +23,7 @@
 <script>
 
 import { OATH_PLAYLIST } from '../../constants'
+import { sendGaClickEvent } from '../../util/comm'
 import { take } from 'lodash'
 
 export default {
@@ -75,7 +75,8 @@ export default {
         this.$emit('loadmore', { id: this.playlist.id, offset: this.itemsFiltered.length })
         this.loading = true
       }
-    }
+    },
+    sendGaClickEvent
   }
 }
 </script>

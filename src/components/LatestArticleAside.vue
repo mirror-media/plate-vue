@@ -2,22 +2,54 @@
   <div class="latest-aside-container" v-if="groupedArticle">
     <div class="latest-list">
       <div class="latest-list_item">
-        <router-link :to="getHref(groupedArticle)" :id="`group${isLast}-latest-${index}-${getValue(groupedArticle, [ 'slug' ], Date.now())}-img`"  v-if="groupedArticle.style !== 'projects' && groupedArticle.style !== 'campaign' && groupedArticle.style !== 'readr'" :target="target">
+        <router-link
+          :to="getHref(groupedArticle)"
+          v-if="groupedArticle.style !== 'projects' && groupedArticle.style !== 'campaign' && groupedArticle.style !== 'readr'"
+          :target="target"
+          @click.native="sendGaClickEvent('home', 'group')">
           <div class="latest-list_item_img" v-lazy:background-image="getImage(groupedArticle, 'mobile')"></div>
         </router-link>
-        <a :href="getHrefFull(groupedArticle)" :id="`group${isLast}--${index}latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-img`"  v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'" :target="target">
+        <a
+          :href="getHrefFull(groupedArticle)"
+          v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'"
+          :target="target"
+          @click="sendGaClickEvent('home', 'group')">
           <div class="latest-list_item_img" v-lazy:background-image="getImage(groupedArticle, 'mobile')"></div>
         </a>
         <div class="latest-list_item_title">
-          <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(groupedArticle, [ 'slug' ], Date.now())}`" v-if="groupedArticle.style !== 'projects' && groupedArticle !== 'campaign' && groupedArticle !== 'readr'" :target="target"></router-link>
-          <a :href="getHrefFull(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(groupedArticle, [ 'slug' ], Date.now())}`" v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'" :target="target"></a>
+          <router-link
+            :to="getHref(groupedArticle)"
+            v-text="getTruncatedVal(groupedArticle.title, 22)"
+            v-if="groupedArticle.style !== 'projects' && groupedArticle !== 'campaign' && groupedArticle !== 'readr'"
+            :target="target"
+            @click.native="sendGaClickEvent('home', 'group')">
+          </router-link>
+          <a
+            :href="getHrefFull(groupedArticle)"
+            v-text="getTruncatedVal(groupedArticle.title, 22)"
+            v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'"
+            :target="target"
+            @click="sendGaClickEvent('home', 'group')">
+          </a>
         </div>
       </div>
 
       <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])" v-if="i < 3">
         <div class="latest-list_item_title">
-          <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(o, [ 'slug' ], Date.now())}`" v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'" :target="target"></router-link>
-          <a :href="getHrefFull(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(o, [ 'slug' ], Date.now())}`" v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'" :target="target"></a>
+          <router-link
+            :to="getHref(o)"
+            v-text="getTruncatedVal(o.title, 22)"
+            v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'"
+            :target="target"
+            @click.native="sendGaClickEvent('home', 'group')">
+          </router-link>
+          <a
+            :href="getHrefFull(o)"
+            v-text="getTruncatedVal(o.title, 22)"
+            v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'"
+            :target="target"
+            @click="sendGaClickEvent('home', 'group')">
+          </a>
         </div>
       </div>
     </div>
@@ -26,7 +58,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../constants'
-import { getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../util/comm'
+import { getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../util/comm'
 
 export default {
   name: 'latest-list-aside',
@@ -69,6 +101,7 @@ export default {
       this.nodeLeftStatic = node.offsetLeft
       this.nodeWidthStatic = node.clientWidth
     },
+    sendGaClickEvent,
     sticky () {
       const { nodeTopStatic, nodeLeftStatic, nodeWidthStatic } = this
       const node = this.$el

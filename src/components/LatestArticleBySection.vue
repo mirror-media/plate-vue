@@ -5,9 +5,8 @@
       <a
         :href="`/story/${highlight.slug}`"
         class="latest-article-by-section__img"
-        data-gtm-category="home"
-        data-gtm="latest_category"
-        target="_blank">
+        target="_blank"
+        @click="sendGaClickEvent('home', 'latest_category')">
         <LazyImage :src="highlightImage" :caption="highlight.title" />
       </a>
       <div class="latest-article-by-section__articles">
@@ -16,10 +15,10 @@
           <h3>
             <a
               :href="`/story/${article.slug}`"
-              data-gtm-category="home"
-              data-gtm="latest_category"
               target="_blank"
-              v-text="article.title" ></a>
+              @click="sendGaClickEvent('home', 'latest_category')"
+              v-text="article.title">
+            </a>
           </h3>
         </div>
       </div>
@@ -30,6 +29,7 @@
 import LazyImage from 'src/components/common/LazyImage.vue'
 import { SECTION_MAP } from '../constants'
 import { get } from 'lodash'
+import { sendGaClickEvent } from '../util/comm'
 
 export default {
   name: 'LatestArticleBySection',
@@ -57,6 +57,9 @@ export default {
     sectionColor () {
       return get(SECTION_MAP, [ this.section.id, 'bgcolor' ])
     }
+  },
+  methods: {
+    sendGaClickEvent
   }
 }
 </script>
