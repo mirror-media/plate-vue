@@ -2,26 +2,26 @@
   <div class="listArticleBlock" :class="{ noHoverEffect: removeHoverEffect }" >
     <template v-if="articleType === 'campaign' || articleType === 'projects' || articleType === 'readr'">
       <figure class="listArticleBlock__figure">
-        <a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
+        <a :href="getHrefFull(article)" target="_blank" @click="sendGaClickEvent('listing', 'latest')">
           <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'title' ])" />
         </a>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
-        <h2><a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></a></h2>
-        <p><a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></a></p>
+        <h2><a :href="getHrefFull(article)" target="_blank" @click="sendGaClickEvent('listing', 'latest')" v-text="getValue(article, [ 'title' ])"></a></h2>
+        <p><a :href="getHrefFull(article)" target="_blank" @click="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></a></p>
       </div>
     </template>
     <template v-else-if="articleType === 'video'">
       <figure class="listArticleBlock__figure">
-        <a :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`" :id="`latest-${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}-img`" target="_blank">
+        <a :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`" target="_blank" @click="sendGaClickEvent('listing', 'latest')">
           <img v-lazy="getValue(article, [ 'snippet', 'thumbnails', 'high', 'url' ])" :alt="getValue(article, [ 'snippet', 'title' ])" />
         </a>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }">Video</div>
       </figure>
       <div class="listArticleBlock__content">
-        <h2><a :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`" :id="`latest-${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}-title`" v-text="getValue(article, [ 'snippet', 'title' ])" target="_blank" /></h2>
-        <p><a :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`" :id="`latest-${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}-descr`" v-text="getTruncatedVal(getValue(article, [ 'snippet', 'description' ]), 45)" target="_blank" /></p>
+        <h2><a :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`" @click="sendGaClickEvent('listing', 'latest')" v-text="getValue(article, [ 'snippet', 'title' ])" target="_blank" /></h2>
+        <p><a :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`" @click="sendGaClickEvent('listing', 'latest')" v-text="getTruncatedVal(getValue(article, [ 'snippet', 'description' ]), 45)" target="_blank" /></p>
       </div>
     </template>
     <template v-else-if="articleType === 'audio'">
@@ -49,26 +49,26 @@
     </template>
     <template v-else-if="articleType === 'topic'">
       <figure class="listArticleBlock__figure">
-        <router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-img`" target="_blank">
+        <router-link :to="`/topic/${getValue(article, [ 'id' ])}`" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')">
           <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'name' ])" />
         </router-link>
       </figure>
       <div class="listArticleBlock__content">
-        <h2><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-title`" target="_blank" v-text="getValue(article, [ 'name' ])"></router-link></h2>
-        <p><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
+        <h2><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getValue(article, [ 'name' ])"></router-link></h2>
+        <p><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></router-link></p>
       </div>
     </template>
     <template v-else>
       <figure class="listArticleBlock__figure">
-        <router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
+        <router-link :to="getHref(article)" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')">
           <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'title' ])" />
         </router-link>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
         <div class="listArticleBlock__content--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
-        <h2><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></router-link></h2>
-        <p><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
+        <h2><router-link :to="getHref(article)" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getValue(article, [ 'title' ])"></router-link></h2>
+        <p><router-link :to="getHref(article)" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></router-link></p>
       </div>
     </template>
   </div>
@@ -77,7 +77,7 @@
 <script>
 
 import { SECTION_MAP, MARKETING_CATGORY_ID, } from '../../constants'
-import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
+import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
 import _ from 'lodash'
 import LazyImage from 'src/components/common/LazyImage.vue'
 import moment from 'moment'
@@ -187,7 +187,8 @@ export default {
       return moment.utc(duration * 1000).format('HH:mm:ss')
     },
     getTruncatedVal,
-    getValue
+    getValue,
+    sendGaClickEvent
   },
   watch: {
     togglePause: function () {

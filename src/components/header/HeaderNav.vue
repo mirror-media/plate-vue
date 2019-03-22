@@ -9,15 +9,13 @@
         <router-link
           v-if="section.name !== 'videohub'"
           :to="`/section/${section.name}`"
-          :data-gtm="`section ${section.name}`"
-          data-gtm-category="header">
+          @click.native="sendGaClickEvent('header', `section ${section.name}`)">
           <span v-text="section.title"></span>
         </router-link>
         <a
           v-else
           :href="`/section/${section.name}`"
-          :data-gtm="`section ${section.name}`"
-          data-gtm-category="header">
+          @click="sendGaClickEvent('header', `section ${section.name}`)">
           <span v-text="section.title"></span>
         </a>
         <div class="dropdown">
@@ -26,8 +24,7 @@
               v-for="category in filterSectionCategories(section)"
               :key="`dropdown-${category.id}`"
               :href="`/category/${category.name}`"
-              :data-gtm="`category ${category.name}`"
-              data-gtm-category="header"
+              @click="sendGaClickEvent('header', `category ${category.name}`)"
               v-text="category.title"></a>
           </template>
           <template v-else>
@@ -35,8 +32,7 @@
               v-for="category in filterSectionCategories(section)"
               :key="`dropdown-${category.id}`"
               :to="`/category/${category.name}`"
-              :data-gtm="`category ${category.name}`"
-              data-gtm-category="header"
+              @click.native="sendGaClickEvent('header', `category ${category.name}`)"
               v-text="category.title"></router-link>
           </template>
         </div>
@@ -50,8 +46,7 @@
             v-for="partner in activePartners"
             :key="`dropdown-${partner.id}`"
             :to="`/externals/${partner.name}`"
-            :data-gtm="`external ${partner.name}`"
-            data-gtm-category="header"
+            @click.native="sendGaClickEvent('header', `external ${partner.name}`)"
             v-text="partner.display"></router-link>
         </div>
       </div>
@@ -62,16 +57,15 @@
           v-for="topic in activeTopics"
           :key="`topic-${topic.id}`"
           :to="`/topic/${topic.id}`"
-          :data-gtm="`topic ${topic.name}`"
-          data-gtm-category="header"
+          @click.native="sendGaClickEvent('header', `topic ${topic.name}`)"
           v-text="topic.name">
         </router-link>
       </div>
-      <router-link to="/section/topic" :data-gtm="`topic ${$t('HEADER.MORE')}`" class="more" data-gtm-category="header" v-text="$t('HEADER.MORE')"></router-link>
-      <a href="https://www.mirrorfiction.com/" class="link--external mirrorfiction" data-gtm="section mirrorfiction" data-gtm-category="header" target="_blank">
+      <router-link to="/section/topic" class="more" @click.native="sendGaClickEvent('header', `topic ${$t('HEADER.MORE')}`)" v-text="$t('HEADER.MORE')"></router-link>
+      <a href="https://www.mirrorfiction.com/" class="link--external mirrorfiction" target="_blank" @click="sendGaClickEvent('header', `section mirrorfiction`)">
         <LazyImage src="/assets/mirrormedia/icon/mirrorfiction.png" :caption="$t('HEADER.MIRRORFICTION')" />
       </a>
-      <a href="https://www.readr.tw/" class="link--external readr" data-gtm="section readr" data-gtm-category="header" target="_blank">
+      <a href="https://www.readr.tw/" class="link--external readr" target="_blank" @click="sendGaClickEvent('header', `section readr`)">
         <LazyImage src="/assets/mirrormedia/icon/readrlogo-gary.png" :caption="$t('HEADER.READR')" />
       </a>
     </nav>
@@ -81,6 +75,7 @@
 import LazyImage from 'src/components/common/LazyImage.vue'
 import { SECTION_MAP } from '../../constants'
 import { get, } from 'lodash'
+import { sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'HeaderNav',
@@ -125,7 +120,8 @@ export default {
     },
     getColor (section) {
       return get(SECTION_MAP, [ section.id, 'bgcolor' ]) 
-    }
+    },
+    sendGaClickEvent
   }
 }
 </script>

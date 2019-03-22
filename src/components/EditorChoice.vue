@@ -8,9 +8,8 @@
           :href="`/story/${item.slug}`"
           :style="{ width: `${100 / editorChoice.length}%`, backgroundImage: `url(${item.heroImage.image.resizedTargets.tablet.url})` }"
           class="slider__item"
-          data-gtm-category="home"
-          data-gtm="choice"
-          target="_blank">
+          target="_blank"
+          @click="sendGaClickEvent('home', 'choice')">
           <div class="slider__item-curtain"></div>
           <p class="slider__item-title" v-text="item.title"></p>
         </a>
@@ -41,8 +40,7 @@
             :to="getHref(item)"
             :target="target"
             class="editorChoice__block--img"
-            data-gtm-category="home"
-            data-gtm="choice">
+            @click.native="sendGaClickEvent('home', 'choice')">
             <LatestAriticleImg class="figure"
               :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
               :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
@@ -53,8 +51,7 @@
             :href="`https://www.mirrormedia.mg${getHref(item)}`"
             :target="target"
             class="editorChoice__block--img"
-            data-gtm-category="home"
-            data-gtm="choice">
+            @click.native="sendGaClickEvent('home', 'choice')">
             <LatestAriticleImg class="figure"
               :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
               :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
@@ -68,16 +65,14 @@
               v-if="item.style !== 'projects'"
               :to="getHref(item)"
               :target="target"
-              data-gtm-category="home"
-              data-gtm="choice">
+              @click.native="sendGaClickEvent('home', 'choice')">
               <h2 v-text="getTitle(item)"></h2>
             </router-link>
             <a
               v-if="item.style === 'projects'"
               :href="`https://www.mirrormedia.mg${getHref(item)}`"
               :target="target"
-              data-gtm-category="home"
-              data-gtm="choice">
+              @click="sendGaClickEvent('home', 'choice')">
               <h2 v-text="getTitle(item)"></h2>
             </a>
           </template>
@@ -89,7 +84,7 @@
 <script>
 
 import { SECTION_MAP } from 'src/constants'
-import { getHref, getImage, getSection, getValue } from 'src/util/comm'
+import { getHref, getImage, getSection, getValue, sendGaClickEvent } from 'src/util/comm'
 import LatestAriticleImg from 'src/components/LatestAriticleImg.vue'
 import Slider from 'src/components/Slider.vue'
 import truncate from 'truncate'
@@ -179,6 +174,7 @@ export default {
       this.sliderCurrent = (this.sliderCurrent - 1 > -1) ? this.sliderCurrent - 1 : this.editorChoice.length - 1
       this.setTimer()
     },
+    sendGaClickEvent,
     setHoverEvent () {
       const _targ = document.querySelectorAll('.editorChoice__menu--item')
       const _targChilde = document.querySelectorAll('.editorChoice__menu--item > span')

@@ -234,6 +234,10 @@ export function mmLog ({ category, eventType, target, description, referrer, ...
   return _normalizeLog({ category, eventType, target, description, referrer, ...rest })
 }
 
+export function sendGaClickEvent (eventCategory, eventLabel) {
+  window.ga && window.ga('send', 'event', eventCategory, 'click', eventLabel, { nonInteraction: false })
+}
+
 export function isEleFixed (ele) {
   let node = ele
   
