@@ -393,7 +393,6 @@ router.get('*', (req, res, next) => {
       next()
     }
     res.header('Cache-Control', 'public, max-age=300')
-    res.header('Transfer-encoding', 'chunked')
     res.send(data)
   } catch (error) {
     const errWrapped = handlerError(error)

@@ -174,7 +174,6 @@ const fetchFromRedisForAPI = (req, res, next) => {
     if (!error && data) {
       console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, decodeURIComponent(req.url))
       res.header('Cache-Control', 'public, max-age=300')
-      res.header('Transfer-encoding', 'chunked')
       res.json(JSON.parse(data))
     } else {
       console.warn(`\n[WARN] Fetch data from Redis in fail.`)
