@@ -273,11 +273,11 @@ export default {
             case 'LMBCVR':
               sendAdCoverGA('dfp')
               if (adDisplayStatus === 'none') {
-                updateCookie().then((isVisited) => {
+                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
                   this.showDfpCoverAd2Flag = !isVisited
                 })
               } else {
-                updateCookie().then((isVisited) => {
+                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
                   this.showDfpCoverAdFlag = !isVisited
                 })
               }
@@ -317,13 +317,13 @@ export default {
       return _.get(this.articlesGroupedList, [ 'choices' ])
     },
     eventEmbedded () {
-      return _.get(this.$store.state.event.embedded, [ 'items', '0' ])
+      return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
     },
     eventLogo () {
-      return _.get(this.$store.state.event.logo, [ 'items', '0' ])
+      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
     },
     eventMod () {
-      return _.get(this.$store, [ 'state', 'event', 'mod', 'items', '0' ])
+      return _.get(this.$store, [ 'state', 'eventMod', 'items', '0' ])
     },
     groupedArticle () {
       return _.slice(_.get(this.articlesGroupedList, [ 'grouped' ]))

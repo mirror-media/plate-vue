@@ -157,7 +157,7 @@ export function getValue (o = {}, p = [], d = '') { // considered deprecated
 
 export function getHost () {
   const browser = typeof window !== 'undefined'
-  if (browser && process.env.VUE_ENV === 'client') {
+  if (browser) {
     return `//${location.host}`
   } else {
     const host = process.env.HOST || 'localhost'
@@ -198,6 +198,23 @@ export function currEnv () {
       return 'dev'
     }
   }
+}
+
+export function enableScroll () {
+  if (window.removeEventListener) {
+    window.removeEventListener('DOMMouseScroll', preventDefault, false)
+  }
+  window.onmousewheel = document.onmousewheel = null
+  window.onwheel = null
+  window.ontouchmove = null
+  document.onkeydown = null
+}
+function preventDefault (e) {
+  e = e || window.event
+  if (e.preventDefault) {
+    e.preventDefault()
+  }
+  e.returnValue = false
 }
 
 /*
@@ -405,12 +422,12 @@ export function removeClass (ele, cls) {
 //   return `<vpon vpon_ad_test="${mode}" vpon_ad_licensy_key="${key}" vpon_ad_format="${format}" debug="${debug}"></vpon>`
 // }
 
-export function updateCookie () {
+export function updateCookie ({ currEnv }) {
   return new Promise(resolve => {
     const cookie = Cookie.get('visited')    
-    // if (currEnv === 'prod' && !cookie) {
-    //   Cookie.set('visited', 'true', { expires: '3m' })
-    // }
+    if (currEnv === 'prod' && !cookie) {
+      // Cookie.set('visited', 'true', { expires: '3m' })
+    }
     resolve(cookie === 'true')
   })
 }
