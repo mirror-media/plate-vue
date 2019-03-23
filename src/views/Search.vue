@@ -155,7 +155,7 @@ export default {
       return _.get(this.$store, 'getters.searchResultNormalized', [])
     },
     eventLogo () {
-      return _.get(this.$store.state.eventLogo, 'items.0')
+      return _.get(this.$store.state.event.logo, 'items.0')
     },
     hasMore () {
       return _.get(this.articles, 'length', 0) < _.get(this.$store, 'getters.searchResultTotalCount', 0)

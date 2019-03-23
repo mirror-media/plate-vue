@@ -306,11 +306,11 @@ export default {
             case 'LMBCVR':
               sendAdCoverGA('dfp')
               if (adDisplayStatus === 'none') {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                updateCookie().then((isVisited) => {
                   this.showDfpCoverAd2Flag = !isVisited
                 })
               } else {
-                updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                updateCookie().then((isVisited) => {
                   this.showDfpCoverAdFlag = !isVisited
                 })
               }
@@ -347,10 +347,10 @@ export default {
       })
     },
     eventEmbedded () {
-      return get(this.$store, 'state.eventEmbedded.items.0')
+      return get(this.$store, 'state.event.embedded.items.0')
     },
     eventLogo () {
-      return get(this.$store, 'state.eventLogo.items.0')
+      return get(this.$store, 'state.event.logo.items.0')
     },
     hasEventEmbedded () {
       const _now = moment()

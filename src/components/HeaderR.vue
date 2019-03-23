@@ -134,9 +134,9 @@ export default {
       return this.$store.state.viewport.width < 1200
     },
     logoFromEvent () {
-      if (new Date() >= new Date(get(this.$store, 'state.eventLogo.items.0.startDate'))
-        && new Date() < new Date(get(this.$store, 'state.eventLogo.items.0.endDate'))) {
-          return get(this.$store, 'state.eventLogo.items.0')
+      if (new Date() >= new Date(get(this.$store, 'state.event.logo.items.0.startDate'))
+        && new Date() < new Date(get(this.$store, 'state.event.logo.items.0.endDate'))) {
+          return get(this.$store, 'state.event.logo.items.0')
       }
       return undefined
     },
