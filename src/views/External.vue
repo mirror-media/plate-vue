@@ -289,11 +289,11 @@
               case 'MBCVR':
                 sendAdCoverGA('dfp')
                 if (adDisplayStatus === 'none') {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  updateCookie().then((isVisited) => {
                     this.showDfpCoverAd2Flag = !isVisited
                   })
                 } else {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
+                  updateCookie().then((isVisited) => {
                     this.showDfpCoverAdFlag = !isVisited
                   })
                 }
@@ -334,10 +334,10 @@
         })
       },
       eventEmbedded () {
-        return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
+        return _.get(this.$store.state.event.embedded, [ 'items', '0' ])
       },
       eventLogo () {
-        return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+        return _.get(this.$store.state.event.logo, [ 'items', '0' ])
       },
       fbAppId () {
         return _.get(this.$store, [ 'state', 'fbAppId' ])

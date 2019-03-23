@@ -405,7 +405,7 @@ export default {
       })
     },
     eventLogo () {
-      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+      return _.get(this.$store.state.event.logo, [ 'items', '0' ])
     },
     fbCommentDiv () {
       return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
