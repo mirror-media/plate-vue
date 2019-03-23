@@ -61,7 +61,7 @@ function setupWhereInParam (type, value, params = {}) {
 }
 
 async function doFetch (url) {
-  return await superagent
+  return superagent
     .get(url)
     .then(res => camelizeKeys(res.body))
 }
