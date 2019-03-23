@@ -166,7 +166,7 @@ function render (req, res, next) {
   const cookies = new Cookies( req, res, {} )
   const mmid = cookies.get('mmid')
   if (!mmid) {
-    cookies.set('mmid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
+    // cookies.set('mmid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
   }
   const handleError = err => {
     if (err.url) {
