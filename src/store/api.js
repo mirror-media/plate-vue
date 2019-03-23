@@ -61,9 +61,14 @@ function setupWhereInParam (type, value, params = {}) {
 }
 
 async function doFetch (url) {
-  return superagent
-    .get(url)
-    .then(res => camelizeKeys(res.body))
+  try {
+    return await superagent
+      .get(url)
+      .then(res => camelizeKeys(res.body))
+  } catch (error) {
+    console.log('[ERR] doFetch', error)
+    return Promise.reject(error)
+  }
 }
 
 export const fetchActivities = (params = {}) => {
