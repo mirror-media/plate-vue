@@ -71,12 +71,14 @@ const fetchStaticJson = (req, res, fileName) => {
         }
       })
       .catch(error => {
-        const status = get(error, 'status') || 500
-        const info = JSON.parse(get(error, 'response.text')) || error
+        const errWrapped = handlerError(error)
+        res.header('Cache-Control', 'no-cache')
+        res.status(errWrapped.status).send({
+          status: errWrapped.status,
+          text: errWrapped.text
+        })
         console.error(`error during fetch data from ${fileName} : ${url}`)
         console.error(error)
-        res.header('Cache-Control', 'no-cache')
-        res.status(status).send(info)
       })
     }
   })
