@@ -395,7 +395,7 @@ router.get('*', (req, res, next) => {
        * If req target is post, have the redis ttl be 7 days.
        */
       const exp_post_query = /^\/posts\?[\s\S]*&clean=content/
-      exp_post_query.test(req.url) && (res.redisTTL = 60 * 60 * 24 * 7)
+      dataAmount > 0 && exp_post_query.test(req.url) && (res.redisTTL = 60 * 60 * 24 * 7)
       next()
     }
     res.header('Cache-Control', 'public, max-age=300')
