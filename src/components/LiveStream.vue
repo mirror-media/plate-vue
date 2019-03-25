@@ -1,8 +1,8 @@
 <template>
   <div class="liveStream" v-if="showLiveStream" ref="pop">
-    <div class="liveStream__curtain" :id="`${type}_curtain`" v-show="!hasZoomIn" @click="toggleZoomIn()"></div>
-    <div class="liveStream-container" :class="{ zoomIn: hasZoomIn }" :id="`${type}__container`" v-html="mediaDataEmbed" @click="toggleZoomIn()"></div>
-    <img class="liveStream__close" src="/assets/mirrormedia/icon/close-btn.png"  :id="`${type}__close`"  alt="關閉" v-show="!hasZoomIn" @click="closeLiveStream()">
+    <div class="liveStream__curtain" v-show="!hasZoomIn" @click="toggleZoomIn()"></div>
+    <div class="liveStream-container" :class="{ zoomIn: hasZoomIn }" v-html="mediaDataEmbed" @click="toggleZoomIn()"></div>
+    <img class="liveStream__close" src="/assets/mirrormedia/icon/close-btn.png"  alt="關閉" v-show="!hasZoomIn" @click="closeLiveStream()">
     <span class="liveStream__prompt" v-show="!hasZoomIn" v-if="type === 'live'">LIVE</span>
   </div>
 </template>
@@ -11,6 +11,7 @@
 
 import _ from 'lodash'
 import Cookie from 'vue-cookie'
+import { sendGaClickEvent } from '../util/comm'
 
 export default {
   name: 'live-stream',
@@ -39,9 +40,20 @@ export default {
     closeLiveStream () {
       Cookie.set('liveStreamClosed', 'true', { expires: '10m' })
       this.showLiveStream = false
+      this.sendGaClickEvent('close')
+    },
+    sendGaClickEvent (action) {
+      if (this.$route.path === '/') {
+        sendGaClickEvent('home', `${this.type} ${action}`)
+      } else if (this.$route.path.match(/\/story\//)) {
+        sendGaClickEvent('article', `${this.type} ${action}`)
+      } else {
+        sendGaClickEvent('listing', `${this.type} ${action}`)
+      }
     },
     toggleZoomIn () {
       this.hasZoomIn = !this.hasZoomIn
+      this.hasZoomIn ? this.sendGaClickEvent('open') : this.sendGaClickEvent('close')
     }
   },
   mounted () {
