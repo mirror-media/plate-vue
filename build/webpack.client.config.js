@@ -20,7 +20,7 @@ const config = merge(base, {
     splitChunks: {
       chunks: 'all',
       minSize: 10000,
-      maxSize: 1500000,
+      // maxSize: 1500000,
       cacheGroups: {
         vendor: {
           name: 'vendor',

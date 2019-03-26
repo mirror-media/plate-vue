@@ -216,6 +216,7 @@ function render (req, res, next) {
     link: '',
     adTrace: '',
     custom: '',
+    resStack: '',
   }
   
   res.on('finish', function () {

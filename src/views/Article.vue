@@ -186,6 +186,7 @@
   const debugDataLoad = require('debug')('CLIENT:DATALOAD')
   const fetchArticles = (store, slug) => {
     debug('Going to fetch article data.', slug)
+    const timestamp = Date.now()
     return store.dispatch('FETCH_ARTICLES', {
       params: {
         // related: 'full',
@@ -199,6 +200,9 @@
         }
       },
       preview: _.get(store, [ 'state', 'route', 'query', 'preview' ])
+    }).then(article => {
+      traceResponse(store, { log: `fetch articlle data: ${Date.now() - timestamp}ms` })
+      return article
     })
   }
 
@@ -216,6 +220,7 @@
 
   const fetchPartners = (store) => {
     const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+    const timestamp = Date.now()
     return store.dispatch('FETCH_PARTNERS', {
       params: {
         max_results: 25,
@@ -223,7 +228,7 @@
       }
     }).then(() => {
       if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
-        fetchPartners(store)
+        fetchPartners(store).then(() => (traceResponse(store, { log: `fetch partners data: ${Date.now() - timestamp}ms` })))
       }
     })
   }
@@ -233,11 +238,19 @@
   }
 
   const fetchSSRData = (store) => {
-    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
+    const timestamp = Date.now()
+    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] }).then(response => {
+      traceResponse(store, { log: `fetch sections and topics data: ${Date.now() - timestamp}ms` })
+      return response
+    })
   }
 
   const fetchCommonData = (store) => {
-    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
+    const timestamp = Date.now()
+    return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] }).then(response => {
+      traceResponse(store, { log: `fetch projects data: ${Date.now() - timestamp}ms` })
+      return response
+    })
   }
 
   const fetchData = async store => {    
@@ -248,9 +261,13 @@
       fetchCommonData(store)
     ])
     const sectionId = _.get(article, 'items.0.sections.0.id')
+    const timestamp = Date.now()
     return fetchLatestArticle(store, {
       sort: '-publishedDate',
       where: { 'sections': sectionId }
+    }).then(response => {
+      traceResponse(store, { log: `fetch latests data: ${Date.now() - timestamp}ms` })
+      return response
     })
   }
   const fetchLatestArticle = (store, params) => store.dispatch('FETCH_LATESTARTICLE', { params: params })
@@ -258,6 +275,8 @@
     ids,
     max_results
   })
+
+  const traceResponse = (store, log) => (process.env.VUE_ENV === 'server' ? store.dispatch('TRACE_RES_STACK', log) : Promise.resolve())
 
   export default {
     name: 'article-view',
