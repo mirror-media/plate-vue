@@ -77,6 +77,7 @@ export function createStore () {
       playlist: {
         info: {}
       },
+      resStack: '\n',
       searchResult: {},
       tag: {},
       tags: [],
@@ -366,6 +367,10 @@ export function createStore () {
         commit('SET_VIEWPORT', viewport)
       },
 
+      TRACE_RES_STACK: ({ commit }, { log }) => {
+        commit('SET_RES_STACK', log)
+      },
+
     },
 
     mutations: {
@@ -548,6 +553,10 @@ export function createStore () {
 
       SET_TOPICS: (state, { topics }) => {
         Vue.set(state, 'topics', topics)
+      },
+
+      SET_RES_STACK: (state, log) => {
+        state[ 'resStack' ] += `${log}\n`
       },
 
       SET_USER: (state, { user }) => {
