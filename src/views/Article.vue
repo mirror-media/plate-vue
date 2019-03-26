@@ -253,23 +253,13 @@
     })
   }
 
-  const fetchData = async store => {    
-    const [ article ] = await Promise.all([
-      fetchArticles(store, store.state.route.params.slug),
-      fetchSSRData(store),
-      fetchPartners(store),
-      fetchCommonData(store)
-    ])
-    const sectionId = _.get(article, 'items.0.sections.0.id')
-    const timestamp = Date.now()
-    return fetchLatestArticle(store, {
-      sort: '-publishedDate',
-      where: { 'sections': sectionId }
-    }).then(response => {
-      traceResponse(store, { log: `fetch latests data: ${Date.now() - timestamp}ms` })
-      return response
-    })
-  }
+  const fetchData = store => Promise.all([
+    fetchArticles(store, store.state.route.params.slug),
+    fetchSSRData(store),
+    fetchPartners(store),
+    fetchCommonData(store)
+  ])
+
   const fetchLatestArticle = (store, params) => store.dispatch('FETCH_LATESTARTICLE', { params: params })
   const fetchImages = (store, { ids = [], max_results = 10 }) => store.dispatch('FETCH_IMAGES_BY_ID', {
     ids,
@@ -813,6 +803,16 @@
       }
 
       /**
+       * Fetch latests after window.onload.
+       */
+      window.addEventListener('load', () => {
+        this.isRenderAside && fetchLatestArticle(this.$store, {
+          sort: '-publishedDate',
+          where: { 'sections': this.sectionId }
+        })        
+      })
+
+      /**
        * Data's supposed to be loaded later.
        */
       const lowPriorityDataLoader = () => {
@@ -865,7 +865,7 @@
         debugDFP('MUTATION DETECTED: isTimeToShowAdCover:', this.isTimeToShowAdCover)
       },
       sectionId: function () {
-        fetchLatestArticle(this.$store, {
+        this.isRenderAside && fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: {
             'sections': this.sectionId
