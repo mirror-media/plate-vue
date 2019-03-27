@@ -104,7 +104,7 @@ app.use(function(req, res, next) {
   }
   if (err){
     console.error('Bad request:', req.path)
-    return res.status(404).send('404 | Not Found')
+    return res.status(400).send('400 | Bad Request')
   }
   next()
 })
