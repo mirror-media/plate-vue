@@ -99,7 +99,7 @@
 
       .article__basic-info
         .article__basic-info-wrapper
-          .article__share
+          .article__audioplayer-share
             display flex
             align-items center
             margin-top .5em
