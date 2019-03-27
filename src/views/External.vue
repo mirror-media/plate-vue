@@ -51,9 +51,11 @@
       </article-body-external>
       <share-tools v-if="viewport > 1200"></share-tools>
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded"></live-stream>
-      <DfpST v-if="(viewport < 550)" :props="props">
-        <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
-      </DfpST>
+      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+        <DfpST :props="props">
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        </DfpST>
+      </LazyItemWrapper>
       <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR" :config="props.config"></vue-dfp>
       </DfpCover> 
@@ -371,6 +373,9 @@
       }
     },
     watch: {
+      '$route.fullPath': function () {
+        this.sectionTempId = `listing-${uuidv4()}`
+      },       
       articleUrl: function () {
         window.FB && window.FB.init({
           appId: this.fbAppId,

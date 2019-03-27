@@ -94,9 +94,11 @@
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <share :right="`20px`" :bottom="`20px`" />
       </div>
-      <DfpST v-if="(viewport < 550)" :props="props">
-        <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
-      </DfpST>
+      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+        <DfpST :props="props">
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        </DfpST>
+      </LazyItemWrapper>
       <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
@@ -580,6 +582,7 @@ export default {
       isVponSDKLoaded: false,
       loading: false,
       microAds,
+      mounted: false,
       sectionTempId: `listing-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
@@ -669,6 +672,7 @@ export default {
            * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
            */
           const sectionTempId = dfpCover.getAttribute('sectionTempId')
+          debug('sectionTempId', currentInstance.sectionTempId, sectionTempId)
           if (currentInstance.sectionTempId !== sectionTempId) { return }
           
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
@@ -721,7 +725,8 @@ export default {
             el: dfpCover,
             slot: event.slot.getSlotElementId(),
             position,
-            isAdEmpty: adDisplayStatus === 'none'
+            isAdEmpty: adDisplayStatus === 'none',
+            sectionTempId
           })   
         },
         setCentering: true
@@ -1042,6 +1047,9 @@ export default {
     // abIndicator: function () {
     //   this.$forceUpdate()
     // },
+    '$route.fullPath': function () {
+      this.sectionTempId = `listing-${uuidv4()}`
+    },
     articleListAutoScrollHeight: function () {
       if (this.uuid === SECTION_FOODTRAVEL_ID && this.page >= 2) {
         this.canScrollLoadMord = false
@@ -1088,6 +1096,7 @@ export default {
     this.abIndicator = this.getMmid()
   },
   mounted () {
+    this.mounted = true
     this.updateViewport()
     window.addEventListener('resize', this.updateViewport)
     window.addEventListener('scroll', this.scrollHandler)

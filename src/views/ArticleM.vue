@@ -62,9 +62,11 @@
           </div>
         </article-body-photography>
       </div>
-      <DfpST v-if="(viewport < 550)" :props="props">
-        <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
-      </DfpST>
+      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+        <DfpST :props="props">
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        </DfpST>
+      </LazyItemWrapper>
       <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
@@ -715,6 +717,9 @@
       this.updateSysStage()
     },
     watch: {
+      '$route.fullPath': function () {
+        this.sectionTempId = `listing-${uuidv4()}`
+      },        
       articleUrl: function () {
         window.FB && window.FB.init({
           appId: this.fbAppId,
