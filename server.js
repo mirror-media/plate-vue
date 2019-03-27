@@ -94,6 +94,21 @@ app.use('/public', (req, res) => {
 app.use('/manifest.json', serve('./manifest.json', true), staticNotFound)
 app.use('/service-worker.js', serve('./dist/service-worker.js'), staticNotFound)
 
+app.use(function(req, res, next) {
+  let err = null
+  try {
+    decodeURIComponent(req.path)
+  }
+  catch(e) {
+    err = e
+  }
+  if (err){
+    console.error('Bad request:', req.path)
+    return res.status(404).send('404 | Not Found')
+  }
+  next()
+})
+
 // since this app has no user-specific content, every page is micro-cacheable.
 // if your app involves user-specific content, you need to implement custom
 // logic to determine whether a request is cacheable based on its url and
