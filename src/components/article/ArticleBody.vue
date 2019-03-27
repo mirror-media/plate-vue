@@ -12,7 +12,8 @@
       <div class="article__basic-info">
         <div class="article__basic-info-wrapper">
           <div class="article__credit" v-html="credit"></div>
-          <div class="article__share">
+          <div class="article__audioplayer-share">
+            <AudioPlayer :post="articleData" />
             <ShareLight :gtmCategory="'article'" />
           </div>
         </div>
@@ -139,6 +140,7 @@ import Newsletter from '../../components/Newsletter.vue'
 import ProjectList from './ProjectList.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
 import Slider from '../Slider.vue'
+import AudioPlayer from 'src/components/audioPlayer/Container.vue'
 import moment from 'moment'
 
 // const debug = require('debug')('CLIENT:ArticleBody')
@@ -153,7 +155,8 @@ export default {
     ArticleVideo,
     ArticleImg,
     LazyItemWrapper,
-    ShareLight
+    ShareLight,
+    AudioPlayer
   },
   computed: {
     articleStyle () {
