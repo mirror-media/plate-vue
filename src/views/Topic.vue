@@ -85,10 +85,12 @@
           <share :right="`20px`" :bottom="`20px`"></share>
         </template>
         
-        <DfpST v-if="(viewport < 550)" :props="props">
+      </div>
+      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+        <DfpST :props="props">
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
-      </div>
+      </LazyItemWrapper>
     </template>
   </vue-dfp-provider>
 </template>
@@ -710,6 +712,9 @@ export default {
     window.removeEventListener('scroll', this.timelineScrollHandler)
   },
   watch: {
+    '$route.fullPath': function () {
+      this.sectionTempId = `listing-${uuidv4()}`
+    },     
     uuid: function () {
       this.$forceUpdate()
       if (process.env.VUE_ENV === 'client') {

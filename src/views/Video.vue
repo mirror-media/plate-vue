@@ -43,6 +43,11 @@
       </section>
       <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
       <Share v-if="!isSingleVideoPage" left="20px" bottom="20px" />
+      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewportWidth < 550)">
+        <DfpST :props="props">
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        </DfpST>
+      </LazyItemWrapper>      
       <DfpCover v-if="mounted && showDfpCoverAdFlag && viewportWidth < 1199 && (isTimeToShowAdCover || dfpMode === 'prod')">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
@@ -60,6 +65,7 @@ import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import Footer from '../components/Footer.vue'
 import HeaderR from '../components/HeaderR.vue'
+import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import LiveStream from '../components/LiveStream.vue'
 import SingleVideoBody from '../components/video/SingleVideoBody.vue'
 import Share from '../components/Share.vue'
@@ -164,6 +170,7 @@ export default {
     DfpCover,
     Footer,
     HeaderR,
+    LazyItemWrapper,
     LiveStream,
     SingleVideoBody,
     Share,
@@ -452,6 +459,11 @@ export default {
       window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
       window.ga('send', 'pageview', { title: this.title, location: document.location.href })
     }
+  },
+  watch: {
+    '$route.fullPath': function () {
+      this.sectionTempId = `listing-${uuidv4()}`
+    },  
   }
 }
 </script>

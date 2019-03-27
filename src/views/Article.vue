@@ -110,15 +110,17 @@
         <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <div v-if="!hiddenAdvertised" slot="slot_dfpFT">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 767" />
+            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config" v-if="viewport >= 1200"/>
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 1200" />
           </div>
         </article-body-photography>
       </div>
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-      <DfpST v-if="(viewport < 550)" :props="props">
-        <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
-      </DfpST>
+      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+        <DfpST :props="props">
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        </DfpST>
+      </LazyItemWrapper>
       <DfpCover v-if="!hiddenAdvertised && isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
@@ -502,7 +504,8 @@
               el: dfpCurrAd,
               slot: event.slot.getSlotElementId(),
               position,
-              isAdEmpty: adDisplayStatus === 'none'
+              isAdEmpty: adDisplayStatus === 'none',
+              sectionTempId
             }) 
           },
           setCentering: true,
@@ -837,6 +840,9 @@
       this.updateSysStage()
     },
     watch: {
+      '$route.fullPath': function () {
+        this.sectionTempId = `listing-${uuidv4()}`
+      },      
       articleUrl: function () {
         window.FB && window.FB.init({
           appId: this.fbAppId,

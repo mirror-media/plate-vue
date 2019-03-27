@@ -19,6 +19,11 @@
           <app-footer />
         </section>
       </div>
+      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+        <DfpST :props="props">
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+        </DfpST>
+      </LazyItemWrapper>      
     </template>
   </vue-dfp-provider>
 </template>
@@ -36,6 +41,7 @@ import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import HeaderR from '../components/HeaderR.vue'
+import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -98,7 +104,8 @@ export default {
     'loading': Loading,
     'more': More,
     'vue-dfp-provider': VueDfpProvider,
-    HeaderR
+    HeaderR,
+    LazyItemWrapper
   },
   asyncData ({ store, route }) {
     return fetchData(store, route)
@@ -250,6 +257,9 @@ export default {
     this.updateSysStage()
   },
   watch: {
+    '$route.fullPath': function () {
+      this.sectionTempId = `listing-${uuidv4()}`
+    },     
     title: function () {
       if (process.env.VUE_ENV === 'client') {
         window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
