@@ -63,6 +63,7 @@
 <script>
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
+import DfpST from '../components/DfpST.vue'
 import Footer from '../components/Footer.vue'
 import HeaderR from '../components/HeaderR.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
@@ -167,6 +168,7 @@ export default {
   name: 'AppVideo',
   components: {
     DfpCover,
+    DfpST,
     Footer,
     HeaderR,
     LazyItemWrapper,
