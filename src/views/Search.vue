@@ -34,6 +34,7 @@ import _ from 'lodash'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
 import { FB_APP_ID, FB_PAGE_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { adtracker } from 'src/util/adtracking'
 import { currEnv, unLockJS } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
@@ -46,7 +47,6 @@ import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
-import uuidv4 from 'uuid/v4'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -149,7 +149,6 @@ export default {
       isVponSDKLoaded: false,
       loading: false,
       page: PAGE,
-      sectionTempId: `search-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverAdVponFlag: false,
@@ -173,28 +172,34 @@ export default {
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
-        sectionTempId: this.sectionTempId,
-        afterEachAdLoaded: (event) => {
+        afterEachAdLoaded: function (event) {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
 
           /**
-           * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
-           * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
-           */
-          const sectionTempId = dfpCover.getAttribute('sectionTempId')
-          if (currentInstance.sectionTempId !== sectionTempId) { return }
+          * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+          * We have check if current page gets changed with checking by sessionId to prevent from runnig this outdated callback.
+          */
+          const elSessionId = dfpCover.getAttribute('sessionId')
+          if (elSessionId !== this.sessionId) { return }
 
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
 
           switch (position) {
             case 'LOGO':
               if (adDisplayStatus !== 'none') {
-                this.showDfpHeaderLogo = true
+                currentInstance.showDfpHeaderLogo = true
               }
-              this.dfpHeaderLogoLoaded = true
+              currentInstance.dfpHeaderLogoLoaded = true
               break
           }
+          adtracker({
+            el: dfpCover,
+            slot: event.slot.getSlotElementId(),
+            position,
+            isAdEmpty: adDisplayStatus === 'none',
+            sessionId: elSessionId
+          })   
         },
         setCentering: true
       })
@@ -257,9 +262,6 @@ export default {
     this.updateSysStage()
   },
   watch: {
-    '$route.fullPath': function () {
-      this.sectionTempId = `listing-${uuidv4()}`
-    },     
     title: function () {
       if (process.env.VUE_ENV === 'client') {
         window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })

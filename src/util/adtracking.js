@@ -2,7 +2,7 @@ import verge from 'verge'
 import { currentYPosition, elmYPosition, } from 'kc-scroll'
 import { isEleFixed, isEleShown } from 'src/util/comm'
 const debug = require('debug')('CLIENT:ADTRACKER')
-export const adtracker = async ({ el, slot, position, isAdEmpty, sectionTempId }) => {
+export const adtracker = async ({ el, slot, position, isAdEmpty, sessionId }) => {
   if (!isAdEmpty) {
     let isEverInSight = false
     let isEverViewed = false
@@ -13,14 +13,14 @@ export const adtracker = async ({ el, slot, position, isAdEmpty, sectionTempId }
       const deviceHeight = verge.viewportH()
       const currPosTop = !isPositionFixed ? currentYPosition() : 0
       const currPosBottom = !isPositionFixed ? currPosTop + deviceHeight : deviceHeight
-      const elTop = elmYPosition(`#${slot}[sectionTempId=${sectionTempId}]`)
+      const elTop = elmYPosition(`#${slot}[sessionId="${sessionId}"]`)
 
-      position === 'MBST' && debug('sectionTempId', sectionTempId, elTop)
+      position === 'MBST' && debug('sessionId', sessionId, elTop)
       if (elTop === undefined) { return window.removeEventListener('scroll', handler) }
       
       const elHeight = el.clientHeight || 0
       const elMid = elTop + elHeight / 2
-      // debug(`POS: ${position}`, currPosTop, elMid, currPosBottom, `. IS IT FIXED?`, isPositionFixed, '. IS IT SHOWN?', isAdShown)
+      position === 'MBAR1' && debug(`POS: ${position}`, currPosTop, elMid, currPosBottom, `. IS IT FIXED?`, isPositionFixed, '. IS IT SHOWN?', isAdShown)
       if (elMid >= currPosTop && elMid <= currPosBottom && isAdShown) {
         isEverInSight = true
         setTimeout(() => {
@@ -35,6 +35,7 @@ export const adtracker = async ({ el, slot, position, isAdEmpty, sectionTempId }
               })
             debug(`##${position}# SEND TRACK TICKET.`, {
               slot,
+              sessionId
             })
           }
         }, 1000)
