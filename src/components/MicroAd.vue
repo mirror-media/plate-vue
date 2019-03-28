@@ -1,16 +1,18 @@
 <template>
-  <div :id="`compass-fit-${id}`"></div>
+  <div :id="`compass-fit-${id}`" :sessionId="sessionId"></div>
 </template>
 <script>
   import { adtracker } from 'src/util/adtracking'
   import { insertMicroAd } from '../util/comm'
+  import uuidv4 from 'uuid/v4'
   const debug = require('debug')('CLIENT:MICROAD')
   export default {
     name: 'micro-ad',
     props: [ 'id', 'currEnv', 'currUrl' ],
     data () {
       return {
-        microAdLoded: false
+        microAdLoded: false,
+        sessionId: uuidv4()
       }
     },
     methods: {
@@ -33,7 +35,8 @@
           el: this.$el,
           slot: `compass-fit-${this.id}`,
           position: this.id,
-          isAdEmpty: false
+          isAdEmpty: false,
+          sessionId: this.sessionId
         }) 
       }
     }

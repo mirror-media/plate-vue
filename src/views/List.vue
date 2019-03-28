@@ -149,7 +149,6 @@ import Share from '../components/Share.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
-import uuidv4 from 'uuid/v4'
 import verge from 'verge'
 
 const MAXRESULT = 12
@@ -583,7 +582,6 @@ export default {
       loading: false,
       microAds,
       mounted: false,
-      sectionTempId: `listing-${uuidv4()}`,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
@@ -662,18 +660,18 @@ export default {
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
-        sectionTempId: this.sectionTempId,
         afterEachAdLoaded: function (event) {
           const dfpCover = document.querySelector(`#${event.slot.getSlotElementId()}`)
           const position = dfpCover.getAttribute('pos')
 
           /**
            * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
-           * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
+           * We have check if current page gets changed with checking by sessionId to prevent from runnig this outdated callback.
            */
-          const sectionTempId = dfpCover.getAttribute('sectionTempId')
-          debug('sectionTempId', currentInstance.sectionTempId, sectionTempId)
-          if (currentInstance.sectionTempId !== sectionTempId) { return }
+          const elSessionId = dfpCover.getAttribute('sessionId')
+          debug('this.sessionId', this.sessionId, elSessionId)
+          if (elSessionId !== this.sessionId) { return }
+
           
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
           const loadInnityAd = () => {
@@ -726,7 +724,7 @@ export default {
             slot: event.slot.getSlotElementId(),
             position,
             isAdEmpty: adDisplayStatus === 'none',
-            sectionTempId
+            sessionId: elSessionId
           })   
         },
         setCentering: true
@@ -1047,9 +1045,6 @@ export default {
     // abIndicator: function () {
     //   this.$forceUpdate()
     // },
-    '$route.fullPath': function () {
-      this.sectionTempId = `listing-${uuidv4()}`
-    },
     articleListAutoScrollHeight: function () {
       if (this.uuid === SECTION_FOODTRAVEL_ID && this.page >= 2) {
         this.canScrollLoadMord = false

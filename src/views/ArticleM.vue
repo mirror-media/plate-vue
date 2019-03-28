@@ -108,7 +108,6 @@
   import sanitizeHtml from 'sanitize-html'
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
-  import uuidv4 from 'uuid/v4'
 
   const fetchArticles = (store, slug) => {
     return store.dispatch('FETCH_ARTICLES', {
@@ -328,7 +327,6 @@
         microAds,
         microAdLoded: {},
         routeUpateReferrerSlug: 'N/A',
-        sectionTempId: `article-${uuidv4()}`,
         showDfpCoverAdFlag: false,
         showDfpCoverAd2Flag: false,
         showDfpCoverInnityFlag: false,        
@@ -360,25 +358,24 @@
       dfpOptions () {
         const currentInstance = this
         return Object.assign({}, DFP_OPTIONS, {
-          sectionTempId: this.sectionTempId,
-          afterEachAdLoaded: (event) => {
+          afterEachAdLoaded: function (event) {
             const dfpCurrAd = document.querySelector(`#${event.slot.getSlotElementId()}`)
             const position = dfpCurrAd.getAttribute('pos')
 
             /**
-             * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
-             * We have check if current page gets changed through sectionTempId. If so, dont run this outdated callback.
-             */
-            const sectionTempId = dfpCurrAd.getAttribute('sectionTempId')
-            if (currentInstance.sectionTempId !== sectionTempId) { return }
+            * Because googletag.pubads().addEventListener('slotRenderEnded', afterEachAdLoaded) can't be removed.
+            * We have check if current page gets changed with checking by sessionId to prevent from runnig this outdated callback.
+            */
+            const elSessionId = dfpCurrAd.getAttribute('sessionId')
+            if (elSessionId !== this.sessionId) { return }
 
             const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
             const loadInnityAd = () => {
               // debug('Event "noad2" is detected!!')
-              if (this.showDfpCoverAd2Flag && !this.showDfpCoverInnityFlag) {
+              if (currentInstance.showDfpCoverAd2Flag && !currentInstance.showDfpCoverInnityFlag) {
                 sendAdCoverGA('innity')
                 // debug('noad2 detected and go innity')
-                this.showDfpCoverInnityFlag = true
+                currentInstance.showDfpCoverInnityFlag = true
               }
             }
             window.addEventListener('noad2', loadInnityAd)
@@ -387,12 +384,12 @@
               case 'MBCVR':
                 sendAdCoverGA('dfp')
                 if (adDisplayStatus === 'none') {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                    this.showDfpCoverAd2Flag = !isVisited
+                  updateCookie({ currEnv: currentInstance.dfpMode }).then((isVisited) => {
+                    currentInstance.showDfpCoverAd2Flag = !isVisited
                   })
                 } else {
-                  updateCookie({ currEnv: this.dfpMode }).then((isVisited) => {
-                    this.showDfpCoverAdFlag = !isVisited
+                  updateCookie({ currEnv: currentInstance.dfpMode }).then((isVisited) => {
+                    currentInstance.showDfpCoverAdFlag = !isVisited
                   })
                 }
                 break
@@ -411,14 +408,15 @@
                 }
                 break    
               case 'PCFF':
-                this.showDfpFixedBtn = !(adDisplayStatus === 'none')
+                currentInstance.showDfpFixedBtn = !(adDisplayStatus === 'none')
                 break
             }
             adtracker({
               el: dfpCurrAd,
               slot: event.slot.getSlotElementId(),
               position,
-              isAdEmpty: adDisplayStatus === 'none'
+              isAdEmpty: adDisplayStatus === 'none',
+              sessionId: elSessionId
             })  
           },
           setCentering: true,
@@ -716,10 +714,7 @@
     updated () {
       this.updateSysStage()
     },
-    watch: {
-      '$route.fullPath': function () {
-        this.sectionTempId = `listing-${uuidv4()}`
-      },        
+    watch: { 
       articleUrl: function () {
         window.FB && window.FB.init({
           appId: this.fbAppId,
