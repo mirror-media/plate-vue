@@ -282,7 +282,7 @@ router.use('/search', (req, res) => {
               'multi_match' : {
                 'query': k,
                 'type': 'phrase',
-                'fields': [ 'title', 'brief' ]
+                'fields': [ 'title', 'brief', 'writers.name' ]
               }
             }))
           }
