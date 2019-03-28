@@ -39,6 +39,7 @@ import { currEnv, unLockJS } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import ArticleList from '../components/ArticleList.vue'
 import Cookie from 'vue-cookie'
+import DfpST from '../components/DfpST.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import HeaderR from '../components/HeaderR.vue'
@@ -104,6 +105,7 @@ export default {
     'loading': Loading,
     'more': More,
     'vue-dfp-provider': VueDfpProvider,
+    DfpST,
     HeaderR,
     LazyItemWrapper
   },

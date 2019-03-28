@@ -104,7 +104,6 @@ import _ from 'lodash'
 import ArticleList from '../components/ArticleList.vue'
 import ArticleListFull from '../components/ArticleListFull.vue'
 import Cookie from 'vue-cookie'
-import DfpST from '../components/DfpST.vue'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
 import GroupList from '../components/GroupList.vue'
@@ -261,7 +260,6 @@ export default {
     'timeline-body': TimelineBody,
     'timeline-headline': TimelineHeadline,
     'vue-dfp-provider': VueDfpProvider,
-    DfpST,
     ProjectList,
     HeaderR
   },
