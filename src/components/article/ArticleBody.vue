@@ -274,7 +274,13 @@ export default {
   },
   methods: {
     blockWrapper (index) {
-      return index <= this.firstTwoUnstyledParagraph[ 0 ] ? 'div' : LazyItemWrapper 
+      switch (index) {
+        case this.firstTwoUnstyledParagraph[ 0 ]:
+        case this.firstTwoUnstyledParagraph[ 1 ]:
+          return 'div'
+        default:
+          return LazyItemWrapper
+      }
     },
     getValue,
     isArticleEmpty () {

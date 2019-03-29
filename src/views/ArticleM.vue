@@ -67,9 +67,9 @@
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
       </LazyItemWrapper>
-      <DfpCover v-show="showDfpCoverAdFlag && viewport < 1199"> 
+      <DfpCover v-if="!hiddenAdvertised && isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
-      </DfpCover> 
+      </DfpCover>       
       <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
@@ -89,7 +89,7 @@
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
-  import { consoleLogOnDev, currEnv, lockJS, unLockJS, insertMicroAd, sendAdCoverGA, updateCookie } from '../util/comm'
+  import { currEnv, lockJS, unLockJS, insertMicroAd, sendAdCoverGA, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import { adtracker } from 'src/util/adtracking'
@@ -371,10 +371,8 @@
 
             const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
             const loadInnityAd = () => {
-              // debug('Event "noad2" is detected!!')
               if (currentInstance.showDfpCoverAd2Flag && !currentInstance.showDfpCoverInnityFlag) {
                 sendAdCoverGA('innity')
-                // debug('noad2 detected and go innity')
                 currentInstance.showDfpCoverInnityFlag = true
               }
             }
@@ -384,31 +382,29 @@
               case 'MBCVR':
                 sendAdCoverGA('dfp')
                 if (adDisplayStatus === 'none') {
-                  updateCookie({ currEnv: currentInstance.dfpMode }).then((isVisited) => {
+                  updateCookie({ currEnv: currentInstance.dfpMode }).then(isVisited => {
                     currentInstance.showDfpCoverAd2Flag = !isVisited
                   })
                 } else {
-                  updateCookie({ currEnv: currentInstance.dfpMode }).then((isVisited) => {
+                  updateCookie({ currEnv: currentInstance.dfpMode }).then(isVisited => {
                     currentInstance.showDfpCoverAdFlag = !isVisited
                   })
                 }
                 break
               case 'MBCVR2':
-                consoleLogOnDev({ msg: 'ad2 loaded' })
                 sendAdCoverGA('ad2')
-                if (adDisplayStatus === 'none') {
-                  consoleLogOnDev({ msg: 'dfp response no ad2' })
-                }
                 break
               case 'MBCVR3':
-                // debug('adInnity loaded')
                 sendAdCoverGA('innity')
-                if (adDisplayStatus === 'none') {
-                  // debug('dfp response no innity')
-                }
-                break    
+                break                
               case 'PCFF':
                 currentInstance.showDfpFixedBtn = !(adDisplayStatus === 'none')
+                break
+              case 'LOGO':
+                if (adDisplayStatus !== 'none') {
+                  currentInstance.showDfpHeaderLogo = true
+                }
+                currentInstance.dfpHeaderLogoLoaded = true
                 break
             }
             adtracker({
@@ -417,7 +413,7 @@
               position,
               isAdEmpty: adDisplayStatus === 'none',
               sessionId: elSessionId
-            })  
+            }) 
           },
           setCentering: true,
           sizeMapping: DFP_SIZE_MAPPING
@@ -490,6 +486,9 @@
         const categories = _.flatten(_.map(_.get(this.articleData, [ 'categories' ]), (o) => _.get(o, [ 'name' ])))
         return _.includes(categories, 'business') || _.includes(categories, 'money')
       },
+      isTimeToShowAdCover () {
+        return _.get(this.$store, 'state.isTimeToShowAdCover', false)
+      },      
       jsonLDBreadcrumbList () {
         return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",
           "itemListElement": [
