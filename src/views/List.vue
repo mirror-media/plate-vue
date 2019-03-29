@@ -116,7 +116,7 @@
 import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, EXTERNALS, FB_APP_ID,
   FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID, VIDEOHUB_ID } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
@@ -727,7 +727,8 @@ export default {
             sessionId: elSessionId
           })   
         },
-        setCentering: true
+        setCentering: true,
+        sizeMapping: DFP_SIZE_MAPPING
       })
     },
     eventEmbedded () {
