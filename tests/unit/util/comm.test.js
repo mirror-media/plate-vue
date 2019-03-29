@@ -7,17 +7,11 @@ import {
   getHrefFull,
   getImage,
   getSection,
-  shareLine,
-  shareFacebook,
   getTruncatedVal,
   getValue,
   getHost,
-  lockJS,
-  unLockJS,
-  currEnv,
   getClientOS,
   setMmCookie,
-  updateCookie,
   extractSlugFromReferrer
 } from '../../../src/util/comm.js'
 import { SITE_URL, SITE_PROJ_URL, } from '../../../src/constants'
@@ -304,52 +298,6 @@ describe('getSection', () => {
   })
 })
 
-describe('shareLine', () => {
-  test('open share link in new window ', () => {
-    window.open = jest.fn()
-    shareLine({ title: '鏡週刊 Mirror Media', route: '/' })
-    expect(window.open).toHaveBeenCalledWith(`https://line.naver.jp/R/msg/text/?${encodeURIComponent('鏡週刊 Mirror Media')}%0D%0A${encodeURIComponent(SITE_URL + '/')}`)
-  })
-})
-
-describe('shareFacebook', () => {
-  test('open share link in new window ', () => {
-    window.open = jest.fn()
-    shareFacebook({ route: '/' })
-    expect(window.open).toHaveBeenCalledWith(`https://www.facebook.com/share.php?u=${SITE_URL}/`)
-  })
-})
-
-describe('lockJS and unLockJS', () => {
-  const event = { keyCode: 67 }
-  beforeEach(() => {
-    process.env = Object.assign(process.env, { VUE_ENV: 'client' })
-  })
-  test('lockJS', () => {
-    lockJS()
-    expect(document.oncontextmenu()).toEqual(false)
-    expect(document.onkeydown(event)).toEqual(false)
-    expect(document.ondragstart()).toEqual(false)
-    expect(document.onselectstart()).toEqual(false)
-  })
-  test('unLockJS', () => {
-    unLockJS()
-    expect(document.oncontextmenu()).toEqual(true)
-    expect(document.onkeydown(event)).toEqual(true)
-    expect(document.ondragstart()).toEqual(true)
-    expect(document.onselectstart()).toEqual(true)
-  })
-})
-
-describe('consoleLogOnDev and currEnv', () => {
-  beforeEach(() => {
-    process.env = Object.assign(process.env, { VUE_ENV: 'client' })
-  })
-  test('get currEnv value', () => {
-    expect(currEnv()).toEqual('dev')
-  })
-})
-
 describe('getTruncatedVal', () => {
   const text1 = '台灣獨立遊戲《還願》因被眼尖玩家發現藏有暗諷中國國家主席習近平的場景素材，導致中國官方全面封殺。'
   const text2 = 'Devotion is a first-person atmospheric horror game depicting the life of a family shadowed by religious belief.'
@@ -389,13 +337,6 @@ describe('setMmCookie', () => {
   test('return uuid', () => {
     expect(setMmCookie()).toBeString()
     expect(setMmCookie().length).toEqual(36)
-  })
-})
-
-describe('updateCookie', () => {
-  test('return cookie visited value', async () => {
-    const response = await updateCookie()
-    expect(response).toBeBoolean()
   })
 })
 
