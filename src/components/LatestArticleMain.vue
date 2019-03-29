@@ -1,5 +1,5 @@
 <template>
-  <div v-if="(latestList.length > 0)" :class="abIndicator.toLowerCase()" class="latest-main-container" >
+  <div v-if="(latestList.length > 0)" class="latest-main-container" >
     <div class="latest-main-container_title"><h3>最新文章</h3></div>
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
@@ -99,6 +99,11 @@ export default {
       return style
     },
     getLabel (article) {
+      if (this.abIndicator === 'B' && this.viewport >= 1200) {
+        const sectionId = article.sections[0]
+        const section = this.$store.state.commonData.sections.items.find(section => section.id === sectionId)
+        return section.title
+      }
       const section = _.get(article, 'sections.0.title', '')
       const categoriesLen = _.get(article, 'categories.length', 0)
       const categoryFirst =  _.get(article, 'categories.0.id')
@@ -332,80 +337,60 @@ export default {
           width 31%
 
         &_item
-          width 31%
+          position relative
           display block
+          width 31%
+          padding 0
 
           > a
             .latest-list_item_label
-              height 25px
-              white-space normal
-              padding 0 10px
-              top auto
-              bottom 0
-              left 0
-              right auto
-              font-size 0.9rem
-
+              display none !important
+            .latest-list_item_img
+              padding-top 100%
           &_title
-            padding-left 0
-            padding-top 5px
+            position absolute
+            left 0
+            right 0
+            bottom 0
+            padding 0
+            background-color transparent
 
             > a
+              display flex
+              align-items center
+              padding 10px
+              background-color rgba(0, 0, 0, .7)
               h3
+                flex 1
+                margin 0
+                color #fff
                 font-size 1rem
                 font-weight 300
 
+            .latest-list_item_label
+              display flex !important
+              height 25px
+              font-size 1rem
+
+          >>> .latest-list_item
+            display flex
+            flex-direction column
+            height 100%
+            .latest-list_item_img
+              height 100%
+              padding-top 0
+            .latest-list_item_label
+              font-size 1rem
+            .latest-list_item_title
+              flex 0 1 auto
+              padding 0 !important
+              background-color #000 !important
+              a
+                padding 10px
+                color #fff
+                h3
+                  margin 0
     .tablet-only
       display none
     
-    .latest-main-container.b
-      .latest-list_item
-        position relative
-        padding 0
-        > a
-          .latest-list_item_label
-            display none !important
-        &_title
-          position absolute
-          left 0
-          right 0
-          bottom 0
-          padding 0
-          background-color transparent
-          > a
-            display flex
-            align-items center
-            padding 10px
-            background-color rgba(0, 0, 0, .7)
-            h3
-              flex 1
-              margin 0
-              color #fff
-
-          .latest-list_item_label
-            display flex !important
-            height 25px
-            font-size 1rem
-        > a
-          .latest-list_item_img
-            padding-top 100%
-      .latest-list_item
-        >>> .latest-list_item
-          display flex
-          flex-direction column
-          height 100%
-          .latest-list_item_img
-            height 100%
-            padding-top 0
-          .latest-list_item_label
-            font-size 1rem
-          .latest-list_item_title
-            flex 0 1 auto
-            padding 0 !important
-            background-color #000 !important
-            a
-              padding 10px
-              color #fff
-              h3
-                margin 0
 </style>

@@ -1,7 +1,7 @@
 <template>
   <VueDfpProvider :dfpid="DFP_ID" :dfpUnits="DFP_UNITS" :options="dfpOptions" :mode="currEnv()" section="5975ab2de531830d00e32b2f">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="videohub" />
+      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="videohub" />
       <template v-if="isSingleVideoPage">
         <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
           <ShareLight slot="share" :gtmCategory="'article'" />
@@ -272,7 +272,7 @@ export default {
       DFP_UNITS,
       OATH_ALL_VIDEO_PLAYLIST_ID,
       OATH_PLAYLIST,
-      abIndicator: 'A',
+      abIndicator: '',
       dfpHeaderLogoLoaded: false,
       mounted: false,
       showDfpCoverAdFlag: false,
@@ -424,7 +424,7 @@ export default {
     }
   },
   beforeMount () {
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
     const jobs = [ fetchEvent(this.$store, 'embedded'), fetchEvent(this.$store, 'logo') ]
     if (this.$route.fullPath.match(/\/section\//)) {
       fetchFullPlaylist(this.$store, jobs)
@@ -458,7 +458,7 @@ export default {
         : ``
       window.ga('set', 'contentGroup1', this.section.name)
       window.ga('set', 'contentGroup2', categoryLabel)
-      window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+      window.ga('set', 'contentGroup3', `list`)
       window.ga('send', 'pageview', { title: this.title, location: document.location.href })
     }
   },

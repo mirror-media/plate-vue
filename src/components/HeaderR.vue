@@ -1,5 +1,5 @@
 <template>
-  <header :class="[{ scrolled: isScrolled }, abIndicator.toLowerCase()]" class="header">
+  <header :class="[{ scrolled: isScrolled }, 'header']">
     <section class="header__logo-layer">
       <button class="btn--menu" @click="openSidebar = true"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt="" @click="sendGaClickEvent('header', 'menu open')"></button>
       <!-- logo -->
@@ -28,7 +28,7 @@
       <ShareLight class="share"/>
     </section>
     <!-- scrollable header -->
-    <section v-if="mounted && abIndicator === 'B'" class="header__section-layer">
+    <section v-if="mounted" class="header__section-layer">
       <div>
         <router-link
           :class="{ active: activeSection === 'home' }"
@@ -97,9 +97,6 @@ export default {
     }
   },
   props: {
-    abIndicator: {
-      type: String
-    },
     activeSection: {
       type: String
     },
@@ -323,8 +320,7 @@ export default {
       z-index 500
       height 50px
       padding 0 2em
-      background-color #fff
-      box-shadow 0 3px 2px 0 rgba(0,0,0,.1), 0 2px 0 0 #fff
+      background-color #f5f5f5
       button
         padding 0
       .logo
@@ -353,11 +349,6 @@ export default {
       position fixed
       top 50px
       z-index 500
-
-    &.b
-      .header__logo-layer
-        background-color #f5f5f5
-        box-shadow none
 
 @media (max-width: 599px)
   .header.scrolled

@@ -2,8 +2,7 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <section style="width: 100%;" v-show="articleStyle !== 'photography'">
-        <HeaderR :abIndicator="abIndicator" :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-        <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" v-if="(articleStyle !== 'photography')" :props="props"></app-header> -->
+        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <LazyItemWrapper :loadAfterPageLoaded="true">
@@ -71,12 +70,21 @@
               </template>
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config"/>
             </LazyItemWrapper>
-            <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode">
+            <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200) && abIndicator !== 'B'" :currEnv="dfpMode">
               <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
                 :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
                 class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
             </pop-list>
-            <RelatedListInContent :relateds="relateds" slot="relatedListInContent" />
+            <RelatedListInContent :abIndicator="abIndicator" :relateds="relateds" slot="relatedListInContent">
+              <micro-ad
+                v-for="a in getValue(microAds, [ 'article' ])"
+                :id="`${getValue(a, [ 'pcId' ])}`"
+                :key="`${getValue(a, [ 'pcId' ])}`"
+                :currEnv="dfpMode"
+                :currUrl="articleUrl"
+                class="related">
+              </micro-ad>
+            </RelatedListInContent>
             <RecommendList slot="relatedlistBottom" 
               v-if="!isAd"
               v-show="recommendlist.length > 0"
@@ -145,7 +153,7 @@
   import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
-  import { currEnv, getImage, lockJS, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
+  import { currEnv, getImage, lockJS, sendAdCoverGA, sendGaClickEvent, unLockJS, updateCookie } from '../util/comm'
   import { getRole } from '../util/mmABRoleAssign'
   import { microAds } from '../constants/microAds'
   import ArticleBody from '../components/article/ArticleBody.vue'
@@ -310,10 +318,7 @@
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
-      // let abIndicator = ''
-      // if (process.env.VUE_ENV === 'client') {
-      //   abIndicator = this.getMmid()
-      // }
+      
       return {
         url: `${SITE_MOBILE_URL}/story/${slug}/`,
         title: title,
@@ -337,7 +342,7 @@
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
-        `, // <meta name="mm-opt" content="article${abIndicator}">
+        `,
         link: `<link rel="amphtml" href="${SITE_URL}/story/amp/${slug}/">`,
         adTrace: adTrace
       }
@@ -745,6 +750,7 @@
         }
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
+      sendGaClickEvent,
       updateJSONLDScript () {
         const newsArticleScript = document.querySelector('#js-newsArticle')
         const personScript = document.querySelector('#js-person')

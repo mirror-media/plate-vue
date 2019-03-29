@@ -4,12 +4,12 @@
     <div class="popListVert-list">
       <template v-for="(o, i) in popArticles">
         <div class="popListVert-list__item" :key="`popListVert${i}`">
-          <router-link :to="o.slug" :id="`popular-${i}-popVertImg`" class="popListVert-list__item--img">
+          <router-link :to="o.slug" class="popListVert-list__item--img" @click.native="sendGaClickEvent('article', 'popular')">
             <LazyImage :src="getImage(o, 'tiny')" :alt="get(o, 'title')" />
           </router-link>
           <div class="popListVert-list__item--text">
             <div :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')"></div>
-            <h2><router-link :to="o.slug" :id="`popular-${i}-popVertTitle`" v-text="getTruncatedVal(o.title, 12)"></router-link></h2>
+            <h2><router-link :to="o.slug" @click.native="sendGaClickEvent('article', 'popular')" v-text="getTruncatedVal(o.title, 12)"></router-link></h2>
           </div>
         </div>
         <slot name="microAdNA3" v-if="i === 1"></slot>
@@ -23,7 +23,7 @@
 <script>
 import LazyImage from 'src/components/common/LazyImage.vue'
 import { SECTION_MAP } from '../../constants'
-import { getImage, getTruncatedVal, } from '../../util/comm'
+import { getImage, getTruncatedVal, sendGaClickEvent } from '../../util/comm'
 import { get, take } from 'lodash'
 
 export default {
@@ -50,7 +50,8 @@ export default {
       const sectionId = get(sect, 'id')
       const style = { backgroundColor: get(SECTION_MAP, `${sectionId}.bgcolor`, '#bcbcbc') }
       return style
-    }
+    },
+    sendGaClickEvent
   }
 }
 </script>

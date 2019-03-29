@@ -3,19 +3,20 @@
     <h3>往下繼續閱讀</h3>
     <div v-for="related in relateds" :key="related.id" class="related">
       <div class="related__title">
-        <a :id="`related-title-${related.slug}`" :href="getHref(related)" target="_blank" v-text="related.title"></a>
+        <a :href="getHref(related)" target="_blank" v-text="related.title" @click="sendGaClickEvent('article', 'related')"></a>
       </div>
-      <a v-if="getImage(related.heroImage)" :id="`related-img-${related.slug}`" :href="getHref(related)" class="related__img" target="_blank">
+      <a v-if="getImage(related.heroImage)" :href="getHref(related)" class="related__img" target="_blank" @click="sendGaClickEvent('article', 'related')">
         <LazyImage :src="getImage(related.heroImage)" :alt="related.title" />
       </a>
     </div>
+    <slot v-if="abIndicator === 'B'"></slot>
   </section>
 </template>
 <script>
 import LazyImage from 'src/components/common/LazyImage.vue'
 import uuidv4 from 'uuid/v4'
 import { get } from 'lodash'
-import { getHref } from '../../util/comm'
+import { getHref, sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'RelatedListInContent',
@@ -28,6 +29,9 @@ export default {
     }
   },
   props: {
+    abIndicator: {
+      type: String
+    },
     relateds: {
       type: Array,
       default () {
@@ -42,6 +46,7 @@ export default {
       const image = get(item, 'image.resizedTargets.mobile.url') || get(item, 'image.url')
       return image ? image : undefined
     },
+    sendGaClickEvent
   },
   mounted () {
     this.id = uuidv4()
@@ -113,6 +118,51 @@ export default {
         object-fit cover
         object-position center center
 
+    >>> #compass-fit-widget-content
+      display flex
+      a
+        text-decoration none
+      figure
+        order 1
+        position relative
+        width 33%
+        margin 0
+        a
+          display block
+          width 100%
+          padding-top 56.25%
+        img
+          display block
+          position absolute
+          top 0
+          left 0
+          right 0
+          bottom 0
+          width 100%
+          height 100%
+          object-fit cover
+          object-position center center
+      .pop_item_title
+        flex 1
+        order 0
+        display flex
+        align-items center
+        padding 1em
+        background-color #eee !important
+        a
+          display inline-block
+          padding 0
+          color #808080
+          font-size 1.125rem
+          line-height 1.3
+          max-height 46.8px
+          -webkit-line-clamp 2
+          -webkit-box-orient vertical
+          text-overflow ellipsis
+          border none
+          overflow hidden
+          
+
 @media (min-width 767px)
   .relateds-in-content
     .related
@@ -120,6 +170,11 @@ export default {
         padding 1em 2em
       &__img
         width 25%
+      >>> #compass-fit-widget-content
+        figure
+          width 25%
+        .pop_item_title
+          padding 1em 2em
 
 @media (min-width 900px)
   .relateds-in-content

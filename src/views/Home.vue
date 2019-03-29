@@ -1,10 +1,9 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" section="home" :options="dfpOptions" :mode="dfpMode" :key="`homepage`">
     <template slot-scope="props" slot="dfpPos">
-      <div class="home-view">
+      <div :class="abIndicator.toLowerCase()" class="home-view">
         <section style="width: 100%;">
-          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
-          <!-- <app-Header v-if="true" :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"/> -->
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
         </section>
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)" :config="props.config"/>
@@ -38,7 +37,14 @@
               :latestList="latestArticle"
               :viewport="viewport">
             </LatestArticleMain>
-            
+            <template v-if="abIndicator === 'B' && viewport >= 1200 && latestArticlesBySection">
+              <LatestArticleBySection
+                v-for="item in latestArticlesBySection"
+                :key="`latest-news-${item.id}`"
+                :section="item"
+                class="latest-news">
+              </LatestArticleBySection>
+            </template>
           </main>
           <aside v-show="viewport >= 1200">
             <div>
@@ -56,6 +62,7 @@
           </aside>
         </section>
         <loading :show="loading" />
+        <Footer v-if="abIndicator === 'B' && viewport >= 1200" class="footer" />
         <LazyItemWrapper :position="verge.viewportH()" :strict="true">
           <live-stream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
           <live-stream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
@@ -85,6 +92,7 @@ import _ from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
+import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import HeaderR from '../components/HeaderR.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
@@ -135,9 +143,9 @@ const fetchArticlesGroupedList = (store) => {
   return store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
 }
 
-// const fetchLatestNewsFromJson = (store) => {
-//   return store.dispatch('FETCH_LATEST_NEWS_FROM_JSON')
-// }
+const fetchLatestNewsFromJson = (store) => {
+  return store.dispatch('FETCH_LATEST_NEWS_FROM_JSON')
+}
 
 const fetchPartners = (store) => {
   const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
@@ -173,6 +181,7 @@ export default {
     'live-stream': LiveStream,
     'loading': Loading,
     DfpCover,
+    Footer,
     LatestArticleAside,
     LatestArticleAsideMobileB,
     LatestArticleBySection,
@@ -187,10 +196,6 @@ export default {
   },
   mixins: [ titleMetaMixin ],
   metaSet () {
-    // let abIndicator = ''
-    // if (process.env.VUE_ENV === 'client') {
-    //   abIndicator = this.getMmid()
-    // }
     return {
       url: SITE_MOBILE_URL,
       title: SITE_TITLE,
@@ -211,7 +216,7 @@ export default {
         <meta property="og:description" content="${SITE_DESCRIPTION}">
         <meta property="og:url" content="${SITE_URL}">
         <meta property="og:image" content="${SITE_OGIMAGE}">
-      ` // <meta name="mm-opt" content="home${abIndicator}">
+      `
     }
   },
   data () {
@@ -376,8 +381,9 @@ export default {
       _.remove(latest, (o) => {
         return _.includes(choicesAndGrouped_slugs, o.slug)
       })
-
-      if (this.notFirstPageNow) {
+      if (this.abIndicator === 'B' && this.viewport >= 1200) {
+        return this.$store.state.latestNewsFromJson.latest
+      } else if (this.notFirstPageNow) {
         return latest
       } else {
         return latestFirstPage
@@ -447,14 +453,16 @@ export default {
       this.dfpMode = currEnv()
     },
     loadMore () {
-      window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
-      this.page += 1
-      this.loading = true
+      if (!(this.abIndicator === 'B' && this.viewport >= 1200)) {
+        window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
+        this.page += 1
+        this.loading = true
 
-      fetchLatestArticle(this.$store, this.page).then(() => {
-        this.hasScrollLoadMore = false
-        this.loading = false
-      })
+        fetchLatestArticle(this.$store, this.page).then(() => {
+          this.hasScrollLoadMore = false
+          this.loading = false
+        })
+      }
     },
     handleScrollForLoadmore () {
       window.onscroll = () => {
@@ -489,6 +497,7 @@ export default {
       fetchEvent(this.$store, 'logo'),
       fetchEvent(this.$store, 'mod'),
     ]
+    this.abIndicator === 'B' ? jobs.push(fetchLatestNewsFromJson(this.$store)) : ''
     Promise.all(jobs)
   },
   mounted () {
@@ -638,9 +647,7 @@ export default {
         margin-left 10px
         border-top 5px solid #356d9c
   .latest-news
-    margin-top 85px
-    & + .latest-news
-      margin-top 30px
+    margin-top 30px
 section.footer
   width 100%
 
@@ -725,6 +732,8 @@ section.footer
 
 @media (min-width: 1200px)
   .home-view
+    &.b
+      padding-bottom 0
     h2
       &.project-title--desktop
         display block
