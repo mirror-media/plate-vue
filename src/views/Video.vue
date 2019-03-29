@@ -76,7 +76,7 @@ import VideoList from '../components/video/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, FB_APP_ID, FB_PAGE_ID, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { consoleLogOnDev, currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
@@ -351,7 +351,8 @@ export default {
             sessionId: elSessionId
           }) 
         },
-        setCentering: true
+        setCentering: true,
+        sizeMapping: DFP_SIZE_MAPPING
       })
     },
     eventEmbedded () {

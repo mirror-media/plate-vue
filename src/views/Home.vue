@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, FB_APP_ID, FB_PAGE_ID } from '../constants'
 import { SECTION_MAP, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
@@ -309,7 +309,8 @@ export default {
             sessionId: elSessionId
           })         
         },
-        setCentering: true
+        setCentering: true,
+        sizeMapping: DFP_SIZE_MAPPING
       })
     },
     editorChoice () {
