@@ -469,11 +469,11 @@
                 sendAdCoverGA('dfp')
                 debugDFP('MBCVR LOADED.')
                 if (adDisplayStatus === 'none') {
-                  updateCookie({ currEnv: currentInstance.dfpMode }).then(isVisited => {
+                  updateCookie().then(isVisited => {
                     currentInstance.showDfpCoverAd2Flag = !isVisited
                   })
                 } else {
-                  updateCookie({ currEnv: currentInstance.dfpMode }).then(isVisited => {
+                  updateCookie().then(isVisited => {
                     currentInstance.showDfpCoverAdFlag = !isVisited
                   })
                 }
