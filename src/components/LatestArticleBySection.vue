@@ -6,7 +6,7 @@
         :href="`/story/${highlight.slug}`"
         class="latest-article-by-section__img"
         target="_blank"
-        @click="sendGaClickEvent('home', 'latest_category')">
+        @click="sendGaClickEvent('home', 'latest_section')">
         <LazyImage :src="highlightImage" :caption="highlight.title" />
       </a>
       <div class="latest-article-by-section__articles">
@@ -16,7 +16,7 @@
             <a
               :href="`/story/${article.slug}`"
               target="_blank"
-              @click="sendGaClickEvent('home', 'latest_category')"
+              @click="sendGaClickEvent('home', 'latest_section')"
               v-text="article.title">
             </a>
           </h3>

@@ -4,18 +4,18 @@
     <div class="list">
       <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
         <div class="thumbnail">
-          <LazyImage :src="getImage(o, 'tiny')" :alt="getValue(o, [ 'title' ])"/>
-          <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'"></router-link>
-          <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style === 'projects'"></a>
+          <a :href="`${site_url}${getHref(o)}`" @click="sendGaClickEvent('article', 'latest')"><LazyImage :src="getImage(o, 'tiny')" :alt="getValue(o, [ 'title' ])"/></a>
+          <router-link :to="{ path: getHref(o) }" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'" @click.native="sendGaClickEvent('article', 'latest')"></router-link>
+          <a :href="`${site_url}${getHref(o)}`" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style === 'projects'" @click="sendGaClickEvent('article', 'latest')"></a>
         </div>
         <div class="content">
           <div class="content_category">
-            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
-            <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
+            <router-link :to="{ path: getHref(o) }" v-if="o.style !== 'projects'" @click.native="sendGaClickEvent('article', 'latest')">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
+            <a :href="`${site_url}${getHref(o)}`" v-if="o.style === 'projects'" @click="sendGaClickEvent('article', 'latest')">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
           </div>
           <div class="content_title">
-            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</router-link>
-            <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</a>
+            <router-link :to="{ path: getHref(o) }" v-if="o.style !== 'projects'" @click.native="sendGaClickEvent('article', 'latest')">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</router-link>
+            <a :href="`${site_url}${getHref(o)}`" v-if="o.style === 'projects'" @click="sendGaClickEvent('article', 'latest')">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</a>
           </div>
         </div>
       </div>
@@ -25,7 +25,7 @@
 <script>
   import LazyImage from 'src/components/common/LazyImage.vue'
   import { SITE_URL } from '../../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
+  import { getHref, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
   import _ from 'lodash'
 
   // const debug = require('debug')('CLIENT:LatestList')
@@ -49,7 +49,8 @@
       getHref,
       getImage,
       getTruncatedVal,
-      getValue
+      getValue,
+      sendGaClickEvent
     },
     name: 'LatestList',
     props: {

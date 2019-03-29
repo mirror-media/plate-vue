@@ -30,8 +30,7 @@
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
-          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="portraitWallSlideImages"></leading>
@@ -48,8 +47,7 @@
         </template>
 
         <template v-else-if="topicType === 'group'">
-          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
@@ -65,8 +63,7 @@
         </template>
 
         <template v-else>
-          <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-          <!-- <app-header :commonData= 'commonData' :eventLogo="eventLogo" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" :props="props"></app-header> -->
+          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
@@ -313,7 +310,7 @@ export default {
   },
   data () {
     return {
-      abIndicator: 'A',
+      abIndicator: '',
       articleListAutoScrollHeight: 0,
       canScrollLoadMord: true,
       commonData: this.$store.state.commonData,
@@ -510,7 +507,7 @@ export default {
       }
       fetchTopicAllImages(this.$store, this.uuid)
     }
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
   },
   mounted () {
     this.updateViewport()
@@ -520,8 +517,8 @@ export default {
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    // window.ga('set', 'contentGroup3', '')
-    window.ga('set', 'contentGroup3', `topic${this.abIndicator}`)
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `topic${this.abIndicator}`)
     window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
 
     window.addEventListener('resize', this.updateViewport)

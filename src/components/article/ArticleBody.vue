@@ -98,7 +98,9 @@
       <div>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>、<a :href="socialLink.AUTH" target="_blank">了解內容授權資訊</a>。</div>
       <div class="article_main_tags">
         <p>相關關鍵字：</p>
-        <div class="tags" v-html="tags" v-if="tags.length > 0"></div>
+        <div class="tags" v-if="tags.length > 0">
+          <a v-for="tag in tags" :key="tag.id" :href="`/tag/${tag.id}`" @click="sendGaClickEvent('article', 'tag')" v-text="tag.name"></a>
+        </div>
       </div>
       <div class="split-line"></div>
       <div class="fbPagePlugin">
@@ -127,7 +129,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
-import { getValue } from '../../util/comm'
+import { getValue, sendGaClickEvent } from '../../util/comm'
 // import { getRole } from '../../util/mmABRoleAssign'
 import ArticleBodyLayout from 'src/components/article/ArticleBodyLayout.vue'
 import Annotation from './Annotation.vue'
@@ -236,9 +238,7 @@ export default {
       return title
     },
     tags () {
-      const { tags = [] } = this.articleData
-      const separator = ''
-      return tags.map(tag => `<a href=\"/tag/${_.get(tag, 'id', '')}\" id=\"tag-${_.get(tag, 'id', '')}\">${_.get(tag, 'name', '')}</a>`).join(separator)
+      return this.articleData.tags || []
     },
     firstTwoUnstyledParagraph () {
       const { content } = this.articleData
@@ -352,7 +352,8 @@ export default {
         default:
           return
       }
-    },  
+    }, 
+    sendGaClickEvent 
   },
   mounted () {
     /*global twttr*/

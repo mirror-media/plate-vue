@@ -1,8 +1,7 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'other'">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :abIndicator="abIndicator" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-      <!-- <app-header :commonData="commonData" :eventLogo="eventLogo" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" :viewport="viewport" ></app-header> -->
+      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <article-body-external :articleData="articleData">
         <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" :dfpId="props.dfpId" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
         <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" :dfpId="props.dfpId" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
@@ -198,10 +197,6 @@
       const category = _.get(partner, [ 'name' ], '')
       const ogDescription = truncate(brief, 197) || SITE_DESCRIPTION
       const imageUrl = thumb || SITE_OGIMAGE
-      // let abIndicator
-      // if (process.env.VUE_ENV === 'client') {
-      //   abIndicator = this.$_external_getMmid()
-      // }
 
       return {
         url: `${SITE_MOBILE_URL}/external/${name}/`,
@@ -224,7 +219,7 @@
           <meta property="og:description" content="${ogDescription}">
           <meta property="og:url" content="${SITE_URL}/external/${name}/">
           <meta property="og:image" content="${imageUrl}">
-        ` // <meta name="mm-opt" content="external${abIndicator}">
+        `
       }
     },
     data () {
@@ -398,7 +393,7 @@
     },
     mounted () {
       this.clientSideFlag = process.env.VUE_ENV === 'client'
-      this.abIndicator = this.$_external_getMmid()
+      // this.abIndicator = this.$_external_getMmid()
       this.$_external_updateViewport()
       this.$_external_updateSysStage()
       this.$_external_insertMediafarmersScript()
@@ -491,8 +486,8 @@
       $_external_sendGA (articleData) {
         window.ga('set', 'contentGroup1', 'external')
         window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'partner', 'name' ], '')}`)
-        // window.ga('set', 'contentGroup3', '')
-        window.ga('set', 'contentGroup3', `external${this.abIndicator}`)
+        window.ga('set', 'contentGroup3', '')
+        // window.ga('set', 'contentGroup3', `external${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       $_external_updateMediafarmersScript () {

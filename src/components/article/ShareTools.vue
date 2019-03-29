@@ -1,13 +1,13 @@
 <template>
   <div class="share-toolbox">
-    <div class="item mm-icon" @click="goHome" id="share-home"></div>
-    <div class="item line" @click="shareLine" id="share-line"></div>
-    <div class="item facebook" @click="shareFacebook" id="share-fb"></div>
+    <div class="item mm-icon" @click="goHome"></div>
+    <div class="item line" @click="shareLine"></div>
+    <div class="item facebook" @click="shareFacebook"></div>
   </div>
 </template>
 <script>
   import { currentYPosition, elmYPosition } from 'kc-scroll'
-  import { shareLine, shareFacebook } from '../../util/comm'
+  import { sendGaClickEvent, shareLine, shareFacebook } from '../../util/comm'
   export default {
     name: 'ShareTools',
     data () {
@@ -35,6 +35,7 @@
     methods: {
       goHome () {
         window.location.href = '/'
+        sendGaClickEvent('article', 'share home side')
       },
       handleResize () {
         this.shareBoxEle.removeAttribute('styel')
@@ -64,9 +65,11 @@
           route: this.$route.path,
           title: document.querySelector('meta[property="og:title"]').getAttribute('content')
         })
+        sendGaClickEvent('article', 'share line side')
       },
       shareFacebook () {
         shareFacebook({ route: this.$route.path })
+        sendGaClickEvent('article', 'share facebook side')
       }
     }
   }
