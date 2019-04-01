@@ -396,7 +396,7 @@ router.get('*', (req, res, next) => {
       /**
        * If req target is post, have the redis ttl be 7 days.
        */
-      const exp_post_query = /^\/posts\?[\s\S]*&clean=content/
+      const exp_post_query = /^\/posts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*&clean=content/
       dataAmount > 0 && exp_post_query.test(req.url) && (res.redisTTL = 60 * 60 * 24 * 7)
       next()
     }

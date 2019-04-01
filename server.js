@@ -242,7 +242,7 @@ function render (req, res, next) {
     if (err) { return handleError(err) }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
-    isProd && !isPreview && redisWriting(req.url, html, null, 120)
+    isProd && !isPreview && redisWriting(req.url, html, null, 60)
   })
 }
 app.use('/story/amp', require('./amp/service/api'))
