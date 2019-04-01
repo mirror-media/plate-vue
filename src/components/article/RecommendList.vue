@@ -6,8 +6,8 @@
         <template v-for="o in filteredRecommends">
           <div v-if="o" class="related-list__list__item">
             <div class="title">
-              <router-link @click.native="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-if="shouldShowItem(o)"></router-link>
-              <a @click="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" :id="`recommend-${getValue(o, [ 'slug' ], Date.now())}`" v-else></a>
+              <router-link @click.native="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" v-if="shouldShowItem(o)"></router-link>
+              <a @click="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" v-else></a>
             </div>
           </div>
         </template>
@@ -18,7 +18,7 @@
 <script>
   import _ from 'lodash'
   import { SECTION_MAP, RELATED_LIST_MAX, RECOMM_HITORY_MAX_IN_LOCALSTORAGE } from '../../constants'
-  import { extractSlugFromReferrer, getHref, getHrefFull, getValue } from '../../util/comm'
+  import { extractSlugFromReferrer, getHref, getHrefFull, getValue, sendGaClickEvent } from '../../util/comm'
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
 
@@ -82,10 +82,12 @@
           }
           dqueue.enqueue(slug)
           setTimeout(() => localStorage.setItem('recommsClickHistory', dqueue.toString()), 1000)
+          sendGaClickEvent('article', 'recommend')
         } catch (e) {
           debug(e)
         }
       },
+      sendGaClickEvent,
       shouldShowItem (article) {
         return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
       },
