@@ -182,4 +182,7 @@ export default {
     .related
       &__img
         width 20%
+      >>> #compass-fit-widget-content
+        figure
+          width 20%
 </style>
