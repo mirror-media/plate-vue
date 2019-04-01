@@ -27,14 +27,14 @@
     <div class="latestArticle-full-posts">
     <template v-for="(article, index) in latestArticle">
       <div :class="'latestArticle-full-post-' + (index % 2)">
-      <a :href="getHref(article)" :id="'latest-' + article.id + '-image'" target="_blank" class="latestArticle-full-post__img" >
+      <a :href="getHref(article)" target="_blank" class="latestArticle-full-post__img" @click="sendGaClickEvent('article', 'latest')">
         <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
       </a>
       <div class="latestArticle-full-post__content">
-        <a :href="getHref(article)" :id="'latest-' + article.id + '-title'" target="_blank">
+        <a :href="getHref(article)" target="_blank" @click="sendGaClickEvent('article', 'latest')">
           <h2 v-text="getTruncatedVal(article.title, 20)"></h2>
         </a>
-        <a :href="getHref(article)" :id="'latest-' + article.id + '-brief'" target="_blank">
+        <a :href="getHref(article)" target="_blank" @click="sendGaClickEvent('article', 'latest')">
           <p v-html="getBrief(article, 55)"></p>
         </a>
         <div class="latestArticle-full-post__meta">
@@ -79,7 +79,8 @@ import {
   getBrief,
   getHref,
   getImage,
-  getTruncatedVal
+  getTruncatedVal,
+  sendGaClickEvent
 } from '../util/comm'
 import moment from 'moment'
 export default {
@@ -94,7 +95,8 @@ export default {
     getHref,
     getImage,
     getTruncatedVal,
-    moment
+    moment,
+    sendGaClickEvent
   },
   computed: {
     latestArticle () {

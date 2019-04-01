@@ -6,19 +6,19 @@
           <swiper-slide :is="props.slide" v-for="(o, i) in filteredProjects" v-if="i < 10" :key="`${i}-${Date.now()}`">
             <div class="proj_item">
               <div>
-                <a :href="`${getHrefFull(o)}`" :id="'projects-' + o.name + '-1'" :target="target">
+                <a :href="`${getHrefFull(o)}`" :target="target" @click="sendGaClickEvent('article', 'projects')">
                   <div class="proj_item_img" :title="getValue(o, [ 'title' ])"
                       :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
                   </div>
                 </a>
               </div>
               <div class="proj_item_title">
-                <a :href="`${getHrefFull(o)}`" :id="'projects-' + o.name + '-2'" :target="target">
+                <a :href="`${getHrefFull(o)}`" :target="target" @click="sendGaClickEvent('article', 'projects')">
                   {{ getTruncatedVal(o.title, 20) }}
                 </a>
               </div>
               <div class="proj_item_desc">
-                <a :href="`${getHrefFull(o)}`" :id="'projects-' + o.name + '-3'" :target="target">
+                <a :href="`${getHrefFull(o)}`" :target="target" @click="sendGaClickEvent('article', 'projects')">
                   {{ getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 20) }}
                 </a>
               </div>
@@ -34,7 +34,7 @@
 <script>
   import _ from 'lodash'
   import { SECTION_MAP, SITE_URL } from '../../constants'
-  import { getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
+  import { getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
   import ProjectListNavBtn from './ProjectListNavBtn.vue'
   import Slider from '../Slider.vue'
   import sanitizeHtml from 'sanitize-html'
@@ -93,7 +93,8 @@
       goNext () {
         window.refs[ this.sliderId ].slideNext()
       },
-      sanitizeHtml
+      sanitizeHtml,
+      sendGaClickEvent
     },
     name: 'project-list',
     props: {

@@ -5,13 +5,13 @@
       <template v-for="(o, i) in popArticles">
         <div class="pop_item">
           <figure>
-            <router-link :to="o.slug" :id="'popular-' + i">
+            <router-link :to="o.slug" @click.native="sendGaClickEvent('article', 'popular')">
               <LazyImage :src="getImage(o, 'mobile')" :caption="getValue(o, [ 'title' ])" />
             </router-link>
             <div class="pop_item--colorBlock" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])" />
           </figure>
           <div class="pop_item_title">
-            <router-link :to="o.slug" :id="'popular-' + i" v-text="getTruncatedVal(o.title, 21)" />
+            <router-link :to="o.slug" @click.native="sendGaClickEvent('article', 'popular')" v-text="getTruncatedVal(o.title, 21)" />
           </div>
         </div>
         <slot :name="`microAd${getMicroAdName(i)}`" v-if="(i === 1 || i === 2 || i === 3)"></slot>
@@ -22,7 +22,7 @@
 <script>
   import LazyImage from 'src/components/common/LazyImage.vue'
   import { SECTION_MAP } from '../../constants'
-  import { getImage, getTruncatedVal, getValue } from '../../util/comm'
+  import { getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
   import _ from 'lodash'
   export default {
     name: 'pop-list',
@@ -46,7 +46,8 @@
       },
       getMicroAdName (index) {
         return index === 1 ? 0 : index === 2 ? 1 : 2
-      }
+      },
+      sendGaClickEvent
     }
   }
 </script>

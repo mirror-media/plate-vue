@@ -1,14 +1,14 @@
 <template>
   <footer class="footer-foodtravel">
     <div class="footer-foodtravel__logo">
-      <router-link :to="'/section/' + this.sectionName" :id="'footer-' + this.sectionName + '-backToTop'">
+      <router-link :to="'/section/' + this.sectionName" @click.native="sendGaClickEvent('footer', `footer backToTop ${sectionName}`)">
         <img :src="getSectionLogoUrl()"/>
       </router-link>
     </div>
 
     <div class="footer-foodtravel__menu">
-      <router-link :to="item.href" v-for="(item, i) in menuItem.section" v-text="item.title" :id="'footer-' + item.href" :key="`${i}-${Date.now()}`"></router-link>
-      <router-link :to="item.href" v-for="(item, i) in menuItem.category" v-text="item.title" :id="'footer-' + item.href" :key="`${i}-${Date.now()}`"></router-link>
+      <router-link :to="item.href" v-for="(item, i) in menuItem.section"  v-text="item.title" :key="`${i}-${Date.now()}`" @click.native="sendGaClickEvent('footer', `footer ${item.name}`)"></router-link>
+      <router-link :to="item.href" v-for="(item, i) in menuItem.category" v-text="item.title" :key="`${i}-${Date.now()}`" @click.native="sendGaClickEvent('footer', `footer ${item.name}`)"></router-link>
     </div>
 
     <div class="footer-foodtravel__vertDivider"></div>
@@ -17,12 +17,12 @@
 
     <div class="footer-foodtravel__link">
       <div class="footer-foodtravel__link--subscribe">
-        <a :href="socialLink.SUBSCRIBE" target="_blank" id="footer-subscribe">訂閱鏡週刊</a> - <a :href="socialLink.AD">廣告合作</a>
+        <a :href="socialLink.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('footer', 'footer subscribe')">訂閱鏡週刊</a> - <a :href="socialLink.AD" @click="sendGaClickEvent('footer', 'footer ad')">廣告合作</a>
       </div>
       <div class="footer-foodtravel__link--socialMedia">
-        <a :href="socialLink.FACEBOOK" target="_blank" id="footer-facebook"><img class="facebook" src="/assets/mirrormedia/icon/facebook_white.png" alt="Facebook"></a>
-        <a :href="socialLink.LINE" target="_blank" id="footer-line"><img class="line" src="/assets/mirrormedia/icon/line_white.png" alt="Line"></a>
-        <a :href="socialLink.WEIBO" target="_blank" id="footer-weibo"><img class="weibo" src="/assets/mirrormedia/icon/weibo_white.png" alt="微博"></a>
+        <a :href="socialLink.FACEBOOK" target="_blank" @click="sendGaClickEvent('footer', 'footer fb')"><img class="facebook" src="/assets/mirrormedia/icon/facebook_white.png" alt="Facebook"></a>
+        <a :href="socialLink.LINE" target="_blank" @click="sendGaClickEvent('footer', 'footer line')"><img class="line" src="/assets/mirrormedia/icon/line_white.png" alt="Line"></a>
+        <a :href="socialLink.WEIBO" target="_blank" @click="sendGaClickEvent('footer', 'footer weibo')"><img class="weibo" src="/assets/mirrormedia/icon/weibo_white.png" alt="微博"></a>
       </div>
     </div>
     
@@ -31,6 +31,7 @@
 <script>
 
 import { SOCIAL_LINK } from '../constants/index'
+import { sendGaClickEvent } from '../util/comm'
 import _ from 'lodash'
 export default {
   name: 'footer-full',
@@ -72,7 +73,8 @@ export default {
     },
     getSectionLogoHeight () {
       return _.get(this.sectionLogo, [ 'image', 'height' ])
-    }
+    },
+    sendGaClickEvent
   }
 }
 </script>

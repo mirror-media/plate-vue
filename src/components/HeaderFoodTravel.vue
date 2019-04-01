@@ -2,19 +2,19 @@
   <header>
     <nav class="headerFoodTravel">
       <div class="headerFoodTravel__logo">
-        <router-link to="/" id="header-home">
+        <router-link to="/" @click.native="sendGaClickEvent('header', 'logo')">
           <img class="headerFoodTravel__link--icon" src="/assets/mirrormedia/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media">
         </router-link>
       </div>
       <div class="headerFoodTravel__menu">
         <a class="headerFoodTravel__menu--ham mobile-only" @click="openSideBar()"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
-        <router-link class="headerFoodTravel__menu--item desktop-only" :to="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :id="'header-' + item.name" :key="`${i}-${Date.now()}`"></router-link>
+        <router-link class="headerFoodTravel__menu--item desktop-only" :to="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :key="`${i}-${Date.now()}`" @click.native="sendGaClickEvent('header', `category ${item.name}`)"></router-link>
       </div>
       <div class="headerFoodTravel__social-and-search">
-        <a :href="socialLink.FACEBOOK_FOODTRAVEL" target="_blank" id="header-facebook">
+        <a :href="socialLink.FACEBOOK_FOODTRAVEL" target="_blank" @click="sendGaClickEvent('header', `header facebook`)">
           <img class="headerFoodTravel__link--icon desktop-only" src="/assets/mirrormedia/icon/facebook@2x.png" alt="Facebook">
         </a>
-        <a :href="socialLink.LINE" target="_blank" id="header-line">
+        <a :href="socialLink.LINE" target="_blank" @click="sendGaClickEvent('header', `header line`)">
           <img class="headerFoodTravel__link--icon desktop-only" src="/assets/mirrormedia/icon/line@2x.png" alt="Line">
         </a>
         <a @click="openSearchBar()">
@@ -52,6 +52,7 @@
   import {
     SOCIAL_LINK
   } from '../constants/index'
+  import { sendGaClickEvent } from '../util/comm'
   import _ from 'lodash'
   export default {
     name: 'header-full',
@@ -87,7 +88,8 @@
       },
       search () {
         this.$router.push('/search/' + this.searchVal)
-      }
+      },
+      sendGaClickEvent
     },
     computed: {
       menuItem () {
