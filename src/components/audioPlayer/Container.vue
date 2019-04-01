@@ -11,6 +11,7 @@
       :volume="playerVolume"
       :muted="playerMuted"
       :playback-rate="playerplaybackRate"
+      @play="onPlay"
     />
   </HOC>
 </template>
@@ -37,6 +38,11 @@ export default {
       playerVolume: 1,
       playerMuted: false,
       playerplaybackRate: 1
+    }
+  },
+  methods: {
+    onPlay() {
+      window.ga('send', 'event', 'article', 'click', 'audio-play')
     }
   }
 }
