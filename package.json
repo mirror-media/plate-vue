@@ -53,6 +53,7 @@
     "ejs": "^2.6.1",
     "es6-promise": "^4.2.5",
     "express": "^4.16.4",
+    "express-useragent": "^1.0.12",
     "forever": "^0.15.3",
     "humps": "^2.0.0",
     "jshashtable": "^0.1.0",
