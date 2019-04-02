@@ -145,7 +145,12 @@ function render (req, res, next) {
   const rendererEjsCB = function (err, html) { 
     if (!err) {
       res.status(rendererEjsCB.code).send(html)
+
+      /**
+       * Save every single page which's processing with problem.
+       */
       isProd && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
+      
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
       res.status(500).send('Internal Server Error')
@@ -242,7 +247,13 @@ function render (req, res, next) {
     if (err) { return handleError(err) }
     res.send(html)
     !isProd && console.info(`whole request: ${Date.now() - s}ms`)
-    isProd && !isPreview && redisWriting(req.url, html, null, 60)
+
+    /**
+     * Save all pages in redis for 1 min for now.
+     */
+
+    // Don't save any page for now.
+    // isProd && !isPreview && redisWriting(req.url, html, null, 60)
   })
 }
 app.use('/story/amp', require('./amp/service/api'))

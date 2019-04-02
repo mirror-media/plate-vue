@@ -55,26 +55,29 @@ if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
     // auto generate service worker
     new SWPrecacheWebpackPlugin({
-      cacheId: 'vue-hn',
+      cacheId: 'mirror-media',
       filename: 'service-worker.js',
       minify: true,
-      dontCacheBustUrlsMatching: /./,
       staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
       runtimeCaching: [
         {
-          urlPattern: '/',
+          urlPattern: /(localhost:8080|mirrormedia.mg)\/(app|author|category|external|project-list|story|section|tag|topic|video)\/[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+$/,
           handler: 'networkFirst'
         },
         {
-          urlPattern: /\/(top|new|show|ask|jobs)/,
+          urlPattern: /(localhost:8080|mirrormedia.com.tw|mirrormedia.mg|storage.googleapis.com\/mirrormedia-files)\/assets\/[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+.[\s\S]+$/,
           handler: 'networkFirst'
         },
         {
-          urlPattern: '/item/:id',
+          urlPattern: /(localhost:8080|mirrormedia.mg)\/?$/,
           handler: 'networkFirst'
         },
         {
-          urlPattern: '/user/:id',
+          urlPattern: /(localhost:8080|mirrormedia.mg)\/dist\/[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+.[\s\S]+$/,
+          handler: 'networkFirst'
+        },
+        {
+          urlPattern: /(localhost:8080|mirrormedia.mg)\/api\/(?!tracking)[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+$/,
           handler: 'networkFirst'
         }
       ]
