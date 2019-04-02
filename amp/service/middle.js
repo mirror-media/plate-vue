@@ -11,6 +11,21 @@ const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MAT
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
+const errorDispatcher = error => {
+  switch (error.status) {
+    case 404:
+      res.status(404).render('404')
+      break
+    case 500:
+      res.status(500).render('500')
+      break
+    default:
+      res.status(error.status).send({
+        status: error.status,
+        text: error.text
+      })  
+  }
+}
 const validateSlugIsEmpty = (req, res, next) => {
   const slug = _.get(req, [ 'params', 'slug' ], '')
   if (_.isEmpty(slug)) {
@@ -26,15 +41,16 @@ const fetchFromRedis = (req, res, next) => {
   req.fetchURL = url
   
   redisFetching(req.fetchURL, ({ error, data }) => {
-     if (!error) {
-       res.redis = data
-       next()
-     } else {
-       console.error('>>> Fetch data from Redis in fail')
-       console.error('>>>', req.fetchURL)
-       next(error)
-     }
-   })
+    if (!error) {
+      res.redis = data
+      next()
+    } else {
+      const errWrapped = handlerError(error)
+      errorDispatcher(errWrapped)
+      console.error('>>> Fetch data from Redis in fail\n>>>', req.fetchURL, '\n', error)
+      next()
+    }
+  })
  }
 
 const fetchStory = (req, res, next) => {
@@ -57,13 +73,8 @@ const fetchStory = (req, res, next) => {
           res_data = JSON.parse(response.text)
         } catch (e) {
           const errWrapped = handlerError(e)
-          res.status(errWrapped.status).send({
-            status: errWrapped.status,
-            text: errWrapped.text
-          })          
-          console.error(`>>> Got bad data from api.`)
-          console.error(`>>> ${req.url}`)
-          console.error(e) 
+          errorDispatcher(errWrapped)
+          console.error(`>>> Got bad data from api.\n`, `>>> ${req.url}\n`, e)
           return 
         }
         res.resData = res_data
@@ -76,22 +87,20 @@ const fetchStory = (req, res, next) => {
           const exp_post_query = /^\/posts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*&clean=content/
           redisWriting(req.fetchURL, response.text, null,
             exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)
+
+          next()
+        } else {
+          res.status(404).render('404')
         }
 
-        next()
       } else {
         const errWrapped = handlerError(error)
-        res.status(errWrapped.status).send({
-          status: errWrapped.status,
-          text: errWrapped.text
-        })             
+        errorDispatcher(errWrapped)            
 
         if (errWrapped.status !== 404) {
-          console.error(`>>> Error occurred during fetching data from api.`)
-          console.error(`>>> ${req.url}`)
-          console.error(error)  
+          console.error(`>>> Error occurred during fetching data from api.\n`, `>>> ${req.url}\n`, error)
         } else {
-          console.error(`Not Found: ${url}`)
+          console.warn(`Not Found: ${url}(amp)`)
         }
       }
     })
