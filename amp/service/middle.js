@@ -2,7 +2,7 @@ require("@babel/register")
 require("@babel/polyfill")
 
 const _ = require('lodash')
-const { get, isEmpty, find, } = require('lodash')
+const { handlerError } = require('../../api/comm')
 const superagent = require('superagent')
 const { redisFetching, redisWriting, } = require('../../api/middle/redisHandler')
 const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph, getTweetIdFromEmbeddedCode } = require('./util')
@@ -12,8 +12,8 @@ const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MAT
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
 const validateSlugIsEmpty = (req, res, next) => {
-  const slug = get(req, [ 'params', 'slug' ], '')
-  if (isEmpty(slug)) {
+  const slug = _.get(req, [ 'params', 'slug' ], '')
+  if (_.isEmpty(slug)) {
     res.status(404).render('404')
   } else {
     next()
@@ -56,7 +56,11 @@ const fetchStory = (req, res, next) => {
         try {
           res_data = JSON.parse(response.text)
         } catch (e) {
-          res.send(e)
+          const errWrapped = handlerError(e)
+          res.status(errWrapped.status).send({
+            status: errWrapped.status,
+            text: errWrapped.text
+          })          
           console.error(`>>> Got bad data from api.`)
           console.error(`>>> ${req.url}`)
           console.error(e) 
@@ -64,18 +68,25 @@ const fetchStory = (req, res, next) => {
         }
         res.resData = res_data
 
-        const res_num = get(res_data, [ '_meta', 'total' ])
+        const res_num = _.get(res_data, '_meta.total')
         if (res_num && res_num > 0) {
-          res.dataString = response.text
-          redisWriting(req.fetchURL, res.dataString, () => {
-            next()
-          })
+          /**
+           * If req target is post, have the redis ttl be 7 days.
+           */
+          const exp_post_query = /^\/posts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*&clean=content/
+          redisWriting(req.fetchURL, response.text, null,
+            exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)
         }
+
+        next()
       } else {
-        const status = get(response, 'status') || get(error, 'status') || 500
-        res.header('Cache-Control', 'no-cache')
-        res.status(status).send(error)
-        if (status !== 404) {
+        const errWrapped = handlerError(error)
+        res.status(errWrapped.status).send({
+          status: errWrapped.status,
+          text: errWrapped.text
+        })             
+
+        if (errWrapped.status !== 404) {
           console.error(`>>> Error occurred during fetching data from api.`)
           console.error(`>>> ${req.url}`)
           console.error(error)  
@@ -89,29 +100,29 @@ const fetchStory = (req, res, next) => {
 
 const getArticleData = (req, res, next) => {
   const data = res.resData
-  const articleData = get(data, [ '_items', 0 ], {})
+  const articleData = _.get(data, [ '_items', 0 ], {})
   res.articleData = articleData
   next()
 }
 
 const sendArticleData = (req, res, next) => {
   const createArticleData = articleData => {
-    const _sectionTitle =            get(articleData, [ 'sections', 0, 'title' ])
-    const _sectionTitleCategories =  get(articleData, [ 'categories', 0, 'title' ], '')
-    const _sectionId =               get(articleData, [ 'sections', 0, '_id' ])
-    const _sectionDFPUnits =         get(DFP_UNITS, [ _sectionId, 'AMP' ], get(DFP_UNITS, [ 'other', 'AMP' ], {}))
-    const _storyPublishedDate =      get(articleData, [ 'publishedDate' ], '')
-    const _storyUpdatedAt =          get(articleData, [ 'updatedAt' ], '')
-    const _storyTitle =              get(articleData, [ 'title' ], '')
-    const _storySlug =               get(articleData, [ 'slug' ], '')
-    const _storyHeroVideoSrc =       get(articleData, [ 'heroVideo', 'video', 'url' ], '')
-    const _storyHeroCaption =        get(articleData, [ 'heroCaption' ], '')
-    const _storyBriefs =             get(articleData, [ 'brief', 'apiData' ], [])
-    const _storyBriefsAnnotation =   get(find(_storyBriefs, [ 'type', 'annotation' ]), [ 'content' ], '')
-    const _storyContent =            get(articleData, [ 'content', 'apiData' ], [])
-    const _storyContentsAnnotation = get(find(_storyContent, [ 'type', 'annotation' ]), [ 'content' ], '')
-    const _storyAdTrace =            get(articleData, 'adTrace', '')
-    const _storyRelateds =           get(articleData, [ 'relateds' ], [])
+    const _sectionTitle =            _.get(articleData, [ 'sections', 0, 'title' ])
+    const _sectionTitleCategories =  _.get(articleData, [ 'categories', 0, 'title' ], '')
+    const _sectionId =               _.get(articleData, [ 'sections', 0, '_id' ])
+    const _sectionDFPUnits =         _.get(DFP_UNITS, [ _sectionId, 'AMP' ], _.get(DFP_UNITS, [ 'other', 'AMP' ], {}))
+    const _storyPublishedDate =      _.get(articleData, [ 'publishedDate' ], '')
+    const _storyUpdatedAt =          _.get(articleData, [ 'updatedAt' ], '')
+    const _storyTitle =              _.get(articleData, [ 'title' ], '')
+    const _storySlug =               _.get(articleData, [ 'slug' ], '')
+    const _storyHeroVideoSrc =       _.get(articleData, [ 'heroVideo', 'video', 'url' ], '')
+    const _storyHeroCaption =        _.get(articleData, [ 'heroCaption' ], '')
+    const _storyBriefs =             _.get(articleData, [ 'brief', 'apiData' ], [])
+    const _storyBriefsAnnotation =   _.get(_.find(_storyBriefs, [ 'type', 'annotation' ]), [ 'content' ], '')
+    const _storyContent =            _.get(articleData, [ 'content', 'apiData' ], [])
+    const _storyContentsAnnotation = _.get(_.find(_storyContent, [ 'type', 'annotation' ]), [ 'content' ], '')
+    const _storyAdTrace =            _.get(articleData, 'adTrace', '')
+    const _storyRelateds =           _.get(articleData, [ 'relateds' ], [])
 
     return {
       storyInfo: {
@@ -139,7 +150,7 @@ const sendArticleData = (req, res, next) => {
       storyContentFirstTwoUnstyledParagraph: firstTwoUnstyledParagraph(_storyContent),
       storyAdTrace: _storyAdTrace,
       storyRelateds: _storyRelateds,
-      showAMPAds: !get(articleData, 'hiddenAdvertised', false),
+      showAMPAds: !_.get(articleData, 'hiddenAdvertised', false),
       AMPAds: {
         DFP_ID,
         DFPUnits: _sectionDFPUnits

@@ -1,5 +1,6 @@
 const { get, map, isString, toNumber } = require('lodash')
 const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/redisHandler') 
+const { handlerError } = require('./comm')
 const config = require('./config')
 const bodyParser = require('body-parser')
 const debug = require('debug')('PLATEVUE:api')
@@ -18,26 +19,6 @@ const loggingClient = new Logging({
 })
 
 const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API_PORT
-
-const isValidJSONString = str => {
-  try {
-    JSON.parse(str)
-  } catch (e) {
-    return false
-  }
-  return true
-}
-const handlerError = (err, res) => {
-  const text = get(res, 'text') || get(err, 'message', '{}')
-  return {
-    status: (typeof(get(res, 'status')) === 'number' && get(res, 'status')) || get(err, 'status') || 500,
-    text: !isValidJSONString(text)
-      ? isString(text)
-      ? `{message:${text}}`
-      : `{}`
-      : text
-  }
-}
 
 router.all('/', (req, res, next) => {
   next()
