@@ -93,15 +93,22 @@ class TimeoutHandler {
 
 const redisFetching = (url, callback) => {
   let timeoutHandler = new TimeoutHandler(callback)
-  redisPoolRead.get(decodeURIComponent(url), (error, data) => {
+  let decodedUrl
+  try {
+    decodedUrl = decodeURIComponent(url)
+  } catch (error) {
+    console.err('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.\n', url)
+    decodedUrl = url
+  }
+  redisPoolRead.get(decodedUrl, (error, data) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
-    redisPoolRead.ttl(decodeURIComponent(url), (err, dt) => {
+    redisPoolRead.ttl(decodedUrl, (err, dt) => {
       if (!err && dt) {
         if (dt <= -1) {
-          redisPoolWrite.del(decodeURIComponent(url), (e, d) => {
+          redisPoolWrite.del(decodedUrl, (e, d) => {
             if (e) {
-              console.log('deleting key ', decodeURIComponent(url), 'from redis in fail ', e)
+              console.log('deleting key ', decodedUrl, 'from redis in fail ', e)
             }
           })
         }
@@ -116,18 +123,25 @@ const redisFetching = (url, callback) => {
 }
 const redisWriting = (url, data, callback, timeout) => {
   let timeoutHandler = new TimeoutHandler(callback)
+  let decodedUrl
+  try {
+    decodedUrl = decodeURIComponent(url)
+  } catch (error) {
+    console.err('[ERROR] Decoding url in fail while writing data to Redis. URIError: URI malformed.\n', url)
+    decodedUrl = url
+  }
   debug('Going to Writing things to redis...')
-  redisPoolWrite.set(decodeURIComponent(url), data, (err) => {
+  redisPoolWrite.set(decodedUrl, data, (err) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if(err) {
-      console.error(`\n[ERROR] Write data to Redis in fail. ${decodeURIComponent(url)}`)
+      console.error(`\n[ERROR] Write data to Redis in fail. ${decodedUrl}`)
       console.error(`${err}\n`)
     } else {
       debug('Set timeout as:', timeout || REDIS_TIMEOUT)
-      redisPoolWrite.expire(decodeURIComponent(url), timeout || REDIS_TIMEOUT || 5000, function(error, d) {
+      redisPoolWrite.expire(decodedUrl, timeout || REDIS_TIMEOUT || 5000, function(error, d) {
         if(error) {
-          console.error(`\n[ERROR] Set redis expire time in fail. ${decodeURIComponent(url)}`)
+          console.error(`\n[ERROR] Set redis expire time in fail. ${decodedUrl}`)
           console.error(`${err}\n`)
         } else {
           callback && callback()
@@ -172,7 +186,7 @@ const fetchFromRedisForAPI = (req, res, next) => {
   debug('Trying to fetching data from redis...', req.url)
   redisFetching(req.url, ({ error, data }) => {
     if (!error && data) {
-      console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, decodeURIComponent(req.url))
+      console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, req.url)
       res.header('Cache-Control', 'public, max-age=300')
       res.json(JSON.parse(data))
     } else {
