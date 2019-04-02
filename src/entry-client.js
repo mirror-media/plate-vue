@@ -1,7 +1,34 @@
+import ProgressBar from './components/ProgressBar.vue'
 import Vue from 'vue'
 import 'es6-promise/auto'
+import { SITE_URL, SITE_MOBILE_URL } from './constants'
+import { UserAgent } from 'express-useragent'
 import { createApp } from './app'
-import ProgressBar from './components/ProgressBar.vue'
+const debug = require('debug')('ENTRY-CLIENT')
+
+const { host, pathname, search, } = location
+const exp_dev = /dev|localhost/
+const useragent = new UserAgent().parse(navigator.userAgent)
+debug('STAGE:', exp_dev.test(host) ? 'DEV' : 'PROD')
+
+if (!exp_dev.test(host)) {
+  debug('CURR PATH:', host, pathname, search)
+  debug('CURR DEVICE:', useragent.platform, useragent.browser)
+  if (SITE_URL && SITE_MOBILE_URL) {
+    const exp_mobile_host = new RegExp(`^${SITE_MOBILE_URL.replace(/https?:\/\//g, '')}`)
+    if ((useragent.isMobile || useragent.isTablet) && !exp_mobile_host.test(host)) {
+      /** Redirect to mobile version */
+      debug('GOING TO', `${SITE_MOBILE_URL}${pathname}${search}`)
+      location.replace(`${SITE_MOBILE_URL}${pathname}${search}`)
+    } else if (useragent.isDesktop && exp_mobile_host.test(host)) {
+      /** Redirect to desktop version */
+      debug('GOING TO', `${SITE_URL}${pathname}${search}`)
+      location.replace(`${SITE_URL}${pathname}${search}`)
+    } else {
+      debug('WELL, DO NOTHING!')
+    }
+  }
+}
 
 // global progress bar
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
