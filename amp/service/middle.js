@@ -17,7 +17,7 @@ const errorDispatcher = (error, res) => {
       res.status(404).render('404')
       break
     case 500:
-      res.status(500).render('500')
+      res.status(500).render('500', { err: error, timestamp: (new Date).toString() })
       break
     default:
       res.status(error.status).send({
