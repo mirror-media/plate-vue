@@ -11,7 +11,7 @@ const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MAT
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
-const errorDispatcher = error => {
+const errorDispatcher = (error, res) => {
   switch (error.status) {
     case 404:
       res.status(404).render('404')
@@ -46,7 +46,7 @@ const fetchFromRedis = (req, res, next) => {
       next()
     } else {
       const errWrapped = handlerError(error)
-      errorDispatcher(errWrapped)
+      errorDispatcher(errWrapped, res)
       console.error('>>> Fetch data from Redis in fail\n>>>', req.fetchURL, '\n', error)
       next()
     }
@@ -73,7 +73,7 @@ const fetchStory = (req, res, next) => {
           res_data = JSON.parse(response.text)
         } catch (e) {
           const errWrapped = handlerError(e)
-          errorDispatcher(errWrapped)
+          errorDispatcher(errWrapped, res)
           console.error(`>>> Got bad data from api.\n`, `>>> ${req.url}\n`, e)
           return 
         }
@@ -95,7 +95,7 @@ const fetchStory = (req, res, next) => {
 
       } else {
         const errWrapped = handlerError(error)
-        errorDispatcher(errWrapped)            
+        errorDispatcher(errWrapped, res)
 
         if (errWrapped.status !== 404) {
           console.error(`>>> Error occurred during fetching data from api.\n`, `>>> ${req.url}\n`, error)
