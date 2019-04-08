@@ -47,63 +47,53 @@ const fetchFromRedis = (req, res, next) => {
     } else {
       const errWrapped = handlerError(error)
       errorDispatcher(errWrapped, res)
-      console.error('>>> Fetch data from Redis in fail\n>>>', req.fetchURL, '\n', error)
+      console.error('[AMP] Fetch data from Redis in fail\n[AMP]', req.fetchURL, '\n', error)
       next()
     }
   })
  }
 
-const fetchStory = (req, res, next) => {
+const fetchStory = async (req, res, next) => {
   if (res.redis) {
     const resData = JSON.parse(res.redis)
     res.resData = resData
     next()
   } else {
-    superagent
-    .get(req.fetchURL)
-    .timeout({
-      response: API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-      deadline: API_DEADLINE ? API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
-    })
-    .end((error, response) => {
-      if (!error && response) {
-        let res_data
+    try {
+      const response = await superagent
+        .get(req.fetchURL)
+        .timeout(
+          {
+            response: API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
+            deadline: API_DEADLINE ? API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+          }
+        )
 
-        try {
-          res_data = JSON.parse(response.text)
-        } catch (e) {
-          const errWrapped = handlerError(e)
-          errorDispatcher(errWrapped, res)
-          console.error(`>>> Got bad data from api.\n`, `>>> ${req.url}\n`, e)
-          return 
-        }
-        res.resData = res_data
+      const data = JSON.parse(response.text)
+      const dataAmount = _.get(data, '_meta.total')
+      if (dataAmount && dataAmount > 0) {
+        /**
+         * If req target is post, have the redis ttl be 7 days.
+         */
+        const exp_post_query = /^\/posts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*&clean=content/
+        redisWriting(req.fetchURL, response.text, null, exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)
 
-        const res_num = _.get(res_data, '_meta.total')
-        if (res_num && res_num > 0) {
-          /**
-           * If req target is post, have the redis ttl be 7 days.
-           */
-          const exp_post_query = /^\/posts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*&clean=content/
-          redisWriting(req.fetchURL, response.text, null,
-            exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)
-
-          next()
-        } else {
-          res.status(404).render('404')
-        }
-
+        res.resData = data
+        next()
       } else {
-        const errWrapped = handlerError(error)
-        errorDispatcher(errWrapped, res)
-
-        if (errWrapped.status !== 404) {
-          console.error(`>>> Error occurred during fetching data from api.\n`, `>>> ${req.url}\n`, error)
-        } else {
-          console.warn(`Not Found: ${url}(amp)`)
-        }
+        res.status(404).render('404')
       }
-    })
+
+    } catch (error) {
+      const errWrapped = handlerError(error)
+      errorDispatcher(errWrapped, res)
+
+      if (errWrapped.status !== 404) {
+        console.error(`[AMP] Error occurred during fetching data from api.\n`, `[AMP] ${req.fetchURL}\n`, error)
+      } else {
+        console.warn(`[AMP] Not Found: ${req.fetchURL}`)
+      }
+    }
   }
 }
 
