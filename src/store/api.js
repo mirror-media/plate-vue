@@ -26,19 +26,13 @@ function _buildQuery (params = {}) {
   return query
 }
 
+const debugFetch = require('debug')('FETCH')
 function _doFetch (url) {
-  return new Promise((resolve, reject) => {
-    superagent
-    .get(url)
-    // .query('')
-    .end(function (err, res) {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(camelizeKeys(res.body))
-      }
-    })
-  })
+  debugFetch('PROMISE SUPERAGENT ONINE.', url)
+  return superagent
+  .get(url)
+  .then(res => camelizeKeys(res.body))
+  .catch(err => Promise.reject(err))
 }
 
 function _logClient (params = {}) {
