@@ -97,7 +97,7 @@ const redisFetching = (url, callback) => {
   try {
     decodedUrl = decodeURIComponent(url)
   } catch (error) {
-    console.err('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.\n', url)
+    console.error('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.\n', url)
     decodedUrl = url
   }
   redisPoolRead.get(decodedUrl, (error, data) => {
@@ -127,7 +127,7 @@ const redisWriting = (url, data, callback, timeout) => {
   try {
     decodedUrl = decodeURIComponent(url)
   } catch (error) {
-    console.err('[ERROR] Decoding url in fail while writing data to Redis. URIError: URI malformed.\n', url)
+    console.error('[ERROR] Decoding url in fail while writing data to Redis. URIError: URI malformed.\n', url)
     decodedUrl = url
   }
   debug('Going to Writing things to redis...')
