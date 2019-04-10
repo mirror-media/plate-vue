@@ -155,10 +155,10 @@ computed: {
     // observe mutable properties
     currentSound() {
       this.audio.src = this.currentSound.src
-      if (this.currentSound.src && this.currentSound.src !== '') {
-        // this.play()
-        this.thenPlay()
-      }
+      // if (this.currentSound.src && this.currentSound.src !== '') {
+      //   // this.play()
+      //   this.thenPlay()
+      // }
     },
     currentVolume() {
       this.audio.volume = this.currentVolume
