@@ -65,7 +65,7 @@ if (process.env.NODE_ENV === 'production') {
           handler: 'networkFirst'
         },
         {
-          urlPattern: /(localhost:8080|mirrormedia.com.tw|mirrormedia.mg|storage.googleapis.com\/mirrormedia-files)\/assets\/[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+.[\s\S]+$/,
+          urlPattern: /(localhost:8080|mirrormedia.com.tw|mirrormedia.mg|storage.googleapis.com\/mirrormedia-files)\/assets\/(?!audios\/)[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+.[\s\S]+$/,
           handler: 'networkFirst'
         },
         {
