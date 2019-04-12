@@ -73,6 +73,7 @@ router.use('/poplist', (req, res) => {
   fetchStaticJson(req, res, 'popularlist')
 })
 
+// deprecated
 router.get('/latestNews', (req, res) => {
   fetchStaticJson(req, res, 'latest_news')
 })

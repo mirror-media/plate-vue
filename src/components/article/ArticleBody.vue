@@ -26,10 +26,8 @@
             :image="getValue(p, [ 'content', 0 ])"
             :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>            
           <div v-else-if="p.type === 'video'" is="article-video" 
-            :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-            :id="'latest-'+ p.id" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template slot-scope="props">
@@ -61,10 +59,8 @@
             :image="getValue(p, [ 'content', 0 ])"
             :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>
           <div v-else-if="p.type === 'video'" is="article-video" 
-            :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-            :id="'latest-'+ p.id" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template slot-scope="props">

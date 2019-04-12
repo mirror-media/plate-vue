@@ -99,11 +99,6 @@ export default {
       return style
     },
     getLabel (article) {
-      if (this.abIndicator === 'B' && this.viewport >= 1200) {
-        const sectionId = article.sections[0]
-        const section = this.$store.state.commonData.sections.items.find(section => section.id === sectionId)
-        return section.title
-      }
       const section = _.get(article, 'sections.0.title', '')
       const categoriesLen = _.get(article, 'categories.length', 0)
       const categoryFirst =  _.get(article, 'categories.0.id')
@@ -127,9 +122,6 @@ export default {
     this.updateSysStage()
   },
   props: {
-    abIndicator: {
-      type: String
-    },
     latestList: {
       default: () => { return [] }
     },

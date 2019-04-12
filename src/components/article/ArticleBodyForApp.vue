@@ -23,10 +23,8 @@
             <div class="caption" v-text="getValue(p.content, [ 0, 'description' ], '')"></div>
           </div>
           <div v-else-if="p.type === 'video'" is="article-video" 
-            :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-            :id="'latest-'+ p.id" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template slot-scope="props">
@@ -54,10 +52,8 @@
       <article class="content">
         <div v-for="(p, index) in contArr">
           <div v-if="p.type === 'video'" is="article-video" 
-            :id="'latest-'+ p.id" 
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
-            :id="'latest-'+ p.id" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template slot-scope="props">
