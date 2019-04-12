@@ -70,16 +70,12 @@
               </template>
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config"/>
             </LazyItemWrapper>
-            <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200) && abIndicator !== 'B'" :currEnv="dfpMode">
-              <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-                :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-                class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
-            </pop-list>
-            <RelatedListInContent :abIndicator="abIndicator" :relateds="relateds" slot="relatedListInContent">
+            <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode"></pop-list>
+            <RelatedListInContent :relateds="relateds" slot="relatedListInContent">
               <micro-ad
-                v-for="a in getValue(microAds, [ 'article' ])"
-                :id="`${getValue(a, [ 'pcId' ])}`"
-                :key="`${getValue(a, [ 'pcId' ])}`"
+                v-for="ad in getValue(microAds, [ 'article' ])"
+                :id="`${getValue(ad, [ 'pcId' ])}`"
+                :key="`${getValue(ad, [ 'pcId' ])}`"
                 :currEnv="dfpMode"
                 :currUrl="articleUrl"
                 class="related">
@@ -740,14 +736,12 @@
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
-          // window.ga('set', 'contentGroup3', '')
-          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         } else {
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
-          // window.ga('set', 'contentGroup3', '')
-          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         }
+        window.ga('set', 'contentGroup3', '')
+        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       sendGaClickEvent,
@@ -797,7 +791,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      this.abIndicator = this.getMmid()
+      // this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
         { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
         { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }

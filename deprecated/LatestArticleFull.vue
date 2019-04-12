@@ -6,16 +6,16 @@
       <div class="latestArticle-full-posts">
         <template v-for="article in latestArticle">
           <div class="latestArticle-full-post">
-            <a :href="getHref(article)" :id="`latest-${article.id}-img`" target="_blank" class="latestArticle-full-post__img">
+            <a :href="getHref(article)" target="_blank" class="latestArticle-full-post__img">
               <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }" :title="getValue(article, [ 'title' ])"></figure>
             </a>
             <div class="latestArticle-full-post__content">
-              <a :href="getHref(article)" :id="`latest-${article.id}-title`" target="_blank"><h2 v-text="article.title"></h2></a>
+              <a :href="getHref(article)" target="_blank"><h2 v-text="article.title"></h2></a>
               <div class="latestArticle-full-post__meta">
                 <span class="latestArticle-full-post__meta--author" v-show="getAuthor(article, 'writers')" v-html="getAuthor(article, 'writers') + ' ｜ '"></span>
                 <span class="latestArticle-full-post__meta--date" v-text="moment(new Date(article.publishedDate)).format('Y.MM.DD')"></span>
               </div>
-              <a :href="getHref(article)" :id="`latest-${article.id}-content`" target="_blank"><p v-html="getBrief(article, 70)"></p></a>
+              <a :href="getHref(article)" target="_blank"><p v-html="getBrief(article, 70)"></p></a>
             </div>
           </div>
         </template>

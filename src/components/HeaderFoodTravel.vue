@@ -31,7 +31,7 @@
           <a class="sidebarFull__close--text" @click="closeSideBar()"></a>
         </div>
         <nav class="sidebarFull__menu">
-          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :id="'header-' + item.name" :key="`${i}-${Date.now()}`"></router-link>
+          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :key="`${i}-${Date.now()}`" @click.native="sendGaClickEvent('header', `category ${item.name}`)"></router-link>
         </nav>
       </div>
       <div class="sidebarFull-curtain" @click="closeSideBar()" v-show="openSide"></div>
@@ -70,9 +70,11 @@
     methods: {
       closeSearchBar () {
         this.openSearch = false
+        sendGaClickEvent('header', `search close`)
       },
       closeSideBar () {
         this.openSide = false
+        sendGaClickEvent('header', `search close`)
       },
       getHeaderDFPHeight () {
         this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35

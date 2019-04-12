@@ -208,11 +208,6 @@
       const sectionName = _.get(sections, [ 0, 'name' ], '')
       const topicId = _.get(topics, [ '_id' ], '')
 
-      // let abIndicator
-      // if (process.env.VUE_ENV === 'client') {
-      //   abIndicator = this.getMmid()
-      // }
-
       return {
         url: `${SITE_MOBILE_URL}/story/${slug}/`,
         title: truncate(title, 21) + ` - ${SITE_TITLE_SHORT}`,
@@ -235,7 +230,7 @@
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : '/asset/logo.png')}">
-        `, // <meta name="mm-opt" content="article${abIndicator}">
+        `,
         link: `<link rel="canonical" href="${SITE_URL}/story/${slug}/" />`
       }
     },
@@ -613,14 +608,12 @@
         if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
-          // window.ga('set', 'contentGroup3', '')
-          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         } else {
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
-          // window.ga('set', 'contentGroup3', '')
-          window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         }
+        window.ga('set', 'contentGroup3', '')
+        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       updateJSONLDScript () {
@@ -701,7 +694,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      this.abIndicator = this.getMmid()
+      // this.abIndicator = this.getMmid()
       this.sendGA(this.articleData)
 
       const scrollTriggerRegister = new ScrollTriggerRegister([

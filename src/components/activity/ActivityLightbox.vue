@@ -22,7 +22,7 @@
       <h3 v-text="getValue(nodes, [ currentNodeIndex, 'subtitle' ])" />
       <h2 v-text="getValue(nodes, [ currentNodeIndex, 'name' ])" />
       <p v-text="getValue(nodes, [ currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])" />
-      <figure @click="share()" id="activity-share">
+      <figure @click="share()">
         <img v-lazy="`/assets/mirrormedia/icon/facebook_white.png`" />
       </figure>
     </div>
@@ -33,7 +33,7 @@
 
 <script>
 
-import { getValue } from '../../util/comm'
+import { getValue, sendGaClickEvent } from '../../util/comm'
 import _ from 'lodash'
 import ActivityLightboxMenu from './ActivityLightboxMenu.vue'
 import ActivityLightboxSlider from './ActivityLightboxSlider.vue'
@@ -145,7 +145,7 @@ export default {
           picture: imageUrl,
           description
         }, function () {})
-      window.ga('send', 'event', 'activity', 'click', 'share-node')
+      sendGaClickEvent('activity', 'share')
     },
     touchend (e) {
       const deltaX = e.changedTouches[0].pageX - this.touchStartValueX

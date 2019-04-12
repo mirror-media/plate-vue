@@ -4,14 +4,14 @@
     <div class="listChoice__block" v-for="(item, index) in sectionfeatured" :class="[ index%2 !== 0 ? 'right' : '' ]">
       <figure>
         <template>
-          <router-link :to="getHref(item)" :id="`listing_choice-${item.name}-img`" target="_blank">
+          <router-link :to="getHref(item)" target="_blank" @click.native="sendGaClickEvent('listing', 'choice')">
             <img :src="getImage(item, viewportTarget)" />
           </router-link>
         </template>
       </figure>
       <div class="listChoice__block--content" :style="{ borderColor: sectionColor }">
-        <h2><router-link :to="getHref(item)" :id="`listing_choice-${item.name}-title`" target="_blank" v-text="getTruncatedVal(getValue(item, [ 'title' ]), 30)"></router-link></h2>
-        <p><router-link :to="getHref(item)" :id="`listing_choice-${item.name}-descr`" target="_blank" v-text="getBrief(item, 45)"></router-link></p>
+        <h2><router-link :to="getHref(item)" target="_blank" v-text="getTruncatedVal(getValue(item, [ 'title' ]), 30)" @click.native="sendGaClickEvent('listing', 'choice')"></router-link></h2>
+        <p><router-link :to="getHref(item)" target="_blank" v-text="getBrief(item, 45)" @click.native="sendGaClickEvent('listing', 'choice')"></router-link></p>
       </div>
     </div>
   </section>
@@ -20,7 +20,7 @@
 <script>
 
 import { SECTION_MAP } from '../constants'
-import { getBrief, getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
+import { getBrief, getHref, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../util/comm'
 import _ from 'lodash'
 
 export default {
@@ -49,7 +49,8 @@ export default {
     getImage,
     getTruncatedVal,
     getHref,
-    getValue
+    getValue,
+    sendGaClickEvent
   }
 }
 </script>

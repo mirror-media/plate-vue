@@ -1,5 +1,5 @@
 <template>
-  <section class="relateds-in-content" :id="`relateds-in-content-${id}`">
+  <section class="relateds-in-content">
     <h3>往下繼續閱讀</h3>
     <div v-for="related in relateds" :key="related.id" class="related">
       <div class="related__title">
@@ -9,12 +9,11 @@
         <LazyImage :src="getImage(related.heroImage)" :alt="related.title" />
       </a>
     </div>
-    <slot v-if="abIndicator === 'B'"></slot>
+    <slot></slot>
   </section>
 </template>
 <script>
 import LazyImage from 'src/components/common/LazyImage.vue'
-import uuidv4 from 'uuid/v4'
 import { get } from 'lodash'
 import { getHref, sendGaClickEvent } from '../../util/comm'
 
@@ -23,15 +22,7 @@ export default {
   components: {
     LazyImage,
   },
-  data () {
-    return {
-      id: '',
-    }
-  },
   props: {
-    abIndicator: {
-      type: String
-    },
     relateds: {
       type: Array,
       default () {
@@ -47,9 +38,6 @@ export default {
       return image ? image : undefined
     },
     sendGaClickEvent
-  },
-  mounted () {
-    this.id = uuidv4()
   },
 }
 </script>
