@@ -18,12 +18,12 @@ if (!exp_dev.test(host)) {
     const exp_mobile_host = new RegExp(`^${SITE_MOBILE_URL.replace(/https?:\/\//g, '')}`)
     if ((useragent.isMobile || useragent.isTablet) && !exp_mobile_host.test(host)) {
       /** Redirect to mobile version */
-      debug('GOING TO', `${SITE_MOBILE_URL}${pathname}${search}`)
-      location.replace(`${SITE_MOBILE_URL}${pathname}${search}`)
+      debug('GOING TO', `${SITE_MOBILE_URL}${pathname}${typeof(search) === 'string' ? search : ''}`)
+      location.replace(`${SITE_MOBILE_URL}${pathname}${typeof(search) === 'string' ? search : ''}`)
     } else if (useragent.isDesktop && exp_mobile_host.test(host)) {
       /** Redirect to desktop version */
-      debug('GOING TO', `${SITE_URL}${pathname}${search}`)
-      location.replace(`${SITE_URL}${pathname}${search}`)
+      debug('GOING TO', `${SITE_URL}${pathname}${typeof(search) === 'string' ? search : ''}`)
+      location.replace(`${SITE_URL}${pathname}${typeof(search) === 'string' ? search : ''}`)
     } else {
       debug('WELL, DO NOTHING!')
     }
