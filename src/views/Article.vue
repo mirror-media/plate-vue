@@ -39,11 +39,7 @@
                   </div>
                 </LazyItemWrapper>
                 <LazyItemWrapper :position="verge.viewportH()" slot="popListVert" :strict="true">
-                  <pop-list-vert :pop="popularlist" class="article_aside_popList">
-                    <micro-ad v-for="(a, i) in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-                      :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-                      class="popListVert-list__item" :slot="`microAd${getValue(a, [ 'pos' ])}`"></micro-ad>
-                  </pop-list-vert>
+                  <pop-list-vert :pop="popularlist" class="article_aside_popList"></pop-list-vert>
                 </LazyItemWrapper>
               </article-aside-fixed>
             </aside>
