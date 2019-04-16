@@ -23,8 +23,10 @@
           <a :href="SOCIAL_LINK.DOWNLOADAPP" target="_blank" @click="sendGaClickEvent('header', 'more download')" v-text="$t('HEADER.DOWNLOADAPP')"></a>
         </div>     
       </div>
-      <button v-show="mounted" class="btn--search" @click="handleSearchBtn"><img src="/assets/mirrormedia/icon/search.svg" alt="" @click="sendGaClickEvent('header', 'search')"></button>
-      <input v-model="keyword" class="search" type="search" @keyup.enter="search(keyword)">
+      <SearchNav
+        :sections="sections"
+        class="search-nav"
+      />
       <ShareLight class="share"/>
     </section>
     <!-- scrollable header -->
@@ -67,6 +69,7 @@ import HeaderSidebar from '../components/header/HeaderSidebar.vue'
 import LazyImage from 'src/components/common/LazyImage.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import ShareLight from '../components/share/ShareLight.vue'
+import SearchNav from '../components/searchNav/SearchNav.vue'
 import { SECTION_MAP, SITE_TITLE, SOCIAL_LINK } from '../constants/index'
 import { get, } from 'lodash'
 import { sendGaClickEvent } from '../util/comm'
@@ -80,6 +83,7 @@ export default {
     LazyImage,
     LazyItemWrapper,
     ShareLight,
+    SearchNav
   },
   directives: {
     'click-outside': {
@@ -243,18 +247,18 @@ export default {
         height 100%
         object-fit contain
         object-position center center
-    .search
-      order 2
-      display none
-      float right // IE
-    .btn--search
-      order 3
-      position relative
-      top 3.5px
-      width 45px
-      height 45px
-      margin 0 0 0 auto
-      float right // IE
+    // .search
+    //   order 2
+    //   display none
+    //   float right // IE
+    // .btn--search
+    //   order 3
+    //   position relative
+    //   top 3.5px
+    //   width 45px
+    //   height 45px
+    //   margin 0 0 0 auto
+    //   float right // IE
     .more
       order 4
       display none
@@ -340,11 +344,11 @@ export default {
         width 30px
         height 30px
         margin 0
-      .btn--search
-        top 0
-        width 30px
-        height 30px
-        margin 0
+      // .btn--search
+      //   top 0
+      //   width 30px
+      //   height 30px
+      //   margin 0
     .header__section-layer
       position fixed
       top 50px
@@ -370,34 +374,34 @@ export default {
           margin-top 10px
         img
           width auto
-      .search
-        display inline-block // IE
-        height 35px
-        margin 17.5px 0 17.5px auto
-        padding 0 10px
-        line-height 35px
-        text-align right
-        vertical-align top
-        border 1px solid #eee
-        border-right none
-        border-radius 2px
+      // .search
+      //   display inline-block // IE
+      //   height 35px
+      //   margin 17.5px 0 17.5px auto
+      //   padding 0 10px
+      //   line-height 35px
+      //   text-align right
+      //   vertical-align top
+      //   border 1px solid #eee
+      //   border-right none
+      //   border-radius 2px
       .btn--menu
         display none
-      .btn--search
-        position static
-        width 35px
-        height 35px
-        padding 0
-        margin 17.5px 0
-        vertical-align top
-        background-color #fff
-        border 1px solid #eee
-        border-left none
-        border-radius 2px
+      // .btn--search
+      //   position static
+      //   width 35px
+      //   height 35px
+      //   padding 0
+      //   margin 17.5px 0
+      //   vertical-align top
+      //   background-color #fff
+      //   border 1px solid #eee
+      //   border-left none
+      //   border-radius 2px
       .more
         display inline-block // IE
         position relative
-        margin 17.5px 0
+        margin 17.5px 0 17.5px 5px
         vertical-align top
         &.open
           .others
@@ -428,4 +432,7 @@ export default {
     &__section-layer, &__sidebar, &__search-bar
       display none
   
+  .search-nav
+    order 1
+    margin 0 0 0 auto
 </style>

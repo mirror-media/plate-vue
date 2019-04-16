@@ -63,7 +63,11 @@ const fetchData = (store, route) => {
     fetchSearch(store, {
       page: PAGE,
       max_results: MAXRESULT,
-      keyword: route.params.keyword
+      keyword: route.params.keyword,
+      where: {
+        section: route.query.section,
+        category: route.query.category
+      }
     }),
     fetchPartners(store)
   ])
@@ -229,7 +233,11 @@ export default {
       fetchSearch(this.$store, {
         page: this.page,
         max_results: MAXRESULT,
-        keyword: this.$route.params.keyword
+        keyword: this.$route.params.keyword,
+        where: {
+          section: this.$route.query.section,
+          category: this.$route.query.category
+        }
       }).then(() => {
         this.loading = false
       })
