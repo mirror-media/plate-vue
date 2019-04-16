@@ -1,29 +1,25 @@
 import ProgressBar from './components/ProgressBar.vue'
 import Vue from 'vue'
 import 'es6-promise/auto'
-import { SITE_URL, SITE_MOBILE_URL } from './constants'
+import { SITE_MOBILE_URL } from './constants'
 import { UserAgent } from 'express-useragent'
 import { createApp } from './app'
 const debug = require('debug')('ENTRY-CLIENT')
 
-const { host, pathname, search, } = location
 const exp_dev = /dev|localhost/
 const useragent = new UserAgent().parse(navigator.userAgent)
-debug('STAGE:', exp_dev.test(host) ? 'DEV' : 'PROD')
-debug('CURR PATH:', host, pathname, search)
+debug('STAGE:', exp_dev.test(location.host) ? 'DEV' : 'PROD')
+debug('CURR PATH:', location.host, location.pathname, location.search)
+debug('useragent.isMobile', useragent.isMobile)
+debug('useragent.isTablet', useragent.isTablet)
 
-if (!exp_dev.test(host)) {
+if (!exp_dev.test(location.host)) {
   debug('CURR DEVICE:', useragent.platform, useragent.browser)
-  if (SITE_URL && SITE_MOBILE_URL) {
-    const exp_mobile_host = new RegExp(`^${SITE_MOBILE_URL.replace(/https?:\/\//g, '')}`)
-    if ((useragent.isMobile || useragent.isTablet) && !exp_mobile_host.test(host)) {
-      /** Redirect to mobile version */
-      debug('GOING TO', `${SITE_MOBILE_URL}${pathname}${search !== '[object Object]' ? search : ''}`)
-      location.replace(`${SITE_MOBILE_URL}${pathname}${search !== '[object Object]' ? search : ''}`)
-    } else if (useragent.isDesktop && exp_mobile_host.test(host)) {
-      /** Redirect to desktop version */
-      debug('GOING TO', `${SITE_URL}${pathname}${search !== '[object Object]' ? search : ''}`)
-      location.replace(`${SITE_URL}${pathname}${search !== '[object Object]' ? search : ''}`)
+  if (SITE_MOBILE_URL) {
+    if (useragent.isMobile || useragent.isTablet) {
+      /** Redirect to Mobile version */
+      debug('GOING TO', `${SITE_MOBILE_URL}${location.pathname}${location.search}`)
+      location.replace(`${SITE_MOBILE_URL}${location.pathname}${location.search}`)
     } else {
       debug('WELL, DO NOTHING!')
     }
