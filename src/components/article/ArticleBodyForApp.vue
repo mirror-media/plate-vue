@@ -70,6 +70,7 @@
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
           <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
         </div>
+        <p v-if="articleData.updatedAt !== articleData.publishedDate" class="updated-time">更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span></p>
       </article>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
@@ -571,6 +572,12 @@ export default {
           line-height 36px
           margin 1.5em 0
           text-align justify
+          &.updated-time
+            color #064f77
+            font-size 1rem
+            line-height 1.5
+            span
+              color #61a4cd
         .youtube 
           clear both
           .youtube-container 
@@ -620,6 +627,7 @@ export default {
 
         .audioBox
           width 100%
+          margin-top 1em
           
           .audioBox-content
             h2

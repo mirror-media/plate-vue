@@ -171,7 +171,12 @@
           line-height 36px
           margin 1.5em 0
           text-align justify
-        
+          &.updated-time
+            color #064f77
+            font-size 1rem
+            line-height 1.5
+            span
+              color #61a4cd
         .youtube 
           clear both
           .youtube-container 
@@ -221,6 +226,7 @@
 
         .audioBox
           width 100%
+          margin-top 1em
 
         .video
           text-align center

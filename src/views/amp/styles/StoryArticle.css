@@ -230,3 +230,13 @@
   border-radius: 10px;
   padding: 10px;
 }
+
+.updated-time {
+  color: #064f77;
+  font-size: 16px;
+}
+
+.updated-time span {
+  color: #61a4cd;
+  font-size: 16px;
+}

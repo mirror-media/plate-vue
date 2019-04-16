@@ -146,7 +146,7 @@
       width 30px
       height 40px
       margin-top -50px
-      background-color #f5f5f5
+      background-color rgba(245, 245, 245, .25)
       background-size 15px auto
       background-position 45% 50%
       background-repeat no-repeat
