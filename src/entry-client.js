@@ -20,12 +20,10 @@ if (!exp_dev.test(host)) {
       /** Redirect to mobile version */
       debug('GOING TO', `${SITE_MOBILE_URL}${pathname}${search !== '[object Object]' ? search : ''}`)
       location.replace(`${SITE_MOBILE_URL}${pathname}${search !== '[object Object]' ? search : ''}`)
-      return
     } else if (useragent.isDesktop && exp_mobile_host.test(host)) {
       /** Redirect to desktop version */
       debug('GOING TO', `${SITE_URL}${pathname}${search !== '[object Object]' ? search : ''}`)
       location.replace(`${SITE_URL}${pathname}${search !== '[object Object]' ? search : ''}`)
-      return
     } else {
       debug('WELL, DO NOTHING!')
     }
