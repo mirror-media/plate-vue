@@ -86,6 +86,7 @@
           <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
           <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
         </div>
+        <p v-if="articleData.updatedAt !== articleData.publishedDate" class="updated-time">更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span></p>
       </article>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
