@@ -39,7 +39,7 @@ export default {
   },
   computed: {
     popArticles () {
-      return take(this.pop, 6)
+      return take(this.pop, 9)
     }
   },
   methods: {

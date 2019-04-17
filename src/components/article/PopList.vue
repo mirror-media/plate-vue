@@ -32,7 +32,7 @@
     },
     computed: {
       popArticles () {
-        return _.take(this.pop, 6)
+        return _.take(this.pop, 9)
       }
     },
     methods: {
