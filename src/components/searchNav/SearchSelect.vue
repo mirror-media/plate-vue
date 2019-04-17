@@ -64,13 +64,21 @@ export default {
     return {
       showOptionList: false,
       defaultOption,
+      filterOutSections: [ 'videohub' ],
+      filterOutCategories: [],
       currentOption: defaultOption
     }
   },
   computed: {
     options() {
-      const sections = this.sections.map(section => this.mapItems(section))
-      const categories = flatten(this.sections.map(section => get(section, 'categories', []).map(category => this.mapItems(category, 'category'))))
+      const sections =
+        this.sections
+          .map(section => this.mapItems(section))
+          .filter(section => !this.filterOutSections.includes(section.name))
+      const categories =
+        flatten(this.sections.map(section => get(section, 'categories', [])
+          .map(category => this.mapItems(category, 'category'))))
+          .filter(category => !this.filterOutCategories.includes(category.name))
       return concat(this.defaultOption, sections, categories)
     }
   },
