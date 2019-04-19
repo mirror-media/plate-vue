@@ -7,6 +7,7 @@ import { createApp } from './app'
 const debug = require('debug')('ENTRY-CLIENT')
 
 const exp_dev = /dev|localhost/
+const exp_moblie_site = new RegExp('m.mirrormedia.mg')
 const useragent = new UserAgent().parse(navigator.userAgent)
 debug('STAGE:', exp_dev.test(location.host) ? 'DEV' : 'PROD')
 debug('CURR PATH:', location.host, location.pathname, location.search)
@@ -16,7 +17,7 @@ debug('useragent.isTablet', useragent.isTablet)
 if (!exp_dev.test(location.host)) {
   debug('CURR DEVICE:', useragent.platform, useragent.browser)
   if (SITE_MOBILE_URL) {
-    if (useragent.isMobile || useragent.isTablet) {
+    if (!location.host.match(exp_moblie_site) && (useragent.isMobile || useragent.isTablet)) {
       /** Redirect to Mobile version */
       debug('GOING TO', `${SITE_MOBILE_URL}${location.pathname}${location.search}`)
       location.replace(`${SITE_MOBILE_URL}${location.pathname}${location.search}`)
