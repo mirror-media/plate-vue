@@ -27,6 +27,11 @@
         :sections="sections"
         class="search-nav"
       />
+      <SearchNavMobile
+        :sections="sections"
+        :isScrolled="isScrolled"
+        class="search-nav-mobile"
+      />
       <ShareLight class="share"/>
     </section>
     <!-- scrollable header -->
@@ -70,6 +75,7 @@ import LazyImage from 'src/components/common/LazyImage.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import ShareLight from '../components/share/ShareLight.vue'
 import SearchNav from '../components/searchNav/SearchNav.vue'
+import SearchNavMobile from '../components/searchNav/mobile/SearchNav.vue'
 import { SECTION_MAP, SITE_TITLE, SOCIAL_LINK } from '../constants/index'
 import { get, } from 'lodash'
 import { sendGaClickEvent } from '../util/comm'
@@ -83,7 +89,8 @@ export default {
     LazyImage,
     LazyItemWrapper,
     ShareLight,
-    SearchNav
+    SearchNav,
+    SearchNavMobile
   },
   directives: {
     'click-outside': {
@@ -313,6 +320,13 @@ export default {
     &.open
       transform translateY(0)
 
+.search-nav
+  display none
+.search-nav-mobile
+  display flex
+  order 1
+  margin 0 0 0 auto
+
 @media (max-width: 1199px)
   .header.scrolled
     height 90px
@@ -321,7 +335,7 @@ export default {
       top 0
       left 0
       right 0
-      z-index 500
+      z-index 501
       height 50px
       padding 0 2em
       background-color #f5f5f5
@@ -433,6 +447,9 @@ export default {
       display none
   
   .search-nav
+    display flex
     order 1
     margin 0 0 0 auto
+  .search-nav-mobile
+    display none
 </style>
