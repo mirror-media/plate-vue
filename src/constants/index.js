@@ -101,6 +101,10 @@ export const DFP_SIZE_MAPPING = {
   'mobile-only': [
     { browser: [ 1, 1 ], ad_sizes: [ [ 1, 1 ], [ 320, 100 ], [ 300, 250 ], [ 320, 480 ], [ 336, 280 ] ] },
     { browser: [ 970, 200 ], ad_sizes: [] }
+  ],
+  'less-than-320-only': [
+    { browser: [ 1, 1 ], ad_sizes: [ [ 1, 1 ], [ 320, 100 ], [ 300, 250 ], [ 320, 480 ] ] },
+    { browser: [ 970, 200 ], ad_sizes: [] }
   ]
 }
 

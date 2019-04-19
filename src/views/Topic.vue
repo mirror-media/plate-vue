@@ -39,7 +39,7 @@
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="getValue($store, 'getters.adSize')"></vue-dfp></div>
           <section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
           </section>
@@ -56,7 +56,7 @@
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="getValue($store, 'getters.adSize')"></vue-dfp></div>
           <section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
           </section>
@@ -72,7 +72,7 @@
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp"></vue-dfp></div>
+            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="getValue($store, 'getters.adSize')"></vue-dfp></div>
           <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
             v-show="hasAutoScroll"></article-list>
           <loading :show="loading"></loading>
