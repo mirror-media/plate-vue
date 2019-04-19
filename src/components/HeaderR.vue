@@ -320,13 +320,6 @@ export default {
     &.open
       transform translateY(0)
 
-.search-nav
-  display none !important
-.search-nav-mobile
-  display flex
-  order 1
-  margin 0 0 0 auto
-
 @media (max-width: 1199px)
   .header.scrolled
     height 90px
@@ -367,6 +360,13 @@ export default {
       position fixed
       top 50px
       z-index 500
+
+  .search-nav
+    display none !important
+  .search-nav-mobile
+    display flex
+    order 1
+    margin 0 0 0 auto
 
 @media (max-width: 599px)
   .header.scrolled
