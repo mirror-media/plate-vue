@@ -4,11 +4,11 @@
       <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <article-body-external :articleData="articleData">
         <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" :dfpId="props.dfpId" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" :dfpId="props.dfpId" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" :dfpId="props.dfpId" :size="getValue($store, 'getters.adSize')" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
         <vue-dfp :is="props.vueDfp" v-if="viewport > 1200" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" pos="PCAR"  class="dfp dfp--desktop"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" v-if="viewport < 1199" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" pos="MBAR1" class="dfp dfp--mobile"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" v-if="viewport < 1199" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" :size="getValue($store, 'getters.adSize')" pos="MBAR1" class="dfp dfp--mobile"></vue-dfp>
         <vue-dfp :is="props.vueDfp" slot="dfp-AT2" :config="props.config" :dfpId="props.dfpId" pos="MBAR2" class="dfp dfp--mobile"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-MBE1" pos="MBE1" :dfpId="props.dfpId" :config="props.config" class="dfp dfp--mobile"></vue-dfp>
+        <vue-dfp :is="props.vueDfp" slot="dfp-MBE1" pos="MBE1" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" class="dfp dfp--mobile"></vue-dfp>
         <div slot="dfp-PCE1E2" class="dfp--PCE1E2 dfp--desktop">
           <vue-dfp :is="props.vueDfp" pos="PCE1" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
           <vue-dfp :is="props.vueDfp" pos="PCE2" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
@@ -25,7 +25,7 @@
         <div slot="fbComment" class="fbComment" v-html="fbCommentHtml"></div>
         <div slot="footer" class="footer">
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="PCFT" class="dfp dfp--desktop"></vue-dfp>
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBFT" class="dfp dfp--mobile" :extClass="`${styleDfpAd}`"></vue-dfp>
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBFT" class="dfp dfp--mobile" :extClass="`${styleDfpAd}`" :size="getValue($store, 'getters.adSize')"></vue-dfp>
           <app-footer/>
         </div>
         <template slot="recommendList">

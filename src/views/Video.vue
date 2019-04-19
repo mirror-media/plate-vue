@@ -7,34 +7,34 @@
           <ShareLight slot="share" :gtmCategory="'article'" />
           <template v-if="mounted">
             <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCHD" :config="props.config" class="dfp" pos="PCHD" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" class="dfp" pos="MBHD" />
+            <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="MBHD" />
           </template>
           <template v-if="mounted">
             <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCFT" :config="props.config" class="dfp" pos="PCFT" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBFT" :config="props.config" class="dfp" pos="MBFT" />
+            <vue-dfp :is="props.vueDfp" v-else slot="MBFT" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="MBFT" />
           </template>
           <template v-if="mounted">
             <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCR1" :config="props.config" class="dfp" pos="PCR1" style="margin-top: 0;" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBE1" :config="props.config" class="dfp" pos="MBE1" />
+            <vue-dfp :is="props.vueDfp" v-else slot="MBE1" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="MBE1" />
           </template>
         </SingleVideoBody>
       </template>
       <template v-else>
         <VideoLeading>
           <vue-dfp :is="props.vueDfp" v-if="mounted && viewportWidth >= 1200" slot="LPCHD" :config="props.config" class="dfp" pos="LPCHD" />
-          <vue-dfp :is="props.vueDfp" v-if="mounted && viewportWidth < 1200" slot="LMBHD" :config="props.config" class="dfp" pos="LMBHD" />
+          <vue-dfp :is="props.vueDfp" v-if="mounted && viewportWidth < 1200" slot="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="LMBHD" />
         </VideoLeading>
         <template v-for="(item, index) in playlist">
           <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
             <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
             <template v-if="mounted && isCategoryPage">
               <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
-              <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" class="dfp" pos="LMBFT" />
+              <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="LMBFT" />
             </template>
           </VideoList>
           <template v-if="mounted && !isCategoryPage">
             <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200 && index === 4" :key="`${index}-LPCFT`" :config="props.config" class="dfp" pos="LPCFT" />
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth < 1200 && index === 2" :key="`${index}-LMBFT`" :config="props.config" class="dfp" pos="LMBFT" />
+            <vue-dfp :is="props.vueDfp" v-if="viewportWidth < 1200 && index === 2" :key="`${index}-LMBFT`" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="LMBFT" />
           </template>
         </template>
       </template>
@@ -437,6 +437,7 @@ export default {
   },
   methods: {
     currEnv,
+    get,
     getMmid () {
       const mmid = Cookie.get('mmid')
       let assisgnedRole = get(this.$route, [ 'query', 'ab' ])

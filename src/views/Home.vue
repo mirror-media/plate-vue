@@ -7,13 +7,13 @@
         </section>
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)" :config="props.config"/>
-          <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" pos="LMBHD" v-else-if="(viewport < 550)" :config="props.config" :size="get($store, 'getters.adSize')" />
         </LazyItemWrapper>
         <section class="home-mainContent">
           <editor-choice :editorChoice='editorChoice' :viewport="viewport" target="_blank" />
           <main>
             <LazyItemWrapper :loadAfterPageLoaded="true">
-              <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBL1" v-if="viewport < 550" :config="props.config" :size="get($store, 'getters.adSize')" />
             </LazyItemWrapper>
             <MirrorMediaTVAside v-if="viewport < 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="viewport < 1200"><h2 v-text="$t('homepage.focus')"></h2></div>
@@ -30,7 +30,7 @@
             </div>
             <LazyItemWrapper :loadAfterPageLoaded="true">
               <vue-dfp :is="props.vueDfp" pos="LPCB1" v-if="(viewport > 1199)" :config="props.config"/>
-              <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" pos="LMBL2" v-if="(viewport < 1199)" :config="props.config" :size="get($store, 'getters.adSize')" />
             </LazyItemWrapper>
             <LatestArticleMain id="latestArticle" target="_blank"
               :latestList="latestArticle"
@@ -78,7 +78,7 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import _ from 'lodash'
+import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, union, unionBy, uniqBy } from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
@@ -132,14 +132,14 @@ const fetchArticlesGroupedList = (store) => {
 }
 
 const fetchPartners = (store) => {
-  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  const page = get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
   return store.dispatch('FETCH_PARTNERS', {
     params: {
       max_results: 25,
       page: page
     }
   }).then(() => {
-    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+    if (get(store.state, [ 'partners', 'items', 'length' ]) < get(store.state, [ 'partners', 'meta', 'total' ])) {
       fetchPartners(store)
     }
   })
@@ -208,11 +208,11 @@ export default {
       dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       dfpUnits: DFP_UNITS,
-      hasScrollLoadMore: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE) > 1,
+      hasScrollLoadMore: get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE) > 1,
       isVponSDKLoaded: false,
       isAdCoverCalledYet: false,
       loading: false,
-      page: _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
+      page: get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], PAGE),
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
@@ -301,67 +301,67 @@ export default {
       })
     },
     editorChoice () {
-      return _.get(this.articlesGroupedList, [ 'choices' ])
+      return get(this.articlesGroupedList, [ 'choices' ])
     },
     eventEmbedded () {
-      return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
+      return get(this.$store.state.eventEmbedded, [ 'items', '0' ])
     },
     eventLogo () {
-      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+      return get(this.$store.state.eventLogo, [ 'items', '0' ])
     },
     eventMod () {
-      return _.get(this.$store, [ 'state', 'eventMod', 'items', '0' ])
+      return get(this.$store, [ 'state', 'eventMod', 'items', '0' ])
     },
     groupedArticle () {
-      return _.slice(_.get(this.articlesGroupedList, [ 'grouped' ]))
+      return slice(get(this.articlesGroupedList, [ 'grouped' ]))
     },
     hasEventEmbedded () {
       const _now = moment()
-      const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
-      let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
+      const _eventStartTime = moment(new Date(get(this.eventEmbedded, [ 'startDate' ])))
+      let _eventEndTime = moment(new Date(get(this.eventEmbedded, [ 'endDate' ])))
       if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+        _eventEndTime = moment(new Date(get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     hasEventMod () {
       const _now = moment()
-      const _eventStartTime = moment(new Date(_.get(this.eventMod, [ 'startDate' ])))
-      let _eventEndTime = moment(new Date(_.get(this.eventMod, [ 'endDate' ])))
+      const _eventStartTime = moment(new Date(get(this.eventMod, [ 'startDate' ])))
+      let _eventEndTime = moment(new Date(get(this.eventMod, [ 'endDate' ])))
       if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(_.get(this.eventMod, [ 'endDate' ]))).add(12, 'h')
+        _eventEndTime = moment(new Date(get(this.eventMod, [ 'endDate' ]))).add(12, 'h')
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     latestArticlesList () {
-      return _.get(this.$store.state, [ 'latestArticles', 'items' ])
+      return get(this.$store.state, [ 'latestArticles', 'items' ])
     },
     latestArticlesBySection () {
-      const latestArticlesBySection = Object.values(_.get(this.$store.state, 'latestNewsFromJson.sections', {})) || []
-      return latestArticlesBySection.sort((a, b) => (_.get(SECTION_MAP, [ a.id, 'latestNewsOrder' ]) || 10) - (_.get(SECTION_MAP, [ b.id, 'latestNewsOrder' ]) || 10))
+      const latestArticlesBySection = Object.values(get(this.$store.state, 'latestNewsFromJson.sections', {})) || []
+      return latestArticlesBySection.sort((a, b) => (get(SECTION_MAP, [ a.id, 'latestNewsOrder' ]) || 10) - (get(SECTION_MAP, [ b.id, 'latestNewsOrder' ]) || 10))
     },
     latestEndIndex () {
-      return _.get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
+      return get(this.$store.state, [ 'articlesGroupedList', 'latestEndIndex' ])
     },
     latestArticle () {
       const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
 
-      const latestFirstPage = _.dropRight(_.get(articlesGroupedList, [ 'latest' ]), 3)
-      const latestAfterFirstPage = _.drop(latestArticlesList, latestEndIndex)
-      const choices = _.get(articlesGroupedList, [ 'choices' ])
-      const groupedTitle = _.get(articlesGroupedList, [ 'grouped' ])
-      const groupedRelateds = _.flatten(_.map(_.get(articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
-      const grouped = _.union(groupedTitle, groupedRelateds)
-      const choicesAndGrouped = _.unionBy(choices, grouped, 'slug')
+      const latestFirstPage = dropRight(get(articlesGroupedList, [ 'latest' ]), 3)
+      const latestAfterFirstPage = drop(latestArticlesList, latestEndIndex)
+      const choices = get(articlesGroupedList, [ 'choices' ])
+      const groupedTitle = get(articlesGroupedList, [ 'grouped' ])
+      const groupedRelateds = flatten(map(get(articlesGroupedList, [ 'grouped' ]), (o) => o.relateds))
+      const grouped = union(groupedTitle, groupedRelateds)
+      const choicesAndGrouped = unionBy(choices, grouped, 'slug')
       const choicesAndGrouped_slugs = choicesAndGrouped.map((o) => o.slug)
 
-      const latest = _.uniqBy(
-        _.concat(latestFirstPage, latestAfterFirstPage),
+      const latest = uniqBy(
+        concat(latestFirstPage, latestAfterFirstPage),
         'slug'
       )
 
-      _.remove(latest, (o) => {
-        return _.includes(choicesAndGrouped_slugs, o.slug)
+      remove(latest, (o) => {
+        return includes(choicesAndGrouped_slugs, o.slug)
       })
       if (this.notFirstPageNow) {
         return latest
@@ -370,17 +370,17 @@ export default {
       }
     },
     isTimeToShowAdCover () {
-      return _.get(this.$store, 'state.isTimeToShowAdCover', false)
+      return get(this.$store, 'state.isTimeToShowAdCover', false)
     },
     notFirstPageNow () {
-      return _.get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], 1) !== 1
+      return get(this.$store.state, [ 'latestArticles', 'meta', 'page' ], 1) !== 1
     },
     popularlist () {
-      const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
+      const { report = [] } = get(this.$store, [ 'state', 'articlesPopList' ])
       return report
     },
     projects () {
-      return _.get(this.commonData, [ 'projects', 'items' ])
+      return get(this.commonData, [ 'projects', 'items' ])
     }
   },
   methods: {
@@ -408,10 +408,10 @@ export default {
         }
       }
     },
-    get: _.get,
+    get,
     getMmid () {
       const mmid = Cookie.get('mmid')
-      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      let assisgnedRole = get(this.$route, [ 'query', 'ab' ])
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }

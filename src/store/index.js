@@ -566,6 +566,9 @@ export function createStore () {
     },
 
     getters: {
+      adSize (state) {
+        return _.get(state, 'viewport.width')  > 320 ? '' : 'less-than-320-only'
+      },
       searchResultNormalized: state => {
         return _.map(state.searchResult.items, item => Object.assign({ id: _.get(item, 'id') }, _.get(item, 'source')))
       },

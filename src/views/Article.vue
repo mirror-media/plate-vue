@@ -7,10 +7,11 @@
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
-          <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config"/>
+          <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')"/>
         </LazyItemWrapper>
-        <div class="article" v-if="articleData">
+        <div :class="[ abIndicator ? abIndicator.toLowerCase() : '' ]" class="article" v-if="articleData">
           <article-body
+            :abIndicator="abIndicator"
             :articleData="articleData"
             :isAd="isAd"
             :poplistData="popularlist"
@@ -47,7 +48,7 @@
               <div :style="{ display: 'flex', justifyContent: 'space-around' }">
                 <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE1" extClass="mobile-hide" :config="props.config"/>
                 <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCE2" extClass="mobile-hide" :config="props.config" :style="{ marginLeft: '10px' }"/>
-                <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" :config="props.config"/>
+                <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')" />
               </div>
             </LazyItemWrapper>
             <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-AR1" :strict="true">
@@ -57,14 +58,14 @@
                 <span id="innity-custom-adnetwork-span-63518"></span>
                 <span id="innity-custom-premium-span-12738"></span>            
               </template>
-              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')"/>
             </LazyItemWrapper>
             <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-AR2" :strict="true">
               <template>
                 <span id="innity-custom-adnetwork-span-68557"></span>
                 <span id="innity-custom-premium-span-12739"></span>           
               </template>
-              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config"/>
+              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')"/>
             </LazyItemWrapper>
             <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode"></pop-list>
             <RelatedListInContent :relateds="relateds" slot="relatedListInContent">
@@ -97,7 +98,7 @@
             <LazyItemWrapper :position="verge.viewportH()" :strict="true">
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441d04bbe120f002a319a'" pos="MBFTOOP" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
-              <vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
+              <vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" :size="getValue($store, 'getters.adSize')" />
             </LazyItemWrapper>
             <div style="width: 100%; height: 100%;">
               <app-footer />
@@ -111,7 +112,7 @@
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <div v-if="!hiddenAdvertised" slot="slot_dfpFT">
             <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config" v-if="viewport >= 1200"/>
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" v-if="viewport < 1200" />
+            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" :size="getValue($store, 'getters.adSize')" v-if="viewport < 1200" />
           </div>
         </article-body-photography>
       </div>
@@ -736,8 +737,8 @@
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
         }
-        window.ga('set', 'contentGroup3', '')
-        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+        // window.ga('set', 'contentGroup3', '')
+        window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       sendGaClickEvent,
@@ -787,7 +788,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      // this.abIndicator = this.getMmid()
+      this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
         { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
         { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
@@ -932,11 +933,15 @@
     .article-container
       .article
         padding 30px 0 0
+        &.b
+          padding 0
 
   @media (min-width 321px) and (max-width 499px)
     .article-container
       .article
         padding 30px 25px 0
+        &.b
+          padding 0 25px
   
   @media (min-width 0px) and (max-width 767px)  
     .article-container
