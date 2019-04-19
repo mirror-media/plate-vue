@@ -321,7 +321,7 @@ export default {
       transform translateY(0)
 
 .search-nav
-  display none
+  display none !important
 .search-nav-mobile
   display flex
   order 1
@@ -451,5 +451,5 @@ export default {
     order 1
     margin 0 0 0 auto
   .search-nav-mobile
-    display none
+    display none !important
 </style>
