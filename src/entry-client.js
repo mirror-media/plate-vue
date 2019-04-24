@@ -1,31 +1,31 @@
 import ProgressBar from './components/ProgressBar.vue'
 import Vue from 'vue'
 import 'es6-promise/auto'
-import { SITE_MOBILE_URL } from './constants'
+// import { SITE_MOBILE_URL } from './constants'
 import { UserAgent } from 'express-useragent'
 import { createApp } from './app'
 const debug = require('debug')('ENTRY-CLIENT')
 
 const exp_dev = /dev|localhost/
-const exp_moblie_site = new RegExp('m.mirrormedia.mg')
+// const exp_moblie_site = new RegExp('m.mirrormedia.mg')
 const useragent = new UserAgent().parse(navigator.userAgent)
 debug('STAGE:', exp_dev.test(location.host) ? 'DEV' : 'PROD')
 debug('CURR PATH:', location.host, location.pathname, location.search)
 debug('useragent.isMobile', useragent.isMobile)
 debug('useragent.isTablet', useragent.isTablet)
 
-if (!exp_dev.test(location.host)) {
-  debug('CURR DEVICE:', useragent.platform, useragent.browser)
-  if (SITE_MOBILE_URL) {
-    if (!location.host.match(exp_moblie_site) && (useragent.isMobile || useragent.isTablet)) {
-      /** Redirect to Mobile version */
-      debug('GOING TO', `${SITE_MOBILE_URL}${location.pathname}${location.search}`)
-      location.replace(`${SITE_MOBILE_URL}${location.pathname}${location.search}`)
-    } else {
-      debug('WELL, DO NOTHING!')
-    }
-  }
-}
+// if (!exp_dev.test(location.host)) {
+//   debug('CURR DEVICE:', useragent.platform, useragent.browser)
+//   if (SITE_MOBILE_URL) {
+//     if (!location.host.match(exp_moblie_site) && (useragent.isMobile || useragent.isTablet)) {
+//       /** Redirect to Mobile version */
+//       debug('GOING TO', `${SITE_MOBILE_URL}${location.pathname}${location.search}`)
+//       location.replace(`${SITE_MOBILE_URL}${location.pathname}${location.search}`)
+//     } else {
+//       debug('WELL, DO NOTHING!')
+//     }
+//   }
+// }
 
 // global progress bar
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
