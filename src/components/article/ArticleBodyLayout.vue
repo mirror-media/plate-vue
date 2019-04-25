@@ -453,7 +453,7 @@
         left -25px
         width calc(100% + 50px)
         margin 25px 0
-        
+        padding 0 !important
 
     &.single-col 
       margin-top 50px
