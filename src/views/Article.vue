@@ -51,7 +51,12 @@
                 <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBE1" extClass="mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')" />
               </div>
             </LazyItemWrapper>
-            <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-AR1" :strict="true">
+            <template slot="dfpad-AR1-MB">
+              <span id="innity-custom-adnetwork-span-63518"></span>
+              <span id="innity-custom-premium-span-12738"></span>
+              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')"/>
+            </template>
+            <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-AR1-PC" :strict="true">
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441604bbe120f002a3197'" pos="PCAROOP" extClass="mobile-hide" :config="props.config" />
               <vue-dfp :is="props.vueDfp" v-else-if="!hiddenAdvertised" pos="PCAR" extClass="mobile-hide" :config="props.config"  />
               <template>
@@ -60,12 +65,16 @@
               </template>
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR1" extClass="mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')"/>
             </LazyItemWrapper>
-            <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-AR2" :strict="true">
+            <template slot="dfpad-AR2-MB">
+              <span id="innity-custom-adnetwork-span-68557"></span>
+              <span id="innity-custom-premium-span-12739"></span>
+              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')"/>
+            </template>
+            <LazyItemWrapper :position="verge.viewportH()" slot="dfpad-AR2-PC" :strict="true">
               <template>
                 <span id="innity-custom-adnetwork-span-68557"></span>
                 <span id="innity-custom-premium-span-12739"></span>           
               </template>
-              <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBAR2" extClass="mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')"/>
             </LazyItemWrapper>
             <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode"></pop-list>
             <RelatedListInContent :relateds="relateds" slot="relatedListInContent">

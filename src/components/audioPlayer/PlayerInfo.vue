@@ -73,4 +73,8 @@ export default {
     &--fixed-width
       min-width max-content
       margin 0 0 0 5px
+
+@media (max-width 768px)
+  .info
+    font-size 11px
 </style>

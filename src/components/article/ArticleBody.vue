@@ -51,6 +51,9 @@
           <div v-else :style="{ backgroundColor: category.color || '#bcbcbc' }" v-html="paragraphComposer(p)"></div>
         </div>        
       </div>
+      <div v-if="viewport <= 768" class="dfp-at--mobile">
+        <slot name="dfpad-AR1-MB"></slot>
+      </div>
       <div class="split-line"></div>
       <article class="content" id="article-body-content">
         <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`" :is="blockWrapper(index)">
@@ -82,12 +85,15 @@
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div>
           <div v-else v-html="paragraphComposer(p)"></div>
-          <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
-          <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
+          <slot name="dfpad-AR1-PC" v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 0 ]"></slot>
+          <slot name="dfpad-AR2-PC" v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 1 ]"></slot>
           <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
         </div>
         <p v-if="articleData.updatedAt !== articleData.publishedDate" class="updated-time">更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span></p>
       </article>
+      <div v-if="viewport <= 768" class="dfp-at--mobile">
+        <slot name="dfpad-AR2-MB"></slot>
+      </div>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
       </div>
