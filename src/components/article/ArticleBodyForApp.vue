@@ -45,8 +45,11 @@
           <div v-else-if="p.type === 'annotation'">
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div>
-          <div v-else v-html="paragraphComposer(p)"></div>
+          <div v-else :style="{ backgroundColor: category.color || '#bcbcbc' }" v-html="paragraphComposer(p)"></div>
         </div>      
+      </div>
+      <div v-if="viewport <= 768" class="dfp-at--mobile">
+        <slot name="dfpad-AR1-MB"></slot>
       </div>
       <div class="split-line"></div>
       <article class="content">
@@ -66,12 +69,13 @@
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div>
           <div v-else v-html="paragraphComposer(p)"></div>
-          <slot name="dfpad-AR1" v-if="index === firstTwoUnstyledParagraph[ 0 ]"></slot>
-          <slot name="dfpad-AR2" v-if="index === firstTwoUnstyledParagraph[ 1 ]"></slot>
           <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
         </div>
         <p v-if="articleData.updatedAt !== articleData.publishedDate" class="updated-time">更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span></p>
       </article>
+      <div v-if="viewport <= 768" class="dfp-at--mobile">
+        <slot name="dfpad-AR2-MB"></slot>
+      </div>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
       </div>
@@ -128,7 +132,8 @@ export default {
       const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ], sectionTitle)
       const shouldShow = !_.get(this.articleData, [ 'isAdvertised' ], false) ? {} : { display: 'none;' }
       const style = { borderLeft: `7px solid ${_.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')}` }
-      return { categoryId, categoryTitle, style: Object.assign(style, shouldShow) }
+      const color = _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
+      return { categoryId, categoryTitle, style: Object.assign(style, shouldShow), color }
     },
     contArr () {
       return _.get(this.articleData, [ 'content', 'apiData' ], [])
@@ -550,7 +555,13 @@ export default {
         color rgba(65, 65, 65, 0.61)
 
         p 
-          text-align justify 
+          margin 0
+          padding 1em 2em
+          color #fff
+          text-align justify
+          font-weight bold
+          font-size 1.2rem
+          
           strong 
             color rgba(65, 65, 65, 0.61)
             font-weight bold
@@ -851,6 +862,14 @@ export default {
       .dfpad-set
         clear both
 
+      .dfp-at--mobile
+        position relative
+        top 0
+        left -25px
+        width calc(100% + 50px)
+        margin 25px 0
+        padding 0 !important
+
     &.single-col 
       margin-top 50px
 
@@ -962,12 +981,19 @@ export default {
       padding 0
       font-size 0
       border none
-      
+
+  @media (max-width 320px)
+    .article_body
+      .article_main 
+        .dfp-at--mobile
+          position static
+          width 100%
+
   @media (min-width 0px) and (max-width 499px)
     .article_body
       > div:not([class="main"]):not([class="pic-container"])
-        padding-right 25px
-        padding-left 25px
+        padding-right 0px
+        padding-left 0px
       > .article_main
         > div:not([class="dfpad-set"]), article
           padding-left 25px
@@ -1041,6 +1067,11 @@ export default {
         > div:not([class="dfpad-set"]), article
           padding-left 0
           padding-right 0
+
+  @media (max-width 320px)   
+     .article_body
+        > .article_basic-info, > .article_title, > .article_credit
+          padding 0 25px !important
 
   @media (min-width 0px) and (max-width 767px)
     .article_body

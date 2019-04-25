@@ -85,8 +85,10 @@
         text-align justify
         line-height 1.5
       > h1
-        margin 15px 0 0
+        margin 25px 0
         font-size 2rem
+        font-weight 400
+        line-height 1.25
         & + div
           margin-top 25px
       > h2
@@ -102,11 +104,13 @@
           .article__audioplayer-share
             display flex
             align-items center
-            margin-top .5em
+            margin 25px 0
+            .player
+              flex 1
             .share-light
               justify-content flex-end
               align-items flex-start
-              margin 0 0 0 auto
+              margin 0 0 0 20px
       .article_main_pop 
         clear both
         margin-top 20px
@@ -443,6 +447,14 @@
         &:not(.mobile)
           display flex
           justify-content space-around
+      .dfp-at--mobile
+        position relative
+        top 0
+        left -25px
+        width calc(100% + 50px)
+        margin 25px 0
+        
+
     &.single-col 
       margin-top 50px
 
@@ -577,13 +589,23 @@
         border-bottom none !important
 
   .article__credit
+    a
+      padding 0
+      line-height 1.5
     a.blue:hover, a.blue:link, a.blue:visited 
-      color #74afd2
+      color #0b4fa2
   .article__date
     font-style italic
     font-size 17px
     color #a1a1a1
     font-weight normal
+
+  @media (max-width 320px)
+    .article_body
+      .article_main 
+        .dfp-at--mobile
+          position static
+          width 100%
 
   @media (min-width 0px) and (max-width 499px)
     .article_body
@@ -592,8 +614,8 @@
         padding-left 25px
       > .article_main
         > div:not([class="dfpad-set"]), article
-          padding-left 25px
-          padding-right 25px
+          padding-left 20px
+          padding-right 20px
           &.article_main_tags
             padding 0 25px
            
@@ -613,7 +635,7 @@
 
       .article_main
         > h1, h2
-          padding 0 25px
+          padding 0 20px
         .article_main_tags
           .tags
             line-height 1.6rem

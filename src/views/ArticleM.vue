@@ -1,8 +1,8 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="`prod`">
     <template slot-scope="props" slot="dfpPos">
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
-        <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
+        <!-- <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/> -->
         <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')" />
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
@@ -19,16 +19,16 @@
         <div class="article" v-if="articleData">
           <article-body :articleData="articleData" :poplistData="popularlist" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
-              <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp>
+              <!-- <vue-dfp :is="props.vueDfp" pos="PCR1" extClass="mobile-hide" :config="props.config"></vue-dfp> -->
               <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" v-if="ifRenderAside" />
-              <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :config="props.config"></vue-dfp>
+              <!-- <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="mobile-hide" :config="props.config"></vue-dfp> -->
             </aside>
-            <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/> -->
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/> -->
             <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
-            <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/>
-            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
-            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/> -->
+            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
             <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
             <RecommendList
               :isApp="true"
@@ -48,7 +48,7 @@
             </template>
           </article-body>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/> -->
             <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" :size="getValue($store, 'getters.adSize')" />
           </div>
         </div>
@@ -57,7 +57,7 @@
         <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments" :isApp="true">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <div slot="slot_dfpFT">
-            <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
+            <!-- <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/> -->
             <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" :size="getValue($store, 'getters.adSize')" v-if="viewport < 767" />
           </div>
         </article-body-photography>
@@ -76,9 +76,9 @@
       <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
         <vue-dfp :is="props.vueDfp" pos="MBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>  
-      <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
+      <!-- <dfp-fixed v-if="hasDfpFixed" v-show="showDfpFixedBtn" v-on:closeDfpFixed="closeDfpFixed">
         <vue-dfp :is="props.vueDfp" pos="PCFF" :dfpId="props.dfpId" slot="dfpFF" :config="props.config"/>
-      </dfp-fixed>
+      </dfp-fixed> -->
       <adult-content-alert v-if="isAdultContent" />
       <div class="fb-quote"></div>
     </template>
@@ -101,6 +101,7 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import DfpST from '../components/DfpST.vue'
   import LatestList from '../components/article/LatestList.vue'
+  import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
   import RecommendList from '../components/article/RecommendList.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -112,7 +113,7 @@
   const fetchArticles = (store, slug) => {
     return store.dispatch('FETCH_ARTICLES', {
       params: {
-        related: 'full',
+        // related: 'full',
         clean: 'content',
         where: {
           'slug': {
@@ -308,6 +309,7 @@
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
       DfpST,
+      LazyItemWrapper,
       RelatedListInContent,
       RecommendList
     },
@@ -450,6 +452,9 @@
         const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const poster = ogImgUrl || (heroImgUrl || '/assets/mirrormedia/notImage.png')
         return (heroVideo && heroVideo.video) ? Object.assign(_.get(heroVideo, [ 'video' ], {}), { id: _.get(heroVideo, [ 'id' ], '') }, { poster }) : heroVideo
+      },
+      hiddenAdvertised () {
+        return _.get(this.articleData, 'hiddenAdvertised', false)
       },
       ifLockJS () {
         return _.get(this.articleData, [ 'lockJS' ])

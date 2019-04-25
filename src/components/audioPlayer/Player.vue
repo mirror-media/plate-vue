@@ -262,5 +262,5 @@ computed: {
 
 @media (max-width 768px)
   .middle
-    min-width 160px
+    min-width 130px
 </style>
