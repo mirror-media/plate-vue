@@ -102,7 +102,7 @@
       <div class="article_main_tags">
         <p>相關關鍵字：</p>
         <div class="tags" v-if="tags.length > 0">
-          <a v-for="tag in tags" :key="tag.id" :href="`/tag/${tag.id}`" @click="sendGaClickEvent('article', 'tag')" v-text="tag.name"></a>
+          <a v-for="tag in tags" :key="tag.id" :href="`/tag/${tag.id}`" target="_blank" @click="sendGaClickEvent('article', 'tag')" v-text="tag.name"></a>
         </div>
       </div>
       <div class="split-line"></div>

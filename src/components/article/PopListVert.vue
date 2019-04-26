@@ -4,12 +4,12 @@
     <div class="popListVert-list">
       <template v-for="(o, i) in popArticles">
         <div class="popListVert-list__item" :key="`popListVert${i}`">
-          <router-link :to="o.slug" class="popListVert-list__item--img" @click.native="sendGaClickEvent('article', 'popular')">
+          <a :href="o.slug" class="popListVert-list__item--img" target="_blank" @click="sendGaClickEvent('article', 'popular')">
             <LazyImage :src="getImage(o, 'tiny')" :alt="get(o, 'title')" />
-          </router-link>
+          </a>
           <div class="popListVert-list__item--text">
             <div :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')"></div>
-            <h2><router-link :to="o.slug" @click.native="sendGaClickEvent('article', 'popular')" v-text="getTruncatedVal(o.title, 12)"></router-link></h2>
+            <h2><a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" target="_blank" v-text="getTruncatedVal(o.title, 12)"></a></h2>
           </div>
         </div>
         <slot name="microAdNA3" v-if="i === 1"></slot>
