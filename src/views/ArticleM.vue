@@ -3,7 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <!-- <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/> -->
-        <vue-dfp :is="props.vueDfp" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+        <vue-dfp :is="props.vueDfp" pos="APPHD" extClass="full mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')" />
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
           <article-video :video="heroVideo" class="heroimg" />
@@ -25,10 +25,10 @@
             </aside>
             <!-- <vue-dfp :is="props.vueDfp" pos="PCE1" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/> -->
             <!-- <vue-dfp :is="props.vueDfp" pos="PCE2" extClass="mobile-hide" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config"/> -->
-            <vue-dfp :is="props.vueDfp" pos="MBE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+            <vue-dfp :is="props.vueDfp" pos="APPE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
             <!-- <vue-dfp :is="props.vueDfp" pos="PCAR" extClass="mobile-hide" slot="dfpad-AR1" :dfpId="props.dfpId" :config="props.config"/> -->
-            <vue-dfp :is="props.vueDfp" pos="MBAR1" extClass="mobile-only" slot="dfpad-AR1-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
-            <vue-dfp :is="props.vueDfp" pos="MBAR2" extClass="mobile-only" slot="dfpad-AR2-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+            <vue-dfp :is="props.vueDfp" pos="APPAT1" extClass="mobile-only" slot="dfpad-AR1-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+            <vue-dfp :is="props.vueDfp" pos="APPAT2" extClass="mobile-only" slot="dfpad-AR2-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
             <RelatedListInContent slot="relatedListInContent" :relateds="relateds" />
             <RecommendList
               :isApp="true"
@@ -49,7 +49,7 @@
           </article-body>
           <div class="article_footer">
             <!-- <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/> -->
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+            <vue-dfp :is="props.vueDfp" pos="APPFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" :size="getValue($store, 'getters.adSize')" />
           </div>
         </div>
       </div>
@@ -58,13 +58,13 @@
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <div slot="slot_dfpFT">
             <!-- <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/> -->
-            <vue-dfp :is="props.vueDfp" pos="MBFT" :extClass="`full mobile-only`" :config="props.config" :size="getValue($store, 'getters.adSize')" v-if="viewport < 767" />
+            <vue-dfp :is="props.vueDfp" pos="APPFT" :extClass="`full mobile-only`" :config="props.config" :size="getValue($store, 'getters.adSize')" v-if="viewport < 767" />
           </div>
         </article-body-photography>
       </div>
       <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
         <DfpST :props="props">
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+          <vue-dfp :is="props.vueDfp" :config="props.config" pos="APPST" slot="dfpST" />
         </DfpST>
       </LazyItemWrapper>
       <DfpCover v-if="!hiddenAdvertised && isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199"> 
