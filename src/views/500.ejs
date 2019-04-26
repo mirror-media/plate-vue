@@ -1,58 +1,326 @@
 <!DOCTYPE html>
 <html lang="zh-Hant-TW">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
-        <meta name="keywords" content="827dd55a5e613a43faad">
-        <title>500 - Internal Error</title>
-        <style>
-            .nav-menu {
-                position: relative;
-                height: 120px;
-                overflow: hidden;
-                width: 100%;
-                padding-top: 5px;
-            }
-            .nav_logo {
-                text-align: center;
-            }
-            .listing-menu {
-                width: 750px;
-                margin-top: 5px;
-                margin-bottom: 5px;
-                margin: 10px auto;
-            }
-            .menu-items {
-                margin-left: auto;
-                margin-right: auto;
-                width: 750px;
-            }
-            .nav-item {
-                display: inline;
-                font-size: 100%;
-                font-weight: 700;
-                padding-left: 29px;
-                padding-right: 29px;
-                letter-spacing: 5px;
-            }
-        </style>
-        <script>
-            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="keywords" content="827dd55a5e613a43faad">
+    <title>500 - Internal Error</title>
+    <link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+    <style>
+      html {
+        box-sizing: border-box;
+        font-size: 16px;
+        line-height: 1.15;
+      }
+      *, *:before, *:after {
+        box-sizing: inherit;
+      }
+      body {
+        width: 100%;
+        margin: 0;
+        background-color: #2c5970;
+      }
+      h1, h2, a {
+        margin: 0 0 .5em;
+      }
+      a {
+        color: #34495e;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      .view {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        -webkit-box-pack: center;
+        -webkit-justify-content: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        min-height: 100vh;
+      }
+      .view figure {
+        position: relative;
+        width: 100%;
+        margin: 2em 0;
+        padding-left: 1em;
+      }
+      .view figure img {
+        width: 100%;
+      }
+      .view figure img.img--desktop {
+        display: none;
+      }
+      .textBox {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -webkit-flex-direction: column;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        position: absolute;
+        right: 30%;
+        bottom: 20%;
+        width: 60%;
+      }
+      .textBox h1 {
+        margin: 0;
+        color: #f89228;
+        font-size: 45px;
+        font-family: 'PT Mono', monospace, -apple-system, "Helvetica Neue", sans-serif;
+        font-weight: normal;
+      }
+      .textBox h2 {
+        color: #f89228;
+        font-size: 1.2rem;
+      }
+      .textBox a {
+        margin: 0;
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: 300;
+      }
+      .pop-list {
+        display: none;
+        padding: 0 5%;
+      }
+      .pop-list h2 {
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: normal;
+      }
+      .post {
+        width: 100%;
+        margin-bottom: 1em;
+      }
+      .post .post__img {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%;
+        margin: 0;
+      }
+      .post .post__img img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: 50% 50%;
+      }
+      .post .post__category {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        padding: 0.5em;
+        color: #fff;
+        letter-spacing: 2px;
+        background-color: #bcbcbc;
+      }
+      .post .post__category.news-people {
+        background-color: #30bac8;
+      }
+      .post .post__category.entertainment {
+        background-color: #bf3284;
+      }
+      .post .post__category.foodtravel {
+        background-color: #eac151;
+      }
+      .post .post__category.watch {
+        background-color: #003153;
+      }
+      .post .post__category.projects {
+        background-color: #000;
+      }
+      .post .post__title {
+        background-color: #fff;
+        padding: 1em;
+      }
+      .post .post__title a {
+        font-size: 1.2rem;
+        font-weight: 300;
+        text-align: justify;
+        line-height: 1.2;
+        letter-spacing: 1px;
+      }
 
-            ga('create', 'UA-83609754-1', 'auto');
-            ga('send', 'pageview');
-        </script>
-    </head>
-    <body>
-        <div style="text-align: center;">
-            <img class="error_img" src="/assets/mirrormedia/500.jpg" alt="500 Internal Server Error" style="width: 100%;">
+      @media (min-width: 600px) {
+        body {
+          height: 100vh;
+        }
+        h1, h2, a {
+          margin: 0;
+        }
+        br {
+          display: none;
+        }
+        .view {
+          justify-content: center;
+          height: 100%;
+        }
+        .view figure img.img--mobile {
+          display: none;
+        }
+        .view figure img.img--desktop {
+          display: inline;
+        }
+        .textBox {
+          flex-direction: row;
+          align-items: flex-end;
+          top: 50%;
+          left: 0;
+          transform: translateY(-50%);
+          width: 100%;
+          padding-left: 5%;
+        }
+        .textBox h1 {
+          font-size: 60px;
+        }
+        .textBox h2, .textBox a {
+          font-size: 1.2rem;
+          padding-bottom: 13px;
+        }
+        .textBox h2 {
+          margin: 0 1em;
+        }
+        .list-container {
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display: flex;
+        }
+        .post {
+          margin: 0 10px;
+          background-color: #fff;
+        }
+        .pop-list h2 {
+          margin: 1em 0 1em 10px;
+        }
+      }
+      @media (min-width: 900px) {
+        .view {
+          justify-content: center;
+          height: 100%;
+        }
+        .view figure {
+          margin: 2em 0;
+        }
+        .textBox {
+          width: 75%;
+          padding: 0;
+          left: 12.5%;
+        }
+        .textBox h1 {
+          font-size: 70px;
+        }
+        .textBox h2, .textBox a {
+          padding-bottom: 15px;
+          font-size: 30px;
+        }
+        .textBox h2 {
+          margin: 0 1.5em;
+        }
+        .pop-list {
+          width: 75%;
+          margin: 0 auto;
+          padding: 0;
+        }
+        .pop-list h2 {
+          margin: 1em 0;
+        }
+        .list-container {
+          justify-content: space-between;
+        }
+        .post {
+          width: 30%;
+          margin: 0;
+        }
+      }
+    </style>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-83609754-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <script>
+      function sendGaClickEvent (label) {
+        window.ga && window.ga('send', 'event', '500', 'click', label)
+      }
+      function getHost () {
+        const browser = typeof window !== 'undefined'
+        if (browser) { return `//${location.host}` }
+        else {
+          const host = process.env.HOST || 'localhost'
+          const port = parseInt(process.env.PORT) || 8080
+          return `${host}:${port}`
+        }
+      }
+      const locationUrl = location.href.split('?')[0]
+      if (locationUrl.match(/localhost:8080\/$/)) {
+        const _host = getHost()
+        const url = `${_host}/api/poplist`
+        let popList
+        fetch(url, {method: 'get'})
+        .then(function(response) {
+          if (!response.ok) throw new Error(response.statusText)
+          return response.json()
+        }).catch(function(err) {
+          console.log('err', err)
+        })
+        .then(function(data) {
+          popList = _.take(_.get(data, [ 'report' ]), 3)
+          let listContent = ''
+          _.forEach(popList, function(item, index) {
+            listContent += `<div class="post">
+              <figure class="post__img">
+                <a href="${item.slug}" onclick="sendGaClickEvent('pop')"><img src="${_.get(item, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ])}" /></a>
+                <div class="post__category ${_.get(item, [ 'sections', '0', 'name' ])}">${_.get(item, [ 'sections', '0', 'title' ])}</div>
+              </figure>
+              <div class="post__title">
+                <a href="${item.slug}" onclick="sendGaClickEvent('pop')">${item.title}</a>
+              </div></div>`
+          })
+          document.querySelector('.list-container').innerHTML =listContent
+          document.querySelector('.pop-list').style.display = 'block'
+        })
+      }
+    </script>
+  </head>
+  <body>
+    <div class="view">
+      <figure>
+        <img class="img--mobile" src="/assets/mirrormedia/404-mobile.png" alt="500 Internal Server Error">
+        <img class="img--desktop" src="/assets/mirrormedia/404-desktop.png" alt="500 Internal Server Error">
+        <div class="textBox">
+          <h1>500</h1>
+          <h2>抱歉！<br>目前網站遇到一些問題<br>請稍後再試</h2>
+          <a href="/" onclick="sendGaClickEvent('home')">| 回首頁 |</a>
         </div>
-        <div style="display: none;">
-          <%= timestamp %>
-          <%= err %>
-        </div>
-    </body>
+      </figure>
+      <div class="pop-list">
+        <h2>熱門文章</h2>
+        <div class="list-container"></div>
+      </div>
+      <!-- <img class="error_img" src="/assets/mirrormedia/500.jpg" alt="500 Internal Server Error" style="width: 100%;"> -->
+    </div>
+    <div style="display: none;">
+      <%= timestamp %>
+      <%= err %>
+    </div>
+  </body>
 </html>
