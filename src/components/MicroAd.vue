@@ -91,9 +91,12 @@
       width 100% 
       max-height 100% 
       h3 
+        height calc(1.7rem * 3)
         font-size 1.2rem
         font-weight 300  
-        line-height 1.7rem  
+        line-height 1.7rem
+        overflow hidden
+        
       &:hover, &:link, &:visited 
         color #8c8c8c 
         font-weight normal 
@@ -160,7 +163,15 @@
           color rgba(0, 0, 0, 0.49) 
           font-weight normal 
           border none 
- 
+
+@media (max-width: 320px) 
+  .nativeDFP.latest-list_item
+    .latest-list_item_title
+      a
+        h3
+          margin .5em 0
+          font-size 1rem
+
 @media (min-width: 600px)   
   .nativeDFP.latest-list_item 
     a 

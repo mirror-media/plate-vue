@@ -6,8 +6,8 @@
         <template v-for="o in filteredRecommends">
           <div v-if="o" class="related-list__list__item">
             <div class="title">
-              <router-link @click.native="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" v-if="shouldShowItem(o)"></router-link>
-              <a @click="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :href="getHrefFull(o)" v-text="getValue(o, [ 'title' ], '')" v-else></a>
+              <!-- <router-link @click.native="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" v-if="shouldShowItem(o)"></router-link> -->
+              <a @click="recommendsClickHandler(getValue(o, [ 'slug' ]))" :href="getHrefFull(o)" target="_blank" v-text="getValue(o, [ 'title' ], '')"></a>
             </div>
           </div>
         </template>
@@ -88,9 +88,9 @@
         }
       },
       sendGaClickEvent,
-      shouldShowItem (article) {
-        return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
-      },
+      // shouldShowItem (article) {
+      //   return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
+      // },
       titleStyle () {
         return { color: _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
       }

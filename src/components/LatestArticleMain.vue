@@ -248,6 +248,14 @@ export default {
 
   .tablet-only
     display none !important
+  @media (max-width: 320px)
+    .latest-main-container
+      .latest-list_item_title
+        a
+          h3
+            margin .5em 0
+            font-size 1rem
+
   @media (min-width: 600px) and (max-width: 1199px)
     .latest-main-container
       .latest-list

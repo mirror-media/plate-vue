@@ -1,5 +1,5 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="`prod`">
+  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <!-- <vue-dfp :is="props.vueDfp" pos="PCHD" extClass="full mobile-hide" :config="props.config"/> -->
@@ -49,7 +49,7 @@
           </article-body>
           <div class="article_footer">
             <!-- <vue-dfp :is="props.vueDfp" pos="PCFT" extClass="mobile-hide" :config="props.config"/> -->
-            <vue-dfp :is="props.vueDfp" pos="APPFT" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+            <vue-dfp :is="props.vueDfp" pos="APPFT" :extClass="`full mobile-only`" :config="props.config" :size="getValue($store, 'getters.adSize')" />
           </div>
         </div>
       </div>
@@ -784,10 +784,11 @@
           border-top 1px solid #c5c5c5
         
     .ad-container.full
-      max-width 1160px
+      width 100%
       background-color #fff
       margin 0 auto
       padding 20px 0
+      text-align center
 
     a, a:hover, a:link, a:visited
       display inline
@@ -806,6 +807,11 @@
     .article-container
       .article
         padding 30px 25px 0
+      .ad-container.full
+        position relative
+        width calc(100% + 40px)
+        top 0
+        left -20px
   
   @media (min-width 0px) and (max-width 767px)  
     .article-container
