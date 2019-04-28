@@ -82,7 +82,7 @@ class TimeoutHandler {
       }
       if (this.timeout <= 0) {
         this.destroy()
-        callback && callback({ err: 'ERROR: Timeout occured while connecting to redis.', data: null })
+        callback && callback({ err: 'ERROR: Timeout occured while cccessing data from redis.', data: null })
       }
     }, 1000)
   }
