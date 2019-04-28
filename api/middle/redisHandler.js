@@ -82,7 +82,7 @@ class TimeoutHandler {
       }
       if (this.timeout <= 0) {
         this.destroy()
-        callback && callback({ err: 'ERROR: Timeout occured while cccessing data from redis.', data: null })
+        callback && callback({ err: 'ERROR: Timeout occured while accessing data from redis.', data: null })
       }
     }, 1000)
   }
@@ -157,6 +157,7 @@ const redisFetchingRecommendNews = (field, callback) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if (timeoutHandler.timeout <= 0) { return }
+	console.info('>>> Fetch recommend news ' + field + ' failed')
     callback && callback({ err, data })
     timeoutHandler = null
   })
