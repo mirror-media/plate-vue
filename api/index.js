@@ -252,8 +252,7 @@ router.use('/search', (req, res) => {
     if (!err && data) {
       res.json(JSON.parse(data))
     } else {
-      console.warn(`\n[WARN] Fetch data from Redis in fail.`, `/search${req.url}`)
-      console.warn(`${err}\n`)
+      console.warn(`\n[WARN] Fetch data from Redis in fail ${err}.`, `/search${req.url}`)
       const keywords = get(req, 'query.keyword', '').split(',')
       const mustKeywords = map(keywords, k => ({
         'multi_match' : {
@@ -306,9 +305,7 @@ router.use('/search', (req, res) => {
           status: errWrapped.status,
           text: errWrapped.text
         })
-        console.error(`\n[ERROR] POST elastic search api`, esSearch_url)
-        console.error(test)
-        console.error(`${error}\n`)
+        console.error(`\n[ERROR] POST elastic search api: ${error}`, esSearch_url)
       })
     }
   })
@@ -323,8 +320,7 @@ router.use('/twitter', (req, res) => {
   } else {
     client.get('statuses/user_timeline', query, (err, data) => {
       if (err) {
-        console.error(`\n[ERROR] GET twitter api.`, req.url)
-        console.error(`${err}\n`)
+        console.error(`\n[ERROR] GET twitter api: ${err}.`, req.url)
         res.status(500).send(err)
       } else {
         res.json(data)
@@ -343,8 +339,7 @@ router.use('/tracking', async (req, res) => {
     await log.write(entry)
     res.send({ msg: 'Logging successfully.' })
   } catch (error) {
-    console.error(`\n[ERROR] Client info logging error occurred.`)
-    console.error(`${error}\n`)
+    console.error(`\n[ERROR] Client info logging error occurred: ${error}.`)
     res.status(500).send(error)
   }
 })
@@ -363,8 +358,7 @@ router.use('/related_news', (req, res) => {
       res.json(parsed)
     } else {
       if (err) {
-        console.error(`\n[ERROR] Fetch data from related-newsredis.`)
-        console.error(`${err}\n`)
+        console.error(`\n[ERROR] Fetch data from related-newsredis: ${err}.`)
       }
       res.json({ count: 0, result: [] })
     }
@@ -388,8 +382,7 @@ router.get('*', (req, res, next) => {
       )
     const data = JSON.parse(response.text)
     const dataAmount = get(data, '_meta.total')
-    console.log(`\n[LOG] Fetch data from Api ${req.url}. Time: ${Date.now() - req.startTime}ms. Amount: ${dataAmount}`)
-    console.log(`${decodeURIComponent(req.url)}\n`)
+    console.log(`\n[LOG] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${Date.now() - req.startTime}ms. Amount: ${dataAmount}`)
     if ((data._items || data._endpoints) && dataAmount >= 0) {
       res.dataString = response.text
 
