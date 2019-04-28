@@ -388,7 +388,7 @@ router.get('*', (req, res, next) => {
       )
     const data = JSON.parse(response.text)
     const dataAmount = get(data, '_meta.total')
-    console.log(`\n[LOG] Fetch data from Api. Time: ${Date.now() - req.startTime}ms. Amount: ${dataAmount}`)
+    console.log(`\n[LOG] Fetch data from Api ${req.url}. Time: ${Date.now() - req.startTime}ms. Amount: ${dataAmount}`)
     console.log(`${decodeURIComponent(req.url)}\n`)
     if ((data._items || data._endpoints) && dataAmount >= 0) {
       res.dataString = response.text
