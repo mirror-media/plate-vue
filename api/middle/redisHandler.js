@@ -135,14 +135,12 @@ const redisWriting = (url, data, callback, timeout) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     if(err) {
-      console.error(`\n[ERROR] Write data to Redis in fail. ${decodedUrl}`)
-      console.error(`${err}\n`)
+      console.error(`\n[ERROR] Write data to Redis in fail. ${decodedUrl}\n${err}\n`)
     } else {
       debug('Set timeout as:', timeout || REDIS_TIMEOUT)
       redisPoolWrite.expire(decodedUrl, timeout || REDIS_TIMEOUT || 5000, function(error, d) {
         if(error) {
-          console.error(`\n[ERROR] Set redis expire time in fail. ${decodedUrl}`)
-          console.error(`${err}\n`)
+          console.error(`\n[ERROR] Set redis expire time in fail. ${decodedUrl}\n${err}\n`)
         } else {
           callback && callback()
         }
