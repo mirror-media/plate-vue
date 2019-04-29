@@ -217,7 +217,7 @@ export const SITE_URL = 'https://www.mirrormedia.mg'
 
 export const SITE_MOBILE_URL = 'https://m.mirrormedia.mg'
 
-export const SITE_PROJ_URL = 'https://projects.mirrormedia.mg'
+export const SITE_PROJ_URL = 'https://www.readr.tw'
 
 export const SITE_DOMAIN = 'mirrormedia.mg'
 
