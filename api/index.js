@@ -382,7 +382,12 @@ router.get('*', (req, res, next) => {
       )
     const data = JSON.parse(response.text)
     const dataAmount = get(data, '_meta.total')
-    console.log(`\n[LOG] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${Date.now() - req.startTime}ms. Amount: ${dataAmount}`)
+	let timePeriod = Date.now() - req.startTime
+	if (timePeriod < 1000) {
+    	console.log(`\n[LOG] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+	} else {
+    	console.warn(`\n[WARN] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+	}
     if ((data._items || data._endpoints) && dataAmount >= 0) {
       res.dataString = response.text
 
