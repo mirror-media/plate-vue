@@ -67,7 +67,7 @@ const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendN
 class TimeoutHandler {
   constructor (callback) {
     this.isResponded = false
-    this.timeout = REDIS_CONNECTION_TIMEOUT || 2000
+    this.timeout = REDIS_CONNECTION_TIMEOUT || 200
 
     this.destroy = this.destroy.bind(this)
     this.init = this.init.bind(this)
@@ -75,7 +75,7 @@ class TimeoutHandler {
   }
   init (callback) {
     this.timeoutHandler = setInterval(() => {
-      this.timeout -= 1000
+      this.timeout -= 100
       if (this.isResponded) {
         this.destroy()
         return
@@ -84,7 +84,7 @@ class TimeoutHandler {
         this.destroy()
         callback && callback({ err: 'ERROR: Timeout occured while accessing data from redis.', data: null })
       }
-    }, 1000)
+    }, 100)
   }
   destroy () {
     clearInterval(this.timeoutHandler)
