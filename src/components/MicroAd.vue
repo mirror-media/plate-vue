@@ -188,6 +188,7 @@
       font-weight 300 
       a 
         h3 
+          height auto
           margin 0 0 10px 
           font-size 1.3rem
     .tablet-only 
