@@ -373,13 +373,13 @@ router.get('*', (req, res, next) => {
       .get(apiHost + req.url)
       .timeout(
         {
-          response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+          response: 2000, //config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
+          deadline: config.API_DEADLINE ? config.API_DEADLINE : 6000, //60000, // but allow 1 minute for the file to finish loading.
         }
       )
     const data = JSON.parse(response.text)
     const dataAmount = get(data, '_meta.total')
-	  let timePeriod = Date.now() - req.startTime
+	let timePeriod = Date.now() - req.startTime
     if (timePeriod < 1000) {
       console.log(`\n[LOG] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
     } else {
