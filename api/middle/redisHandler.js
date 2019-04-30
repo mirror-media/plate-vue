@@ -97,7 +97,7 @@ const redisFetching = (url, callback) => {
   try {
     decodedUrl = decodeURIComponent(url)
   } catch (error) {
-    console.error('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.\n', url)
+    console.error('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.', url)
     decodedUrl = url
   }
   redisPoolRead.get(decodedUrl, (error, data) => {
@@ -113,7 +113,7 @@ const redisFetching = (url, callback) => {
           })
         }
       } else {
-        console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} \n ${err}`)
+        console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} ${err}`)
       }
     })
     if (timeoutHandler.timeout <= 0) { return }
@@ -184,11 +184,11 @@ const fetchFromRedisForAPI = (req, res, next) => {
   debug('Trying to fetching data from redis...', req.url)
   redisFetching(req.url, ({ error, data }) => {
     if (!error && data) {
-      console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms\n`, req.url)
+      console.log('Fetch data from Redis.', `${Date.now() - req.startTime}ms`, req.url)
       res.header('Cache-Control', 'public, max-age=300')
       res.json(JSON.parse(data))
     } else {
-      console.warn(`\n[WARN] Fetch data from Redis in fail. \n${req.url} error: ${error}, data: ${data}`)
+      console.warn(`[WARN] Fetch data from Redis in fail. ${req.url} error: ${error}, data: ${data}`)
       next(error)
     }
   })
