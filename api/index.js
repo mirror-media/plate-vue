@@ -44,7 +44,7 @@ const fetchStaticJson = (req, res, fileName) => {
       .timeout(
         {
           response: 1000, //config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 5000, //60000, // but allow 1 minute for the file to finish loading.
+          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
         }
       )
       .then(response => {
@@ -376,7 +376,7 @@ router.get('*', (req, res, next) => {
       .timeout(
         {
           response: 1000, //config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 5000, //60000, // but allow 1 minute for the file to finish loading.
+          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
         }
       )
     const data = JSON.parse(response.text)
