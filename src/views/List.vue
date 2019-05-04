@@ -157,7 +157,7 @@ const GS_TAG_ID = '5bbf08301e598f1000fc8e52' // dev 5bbc2069f39162100007c8bc
 
 const fetchCommonData = (store, route) => {
   return Promise.all([
-    store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
+    store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] }),
     fetchPartners(store)
   ]).then(() => {
     const jobs = []
