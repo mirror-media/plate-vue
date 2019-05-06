@@ -396,7 +396,9 @@ router.get('*', (req, res, next) => {
       const exp_post_query = /^\/posts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*&clean=content/
       dataAmount > 0 && exp_post_query.test(req.url) && (res.redisTTL = 60 * 60 * 24 * 7)
       // redis ttl be 30 days.
-      UrlForRedisStoreOneMonth.filter(url => url === req.url).length > 0 && (res.redisTTL = 60 * 60 * 24 * 30)
+      req.headers.host.match(/www.mirrormedia.mg/g)
+      ? UrlForRedisStoreOneMonth.filter(url => url === req.url).length > 0 && (res.redisTTL = 60 * 60 * 24 * 30)
+      : ''
       next()
     }
     res.header('Cache-Control', 'public, max-age=600')
