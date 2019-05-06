@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { alexa, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
+import { alexa, autoAdsAsyncSrc, autoAdsScript, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
 let isScriptLoaded = false
@@ -90,18 +90,32 @@ const clientTitleMetaMixin = {
   }
 }
 process.env.VUE_ENV === 'client' && !isWindowLoadedHandlerSetup && window.addEventListener('load', () => {
-  console.log('PAGE LOADED.')
+  const isAppPage = location.pathname.match(/\/app\//g)
+  
   if (!isScriptLoaded) {
-    const insertCodes = async codes => {
+    const insertCodes = async ({ async, codes, id, src,  }) => {
       const script = document.createElement('script')
-      script.innerHTML = codes
+      async ? script.setAttribute('async', true) : ''
+      id ? script.setAttribute('id', id) : ''
+      src ? script.setAttribute('src', src) : ''
+      codes ? script.innerHTML = codes : ''
       document.head.appendChild(script)
     }
-    isScriptLoaded = Promise.all([
-      insertCodes(gtm_mirrormedia).then(() => insertCodes(gtm_likr)),
-      insertCodes(fb_sdk),
-      insertCodes(scorecardresearch).then(() => insertCodes(alexa)),
-    ]).then(() => true).catch(() => false)
+    const jobs = [
+      insertCodes({ codes: gtm_mirrormedia }).then(() => insertCodes({ codes: gtm_likr })),
+      insertCodes({ codes: fb_sdk }),
+      insertCodes({ codes: scorecardresearch }).then(() => insertCodes({ codes: alexa })),
+    ]
+    if (isAppPage && !document.querySelector('#autoAdsAsyncSrc')) {
+      jobs.push(insertCodes({ async: true, id: 'autoAdsAsyncSrc', src: autoAdsAsyncSrc }))
+      jobs.push(insertCodes({ codes: autoAdsScript, id: 'autoAdsScript',  }))
+    }
+    // else if (!isAppPage && document.querySelector('#autoAdsAsyncSrc')) {
+    //   document.querySelector('#autoAdsAsyncSrc').remove()
+    //   document.querySelector('#autoAdsScript').remove()
+    // }
+
+    isScriptLoaded = Promise.all(jobs).then(() => true).catch(() => false)
   }
   isWindowLoadedHandlerSetup = true
 })

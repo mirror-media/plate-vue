@@ -727,11 +727,10 @@
       > .article_title
         h1
           font-size 2.2rem
-      &.b
-        .article_main
-          > h1
-            margin-top 13px
-            font-size 1.75rem
+      .article_main
+        > h1
+          margin-top 13px
+          font-size 1.75rem
 
 
     .article_fb_comment
