@@ -193,7 +193,7 @@ function loadImage (uuid = '') {
 
 function loadLatestArticle (params = {}) {
   const query = _buildQuery(params)
-  let url = `${_host}/api/listing`
+  let url = `${_host}/api/getlist`
   url = `${url}?${query}`
   return _doFetch(url)
 }
