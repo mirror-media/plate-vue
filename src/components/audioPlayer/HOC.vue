@@ -1,5 +1,6 @@
 <script>
-import { get } from 'lodash'
+import { get, intersection } from 'lodash'
+import { CATEGORIES_HIDE_PLAYER } from './constants'
 
 export default {
   props: {
@@ -31,6 +32,17 @@ export default {
     },
     hasVocals() {
       return get(this.post, 'vocals', []).length > 0
+    },
+
+    postCategories() {
+      return get(this.post, 'categories', []).map(item => item.name)
+    },
+    isCategoriesShouldHidePlayer() {
+      return intersection(this.postCategories, CATEGORIES_HIDE_PLAYER).length > 0
+    },
+
+    showPlayer () {
+      return !this.isCategoriesShouldHidePlayer && this.hasVocals
     }
   },
   methods: {
@@ -46,7 +58,7 @@ export default {
   render() {
     return this.$scopedSlots.default({
       sound: this.sound,
-      showPlayer: this.hasVocals
+      showPlayer: this.showPlayer
     })
   }
 }
