@@ -1,5 +1,5 @@
 <template>
-  <ArticleBodyLayout class="article_body" v-if="!isArticleEmpty()" :class="[ styleForCurrArticle, abIndicator ? abIndicator.toLowerCase() : '' ]">
+  <ArticleBodyLayout class="article_body" v-if="!isArticleEmpty()" :class="[ styleForCurrArticle ]">
     <main class="article_main">
       <div class="article_basic-info">
         <div class="category">
@@ -366,7 +366,6 @@ export default {
   },
   name: 'article-body',
   props: {
-    abIndicator: {},
     articleData: {
       default: () => { return {} }
     },

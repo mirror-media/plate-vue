@@ -9,9 +9,8 @@
           <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCHD" extClass="full mobile-hide" :config="props.config"/>
           <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="MBHD" extClass="full mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')"/>
         </LazyItemWrapper>
-        <div :class="[ abIndicator ? abIndicator.toLowerCase() : '' ]" class="article" v-if="articleData">
+        <div class="article" v-if="articleData">
           <article-body
-            :abIndicator="abIndicator"
             :articleData="articleData"
             :isAd="isAd"
             :poplistData="popularlist"
@@ -746,8 +745,8 @@
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
         }
-        // window.ga('set', 'contentGroup3', '')
-        window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+        window.ga('set', 'contentGroup3', '')
+        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       sendGaClickEvent,
@@ -797,7 +796,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      this.abIndicator = this.getMmid()
+      // this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
         { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
         { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
@@ -941,16 +940,12 @@
   @media (min-width 0px) and (max-width 499px)
     .article-container
       .article
-        padding 30px 0 0
-        &.b
-          padding 0
+        padding 0
 
   @media (min-width 321px) and (max-width 499px)
     .article-container
       .article
-        padding 30px 25px 0
-        &.b
-          padding 0 25px
+        padding 0 25px
   
   @media (min-width 0px) and (max-width 767px)  
     .article-container
