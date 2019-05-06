@@ -126,10 +126,10 @@ function render (req, res, next) {
 
   const checkoutMem = () => {
     const mem = process.memoryUsage()
-    console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
+    //console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
     if (mem.heapUsed > maxMemUsageLimit) {
       for (let i = 0; i < 10; i += 1) {
-        console.error('MEMORY WAS WUNNING OUT')
+        console.error('MEMORY WAS RUNNING OUT')
       } 
       console.error(`KILLING PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
       process.exit(1)
@@ -302,7 +302,7 @@ memwatch.on('leak', function(info) {
   const growth = formatMem(info.growth)
   const mem = process.memoryUsage()
   console.error('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
-  console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
+  //console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
 })
 memwatch.on('stats', function(stats) {
   const estBase = formatMem(stats.estimated_base)
@@ -323,9 +323,9 @@ memwatch.on('stats', function(stats) {
   ].join(', '), `\n=======================================`)
 
   if (stats.current_base > maxMemUsageLimit) {
-    for (let i = 0; i < 10; i += 1) {
-      console.error('MEMORY WAS WUNNING OUT')
-    } 
+    //for (let i = 0; i < 10; i += 1) {
+      console.error('MEMORY WAS RUNNING OUT')
+    //} 
     /**
      * kill this process gracefully
      */
