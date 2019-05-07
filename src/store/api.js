@@ -14,7 +14,7 @@ function _buildQuery (params = {}) {
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where' || ele === 'embedded') {
-        query[ele] = JSON.stringify(params[ele])
+        query[ele] = typeof params[ele] === 'string' ? params[ele] : JSON.stringify(params[ele])
       } else if (ele === 'id') {
         query[ele] = typeof params[ele] === 'string' ? params[ele] : params[ele].join(',')
       } else {
