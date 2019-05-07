@@ -203,7 +203,9 @@
         clean: 'content',
         where: {
           'slug': {
-            slug
+			'$in': [
+              slug
+			]
           }
         }
       },
