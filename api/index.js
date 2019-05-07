@@ -101,7 +101,7 @@ router.get('/newsletter/:userEmail', async (req, res) => {
       )
     res.json(JSON.parse(response.text))
   } catch (error) {
-    console.error(`\n[ERROR] GET newsletter api.`, url, `\n${error}\n`)
+    console.error(`[ERROR] GET newsletter api.`, url, `${error}`)
     const status = get(error, 'status') || 500
     const info = JSON.parse(get(error, 'response.text')) || error
     res.header('Cache-Control', 'no-cache')
@@ -131,7 +131,7 @@ router.post('/newsletter', jsonParser, async (req, res) => {
       throw { status: 400, response: { text: "{\"_error\": {\"code\": 400, \"message\": \"Bad request.\"}}" }}
     }
   } catch (error) {
-    console.error(`\n[ERROR] POST newsletter api.`, url, { user: req.body.user, item: req.body.item }, `\n${error}\n`)
+    console.error(`[ERROR] POST newsletter api.`, url, { user: req.body.user, item: req.body.item }, `${error}`)
     const status = get(error, 'status') || 500
     const info = JSON.parse(get(error, 'response.text')) || error
     res.header('Cache-Control', 'no-cache')
@@ -159,7 +159,7 @@ router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
       let message = get(error, 'response.text')
       message = message ? get(JSON.parse(message), 'failureCause.message') : error
       res.status(status).send(message)
-      console.error(`\n[ERROR] GET oath api.`, url, `\n${error}\n`)
+      console.error(`[ERROR] GET oath api.`, url, `${error}`)
     }
   }
 }, insertIntoRedis)
@@ -383,9 +383,9 @@ router.get('*', (req, res, next) => {
     const dataAmount = get(data, '_meta.total')
 	let timePeriod = Date.now() - req.startTime
     if (timePeriod < 1000) {
-      console.log(`\n[LOG] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+      console.log(`[LOG] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
     } else {
-      console.warn(`\n[WARN] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+      console.warn(`[WARN] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
     }
     if ((data._items || data._endpoints) && dataAmount >= 0) {
       res.dataString = response.text
@@ -406,9 +406,9 @@ router.get('*', (req, res, next) => {
   } catch (error) {
     const errWrapped = handlerError(error)
     if (errWrapped.status !== 404) {
-      console.error(`\n[ERROR] Fetch data from from api.`, req.url, `\n${errWrapped.text}\n`)
+      console.error(`[ERROR] Fetch data from from api.`, req.url, `${errWrapped.text}`)
     } else {
-      console.error(`\n[ERROR] Not Found.`, req.url)
+      console.error(`[ERROR] Not Found.`, req.url)
     }
 
     res.header('Cache-Control', 'no-cache')
