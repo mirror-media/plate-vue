@@ -66,7 +66,7 @@ function loadActivities (params = {}) {
 
 function loadArticles (params = {}, preview) {
   const query = _buildQuery(params)
-  let url = !preview ? `${_host}/api/posts` : `${_host}/api/drafts`
+  let url = !preview ? `${_host}/api/getposts` : `${_host}/api/drafts`
   url = `${url}?${query}`
   return _doFetch(url)
 }
