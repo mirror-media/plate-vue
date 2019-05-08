@@ -14,7 +14,7 @@ function _buildQuery (params = {}) {
   whitelist.forEach((ele) => {
     if (params.hasOwnProperty(ele)) {
       if (ele === 'where' || ele === 'embedded') {
-        query[ele] = typeof params[ele] === 'string' ? params[ele] : JSON.stringify(params[ele])
+        query[ele] = JSON.stringify(params[ele])
       } else if (ele === 'id') {
         query[ele] = typeof params[ele] === 'string' ? params[ele] : params[ele].join(',')
       } else {
@@ -66,7 +66,7 @@ function loadActivities (params = {}) {
 
 function loadArticles (params = {}, preview) {
   const query = _buildQuery(params)
-  let url = !preview ? `${_host}/api/getposts` : `${_host}/api/drafts`
+  let url = !preview ? `${_host}/api/posts` : `${_host}/api/drafts`
   url = `${url}?${query}`
   return _doFetch(url)
 }

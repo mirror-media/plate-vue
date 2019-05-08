@@ -201,7 +201,13 @@
       params: {
         // related: 'full',
         clean: 'content',
-        where: slug
+        where: {
+		  'slug': {
+            '$in': [
+              slug
+            ]
+          }
+        }
       },
       preview: _.get(store, [ 'state', 'route', 'query', 'preview' ])
     }).then(article => {
