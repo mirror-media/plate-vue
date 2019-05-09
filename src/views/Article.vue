@@ -200,7 +200,7 @@
     return store.dispatch('FETCH_ARTICLES', {
       params: {
         // related: 'full',
-        clean: 'content',
+        // clean: 'content',
         where: {
           'slug': {
             '$in': [
