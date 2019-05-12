@@ -201,12 +201,7 @@
       params: {
         // related: 'full',
         clean: 'content',
-        where: {
-		  'slug': {
-            '$in': [
-              slug
-            ]
-          }
+        where: { 'slug': slug }
         }
       },
       preview: _.get(store, [ 'state', 'route', 'query', 'preview' ])
