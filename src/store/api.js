@@ -66,7 +66,7 @@ function loadActivities (params = {}) {
 
 function loadArticles (params = {}, preview) {
   const query = _buildQuery(params)
-  let url = !preview ? `${_host}/api/posts` : `${_host}/api/drafts`
+  let url = !preview ? `${_host}/api/getposts` : `${_host}/api/drafts`
   url = `${url}?${query}`
   return _doFetch(url)
 }
@@ -100,7 +100,7 @@ function loadArticlesByUuid (uuid = '', type = '', params = {}) {
   }
   params.related ? (params.useMetaEndpoint = true) : ''
   params.sort = params.sort || '-publishedDate'
-  let url = `${_host}/api/getlist`
+  let url = params.useMetaEndpoint ? `${_host}/api/getmeta` : `${_host}/api/getlist`
   const query = _buildQuery(params)
   url = `${url}?${query}`
   return _doFetch(url)

@@ -37,7 +37,7 @@ const validateSlugIsEmpty = (req, res, next) => {
 
 const fetchFromRedis = (req, res, next) => {
   const slug = req.params.slug
-  const url = `${apiHost}/posts?where={"slug":{"$in":["${slug}"]}}&clean=content`
+  const url = `${apiHost}/getposts?where={"slug":{"$in":["${slug}"]}}`
   req.fetchURL = url
   
   redisFetching(req.fetchURL, ({ error, data }) => {
@@ -75,7 +75,7 @@ const fetchStory = async (req, res, next) => {
         /**
          * If req target is post, have the redis ttl be 7 days.
          */
-        const exp_post_query = /^\/posts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*&clean=content/
+        const exp_post_query = /^\/getposts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*/
         redisWriting(req.fetchURL, response.text, null, exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)
 
         res.resData = data
