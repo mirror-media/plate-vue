@@ -37,7 +37,7 @@ const validateSlugIsEmpty = (req, res, next) => {
 
 const fetchFromRedis = (req, res, next) => {
   const slug = req.params.slug
-  const url = `${apiHost}/getposts?where={"slug":{"$in":["${slug}"]}}`
+  const url = `${apiHost}/getposts?where={"slug":"${slug}"}`
   req.fetchURL = url
   
   redisFetching(req.fetchURL, ({ error, data }) => {
