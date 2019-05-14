@@ -262,7 +262,7 @@ app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
-  if (req.url.match(/\/story\//)) {
+  if (req.url.match(/\/story\//) && !req.url.match(/\?preview=true/)) {
     req.url = req.url.split('?')[0]
   }
   next()
