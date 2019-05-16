@@ -383,9 +383,9 @@ router.get('*', (req, res, next) => {
     const dataAmount = get(data, '_meta.total')
 	let timePeriod = Date.now() - req.startTime
     if (timePeriod < 1000) {
-      console.log(`[LOG]Mobile Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+      console.log(`[LOG]Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
     } else {
-      console.warn(`[WARN]Mobile Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+      console.warn(`[WARN]Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
     }
     if ((data._items || data._endpoints) && dataAmount >= 0) {
       res.dataString = response.text

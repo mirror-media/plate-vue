@@ -49,7 +49,7 @@ const redisPoolRead = RedisConnectionPool('myRedisPoolRead', {
 const redisPoolWrite = isProd ? RedisConnectionPool('myRedisPoolWrite', {
   host: REDIS_WRITE_HOST,
   port: REDIS_WRITE_PORT,
-  max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
+  max_clients: 5,
   perform_checks: false,
   database: 0,
   options: REDIS_OPTIONS
