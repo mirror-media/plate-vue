@@ -6,7 +6,7 @@
       <div class="articleBodyExternal__heroImage">
         <img v-if="heroImage" v-lazy="heroImage">
       </div>
-      <article class="article">
+      <article class="article" itemprop="articleBody">
         <div class="article__info">
           <div class="article__info--section">健康醫療</div>
           <div class="article__info--date" v-text="date"></div>
