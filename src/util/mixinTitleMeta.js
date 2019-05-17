@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { alexa, autoAdsAsyncSrc, autoAdsScript, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
+import { alexa, autoAdsAsyncSrc, autoAdsScript, dableScript, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
 let isScriptLoaded = false
@@ -93,18 +93,23 @@ process.env.VUE_ENV === 'client' && !isWindowLoadedHandlerSetup && window.addEve
   const isAppPage = location.pathname.match(/\/app\//g)
   
   if (!isScriptLoaded) {
-    const insertCodes = async ({ async, codes, id, src,  }) => {
+    const insertCodes = async ({ async, codes, id, src, position }) => {
       const script = document.createElement('script')
       async ? script.setAttribute('async', true) : ''
       id ? script.setAttribute('id', id) : ''
       src ? script.setAttribute('src', src) : ''
       codes ? script.innerHTML = codes : ''
-      document.head.appendChild(script)
+      if (position && document[position]) {
+        document[position].appendChild(script)
+      } else {
+        document.head.appendChild(script)
+      }
     }
     const jobs = [
       insertCodes({ codes: gtm_mirrormedia }).then(() => insertCodes({ codes: gtm_likr })),
       insertCodes({ codes: fb_sdk }),
       insertCodes({ codes: scorecardresearch }).then(() => insertCodes({ codes: alexa })),
+      insertCodes({ codes: dableScript, position: 'body' }),
     ]
     if (isAppPage && !document.querySelector('#autoAdsAsyncSrc')) {
       jobs.push(insertCodes({ async: true, id: 'autoAdsAsyncSrc', src: autoAdsAsyncSrc }))

@@ -293,27 +293,33 @@
       const {
         adTrace = '',
         brief = {},
-        categories = {},
+        categories = [],
         heroImage = {},
         isAdult = false,
         ogDescription = '',
         ogImage = {},
         ogTitle = '',
-        sections = {},
+        publishedDate = '',
+        sections = [],
         slug = '',
-        tags = {},
+        tags = [],
         title = '',
-        topics = {}
+        topics = {},
+        writers = []
       } = this.articleData
+      const author = _.get(writers, '0.name', '')
       const categorieName = _.get(categories, [ 0, 'name' ], '')
+      const categorieTitle = _.get(categories, '0.title', '')
       const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
       const robotsValue = isAdult ? 'noindex' : 'index'
       const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
+      const publishedTime = publishedDate ? new Date(publishedDate).toISOString() : ''
       const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
       const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
       const sectionName = _.get(sections, [ 0, 'name' ], '')
+      const sectionTitle = _.get(sections, '0.title', '')
       const topicId = _.get(topics, [ '_id' ], '')
-      
+
       return {
         url: `${SITE_MOBILE_URL}/story/${slug}/`,
         title: title,
@@ -337,6 +343,11 @@
           <meta property="og:description" content="${(ogDescription.length > 0) ? truncate(ogDescription, 197) : pureBrief}">
           <meta property="og:url" content="${SITE_URL}/story/${slug}/">
           <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
+          <meta property="dable:item_id" content="${slug}">
+          <meta property="dable:author" content="${author}">
+          <meta property="article:section" content="${sectionTitle}">
+          <meta property="article:section2" content="${categorieTitle}">
+          <meta property="article:published_time" content="${publishedTime}">
         `,
         link: `<link rel="amphtml" href="${SITE_URL}/story/amp/${slug}/">`,
         adTrace: adTrace
