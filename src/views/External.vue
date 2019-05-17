@@ -192,11 +192,20 @@
         e.code = '404'
         throw e
       }
-      const { brief, name, partner, thumb } = this.articleData
+      const {
+        brief = '',
+        extendByline = '',
+        name = '',
+        partner = {},
+        publishedDate = '',
+        thumb = ''
+      } = this.articleData
       const title = `${_.get(this.articleData, [ 'title' ])} - ${SITE_TITLE_SHORT}`
       const category = _.get(partner, [ 'name' ], '')
       const ogDescription = truncate(brief, 197) || SITE_DESCRIPTION
       const imageUrl = thumb || SITE_OGIMAGE
+      const partnerDisplay = _.get(partner, 'display', '')
+      const publishedTime = publishedDate ? new Date(publishedDate).toISOString() : ''
 
       return {
         url: `${SITE_MOBILE_URL}/external/${name}/`,
@@ -219,6 +228,11 @@
           <meta property="og:description" content="${ogDescription}">
           <meta property="og:url" content="${SITE_URL}/external/${name}/">
           <meta property="og:image" content="${imageUrl}">
+          <meta property="dable:item_id" content="${name}">
+          <meta property="dable:author" content="${extendByline}">
+          <meta property="article:section" content="${this.$t('HEADER.EXTERNAL')}">
+          <meta property="article:section2" content="${partnerDisplay}">
+          <meta property="article:published_time" content="${publishedTime}">
         `
       }
     },

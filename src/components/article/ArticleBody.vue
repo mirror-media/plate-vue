@@ -55,7 +55,7 @@
         <slot name="dfpad-AR1-MB"></slot>
       </div>
       <div class="split-line"></div>
-      <article class="content" id="article-body-content">
+      <article class="content" id="article-body-content" itemprop="articleBody">
         <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`" :is="blockWrapper(index)">
           <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
