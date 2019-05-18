@@ -101,7 +101,6 @@ const redisFetching = (url, callback) => {
     decodedUrl = url
   }
   redisPoolRead.get(decodedUrl, (error, data) => {
-  	console.log('url for redis: ' + decodedUrl)
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     redisPoolRead.ttl(decodedUrl, (err, dt) => {
@@ -112,7 +111,9 @@ const redisFetching = (url, callback) => {
               console.log('deleting key ', decodedUrl, 'from redis in fail ', e)
             }
           })
-        }
+        } else {
+			console.log('success from redis: ' + decodedUrl)
+		}
       } else {
         console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} ${err}`)
       }
