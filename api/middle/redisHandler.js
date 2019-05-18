@@ -101,6 +101,7 @@ const redisFetching = (url, callback) => {
     decodedUrl = url
   }
   redisPoolRead.get(decodedUrl, (error, data) => {
+  	console.log('url for redis: ' + decodedUrl)
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     redisPoolRead.ttl(decodedUrl, (err, dt) => {
