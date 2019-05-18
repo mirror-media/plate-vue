@@ -111,9 +111,7 @@ const redisFetching = (url, callback) => {
               console.log('deleting key ', decodedUrl, 'from redis in fail ', e)
             }
           })
-        } else {
-			console.log('success from redis: ' + decodedUrl)
-		}
+        }
       } else {
         console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} ${err}`)
       }
