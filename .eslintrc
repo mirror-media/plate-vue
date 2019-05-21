@@ -13,7 +13,8 @@
       "no-case-declarations": 1,
       "no-console": 1,
       "no-useless-escape": 1,
-      "yoda": [ 0, "never" ]
+      "yoda": [ 0, "never" ],
+      "no-mixed-spaces-and-tabs": 2
     },
     "globals": {
       "location": true,
