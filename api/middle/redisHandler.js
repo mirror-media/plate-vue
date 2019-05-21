@@ -101,6 +101,7 @@ const redisFetching = (url, callback) => {
     console.error('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.', url)
     decodedUrl = url
   }
+  let beforeGet = Date.now() - start
   redisPoolRead.get(decodedUrl, (error, data) => {
     let redisPoolReadError
     if (data === null) {
@@ -108,11 +109,11 @@ const redisFetching = (url, callback) => {
     } else if (error) {
       redisPoolReadError = error
     }
+    let afterGet = Date.now() - start
 
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     
-	let beforeTtl = Date.now() - start
     redisPoolRead.ttl(decodedUrl, (err, dt) => {
       if (!err && (dt === -1)) { // if the key exists but has no associated expire.
         redisPoolWrite.del(decodedUrl, (e, d) => {
@@ -130,7 +131,7 @@ const redisFetching = (url, callback) => {
     callback && callback({ error: redisPoolReadError, data })
     let timePeriod = Date.now() - start
     if (timePeriod > 300) {
-	  console.log('[WARN]Redis operating total:', `${timePeriod}ms`, 'before ttl: ', `${beforeTtl}ms`, decodedUrl)
+	  console.log('[WARN]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
     }
     timeoutHandler = null
   })
