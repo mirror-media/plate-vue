@@ -92,6 +92,7 @@ class TimeoutHandler {
 }
 
 const redisFetching = (url, callback) => {
+  let start = Date.now()
   let timeoutHandler = new TimeoutHandler(callback)
   let decodedUrl
   try {
@@ -126,6 +127,10 @@ const redisFetching = (url, callback) => {
     if (timeoutHandler.timeout <= 0) { return }
 
     callback && callback({ error: redisPoolReadError, data })
+    let timePeriod = Date.now() - start
+    if (timePeriod > 300) {
+	  console.log('[WARN]Redis operating total:', `${timePeriod}ms`, decodedUrl)
+    }
     timeoutHandler = null
   })
 }
