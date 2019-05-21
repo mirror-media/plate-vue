@@ -114,6 +114,7 @@ const redisFetching = (url, callback) => {
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
     
+	/*
     redisPoolRead.ttl(decodedUrl, (err, dt) => {
       if (!err && (dt === -1)) { // if the key exists but has no associated expire.
         redisPoolWrite.del(decodedUrl, (e, d) => {
@@ -125,6 +126,7 @@ const redisFetching = (url, callback) => {
         console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} ${err}`)
       }
     })
+	*/
     
     if (timeoutHandler.timeout <= 0) { return }
 
