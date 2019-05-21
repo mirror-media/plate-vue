@@ -67,7 +67,7 @@ const redisPoolRecommendNews = isProd ? RedisConnectionPool('redisPoolRecommendN
 class TimeoutHandler {
   constructor (callback) {
     this.isResponded = false
-    this.timeout = REDIS_CONNECTION_TIMEOUT || 200
+    this.timeout = REDIS_CONNECTION_TIMEOUT || 200 // 0.2s
 
     this.destroy = this.destroy.bind(this)
     this.init = this.init.bind(this)
@@ -82,7 +82,7 @@ class TimeoutHandler {
       }
       if (this.timeout <= 0) {
         this.destroy()
-        callback && callback({ err: 'ERROR: Timeout occured while accessing data from redis.', data: null })
+        callback && callback({ error: 'Timeout occured while accessing data from redis.', data: null })
       }
     }, 100)
   }
@@ -101,23 +101,31 @@ const redisFetching = (url, callback) => {
     decodedUrl = url
   }
   redisPoolRead.get(decodedUrl, (error, data) => {
+    let redisPoolReadError
+    if (data === null) {
+      redisPoolReadError = 'Key does not exist.'
+    } else if (error) {
+      redisPoolReadError = error
+    }
+
     timeoutHandler.isResponded = true
     timeoutHandler.destroy()
+    
     redisPoolRead.ttl(decodedUrl, (err, dt) => {
-      if (!err && dt) {
-        if (dt <= -1) {
-          redisPoolWrite.del(decodedUrl, (e, d) => {
-            if (e) {
-              console.log('deleting key ', decodedUrl, 'from redis in fail ', e)
-            }
-          })
-        }
-      } else {
+      if (!err && (dt === -1)) { // if the key exists but has no associated expire.
+        redisPoolWrite.del(decodedUrl, (e, d) => {
+          if (e) {
+            console.warn('[WARN] deleting key ', decodedUrl, 'from redis in fail ', e)
+          }
+        })
+      } else if (err) {
         console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} ${err}`)
       }
     })
+    
     if (timeoutHandler.timeout <= 0) { return }
-    callback && callback({ error, data })
+
+    callback && callback({ error: redisPoolReadError, data })
     timeoutHandler = null
   })
 }
@@ -174,8 +182,8 @@ const fetchFromRedis = (req, res, next) => {
       res.redis = data
       next()
     } else {
-      console.error('>>> Fetch data from Redis in fail with error.', error)
-      next(error)
+      console.error('>>> Fetch data from Redis in fail with error.', `\n${error}`)
+      next()
     }
   })
 }
@@ -185,15 +193,15 @@ const fetchFromRedisForAPI = (req, res, next) => {
   let start = Date.now()
   redisFetching(req.url, ({ error, data }) => {
     if (!error && data) {
-	  let timePeriod = Date.now() - start
-	  if (timePeriod > 500) {
+      let timePeriod = Date.now() - start
+      if (timePeriod > 500) {
         console.log('[WARN]Fetch data from Redis.', `${timePeriod}ms`, req.url)
-	  }
+      }
       res.header('Cache-Control', 'public, max-age=300')
       res.json(JSON.parse(data))
     } else {
-      //console.warn(`[WARN] Fetch data from Redis in fail. ${req.url} error: ${error}, data: ${data}`)
-      next(error)
+      console.warn(`[WARN] Fetch data from Redis in fail. ${req.url} 、\nError: ${error} \nData: ${data}`)
+      next()
     }
   })
 }
