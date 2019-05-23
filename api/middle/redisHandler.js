@@ -139,6 +139,7 @@ const redisFetching = (url, callback) => {
   })
 }
 const redisWriting = (url, data, callback, timeout) => {
+  /*
   let timeoutHandler = new TimeoutHandler(callback)
   let decodedUrl
   try {
@@ -165,6 +166,7 @@ const redisWriting = (url, data, callback, timeout) => {
     }
     timeoutHandler = null
   })
+  */
 }
 const redisFetchingRecommendNews = (field, callback) => {
   let timeoutHandler = new TimeoutHandler(callback)
