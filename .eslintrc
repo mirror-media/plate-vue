@@ -14,7 +14,8 @@
       "no-console": 1,
       "no-useless-escape": 1,
       "yoda": [ 0, "never" ],
-      "no-mixed-spaces-and-tabs": 2
+      "no-mixed-spaces-and-tabs": "error",
+      "no-unused-vars": [ "error", { "argsIgnorePattern": "next|req|res|d" } ]
     },
     "globals": {
       "location": true,
