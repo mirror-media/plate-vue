@@ -3,7 +3,8 @@ const isProd = process.env.NODE_ENV === 'production'
 // const isTest = process.env.NODE_ENV === 'test'
 const RedisConnectionPool = require('redis-connection-pool')
 
-const redis = require("redis")
+const RedisConnectionPoolForLog = require('./redis-connection-pool/src/redis-connection-pool')
+// const redis = require("redis")
 
 const { 
   REDIS_AUTH,
@@ -39,29 +40,29 @@ const REDIS_OPTIONS = {
   }  
 }
 
-const client = redis.createClient(REDIS_READ_PORT, REDIS_READ_HOST, {
-  password: REDIS_AUTH,
-  retry_strategy: function (options) {
-    if (options.error && options.error.code === 'ECONNREFUSED') {
-      return new Error('The server refused the connection')
-    }
-    if (options.error && options.error.code === 'ETIMEDOUT') {
-      return new Error('Timeout occured while connecting to redis.')      
-    }
-    if (options.total_retry_time > 1000 * 5) {
-      return new Error('Retry time exhausted')
-    }
-    if (options.attempt > 0 || options.times_connected > 0) {
-      // this means "dont do retry"
-      return undefined
-    }
-    // reconnect after
-    // wouldnt go this return way never
-    return 100
-  }
-})
+// const client = redis.createClient(REDIS_READ_PORT, REDIS_READ_HOST, {
+//   password: REDIS_AUTH,
+//   retry_strategy: function (options) {
+//     if (options.error && options.error.code === 'ECONNREFUSED') {
+//       return new Error('The server refused the connection')
+//     }
+//     if (options.error && options.error.code === 'ETIMEDOUT') {
+//       return new Error('Timeout occured while connecting to redis.')      
+//     }
+//     if (options.total_retry_time > 1000 * 5) {
+//       return new Error('Retry time exhausted')
+//     }
+//     if (options.attempt > 0 || options.times_connected > 0) {
+//       // this means "dont do retry"
+//       return undefined
+//     }
+//     // reconnect after
+//     // wouldnt go this return way never
+//     return 100
+//   }
+// })
 
-const redisPoolRead = RedisConnectionPool('myRedisPoolRead', {
+const redisPoolRead = RedisConnectionPoolForLog('myRedisPoolRead', {
   host: REDIS_READ_HOST,
   port: REDIS_READ_PORT,
   max_clients: REDIS_MAX_CLIENT ? REDIS_MAX_CLIENT : 50,
@@ -126,62 +127,63 @@ const redisFetching = (url, callback) => {
     decodedUrl = url
   }
   let beforeGet = Date.now() - start
-  client.get(decodedUrl, (error, data) => {
-    let afterGet = Date.now() - start
-    let redisPoolReadError
-    if (data === null) {
-      redisPoolReadError = 'Key does not exist.'
-    } else if (error) {
-      redisPoolReadError = error
-    }
-    timeoutHandler.isResponded = true
-    timeoutHandler.destroy()
-
-    if (timeoutHandler.timeout <= 0) { return }
-
-    callback && callback({ error: redisPoolReadError, data })
-    
-    let timePeriod = Date.now() - start
-    if (timePeriod > 300) {
-      console.log('[WARN]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
-    }
-    timeoutHandler = null
-  })
-  // redisPoolRead.get(decodedUrl, (error, data) => {
+  // client.get(decodedUrl, (error, data) => {
+  //   let afterGet = Date.now() - start
   //   let redisPoolReadError
   //   if (data === null) {
   //     redisPoolReadError = 'Key does not exist.'
   //   } else if (error) {
   //     redisPoolReadError = error
   //   }
-  //   let afterGet = Date.now() - start
-
   //   timeoutHandler.isResponded = true
   //   timeoutHandler.destroy()
-    
-	// /*
-  //   redisPoolRead.ttl(decodedUrl, (err, dt) => {
-  //     if (!err && (dt === -1)) { // if the key exists but has no associated expire.
-  //       redisPoolWrite.del(decodedUrl, (e, d) => {
-  //         if (e) {
-  //           console.warn('[WARN] deleting key ', decodedUrl, 'from redis in fail ', e)
-  //         }
-  //       })
-  //     } else if (err) {
-  //       console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} ${err}`)
-  //     }
-  //   })
-	// */
-    
+
   //   if (timeoutHandler.timeout <= 0) { return }
 
   //   callback && callback({ error: redisPoolReadError, data })
+    
   //   let timePeriod = Date.now() - start
   //   if (timePeriod > 300) {
-	//   console.log('[WARN]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
+  //     console.log('[WARN]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
   //   }
   //   timeoutHandler = null
   // })
+
+  redisPoolRead.get(decodedUrl, (error, data) => {
+    let redisPoolReadError
+    if (data === null) {
+      redisPoolReadError = 'Key does not exist.'
+    } else if (error) {
+      redisPoolReadError = error
+    }
+    let afterGet = Date.now() - start
+
+    timeoutHandler.isResponded = true
+    timeoutHandler.destroy()
+    
+	/*
+    redisPoolRead.ttl(decodedUrl, (err, dt) => {
+      if (!err && (dt === -1)) { // if the key exists but has no associated expire.
+        redisPoolWrite.del(decodedUrl, (e, d) => {
+          if (e) {
+            console.warn('[WARN] deleting key ', decodedUrl, 'from redis in fail ', e)
+          }
+        })
+      } else if (err) {
+        console.warn(`[WARN] fetching ttl in fail. ${decodedUrl} ${err}`)
+      }
+    })
+	*/
+    
+    if (timeoutHandler.timeout <= 0) { return }
+
+    callback && callback({ error: redisPoolReadError, data })
+    let timePeriod = Date.now() - start
+    if (timePeriod > 300) {
+      console.log('[WARN]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
+    }
+    timeoutHandler = null
+  })
 }
 const redisWriting = (url, data, callback, timeout) => {
   let timeoutHandler = new TimeoutHandler(callback)
