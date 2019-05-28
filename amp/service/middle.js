@@ -109,6 +109,18 @@ const getArticleData = (req, res, next) => {
   next()
 }
 
+const validateArticle = (req, res, next) => {
+  if (_.isEmpty(res.articleData)) {
+    console.warn(`[AMP] Article data is empty, response 404: ${req.fetchURL}`)
+    res.status(404).render('404')
+  } else if (_.get(res.articleData, [ 'publishedDate' ], '') === '') {
+    console.warn(`[AMP] Article's publishedDate is empty, response 404: ${req.fetchURL}`)
+    res.status(404).render('404')
+  }
+
+  next()
+}
+
 const sendArticleData = (req, res, next) => {
   const createArticleData = articleData => {
     const _sectionTitle =            _.get(articleData, [ 'sections', 0, 'title' ])
@@ -182,5 +194,6 @@ module.exports = {
   fetchFromRedis,
   fetchStory,
   getArticleData,
+  validateArticle,
   sendArticleData
 }

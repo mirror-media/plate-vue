@@ -5,6 +5,7 @@ const {
   fetchFromRedis,
   fetchStory,
   getArticleData,
+  validateArticle,
   sendArticleData
 } = require('./middle')
 
@@ -13,6 +14,7 @@ router.get(
   validateSlugIsEmpty,
   [ fetchFromRedis, fetchStory ],
   getArticleData,
+  validateArticle,
   sendArticleData
 )
 
