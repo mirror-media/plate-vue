@@ -171,7 +171,7 @@ const fetchCommonData = (store, route) => {
       if (route.params.title === GS_CATEGORY_NAME) {
         jobs.push(fetchImages(store, GS_TAG_ID))
       }
-      jobs.push(fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(route.path, '/')[2], 'ogImage' ], '')))
+      // jobs.push(fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(route.path, '/')[2], 'ogImage' ], '')))
     }
     return Promise.all(jobs)
   }).catch(err => {
@@ -186,15 +186,15 @@ const fetchCommonData = (store, route) => {
   })
 }
 
-const fetchCategoryOgImages = (store, uuid) => {
-  return store.dispatch('FETCH_IMAGE', {
-    'uuid': uuid,
-    'params': {
-      max_results: 1
-    },
-    'type': 'OG'
-  })
-}
+// const fetchCategoryOgImages = (store, uuid) => {
+//   return store.dispatch('FETCH_IMAGE', {
+//     'uuid': uuid,
+//     'params': {
+//       max_results: 1
+//     },
+//     'type': 'OG'
+//   })
+// }
 
 const fetchImages = (store, uuid) => store.dispatch('FETCH_IMAGES', {
   uuid: uuid,
