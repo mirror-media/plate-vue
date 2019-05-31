@@ -7,11 +7,20 @@ const { SERVER_PROTOCOL, SERVER_HOST } = require('../../api/config')
 const { SECTION_MAP } = require('../../src/constants')
 
 const getDate = (date, offsetHour = 0) => {
-  const normalizedDt = new Date(date)
-  const datetime = moment(normalizedDt).add(offsetHour, 'hours').format('YYYY.MM.DD HH:mm')
-  return {
-    dateFormatted: datetime,
-    dateISO: normalizedDt.toISOString()
+  try {
+    const normalizedDt = new Date(date)
+    const datetime = moment(normalizedDt).add(offsetHour, 'hours').format('YYYY.MM.DD HH:mm')
+    return {
+      dateFormatted: datetime,
+      dateISO: normalizedDt.toISOString()
+    }
+  } catch (e) {
+    console.warn(`[AMP] Invalid time value encounter in getDate: ${date}`)
+    console.warn(`[AMP] Return current time`)
+    return {
+      dateFormatted: moment().add(offsetHour, 'hours').format('YYYY.MM.DD HH:mm'),
+      dateISO: new Date().toISOString()
+    }
   }
 }
 
