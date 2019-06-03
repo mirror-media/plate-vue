@@ -2,7 +2,7 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
       <section style="width: 100%;" v-show="articleStyle !== 'photography'">
-        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <LazyItemWrapper :loadAfterPageLoaded="true">
@@ -167,7 +167,6 @@
   import DfpST from '../components/DfpST.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
-  import HeaderR from '../components/HeaderR.vue'
   import HeroImage from '../components/article/HeroImage.vue'
   import HeroVideo from '../components/article/HeroVideo.vue'
   import LatestList from '../components/article/LatestList.vue'
@@ -385,7 +384,6 @@
       'article-body': ArticleBody,
       'article-body-photography': ArticleBodyPhotography,
       'app-footer': Footer,
-      'app-header': Header,
       'dfp-fixed': DfpFixed,
       'latest-list': LatestList,
       'live-stream': LiveStream,
@@ -396,7 +394,7 @@
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
       DfpST,
-      HeaderR,
+      Header,
       HeroImage,
       HeroVideo,
       RelatedListInContent,
