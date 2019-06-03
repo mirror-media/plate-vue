@@ -100,6 +100,7 @@
             <template v-if="!hiddenAdvertised" slot="recommendList">
               <div><h3>推薦文章</h3></div>
               <GoogleMatchedContent />
+              <div v-if="abIndicator === 'B'" id="dablewidget_GlYwenoy" data-widget_id="GlYwenoy"></div>
             </template>
           </article-body>
           <div class="article_footer">
