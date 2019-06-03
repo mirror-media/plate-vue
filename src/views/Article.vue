@@ -99,7 +99,7 @@
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template v-if="!hiddenAdvertised" slot="recommendList">
               <div><h3>推薦文章</h3></div>
-              <div id="matchedContentContainer" class="matchedContentContainer"></div>
+              <GoogleMatchedContent />
             </template>
           </article-body>
           <div class="article_footer">
@@ -151,7 +151,6 @@
   import _ from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
-  import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
   import { currEnv, getImage, lockJS, sendAdCoverGA, sendGaClickEvent, unLockJS, updateCookie } from '../util/comm'
@@ -166,6 +165,7 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import DfpST from '../components/DfpST.vue'
   import Footer from '../components/Footer.vue'
+  import GoogleMatchedContent from '../components/GoogleMatchedContent.vue'
   import Header from '../components/Header.vue'
   import HeroImage from '../components/article/HeroImage.vue'
   import HeroVideo from '../components/article/HeroVideo.vue'
@@ -394,6 +394,7 @@
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
       DfpST,
+      GoogleMatchedContent,
       Header,
       HeroImage,
       HeroVideo,
@@ -701,37 +702,6 @@
           document.querySelector('head').appendChild(breadcrumbScript)
         }
       },
-      insertMatchedContentScript () {
-        const matchedContentStart = document.createElement('script')
-        const matchedContentContent = document.createElement('ins')
-        const matchedContentEnd = document.createElement('script')
-        matchedContentStart.setAttribute('id', 'matchedContentStart')
-        matchedContentStart.setAttribute('async', 'true')
-        matchedContentStart.setAttribute('src', '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js')
-        matchedContentContent.setAttribute('id', 'matchedContentContent')
-        matchedContentContent.setAttribute('class', 'adsbygoogle')
-        matchedContentContent.setAttribute('style', 'display:block')
-        matchedContentContent.setAttribute('data-ad-format', 'autorelaxed')
-        matchedContentContent.setAttribute('data-ad-client', MATCHED_CONTENT_AD_CLIENT)
-        matchedContentContent.setAttribute('data-ad-slot', MATCHED_CONTENT_AD_SLOT)
-        matchedContentEnd.setAttribute('id', 'matchedContentEnd')
-        matchedContentEnd.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`
-
-        /**/
-        /* photography article may not have this container */
-        const container = document.querySelector('#matchedContentContainer')
-        /**/
-
-        if (!document.querySelector('#matchedContentStart')) {
-          container && container.appendChild(matchedContentStart)
-        }
-        if (!document.querySelector('#matchedContentContent')) {
-          container && container.appendChild(matchedContentContent)
-        }
-        if (!document.querySelector('#matchedContentEnd')) {
-          container && container.appendChild(matchedContentEnd)
-        }
-      },
       insertMediafarmersScript () {
         const mediafarmersScript = document.createElement('script')
         mediafarmersScript.setAttribute('id', 'mediafarmersJS')
@@ -748,8 +718,8 @@
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
         }
-        window.ga('set', 'contentGroup3', '')
-        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+        // window.ga('set', 'contentGroup3', '')
+        window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       sendGaClickEvent,
@@ -763,17 +733,6 @@
           document.querySelector('head').removeChild(breadcrumbScript)
         }
         this.insertJSONLDScript()
-      },
-      updateMatchedContentScript () {
-        const matchedContentStart = document.querySelector('#matchedContentStart')
-        const matchedContentContent = document.querySelector('#matchedContentContent')
-        const matchedContentEnd = document.querySelector('#matchedContentEnd')
-        if (matchedContentStart) {
-          document.querySelector('#matchedContentContainer').removeChild(matchedContentStart)
-          document.querySelector('#matchedContentContainer').removeChild(matchedContentContent)
-          document.querySelector('#matchedContentContainer').removeChild(matchedContentEnd)
-        }
-        this.insertMatchedContentScript()
       },
       updateMediafarmersScript () {
         const mediafarmersScript = document.querySelector('#mediafarmersJS')
@@ -799,9 +758,8 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      // this.abIndicator = this.getMmid()
+      this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
-        { target: '#matchedContentContainer', offset: 400, cb: this.insertMatchedContentScript },
         { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
       ])
       scrollTriggerRegister.init()
@@ -854,7 +812,6 @@
         })
         window.FB && window.FB.XFBML.parse()
         this.checkIfLockJS()
-        this.updateMatchedContentScript()
 
         this.updateMediafarmersScript()
         this.sendGA(this.articleData)
