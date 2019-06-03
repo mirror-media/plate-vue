@@ -2,14 +2,14 @@
   <section class="header-sidebar">
     <button class="header-sidebar__close" @click="closeSidebar()"><img src="/assets/mirrormedia/icon/close_white@2x.png" :alt="$t('HEADER.CLOSE')"></button>
     <div v-if="topics.length > 0" class="topics">
-      <router-link
+      <a
         v-for="topic in activeTopics"
         :key="`sidebar-topic-${topic.id}`"
-        :to="`/topic/${topic.id}`"
-        @click.native="sendGaClickEvent('header', `topic ${topic.name}`)"
+        :href="`/topic/${topic.id}`"
+        @click="sendGaClickEvent('header', `topic ${topic.name}`)"
         v-text="topic.name">
-      </router-link>
-      <router-link to="/section/topic" class="topic--more" @click.native="sendGaClickEvent('header', `topic ${$t('HEADER.MORE')}`)" v-text="$t('HEADER.MORE')"></router-link>
+      </a>
+      <a href="/section/topic" class="topic--more" @click="sendGaClickEvent('header', `topic ${$t('HEADER.MORE')}`)" v-text="$t('HEADER.MORE')"></a>
     </div>
     <div class="sections">
       <div
@@ -17,7 +17,7 @@
         :key="`sidebar-section-${section.id}`"
         :style="{ borderLeftColor: getColor(section) }"
         class="section">
-        <router-link v-if="section.name !== 'videohub'" :to="`/section/${section.name}`" @click.native="sendGaClickEvent('header', `section ${section.name}`)" v-text="section.title"></router-link>
+        <a v-if="section.name !== 'videohub'" :href="`/section/${section.name}`" @click="sendGaClickEvent('header', `section ${section.name}`)" v-text="section.title"></a>
         <a v-else :href="`/section/${section.name}`" @click="sendGaClickEvent('header', `section ${section.name}`)" v-text="section.title"></a>
         <div class="categories">
           <template v-if="section.name === 'videohub'">
@@ -30,26 +30,26 @@
             </a>
           </template>
           <template v-else>
-            <router-link
+            <a
               v-for="category in filterSectionCategories(section)"
               :key="`sidebar-category-${category.id}`"
-              :to="`/category/${category.name}`"
-              @click.native="sendGaClickEvent('header', `category ${category.name}`)"
+              :href="`/category/${category.name}`"
+              @click="sendGaClickEvent('header', `category ${category.name}`)"
               v-text="category.title">
-            </router-link>
+            </a>
           </template>
         </div>
       </div>
       <div class="section external">
         <a v-text="$t('HEADER.EXTERNAL')"></a>
         <div v-if="partners.length > 0" class="categories">
-          <router-link
+          <a
             v-for="partner in activePartners"
             :key="`sidebar-partner-${partner.id}`"
-            :to="`/externals/${partner.name}`"
-            @click.native="sendGaClickEvent('header', `external ${partner.name}`)"
+            :href="`/externals/${partner.name}`"
+            @click="sendGaClickEvent('header', `external ${partner.name}`)"
             v-text="partner.display">
-          </router-link>
+          </a>
         </div>
       </div>
       <div class="section mirrorfiction">

@@ -1,13 +1,13 @@
 <template>
   <div class="listArticleBlockLight">
     <figure v-if="image" class="listArticleBlockLight__figure">
-      <router-link :to="`/external/${getValue(article, [ 'name' ])}`" target="_blank">
+      <a :href="`/external/${getValue(article, [ 'name' ])}`" target="_blank">
         <img v-lazy="image" :alt="getValue(article, [ 'title' ])" />
-      </router-link>
+      </a>
     </figure>
     <div class="listArticleBlockLight__text" :class="{ noImg: !image }">
-      <h2><router-link :to="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="getValue(article, [ 'title' ])"></router-link></h2>
-      <p><router-link :to="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="$_listArticleLight_getBrief(article)"></router-link></p>
+      <h2><a :href="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="getValue(article, [ 'title' ])"></a></h2>
+      <p><a :href="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="$_listArticleLight_getBrief(article)"></a></p>
     </div>
   </div>
 </template>

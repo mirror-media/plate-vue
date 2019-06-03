@@ -49,26 +49,26 @@
     </template>
     <template v-else-if="articleType === 'topic'">
       <figure class="listArticleBlock__figure">
-        <router-link :to="`/topic/${getValue(article, [ 'id' ])}`" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')">
+        <a :href="`/topic/${getValue(article, [ 'id' ])}`" target="_blank" @click="sendGaClickEvent('listing', 'latest')">
           <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'name' ])" />
-        </router-link>
+        </a>
       </figure>
       <div class="listArticleBlock__content">
-        <h2><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getValue(article, [ 'name' ])"></router-link></h2>
-        <p><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></router-link></p>
+        <h2><a :href="`/topic/${getValue(article, [ 'id' ])}`" target="_blank" @click="sendGaClickEvent('listing', 'latest')" v-text="getValue(article, [ 'name' ])"></a></h2>
+        <p><a :href="`/topic/${getValue(article, [ 'id' ])}`" target="_blank" @click="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></a></p>
       </div>
     </template>
     <template v-else>
       <figure class="listArticleBlock__figure">
-        <router-link :to="getHref(article)" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')">
+        <a :href="getHref(article)" target="_blank" @click="sendGaClickEvent('listing', 'latest')">
           <LazyImage :src="getImage(article, 'mobile')" :caption="getValue(article, [ 'title' ])" />
-        </router-link>
+        </a>
         <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
       </figure>
       <div class="listArticleBlock__content">
         <div class="listArticleBlock__content--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
-        <h2><router-link :to="getHref(article)" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getValue(article, [ 'title' ])"></router-link></h2>
-        <p><router-link :to="getHref(article)" target="_blank" @click.native="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></router-link></p>
+        <h2><a :href="getHref(article)" target="_blank" @click="sendGaClickEvent('listing', 'latest')" v-text="getValue(article, [ 'title' ])"></a></h2>
+        <p><a :href="getHref(article)" target="_blank" @click="sendGaClickEvent('listing', 'latest')" v-text="getBrief(article, 45)"></a></p>
       </div>
     </template>
   </div>

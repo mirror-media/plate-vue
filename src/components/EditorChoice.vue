@@ -35,17 +35,17 @@
       <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
       <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
         <template>
-          <router-link
+          <a
             v-if="item.style !== 'projects'"
-            :to="getHref(item)"
+            :href="getHref(item)"
             :target="target"
             class="editorChoice__block--img"
-            @click.native="sendGaClickEvent('home', 'choice')">
+            @click="sendGaClickEvent('home', 'choice')">
             <LatestAriticleImg class="figure"
               :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
               :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
             <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
-          </router-link>
+          </a>
           <a
             v-if="item.style === 'projects'"
             :href="`https://www.mirrormedia.mg${getHref(item)}`"
@@ -61,13 +61,13 @@
         <div class="editorChoice__block--title" :class="getSection(item)">
           <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
           <template>
-            <router-link
+            <a
               v-if="item.style !== 'projects'"
-              :to="getHref(item)"
+              :href="getHref(item)"
               :target="target"
-              @click.native="sendGaClickEvent('home', 'choice')">
+              @click="sendGaClickEvent('home', 'choice')">
               <h2 v-text="getTitle(item)"></h2>
-            </router-link>
+            </a>
             <a
               v-if="item.style === 'projects'"
               :href="`https://www.mirrormedia.mg${getHref(item)}`"

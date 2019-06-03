@@ -3,8 +3,8 @@
     <section class="header__logo-layer">
       <button class="btn--menu" @click="openSidebar = true"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt="" @click="sendGaClickEvent('header', 'menu open')"></button>
       <!-- logo -->
-      <router-link v-show="!isScrolled" :to="'/'" class="logo" @click.native="sendGaClickEvent('header', 'logo')"><img src="/assets/mirrormedia/logo.svg" :alt="SITE_TITLE"></router-link>
-      <router-link v-show="isScrolled" :to="'/'" class="logo" @click.native="sendGaClickEvent('header', 'logo')"><img src="/assets/mirrormedia/icon/logo@2x.png" :alt="SITE_TITLE"></router-link>
+      <a v-show="!isScrolled" href="/" class="logo" @click="sendGaClickEvent('header', 'logo')"><img src="/assets/mirrormedia/logo.svg" :alt="SITE_TITLE"></a>
+      <a v-show="isScrolled" href="/" class="logo" @click="sendGaClickEvent('header', 'logo')"><img src="/assets/mirrormedia/icon/logo@2x.png" :alt="SITE_TITLE"></a>
       <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded" :href="get(logoFromEvent, 'link', '/')" class="logo event" target="_blank" @click.native="sendGaClickEvent('header', 'logo event')">
         <LazyImage :src="get(logoFromEvent, 'image.image.resizedTargets.mobile.url')" />
       </a>
@@ -37,11 +37,11 @@
     <!-- scrollable header -->
     <section v-if="mounted" class="header__section-layer">
       <div>
-        <router-link
+        <a
           :class="{ active: activeSection === 'home' }"
-          to="/"
-          @click.native="sendGaClickEvent('header', 'section home out')">首頁
-        </router-link>
+          href="/"
+          @click="sendGaClickEvent('header', 'section home out')">首頁
+        </a>
         <template v-for="section in activeSections">
           <a
             v-if="section.name === 'videohub'"
@@ -51,14 +51,14 @@
             @click="sendGaClickEvent('header', 'section videohub out')"
             v-text="section.title">
           </a>
-          <router-link
+          <a
             v-else
             :key="`section-layer-${section.id}`"
             :class="{ active: activeSection === section.name }"
-            :to="`/section/${section.name}`"
+            :href="`/section/${section.name}`"
             @click.native="sendGaClickEvent('header', `section ${section.name} out`)"
             v-text="section.title">
-          </router-link>
+          </a>
         </template>
       </div>
     </section>
@@ -81,7 +81,7 @@ import { get, } from 'lodash'
 import { sendGaClickEvent } from '../util/comm'
 
 export default {
-  naem: 'AppHeader',
+  name: 'AppHeader',
   components: {
     HeaderNav,
     HeaderSearchBar,

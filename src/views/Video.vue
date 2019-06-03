@@ -26,7 +26,7 @@
         </VideoLeading>
         <template v-for="(item, index) in playlist">
           <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
-            <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
+            <a v-if="!isCategoryPage" slot="more" :href="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></a>
             <template v-if="mounted && isCategoryPage">
               <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
               <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="LMBFT" />
