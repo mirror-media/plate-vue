@@ -62,4 +62,5 @@ export const dableScript = `
   dable('setService', 'mirrormedia.mg');
   dable('sendLogOnce');
   dable('renderWidget', 'dablewidget_1oVMvjXP');
+  dable('renderWidget', 'dablewidget_GlYwenoy');
 `
