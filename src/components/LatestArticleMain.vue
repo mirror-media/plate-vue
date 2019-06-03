@@ -4,27 +4,27 @@
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
         <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
-          <router-link :to="getHref(o)"
+          <a :href="getHref(o)"
             v-if="shouldShowItem(o)"
             :target="target"
-            @click.native="sendGaClickEvent('home', 'latest')">
+            @click="sendGaClickEvent('home', 'latest')">
             <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="getValue(o, [ 'heroImage', 'id' ], Date.now())" :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
-          </router-link>
+          </a>
           <a :href="getHrefFull(o)" v-if="!shouldShowItem(o)" tid="ee" :target="target" @click="sendGaClickEvent('home', 'latest')">
             <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="getValue(o, [ 'heroImage', 'id' ], Date.now())" :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
             <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
           </a>
           <div class="latest-list_item_title">
             <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
-            <router-link
+            <a
               v-if="shouldShowItem(o)"
-              :to="getHref(o)"
+              :href="getHref(o)"
               :target="target"
-              @click.native="sendGaClickEvent('home', 'latest')">
+              @click="sendGaClickEvent('home', 'latest')">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
-            </router-link>
+            </a>
             <a :href="getHrefFull(o)" v-if="!shouldShowItem(o)" :target="target" @click="sendGaClickEvent('home', 'latest')">
               <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
               <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>

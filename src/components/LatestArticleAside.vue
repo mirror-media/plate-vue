@@ -2,13 +2,13 @@
   <div class="latest-aside-container" v-if="groupedArticle">
     <div class="latest-list">
       <div class="latest-list_item">
-        <router-link
-          :to="getHref(groupedArticle)"
+        <a
+          :href="getHref(groupedArticle)"
           v-if="groupedArticle.style !== 'projects' && groupedArticle.style !== 'campaign' && groupedArticle.style !== 'readr'"
           :target="target"
-          @click.native="sendGaClickEvent('home', 'group')">
+          @click="sendGaClickEvent('home', 'group')">
           <div class="latest-list_item_img" v-lazy:background-image="getImage(groupedArticle, 'mobile')"></div>
-        </router-link>
+        </a>
         <a
           :href="getHrefFull(groupedArticle)"
           v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'"
@@ -17,13 +17,13 @@
           <div class="latest-list_item_img" v-lazy:background-image="getImage(groupedArticle, 'mobile')"></div>
         </a>
         <div class="latest-list_item_title">
-          <router-link
-            :to="getHref(groupedArticle)"
+          <a
+            :href="getHref(groupedArticle)"
             v-text="getTruncatedVal(groupedArticle.title, 22)"
             v-if="groupedArticle.style !== 'projects' && groupedArticle !== 'campaign' && groupedArticle !== 'readr'"
             :target="target"
-            @click.native="sendGaClickEvent('home', 'group')">
-          </router-link>
+            @click="sendGaClickEvent('home', 'group')">
+          </a>
           <a
             :href="getHrefFull(groupedArticle)"
             v-text="getTruncatedVal(groupedArticle.title, 22)"
@@ -36,13 +36,13 @@
 
       <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])" v-if="i < 3">
         <div class="latest-list_item_title">
-          <router-link
-            :to="getHref(o)"
+          <a
+            :href="getHref(o)"
             v-text="getTruncatedVal(o.title, 22)"
             v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'"
             :target="target"
-            @click.native="sendGaClickEvent('home', 'group')">
-          </router-link>
+            @click="sendGaClickEvent('home', 'group')">
+          </a>
           <a
             :href="getHrefFull(o)"
             v-text="getTruncatedVal(o.title, 22)"

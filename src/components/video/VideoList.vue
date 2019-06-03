@@ -1,6 +1,6 @@
 <template>
   <section class="video-list">
-    <h2><router-link :to="`/category/${OATH_PLAYLIST[playlist.id].categoryName}`" v-text="playlist.name"></router-link></h2>
+    <h2><a :href="`/category/${OATH_PLAYLIST[playlist.id].categoryName}`" v-text="playlist.name"></a></h2>
     <div class="video-list__list">
       <template v-for="(item, index) in itemsFiltered">
         <a :key="item.id"

@@ -2,11 +2,11 @@
   <section class="portraitWallList">
     <div class="portraitWallList__imageGroup" :class="[ index%2 === 0 ? 'color' : '' ]" v-for="(item, index) in images">
       <div class="portraitWallList__block" :class="[ getOrder(image) %2 === 0 ? '' : 'color' ]" v-for="(image, index) in item">
-        <router-link :to="getHref(image)" target="_blank" class="portraitWallList__block--image" :style="{ backgroundImage: 'url(' + getImage(image) + ')' }">
+        <a :href="getHref(image)" target="_blank" class="portraitWallList__block--image" :style="{ backgroundImage: 'url(' + getImage(image) + ')' }">
           <p v-text="getTitle(image, false)"></p>
-        </router-link>
+        </a>
         <div class="portraitWallList__block--content">
-          <h2><router-link :to="getHref(image)" target="_blank" v-text="getValue(image, [ 'description' ])"></router-link></h2>
+          <h2><a :href="getHref(image)" target="_blank" v-text="getValue(image, [ 'description' ])"></a></h2>
           <p><a target="_blank" v-text="getTitle(image, true)"></a></p>
         </div>
       </div>

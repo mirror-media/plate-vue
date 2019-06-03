@@ -16,9 +16,9 @@
       <a class="item" :href="SOCIAL_LINK.EMAIL" target="_blank" @click="sendGaClickEvent('footer', 'footer email')"><img src="/assets/mirrormedia/icon/mail@2x.png" alt="聯絡我們" class="footer-icon mail" /></a>
     </div>
     <div class="mobile-follow mobile-only">
-      <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a> - 
-      <router-link to="/story/ad1018001" target="_blank">廣告合作</router-link> - 
-      <router-link to="/category/campaign" target="_blank">活動專區</router-link>
+      <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('footer', 'footer subscribe')">訂閱鏡週刊</a> - 
+      <a :href="SOCIAL_LINK.AD" target="_blank" @click="sendGaClickEvent('footer', 'footer ad')">廣告合作</a> - 
+      <a href="/category/campaign" target="_blank" @click="sendGaClickEvent('footer', 'footer activity')">活動專區</a>
     </div>
   </footer>
 </template>
