@@ -30,7 +30,7 @@
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="portraitWallSlideImages"></leading>
@@ -47,7 +47,7 @@
         </template>
 
         <template v-else-if="topicType === 'group'">
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
@@ -63,7 +63,7 @@
         </template>
 
         <template v-else>
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
           <div class="topic">
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
@@ -104,9 +104,8 @@ import Cookie from 'vue-cookie'
 import Footer from '../components/Footer.vue'
 import FooterFull from '../components/FooterFull.vue'
 import GroupList from '../components/GroupList.vue'
-import Header from '../components/Header.vue'
 import HeaderFull from '../components/HeaderFull.vue'
-import HeaderR from '../components/HeaderR.vue'
+import Header from '../components/Header.vue'
 import Leading from '../components/Leading.vue'
 import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
@@ -242,7 +241,6 @@ export default {
   name: 'Topic',
   components: {
     'app-footer': Footer,
-    'app-header': Header,
     'article-list': ArticleList,
     'article-list-full': ArticleListFull,
     'footer-full': FooterFull,
@@ -258,7 +256,7 @@ export default {
     'timeline-headline': TimelineHeadline,
     'vue-dfp-provider': VueDfpProvider,
     ProjectList,
-    HeaderR
+    Header
   },
   asyncData ({ store, route }) {
     return fetchData(store, route.params.topicId)

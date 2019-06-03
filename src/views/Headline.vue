@@ -1,7 +1,6 @@
 <template>
   <div class="headline">
-    <HeaderR/>
-    <!-- <Header :commonData="$store.state.commonData" /> -->
+    <Header/>
     <main>
       <iframe src="https://load-balancer.likr.com.tw/news_page_new/main_page/mirrormedia.php" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" id="Iframe">
       </iframe>
@@ -15,7 +14,6 @@
 
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
-import HeaderR from '../components/HeaderR.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
 import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { get } from 'lodash'
@@ -48,8 +46,7 @@ export default {
   },
   components: {
     Footer,
-    Header,
-    HeaderR
+    Header
   },
   mixins: [ titleMetaMixin ],
   metaSet () {

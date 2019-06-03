@@ -1,7 +1,7 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'other'">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <article-body-external :articleData="articleData">
         <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" :dfpId="props.dfpId" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
         <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" :dfpId="props.dfpId" :size="getValue($store, 'getters.adSize')" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
@@ -85,7 +85,6 @@
   import DfpST from '../components/DfpST.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
-  import HeaderR from '../components/HeaderR.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
@@ -169,7 +168,6 @@
     },
     components: {
       'app-footer': Footer,
-      'app-header': Header,
       'article-aside-fixed': ArticleAsideFixed,
       'article-body-external': ArticleBodyExternal,
       'latest-list': LatestList,
@@ -182,7 +180,7 @@
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
       DfpST,
-      HeaderR
+      Header
     },
     mixins: [ titleMetaMixin ],
     metaSet () {
