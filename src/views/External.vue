@@ -193,7 +193,6 @@
       }
       const {
         brief = '',
-        extendByline = '',
         name = '',
         partner = {},
         publishedDate = '',
@@ -228,7 +227,6 @@
           <meta property="og:url" content="${SITE_URL}/external/${name}/">
           <meta property="og:image" content="${imageUrl}">
           <meta property="dable:item_id" content="${name}">
-          <meta property="dable:author" content="${extendByline}">
           <meta property="article:section" content="${this.$t('HEADER.EXTERNAL')}">
           <meta property="article:section2" content="${partnerDisplay}">
           <meta property="article:published_time" content="${publishedTime}">
