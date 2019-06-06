@@ -225,7 +225,7 @@ router.get('/playlist', (req, res) => {
     if (!err && data) {
       res.json(JSON.parse(data))
     } else {
-      console.warn(`[WARN]Mobile Fetch data from Redis in fail.`, `${url}?${req.url}`, `${err}`)
+      console.warn(`[WARN]Fetch data from Redis in fail.`, `${url}?${req.url}`, `${err}`)
       superagent
       .get(url)
       .timeout(config.YOUTUBE_API_TIMEOUT)
@@ -302,7 +302,7 @@ router.use('/search', (req, res) => {
           status: errWrapped.status,
           text: errWrapped.text
         })
-        console.error(`[ERROR]Mobile POST elastic search api: ${error}`, esSearch_url)
+        console.error(`[ERROR]POST elastic search api: ${error}`, esSearch_url)
       })
     }
   })
@@ -357,7 +357,7 @@ router.use('/related_news', (req, res) => {
       res.json(parsed)
     } else {
       if (err) {
-        console.error(`[ERROR]Mobile Fetch data from related-newsredis: ${err}.`)
+        console.error(`[ERROR]Fetch data from related-newsredis: ${err}.`)
       }
       res.json({ count: 0, result: [] })
     }
@@ -406,7 +406,7 @@ router.get('*', (req, res, next) => {
   } catch (error) {
     const errWrapped = handlerError(error)
     if (errWrapped.status !== 404) {
-      console.error(`[ERROR]Mobile Fetch data from from api.`, req.url, `${errWrapped.text}`)
+      console.error(`[ERROR]Fetch data from from api.`, req.url, `${errWrapped.text}`)
     } else {
       console.error(`[ERROR] Not Found.`, req.url)
     }
