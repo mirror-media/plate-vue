@@ -7,7 +7,7 @@ const debug = require('debug')('PLATEVUE:api')
 const express = require('express')
 // const isProd = process.env.NODE_ENV === 'production'
 const router = express.Router()
-const superagent = require('superagent')
+const superagent = require('./agent')
 const Twitter = require('twitter')
 
 const jsonParser = bodyParser.json()
