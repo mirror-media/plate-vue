@@ -5,8 +5,8 @@ const agent =
   .agent()
   .use(req => {
     req.on('abort', () => {
-      console.error('[superagent] encounter a abort event')
-      console.log(`[superagent] request url is: ${req.url}`)
+      console.error('[superagent] encounter a abort event in plate-vue')
+      console.error(`[superagent] request url is: ${req.url}`)
     })
   })
 
