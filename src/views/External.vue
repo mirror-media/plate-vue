@@ -1,7 +1,7 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'other'">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       <article-body-external :articleData="articleData">
         <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" :dfpId="props.dfpId" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
         <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" :dfpId="props.dfpId" :size="getValue($store, 'getters.adSize')" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
@@ -30,7 +30,7 @@
         </div>
         <template slot="recommendList">
           <div><h3>推薦文章</h3></div>
-          <div id="matchedContentContainer" class="matchedContentContainer"></div>
+          <GoogleMatchedContent />
         </template>
         <article-aside-fixed slot="articleAsideFixed">
           <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
@@ -63,7 +63,7 @@
       </DfpCover>
       <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
         <vue-dfp :is="props.vueDfp" pos="MBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
-      </DfpCover>      
+      </DfpCover>
     </template>
   </vue-dfp-provider>
 </template>
@@ -71,7 +71,6 @@
 <script>
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
-  import { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
   import { consoleLogOnDev, currEnv, getValue, sendAdCoverGA, updateCookie } from '../util/comm'
@@ -84,8 +83,8 @@
   import DfpCover from '../components/DfpCover.vue'
   import DfpST from '../components/DfpST.vue'
   import Footer from '../components/Footer.vue'
+  import GoogleMatchedContent from '../components/GoogleMatchedContent.vue'
   import Header from '../components/Header.vue'
-  import HeaderR from '../components/HeaderR.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
@@ -169,7 +168,6 @@
     },
     components: {
       'app-footer': Footer,
-      'app-header': Header,
       'article-aside-fixed': ArticleAsideFixed,
       'article-body-external': ArticleBodyExternal,
       'latest-list': LatestList,
@@ -182,7 +180,8 @@
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
       DfpST,
-      HeaderR
+      GoogleMatchedContent,
+      Header
     },
     mixins: [ titleMetaMixin ],
     metaSet () {
@@ -194,7 +193,6 @@
       }
       const {
         brief = '',
-        extendByline = '',
         name = '',
         partner = {},
         publishedDate = '',
@@ -229,7 +227,6 @@
           <meta property="og:url" content="${SITE_URL}/external/${name}/">
           <meta property="og:image" content="${imageUrl}">
           <meta property="dable:item_id" content="${name}">
-          <meta property="dable:author" content="${extendByline}">
           <meta property="article:section" content="${this.$t('HEADER.EXTERNAL')}">
           <meta property="article:section2" content="${partnerDisplay}">
           <meta property="article:published_time" content="${publishedTime}">
@@ -387,7 +384,6 @@
           version: 'v2.0'
         })
         window.FB && window.FB.XFBML.parse()
-        this.$_external_updateMatchedContentScript()
         this.$_external_updateMediafarmersScript()
         this.$_external_sendGA(this.articleData)
       },
@@ -416,9 +412,7 @@
         this.$_external_sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
       }
-      this.$_external_insertMatchedContentScript()
       const scrollTriggerRegister = new ScrollTriggerRegister([
-        { target: '#matchedContentContainer', offset: 400, cb: this.$_external_insertMatchedContentScript },
         { target: '#matchedContentContainer', offset: 400, cb: this.$_external_initializeFBComments }
       ])
       scrollTriggerRegister.init()
@@ -470,33 +464,6 @@
           document.querySelector('body').appendChild(mediafarmersScript)
         }
       },
-      $_external_insertMatchedContentScript () {
-        const matchedContentStart = document.createElement('script')
-        const matchedContentContent = document.createElement('ins')
-        const matchedContentEnd = document.createElement('script')
-        matchedContentStart.setAttribute('id', 'matchedContentStart')
-        matchedContentStart.setAttribute('async', 'true')
-        matchedContentStart.setAttribute('src', '//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js')
-        matchedContentContent.setAttribute('id', 'matchedContentContent')
-        matchedContentContent.setAttribute('class', 'adsbygoogle')
-        matchedContentContent.setAttribute('style', 'display:block')
-        matchedContentContent.setAttribute('data-ad-format', 'autorelaxed')
-        matchedContentContent.setAttribute('data-ad-client', MATCHED_CONTENT_AD_CLIENT)
-        matchedContentContent.setAttribute('data-ad-slot', MATCHED_CONTENT_AD_SLOT)
-        matchedContentEnd.setAttribute('id', 'matchedContentEnd')
-        matchedContentEnd.innerHTML = `(adsbygoogle = window.adsbygoogle || []).push({});`
-
-        const container = document.querySelector('#matchedContentContainer')
-        if (!document.querySelector('#matchedContentStart')) {
-          container && container.appendChild(matchedContentStart)
-        }
-        if (!document.querySelector('#matchedContentContent')) {
-          container && container.appendChild(matchedContentContent)
-        }
-        if (!document.querySelector('#matchedContentEnd')) {
-          container && container.appendChild(matchedContentEnd)
-        }
-      },
       $_external_sendGA (articleData) {
         window.ga('set', 'contentGroup1', 'external')
         window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'partner', 'name' ], '')}`)
@@ -517,17 +484,6 @@
         if (browser) {
           this.viewport = document.documentElement.clientWidth || document.body.clientWidth
         }
-      },
-      $_external_updateMatchedContentScript () {
-        const matchedContentStart = document.querySelector('#matchedContentStart')
-        const matchedContentContent = document.querySelector('#matchedContentContent')
-        const matchedContentEnd = document.querySelector('#matchedContentEnd')
-        if (matchedContentStart) {
-          document.querySelector('#matchedContentContainer').removeChild(matchedContentStart)
-          document.querySelector('#matchedContentContainer').removeChild(matchedContentContent)
-          document.querySelector('#matchedContentContainer').removeChild(matchedContentEnd)
-        }
-        this.$_external_insertMatchedContentScript()
       },
       getValue,
     }

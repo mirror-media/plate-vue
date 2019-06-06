@@ -2,10 +2,10 @@
   <section class="editorChoiceFood">
     <h2 class="editorChoiceFood__title">編輯精選</h2>
     <div class="editorChoiceFoodBlock" v-for="(item, index) in sectionfeatured">
-      <router-link :to="getHref(item)" class="editorChoiceFoodBlock__img" target="_blank"><figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure></router-link>
+      <a :href="getHref(item)" class="editorChoiceFoodBlock__img" target="_blank"><figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure></a>
       <div class="editorChoiceFoodBlock__content">
-        <router-link :to="getHref(item)" target="_blank"><h2 v-text="calcTitle(getValue(item, [ 'title' ]))"></h2></router-link>
-        <router-link :to="getHref(item)" target="_blank"><p v-text="calcBrief(item, index)"></p></router-link>
+        <a :href="getHref(item)" target="_blank"><h2 v-text="calcTitle(getValue(item, [ 'title' ]))"></h2></a>
+        <a :href="getHref(item)" target="_blank"><p v-text="calcBrief(item, index)"></p></a>
       </div>
     </div>
   </section>

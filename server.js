@@ -141,7 +141,8 @@ function render (req, res, next) {
         // process.exit(1)
       }
     }    
-  }  
+  }
+  const isPreview = exp_preview_mode.test(req.url)
   const rendererEjsCB = function (err, html) { 
     if (!err) {
       res.status(rendererEjsCB.code).send(html)
@@ -149,7 +150,7 @@ function render (req, res, next) {
       /**
        * Save every single page which's processing with problem.
        */
-      isProd && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
+      isProd && !isPreview && redisWriting(req.url, rendererEjsCB.code || 500, null, 120)
       
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
@@ -158,7 +159,6 @@ function render (req, res, next) {
     checkoutMem()
   }
 
-  const isPreview = exp_preview_mode.test(req.url)
   if (!isPreview) {
     res.setHeader('Cache-Control', 'public, max-age=600')
   } else {
@@ -174,8 +174,7 @@ function render (req, res, next) {
       res.render('404', rendererEjsCB)
       // response 404 instead of 403 to avoid this page be indexed by search engin.
       // res.status(403).send('Forbidden')
-
-      console.info('Attempted to access draft in fail: 403 Forbidden')
+      console.warn(`Attempted to access draft in fail: 403 Forbidden \nclientIp: ${req.connection.remoteAddress} \nreq.url: ${req.url}`)
       return
     }
   }
@@ -262,7 +261,7 @@ app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
-  if (req.url.match(/\/story\//) && !req.url.match(/\?preview=true/)) {
+  if (req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
     req.url = req.url.split('?')[0]
   }
   next()

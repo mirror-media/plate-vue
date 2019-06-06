@@ -2,13 +2,13 @@
   <header>
     <nav class="headerFoodTravel">
       <div class="headerFoodTravel__logo">
-        <router-link to="/" @click.native="sendGaClickEvent('header', 'logo')">
+        <a href="/" @click="sendGaClickEvent('header', 'logo')">
           <img class="headerFoodTravel__link--icon" src="/assets/mirrormedia/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media">
-        </router-link>
+        </a>
       </div>
       <div class="headerFoodTravel__menu">
         <a class="headerFoodTravel__menu--ham mobile-only" @click="openSideBar()"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
-        <router-link class="headerFoodTravel__menu--item desktop-only" :to="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :key="`${i}-${Date.now()}`" @click.native="sendGaClickEvent('header', `category ${item.name}`)"></router-link>
+        <a class="headerFoodTravel__menu--item desktop-only" :href="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :key="`${i}-${Date.now()}`" @click="sendGaClickEvent('header', `category ${item.name}`)"></a>
       </div>
       <div class="headerFoodTravel__social-and-search">
         <a :href="socialLink.FACEBOOK_FOODTRAVEL" target="_blank" @click="sendGaClickEvent('header', `header facebook`)">
@@ -31,7 +31,7 @@
           <a class="sidebarFull__close--text" @click="closeSideBar()"></a>
         </div>
         <nav class="sidebarFull__menu">
-          <router-link class="sidebarFull__menu--item" :to="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :key="`${i}-${Date.now()}`" @click.native="sendGaClickEvent('header', `category ${item.name}`)"></router-link>
+          <a class="sidebarFull__menu--item" :href="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :key="`${i}-${Date.now()}`" @click="sendGaClickEvent('header', `category ${item.name}`)"></a>
         </nav>
       </div>
       <div class="sidebarFull-curtain" @click="closeSideBar()" v-show="openSide"></div>

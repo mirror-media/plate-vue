@@ -21,7 +21,7 @@
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
-        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <list-slider class="gs"></list-slider>
         <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode"></article-list>
         <LazyItemWrapper :position="verge.viewportH()" :strict="true">
@@ -38,7 +38,7 @@
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'light'">
-        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
           <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="getValue($store, 'getters.adSize')" /></div>
@@ -61,7 +61,7 @@
       </div>
 
       <div class="list-view" v-else>
-        <HeaderR :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <div><vue-dfp v-if="hasDFP && !isMobile" :is="props.vueDfp" pos="LPCHD" :config="props.config" /></div>
           <div><vue-dfp v-if="hasDFP && isMobile" :is="props.vueDfp" pos="LMBHD" :config="props.config" :size="getValue($store, 'getters.adSize')" /></div>
@@ -130,9 +130,8 @@ import EditorChoiceFoodTravel from '../components/EditorChoiceFoodTravel.vue'
 import FeaturedStoryFoodTravel from '../components/FeaturedStoryFoodTravel.vue'
 import Footer from '../components/Footer.vue'
 import FooterFoodTravel from '../components/FooterFoodTravel.vue'
-import Header from '../components/Header.vue'
 import HeaderFoodTravel from '../components/HeaderFoodTravel.vue'
-import HeaderR from '../components/HeaderR.vue'
+import Header from '../components/Header.vue'
 import HeroImageFoodTravel from '../components/HeroImageFoodTravel.vue'
 import LatestArticleFoodTravel from '../components/LatestArticleFoodTravel.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
@@ -171,7 +170,7 @@ const fetchCommonData = (store, route) => {
       if (route.params.title === GS_CATEGORY_NAME) {
         jobs.push(fetchImages(store, GS_TAG_ID))
       }
-      jobs.push(fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(route.path, '/')[2], 'ogImage' ], '')))
+      // jobs.push(fetchCategoryOgImages(store, _.get(store, [ 'state', 'commonData', 'categories', _.split(route.path, '/')[2], 'ogImage' ], '')))
     }
     return Promise.all(jobs)
   }).catch(err => {
@@ -186,15 +185,15 @@ const fetchCommonData = (store, route) => {
   })
 }
 
-const fetchCategoryOgImages = (store, uuid) => {
-  return store.dispatch('FETCH_IMAGE', {
-    'uuid': uuid,
-    'params': {
-      max_results: 1
-    },
-    'type': 'OG'
-  })
-}
+// const fetchCategoryOgImages = (store, uuid) => {
+//   return store.dispatch('FETCH_IMAGE', {
+//     'uuid': uuid,
+//     'params': {
+//       max_results: 1
+//     },
+//     'type': 'OG'
+//   })
+// }
 
 const fetchImages = (store, uuid) => store.dispatch('FETCH_IMAGES', {
   uuid: uuid,
@@ -470,7 +469,6 @@ export default {
   name: 'list-view',
   components: {
     'app-footer': Footer,
-    'app-header': Header,
     'article-list': ArticleList,
     'article-list-light': ArticleListLight,
     'editor-foodtravel': EditorChoiceFoodTravel,
@@ -489,7 +487,7 @@ export default {
     'vue-dfp-provider': VueDfpProvider,
     DfpCover,
     DfpST,
-    HeaderR,
+    Header,
     LazyItemWrapper
   },
   asyncData ({ store, route }) {

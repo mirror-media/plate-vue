@@ -1,7 +1,7 @@
 <template>
   <VueDfpProvider :dfpid="DFP_ID" :dfpUnits="DFP_UNITS" :options="dfpOptions" :mode="currEnv()" section="5975ab2de531830d00e32b2f">
     <template slot-scope="props" slot="dfpPos">
-      <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="videohub" />
+      <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="videohub" />
       <template v-if="isSingleVideoPage">
         <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
           <ShareLight slot="share" :gtmCategory="'article'" />
@@ -26,7 +26,7 @@
         </VideoLeading>
         <template v-for="(item, index) in playlist">
           <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
-            <router-link v-if="!isCategoryPage" slot="more" :to="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></router-link>
+            <a v-if="!isCategoryPage" slot="more" :href="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></a>
             <template v-if="mounted && isCategoryPage">
               <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
               <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="LMBFT" />
@@ -65,7 +65,7 @@ import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import DfpST from '../components/DfpST.vue'
 import Footer from '../components/Footer.vue'
-import HeaderR from '../components/HeaderR.vue'
+import Header from '../components/Header.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import LiveStream from '../components/LiveStream.vue'
 import SingleVideoBody from '../components/video/SingleVideoBody.vue'
@@ -170,7 +170,7 @@ export default {
     DfpCover,
     DfpST,
     Footer,
-    HeaderR,
+    Header,
     LazyItemWrapper,
     LiveStream,
     SingleVideoBody,

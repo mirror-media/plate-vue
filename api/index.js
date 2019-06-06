@@ -366,8 +366,13 @@ router.use('/related_news', (req, res) => {
 
 router.get('*', (req, res, next) => {
   req.startTime = Date.now()
+  const maxResults = req.query.max_results
+  const maxResultsLimit = config.MAX_RESULTS_LIMIT || 25
   res.header("Access-Control-Allow-Origin", "*")
   res.header("Access-Control-Allow-Headers", "X-Requested-With")
+  if (maxResults && maxResults > maxResultsLimit) {
+    return res.status(403).send()
+  }
   next()
 }, fetchFromRedisForAPI, async (req, res, next) => {
   try {

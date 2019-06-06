@@ -37,16 +37,17 @@ const validateSlugIsEmpty = (req, res, next) => {
 
 const fetchFromRedis = (req, res, next) => {
   const slug = req.params.slug
-  const url = `${apiHost}/getposts?where={"slug":"${slug}"}`
+  const url = `/getposts?where={"slug":"${slug}"}&clean=content`
   req.fetchURL = url
   
   redisFetching(req.fetchURL, ({ error, data }) => {
     if (!error) {
+      console.log('[AMP] Fetch data from Redis success\n[AMP]', req.fetchURL)
       res.redis = data
       next()
     } else {
-      const errWrapped = handlerError(error)
-      errorDispatcher(errWrapped, res)
+      // const errWrapped = handlerError(error)
+      // errorDispatcher(errWrapped, res)
       console.error('[AMP] Fetch data from Redis in fail\n[AMP]', req.fetchURL, '\n', error)
       next()
     }
@@ -59,9 +60,11 @@ const fetchStory = async (req, res, next) => {
     res.resData = resData
     next()
   } else {
+    const fetchURLAPI = `${apiHost}${req.fetchURL}`
     try {
+      console.log(`[AMP] Start fetch data from API: ${fetchURLAPI}`)
       const response = await superagent
-        .get(req.fetchURL)
+        .get(fetchURLAPI)
         .timeout(
           {
             response: API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
@@ -72,15 +75,17 @@ const fetchStory = async (req, res, next) => {
       const data = JSON.parse(response.text)
       const dataAmount = _.get(data, '_meta.total')
       if (dataAmount && dataAmount > 0) {
-        /**
-         * If req target is post, have the redis ttl be 7 days.
-         */
-        const exp_post_query = /^\/getposts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*/
-        redisWriting(req.fetchURL, response.text, null, exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)
-
+        // /**
+        //  * If req target is post, have the redis ttl be 7 days.
+        //  */
+        // const exp_post_query = /^\/getposts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*/
+        // redisWriting(req.fetchURL, response.text, null, exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)        
+        
+        console.log(`[AMP] Data exist from API: ${fetchURLAPI}`)
         res.resData = data
         next()
       } else {
+        console.warn(`[AMP] Data not exist from API: ${fetchURLAPI}`)
         res.status(404).render('404')
       }
 
@@ -89,9 +94,9 @@ const fetchStory = async (req, res, next) => {
       errorDispatcher(errWrapped, res)
 
       if (errWrapped.status !== 404) {
-        console.error(`[AMP] Error occurred during fetching data from api.\n`, `[AMP] ${req.fetchURL}\n`, error)
+        console.error(`[AMP] Error occurred during fetching data from api.\n`, `[AMP] ${fetchURLAPI}\n`, error)
       } else {
-        console.warn(`[AMP] Not Found: ${req.fetchURL}`)
+        console.warn(`[AMP] Not Found: ${fetchURLAPI}`)
       }
     }
   }
@@ -101,6 +106,18 @@ const getArticleData = (req, res, next) => {
   const data = res.resData
   const articleData = _.get(data, [ '_items', 0 ], {})
   res.articleData = articleData
+  next()
+}
+
+const validateArticle = (req, res, next) => {
+  if (_.isEmpty(res.articleData)) {
+    console.warn(`[AMP] Article data is empty, response 404: ${req.fetchURL}`)
+    res.status(404).render('404')
+  } else if (_.get(res.articleData, [ 'publishedDate' ], '') === '') {
+    console.warn(`[AMP] Article's publishedDate is empty, response 404: ${req.fetchURL}`)
+    res.status(404).render('404')
+  }
+
   next()
 }
 
@@ -177,5 +194,6 @@ module.exports = {
   fetchFromRedis,
   fetchStory,
   getArticleData,
+  validateArticle,
   sendArticleData
 }

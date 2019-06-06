@@ -3,7 +3,7 @@
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
-          <HeaderR :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
+          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
         </section>
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp :is="props.vueDfp" pos="LPCHD" v-if="(viewport > 999)" :config="props.config"/>
@@ -83,7 +83,6 @@ import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
 import Header from '../components/Header.vue'
-import HeaderR from '../components/HeaderR.vue'
 import LatestArticleAside from '../components/LatestArticleAside.vue'
 import LatestArticleAsideMobileB from '../components/LatestArticleAsideMobileB.vue'
 import LatestArticleMain from '../components/LatestArticleMain.vue'
@@ -160,7 +159,6 @@ const fetchLatestArticle = (store, page) => {
 export default {
   name: 'home-view',
   components: {
-    'app-Header': Header,
     'editor-choice': EditorChoice,
     'live-stream': LiveStream,
     'loading': Loading,
@@ -171,7 +169,7 @@ export default {
     LazyItemWrapper,
     MirrorMediaTVAside,
     VueDfpProvider,
-    HeaderR
+    Header
   },
   asyncData ({ store }) {
     return fetchSSRData(store)
