@@ -26,7 +26,7 @@ const REDIS_OPTIONS = {
     if (options.error && options.error.code === 'ETIMEDOUT') {
       return new Error('Timeout occured while connecting to redis.')      
     }
-    if (options.total_retry_time > 1000 * 5) {
+    if (options.total_retry_time > 200 * 5) {
       return new Error('Retry time exhausted')
     }
     if (options.attempt > 0 || options.times_connected > 0) {
