@@ -1,17 +1,51 @@
 <template>
   <div class="related-list">
-    <div v-if="!(filteredRecommends.length < 1)" class="related-list__list" :style="containerStyle()">
-      <div class="related-list__list__title"><h4 :style="titleStyle()">相關文章</h4></div>
+    <div
+      class="related-list__list"
+      :style="containerStyle()"
+    >
+      <div class="related-list__list__title">
+        <h4 :style="titleStyle()">
+          相關文章
+        </h4>
+      </div>
       <template v-if="!isAd">
-        <template v-for="o in filteredRecommends">
-          <div v-if="o" class="related-list__list__item">
+        <template v-for="(o, i) in filteredRecommends">
+          <div
+            v-if="o"
+            :key="i"
+            class="related-list__list__item"
+          >
             <div class="title">
               <!-- <router-link @click.native="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" v-if="shouldShowItem(o)"></router-link> -->
-              <a @click="recommendsClickHandler(getValue(o, [ 'slug' ]))" :href="getHrefFull(o)" target="_blank" v-text="getValue(o, [ 'title' ], '')"></a>
+              <a
+                @click="recommendsClickHandler(getValue(o, [ 'slug' ]))"
+                :href="getHrefFull(o)"
+                target="_blank"
+                v-text="getValue(o, [ 'title' ], '')"
+              >
+              </a>
             </div>
+          </div>
+          <div
+            v-if="i === showPopInAdAt"
+            :key="i"
+            class="related-list__list__item"
+          >
+            <popin-ad>
+              <div id="_popIn_recommend_ad_1"></div>
+            </popin-ad>
           </div>
         </template>
       </template>
+      <div
+        v-if="showPopInAdAt === 0"
+        class="related-list__list__item"
+      >
+        <popin-ad>
+          <div id="_popIn_recommend_ad_1"></div>
+        </popin-ad>
+      </div>
     </div>
   </div>
 </template>
@@ -21,6 +55,7 @@
   import { extractSlugFromReferrer, getHref, getHrefFull, getValue, sendGaClickEvent } from '../../util/comm'
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
+  import PopInAd from '../PopInAd.vue'
 
   const debug = require('debug')('CLIENT:RecommendList')
   const fetchRecommendList = (store, id) => {
@@ -33,6 +68,9 @@
   }
 
   export default {
+    components: {
+      'popin-ad': PopInAd
+    },
     computed: {
       filteredRecommends () {
         const dqueue = this.getRecommClickHistory()
@@ -52,6 +90,12 @@
         })
         return hashtable
       },
+      showPopInAdAt () {
+        if (!this.filteredRecommends.length) {
+          return 0
+        }
+        return this.filteredRecommends.length < 3 ? this.filteredRecommends.length - 1 : 3
+      }
     },
     data () {
       return {
