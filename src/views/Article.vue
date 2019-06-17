@@ -76,10 +76,7 @@
               </template>
             </LazyItemWrapper>
             <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode"></pop-list>
-            <RelatedListInContent
-              :relateds="relateds"
-              slot="relatedListInContent"
-            >
+            <RelatedListInContent :relateds="relateds" slot="relatedListInContent">
               <micro-ad
                 v-for="ad in getValue(microAds, [ 'article' ])"
                 :id="`${getValue(ad, [ 'pcId' ])}`"
@@ -88,13 +85,10 @@
                 :currUrl="articleUrl"
                 class="related">
               </micro-ad>
-              <popin-ad>
-                <div id="_popIn_recommend"></div>
-              </popin-ad>
             </RelatedListInContent>
-            <RecommendList
-              slot="relatedlistBottom" 
+            <RecommendList slot="relatedlistBottom" 
               v-if="!isAd"
+              v-show="recommendlist.length > 0"
               :isAd="isAd"
               :sectionId="sectionId"
               :relateds="relateds"
@@ -180,7 +174,6 @@
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import LiveStream from '../components/LiveStream.vue'
   import MicroAd from '../components/MicroAd.vue'
-  import PopInAd from '../components/PopInAd.vue'
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
@@ -396,7 +389,6 @@
       'latest-list': LatestList,
       'live-stream': LiveStream,
       'micro-ad': MicroAd,
-      'popin-ad': PopInAd,
       'pop-list': PopList,
       'pop-list-vert': PopListVert,
       'share-tools': ShareTools,
