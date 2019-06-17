@@ -388,22 +388,6 @@ export async function insertMicroAd ({ adId, currEnv, vm }) {
   }
 }
 
-export function insertPopInAdScript (vm) {
-  if (process.env.VUE_ENV === 'client' && !vm.adScriptLoaded) {
-    const pa = document.createElement('script')
-    pa.onload = () => {
-      debug('popInAd loaded')
-      vm.adScriptLoaded = true
-    }
-    pa.type = 'text/javascript'
-    pa.charset = 'utf-8'
-    pa.async = true
-    pa.src = window.location.protocol + '//api.popin.cc/searchbox/mirrormedia_tw.js'
-    const s = document.getElementsByTagName('script')[0]
-    s.parentNode.insertBefore(pa, s)
-  }
-}
-
 // Vpon ad is abandoned 20180810 BY KC
 // export function insertVponAdSDK ({ isVponSDKLoaded = false }) {
 //   if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
