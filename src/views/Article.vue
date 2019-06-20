@@ -202,7 +202,7 @@
   //debug variable 
   const random = Math.floor((Math.random() * 1000) + 1)
   const id_timestamp = Date.now()
-  const id = id.timestamp.toString() + random.toString()
+  const id = id_timestamp.toString() + random.toString()
   //debug variable 
   const debugDFP = require('debug')('CLIENT:DFP')
   const debugDataLoad = require('debug')('CLIENT:DATALOAD')
