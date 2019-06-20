@@ -199,17 +199,11 @@
   // const RelatedListInContent = () => import('../components/article/RelatedListInContent.vue')
 
   const debug = require('debug')('CLIENT:VIEWS:article')
-  //debug variable 
-  const random = Math.floor((Math.random() * 1000) + 1)
-  const id_timestamp = Date.now()
-  const id = id_timestamp.toString() + random.toString()
-  //debug variable 
   const debugDFP = require('debug')('CLIENT:DFP')
   const debugDataLoad = require('debug')('CLIENT:DATALOAD')
   const fetchArticles = (store, slug) => {
     debug('Going to fetch article data.', slug)
     const timestamp = Date.now()
-	console.log(`${id} - fetch article start: ${Date.now()}`)
     return store.dispatch('FETCH_ARTICLES', {
       params: {
         // related: 'full',
@@ -219,7 +213,6 @@
       preview: _.get(store, [ 'state', 'route', 'query', 'preview' ])
     }).then(article => {
       traceResponse(store, { log: `fetch articlle data: ${Date.now() - timestamp}ms` })
-	  console.log(`${id} - fetch article end: ${Date.now()}`)
       return article
     })
   }
@@ -237,7 +230,6 @@
   }
 
   const fetchPartners = (store) => {
-	console.log(`${id} - fetch partners start: ${Date.now()}`)
     const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
     const timestamp = Date.now()
     return store.dispatch('FETCH_PARTNERS', {
@@ -248,7 +240,6 @@
     }).then(() => {
       if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
         fetchPartners(store).then(() => (traceResponse(store, { log: `fetch partners data: ${Date.now() - timestamp}ms` })))
-	    console.log(`${id} - fetch partners end: ${Date.now()}`)
       }
     })
   }
@@ -259,20 +250,16 @@
 
   const fetchSSRData = (store) => {
     const timestamp = Date.now()
-	console.log(`${id} - fetch ssr start: ${Date.now()}`)
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] }).then(response => {
       traceResponse(store, { log: `fetch sections and topics data: ${Date.now() - timestamp}ms` })
-	  console.log(`${id} - fetch ssr end: ${Date.now()}`)
       return response
     })
   }
 
   const fetchCommonData = (store) => {
     const timestamp = Date.now()
-	console.log(`${id} - fetch common start: ${Date.now()}`)
     return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] }).then(response => {
       traceResponse(store, { log: `fetch projects data: ${Date.now() - timestamp}ms` })
-	  console.log(`${id} - fetch common end: ${Date.now()}`)
       return response
     })
   }
