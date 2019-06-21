@@ -104,9 +104,9 @@
             />            
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template v-if="!hiddenAdvertised" slot="recommendList">
-              <div><h3>推薦文章</h3></div>
-              <GoogleMatchedContent />
-              <div v-if="abIndicator === 'B'" id="dablewidget_GlYwenoy" data-widget_id="GlYwenoy"></div>
+              <div v-if="abIndicator !== 'B'"><h3>推薦文章</h3></div>
+              <GoogleMatchedContent v-if="abIndicator !== 'B'" />
+              <div v-if="abIndicator === 'B'" id="dablewidget_GlYwenoy" class="dable-widget" data-widget_id="GlYwenoy"></div>
             </template>
           </article-body>
           <div class="article_footer">
@@ -905,6 +905,9 @@
 
     a, a:hover, a:link, a:visited
       display inline
+
+  .dable-widget
+    margin-top 15px
 
   @media (min-width 0px) and (max-width 499px)
     .article-container
