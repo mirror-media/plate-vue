@@ -232,7 +232,7 @@ const insertIntoRedis = (req, res, next) => {
 
 const fetchFromRedis = (req, res, next) => {
   debug('Trying to fetching data from redis...', req.url)
-  redisFetching(req.url, ({ error, data }) => {
+  redisFetching(req.hostname + "/" + req.url, ({ error, data }) => {
     if (!error) {
       res.redis = data
       next()
