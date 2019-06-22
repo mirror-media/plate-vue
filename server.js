@@ -302,7 +302,7 @@ process.on('unhandledRejection', reason => {
 })
 
 const port = process.env.PORT || 8080
-const server = http.create(app).listen(port, () => console.log(`server started at localhost:${port}`))
+const server = http.createServer(app).listen(port, () => console.log(`server started at localhost:${port}`))
 
 module.exports = {
   ready: readyPromise,
