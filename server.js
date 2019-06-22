@@ -30,7 +30,7 @@ const serverInfo =
   `vue-server-renderer/${require('vue-server-renderer/package.json').version}`
 
 const app = express()
-app.maxSockets = Infinity
+http.globalAgent.maxSockets = Infinity
 const debug = require('debug')('PLATEVUE:server')
 const template = fs.readFileSync(resolve('./src/index.template.html'), 'utf-8')
 
@@ -302,7 +302,7 @@ process.on('unhandledRejection', reason => {
 })
 
 const port = process.env.PORT || 8080
-const server = app.listen(port, () => console.log(`server started at localhost:${port}`))
+const server = http.create(app).listen(port, () => console.log(`server started at localhost:${port}`))
 
 module.exports = {
   ready: readyPromise,
