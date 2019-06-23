@@ -161,7 +161,7 @@ function render (req, res, next) {
       /**
        * Save every single page which's processing with problem.
        */
-      isProd && !isPreview && redisWriting(req.hostname + "/" + req.url, rendererEjsCB.code || 500, null, 120)
+      isProd && !isPreview && redisWriting(req.hostname + "/" + req.url, rendererEjsCB.code || 500, null, 60)
       
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
@@ -274,6 +274,9 @@ app.get('*', (req, res, next) => {
   console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
   if (req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
     req.url = req.url.split('?')[0]
+	if (urlRegex = req.url.match(/(\/story\/[\w\d-_]*)/)) {
+      req.url = urlRegex[1]
+    }
   }
   next()
 }, fetchFromRedis, (req, res, next) => {
