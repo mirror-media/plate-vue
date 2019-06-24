@@ -143,7 +143,7 @@ const redisFetching = (url, callback) => {
     
     let timePeriod = Date.now() - start
     if (timePeriod > 300) {
-      console.log('[WARN]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
+      console.warn('[WARN]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
     }
     timeoutHandler = null
   })
@@ -237,7 +237,7 @@ const fetchFromRedis = (req, res, next) => {
       res.redis = data
       next()
     } else {
-      console.error('>>> Fetch data from Redis in fail with error.', `\n${error}`)
+      console.log('>>> Fetch data from Redis in fail with error.', `\n${error}`)
       next()
     }
   })
