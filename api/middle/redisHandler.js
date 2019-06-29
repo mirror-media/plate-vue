@@ -225,9 +225,9 @@ const redisFetchingRecommendNews = (field, callback) => {
 }
 
 const insertIntoRedis = (req, res, next) => {
-  redisWriting(req.url, res.dataString, () => {
+  //redisWriting(req.url, res.dataString, () => {
     // next()
-  }, res.redisTTL)
+  //}, res.redisTTL)
 }
 
 const fetchFromRedis = (req, res, next) => {

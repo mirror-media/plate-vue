@@ -263,7 +263,7 @@ function render (req, res, next) {
      */
 
     // Don't save any page for now.
-    isProd && !isPreview && redisWriting(req.hostname + req.url, html, null, 300)
+    isProd && !isPreview && redisWriting(req.hostname + req.url, html, null, 600)
   })
 }
 app.use('/story/amp', require('./amp/service/api'))
