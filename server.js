@@ -171,7 +171,7 @@ function render (req, res, next) {
   }
 
   if (!isPreview) {
-    res.setHeader('Cache-Control', 'public, max-age=600')
+    res.setHeader('Cache-Control', 'public, max-age=600, stale-while-revalidate=3600')
   } else {
     const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, i => (req.clientIp.indexOf(i) > -1)).length > 0
     console.info('Is there any preview permission limit?', _.get(VALID_PREVIEW_IP_ADD, 'length', 0) > 0)
