@@ -228,12 +228,12 @@ export class OnePageScroller {
           touchStartX = touches[0].pageX;
           touchStartY = touches[0].pageY;
           this.scrollingFlag = false;
-          this.doc.addEventListener("touchmove", _touchMove);
+          this.doc.addEventListener("touchmove", _touchMove, { passive: false, cancelable: true });
         }
       };
       this.doc.addEventListener("touchstart", _touchStart);  
       this.doc.addEventListener("touchend", () => {
-        this.doc.removeEventListener('touchmove', _touchMove);
+        this.doc.removeEventListener('touchmove', _touchMove, { passive: false, cancelable: true });
       });  
       this.doc.addEventListener("pageDown",  (evt) => {
         // if (!_hasClass(body, "disabled-onepage-scroll")) event.preventDefault();
