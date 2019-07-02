@@ -5,7 +5,7 @@
       <div class="slider-container" :style="{ width: `${editorChoice.length * 100}%`, transform: `translateX(-${100 / editorChoice.length * sliderCurrent}%)` }">
         <a v-for="item in editorChoice"
           :key="item.slug"
-          :href="`/story/${item.slug}`"
+          :href="getHref(item)"
           :style="{ width: `${100 / editorChoice.length}%`, backgroundImage: `url(${item.heroImage.image.resizedTargets.tablet.url})` }"
           class="slider__item"
           target="_blank"
