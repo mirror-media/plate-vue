@@ -386,7 +386,7 @@ router.get('*', (req, res, next) => {
       )
     const data = JSON.parse(response.text)
     const dataAmount = get(data, '_meta.total')
-	let timePeriod = Date.now() - req.startTime
+    let timePeriod = Date.now() - req.startTime
     if (timePeriod < 1000) {
       console.log(`[LOG]Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
     } else {
@@ -422,6 +422,6 @@ router.get('*', (req, res, next) => {
       text: errWrapped.text
     })
   }
-}, insertIntoRedis)
+})
 
 module.exports = router
