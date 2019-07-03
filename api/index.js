@@ -217,34 +217,6 @@ router.get('/playlistng/:ids', fetchFromRedisForAPI, async (req, res, next) => {
   }
 }, insertIntoRedis)
 
-// deprecated
-router.get('/playlist', (req, res) => {
-  let query = req.query
-  let url = `${config.YOUTUBE_PROTOCOL}://${config.YOUTUBE_HOST}?part=snippet&playlistId=${config.YOUTUBE_PLAYLIST_ID}&key=${config.YOUTUBE_API_KEY}`
-  redisFetching(`${url}?${req.url}`, ({ err, data }) => {
-    if (!err && data) {
-      res.json(JSON.parse(data))
-    } else {
-      console.warn(`[WARN]Fetch data from Redis in fail.`, `${url}?${req.url}`, `${err}`)
-      superagent
-      .get(url)
-      .timeout(config.YOUTUBE_API_TIMEOUT)
-      .query(query)
-      .then(response => {
-        redisWriting(`${url}?${req.url}`, JSON.stringify(response.body))
-        res.json(response.body)
-      })
-      .catch(error => {
-        console.error(`\n[ERROR] GET youtube api.`, url, `\n${error}\n`)
-        const status = get(error, 'status') || 500
-        const info = JSON.parse(get(error, 'response.text')) || error
-        res.header('Cache-Control', 'no-cache')
-        res.status(status).send(info)
-      })
-    }
-  })
-})
-
 router.use('/search', (req, res) => {
   const esSearch_url = `${config.SEARCH_PROTOCOL}://${config.SEARCH_HOST}:${config.SEARCH_PORT || 9200}${config.SEARCH_ENDPOINT}`
   redisFetching(`/search${req.url}`, ({ err, data }) => {
