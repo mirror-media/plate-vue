@@ -1,4 +1,4 @@
-import { GA_ID, OATH_PLAYLIST } from '../constants/index'
+import { GA_ID, GA_TEST_ID, OATH_PLAYLIST } from '../constants/index'
 import Vue from 'vue'
 import Router from 'vue-router'
 import VueLazyload from 'vue-lazyload'
@@ -30,7 +30,8 @@ const oathCategories = Object.values(OATH_PLAYLIST).map(item => `/category/${ite
 
 export function createRouter () {
   if (process.env.VUE_ENV === 'client') {
-    window.ga('create', GA_ID, 'auto')
+    const gaId = location.hostname.match(/(www|m).mirrormedia.mg/) ? GA_ID : GA_TEST_ID
+    window.ga && !window.gaData && window.ga('create', gaId, 'auto')
   }
   return new Router({
     mode: 'history',
