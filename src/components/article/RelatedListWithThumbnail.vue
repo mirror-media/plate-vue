@@ -3,12 +3,18 @@
     <div class="related_title"><h3></h3></div>
     <div class="related_list">
       <template v-if="isApp">
-        <div class="related_item" v-for="(o, i) in relatedList">
+        <div
+          class="related_item"
+          v-for="(o, i) in relatedList"
+          :key="i"
+        >
           <div>
             <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" >
-              <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
-                    :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
-              </div>
+              <div
+                class="related_item_img"
+                :alt="getValue(o, [ 'title' ])"
+                :style="{ backgroundImage: getBackgroundImage(getValue(o, [ 'heroImage' ])) }"
+              />
             </a>
           </div>
           <div class="related_item_title">
@@ -17,12 +23,18 @@
         </div>
       </template>
       <template v-else>
-        <div class="related_item" v-for="(o, i) in relatedList">
+        <div
+          class="related_item"
+          v-for="(o, i) in relatedList"
+          :key="i"
+        >
           <div>
             <a :href="getHref(o)" >
-              <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
-                    :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
-              </div>
+              <div
+                class="related_item_img"
+                :alt="getValue(o, [ 'title' ])"
+                :style="{ backgroundImage: getBackgroundImage(getValue(o, [ 'heroImage' ])) }"
+              />
             </a>
           </div>
           <div class="related_item_title">
@@ -35,12 +47,20 @@
 </template>
 <script>
   import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+  import { mapState } from 'vuex'
+  import { find } from 'lodash'
+
   export default {
     name: 'related-list-thumbnail',
     methods: {
       getHref,
       getTruncatedVal,
-      getValue
+      getValue,
+      getBackgroundImage (id) {
+        const imageData = find(this.imagesById, [ 'id', id ])
+        const imageUrl = getValue(imageData, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
+        return `url(${imageUrl})`
+      }
     },
     props: {
       isApp: {
@@ -49,6 +69,11 @@
       relatedList: {
         default: () => { return [] }
       }
+    },
+    computed: {
+      ...mapState({
+        imagesById: state => state.imagesById
+      })
     }
   }
 </script>
