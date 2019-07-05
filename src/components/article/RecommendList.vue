@@ -1,6 +1,7 @@
 <template>
   <div class="related-list">
     <div
+      v-if="filteredRecommends.length > 0"
       class="related-list__list"
       :style="containerStyle()"
     >
@@ -17,10 +18,9 @@
             class="related-list__list__item"
           >
             <div class="title">
-              <!-- <router-link @click.native="recommendsClickHandler(getValue(o, [ 'slug' ]), $event)" :to="routerLinkUrl(o)" v-text="getValue(o, [ 'title' ], '')" v-if="shouldShowItem(o)"></router-link> -->
               <a
                 @click="recommendsClickHandler(getValue(o, [ 'slug' ]))"
-                :href="getHrefFull(o)"
+                :href="getHrefFull(o, isAppPage)"
                 target="_blank"
                 v-text="getValue(o, [ 'title' ], '')"
               >
@@ -52,7 +52,7 @@
 <script>
   import _ from 'lodash'
   import { SECTION_MAP, RELATED_LIST_MAX, RECOMM_HITORY_MAX_IN_LOCALSTORAGE } from '../../constants'
-  import { extractSlugFromReferrer, getHref, getHrefFull, getValue, sendGaClickEvent } from '../../util/comm'
+  import { extractSlugFromReferrer, getHrefFull, getValue, sendGaClickEvent } from '../../util/comm'
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
   import PopInAd from '../PopInAd.vue'
@@ -114,9 +114,6 @@
         recommsClickHistory && dqueue.push(...recommsClickHistory.split(','))
         return dqueue
       },
-      routerLinkUrl (article) {
-        return !this.isApp ? getHref(article) : `/app/${getValue(article, [ 'slug' ], '')}`
-      },
       recommendsClickHandler (slug) {
         try {
           const dqueue = this.getRecommClickHistory()
@@ -165,8 +162,9 @@
       excludingArticle: {
         default: () => ('N/A')
       },
-      isApp: {
-        default: () => false
+      isAppPage: {
+        type: Boolean,
+        default: false
       },
       isAd: {
         default: () => false
