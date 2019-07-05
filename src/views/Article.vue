@@ -104,9 +104,7 @@
             />            
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template v-if="!hiddenAdvertised" slot="recommendList">
-              <div v-if="abIndicator !== 'B'"><h3>推薦文章</h3></div>
-              <GoogleMatchedContent v-if="abIndicator !== 'B'" />
-              <div v-if="abIndicator === 'B'" id="dablewidget_GlYwenoy" class="dable-widget" data-widget_id="GlYwenoy"></div>
+              <div id="dablewidget_GlYwenoy" class="dable-widget" data-widget_id="GlYwenoy"></div>
             </template>
           </article-body>
           <div class="article_footer">
@@ -727,8 +725,8 @@
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
         }
-        // window.ga('set', 'contentGroup3', '')
-        window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+        window.ga('set', 'contentGroup3', '')
+        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       sendGaClickEvent,
@@ -767,7 +765,7 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      this.abIndicator = this.getMmid()
+      // this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
         { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
       ])

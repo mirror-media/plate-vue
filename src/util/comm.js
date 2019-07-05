@@ -66,7 +66,7 @@ export function getBrief (article, count = 30, allowedTags = []) {
   return truncate(brief, count)
 }
 
-export function getHref (relAritlcle = {}) {
+export function getHref (relAritlcle = {}, isAppPage = false) {
   const { style = '', slug } = relAritlcle
   
   switch (style) {
@@ -78,12 +78,12 @@ export function getHref (relAritlcle = {}) {
       // if (_.split(href, '/')[1] === 'topic') {
       //   return href
       // } else {
-      return `/story/${slug}/`
+      return isAppPage ? `/app/${slug}/` : `/story/${slug}/`
       // }
   }
 }
 
-export function getHrefFull (relAritlcle = {}) {
+export function getHrefFull (relAritlcle = {}, isAppPage = false) {
   const { style = '', slug } = relAritlcle
   switch (style) {
     case 'campaign':
@@ -96,7 +96,7 @@ export function getHrefFull (relAritlcle = {}) {
       // if (_.split(href, '/')[1] === 'topic') {
       //   return href
       // } else {
-      return `${SITE_URL}/story/${slug}/`
+      return isAppPage ? `${SITE_URL}/app/${slug}/` : `${SITE_URL}/story/${slug}/`
       // }
   }
 }
