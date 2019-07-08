@@ -298,21 +298,18 @@ router.use('/twitter', (req, res) => {
   }
 })
 
-router.use('/tracking', async (req, res) => {
-  /*
+router.use('/tracking', (req, res) => {
   try {
+    res.send({ msg: 'Received.' })
     const query = req.query
     const log = loggingClient.log(config.GCP_STACKDRIVER_LOG_NAME)
     const metadata = { resource: { type: 'global' } }
     query['ip'] = req.clientIp
     const entry = log.entry(metadata, query)
-    await log.write(entry)
-    res.send({ msg: 'Logging successfully.' })
+    log.write(entry)
   } catch (error) {
-    console.error(`\n[ERROR] Client info logging error occurred: ${error}.`)
-    res.status(500).send(error)
+    console.error(`[ERROR] Client info logging error occurred: ${error}.`)
   }
-  */
 })
 
 router.use('/related_news', (req, res) => {

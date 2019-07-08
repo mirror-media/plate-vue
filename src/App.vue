@@ -69,9 +69,9 @@
       },
       launchLogger () {
         this.globalTapevent = new Tap(this.doc)
-        // this.doc.addEventListener('tap', (event) => {
-        //   this.doLog(event)
-        // })
+        this.doc.addEventListener('tap', (event) => {
+          this.doLog(event)
+        })
       },
       setUpVisibleTracking () {
         this.visibleTracking(
