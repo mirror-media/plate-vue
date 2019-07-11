@@ -274,7 +274,7 @@ router.use('/search', (req, res) => {
           status: errWrapped.status,
           text: errWrapped.text
         })
-        console.error(`[ERROR]POST elastic search api: ${error}`, esSearch_url)
+        console.error(`[ERROR] POST elastic search api: ${error}`, esSearch_url)
       })
     }
   })
@@ -326,7 +326,7 @@ router.use('/related_news', (req, res) => {
       res.json(parsed)
     } else {
       if (err) {
-        console.error(`[ERROR]Fetch data from related-newsredis: ${err}.`)
+        console.error(`[ERROR] Fetch data from related-newsredis: ${err}.`)
       }
       res.json({ count: 0, result: [] })
     }
@@ -357,9 +357,9 @@ router.get('*', (req, res, next) => {
     const dataAmount = get(data, '_meta.total')
     let timePeriod = Date.now() - req.startTime
     if (timePeriod < 1000) {
-      console.log(`[LOG]Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+      console.log(`[LOG] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
     } else {
-      console.warn(`[WARN]Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
+      console.warn(`[WARN] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
     }
     if ((data._items || data._endpoints) && dataAmount >= 0) {
       res.dataString = response.text
@@ -380,7 +380,7 @@ router.get('*', (req, res, next) => {
   } catch (error) {
     const errWrapped = handlerError(error)
     if (errWrapped.status !== 404) {
-      console.error(`[ERROR]Fetch data from from api.`, req.url, `${errWrapped.text}`)
+      console.error(`[ERROR] Fetch data from from api.`, req.url, `${errWrapped.text}`)
     } else {
       console.error(`[ERROR] Not Found.`, req.url)
     }

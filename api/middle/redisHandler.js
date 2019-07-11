@@ -58,6 +58,12 @@ const setAsync = promisify(writeClient.set).bind(writeClient)
 const expireAsync = promisify(writeClient.expire).bind(writeClient)
 const mgetAsync = promisify(recommendNewsClient.mget).bind(recommendNewsClient)
 
+readClient.on('error', err => console.error('[ERROR] read client', err))
+
+writeClient.on('error', err => console.error('[ERROR] write client', err))
+
+recommendNewsClient.on('error', err => console.error('[ERROR] recommend news client', err))
+
 const promiseTimeout = (promise) => {
   const time = REDIS_CONNECTION_TIMEOUT || 200
   let timeout = new Promise((resolve, reject) => {
@@ -100,7 +106,7 @@ const redisFetching = (url, callback) => {
     .then(data => {
       let timePeriod = Date.now() - start
       if (afterGet > REDIS_CONNECTION_TIMEOUT) {
-        console.warn('[WARN]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
+        console.warn('[WARN] Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
       }
       callback && callback({ error: redisPoolReadError, data })
     })
@@ -146,7 +152,7 @@ const fetchFromRedis = (req, res, next) => {
       res.redis = data
       next()
     } else {
-      console.log('>>> Fetch data from Redis in fail with error.', `\n${error}`)
+      console.log('[LOG] Fetch data from Redis in fail with error.', error)
       next()
     }
   })
@@ -159,7 +165,7 @@ const fetchFromRedisForAPI = (req, res, next) => {
       res.header('Cache-Control', 'public, max-age=300')
       res.json(JSON.parse(data))
     } else {
-      console.warn(`[WARN] Fetch data from Redis in fail. ${req.url} 、\nError: ${error} \nData: ${data}`)
+      console.warn(`[WARN] Fetch data from Redis in fail. ${req.url}`, 'Data: ', data, 'Error: ', error)
       next()
     }
   })
