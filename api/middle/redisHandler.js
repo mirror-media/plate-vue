@@ -54,8 +54,7 @@ const recommendNewsClient = isProd ? redis.createClient(REDIS_RECOMMEND_NEWS_POR
 }) : readClient
 
 const getAsync = promisify(readClient.get).bind(readClient)
-const setAsync = promisify(writeClient.set).bind(writeClient)
-const expireAsync = promisify(writeClient.expire).bind(writeClient)
+const setexAsync = promisify(writeClient.setex).bind(writeClient)
 const mgetAsync = promisify(recommendNewsClient.mget).bind(recommendNewsClient)
 
 readClient.on('error', err => console.error('[ERROR] read client', err))
@@ -123,11 +122,9 @@ const redisWriting = (url, data, callback, timeout) => {
   }
   debug('Going to Writing things to redis...')
 
-  promiseTimeout(setAsync(decodedUrl, data))
-    .then(() => expireAsync(decodedUrl, redisTimeout))
-    .catch(err => console.error(`[ERROR] Write data to Redis in fail. ${decodedUrl} Error: ${err}`))
+  promiseTimeout(setexAsync(decodedUrl, redisTimeout, data))
     .then(() => callback && callback())
-    .catch(err => console.error(`[ERROR] Set redis expire time in fail. ${decodedUrl} Error: ${err}`))
+    .catch(err => console.error(`[ERROR] Set redis in fail. ${decodedUrl} Error: ${err}`))
 }
 
 const redisFetchingRecommendNews = (field, callback) => {
