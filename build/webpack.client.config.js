@@ -5,7 +5,7 @@ const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 
 const config = merge(base, {
-  entry: [ './src/entry-client.js' ],
+  entry: [ '@babel/polyfill', './src/entry-client.js' ],
   optimization: {
     providedExports: true,
     usedExports: true,

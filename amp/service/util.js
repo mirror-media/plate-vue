@@ -1,5 +1,5 @@
 require("@babel/register")
-require("@babel/polyfill")
+// require("@babel/polyfill")
 
 const moment = require('moment')
 const { get } = require('lodash')
