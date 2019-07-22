@@ -57,11 +57,17 @@ const getAsync = promisify(readClient.get).bind(readClient)
 const setexAsync = promisify(writeClient.setex).bind(writeClient)
 const mgetAsync = promisify(recommendNewsClient.mget).bind(recommendNewsClient)
 
-readClient.on('error', err => console.error('[ERROR] read client', err))
+readClient.on('reconnecting', () => console.warn('[REDIS]Read client reconnecting...'))
 
-writeClient.on('error', err => console.error('[ERROR] write client', err))
+writeClient.on('reconnecting', () => console.warn('[REDIS]Write client reconnecting...'))
 
-recommendNewsClient.on('error', err => console.error('[ERROR] recommend news client', err))
+recommendNewsClient.on('reconnecting', () => console.warn('[REDIS]Recommend news client reconnecting...'))
+
+readClient.on('error', err => console.error('[REDIS]Read client error', err))
+
+writeClient.on('error', err => console.error('[REDIS]Write client error', err))
+
+recommendNewsClient.on('error', err => console.error('[REDIS]Recommend news client error', err))
 
 const promiseTimeout = (promise) => {
   const time = REDIS_CONNECTION_TIMEOUT || 200
@@ -85,7 +91,7 @@ const redisFetching = (url, callback) => {
   try {
     decodedUrl = decodeURIComponent(url)
   } catch (error) {
-    console.error('[ERROR] Decoding url in fail while fetching data to Redis. URIError: URI malformed.', url)
+    console.error('[REDIS]Decoding url in fail while fetching data to Redis. URIError: URI malformed.', url)
     decodedUrl = url
   }
   let beforeGet = Date.now() - start
@@ -105,7 +111,7 @@ const redisFetching = (url, callback) => {
     .then(data => {
       let timePeriod = Date.now() - start
       if (afterGet > REDIS_CONNECTION_TIMEOUT) {
-        console.warn('[WARN] Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
+        console.warn('[REDIS]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
       }
       callback && callback({ error: redisPoolReadError, data })
     })
@@ -117,21 +123,21 @@ const redisWriting = (url, data, callback, timeout) => {
   try {
     decodedUrl = decodeURIComponent(url)
   } catch (error) {
-    console.error('[ERROR] Decoding url in fail while writing data to Redis. URIError: URI malformed.\n', url)
+    console.error('[REDIS]Decoding url in fail while writing data to Redis. URIError: URI malformed.\n', url)
     decodedUrl = url
   }
   debug('Going to Writing things to redis...')
 
   promiseTimeout(setexAsync(decodedUrl, redisTimeout, data))
     .then(() => callback && callback())
-    .catch(err => console.error(`[ERROR] Set redis in fail. ${decodedUrl} Error: ${err}`))
+    .catch(err => console.error(`[REDIS]Set redis in fail. ${decodedUrl} Error: ${err}`))
 }
 
 const redisFetchingRecommendNews = (field, callback) => {
   promiseTimeout(mgetAsync([ ...field ]))
     .then(data => callback && callback({ data }))
     .catch(err =>{
-      console.error('>>> Fetch recommend news ' + field + ' failed', 'Error: ', err)
+      console.error('[REDIS]Fetch recommend news ' + field + ' failed', 'Error: ', err)
       callback && callback({ err })
     })
 }
@@ -149,7 +155,7 @@ const fetchFromRedis = (req, res, next) => {
       res.redis = data
       next()
     } else {
-      console.log('[LOG] Fetch data from Redis in fail with error.', error)
+      console.log('[REDIS]Fetch data from Redis in fail with error.', error)
       next()
     }
   })
@@ -162,7 +168,7 @@ const fetchFromRedisForAPI = (req, res, next) => {
       res.header('Cache-Control', 'public, max-age=300')
       res.json(JSON.parse(data))
     } else {
-      console.warn(`[WARN] Fetch data from Redis in fail. ${req.url}`, 'Data: ', data, 'Error: ', error)
+      console.warn(`[REDIS]Fetch data from Redis in fail. ${req.url}`, 'Data: ', data, 'Error: ', error)
       next()
     }
   })
