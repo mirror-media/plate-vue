@@ -27,6 +27,9 @@
               <LazyItemWrapper :position="verge.viewportH() / 2" :strict="true" v-if="isRenderAside" >
                 <latest-list :latest="latestList" :currArticleSlug="currArticleSlug"></latest-list>
               </LazyItemWrapper>
+              <LazyItemWrapper :loadAfterPageLoaded="true" :style="{ minHeight: '300px' }">
+                <READrEmbeddedPromotions class="readr-embedded-promotions"/>
+              </LazyItemWrapper>
               <article-aside-fixed :projects="projectlist">
                 <LazyItemWrapper :position="verge.viewportH()" :strict="true" v-if="!hiddenAdvertised" slot="dfpR2" :style="{ minHeight: '250px', backgroundColor: '#f5f5f5' }">
                   <vue-dfp :is="props.vueDfp" pos="PCR2" extClass="dfp-r2 mobile-hide" :config="props.config"></vue-dfp>
@@ -190,6 +193,12 @@
   import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
   import verge from 'verge'
+
+  // This is a workaround
+  let READrEmbeddedPromotions = {}
+  if (process.env.VUE_ENV === 'client') {
+    READrEmbeddedPromotions = require('@readr-ui/embedded-promotions')
+  }
 
   // const ArticleBody = () => import('../components/article/ArticleBody.vue')
   // const ArticleBodyPhotography = () => import('../components/article/ArticleBodyPhotography.vue')
@@ -407,7 +416,8 @@
       HeroVideo,
       RelatedListInContent,
       RecommendList,
-      LazyItemWrapper
+      LazyItemWrapper,
+      READrEmbeddedPromotions
     },
     data () {
       return {
@@ -906,6 +916,11 @@
 
   .dable-widget
     margin-top 15px
+
+  .readr-embedded-promotions
+    width 300px
+    margin 15px auto 0 auto
+    min-height 300px
 
   @media (min-width 0px) and (max-width 499px)
     .article-container
