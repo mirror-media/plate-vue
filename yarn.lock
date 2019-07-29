@@ -932,13 +932,14 @@
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
 
-"@readr-ui/embedded-promotions@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@readr-ui/embedded-promotions/-/embedded-promotions-1.1.1.tgz#8c32ea78e045cb567efc4c45f71fdbe15d7b44c8"
+"@readr-ui/embedded-promotions@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@readr-ui/embedded-promotions/-/embedded-promotions-1.2.0.tgz#8759127607421a78370969d2d9a091da7eaf7cad"
   dependencies:
     "@readr-ui/logo" "^1.1.0"
     axios "^0.19.0"
     core-js "^2.6.5"
+    debug "^4.1.1"
     vue "^2.6.10"
     vuex "^3.0.1"
 
