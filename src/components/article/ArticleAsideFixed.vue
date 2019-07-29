@@ -38,8 +38,9 @@ export default {
       const currPos = currentYPosition()
       let fixedPos
       let fixedPosBtm
-      fixedPos = document.querySelector('.article_aside .latest-list-container') || document.querySelector('.article__aside .latest-list-container')
-      fixedPosBtm = elmYPosition('.article_aside .latest-list-container') + fixedPos.offsetHeight || elmYPosition('.article__aside .latest-list-container') + fixedPos.offsetHeight
+      const shouldFixAfter = '.readr-embedded-promotions'
+      fixedPos = document.querySelector(`.article_aside ${shouldFixAfter}`) || document.querySelector(`.article_aside ${shouldFixAfter}`)
+      fixedPosBtm = elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight || elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight
 
       if (articleMain.offsetHeight > articleAsideHeight) {
         if (currPos > fixedPosBtm && (articleMainPosBtm - currPos - 20) > articleAsideFixed.clientHeight) {
