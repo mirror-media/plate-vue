@@ -4,6 +4,7 @@
       "@babel/preset-env",
       {
         "useBuiltIns": "usage",
+        "targets": "> 2%, IE 10"
       }
     ]
   ],
