@@ -9,7 +9,7 @@
           </a>
           <div class="popListVert-list__item--text">
             <div :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')"></div>
-            <h2><a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" target="_blank" v-text="abIndicator === 'B' ? o.title : getTruncatedVal(o.title, 12)"></a></h2>
+            <h2><a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" target="_blank" v-text="o.title"></a></h2>
           </div>
         </div>
         <slot name="microAdNA3" v-if="i === 1"></slot>
@@ -109,15 +109,18 @@ export default {
           margin .8em 0 0
           font-size 1rem
           font-weight 700
+          a
+            display -webkit-box
+            -webkit-line-clamp 2
+            -webkit-box-orient vertical
+            height calc(1em * 1.15 * 2)
+            overflow hidden
 
 .popListVert.b
   .popListVert-list__item--text
     h2
       a
-        display -webkit-box
-        -webkit-line-clamp 2
-        -webkit-box-orient vertical
-        height calc(1em * 1.15 * 2)
-        overflow hidden
+        -webkit-line-clamp 3
+        height calc(1em * 1.15 * 3)
 
 </style>
