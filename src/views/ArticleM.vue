@@ -37,8 +37,7 @@
             />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <template slot="recommendList">
-              <div><h3>推薦文章</h3></div>
-              <GoogleMatchedContent />
+              <div id="dablewidget_GlYwenoy" class="dable-widget" data-widget_id="GlYwenoy"></div>
             </template>
           </article-body>
           <div class="article_footer">
@@ -89,7 +88,6 @@
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
   import DfpST from '../components/DfpST.vue'
-  import GoogleMatchedContent from '../components/GoogleMatchedContent.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
@@ -293,7 +291,6 @@
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
       DfpST,
-      GoogleMatchedContent,
       LazyItemWrapper,
       RelatedListInContent,
       RecommendList
@@ -646,7 +643,7 @@
       this.sendGA(this.articleData)
 
       const scrollTriggerRegister = new ScrollTriggerRegister([
-        { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
+        { target: '.dable-widget', offset: 400, cb: this.initializeFBComments }
       ])
       scrollTriggerRegister.init()
     },

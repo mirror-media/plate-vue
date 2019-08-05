@@ -1,5 +1,5 @@
 <template>
-  <section class="popListVert">
+  <section :class="abIndicator.toLowerCase()" class="popListVert">
     <div class="popListVert__title">熱門文章</div>
     <div class="popListVert-list">
       <template v-for="(o, i) in popArticles">
@@ -9,7 +9,7 @@
           </a>
           <div class="popListVert-list__item--text">
             <div :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')"></div>
-            <h2><a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" target="_blank" v-text="getTruncatedVal(o.title, 12)"></a></h2>
+            <h2><a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" target="_blank" v-text="abIndicator === 'B' ? o.title : getTruncatedVal(o.title, 12)"></a></h2>
           </div>
         </div>
         <slot name="microAdNA3" v-if="i === 1"></slot>
@@ -29,6 +29,10 @@ import { get, take } from 'lodash'
 export default {
   name: 'popListVert',
   props: {
+    abIndicator: {
+      type: String,
+      default: 'A'
+    },
     pop: {
       type: Array,
       default: []
@@ -105,5 +109,15 @@ export default {
           margin .8em 0 0
           font-size 1rem
           font-weight 700
-        
+
+.popListVert.b
+  .popListVert-list__item--text
+    h2
+      a
+        display -webkit-box
+        -webkit-line-clamp 2
+        -webkit-box-orient vertical
+        height calc(1em * 1.15 * 2)
+        overflow hidden
+
 </style>

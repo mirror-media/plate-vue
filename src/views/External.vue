@@ -29,8 +29,7 @@
           <app-footer/>
         </div>
         <template slot="recommendList">
-          <div><h3>推薦文章</h3></div>
-          <GoogleMatchedContent />
+          <div id="dablewidget_GlYwenoy" class="dable-widget" data-widget_id="GlYwenoy"></div>
         </template>
         <article-aside-fixed slot="articleAsideFixed">
           <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
@@ -83,7 +82,6 @@
   import DfpCover from '../components/DfpCover.vue'
   import DfpST from '../components/DfpST.vue'
   import Footer from '../components/Footer.vue'
-  import GoogleMatchedContent from '../components/GoogleMatchedContent.vue'
   import Header from '../components/Header.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LiveStream from '../components/LiveStream.vue'
@@ -180,7 +178,6 @@
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
       DfpST,
-      GoogleMatchedContent,
       Header
     },
     mixins: [ titleMetaMixin ],
@@ -413,7 +410,7 @@
         this.hasSentFirstEnterGA = true
       }
       const scrollTriggerRegister = new ScrollTriggerRegister([
-        { target: '#matchedContentContainer', offset: 400, cb: this.$_external_initializeFBComments }
+        { target: '.dable-widget', offset: 400, cb: this.$_external_initializeFBComments }
       ])
       scrollTriggerRegister.init()
 
@@ -512,7 +509,4 @@
     &--mobile
       display none !important
 
-@media (min-width 1200px)
-  .matchedContentContainer
-    margin-bottom 20px
 </style>
