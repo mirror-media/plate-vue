@@ -42,7 +42,7 @@
                   </div>
                 </LazyItemWrapper>
                 <LazyItemWrapper :position="verge.viewportH()" slot="popListVert" :strict="true">
-                  <pop-list-vert :pop="popularlist" class="article_aside_popList"></pop-list-vert>
+                  <pop-list-vert :abIndicator="abIndicator" :pop="popularlist" class="article_aside_popList"></pop-list-vert>
                 </LazyItemWrapper>
               </article-aside-fixed>
             </aside>
@@ -78,7 +78,7 @@
                 <span id="innity-custom-premium-span-12739"></span>           
               </template>
             </LazyItemWrapper>
-            <pop-list :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode"></pop-list>
+            <pop-list :abIndicator="abIndicator" :pop="popularlist" slot="poplist" v-if="isShowPoplist && !(viewport >= 1200)" :currEnv="dfpMode"></pop-list>
             <RelatedListInContent
               :relateds="relateds"
               slot="relatedListInContent"
@@ -173,7 +173,6 @@
   import DfpFixed from '../components/DfpFixed.vue'
   import DfpST from '../components/DfpST.vue'
   import Footer from '../components/Footer.vue'
-  import GoogleMatchedContent from '../components/GoogleMatchedContent.vue'
   import Header from '../components/Header.vue'
   import HeroImage from '../components/article/HeroImage.vue'
   import HeroVideo from '../components/article/HeroVideo.vue'
@@ -410,7 +409,6 @@
       'vue-dfp-provider': VueDfpProvider,
       DfpCover,
       DfpST,
-      GoogleMatchedContent,
       Header,
       HeroImage,
       HeroVideo,
@@ -735,8 +733,8 @@
           window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
           window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
         }
-        window.ga('set', 'contentGroup3', '')
-        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+        // window.ga('set', 'contentGroup3', '')
+        window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
         window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       sendGaClickEvent,
@@ -775,9 +773,9 @@
       })
       this.checkIfLockJS()
       this.updateSysStage()
-      // this.abIndicator = this.getMmid()
+      this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
-        { target: '#matchedContentContainer', offset: 400, cb: this.initializeFBComments }
+        { target: '.dable-widget', offset: 400, cb: this.initializeFBComments }
       ])
       scrollTriggerRegister.init()
 

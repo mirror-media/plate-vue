@@ -79,9 +79,9 @@
             { target: '.article_body > .article_main .poplist-container', seenFlag: false, desc: 'popular' },
             { target: '.article_body > .article_main .article_main_tags', seenFlag: false, desc: 'tag' },
             { target: '.article_body > .article_main .newsletter', seenFlag: false, desc: 'end' },
-            { target: '.article_body > .article_main .matchedContentContainer', seenFlag: false, desc: 'matched' },
+            { target: '.article_body > .article_main .dable-widget', seenFlag: false, desc: 'matched' },
             { target: '.article__main .newsletter', seenFlag: false, desc: 'end' },
-            { target: '.article__main .matchedContentContainer', seenFlag: false, desc: 'matched' }
+            { target: '.article__main .dable-widget', seenFlag: false, desc: 'matched' }
           ]
         )
       },
