@@ -795,7 +795,7 @@ export default {
       return _.get(this.$store.state.latestArticle, [ 'items' ], [])
     },
     needWineWarning () {
-      return this.$route.params.title === 'wine' ? true : false
+      return this.$route.params.title === 'wine'
     },
     page () {
       switch (this.type) {

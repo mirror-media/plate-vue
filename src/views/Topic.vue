@@ -123,6 +123,11 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
+const WINE_TOPIC_IDS = [
+  '5c25f9e3315ec51000903a82',
+  '5d22bb9fe311f3925c49396c',
+  '5a4d8e60160ac91000294611'
+]
 
 const fetchData = (store, id) => {
   return Promise.all([
@@ -483,15 +488,7 @@ export default {
       }
     },
     needWineWarning () {
-      const wineTopicIds = [
-        '5c25f9e3315ec51000903a82',
-        '5d22bb9fe311f3925c49396c',
-        '5a4d8e60160ac91000294611'
-      ]
-      for (let i = 0; i < wineTopicIds.length; i++) {
-        if (this.$route.params.topicId === wineTopicIds[i]) return true
-      }
-      return false
+      return WINE_TOPIC_IDS.some((id) => this.$route.params.topicId === id)
     },
     uuid () {
       return this.$route.params.topicId
