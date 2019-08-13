@@ -133,11 +133,12 @@
         </article-body-photography>
       </div>
       <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
-      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550) && !needWineWarning">
         <DfpST :props="props">
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
       </LazyItemWrapper>
+      <WineWarning v-if="needWineWarning" />
       <DfpCover v-if="!hiddenAdvertised && isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199"> 
         <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" /> 
       </DfpCover> 
@@ -186,6 +187,7 @@
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
   import RecommendList from '../components/article/RecommendList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
+  import WineWarning from '../components/WineWarning.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
@@ -407,6 +409,7 @@
       'pop-list-vert': PopListVert,
       'share-tools': ShareTools,
       'vue-dfp-provider': VueDfpProvider,
+      WineWarning,
       DfpCover,
       DfpST,
       Header,
@@ -631,6 +634,10 @@
       },
       latestList () {
         return _.get(this.$store.state.latestArticle, [ 'items' ], [])
+      },
+      needWineWarning () {
+        const cats = this.articleData.categories
+        return cats.some((cat) => cat.name === 'wine')
       },
       popularlist () {
         const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])

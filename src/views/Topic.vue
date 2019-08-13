@@ -81,7 +81,9 @@
           </section>-->
           <share :right="`20px`" :bottom="`20px`"></share>
         </template>
-        
+
+        <WineWarning v-if="needWineWarning" />
+
       </div>
     </template>
   </vue-dfp-provider>
@@ -115,11 +117,17 @@ import ProjectList from '../components/article/ProjectList.vue'
 import Share from '../components/Share.vue'
 import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
+import WineWarning from '../components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
+const WINE_TOPIC_IDS = [
+  '5c25f9e3315ec51000903a82',
+  '5d22bb9fe311f3925c49396c',
+  '5a4d8e60160ac91000294611'
+]
 
 const fetchData = (store, id) => {
   return Promise.all([
@@ -255,6 +263,7 @@ export default {
     'timeline-body': TimelineBody,
     'timeline-headline': TimelineHeadline,
     'vue-dfp-provider': VueDfpProvider,
+    WineWarning,
     ProjectList,
     Header
   },
@@ -477,6 +486,9 @@ export default {
       return {
         images: _.get(this.$store.state, [ 'images', this.uuid ])
       }
+    },
+    needWineWarning () {
+      return WINE_TOPIC_IDS.some((id) => this.$route.params.topicId === id)
     },
     uuid () {
       return this.$route.params.topicId

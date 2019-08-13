@@ -91,11 +91,12 @@
         <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <share :right="`20px`" :bottom="`20px`" />
       </div>
-      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550) && !needWineWarning">
         <DfpST :props="props">
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
       </LazyItemWrapper>
+      <WineWarning v-if="needWineWarning" />
       <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
@@ -142,6 +143,7 @@ import Loading from '../components/Loading.vue'
 import MicroAd from '../components/MicroAd.vue'
 import MoreFull from '../components/MoreFull.vue'
 import Share from '../components/Share.vue'
+import WineWarning from '../components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
 import titleMetaMixin from '../util/mixinTitleMeta'
@@ -485,6 +487,7 @@ export default {
     'more-full': MoreFull,
     'share': Share,
     'vue-dfp-provider': VueDfpProvider,
+    WineWarning,
     DfpCover,
     DfpST,
     Header,
@@ -790,6 +793,9 @@ export default {
     },
     latestList () {
       return _.get(this.$store.state.latestArticle, [ 'items' ], [])
+    },
+    needWineWarning () {
+      return this.$route.params.title === 'wine'
     },
     page () {
       switch (this.type) {
