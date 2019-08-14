@@ -1,7 +1,7 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
-      <div :class="[ { 'topic-view': !isTimeline }, topicType ]">
+      <div :class="[ { 'topic-view': !isTimeline }, topicType ]" :style="needWineWarning ? { paddingBottom: '10px' } : ''">
 
         <template v-if="pageStyle === 'wide'">
           <section>

@@ -110,7 +110,7 @@
               <div id="dablewidget_GlYwenoy" class="dable-widget" data-widget_id="GlYwenoy"></div>
             </template>
           </article-body>
-          <div class="article_footer">
+          <div class="article_footer" :style="needWineWarning ? { paddingBottom: '10px' } : ''">
             <LazyItemWrapper :position="verge.viewportH()" :strict="true">
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised" pos="PCFT" extClass="mobile-hide" :config="props.config"/>
               <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441d04bbe120f002a319a'" pos="MBFTOOP" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" />
