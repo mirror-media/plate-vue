@@ -68,12 +68,15 @@
             <div class="topic-title"><h1></h1></div>
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
-          <article-list ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='false'></article-list>
+
+          <PresidentElectionList v-if="isPresidentElectionId" :candidateData="candidateData" @loadMore="loadMorePresident" />
+
+          <article-list ref="articleList" id="articleList" v-if="!isPresidentElectionId" :articles='autoScrollArticles' :hasDFP='false'></article-list>
           <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
           <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
             :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="getValue($store, 'getters.adSize')"></vue-dfp></div>
-          <article-list ref="articleListAutoScroll" id="articleListAutoScroll" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
+          <article-list ref="articleListAutoScroll" id="articleListAutoScroll" v-if="!isPresidentElectionId" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
             v-show="hasAutoScroll"></article-list>
           <loading :show="loading"></loading>
           <!--<section class="footer container">
@@ -92,7 +95,7 @@
 <script>
 
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { FB_APP_ID, FB_PAGE_ID, TAG, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
@@ -114,6 +117,7 @@ import Loading from '../components/Loading.vue'
 import MoreFull from '../components/MoreFull.vue'
 import PortraitWallList from '../components/PortraitWallList.vue'
 import ProjectList from '../components/article/ProjectList.vue'
+import PresidentElectionList from '../components/PresidentElectionList.vue'
 import Share from '../components/Share.vue'
 import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
@@ -123,11 +127,12 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
-const WINE_TOPIC_IDS = [
+const WINE_TOPICS_ID = [
   '5c25f9e3315ec51000903a82',
   '5d22bb9fe311f3925c49396c',
   '5a4d8e60160ac91000294611'
 ]
+const PRESIDENT_ELECTION_ID = '5c766e19315ec51000909259'
 
 const fetchData = (store, id) => {
   return Promise.all([
@@ -265,6 +270,7 @@ export default {
     'vue-dfp-provider': VueDfpProvider,
     WineWarning,
     ProjectList,
+    PresidentElectionList,
     Header
   },
   asyncData ({ store, route }) {
@@ -332,7 +338,33 @@ export default {
       showDfpCoverAdVponFlag: false,
       showDfpHeaderLogo: false,
       siteTitle: SITE_TITLE,
-      viewport: 0
+      viewport: 0,
+      persidentCandidateData: [
+        {
+          // tagId: '2020-1',
+          tagId: '57f3a35ca89ee20d00cc4bd1',
+          title: '民進黨',
+          img: '/assets/mirrormedia/2020-1.jpg',
+          color: '#5dc68a',
+          articles: []
+        },
+        {
+          // tagId: '2020-2',
+          tagId: '587605103c1f950d00ce3726',
+          title: '國民黨',
+          img: '/assets/mirrormedia/2020-2.jpeg',
+          color: '#4a90e2',
+          articles: []
+        },
+        {
+          // tagId: '2020-3',
+          tagId: '58171ba7aa39ed0d00bfda25',
+          title: '民眾黨',
+          img: '/assets/mirrormedia/2020-3.jpg',
+          color: '#9b9b9b',
+          articles: []
+        }
+      ]
     }
   },
   computed: {
@@ -353,6 +385,11 @@ export default {
         return _.slice(this.articles, 3)
       }
       return _.slice(this.articles, 12)
+    },
+    candidateData () {
+      // todo need to use _.uniqBy?
+      this.persidentCandidateData.forEach((cand) => cand.articles = _.get(this.$store.state, [ 'articlesByUUID', TAG, cand.tagId, 'items' ]))
+      return this.persidentCandidateData
     },
     customCSS () {
       return _.get(this.topic, [ 'style' ], null)
@@ -419,6 +456,9 @@ export default {
     },
     hasMore () {
       return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items', 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'total' ], 0)
+    },
+    isPresidentElectionId () {
+      return this.uuid === PRESIDENT_ELECTION_ID
     },
     mobileDfp () {
       return _.get(this.topic, [ 'mobileDfp' ], null)
@@ -488,7 +528,7 @@ export default {
       }
     },
     needWineWarning () {
-      return WINE_TOPIC_IDS.some((id) => this.$route.params.topicId === id)
+      return WINE_TOPICS_ID.some((id) => this.uuid === id)
     },
     uuid () {
       return this.$route.params.topicId
@@ -512,6 +552,10 @@ export default {
         fetchAllArticlesByUuid(this.$store, this.uuid, TOPIC, true)
       } else if (this.topicType === 'wide') {
         fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false, 3)
+      } else if (this.uuid === PRESIDENT_ELECTION_ID) {
+        this.persidentCandidateData.forEach((cand) => {
+          fetchArticlesByUuid(this.$store, cand.tagId, TAG, false, false, 3)
+        })
       } else {
         fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false)
       }
@@ -587,6 +631,9 @@ export default {
         this.canScrollLoadMord = true
       })
     },
+    loadMorePresident (tagId, page) {
+      fetchArticlesByUuid(this.$store, tagId, TAG, page, false, 3)
+    },
     pageNotFoundHandler () {
       const e = new Error()
       e.massage = 'Page Not Found'
@@ -651,7 +698,6 @@ export default {
     let topicType
     const uuid = _.split(to.path, '/')[2]
     const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
-
     if (!topic) {
       fetchTopicByUuid(this.$store, uuid)
       .then(() => {
