@@ -78,7 +78,7 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, union, unionBy, uniqBy } from 'lodash'
+import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, take, union, unionBy, uniqBy } from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import EditorChoice from '../components/EditorChoice.vue'
@@ -299,7 +299,8 @@ export default {
       })
     },
     editorChoice () {
-      return get(this.articlesGroupedList, [ 'choices' ])
+      const articles = get(this.articlesGroupedList, [ 'choices' ])
+      return this.abIndicator === 'A' ? take(articles, 5) : articles
     },
     eventEmbedded () {
       return get(this.$store.state.eventEmbedded, [ 'items', '0' ])
@@ -467,7 +468,7 @@ export default {
     }, 
   },
   beforeMount () {
-    // this.abIndicator = this.getMmid()
+    this.abIndicator = this.getMmid()
     const jobs = [
       fetchEvent(this.$store, 'embedded'),
       fetchEvent(this.$store, 'logo'),
@@ -496,8 +497,8 @@ export default {
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
+    // window.ga('set', 'contentGroup3', '')
+    window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {
