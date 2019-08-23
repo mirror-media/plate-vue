@@ -1,5 +1,5 @@
 <template>
-  <section :class="abIndicator.toLowerCase()" class="popListVert">
+  <section class="popListVert">
     <div class="popListVert__title">熱門文章</div>
     <div class="popListVert-list">
       <template v-for="(o, i) in popArticles">
@@ -29,10 +29,6 @@ import { get, take } from 'lodash'
 export default {
   name: 'popListVert',
   props: {
-    abIndicator: {
-      type: String,
-      default: 'A'
-    },
     pop: {
       type: Array,
       default: []
@@ -111,16 +107,9 @@ export default {
           font-weight 700
           a
             display -webkit-box
-            -webkit-line-clamp 2
+            -webkit-line-clamp 3
             -webkit-box-orient vertical
-            height calc(1em * 1.15 * 2)
+            height calc(1em * 1.15 * 3)
             overflow hidden
-
-.popListVert.b
-  .popListVert-list__item--text
-    h2
-      a
-        -webkit-line-clamp 3
-        height calc(1em * 1.15 * 3)
 
 </style>
