@@ -33,6 +33,8 @@ import { fetchActivities,
   logClient } from './api'
 import { OATH_PLAYLIST } from '../constants'
 
+import DataPost from '../../next/store/modules/DataPost'
+
 Vue.use(Vuex)
 
 const { DFPID, FB_APP_ID, FB_PAGES_ID } = config
@@ -88,6 +90,10 @@ export function createStore () {
         height: 0,
         width: 0
       },
+    },
+
+    modules: {
+      DataPost
     },
 
     actions: {

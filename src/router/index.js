@@ -13,7 +13,7 @@ Vue.use(VueLazyload, {
 })
 
 const Activity = () => import('../views/Activity.vue')
-const Article = () => import('../views/Article.vue')
+// const Article = () => import('../views/Article.vue')
 const ArticleM = () => import('../views/ArticleM.vue')
 const External = () => import('../views/External.vue')
 const Headline = () => import('../views/Headline.vue')
@@ -25,6 +25,8 @@ const Search = () => import('../views/Search.vue')
 const TimelineView = () => import('../views/TimelineView.vue')
 const Topic = () => import('../views/Topic.vue')
 const Video = () => import('../views/Video.vue')
+
+const Post = () => import('../../next/views/AppPost.vue')
 
 const oathCategories = Object.values(OATH_PLAYLIST).map(item => `/category/${item.categoryName}`)
 
@@ -44,12 +46,20 @@ export function createRouter () {
       // { path: '/category/:title', component: List },
       { path: '/external/:name', component: External },
       // { path: '/externals/:name', component: List },
+      // {
+      //   path: '/story/:slug',
+      //   component: Article,
+      //   children: [ {
+      //     path: 'index.html',
+      //     component: Article
+      //   } ]
+      // },
       {
         path: '/story/:slug',
-        component: Article,
+        component: Post,
         children: [ {
           path: 'index.html',
-          component: Article
+          component: Post
         } ]
       },
       { path: '/app/:slug', component: ArticleM },

@@ -6,12 +6,12 @@
         <div class="pop_item">
           <figure>
             <a :href="o.slug" target="_blank" @click="sendGaClickEvent('article', 'popular')">
-              <LazyImage :src="getImage(o, 'mobile')" :caption="getValue(o, [ 'title' ])" />
+              <LazyImage :src="getImage(o, 'mobile')" :caption="get(o, 'title')" />
             </a>
-            <div class="pop_item--colorBlock" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])" />
+            <div class="pop_item--colorBlock" :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')" />
           </figure>
           <div class="pop_item_title">
-            <a :href="o.slug" target="_blank" @click="sendGaClickEvent('article', 'popular')" v-text="getTruncatedVal(o.title, 21)" />
+            <a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" v-text="getTruncatedVal(o.title, 21)" target="_blank" />
           </div>
         </div>
         <slot :name="`microAd${getMicroAdName(i)}`" v-if="(i === 1 || i === 2 || i === 3)"></slot>
@@ -21,27 +21,27 @@
 </template>
 <script>
   import LazyImage from 'src/components/common/LazyImage.vue'
-  import { SECTION_MAP } from '../../constants'
-  import { getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
-  import _ from 'lodash'
+  import { SECTION_MAP } from 'src/constants'
+  import { getImage, getTruncatedVal, sendGaClickEvent } from 'src/util/comm'
+  import { get, take } from 'lodash'
   export default {
     name: 'pop-list',
-    props: [ 'pop', 'currEnv' ],
+    props: [ 'pop' ],
     components: {
       LazyImage,
     },
     computed: {
       popArticles () {
-        return _.take(this.pop, 9)
+        return take(this.pop, 9)
       }
     },
     methods: {
+      get,
       getImage,
       getTruncatedVal,
-      getValue,
       getSectionStyle (sect) {
-        const sectionId = _.get(sect, [ 'id' ])
-        const style = { backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc') }
+        const sectionId = get(sect, 'id')
+        const style = { backgroundColor: get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc') }
         return style
       },
       getMicroAdName (index) {
@@ -54,25 +54,40 @@
 <style lang="stylus" scoped>
   .poplist-container 
     font-size 18px
-
+    margin 40px auto
+    .pop_title
+      > h3
+        font-size 1.5rem
     .pop_list 
       margin-top 10px
       display flex
       align-content flex-start
       flex-wrap wrap
       justify-content space-between
-      
 
-      .pop_item 
-        width 31%
+      .pop_item
+        display block
+        width calc(50% - 5px)
         vertical-align top
         margin-bottom 30px
+
+        &:first-child
+          width 100%
+
+        > div:not([class="pop_item_title"])
+          height 0
+          position relative          
+          padding-top 66.67%
+
+
         figure
           position relative
           width 100%
           padding-top 66.66%
           margin 0
           overflow hidden
+          > a
+            padding-top 66.66%
           img
             position absolute
             top 0
@@ -98,33 +113,23 @@
           white-space nowrap
           padding 0 10px
 
-        .pop_item_img 
-          width 100%
-          height 150px
-          background-repeat no-repeat
-          background-size cover
-          background-position center center
-        
         .pop_item_title 
           background-color #fff
           border-top-width 0
           line-height 1.5rem
-          font-size 1.1rem
+          font-size 1.2rem
           display flex
           justify-content center
           align-items flex-start
-        
           a 
             width 100%
             max-height 100%
-            margin 10px 0
-            padding 0 0 0 10px
-        
+            padding .2em 0 0
             &:hover, &:link, &:visited
-              color rgba(0, 0, 0, 0.49)
+              color #000
               font-weight normal
               border none
-      & >>> .pop_item, & >>> #compass-fit-widget-content
+      >>> #compass-fit-widget-content
         display flex
         flex-direction row
         align-items center
@@ -142,27 +147,5 @@
         margin 0 0 20px 0
       & >>> .pop_item_title
         width 100%
-
-  @media (min-width 0px) and (max-width 1199px)
-    .poplist-container 
-      .pop_list 
-        .pop_item
-          width 100%
-          
-          > div:not([class="pop_item_title"])
-            height 0
-            position relative          
-            padding-top 66.67%
-
-            > a
-              .pop_item_img
-                position absolute
-                top 0
-                left 0
-                height 100%
-          
-          .pop_item_title
-            font-size 1.2rem
-            line-height 1.5rem
 
 </style>

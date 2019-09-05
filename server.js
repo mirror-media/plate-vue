@@ -280,7 +280,7 @@ app.get('*', (req, res, next) => {
     }
   }
   next()
-}, fetchFromRedis, (req, res, next) => {
+}, (req, res, next) => {
   if (res.redis) {
     console.log('Fetch page from Redis.', `${Date.now() - req.s}ms\n`, decodeURIComponent(req.url))
     if (res.redis.length > 3) {

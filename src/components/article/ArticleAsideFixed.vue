@@ -81,4 +81,10 @@ export default {
     margin auto
     &.external
       right calc((100% - 1170px) / 2 + 55px)
+  &.post-aside-fixed
+    &.fixed-top
+      top 20px !important
+      right auto !important
+    &.fixed
+      right auto !important
 </style>

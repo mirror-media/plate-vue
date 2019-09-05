@@ -89,9 +89,6 @@
       preventScroll.off()
     },
     props: {
-      viewport: {
-        type: Number,
-      },
       image: {
         type: Object,
       },
@@ -165,11 +162,13 @@
     clear both
     margin 1.5em 0
 
-    & >>> img 
+    >>> img 
       width 100%
 
     .thumbnail
       cursor pointer
+      >>> img 
+        width 100%
     
     .caption 
       font-family "Noto Sans TC", STHeitiTC-Medium, "Microsoft JhengHei", sans-serif
@@ -177,30 +176,53 @@
       line-height 1.7
       letter-spacing 0.3px
       color rgba(0, 0, 0, 0.498039)
-      padding-top 10px
-      padding-bottom 10px
+      // padding 0 20px
+      // padding-top 10px
+      // padding-bottom 10px
     
-    &.right 
-      float right
-      width 300px
-      margin-left 20px
-      border-bottom 2px solid #255577
-      margin-bottom 30px
-      padding-bottom 10px
-    
-    &.left 
-      float left
-      width 300px
-      margin-right 20px
-      border-bottom 2px solid #255577
-      margin-bottom 30px
-      padding-bottom 10px
-    
-    &.center 
-      margin-top 20px
-      width 100%
+  // plate-vue-mobile only
   @media (min-width 0px) and (max-width 767px)
     .content-image
       .caption
+        line-height 1.5rem
+        margin-top 10px
+        width 100%
         text-align justify
+        padding 0 20px
+  // plate-vue-mobile only
+  @media (min-width 400px) and (max-width 767px)
+    .content-image
+      .caption 
+        padding-left 40px
+        padding-right 40px
+  // plate-vue only
+  @media (min-width 768px)
+    .content-image
+      .caption 
+        padding-left 40px
+        padding-right 40px
+      &.right 
+        float right
+        width 300px
+        margin-left 20px
+        border-bottom 2px solid #255577
+        margin-bottom 30px
+        padding-bottom 10px
+      
+      &.left 
+        float left
+        width 300px
+        margin-right 20px
+        border-bottom 2px solid #255577
+        margin-bottom 30px
+        padding-bottom 10px
+
+      &.center 
+        margin-top 20px
+        width 100%
+
+  @media (min-width 1024px)
+    .content-image
+      .caption 
+        padding 0
 </style>

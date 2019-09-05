@@ -59,10 +59,6 @@
 </script>
 <style lang="stylus" scoped>
   .hero-image
-    position relative
-    left -25px
-    width calc(100% + 50px)
-    background-color #fff
     figure
       margin 0
       font-size 0

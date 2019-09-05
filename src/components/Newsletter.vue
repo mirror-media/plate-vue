@@ -253,6 +253,7 @@ $duration = 1.4s
   width calc(100% - 50px)
   min-height 70px
   margin calc(1em + 30px) auto 1em
+  // margin calc(1em + 30px) auto 1em
   padding 1em 1em
   border 1px solid #eaeaea
   border-top 20px solid #0c5a80
