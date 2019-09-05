@@ -13,7 +13,7 @@ pipeline:
       *{{build.author}}* give *{{build.branch}}* a little push.
     when:
       event: [push]
-      branch: [master, dev, speedup]
+      branch: [master, dev, next]
   
   restore-cache:
     image: drillster/drone-volume-cache
@@ -23,7 +23,7 @@ pipeline:
     volumes:
       - /tmp/cache:/cache
     when:
-      branch: [dev]
+      branch: [dev, next]
 
   get_config:
     image: gcr.io/mirrormedia-1470651750304/drone-cloud-sdk:latest
@@ -34,7 +34,7 @@ pipeline:
     - cp ../default/keystone/gcskeyfile.json ./gcskeyfile.json
     when:
       event: [push]
-      branch: [master, dev, speedup]
+      branch: [master, dev, next]
   
   builds:
     image: plugins/gcr
@@ -45,7 +45,7 @@ pipeline:
     secrets: [google_credentials]
     when:
       event: [push]
-      branch: [master, dev, speedup]
+      branch: [master, dev, next]
 
   deploy_dev:
     image: nytimes/drone-gke:develop
@@ -66,7 +66,7 @@ pipeline:
       deployName: vue-deployment
     when:
       event: [push]
-      branch: [dev, speedup]
+      branch: [dev, next]
   
   rebuild-cache:
     image: drillster/drone-volume-cache
@@ -76,7 +76,7 @@ pipeline:
     volumes:
       - /tmp/cache:/cache
     when:
-      branch: [dev, speedup]
+      branch: [dev, next]
 
   finish_slack:
     image: plugins/slack
@@ -87,7 +87,7 @@ pipeline:
     when:
       status: [success, failure]
       event: [push]
-      branch: [master, dev, speedup]
+      branch: [master, dev, next]
     template: >
       {{#success build.status}}
         Build<${DRONE_BUILD_LINK}|#{{build.number}}> *success* ${DRONE_REPO_NAME}:${DRONE_COMMIT_AUTHOR}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_NUMBER} was well served.
