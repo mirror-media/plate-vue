@@ -39,6 +39,9 @@ export default {
   right 0
   bottom 0
   z-index 900
+  >>> div
+    > div
+      text-align center
 
 @media (min-width 1200px)
   .dfp-st
