@@ -154,18 +154,24 @@
                 <slot name="microAdInRelateds"/>
                 <slot name="popInAdInRelateds"/>
               </RelatedListInContent>
-              <slot
+              <div
                 v-if="shouldShowADAR1 && index === nonEmptyParagraphsIndexs[0]"
-                name="dfpMBAR1"
-              />
-              <slot
+                class="ad"
+              >
+                <slot name="dfpMBAR1" />
+              </div>
+              <div
                 v-if="index === nonEmptyParagraphsIndexs[0]"
-                name="dfpPCAR1"
-              />
-              <slot
+                class="ad"
+              >
+                <slot name="dfpPCAR1" />
+              </div>
+              <div
                 v-if="shouldShowADAR1 && index === nonEmptyParagraphsIndexs[4]"
-                name="dfpMBAR2"
-              />
+                class="ad"
+              >
+                <slot name="dfpMBAR2" />
+              </div>
             </div>
             <!-- end -->
             <p
