@@ -204,7 +204,7 @@
           <slot name="dfpPCE1E2" />
           <slot name="dableMB" />
           <PopList
-            v-if="isMobile"
+            v-if="isMobile && isShowPoplist"
             :pop="popularList"
           />
           <div>
@@ -304,6 +304,10 @@ export default {
     isMobile: {
       type: Boolean,
       required: true
+    },
+    isShowPoplist: {
+      type: Boolean,
+      default: true
     },
     post: {
       type: Object,

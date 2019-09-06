@@ -77,9 +77,13 @@
         this.visibleTracking(
           [
             { target: '.article_body > .article_main .poplist-container', seenFlag: false, desc: 'popular' },
+            { target: '.post-body > .article_main .poplist-container', seenFlag: false, desc: 'popular' },
             { target: '.article_body > .article_main .article_main_tags', seenFlag: false, desc: 'tag' },
+            { target: '.post-body > .article_main .post-tags', seenFlag: false, desc: 'tag' },
             { target: '.article_body > .article_main .newsletter', seenFlag: false, desc: 'end' },
+            { target: '.post-body > .article_main .newsletter', seenFlag: false, desc: 'end' },
             { target: '.article_body > .article_main .dable-widget', seenFlag: false, desc: 'matched' },
+            { target: '.post-body > .article_main .dable-widget', seenFlag: false, desc: 'end' },
             { target: '.article__main .newsletter', seenFlag: false, desc: 'end' },
             { target: '.article__main .dable-widget', seenFlag: false, desc: 'matched' }
           ]
