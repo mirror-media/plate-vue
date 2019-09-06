@@ -341,24 +341,21 @@ export default {
       viewport: 0,
       persidentCandidateData: [
         {
-          tagId: '2020-1',
-          // tagId: '57f3a35ca89ee20d00cc4bd1',
+          tagId: '5d65fbaa486faa3919afaeb9',
           title: '民進黨',
           img: '/assets/mirrormedia/2020-1.jpg',
           color: '#5dc68a',
           articles: []
         },
         {
-          tagId: '2020-2',
-          // tagId: '587605103c1f950d00ce3726',
+          tagId: '5d65fbaf486faa3919afaeba',
           title: '國民黨',
           img: '/assets/mirrormedia/2020-2.jpeg',
           color: '#4a90e2',
           articles: []
         },
         {
-          tagId: '2020-3',
-          // tagId: '58171ba7aa39ed0d00bfda25',
+          tagId: '5d65fbb6486faa3919afaebb',
           title: '民眾黨',
           img: '/assets/mirrormedia/2020-3.jpg',
           color: '#9b9b9b',

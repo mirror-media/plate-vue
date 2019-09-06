@@ -113,7 +113,7 @@ export function createStore () {
         const orig = _.values(_.get(state, [ 'articlesByUUID', type, uuid, 'items' ]))
         if (state.articlesByUUID[type][uuid]) {
           if ((state.uuid === uuid && params.page > 1) || 
-              (uuid === '2020-1' || uuid === '2020-2' || uuid === '2020-3'))
+              (uuid === '5d65fbaa486faa3919afaeb9' || uuid === '5d65fbaf486faa3919afaeba' || uuid === '5d65fbb6486faa3919afaebb'))
           {
             return fetchArticlesByUuid(uuid, type, params).then(articles => {
               articles[ 'items' ] = _.concat(orig, _.get(articles, [ 'items' ]))
