@@ -8,6 +8,7 @@
   >
     <template slot-scope="props" slot="dfpPos">
       <Header
+        v-if="!isPhotography"
         :activeSection="sectionName"
         :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded"
         :props="props"
@@ -15,10 +16,14 @@
       />
       <section
         :is="component"
+        :articleData="post"
         :isAd="isAd"
         :isMobile="isMobile"
+        :isShowPoplist="isShowPoplist"
         :post="post"
         :postUrl="postUrl"
+        :viewport="viewportWidth"
+        :initFBComment="initializeFBComments"
       >
         <RecommendList
           v-if="!isAd"
@@ -28,6 +33,20 @@
           :currArticleId="post.id"
           :recommends="recommendList"
         />
+        <!-- photography fb comment -->
+        <div
+          v-if="isPhotography"
+          slot="slot_fb_comment"
+          class="article_fb_comment"
+        >
+          <div
+            class="fb-comments"
+            :data-href="postUrl"
+            data-numposts="5"
+            data-width="100%"
+            data-order-by="reverse_time"
+          />
+        </div>
         <Footer
           slot="footer"
           :style="needWineWarning ? { paddingBottom: '10px' } : ''"
@@ -265,6 +284,21 @@
             />
           </DfpCover>
         </template>
+        <!-- 手機、平板、桌機共用且不需考慮 hiddenAdvertised -->
+        <MicroAd
+          v-for="ad in get(microAds, 'article')"
+          :key="`${get(ad, 'pcId')}`"
+          slot="microAdInRelateds"
+          :id="`${get(ad, 'pcId')}`"
+          :currEnv="dfpMode"
+          :currUrl="postUrl"
+          class="related"
+        />
+        <PopInAd
+          slot="popInAdInRelateds"
+        >
+          <div id="_popIn_recommend"></div>
+        </PopInAd>
       </section>
       <!-- 手機、平板、桌機共用的廣告 -->
       <template v-if="!hiddenAdvertised">
@@ -282,28 +316,13 @@
           />
         </DfpFixed>
       </template>
-      <!-- 手機、平板、桌機共用且不需考慮 hiddenAdvertised -->
-      <MicroAd
-        v-for="ad in get(microAds, 'article')"
-        :key="`${get(ad, 'pcId')}`"
-        slot="microAdInRelateds"
-        :id="`${get(ad, 'pcId')}`"
-        :currEnv="dfpMode"
-        :currUrl="postUrl"
-        class="related"
-      />
-      <PopInAd
-        slot="popInAdInRelateds"
-      >
-        <div id="_popIn_recommend"></div>
-      </PopInAd>
-
     </template>
   </VueDfpProvider>
 </template>
 <script>
 import AdultContentAlert from 'src/components/AdultContentAlert.vue'
 import ArticleBodyPhotography from 'src/components/article/ArticleBodyPhotography.vue'
+import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import DfpFixed from 'src/components/DfpFixed.vue'
 import DfpST from 'src/components/DfpST.vue'
@@ -331,6 +350,7 @@ import {
   DFP_OPTIONS,
   FB_APP_ID,
   FB_PAGE_ID,
+  SECTION_MAP,
   SECTION_WATCH_ID,
   SITE_MOBILE_URL,
   SITE_DESCRIPTION,
@@ -343,16 +363,16 @@ import { adtracker } from 'src/util/adtracking'
 import { createNamespacedHelpers } from 'vuex'
 import {
   currEnv,
-  getImage,
   lockJS,
   sendAdCoverGA,
-  sendGaClickEvent,
   unLockJS,
   updateCookie 
 } from 'src/util/comm'
 import { find, get } from 'lodash'
+import { getRole } from 'src/util/mmABRoleAssign'
 import { microAds } from 'src/constants/microAds'
 
+import { insertJSONLDScript } from '../util/post'
 
 const debugDFP = require('debug')('CLIENT:DFP')
 
@@ -365,6 +385,25 @@ const fetchEvent = (store, { eventType = 'embedded' }) => store.dispatch('FETCH_
     }
   }
 })
+
+const fetchPartners = (store) => {
+  const page = get(store.state, 'partners.meta.page', 0) + 1
+  const timestamp = Date.now()
+  return store.dispatch('FETCH_PARTNERS', {
+    params: {
+      max_results: 25,
+      page: page
+    }
+  }).then(() => {
+    if (get(store.state, 'partners.items.length') < get(store.state, 'partners.meta.total')) {
+      fetchPartners(store)
+        .then(() => (traceResponse(store, { log: `fetch partners data: ${Date.now() - timestamp}ms` })))
+    }
+    return Promise.resolve()
+  })
+}
+
+const traceResponse = (store, log) => (process.env.VUE_ENV === 'server' ? store.dispatch('TRACE_RES_STACK', log) : Promise.resolve())
 
 export default {
   name: 'AppPost',
@@ -405,6 +444,14 @@ export default {
       writers = []
     } = this.post
 
+
+    if (!slug && process.env.VUE_ENV === 'server') {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    }
+
     const tagsString = tags.map(tag => tag.name).join(',')
     const firstCategory = get(categories, '0.title')
     const keywords = firstCategory ? `${firstCategory},${tagsString}` : tagsString
@@ -414,6 +461,7 @@ export default {
     const publishedTime = publishedDate ? new Date(publishedDate).toISOString() : ''
 
     return {
+      url: `${SITE_MOBILE_URL}/story/${slug}/`,
       title: metaTitle,
       meta: `
         <meta name="robots" content="${isAdult ? 'noindex' : 'index'}">
@@ -449,7 +497,8 @@ export default {
     return Promise.all([
       store.dispatch('DataPost/FETCH_POST', { slug: route.params.slug }),
       store.dispatch('FETCH_COMMONDATA', { endpoints: [ 'sections', 'topics' ] }),
-      store.dispatch('FETCH_COMMONDATA', { endpoints: [ 'projects' ] })
+      store.dispatch('FETCH_COMMONDATA', { endpoints: [ 'projects' ] }),
+      fetchPartners(store)
     ])
   },
   data () {
@@ -563,12 +612,20 @@ export default {
     isAd () {
       return get(this.post, 'isAdvertised')
     },
-    
     isMobile () {
       return this.viewportWidth <= 768
     },
+    isPhotography () {
+      return this.postStyle === 'photography'
+    },
+    isShowPoplist () {
+      return get(SECTION_MAP, [ this.sectionId, 'isShowPoplist' ], true)
+    },
     needAdultWarning () {
       return get(this.post, 'isAdult')
+    },
+    needLockJS () {
+      return get(this.post, 'lockJS')
     },
     needWineWarning () {
       const cats = this.post.categories || []
@@ -608,6 +665,11 @@ export default {
       this.fetchRelatedImages()
     }
 
+    this.insertJSONLDScript(this.post)
+    this.checkLockJS()
+    this.abIndicator = this.getMmid()
+    this.dfpMode = currEnv()
+
     window.addEventListener('load', () => {
       this.$store.dispatch('FETCH_LATESTARTICLE', {
         params: {
@@ -621,15 +683,54 @@ export default {
       fetchEvent(this.$store, { eventType: 'embedded' })
       fetchEvent(this.$store, { eventType: 'logo' })
     })
+    this.sendGA(this.post)
   },
   methods: {
+    checkLockJS () {
+      this.needLockJS ? lockJS() : unLockJS()
+    },
     fetchRelatedImages () {
       const relatedImages = this.relateds
         .filter(related => related)
         .map(related => related.heroImage)
       this.$store.dispatch('FETCH_IMAGES_BY_ID', { ids: relatedImages, max_results: relatedImages.length })
     },
-    get
+    get,
+    getMmid () {
+      const mmid = Cookie.get('mmid')
+      let assisgnedRole = get(this.$route, 'query.ab')
+      if (assisgnedRole) {
+        assisgnedRole = assisgnedRole.toUpperCase()
+      }
+      const role = getRole({ mmid, distribution: [
+        { id: 'A', weight: 50 },
+        { id: 'B', weight: 50 } ]
+      })
+      return assisgnedRole || role
+    },
+    initializeFBComments () {
+      if (window.FB) {
+        window.FB && window.FB.init({
+          appId: get(this.$store, 'state.fbAppId'),
+          xfbml: true,
+          version: 'v2.0'
+        })
+        window.FB && window.FB.XFBML.parse()
+      }
+    },
+    insertJSONLDScript,
+    sendGA (post) {
+      if (get(post, 'sections.length') === 0) {
+          window.ga('set', 'contentGroup1', '')
+          window.ga('set', 'contentGroup2', '')
+        } else {
+          window.ga('set', 'contentGroup1', `${get(post, 'sections.0.name')}`)
+          window.ga('set', 'contentGroup2', `${get(post, 'categories.0.name')}`)
+        }
+        window.ga('set', 'contentGroup3', '')
+        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+        window.ga('send', 'pageview', { title: `${get(post, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
+    }
   }
 }
 </script>
