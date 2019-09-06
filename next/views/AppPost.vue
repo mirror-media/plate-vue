@@ -15,10 +15,31 @@
       />
       <section
         :is="component"
+        :isAd="isAd"
         :isMobile="isMobile"
         :post="post"
         :postUrl="postUrl"
       >
+        <RecommendList
+          v-if="!isAd"
+          slot="recommendList"
+          :isAd="isAd"
+          :sectionId="sectionId"
+          :currArticleId="post.id"
+          :recommends="recommendList"
+        />
+        <Footer
+          slot="footer"
+          :style="needWineWarning ? { paddingBottom: '10px' } : ''"
+          class="footer"
+        />
+        <LiveStream
+          v-if="hasEventEmbedded"
+          :mediaData="eventEmbedded"
+        />
+        <WineWarning v-if="needWineWarning" />
+        <AdultContentAlert v-if="needAdultWarning" />
+        <!-- 只在手機、平板的廣告、dable推薦 -->
         <template v-if="isMobile && !hiddenAdvertised">
           <!-- HD -->
           <vue-dfp
@@ -79,6 +100,13 @@
             pos="MBE1"
             class="dfp dfp-full"
           />
+          <!-- dable -->
+          <div
+            slot="dableMB"
+            id="dablewidget_6XgaOJ7N"
+            class="dable-widget"
+            data-widget_id="6XgaOJ7N"
+          />
           <!-- FT -->
           <vue-dfp
             :is="props.vueDfp"
@@ -87,8 +115,22 @@
             pos="MBFT"
             class="dfp dfp-full"
           />
+          <!-- FT Photography -->
+          <div
+            v-if="viewportWidth < 1200"
+            slot="slot_dfpFT"
+          >
+            <vue-dfp
+              :is="props.vueDfp"
+              :config="props.config"
+              pos="MBFT"
+              extClass="full"
+            />
+          </div>
         </template>
-        <template v-if="!isMobile">
+        <!-- 只在桌機的廣告、dable推薦 -->
+        <template v-if="!isMobile && !hiddenAdvertised">
+          <ShareTools slot="shareTools" />
           <!-- HD -->
           <vue-dfp
             :is="props.vueDfp"
@@ -139,13 +181,20 @@
             pos="PCR1"
             class="dfp"
           />
-          <!--  -->
+          <!-- R2 -->
           <vue-dfp
             :is="props.vueDfp"
             slot="dfpPCR2"
             pos="PCR2"
             :config="props.config"
             class="dfp dfp-margin-btm"
+          />
+          <!-- dable -->
+          <div
+            slot="dablePC"
+            id="dablewidget_GlYwenoy"
+            class="dable-widget"
+            data-widget_id="GlYwenoy"
           />
           <!-- FT -->
           <vue-dfp
@@ -156,70 +205,70 @@
             class="dfp dfp-full"
             :config="props.config"
           />
+          <!-- FT Photography -->
+          <div 
+            v-if="viewportWidth >= 1200"
+            slot="slot_dfpFT"
+          >
+            <vue-dfp
+              :is="props.vueDfp"
+              pos="PCFT"
+              extClass="mobile-hide"
+              :config="props.config"
+            />
+          </div>
+          <!-- ST -->
+          <DfpST
+            v-if="!needWineWarning"
+            :props="props"
+          >
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="dfpST"
+              :config="props.config"
+              pos="MBST"
+            />
+          </DfpST>
+          <!-- Cover -->
+          <DfpCover
+            v-show="showDfpCoverAdFlag"
+          > 
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="ad-cover"
+              :config="props.config"
+              pos="MBCVR"
+            /> 
+          </DfpCover>
+          <DfpCover
+            v-if="showDfpCoverAd2Flag"
+            :showCloseBtn="false"
+            class="raw"
+          > 
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="ad-cover"
+              :config="props.config"
+              pos="MBCVR2"
+            /> 
+          </DfpCover>
+          <DfpCover
+            v-if="showDfpCoverInnityFlag"
+            :showCloseBtn="false"
+            class="raw"
+          >
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="ad-cover"
+              :config="props.config"
+              pos="MBCVR3"
+            />
+          </DfpCover>
         </template>
-        <MicroAd
-          v-for="ad in get(microAds, 'article')"
-          :key="`${get(ad, 'pcId')}`"
-          slot="microAdInRelateds"
-          :id="`${get(ad, 'pcId')}`"
-          :currEnv="dfpMode"
-          :currUrl="postUrl"
-          class="related"
-        />
-        <PopInAd
-          slot="popInAdInRelateds"
-        >
-          <div id="_popIn_recommend"></div>
-        </PopInAd>
-        <Footer
-          slot="footer"
-          class="footer"
-        />
       </section>
-      <template v-if="isMobile && !hiddenAdvertised">
-        <DfpST :props="props">
-          <vue-dfp
-            :is="props.vueDfp"
-            slot="dfpST"
-            :config="props.config"
-            pos="MBST"
-          />
-        </DfpST>
-        <DfpCover
-          v-show="showDfpCoverAdFlag"
-        > 
-          <vue-dfp
-            :is="props.vueDfp"
-            slot="ad-cover"
-            :config="props.config"
-            pos="MBCVR"
-          /> 
-        </DfpCover>
-        <DfpCover
-          v-if="showDfpCoverAd2Flag"
-          :showCloseBtn="false"
-          class="raw"
-        > 
-          <vue-dfp
-            :is="props.vueDfp"
-            slot="ad-cover"
-            :config="props.config"
-            pos="MBCVR2"
-          /> 
-        </DfpCover>
-        <DfpCover
-          v-if="showDfpCoverInnityFlag"
-          :showCloseBtn="false"
-          class="raw"
-        >
-          <vue-dfp
-            :is="props.vueDfp"
-            slot="ad-cover"
-            :config="props.config"
-            pos="MBCVR3"
-          />
-        </DfpCover>
-        <dfp-fixed
+      <!-- 手機、平板、桌機共用的廣告 -->
+      <template v-if="!hiddenAdvertised">
+        <DfpFixed
           v-if="sectionId === SECTION_WATCH_ID"
           v-show="showDfpFixedBtn"
           @closeDfpFixed="showDfpFixedBtn = false"
@@ -231,8 +280,24 @@
             :dfpId="props.dfpId"
             pos="PCFF"
           />
-        </dfp-fixed>
+        </DfpFixed>
       </template>
+      <!-- 手機、平板、桌機共用且不需考慮 hiddenAdvertised -->
+      <MicroAd
+        v-for="ad in get(microAds, 'article')"
+        :key="`${get(ad, 'pcId')}`"
+        slot="microAdInRelateds"
+        :id="`${get(ad, 'pcId')}`"
+        :currEnv="dfpMode"
+        :currUrl="postUrl"
+        class="related"
+      />
+      <PopInAd
+        slot="popInAdInRelateds"
+      >
+        <div id="_popIn_recommend"></div>
+      </PopInAd>
+
     </template>
   </VueDfpProvider>
 </template>
@@ -245,11 +310,17 @@ import DfpST from 'src/components/DfpST.vue'
 import Footer from 'src/components/Footer.vue'
 import Header from 'src/components/Header.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
+import LiveStream from 'src/components/LiveStream.vue'
 import MicroAd from 'src/components/MicroAd.vue'
 import PopInAd from 'src/components/PopInAd.vue'
-import PostBody from '../components/post/PostBody.vue'
+import RecommendList from 'src/components/article/RecommendList.vue'
+import ShareTools from 'src/components/article/ShareTools.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import WineWarning from 'src/components/WineWarning.vue'
+
+import PostBody from '../components/post/PostBody.vue'
+
+import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import titleMetaMixin from 'src/util/mixinTitleMeta'
 import truncate from 'truncate'
@@ -285,6 +356,16 @@ import { microAds } from 'src/constants/microAds'
 
 const debugDFP = require('debug')('CLIENT:DFP')
 
+const fetchEvent = (store, { eventType = 'embedded' }) => store.dispatch('FETCH_EVENT', {
+  params: {
+    max_results: 1,
+    where: {
+      isFeatured: true,
+      eventType
+    }
+  }
+})
+
 export default {
   name: 'AppPost',
   components: {
@@ -296,9 +377,12 @@ export default {
     Footer,
     Header,
     LazyItemWrapper,
+    LiveStream,
     MicroAd,
     PopInAd,
     PostBody,
+    RecommendList,
+    ShareTools,
     VueDfpProvider,
     WineWarning
   },
@@ -461,11 +545,34 @@ export default {
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
+    eventEmbedded () {
+      return get(this.$store, 'state.eventEmbedded.items.0')
+    },
+    hasEventEmbedded () {
+      const _now = moment()
+      const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
+      let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
+      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+        _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
+      }
+      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
+    },
     hiddenAdvertised () {
       return get(this.post, 'hiddenAdvertised')
     },
+    isAd () {
+      return get(this.post, 'isAdvertised')
+    },
+    
     isMobile () {
-      return get(this.$store, 'state.viewport.width') <= 768
+      return this.viewportWidth <= 768
+    },
+    needAdultWarning () {
+      return get(this.post, 'isAdult')
+    },
+    needWineWarning () {
+      const cats = this.post.categories || []
+      return cats.some(cat => cat.name === 'wine')
     },
     post () {
       return find(this.$store.state.DataPost.posts, { slug: this.slug })
@@ -475,6 +582,9 @@ export default {
     },
     postUrl () {
       return `${SITE_URL}/story/${this.slug}/`
+    },
+    recommendList () {
+      return get(this.$store, 'state.articlesRecommendList.relatedNews') || []
     },
     relateds () {
       return get(this.post, 'relateds') || []
@@ -488,6 +598,9 @@ export default {
     },
     slug () {
       return this.$route.params.slug
+    },
+    viewportWidth () {
+      return get(this.$store, 'state.viewport.width') || 0
     }
   },
   mounted () {
@@ -504,8 +617,10 @@ export default {
           }
         }
       })
+      this.$store.dispatch('FETCH_ARTICLES_POP_LIST', {})
+      fetchEvent(this.$store, { eventType: 'embedded' })
+      fetchEvent(this.$store, { eventType: 'logo' })
     })
-    this.$store.dispatch('FETCH_ARTICLES_POP_LIST', {})
   },
   methods: {
     fetchRelatedImages () {

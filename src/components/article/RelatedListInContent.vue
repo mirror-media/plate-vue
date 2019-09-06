@@ -78,7 +78,7 @@ export default {
         display inline-block
         display -webkit-box
         padding 0
-        color #808080
+        color #808080 !important
         font-size 1.125rem
         line-height 1.3
         max-height 46.8px

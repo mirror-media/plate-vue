@@ -1,14 +1,16 @@
 <template>
   <section class="post-body">
-    <div class="post-body-container">
+    <div class="post-body-container article">
       <LazyItemWrapper :loadAfterPageLoaded="true">
         <slot name="dfpPCHD" />
         <slot name="dfpMBHD" />
       </LazyItemWrapper>
+      <slot name="shareTools" />
       <div class="post-main-container">
         <main class="article__main">
           <div class="post-category-date space-between">
             <p
+              v-if="!isAd"
               :style="{ borderLeftColor: sectionColor }"
               class="category"
               v-text="category.title"
@@ -173,6 +175,7 @@
               更新時間｜<span>{{ moment(post.updatedAt).format('YYYY.MM.DD HH:mm') }}</span>
             </p>
           </article>
+          <slot name="recommendList"/>
           <div>
             <slot name="dfpAR3"/>
           </div>
@@ -182,7 +185,10 @@
             <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>、
             <a :href="SOCIAL_LINK.AUTH" target="_blank">了解內容授權資訊</a>。
           </p>
-          <div class="post-tags">
+          <div
+            v-if="tags.length > 0"
+            class="post-tags"
+          >
             <p>相關關鍵字：</p>
             <a
               v-for="tag in tags"
@@ -196,6 +202,7 @@
           <MediaFarmer />
           <slot name="dfpMBE1" />
           <slot name="dfpPCE1E2" />
+          <slot name="dableMB" />
           <PopList
             v-if="isMobile"
             :pop="popularList"
@@ -209,6 +216,7 @@
               data-order-by="reverse_time"
             />
           </div>
+          <slot name="dablePC" />
         </main>
         <PostBodyAside
           v-if="!isMobile"
@@ -289,6 +297,10 @@ export default {
     Slider
   },
   props: {
+    isAd: {
+      type: Boolean,
+      default: false
+    },
     isMobile: {
       type: Boolean,
       required: true
@@ -568,11 +580,12 @@ export default {
       line-height 36px
       text-align justify
       a
-        color #3195b3
-        text-decoration none
         cursor pointer
         border-bottom 1px solid #3195b3
         padding-bottom 5px
+    >>> a
+      color #3195b3
+      cursor pointer
     >>> code
       display block
       a
