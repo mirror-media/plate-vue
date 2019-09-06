@@ -385,8 +385,6 @@ export default {
     },
     candidateData () {
       // todo need to use _.uniqBy?
-      console.log('1');
-      
       this.persidentCandidateData.forEach((cand) => cand.articles = _.get(this.$store.state, [ 'articlesByUUID', TAG, cand.tagId, 'items' ]))
       return this.persidentCandidateData
     },
@@ -552,7 +550,6 @@ export default {
       } else if (this.topicType === 'wide') {
         fetchArticlesByUuid(this.$store, this.uuid, TOPIC, false, false, 3)
       } else if (this.uuid === PRESIDENT_ELECTION_ID) {
-        console.log('2');
         this.persidentCandidateData.forEach((cand) => {
           fetchArticlesByUuid(this.$store, cand.tagId, TAG, false, false, 3)
         })
