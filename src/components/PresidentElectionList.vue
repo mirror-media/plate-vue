@@ -1,6 +1,5 @@
 <template>
   <article class="candidates">
-    <!-- <PresidentElectionProgress /> -->
     <section v-for="(cand, idx) in candidateData" :key="cand.tagId" class="candidate-card">
       <div class="candidate-card__wrapper">
 
@@ -35,15 +34,11 @@
 </template>
 
 <script>
-// import PresidentElectionProgress from './PresidentElectionProgress.vue'
 import { checkMob, debounce } from '../util/comm.js'
 
 export default {
   name: 'PresidentElectionList',
   props: [ 'candidateData' ],
-  // components: {
-  //   PresidentElectionProgress
-  // },
   data () {
     return {
       artTitleEl: null,
