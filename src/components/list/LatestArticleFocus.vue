@@ -35,9 +35,10 @@
 </template>
 
 <script>
-import { getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../util/comm'
+import { getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from 'src/util/comm'
 
 export default {
+  name: 'LatestArticleFocus',
   props: {
     groupedArticle: {
       type: Object,
