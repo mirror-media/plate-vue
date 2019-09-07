@@ -73,6 +73,7 @@
     "route-cache": "^0.4.4",
     "sanitize-html": "^1.19.1",
     "serve-favicon": "^2.5.0",
+    "smoothscroll-polyfill": "^0.4.4",
     "superagent": "^4.1.0",
     "tap.js": "^2.2.0",
     "truncate": "^2.0.1",

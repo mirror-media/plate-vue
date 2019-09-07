@@ -69,6 +69,7 @@
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
 
+          <PresidentElectionProgress />
           <PresidentElectionList v-if="isPresidentElectionId" :candidateData="candidateData" @loadMore="loadMorePresident" />
 
           <article-list ref="articleList" id="articleList" v-if="!isPresidentElectionId" :articles='autoScrollArticles' :hasDFP='false'></article-list>
@@ -117,6 +118,7 @@ import Loading from '../components/Loading.vue'
 import MoreFull from '../components/MoreFull.vue'
 import PortraitWallList from '../components/PortraitWallList.vue'
 import ProjectList from '../components/article/ProjectList.vue'
+import PresidentElectionProgress from '../components/PresidentElectionProgress.vue'
 import PresidentElectionList from '../components/PresidentElectionList.vue'
 import Share from '../components/Share.vue'
 import TimelineBody from '../components/timeline/TimelineBody.vue'
@@ -270,6 +272,7 @@ export default {
     'vue-dfp-provider': VueDfpProvider,
     WineWarning,
     ProjectList,
+    PresidentElectionProgress,
     PresidentElectionList,
     Header
   },
