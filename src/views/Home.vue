@@ -343,9 +343,6 @@ export default {
     eventEmbedded () {
       return get(this.$store, 'state.eventEmbedded.items.0')
     },
-    eventLogo () {
-      return get(this.$store, 'state.eventLogo.items.0')
-    },
     eventMod () {
       return get(this.$store, 'state.eventMod.items.0')
     },

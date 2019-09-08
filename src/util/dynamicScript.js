@@ -63,4 +63,5 @@ export const dableScript = `
   dable('sendLogOnce');
   dable('renderWidget', 'dablewidget_1oVMvjXP');
   dable('renderWidget', 'dablewidget_GlYwenoy');
+  dable('renderWidget', 'dablewidget_6XgaOJ7N');
 `
