@@ -19,9 +19,12 @@
         </div>
       </div>
       <slot name="hero"></slot>
-      <div class="brief fb-quotable">
-        <div v-for="p in briefArr">
-          <ArticleImg v-if="p.type === 'image'"
+      <div
+        :style="{ backgroundColor: category.color || '#bcbcbc' }"
+        class="brief fb-quotable"
+      >
+        <div v-for="(p, i) in briefArr" :key="`brief-${i}`">
+          <!-- <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
             :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>            
@@ -47,13 +50,11 @@
           </div>
           <div v-else-if="p.type === 'annotation'">
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
-          </div>
-          <div v-else :style="{ backgroundColor: category.color || '#bcbcbc' }" v-html="paragraphComposer(p)"></div>
+          </div> -->
+          <div v-if="p.type === 'unstyled'" v-html="paragraphComposer(p)"></div>
         </div>        
       </div>
-      <div v-if="viewport <= 768" class="dfp-at--mobile">
-        <slot name="dfpad-AR1-MB"></slot>
-      </div>
+      
       <div class="split-line"></div>
       <article class="content" id="article-body-content" itemprop="articleBody">
         <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`" :is="blockWrapper(index)">
@@ -87,15 +88,21 @@
           <div v-else v-html="paragraphComposer(p)"></div>
           <slot name="dfpad-AR1-PC" v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 0 ]"></slot>
           <slot name="dfpad-AR2-PC" v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 1 ]"></slot>
+          <div v-if="shouldShowADAR1 && index === nonEmptyParagraphsIndexs[0]" class="dfp-at--mobile">
+            <slot name="dfpad-AR1-MB"></slot>
+          </div>
+          <div v-if="shouldShowADAR2 && index === nonEmptyParagraphsIndexs[4]" class="dfp-at--mobile">
+            <slot name="dfpad-AR2-MB"></slot>
+          </div>
           <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
         </div>
         <p v-if="articleData.updatedAt !== articleData.publishedDate" class="updated-time">更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span></p>
       </article>
-      <div v-if="viewport <= 768" class="dfp-at--mobile">
-        <slot name="dfpad-AR2-MB"></slot>
-      </div>
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom"></slot>
+      </div>
+      <div class="dfp-at--mobile">
+        <slot name="dfpad-AR3-MB"></slot>
       </div>
       <newsletter></newsletter>
       <div>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>、<a :href="socialLink.AUTH" target="_blank">了解內容授權資訊</a>。</div>
@@ -268,7 +275,22 @@ export default {
         }
       })
       return last
-    }
+    },
+    nonEmptyParagraphsIndexs () {
+      const isContentParagraph = obj => obj.type === 'unstyled' && obj.content.join('') !== ''
+      const contents = _.get(this.articleData, 'content.apiData') || []
+      return contents
+        // Preserve original index
+        .map((d, i) => ({ index: i, type: d.type, content: d.content || [] }))
+        .filter(obj => isContentParagraph(obj))
+        .map(d => d.index)
+    },
+    shouldShowADAR1 () {
+      return _.get(this.nonEmptyParagraphsIndexs, 0, -1) !== -1
+    },
+    shouldShowADAR2 () {
+      return _.get(this.nonEmptyParagraphsIndexs, 4, -1) !== -1
+    },
   },
   data () {
     return {
