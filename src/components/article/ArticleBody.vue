@@ -302,6 +302,8 @@ export default {
       switch (index) {
         case this.firstTwoUnstyledParagraph[ 0 ]:
         case this.firstTwoUnstyledParagraph[ 1 ]:
+        case this.nonEmptyParagraphsIndexs[0]:
+        case this.nonEmptyParagraphsIndexs[4]:
           return 'div'
         default:
           return LazyItemWrapper
