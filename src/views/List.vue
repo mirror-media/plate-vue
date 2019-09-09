@@ -11,21 +11,23 @@
         <LatestArticleFoodTravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" ref="articleListAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
         <MoreFull v-if="hasMore && (!loading)" v-on:loadMore="loadMore" :className="'moreFoodTravel'" />
         <Loading :show="loading" />
-        <LazyItemWrapper :position="verge.viewportH()" :strict="true">
-          <vue-dfp
-            :is="props.vueDfp"
-            v-if="isMobile"
-            :config="props.config"
-            :size="get($store, 'getters.adSize')"
-            pos="LMBSFT"
-          />
-          <vue-dfp
-            :is="props.vueDfp"
-            v-else
-            :config="props.config"
-            pos="LPCSFT"
-          />
-        </LazyItemWrapper>
+        <ClientOnly>
+          <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="isMobile"
+              :config="props.config"
+              :size="get($store, 'getters.adSize')"
+              pos="LMBSFT"
+            />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-else
+              :config="props.config"
+              pos="LPCSFT"
+            />
+          </LazyItemWrapper>
+        </ClientOnly>
         <FooterFoodTravel :commonData='commonData' :sectionName='sectionName' />
         <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       </div>
@@ -34,25 +36,27 @@
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <ListSlider class="gs" />
         <ArticleList ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode" />
-        <LazyItemWrapper :position="verge.viewportH()" :strict="true">
-          <div v-if="isMobile">
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              :size="get($store, 'getters.adSize')"
-              pos="LMBFT"
-              unitId="mirror_RWD_GS_970250-300250_FT"
-            />
-          </div>
-          <div v-else>
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              pos="LPCFT"
-              unitId="mirror_RWD_GS_970250-300250_FT"
-            />
-          </div>
-        </LazyItemWrapper>
+        <ClientOnly>
+          <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+            <div v-if="isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                pos="LMBFT"
+                unitId="mirror_RWD_GS_970250-300250_FT"
+              />
+            </div>
+            <div v-else>
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                pos="LPCFT"
+                unitId="mirror_RWD_GS_970250-300250_FT"
+              />
+            </div>
+          </LazyItemWrapper>
+        </ClientOnly>
         <ArticleList
           ref="articleListAutoScroll"
           id="articleListAutoScroll"
@@ -69,45 +73,49 @@
 
       <div class="list-view" v-else-if="pageStyle === 'light'">
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-        <LazyItemWrapper :loadAfterPageLoaded="true">
-          <div v-if="hasDFP && isMobile">
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              :size="get($store, 'getters.adSize')"
-              pos="LMBHD"
-            />
-          </div>
-          <div v-if="hasDFP && !isMobile">
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              pos="LPCHD"
-            />
-          </div>
-        </LazyItemWrapper>
+        <ClientOnly>
+          <LazyItemWrapper :loadAfterPageLoaded="true">
+            <div v-if="hasDFP && isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                pos="LMBHD"
+              />
+            </div>
+            <div v-if="hasDFP && !isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                pos="LPCHD"
+              />
+            </div>
+          </LazyItemWrapper>
+        </ClientOnly>
         <div class="list-title container" >
           <a :href="get(section, 'website')" :style="{ color: sectionColor }" class="list-title__text" target="_blank" v-text="title"></a>
         </div>
         <ArticleListLight id="articleList" ref="articleList" :articles="autoScrollArticles" :latest="latestList" :showLatest="true" :viewport="viewportWidth" />
         <ArticleListLight v-show="hasAutoScroll" id="articleListAutoScroll" ref="articleListAutoScroll" :articles="autoScrollArticlesLoadMore" :latest="latestList" :viewport="viewportWidth" />
-        <LazyItemWrapper :position="verge.viewportH()" :strict="true">
-          <div v-if="title !== 'Topic' && isMobile">
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              :size="get($store, 'getters.adSize')"
-              pos="LMBFT"
-            />
-          </div>
-          <div v-if="title !== 'Topic' && !isMobile">
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              pos="LPCFT"
-            />
-          </div>
-        </LazyItemWrapper>
+        <ClientOnly>
+          <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+            <div v-if="title !== 'Topic' && isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                pos="LMBFT"
+              />
+            </div>
+            <div v-if="title !== 'Topic' && !isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                pos="LPCFT"
+              />
+            </div>
+          </LazyItemWrapper>
+        </ClientOnly>
         <Loading :show="loading" />
         <section class="footer container">
           <Footer />
@@ -118,36 +126,42 @@
 
       <div class="list-view" v-else>
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-        <LazyItemWrapper :loadAfterPageLoaded="true">
-          <div v-if="hasDFP && isMobile">
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              :size="get($store, 'getters.adSize')"
-              pos="LMBHD"
-            />
-          </div>
-          <div v-if="hasDFP && !isMobile">
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              pos="LPCHD"
-            />
-          </div>
-        </LazyItemWrapper>
+        <ClientOnly>
+          <LazyItemWrapper
+            :loadAfterPageLoaded="true"
+          >
+            <div v-if="hasDFP && isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                pos="LMBHD"
+              />
+            </div>
+            <div v-if="hasDFP && !isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                pos="LPCHD"
+              />
+            </div>
+          </LazyItemWrapper>
+        </ClientOnly>
         <div class="list-title container" :style="{ color: sectionColor }">
           <span class="list-title__text" v-text="title"></span>
         </div>
         <ArticleList ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv="dfpMode">
-          <LazyItemWrapper :position="verge.viewportH()" :strict="true" slot="dfpL1">
-            <vue-dfp
-              :is="props.vueDfp"
-              v-if="hasDFP && isMobile"
-              pos="LMBL1"
-              :config="props.config"
-              :size="get($store, 'getters.adSize')"
-            />
-          </LazyItemWrapper>
+          <ClientOnly>
+            <LazyItemWrapper :position="verge.viewportH()" :strict="true" slot="dfpL1">
+              <vue-dfp
+                :is="props.vueDfp"
+                v-if="hasDFP && isMobile"
+                pos="LMBL1"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+              />
+            </LazyItemWrapper>
+          </ClientOnly>
           <template v-for="(a, i) in get(microAds, 'listing')">
             <MicroAd
               v-if="hasDFP"
@@ -160,23 +174,25 @@
             />
           </template>
         </ArticleList>
-        <LazyItemWrapper :position="verge.viewportH()" :strict="true">
-          <div v-if="title !== 'Topic' && !isMobile">
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              pos="LPCFT"
-            />
-          </div>
-          <div v-if="title !== 'Topic' && isMobile">
-            <vue-dfp
-              :is="props.vueDfp"
-              :config="props.config"
-              :size="get($store, 'getters.adSize')"
-              pos="LMBFT"
-            />
-          </div>
-        </LazyItemWrapper>
+        <ClientOnly>
+          <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+            <div v-if="title !== 'Topic' && !isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                pos="LPCFT"
+              />
+            </div>
+            <div v-if="title !== 'Topic' && isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                pos="LMBFT"
+              />
+            </div>
+          </LazyItemWrapper>
+        </ClientOnly>
         <ArticleList
           ref="articleListAutoScroll"
           id="articleListAutoScroll"
@@ -191,55 +207,59 @@
         <lLiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
         <Share :right="`20px`" :bottom="`20px`" />
       </div>
-      <LazyItemWrapper
-        v-if="isMobile && !needWineWarning"
-        :loadAfterPageLoaded="true"
-      >
-        <DfpST :props="props">
+      <ClientOnly>
+        <LazyItemWrapper
+          v-if="isMobile && !needWineWarning"
+          :loadAfterPageLoaded="true"
+        >
+          <DfpST :props="props">
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="dfpST"
+              :config="props.config"
+              pos="MBST"
+            />
+          </DfpST>
+        </LazyItemWrapper>
+      </ClientOnly>
+      <WineWarning v-if="needWineWarning" />
+      <ClientOnly>
+        <DfpCover
+          v-if="isMobile"
+          v-show="showDfpCoverAdFlag"
+        >
           <vue-dfp
             :is="props.vueDfp"
-            slot="dfpST"
+            slot="ad-cover"
             :config="props.config"
-            pos="MBST"
+            pos="LMBCVR"
           />
-        </DfpST>
-      </LazyItemWrapper>
-      <WineWarning v-if="needWineWarning" />
-      <DfpCover
-        v-if="isMobile"
-        v-show="showDfpCoverAdFlag"
-      >
-        <vue-dfp
-          :is="props.vueDfp"
-          slot="ad-cover"
-          :config="props.config"
-          pos="LMBCVR"
-        />
-      </DfpCover>
-      <DfpCover
-        v-if="showDfpCoverAd2Flag && isMobile"
-        :showCloseBtn="false"
-        class="raw"
-      >
-        <vue-dfp
-          :is="props.vueDfp"
-          slot="ad-cover"
-          :config="props.config"
-          pos="LMBCVR2"
-        />
-      </DfpCover>
-      <DfpCover
-        v-if="showDfpCoverInnityFlag && isMobile"
-        :showCloseBtn="false"
-        class="raw"
-      >
-        <vue-dfp
-          :is="props.vueDfp"
-          slot="ad-cover"
-          :config="props.config"
-          pos="LMBCVR3"
-        />
-      </DfpCover>         
+        </DfpCover>
+        <DfpCover
+          v-if="showDfpCoverAd2Flag && isMobile"
+          :showCloseBtn="false"
+          class="raw"
+        >
+          <vue-dfp
+            :is="props.vueDfp"
+            slot="ad-cover"
+            :config="props.config"
+            pos="LMBCVR2"
+          />
+        </DfpCover>
+        <DfpCover
+          v-if="showDfpCoverInnityFlag && isMobile"
+          :showCloseBtn="false"
+          class="raw"
+        >
+          <vue-dfp
+            :is="props.vueDfp"
+            slot="ad-cover"
+            :config="props.config"
+            pos="LMBCVR3"
+          />
+        </DfpCover>
+      </ClientOnly>        
     </template>
   </VueDfpProvider>
 </template>
@@ -258,6 +278,7 @@ import { microAds } from 'src/constants/microAds'
 import { find, get, pick, slice, split, take, toUpper, uniqBy, xorBy  } from 'lodash'
 import ArticleList from 'src/components/ArticleList.vue'
 import ArticleListLight from 'src/components/ArticleListLight.vue'
+import ClientOnly from 'vue-client-only'
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import DfpST from 'src/components/DfpST.vue'
@@ -558,6 +579,7 @@ export default {
   components: {
     ArticleList,
     ArticleListLight,
+    ClientOnly,
     DfpCover,
     DfpST,
     EditorChoiceFoodTravel,

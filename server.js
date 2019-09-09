@@ -211,7 +211,7 @@ function render (req, res, next) {
         `REQUEST URL: ${req.url}\n`,
         `REQUEST IP: ${req.clientIp}\n`,
         `REFERER: ${req.headers.referer}\n`,
-        `${err}\n`, '######################')
+        err, '\n######################')
 
       return
     } else {
@@ -219,7 +219,7 @@ function render (req, res, next) {
         `REQUEST URL: ${req.url}\n`,
         `REQUEST IP: ${req.clientIp}\n`,
         `REFERER: ${req.headers.referer}\n`,
-        `${err}`)
+        err)
 
       isErrorOccurred = true
       err.status = err.status || 500

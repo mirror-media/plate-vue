@@ -1,6 +1,6 @@
 <template>
   <div class="slider-wrapper">
-    <NoSSR>
+    <ClientOnly>
       <vue-slider
         v-model="internalValue"
         class="slider-wrapper__slider"
@@ -9,15 +9,15 @@
         v-bind="options"
         @change="v => $emit('valueChange', v)"
       />
-    </NoSSR>
+    </ClientOnly>
   </div>
 </template>
 
 <script>
-import NoSSR from 'vue-no-ssr'
+import ClientOnly from 'vue-client-only'
 
 const components = {
-  NoSSR
+  ClientOnly
 }
 if (process.browser) {
   const VueSlider = require('vue-slider-component')
