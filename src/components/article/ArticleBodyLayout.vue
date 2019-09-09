@@ -602,7 +602,11 @@
 
   @media (max-width 320px)
     .article_body
-      .article_main 
+      .article_main
+        .brief
+          width calc(100% - 40px)
+          margin-left auto
+          margin-right auto
         .dfp-at--mobile
           position static
           width 100%
