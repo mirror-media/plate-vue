@@ -1,5 +1,5 @@
 <template>
-  <vue-dfp-provider :dfpUnits="DFP_UNITS" :dfpid="DFP_ID" section="home" :options="dfpOptions" mode="dev" :key="`homepage`">
+  <vue-dfp-provider :dfpUnits="DFP_UNITS" :dfpid="DFP_ID" section="home" :options="dfpOptions" :mode="dfpMode" :key="`homepage`">
     <template slot-scope="props" slot="dfpPos">
       <div class="home-view">
         <section style="width: 100%;">
