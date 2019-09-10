@@ -128,23 +128,19 @@
               />
             </template>
             <!-- DFP PC AT 1 -->
-            <ClientOnly>
-              <LazyItemWrapper
-                v-if="!isMobile"
-                slot="dfpad-AR1-PC"
-                :position="verge.viewportH()"
-                :strict="true"
-              >
-                <span id="innity-custom-adnetwork-span-63518"></span>
-                <span id="innity-custom-premium-span-12738"></span>     
-                <vue-dfp
-                  :is="props.vueDfp"
-                  v-if="!hiddenAdvertised"
-                  pos="PCAR"
-                  :config="props.config"
-                />
-              </LazyItemWrapper>
-            </ClientOnly>
+            <template
+              v-if="!isMobile"
+              slot="dfpad-AR1-PC"
+            >
+              <span id="innity-custom-adnetwork-span-63518"></span>
+              <span id="innity-custom-premium-span-12738"></span>     
+              <vue-dfp
+                :is="props.vueDfp"
+                v-if="!hiddenAdvertised"
+                pos="PCAR"
+                :config="props.config"
+              />
+            </template>
             <!-- DFP MB AT 2 -->
             <template
               v-if="isMobile"
