@@ -128,21 +128,23 @@
               />
             </template>
             <!-- DFP PC AT 1 -->
-            <LazyItemWrapper
-              v-if="!isMobile"
-              slot="dfpad-AR1-PC"
-              :position="verge.viewportH()"
-              :strict="true"
-            >
-              <span id="innity-custom-adnetwork-span-63518"></span>
-              <span id="innity-custom-premium-span-12738"></span>     
-              <vue-dfp
-                :is="props.vueDfp"
-                v-if="!hiddenAdvertised"
-                pos="PCAR"
-                :config="props.config"
-              />
-            </LazyItemWrapper>
+            <ClientOnly>
+              <LazyItemWrapper
+                v-if="!isMobile"
+                slot="dfpad-AR1-PC"
+                :position="verge.viewportH()"
+                :strict="true"
+              >
+                <span id="innity-custom-adnetwork-span-63518"></span>
+                <span id="innity-custom-premium-span-12738"></span>     
+                <vue-dfp
+                  :is="props.vueDfp"
+                  v-if="!hiddenAdvertised"
+                  pos="PCAR"
+                  :config="props.config"
+                />
+              </LazyItemWrapper>
+            </ClientOnly>
             <!-- DFP MB AT 2 -->
             <template
               v-if="isMobile"
@@ -1089,10 +1091,6 @@
         .article_footer
           width 645px
           margin 0 auto
-
-.ad-fit
-  position relative
-  margin-left -15px !important
 
 @keyframes fade-in
   0%
