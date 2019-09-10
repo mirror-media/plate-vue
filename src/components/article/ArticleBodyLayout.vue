@@ -607,9 +607,9 @@
           width calc(100% - 40px)
           margin-left auto
           margin-right auto
-        .dfp-at--mobile
-          position static
-          width 100%
+        // .dfp-at--mobile
+        //   position static
+        //   width 100%
 
   @media (min-width 0px) and (max-width 499px)
     .article_body

@@ -982,12 +982,12 @@ export default {
       font-size 0
       border none
 
-  @media (max-width 320px)
-    .article_body
-      .article_main 
-        .dfp-at--mobile
-          position static
-          width 100%
+  // @media (max-width 320px)
+  //   .article_body
+  //     .article_main 
+  //       .dfp-at--mobile
+  //         position static
+  //         width 100%
 
   @media (min-width 0px) and (max-width 499px)
     .article_body
