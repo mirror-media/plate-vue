@@ -48,7 +48,7 @@
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
       </LazyItemWrapper>      
-      <DfpCover v-if="mounted && showDfpCoverAdFlag && viewportWidth < 1199 && (isTimeToShowAdCover || dfpMode === 'prod')">
+      <DfpCover v-if="mounted && showDfpCoverAdFlag && viewportWidth < 1199">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
       <DfpCover v-if="mounted && showDfpCoverAd2Flag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
@@ -79,7 +79,7 @@ import titleMetaMixin from '../util/mixinTitleMeta'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, FB_APP_ID, FB_PAGE_ID, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
 import { adtracker } from 'src/util/adtracking'
-import { consoleLogOnDev, currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
+import { currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
 import { get, truncate, } from 'lodash'
 import { getRole } from '../util/mmABRoleAssign'
 
@@ -263,7 +263,7 @@ export default {
         <meta property="og:description" content="${description}">
         <meta property="og:url" content="${ogUrl}">
         <meta property="og:image" content="${image}">
-      ` // <meta name="mm-opt" content="">
+      `
     }
   },
   data () {
@@ -324,9 +324,9 @@ export default {
               break
             case 'LMBCVR2':
               sendAdCoverGA('ad2')
-              consoleLogOnDev({ msg: 'ad2 loaded' })
+              debug({ msg: 'ad2 loaded' })
               if (adDisplayStatus === 'none') {
-                consoleLogOnDev({ msg: 'dfp response no ad2' })
+                debug({ msg: 'dfp response no ad2' })
               }
               break
             case 'LMBCVR3':
@@ -375,9 +375,6 @@ export default {
     },
     isSingleVideoPage () {
       return this.$route.fullPath.match(/\/video\//)
-    },
-    isTimeToShowAdCover () {
-      return get(this.$store, 'state.isTimeToShowAdCover', false)
     },
     playlist () {
       const playlist = Object.values(this.$store.state.playlist.info) || []
