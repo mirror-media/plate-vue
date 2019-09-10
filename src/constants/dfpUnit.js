@@ -207,7 +207,6 @@ export default {
     'MBAR3': { 'aduid': 'mirror_m_fin_300x250_AT3', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ 'margin-left: auto', 'margin-right: auto', 'line-height: default' ] },
     'MBE1': { 'aduid': 'mirror_m_fin_300x250_E1', 'dimensions': '1x1,300x250,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
     'MBFT': { 'aduid': 'mirror_m_fin_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ] },
-    'MBFTOOP': { 'aduid': 'mirror_m_fin_300x250_FT', 'dimensions': '1x1,300x250,320x100,336x280', 'cont-class': [ 'ad-container' ], 'cont-style': [ '' ], 'outOfPage': true },
     'MBCVR': { 'aduid': 'mirror_m_ros_320x480_FS', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'MBCVR2': { 'aduid': 'mirror_m_ros_320x480_AD2', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
     'MBCVR3': { 'aduid': 'mirror_m_ros_320x480_innity', 'dimensions': '1x1,320x480', 'cont-class': [ 'ad-container', 'margin-top-0' ], 'cont-style': [ '' ] },
