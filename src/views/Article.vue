@@ -11,23 +11,25 @@
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
       <div class="article-container" v-if="!isArticlePhotography" >
-        <LazyItemWrapper :loadAfterPageLoaded="true">
-          <vue-dfp
-            :is="props.vueDfp"
-            v-if="isMobile && !hiddenAdvertised"
-            pos="MBHD"
-            extClass="full"
-            :config="props.config"
-            :size="get($store, 'getters.adSize')"
-          />
-          <vue-dfp
-            :is="props.vueDfp"
-            v-if="!isMobile && !hiddenAdvertised"
-            pos="PCHD"
-            extClass="full"
-            :config="props.config"
-          />
-        </LazyItemWrapper>
+        <ClientOnly>
+          <LazyItemWrapper :loadAfterPageLoaded="true">
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="isMobile && !hiddenAdvertised"
+              pos="MBHD"
+              extClass="full"
+              :config="props.config"
+              :size="get($store, 'getters.adSize')"
+            />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="!isMobile && !hiddenAdvertised"
+              pos="PCHD"
+              extClass="full"
+              :config="props.config"
+            />
+          </LazyItemWrapper>
+        </ClientOnly>
         <div class="article" v-if="articleData">
           <ArticleBody
             :articleData="articleData"
@@ -132,7 +134,6 @@
               :position="verge.viewportH()"
               :strict="true"
             >
-              <!-- <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441604bbe120f002a3197'" pos="PCAROOP" extClass="mobile-hide" :config="props.config" /> -->
               <span id="innity-custom-adnetwork-span-63518"></span>
               <span id="innity-custom-premium-span-12738"></span>     
               <vue-dfp
@@ -231,7 +232,6 @@
                 :config="props.config"
                 pos="PCFT"
               />
-              <!-- <vue-dfp :is="props.vueDfp" v-if="!hiddenAdvertised && dfpMode === 'dev' && sectionId === '596441d04bbe120f002a319a'" pos="MBFTOOP" :extClass="`full mobile-only ${styleDfpAd}`" :config="props.config" /> -->
             </LazyItemWrapper>
             <div style="width: 100%; height: 100%;">
               <Footer />
@@ -243,74 +243,78 @@
       <div v-else-if="(articleStyle === 'photography')">
         <ArticleBodyPhotography :articleData="articleData" :viewport="viewportWidth" :initFBComment="initializeFBComments">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
-          <div v-if="!hiddenAdvertised" slot="slot_dfpFT">
-            <vue-dfp
-              :is="props.vueDfp"
-              v-if="isMobile"
-              pos="MBFT"
-              :config="props.config"
-              :size="get($store, 'getters.adSize')"
-              extClass="full"
-            />
-            <vue-dfp
-              :is="props.vueDfp"
-              v-else
-              :config="props.config"
-              pos="PCFT"
-            />
-          </div>
+          <ClientOnly>
+            <div v-if="!hiddenAdvertised" slot="slot_dfpFT">
+              <vue-dfp
+                :is="props.vueDfp"
+                v-if="isMobile"
+                pos="MBFT"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                extClass="full"
+              />
+              <vue-dfp
+                :is="props.vueDfp"
+                v-else
+                :config="props.config"
+                pos="PCFT"
+              />
+            </div>
+          </ClientOnly>
         </ArticleBodyPhotography>
       </div>
       <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
       <WineWarning v-if="needWineWarning" />
       <!-- DFP MB ST, Cover -->
-      <template v-if="isMobile">
-        <LazyItemWrapper :loadAfterPageLoaded="true" v-if="!needWineWarning">
-          <DfpST :props="props">
+      <ClientOnly>
+        <template v-if="isMobile">
+          <LazyItemWrapper :loadAfterPageLoaded="true" v-if="!needWineWarning">
+            <DfpST :props="props">
+              <vue-dfp
+                :is="props.vueDfp"
+                slot="dfpST"
+                :config="props.config"
+                pos="MBST"
+              />
+            </DfpST>
+          </LazyItemWrapper>
+          <DfpCover
+            v-if="!hiddenAdvertised"
+            v-show="showDfpCoverAdFlag"
+          > 
             <vue-dfp
               :is="props.vueDfp"
-              slot="dfpST"
+              pos="MBCVR"
               :config="props.config"
-              pos="MBST"
+              slot="ad-cover"
+            /> 
+          </DfpCover> 
+          <DfpCover
+            v-if="!hiddenAdvertised && showDfpCoverAd2Flag"
+            :showCloseBtn="false"
+            class="raw"
+          > 
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="ad-cover"
+              :config="props.config"
+              pos="MBCVR2"
+            /> 
+          </DfpCover>
+          <DfpCover
+            v-if="!hiddenAdvertised && showDfpCoverInnityFlag"
+            :showCloseBtn="false"
+            class="raw"
+          >
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="ad-cover"
+              pos="MBCVR3"
+              :config="props.config"
             />
-          </DfpST>
-        </LazyItemWrapper>
-        <DfpCover
-          v-if="!hiddenAdvertised"
-          v-show="showDfpCoverAdFlag"
-        > 
-          <vue-dfp
-            :is="props.vueDfp"
-            pos="MBCVR"
-            :config="props.config"
-            slot="ad-cover"
-          /> 
-        </DfpCover> 
-        <DfpCover
-          v-if="!hiddenAdvertised && showDfpCoverAd2Flag"
-          :showCloseBtn="false"
-          class="raw"
-        > 
-          <vue-dfp
-            :is="props.vueDfp"
-            slot="ad-cover"
-            :config="props.config"
-            pos="MBCVR2"
-          /> 
-        </DfpCover>
-        <DfpCover
-          v-if="!hiddenAdvertised && showDfpCoverInnityFlag"
-          :showCloseBtn="false"
-          class="raw"
-        >
-          <vue-dfp
-            :is="props.vueDfp"
-            slot="ad-cover"
-            pos="MBCVR3"
-            :config="props.config"
-          />
-        </DfpCover>  
-      </template>
+          </DfpCover>  
+        </template>
+      </ClientOnly>
       <!-- DFP FF -->
       <DfpFixed
         v-if="!hiddenAdvertised && hasDfpFixed"
@@ -343,6 +347,7 @@
   import ArticleBodyPhotography from '../components/article/ArticleBodyPhotography.vue'
   import AdultContentAlert from '../components/AdultContentAlert.vue'
   import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
+  import ClientOnly from 'vue-client-only'
   import Cookie from 'vue-cookie'
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
@@ -566,6 +571,7 @@
       ArticleAsideFixed,
       ArticleBody,
       ArticleBodyPhotography,
+      ClientOnly,
       DfpCover,
       DfpFixed,
       DfpST,
