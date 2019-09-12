@@ -69,7 +69,7 @@
             <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
           </div>
 
-          <PresidentElectionProgress />
+          <PresidentElectionProgress v-if="isPresidentElectionId" />
           <PresidentElectionList v-if="isPresidentElectionId" :candidateData="candidateData" @loadMore="loadMorePresident" />
 
           <article-list ref="articleList" id="articleList" v-if="!isPresidentElectionId" :articles='autoScrollArticles' :hasDFP='false'></article-list>
