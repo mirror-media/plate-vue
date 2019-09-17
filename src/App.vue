@@ -39,10 +39,12 @@
         resetAdCoverFlag(this.$store)
       }
     },
-    beforeMount () {
-      updateViewport(this.$store)
-    },
+    // beforeMount () {
+    //   updateViewport(this.$store)
+    // },
     mounted () {
+      updateViewport(this.$store)
+      
       this.doc = document
       this.launchLogger()
       this.setUpVisibleTracking()
