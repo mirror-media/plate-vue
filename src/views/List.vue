@@ -34,7 +34,7 @@
 
       <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-        <ListSlider class="gs" />
+        <ListSlider v-if="imagesForGS.length > 0" :images="imagesForGS" class="gs" />
         <ArticleList ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode" />
         <ClientOnly>
           <LazyItemWrapper :position="verge.viewportH()" :strict="true">
@@ -850,6 +850,9 @@ export default {
           }
           return get(this.articles, 'length', 0) < get(this.$store, `state.articlesByUUID.${this.type}.${this.uuid}.meta.total`, 0)
       }
+    },
+    imagesForGS () {
+      return get(this.$store, `state.images.${GS_TAG_ID}.items`) || []
     },
     isMobile () {
       return this.viewportWidth < 1200
