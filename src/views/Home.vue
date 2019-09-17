@@ -388,7 +388,6 @@ export default {
         'slug'
       )
       const notFirstPageNow = (get(this.$store, 'state.latestArticles.meta.page') || 1) !== 1
-      console.log('notFirstPageNow', notFirstPageNow)
       remove(latest, o => includes(choicesAndGrouped_slugs, o.slug))
       return notFirstPageNow ? latest : latestFirstPage
     },
