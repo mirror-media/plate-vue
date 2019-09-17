@@ -1,17 +1,17 @@
 <template>
   <section class="gs-list">
-    <div v-if="images.length > 0" class="gs-list__slider slider" @touchstart="handleTouchstart" @touchend="handleTouchend">
-      <div class="slider-container" :style="{ width: `${images.length * 100}%`, transform: `translateX(-${100 / images.length * current}%)` }">
-        <a v-for="item in images"
+    <div class="gs-list__slider slider">
+      <div class="slider-container" :style="{ width: `${imagesSorted.length * 100}%`, transform: `translateX(-${100 / imagesSorted.length * current}%)` }">
+        <a v-for="item in imagesSorted"
           :key="item.id"
-          :style="{ width: `${100 / images.length}%`, backgroundImage: `url(${item.image.resizedTargets.desktop.url})` }"
+          :style="{ width: `${100 / imagesSorted.length}%`, backgroundImage: `url(${item.image.resizedTargets.desktop.url})` }"
           class="slider__item"
           :href="getHref(item)"
           target="_blank">
         </a>
       </div>
       <div class="slider__nav">
-        <div class="nav-container" :style="{ width: `${ images.length * 15 + (images.length - 1) * 10 }px` }">
+        <div class="nav-container" :style="{ width: `${ imagesSorted.length * 15 + (imagesSorted.length - 1) * 10 }px` }">
           <div v-for="(item, index) in images"
             :key="`btn-${item.id}`"
             :class="{ active: current === index}"
@@ -24,12 +24,16 @@
   </section>
 </template>
 <script>
-import { get, throttle } from 'lodash'
-
-const GS_TAG_ID = '5bbf08301e598f1000fc8e52' // dev 5bbc2069f39162100007c8bc
+import { throttle } from 'lodash'
 
 export default {
   name: 'ListSlider',
+  props: {
+    images: {
+      type: Array,
+      default: () => []
+    }
+  },
   data () {
     return {
       current: 0,
@@ -39,11 +43,9 @@ export default {
     }
   },
   computed: {
-    images () {
-      const items = get(this.$store, [ 'state', 'images', GS_TAG_ID, 'items' ], []) || []
-      return items.sort((a, b) => {
-        return Number(a.keywords.split('_')[0]) - Number(b.keywords.split('_')[0])
-      })
+    imagesSorted () {
+      return this.images
+        .sort((a, b) => Number(a.keywords.split('_')[0]) - Number(b.keywords.split('_')[0]))
     }
   },
   mounted () {
