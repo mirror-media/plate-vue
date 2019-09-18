@@ -33,7 +33,7 @@
     </div>
     <div class="editorChoice--mobile">
       <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
-      <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
+      <div v-for="item in editorChoice" :href="getHref(item)" class="editorChoice__block" :key="item.slug">
         <template>
           <a
             v-if="item.style !== 'projects'"
@@ -416,8 +416,8 @@ export default {
     .editorChoice__block--title
       position absolute
       bottom 0
-      left 5%
-      width 90%
+      padding-top 0
+      padding-bottom 0
       > div
         display inline-flex
         justify-content center
@@ -428,9 +428,10 @@ export default {
         font-size 1rem
         white-space nowrap
       h2
-        margin-top 5px
         color #fff
         text-shadow 1.4px 1.4px 1.9px rgba(0, 0, 0, 0.2)
+        background-color rgba(0, 0, 0, 0.7)
+        padding 10px
 
 @media (min-width: 600px)
   .editorChoice
