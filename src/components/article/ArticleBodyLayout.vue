@@ -530,8 +530,11 @@
           > div
             width 100%
 
-          .slideshowImg 
-            img 
+          .slideshowImg
+            & div
+              padding-left 52px
+              padding-right 52px
+            & img 
               width 100%
               object-fit contain
               object-position center center
@@ -543,7 +546,8 @@
               padding 8px 0
               color rgba(0,0,0,0.498)
               font-size 1rem
-              text-align left
+              // text-align left
+              text-align center
               line-height 1.4rem
 
       .swiper-pagination
@@ -761,32 +765,6 @@
           width 645px
           margin-left auto !important
           margin-right auto !important
-      
-  @media (min-width 900px) and (max-width 1199px)
-    .article_body
-      // .article_basic-info
-      //   width 695px
-      //   max-width 695px
-      //   margin 0 auto
-
-      .article_credit, .article_main
-        // width 695px
-        // max-width 695px
-        margin 0 auto
-      .article_title
-        // width 695px
-        // max-width 695px
-        margin 15px auto
-
-      .article_subtitle
-        // width 695px
-        // max-width 695px
-        margin 0 auto 15px
-      .article_main
-        > *
-          width 695px
-          margin-left auto !important
-          margin-right auto !important
 
   @media (max-width 1199px)
     .article_body
@@ -806,12 +784,49 @@
       .per-slide 
         .swiper-wrapper 
           .swiper-slide 
-            .slideshowImg 
-              .img-caption
+            .slideshowImg
+              & div
+                padding-left 60px
+                padding-right 60px
+              & .img-caption
                 width 70%
                 padding 8px
-                text-align center
-                
+                // text-align center
+  @media (min-width 900px) and (max-width 1199px)
+    .article_body
+      // .article_basic-info
+      //   width 695px
+      //   max-width 695px
+      //   margin 0 auto
+      .article_credit, .article_main
+        // width 695px
+        // max-width 695px
+        margin 0 auto
+      .article_title
+        // width 695px
+        // max-width 695px
+        margin 15px auto
+
+      .article_subtitle
+        // width 695px
+        // max-width 695px
+        margin 0 auto 15px
+      .article_main
+        > *
+          width 695px
+          margin-left auto !important
+          margin-right auto !important
+
+  @media (min-width 900px)
+    .article_body
+      .per-slide 
+        .swiper-wrapper 
+          .swiper-slide 
+            .slideshowImg
+              & div
+                padding-left 76px
+                padding-right 76px
+
   @media (min-width 1200px)
     .article_body
       .article_main

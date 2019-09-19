@@ -71,11 +71,13 @@
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div>
                   <div class="slideshowImg">
-                    <img :alt="getValue(o, [ 'description' ], '')"
-                          :src="getValue(o, [ 'url' ], '')"
-                          :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
-                                      ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
-                                      ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
+                    <div>
+                      <img :alt="getValue(o, [ 'description' ], '')"
+                            :src="getValue(o, [ 'url' ], '')"
+                            :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
+                                        ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
+                                        ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
+                    </div>
                     <div class="img-caption" v-text="getValue(o, [ 'description' ], '')"></div>
                   </div>
                 </div>
@@ -351,10 +353,12 @@ export default {
                   </blockquote>`
         case 'slideshow':
           return `<div class=\"slideshowImg\">
-                    <img alt="${_.get(item.content, [ 0, 'description' ], '')}" src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
-                         srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
-                                       ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
-                                       ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\" />
+                    <div>
+                      <img alt="${_.get(item.content, [ 0, 'description' ], '')}" src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
+                          srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
+                                        ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
+                                        ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\" />
+                    </div>
                     <div class=\"img-caption\">${_.get(item.content, [ 0, 'description' ], '')}</div>
                   </div>`
         case 'unordered-list-item':

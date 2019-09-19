@@ -31,11 +31,13 @@
               <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
                 <div>
                   <div class="slideshowImg">
-                    <img :alt="getValue(o, [ 'description' ], '')" 
-                          :src="getValue(o, [ 'url' ], '')"
-                          :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
-                                      ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
-                                      ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
+                    <div>
+                      <img :alt="getValue(o, [ 'description' ], '')" 
+                            :src="getValue(o, [ 'url' ], '')"
+                            :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
+                                        ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
+                                        ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
+                    </div>
                     <div class="img-caption" v-text="getValue(o, [ 'description' ], '')"></div>
                   </div>
                 </div>
@@ -268,10 +270,12 @@ export default {
                   </blockquote>`
         case 'slideshow':
           return `<div class=\"slideshowImg\">
-                    <img alt="${_.get(item.content, [ 0, 'description' ], '')}" src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
-                         srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
-                                       ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
-                                       ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\" />
+                    <div>
+                      <img alt="${_.get(item.content, [ 0, 'description' ], '')}" src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
+                          srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
+                                        ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
+                                        ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\" />
+                    </div>
                     <div class=\"img-caption\">${_.get(item.content, [ 0, 'description' ], '')}</div>
                   </div>`
         case 'unordered-list-item':
@@ -944,7 +948,10 @@ export default {
           > div
             width 100%
 
-          .slideshowImg 
+          .slideshowImg
+            & div
+              padding-left 52px
+              padding-right 52px
             img 
               width 100%
               object-fit contain
@@ -1133,7 +1140,28 @@ export default {
         width 645px
         max-width 645px
         margin 0 auto 15px
-      
+
+  @media (max-width 1199px)
+    .article_body
+      .article_main, .article_credit, .article_subtitle
+        display block
+    .herbsapi
+      br
+        display inline
+
+  @media (min-width 768px)
+    .article_body
+      .per-slide 
+        .swiper-wrapper 
+          .swiper-slide 
+            .slideshowImg
+              & div
+                padding-left 60px
+                padding-right 60px
+              & .img-caption
+                width 70%
+                padding 8px
+                // text-align center
   @media (min-width 900px) and (max-width 1199px)
     .article_body
       .article_basic-info
@@ -1154,25 +1182,13 @@ export default {
         width 695px
         max-width 695px
         margin 0 auto 15px
-
-  @media (max-width 1199px)
-    .article_body
-      .article_main, .article_credit, .article_subtitle
-        display block
-    .herbsapi
-      br
-        display inline
-
-  @media (min-width 768px)
+  @media (min-width 900px)
     .article_body
       .per-slide 
         .swiper-wrapper 
           .swiper-slide 
-            .slideshowImg 
-              .img-caption
-                width 70%
-                padding 8px
-                text-align center
-    
-
+            .slideshowImg
+              & div
+                padding-left 76px
+                padding-right 76px
 </style>
