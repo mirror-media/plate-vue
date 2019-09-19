@@ -964,7 +964,7 @@ export default {
               padding 8px 0
               color rgba(0,0,0,0.498)
               font-size 1rem
-              text-align left
+              text-align center
               line-height 1.4rem
 
       .swiper-pagination
