@@ -131,7 +131,7 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, take, union, unionBy, uniqBy } from 'lodash'
+import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, union, unionBy, uniqBy } from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import EditorChoice from 'src/components/EditorChoice.vue'
@@ -247,7 +247,7 @@ export default {
     return {
       DFP_ID,
       DFP_UNITS,
-      abIndicator: '',
+      // abIndicator: '',
       dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       hasScrollLoadMore: get(this.$store, 'state.latestArticles.meta.page', PAGE) > 1,
@@ -337,8 +337,7 @@ export default {
       })
     },
     editorChoice () {
-      const articles = get(this.articlesGroupedList, 'choices')
-      return this.abIndicator === 'A' ? take(articles, 5) : articles
+      return get(this.articlesGroupedList, 'choices')
     },
     eventEmbedded () {
       return get(this.$store, 'state.eventEmbedded.items.0')

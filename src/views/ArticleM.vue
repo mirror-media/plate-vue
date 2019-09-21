@@ -16,13 +16,17 @@
           <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
         </div>
         <div class="article" v-if="articleData">
-          <article-body :articleData="articleData" :poplistData="popularlist" :viewport="viewport">
+
+          <article-body :articleData="articleData" :viewport="viewport">
             <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
-              <latest-list :latest="latestList" :currArticleSlug="currArticleSlug" :isAppPage="true" v-if="ifRenderAside" />
+              <latest-list :latests="latests" :isAppPage="true" v-if="ifRenderAside" />
             </aside>
             <vue-dfp :is="props.vueDfp" pos="APPE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
             <vue-dfp :is="props.vueDfp" pos="APPAT1" extClass="mobile-only" slot="dfpad-AR1-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
             <vue-dfp :is="props.vueDfp" pos="APPAT2" extClass="mobile-only" slot="dfpad-AR2-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+
+            <PopList :pop="popularlist" slot="poplist" :currEnv="dfpMode" />
+
             <RelatedListInContent slot="relatedListInContent" :isAppPage="true" :relateds="relateds" />
             <RecommendList
               v-if="recommendlist.length > 0 && !isAd"
@@ -74,7 +78,13 @@
   </vue-dfp-provider>
 </template>
 <script>
-  import _ from 'lodash'
+  import {
+    get as _get,
+    map as _map,
+    find as _find,
+    includes as _includes,
+    flatten as _flatten
+  } from 'lodash'
   import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
@@ -91,6 +101,7 @@
   import DfpST from '../components/DfpST.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
+  import PopList from '../components/article/PopList.vue'
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
   import RecommendList from '../components/article/RecommendList.vue'
   import WineWarning from '../components/WineWarning.vue'
@@ -148,7 +159,7 @@
 
   const fetchData = (store) => {
     return Promise.all([ fetchSSRData(store), fetchArticles(store, store.state.route.params.slug).then(() => {
-      const id = _.get(_.find(_.get(store, [ 'state', 'articles', 'items' ]), { 'slug': store.state.route.params.slug }), [ 'id' ], '')
+      const id = _get(_find(_get(store, [ 'state', 'articles', 'items' ]), { 'slug': store.state.route.params.slug }), [ 'id' ], '')
       return fetchRecommendList(store, id)
     }) ])
   }
@@ -185,19 +196,19 @@
         title = '',
         topics = {}
       } = this.articleData
-      const categorieName = _.get(categories, [ 0, 'name' ], '')
-      const imageUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const ogImageUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-      const pureBrief = truncate(sanitizeHtml(_.map(_.get(brief, [ 'apiData' ], []), (o) => (_.map(_.get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
-      const pureTags = _.map(tags, (t) => (_.get(t, [ 'name' ], '')))
-      const sectionName = _.get(sections, [ 0, 'name' ], '')
-      const topicId = _.get(topics, [ '_id' ], '')
+      const categorieName = _get(categories, [ 0, 'name' ], '')
+      const imageUrl = _get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
+      const ogImageUrl = _get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
+      const pureBrief = truncate(sanitizeHtml(_map(_get(brief, [ 'apiData' ], []), (o) => (_map(_get(o, [ 'content' ], []), (str) => (str)))).join(''), { allowedTags: [] }), 197)
+      const pureTags = _map(tags, (t) => (_get(t, [ 'name' ], '')))
+      const sectionName = _get(sections, [ 0, 'name' ], '')
+      const topicId = _get(topics, [ '_id' ], '')
 
       return {
         url: `${SITE_MOBILE_URL}/story/${slug}/`,
         title: truncate(title, 21) + ` - ${SITE_TITLE_SHORT}`,
         meta: `
-          <meta name="keywords" content="${_.get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
+          <meta name="keywords" content="${_get(categories, [ 0, 'title' ]) + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
           <meta name="section-name" content="${sectionName}">
           <meta name="category-name" content="${categorieName}">
@@ -222,19 +233,19 @@
     beforeRouteEnter (to, from, next) {
       if (process.env.VUE_ENV === 'client' && to.path !== from.path && from.matched && from.matched.length > 0) {
         next(vm => {
-          const _targetArticle = _.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
+          const _targetArticle = _find(_get(vm.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug })
           if (!_targetArticle) {
             Promise.all([
               fetchArticles(vm.$store, to.params.slug).then(() => {
-                const { sections } = _.get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
+                const { sections } = _get(vm.$store, [ 'state', 'articles', 'items', 0 ], {})
                 return fetchLatestArticle(vm.$store, {
                   sort: '-publishedDate',
                   where: {
-                    'sections': _.get(sections, [ 0, 'id' ])
+                    'sections': _get(sections, [ 0, 'id' ])
                   }
                 })
               }).then(() => {
-                const id = _.get(_.find(_.get(vm.$store, [ 'state', 'articles', 'items' ]), { 'slug': vm.$store.state.route.params.slug }), [ 'id' ], '')
+                const id = _get(_find(_get(vm.$store, [ 'state', 'articles', 'items' ]), { 'slug': vm.$store.state.route.params.slug }), [ 'id' ], '')
                 return fetchRecommendList(vm.$store, id)
               }),
               fetchPop(vm.$store)
@@ -247,18 +258,18 @@
     },
     beforeRouteUpdate (to, from, next) {
       fetchArticles(this.$store, to.params.slug).then(() => {
-        const sections = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
+        const sections = _get(_find(_get(this.$store, [ 'state', 'articles', 'items' ]), { slug: to.params.slug }), [ 'sections' ])
         return fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: {
-            'sections': _.get(sections, [ 0, 'id' ])
+            'sections': _get(sections, [ 0, 'id' ])
           }
         }).then(() => {
           next()
         })
       }).then(() => {
-        const id = _.get(_.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
-        this.routeUpateReferrerSlug = _.get(from, [ 'params', 'slug' ], 'N/A')
+        const id = _get(_find(_get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.$store.state.route.params.slug }), [ 'id' ], '')
+        this.routeUpateReferrerSlug = _get(from, [ 'params', 'slug' ], 'N/A')
         return fetchRecommendList(this.$store, id)
       })
     },
@@ -272,11 +283,11 @@
       next()
     },
     beforeMount () {
-      const { sections } = _.get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
+      const { sections } = _get(this.$store, [ 'state', 'articles', 'items', 0 ], {})
       fetchLatestArticle(this.$store, {
         sort: '-publishedDate',
         where: {
-          'sections': _.get(sections, [ 0, 'id' ])
+          'sections': _get(sections, [ 0, 'id' ])
         }
       })
       fetchPop(this.$store)
@@ -295,6 +306,7 @@
       DfpCover,
       DfpST,
       LazyItemWrapper,
+      PopList,
       RelatedListInContent,
       RecommendList
     },
@@ -319,17 +331,17 @@
     },
     computed: {
       currArticleId () {
-        return _.get(_.find(_.get(this.$store, 'state.articles.items'), { 'slug': this.$store.state.route.params.slug }), 'id', '')
+        return _get(_find(_get(this.$store, 'state.articles.items'), { 'slug': this.$store.state.route.params.slug }), 'id', '')
       },
       articleUrl () {
         return `${SITE_URL}/story/${this.currArticleSlug}/`
       },
       articleData () {
-        const _data = _.find(_.get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.currArticleSlug })
+        const _data = _find(_get(this.$store, [ 'state', 'articles', 'items' ]), { 'slug': this.currArticleSlug })
         return _data || {}
       },
       articleStyle () {
-        return _.get(this.articleData, [ 'style' ], '')
+        return _get(this.articleData, [ 'style' ], '')
       },
       currArticleSlug () {
         return this.$store.state.route.params.slug
@@ -402,13 +414,13 @@
         })
       },
       eventEmbedded () {
-        return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
+        return _get(this.$store.state.eventEmbedded, [ 'items', '0' ])
       },
       eventLogo () {
-        return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+        return _get(this.$store.state.eventLogo, [ 'items', '0' ])
       },
       fbAppId () {
-        return _.get(this.$store, [ 'state', 'fbAppId' ])
+        return _get(this.$store, [ 'state', 'fbAppId' ])
       },
       fbCommentDiv () {
         return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
@@ -418,31 +430,31 @@
       },
       hasEventEmbedded () {
         const _now = moment()
-        const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
-        let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
+        const _eventStartTime = moment(new Date(_get(this.eventEmbedded, [ 'startDate' ])))
+        let _eventEndTime = moment(new Date(_get(this.eventEmbedded, [ 'endDate' ])))
         if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-          _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+          _eventEndTime = moment(new Date(_get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
         }
         return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
       },
       heroCaption () {
-        return _.get(this.articleData, [ 'heroCaption' ], '')
+        return _get(this.articleData, [ 'heroCaption' ], '')
       },
       heroImage () {
-        return _.get(this.articleData, [ 'heroImage' ])
+        return _get(this.articleData, [ 'heroImage' ])
       },
       heroVideo () {
         const { heroImage, heroVideo, ogImage } = this.articleData
-        const heroImgUrl = _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
-        const ogImgUrl = _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
+        const heroImgUrl = _get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
+        const ogImgUrl = _get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], undefined)
         const poster = ogImgUrl || (heroImgUrl || '/assets/mirrormedia/notImage.png')
-        return (heroVideo && heroVideo.video) ? Object.assign(_.get(heroVideo, [ 'video' ], {}), { id: _.get(heroVideo, [ 'id' ], '') }, { poster }) : heroVideo
+        return (heroVideo && heroVideo.video) ? Object.assign(_get(heroVideo, [ 'video' ], {}), { id: _get(heroVideo, [ 'id' ], '') }, { poster }) : heroVideo
       },
       hiddenAdvertised () {
-        return _.get(this.articleData, 'hiddenAdvertised', false)
+        return _get(this.articleData, 'hiddenAdvertised', false)
       },
       ifLockJS () {
-        return _.get(this.articleData, [ 'lockJS' ])
+        return _get(this.articleData, [ 'lockJS' ])
       },
       ifRenderAside () {
         return this.viewport >= 1200
@@ -456,75 +468,72 @@
         return this.viewport >= 1200
       },
       ifShowPoplist () {
-        return _.get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
+        return _get(SECTION_MAP, [ this.sectionId, 'ifShowPoplist' ], true)
       },
       ifSingleCol () {
         return (this.articleStyle === 'wide' || !this.ifRenderAside)
       },
       isAdultContent () {
-        return _.get(this.articleData, [ 'isAdult' ], false)
+        return _get(this.articleData, [ 'isAdult' ], false)
       },
       isAd () {
-        return _.get(this.articleData, [ 'isAdvertised' ], false)
+        return _get(this.articleData, [ 'isAdvertised' ], false)
       },
       isCategoryBusinessMoney () {
-        const categories = _.flatten(_.map(_.get(this.articleData, [ 'categories' ]), (o) => _.get(o, [ 'name' ])))
-        return _.includes(categories, 'business') || _.includes(categories, 'money')
+        const categories = _flatten(_map(_get(this.articleData, [ 'categories' ]), (o) => _get(o, [ 'name' ])))
+        return _includes(categories, 'business') || _includes(categories, 'money')
       },
       isTimeToShowAdCover () {
-        return _.get(this.$store, 'state.isTimeToShowAdCover', false)
+        return _get(this.$store, 'state.isTimeToShowAdCover', false)
       },      
       jsonLDBreadcrumbList () {
         return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",
           "itemListElement": [
             { "@type": "ListItem", "position": 1, "item": { "@id": "${SITE_URL}", "name": "${SITE_TITLE}" } },
-            { "@type": "ListItem", "position": 2, "item": { "@id": "${SITE_URL + '/section/' + _.get(this.articleData, [ 'sections', '0', 'name' ])}", "name": "${_.get(this.articleData, [ 'sections', '0', 'title' ])}" } },
-            { "@type": "ListItem", "position": 3, "item": { "@id": "${SITE_URL + _.get(this.$route, [ 'path' ])}", "name": "${_.get(this.articleData, [ 'title' ])}" } }
+            { "@type": "ListItem", "position": 2, "item": { "@id": "${SITE_URL + '/section/' + _get(this.articleData, [ 'sections', '0', 'name' ])}", "name": "${_get(this.articleData, [ 'sections', '0', 'title' ])}" } },
+            { "@type": "ListItem", "position": 3, "item": { "@id": "${SITE_URL + _get(this.$route, [ 'path' ])}", "name": "${_get(this.articleData, [ 'title' ])}" } }
           ]
         }`
       },
       jsonLDNewsArticle () {
-        return `{ "@context": "http://schema.org", "@type": "NewsArticle", "headline": "${_.get(this.articleData, [ 'title' ])}",
-          "url": "${SITE_URL + _.get(this.$route, [ 'path' ])}", "thumbnailUrl": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}",
-          "articleSection": "${_.get(this.articleData, [ 'sections', '0', 'title' ])}",
-          "keywords": [ ${_.map(_.get(this.articleData, [ 'tags' ]), (t) => { return `"${_.get(t, [ 'name' ])}"` })} ],
-          "mainEntityOfPage": { "@type": "WebPage", "@id": "${SITE_URL + _.get(this.$route, [ 'path' ])}" },
-          "image": { "@type": "ImageObject", "url": "${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}", "height": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'height' ])}, "width": ${_.get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'width' ])} },
-          "datePublished": "${_.get(this.articleData, [ 'publishedDate' ])}", "dateModified": "${_.get(this.articleData, [ 'updatedAt' ])}", "author": { "@type": "Person", "name": "${_.get(this.articleData, [ 'writers', '0', 'name' ])}" },
+        return `{ "@context": "http://schema.org", "@type": "NewsArticle", "headline": "${_get(this.articleData, [ 'title' ])}",
+          "url": "${SITE_URL + _get(this.$route, [ 'path' ])}", "thumbnailUrl": "${_get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}",
+          "articleSection": "${_get(this.articleData, [ 'sections', '0', 'title' ])}",
+          "keywords": [ ${_map(_get(this.articleData, [ 'tags' ]), (t) => { return `"${_get(t, [ 'name' ])}"` })} ],
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "${SITE_URL + _get(this.$route, [ 'path' ])}" },
+          "image": { "@type": "ImageObject", "url": "${_get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])}", "height": ${_get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'height' ])}, "width": ${_get(this.heroImage, [ 'image', 'resizedTargets', 'desktop', 'width' ])} },
+          "datePublished": "${_get(this.articleData, [ 'publishedDate' ])}", "dateModified": "${_get(this.articleData, [ 'updatedAt' ])}", "author": { "@type": "Person", "name": "${_get(this.articleData, [ 'writers', '0', 'name' ])}" },
           "publisher": { "@type": "Organization", "name": "${SITE_TITLE}", "logo": { "@type": "ImageObject", "url": "https://www.mirrormedia.mg/assets/images/logo.png" } },
-          "description": "${_.get(this.articleData, [ 'brief', 'apiData', '0', 'content', '0' ])}"
+          "description": "${_get(this.articleData, [ 'brief', 'apiData', '0', 'content', '0' ])}"
         }`
       },
       jsonLDPerson () {
-        return `{ "@context": "http://schema.org", "@type": "Person", "name": "${_.get(this.articleData, [ 'writers', '0', 'name' ])}",
-          "url": "${SITE_URL + '/author/' + _.get(this.articleData, [ 'writers', '0', 'id' ])}",
+        return `{ "@context": "http://schema.org", "@type": "Person", "name": "${_get(this.articleData, [ 'writers', '0', 'name' ])}",
+          "url": "${SITE_URL + '/author/' + _get(this.articleData, [ 'writers', '0', 'id' ])}",
           "brand": { "@type": "Brand", "name": "${SITE_TITLE}", "url": "${SITE_URL}", "image": "https://www.mirrormedia.mg/assets/mirrormedia/logo.svg", "logo": "https://www.mirrormedia.mg/assets/mirrormedia/logo.svg", "description": "${SITE_DESCRIPTION}" }
         }`
       },
-      latestList () {
-        return _.get(this.$store.state.latestArticle, [ 'items' ], [])
+      latests () {
+        return _get(this.$store, 'state.latestArticle.items', [])
+                .filter((latest) => _get(latest, 'slug', '') !== this.currArticleSlug)
       },
       needWineWarning () {
         const cats = this.articleData.categories
         return cats.some((cat) => cat.name === 'wine')
       },
       popularlist () {
-        const { report = [] } = _.get(this.$store, [ 'state', 'articlesPopList' ])
+        const { report = [] } = _get(this.$store, [ 'state', 'articlesPopList' ])
         return report
       },
-      projectlist () {
-        const items = _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
-        return items
-      },
       recommendlist () {
-        return _.get(this.$store, [ 'state', 'articlesRecommendList', 'relatedNews' ], [])
+        return _get(this.$store, [ 'state', 'articlesRecommendList', 'relatedNews' ], [])
       },
       relateds () {
-        const items = _.get(this.articleData, [ 'relateds' ], []) || []
+        const items = _get(this.articleData, [ 'relateds' ], []) || []
         return items.filter(item => item)
       },
       sectionId () {
-        const _sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ])
+        const _sectionId = _get(this.articleData, [ 'sections', 0, 'id' ])
         return this.dfpUnits[ _sectionId ] ? _sectionId : 'other'
       },
       styleDfpAd () {
@@ -551,7 +560,7 @@
         return role
       },
       getValue (o = {}, p = [], d = '') {
-        return _.get(o, p, d)
+        return _get(o, p, d)
       },
       initializeFBComments () {
         if (window.FB) {
@@ -599,16 +608,16 @@
         return true
       },
       sendGA (articleData) {
-        if (_.get(articleData, [ 'sections', 'length' ]) === 0) {
+        if (_get(articleData, [ 'sections', 'length' ]) === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
         } else {
-          window.ga('set', 'contentGroup1', `${_.get(articleData, [ 'sections', '0', 'name' ])}`)
-          window.ga('set', 'contentGroup2', `${_.get(articleData, [ 'categories', '0', 'name' ])}`)
+          window.ga('set', 'contentGroup1', `${_get(articleData, [ 'sections', '0', 'name' ])}`)
+          window.ga('set', 'contentGroup2', `${_get(articleData, [ 'categories', '0', 'name' ])}`)
         }
         window.ga('set', 'contentGroup3', '')
         // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
-        window.ga('send', 'pageview', { title: `${_.get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
+        window.ga('send', 'pageview', { title: `${_get(articleData, [ 'title' ], '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       updateJSONLDScript () {
         const newsArticleScript = document.querySelector('#js-newsArticle')
