@@ -23,7 +23,7 @@
           </template>
         </div>
 
-        <div class="candidate-card__load-more-btn" @[touchOrClick]="loadMore(cand.tagId, idx)">
+        <div :class="['candidate-card__load-more-btn', isTouchDevice ? '' : 'no-touch']" @click="loadMore(cand.tagId, idx)">
           <img src="/assets/mirrormedia/refresh.png" alt="refresh">
           <div>看更多</div>
         </div>
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { checkMob, debounce } from '../util/comm.js'
+import { debounce, isTouchDevice } from '../util/comm.js'
 
 export default {
   name: 'PresidentElectionList',
@@ -47,9 +47,10 @@ export default {
       artTitleW: 0,
       artTitleLMW: 0,
       wEl: null,
+      // ww = window width
       ww: 0,
       pages: [ 1, 1, 1 ],
-      checkMob: checkMob()
+      isTouchDevice: isTouchDevice()
     }
   },
   mounted () {
@@ -59,18 +60,15 @@ export default {
     this.artTitleLMEl = document.querySelector('.candidate-card__load-more-body')
     this.artTitleW = this.artTitleEl.clientWidth
     this.artTitleLMW = this.artTitleLMEl.clientWidth
-    this.wEl.addEventListener('resize', debounce(this.handleResize, 300))
+    this.wEl.addEventListener('resize', debounce(this.handleWWChange, 300))
+    this.wEl.addEventListener('orientationChange', debounce(this.handleWWChange, 300))
   },
   computed: {
     isLap () {
       return this.ww >= 768
-    },
-    touchOrClick () {
-      return this.checkMob ? 'touchstart' : 'click'
     }
   },
   methods: {
-    // checkMob,
     beginningArts (arts) {
       return arts ? arts.slice(0, 3) : []
     },
@@ -91,11 +89,10 @@ export default {
         marginTop: (page - 1) ? `${marginTop}px` : 0
       }
     },
-    handleResize () {
+    handleWWChange () {
       this.ww = this.wEl.innerWidth
       this.artTitleW = this.artTitleEl.clientWidth
       this.artTitleLMW = this.artTitleLMEl.clientWidth
-      this.checkMob = checkMob()
     },
     getArtTitle (title, isLoadMore = false) {
       const titleFontSize = this.isLap ? 18 : 15
@@ -171,8 +168,7 @@ export default {
     transition background-color 0.2s ease-out
     @media (min-width: 768px)
       margin-top 15px
-    // todo hover 在手機上顏色會停留
-    &:hover, &:active
+    &.no-touch:hover, &:not(.no-touch):active
       background-color #9b9b9b
     & img
       width 13.5px
