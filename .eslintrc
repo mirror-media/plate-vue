@@ -19,7 +19,8 @@
     },
     "globals": {
       "location": true,
-      "source": true
+      "source": true,
+      "DocumentTouch": true
     },
     "env": {
       "node": true,

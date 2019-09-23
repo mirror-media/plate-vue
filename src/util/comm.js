@@ -495,3 +495,16 @@ export function debounce (fn, wait) {
     timer = setTimeout(fn, wait)
   }
 }
+
+export function isTouchDevice () {
+  if (typeof window === 'undefined') return false
+  const prefixes = ' -webkit- -moz- -o- -ms- '.split(' ')
+  const mq = function (query) {
+    return window.matchMedia(query).matches
+  }
+  if (('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch) {
+    return true
+  }
+  const query = [ '(', prefixes.join('touch-enabled),('), 'heartz', ')' ].join('')
+  return mq(query)
+}

@@ -418,6 +418,7 @@ export default {
       bottom 0
       padding-top 0
       padding-bottom 0
+      width 100%
       > div
         display inline-flex
         justify-content center
