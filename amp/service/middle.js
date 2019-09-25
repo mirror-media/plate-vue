@@ -37,7 +37,7 @@ const validateSlugIsEmpty = (req, res, next) => {
 
 const fetchFromRedis = (req, res, next) => {
   const slug = req.params.slug
-  const url = `/getposts?where={"slug":"${slug}"}&clean=content`
+  const url = `/getposts?where={"slug":"${slug}","isAudioSiteOnly":false}&clean=content`
   req.fetchURL = url
   
   redisFetching(req.fetchURL, ({ error, data }) => {

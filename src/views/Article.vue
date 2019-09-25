@@ -388,7 +388,7 @@
       params: {
         // related: 'full',
         clean: 'content',
-        where: { 'slug': slug }
+        where: { 'slug': slug, isAudioSiteOnly: false }
       },
       preview: get(store, 'state.route.query.preview')
     }).then(article => {
