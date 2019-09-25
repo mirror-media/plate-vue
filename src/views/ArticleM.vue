@@ -105,7 +105,7 @@
       params: {
         // related: 'full',
         clean: 'content',
-        where: { 'slug': slug }
+        where: { 'slug': slug, isAudioSiteOnly: false }
       }
     })
   }

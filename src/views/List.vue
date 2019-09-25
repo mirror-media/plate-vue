@@ -309,7 +309,6 @@ const debug = require('debug')('CLIENT:LIST')
 const GS_CATEGORY_NAME = 'grand-seiko-2018' // dev gslecture
 const GS_TAG_ID = '5bbf08301e598f1000fc8e52' // dev 5bbc2069f39162100007c8bc
 
-
 const fetchCommonData = (store, route) => Promise.all([
   store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
   fetchPartners(store)
