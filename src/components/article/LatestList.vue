@@ -51,9 +51,6 @@
         type: Array,
         default: []
       },
-      // currArticleSlug: {
-      //   default: ''
-      // },
       isAppPage: {
         type: Boolean,
         default: false
