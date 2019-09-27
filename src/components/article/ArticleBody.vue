@@ -151,7 +151,6 @@ import AudioBox from '../../components/AudioBox.vue'
 import ArticleImg from 'src/components/article/ArticleImg.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import Newsletter from '../../components/Newsletter.vue'
-import ProjectList from './ProjectList.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
 import Slider from '../Slider.vue'
 import AudioPlayer from 'src/components/audioPlayer/Container.vue'
@@ -163,7 +162,6 @@ export default {
     'app-slider': Slider,
     'audio-box': AudioBox,
     'newsletter': Newsletter,
-    'proj-list': ProjectList,
     Annotation,
     ArticleBodyLayout,
     ArticleVideo,
@@ -211,10 +209,6 @@ export default {
       const normalizedDt = new Date(publishedDate)
       const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
       return datetime
-    },
-    popularlist () {
-      const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ], { report: [] })
-      return report
     },
     styleForCurrArticle () {
       switch (this.articleStyle) {
@@ -396,9 +390,6 @@ export default {
   props: {
     articleData: {
       default: () => { return {} }
-    },
-    projlistData: {
-      default: () => { return [] }
     },
     viewport: {
       default: () => { return undefined }

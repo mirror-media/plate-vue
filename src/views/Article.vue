@@ -10,6 +10,9 @@
       <section style="width: 100%;" v-show="!isArticlePhotography">
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
+
+      <RelatedListOverContent :articles="articlesOverContent" :relatedCategory="relatedCategory" />
+
       <div class="article-container" v-if="!isArticlePhotography" >
         <ClientOnly>
           <LazyItemWrapper :loadAfterPageLoaded="true">
@@ -19,7 +22,7 @@
               pos="MBHD"
               extClass="full"
               :config="props.config"
-              :size="get($store, 'getters.adSize')"
+              :size="_get($store, 'getters.adSize')"
             />
             <vue-dfp
               :is="props.vueDfp"
@@ -34,8 +37,6 @@
           <ArticleBody
             :articleData="articleData"
             :isAd="isAd"
-            :poplistData="popularlist"
-            :projlistData="projectlist"
             :viewport="viewportWidth">
             <template slot="hero">
               <div v-if="heroVideo" class="article-heromedia"><HeroVideo :heroCaption="heroCaption" :video="heroVideo" /></div>
@@ -55,7 +56,7 @@
                 />
               </LazyItemWrapper>
               <LazyItemWrapper :position="verge.viewportH() / 2" :strict="true">
-                <LatestList :latest="latestList" :currArticleSlug="currArticleSlug" />
+                <LatestList :latests="latests" />
               </LazyItemWrapper>
               <LazyItemWrapper :loadAfterPageLoaded="true" :style="{ minHeight: '300px' }">
                 <READrEmbeddedPromotions class="readr-embedded-promotions"/>
@@ -94,7 +95,7 @@
                   :is="props.vueDfp"
                   v-if="isMobile && !hiddenAdvertised"
                   :config="props.config"
-                  :size="get($store, 'getters.adSize')"
+                  :size="_get($store, 'getters.adSize')"
                   pos="MBE1"
                 />
                 <vue-dfp
@@ -123,7 +124,7 @@
                 :is="props.vueDfp"
                 v-if="!hiddenAdvertised"
                 :config="props.config"
-                :size="get($store, 'getters.adSize')"
+                :size="_get($store, 'getters.adSize')"
                 pos="MBAR1"
               />
             </template>
@@ -152,7 +153,7 @@
                 :is="props.vueDfp"
                 v-if="!hiddenAdvertised"
                 :config="props.config"
-                :size="get($store, 'getters.adSize')"
+                :size="_get($store, 'getters.adSize')"
                 pos="MBAR2"
               />
             </template>
@@ -162,19 +163,19 @@
                 :is="props.vueDfp"
                 slot="dfpad-AR3-MB"
                 :config="props.config"
-                :size="get($store, 'getters.adSize')"
+                :size="_get($store, 'getters.adSize')"
                 pos="MBAR3"
               />
             </template>
-            <PopList :pop="popularlist" slot="poplist" v-if="isShowPoplist && isMobile" :currEnv="dfpMode" />
+            <PopList :pop="popularlist" slot="poplist" v-if="isMobile" :currEnv="dfpMode" />
             <RelatedListInContent
               :relateds="relateds"
               slot="relatedListInContent"
             >
               <MicroAd
-                v-for="ad in get(microAds, 'article')"
-                :id="`${get(ad, 'pcId')}`"
-                :key="`${get(ad, 'pcId')}`"
+                v-for="ad in _get(microAds, 'article')"
+                :id="`${_get(ad, 'pcId')}`"
+                :key="`${_get(ad, 'pcId')}`"
                 :currEnv="dfpMode"
                 :currUrl="articleUrl"
                 class="related">
@@ -222,7 +223,7 @@
                 pos="MBFT"
                 :extClass="`full ${styleDfpAd}`"
                 :config="props.config"
-                :size="get($store, 'getters.adSize')"
+                :size="_get($store, 'getters.adSize')"
               />
               <vue-dfp
                 :is="props.vueDfp"
@@ -248,7 +249,7 @@
                 v-if="isMobile"
                 pos="MBFT"
                 :config="props.config"
-                :size="get($store, 'getters.adSize')"
+                :size="_get($store, 'getters.adSize')"
                 extClass="full"
               />
               <vue-dfp
@@ -333,8 +334,13 @@
   </VueDfpProvider>
 </template>
 <script>
-  import { find, get, isEmpty, map } from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_MAP, SECTION_WATCH_ID } from '../constants'
+  import {
+    find as _find,
+    get as _get,
+    isEmpty as _isEmpty,
+    map as _map
+  } from 'lodash'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_WATCH_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
@@ -362,6 +368,7 @@
   import PopList from '../components/article/PopList.vue'
   import PopListVert from '../components/article/PopListVert.vue'
   import RelatedListInContent from '../components/article/RelatedListInContent.vue'
+  import RelatedListOverContent from '../components/article/RelatedListOverContent.vue'
   import RecommendList from '../components/article/RecommendList.vue'
   import ShareTools from '../components/article/ShareTools.vue'
   import WineWarning from '../components/WineWarning.vue'
@@ -390,7 +397,7 @@
         clean: 'content',
         where: { 'slug': slug, isAudioSiteOnly: false }
       },
-      preview: get(store, 'state.route.query.preview')
+      preview: _get(store, 'state.route.query.preview')
     }).then(article => {
       traceResponse(store, { log: `fetch articlle data: ${Date.now() - timestamp}ms` })
       return article
@@ -408,15 +415,15 @@
   })
 
   const fetchPartners = store => {
-    const page = (get(store.state, 'partners.meta.page') || 0) + 1
+    const page = (_get(store.state, 'partners.meta.page') || 0) + 1
     return store.dispatch('FETCH_PARTNERS', {
       params: {
         max_results: 25,
         page: page
       }
     }).then(() => {
-      const amount = get(store.state, 'partners.items.length')
-      const total = get(store.state, 'partners.meta.total')
+      const amount = _get(store.state, 'partners.items.length')
+      const total = _get(store.state, 'partners.meta.total')
       if (amount < total) {
         return fetchPartners(store)
       }
@@ -492,25 +499,25 @@
         topics = {},
         writers = []
       } = this.articleData
-      const author = get(writers, '0.name', '')
-      const categorieName = get(categories, '0.name', '')
-      const categorieTitle = get(categories, '0.title', '')
-      const imageUrl = get(heroImage, 'image.resizedTargets.mobile.url', '')
+      const author = _get(writers, '0.name', '')
+      const categorieName = _get(categories, '0.name', '')
+      const categorieTitle = _get(categories, '0.title', '')
+      const imageUrl = _get(heroImage, 'image.resizedTargets.mobile.url', '')
       const robotsValue = isAdult ? 'noindex' : 'index'
-      const ogImageUrl = get(ogImage, 'image.resizedTargets.mobile.url', '')
+      const ogImageUrl = _get(ogImage, 'image.resizedTargets.mobile.url', '')
       const publishedTime = publishedDate ? new Date(publishedDate).toISOString() : ''
-      const pureBrief = truncate(sanitizeHtml(map(get(brief, 'apiData', []), o => map(get(o, 'content', []), str => str)).join(''), { allowedTags: [] }), 197)
-      const pureTags = map(tags, t => get(t, 'name', ''))
-      const sectionName = get(sections, '0.name', '')
-      const sectionTitle = get(sections, '0.title', '')
-      const topicId = get(topics, '_id', '')
+      const pureBrief = truncate(sanitizeHtml(_map(_get(brief, 'apiData', []), o => _map(_get(o, 'content', []), str => str)).join(''), { allowedTags: [] }), 197)
+      const pureTags = _map(tags, t => _get(t, 'name', ''))
+      const sectionName = _get(sections, '0.name', '')
+      const sectionTitle = _get(sections, '0.title', '')
+      const topicId = _get(topics, '_id', '')
 
       return {
         url: `${SITE_MOBILE_URL}/story/${slug}/`,
         title: title,
         meta: `
           <meta name="robots" content="${robotsValue}">
-          <meta name="keywords" content="${get(categories, '0.title') + ',' + pureTags.toString()}">
+          <meta name="keywords" content="${_get(categories, '0.title') + ',' + pureTags.toString()}">
           <meta name="description" content="${pureBrief}">
           <meta name="section-name" content="${sectionName}">
           <meta name="category-name" content="${categorieName}">
@@ -542,12 +549,12 @@
       debug('beforeRouteUpdate')
       fetchArticles(this.$store, to.params.slug)
         .then(() => {
-          const thisItem = find(get(this.$store, 'state.articles.items'), { 'slug': to.params.slug })
-          const theComingArticleSlug = get(thisItem, 'slug')
+          const thisItem = _find(_get(this.$store, 'state.articles.items'), { 'slug': to.params.slug })
+          const theComingArticleSlug = _get(thisItem, 'slug')
 
           debug('this.articleData', theComingArticleSlug)
           if (!theComingArticleSlug) { location.replace('/404') }
-          this.routeUpateReferrerSlug = get(from, 'params.slug', 'N/A')
+          this.routeUpateReferrerSlug = _get(from, 'params.slug', 'N/A')
           return
         })
         .then(() => next())
@@ -585,6 +592,7 @@
       PopList,
       PopListVert,
       RelatedListInContent,
+      RelatedListOverContent,
       RecommendList,
       ShareTools,
       READrEmbeddedPromotions,
@@ -616,17 +624,23 @@
         return `${SITE_URL}/story/${this.currArticleSlug}/`
       },
       articleData () {
-        const _data = find(get(this.$store, 'state.articles.items'), { 'slug': this.currArticleSlug })
+        const _data = _find(_get(this.$store, 'state.articles.items'), { 'slug': this.currArticleSlug })
         return _data || {}
       },
       articleStyle () {
-        return get(this.articleData, 'style', '')
+        return _get(this.articleData, 'style', '')
+      },
+      articlesOverContent () {
+        return this.abIndicator === 'A' ? this.relateds : this.latests
+      },
+      relatedCategory () {
+        return this.abIndicator === 'A' ? _get(this.articleData, 'categories.0.title', '新聞') : ''
       },
       currArticleSlug () {
-        return get(this.$store, 'state.route.params.slug')
+        return _get(this.$store, 'state.route.params.slug', '')
       },
       currArticleId () {
-        return get(find(get(this.$store, 'state.articles.items'), { 'slug': this.$store.state.route.params.slug }), 'id', '')
+        return _get(_find(_get(this.$store, 'state.articles.items'), { 'slug': this.$store.state.route.params.slug }), 'id', '')
       },
       dfpOptions () {
         const currentInstance = this
@@ -704,10 +718,10 @@
         })
       },
       eventEmbedded () {
-        return get(this.$store, 'state.eventEmbedded.items.0')
+        return _get(this.$store, 'state.eventEmbedded.items.0')
       },
       fbAppId () {
-        return get(this.$store, 'state.fbAppId')
+        return _get(this.$store, 'state.fbAppId')
       },
       fbCommentDiv () {
         return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
@@ -717,43 +731,40 @@
       },
       hasEventEmbedded () {
         const _now = moment()
-        const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
-        let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
+        const _eventStartTime = moment(new Date(_get(this.eventEmbedded, 'startDate')))
+        let _eventEndTime = moment(new Date(_get(this.eventEmbedded, 'endDate')))
         if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-          _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
+          _eventEndTime = moment(new Date(_get(this.eventEmbedded, 'endDate'))).add(12, 'h')
         }
         return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
       },
       heroCaption () {
-        return get(this.articleData, [ 'heroCaption' ], '')
+        return _get(this.articleData, [ 'heroCaption' ], '')
       },
       heroImage () {
-        return get(this.articleData, 'heroImage') || { image: {}, }
+        return _get(this.articleData, 'heroImage') || { image: {}, }
       },
       heroVideo () {
         const { heroVideo } = this.articleData
         const poster = getImage(this.articleData)
         return (heroVideo && heroVideo.video)
-          ? Object.assign(get(heroVideo, 'video', {}), { id: get(heroVideo, 'id', '') }, { poster })
+          ? Object.assign(_get(heroVideo, 'video', {}), { id: _get(heroVideo, 'id', '') }, { poster })
           : heroVideo
       },
       hiddenAdvertised () {
-        return get(this.articleData, 'hiddenAdvertised')
+        return _get(this.articleData, 'hiddenAdvertised')
       },
       isAd () {
-        return get(this.articleData, [ 'isAdvertised' ], false)
+        return _get(this.articleData, [ 'isAdvertised' ], false)
       },
       isAdultContent () {
-        return get(this.articleData, 'isAdult')
+        return _get(this.articleData, 'isAdult')
       },
       isArticlePhotography () {
-        return get(this.articleData, 'style', '') === 'photography'
+        return _get(this.articleData, 'style', '') === 'photography'
       },
       isLockJS () {
-        return get(this.articleData, 'lockJS')
-      },
-      isShowPoplist () {
-        return get(SECTION_MAP, [ this.sectionId, 'isShowPoplist' ], true)
+        return _get(this.articleData, 'lockJS')
       },
       ifSingleCol () {
         return (this.articleStyle === 'wide' || this.isMobile)
@@ -765,70 +776,71 @@
         return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",
           "itemListElement": [
             { "@type": "ListItem", "position": 1, "item": { "@id": "${SITE_URL}", "name": "${SITE_TITLE}" } },
-            { "@type": "ListItem", "position": 2, "item": { "@id": "${SITE_URL + '/section/' + get(this.articleData, 'sections.0.name')}", "name": "${get(this.articleData, 'sections.0.title')}" } },
-            { "@type": "ListItem", "position": 3, "item": { "@id": "${SITE_URL + get(this.$route, 'path')}", "name": "${get(this.articleData, 'title')}" } }
+            { "@type": "ListItem", "position": 2, "item": { "@id": "${SITE_URL + '/section/' + _get(this.articleData, 'sections.0.name')}", "name": "${_get(this.articleData, 'sections.0.title')}" } },
+            { "@type": "ListItem", "position": 3, "item": { "@id": "${SITE_URL + _get(this.$route, 'path')}", "name": "${_get(this.articleData, 'title')}" } }
           ]
         }`
       },
       jsonLDNewsArticle () {
-        return `{ "@context": "http://schema.org", "@type": "NewsArticle", "headline": "${get(this.articleData, 'title')}",
-          "url": "${SITE_URL + get(this.$route, 'path')}", "thumbnailUrl": "${get(this.heroImage, 'image.resizedTargets.desktop.url')}",
-          "articleSection": "${get(this.articleData, 'sections.0.title')}",
-          "keywords": [ ${map(get(this.articleData, 'tags'), t => `"${get(t, 'name')}"`)} ],
-          "mainEntityOfPage": { "@type": "WebPage", "@id": "${SITE_URL + get(this.$route, 'path')}" },
-          "image": { "@type": "ImageObject", "url": "${get(this.heroImage, 'image.resizedTargets.desktop.url')}", "height": ${get(this.heroImage, 'image.resizedTargets.desktop.height')}, "width": ${get(this.heroImage, 'image.resizedTargets.desktop.width')} },
-          "datePublished": "${get(this.articleData, 'publishedDate')}", "dateModified": "${get(this.articleData, 'updatedAt')}", "author": { "@type": "Person", "name": "${get(this.articleData, 'writers.0.name')}" },
+        return `{ "@context": "http://schema.org", "@type": "NewsArticle", "headline": "${_get(this.articleData, 'title')}",
+          "url": "${SITE_URL + _get(this.$route, 'path')}", "thumbnailUrl": "${_get(this.heroImage, 'image.resizedTargets.desktop.url')}",
+          "articleSection": "${_get(this.articleData, 'sections.0.title')}",
+          "keywords": [ ${_map(_get(this.articleData, 'tags'), t => `"${_get(t, 'name')}"`)} ],
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "${SITE_URL + _get(this.$route, 'path')}" },
+          "image": { "@type": "ImageObject", "url": "${_get(this.heroImage, 'image.resizedTargets.desktop.url')}", "height": ${_get(this.heroImage, 'image.resizedTargets.desktop.height')}, "width": ${_get(this.heroImage, 'image.resizedTargets.desktop.width')} },
+          "datePublished": "${_get(this.articleData, 'publishedDate')}", "dateModified": "${_get(this.articleData, 'updatedAt')}", "author": { "@type": "Person", "name": "${_get(this.articleData, 'writers.0.name')}" },
           "publisher": { "@type": "Organization", "name": "${SITE_TITLE}", "logo": { "@type": "ImageObject", "url": "https://www.mirrormedia.mg/assets/images/logo.png" } },
-          "description": "${get(this.articleData, 'brief.apiData.0.content.0')}"
+          "description": "${_get(this.articleData, 'brief.apiData.0.content.0')}"
         }`
       },
       jsonLDPerson () {
-        return `{ "@context": "http://schema.org", "@type": "Person", "name": "${get(this.articleData, 'writers.0.name')}",
-          "url": "${SITE_URL + '/author/' + get(this.articleData, 'writers.0.id')}",
+        return `{ "@context": "http://schema.org", "@type": "Person", "name": "${_get(this.articleData, 'writers.0.name')}",
+          "url": "${SITE_URL + '/author/' + _get(this.articleData, 'writers.0.id')}",
           "brand": { "@type": "Brand", "name": "${SITE_TITLE}", "url": "${SITE_URL}", "image": "https://www.mirrormedia.mg/assets/mirrormedia/logo.svg", "logo": "https://www.mirrormedia.mg/assets/mirrormedia/logo.svg", "description": "${SITE_DESCRIPTION}" }
         }`
       },
-      latestList () {
-        return get(this.$store, 'state.latestArticle.items') || []
+      latests () {
+        return _get(this.$store, 'state.latestArticle.items', [])
+                .filter((latest) => _get(latest, 'slug', '') !== this.currArticleSlug)
       },
       needWineWarning () {
         const cats = this.articleData.categories
         return cats.some(cat => cat.name === 'wine')
       },
       popularlist () {
-        return get(this.$store, 'state.articlesPopList.report') || []
+        return _get(this.$store, 'state.articlesPopList.report') || []
       },
       projectlist () {
-        return get(this.$store, 'state.commonData.projects.items') || []
+        return _get(this.$store, 'state.commonData.projects.items') || []
       },
       recommendlist () {
-        return get(this.$store, 'state.articlesRecommendList.relatedNews') || []
+        return _get(this.$store, 'state.articlesRecommendList.relatedNews') || []
       },
       relateds () {
-        return (get(this.articleData, 'relateds') || []).filter(item => item)
+        return (_get(this.articleData, 'relateds') || []).filter(item => item)
       },
       sectionName () {
-        return get(this.articleData, 'sections.0.name')
+        return _get(this.articleData, 'sections.0.name')
       },
       sectionId () {
-        const _sectionId = get(this.articleData, 'sections.0.id')
+        const _sectionId = _get(this.articleData, 'sections.0.id')
         return DFP_UNITS[ _sectionId ] ? _sectionId : 'other'
       },
       styleDfpAd () {
         return this.viewportWidth < 321 ? 'ad-fit' : ''
       },
       viewportWidth () {
-        return get(this.$store, 'state.viewport.width') || 0
+        return _get(this.$store, 'state.viewport.width') || 0
       },
     },
     methods: {
       checkLockJS () {
         this.isLockJS ? lockJS() : unLockJS()
       },
-      get,
+      _get,
       getMmid () {
         const mmid = Cookie.get('mmid')
-        let assisgnedRole = get(this.$route, [ 'query', 'ab' ])
+        let assisgnedRole = _get(this.$route, [ 'query', 'ab' ])
         if (assisgnedRole) {
           assisgnedRole = assisgnedRole.toUpperCase()
         }
@@ -837,6 +849,15 @@
           { id: 'B', weight: 50 } ]
         })
         return assisgnedRole || role
+      },
+      handleWWChange () {
+        const isLapW = window.innerWidth >= 1200
+        if (isLapW && !this.latests.length) {
+          fetchLatestArticle(this.$store, {
+            sort: '-publishedDate',
+            where: { 'sections': this.sectionId }
+          })
+        }
       },
       initializeFBComments () {
         if (window.FB) {
@@ -880,16 +901,16 @@
         }
       },
       sendGA (articleData) {
-        if (get(articleData, 'sections.length') === 0) {
+        if (_get(articleData, 'sections.length') === 0) {
           window.ga('set', 'contentGroup1', '')
           window.ga('set', 'contentGroup2', '')
         } else {
-          window.ga('set', 'contentGroup1', `${get(articleData, 'sections.0.name')}`)
-          window.ga('set', 'contentGroup2', `${get(articleData, 'categories.0.name')}`)
+          window.ga('set', 'contentGroup1', `${_get(articleData, 'sections.0.name')}`)
+          window.ga('set', 'contentGroup2', `${_get(articleData, 'categories.0.name')}`)
         }
         window.ga('set', 'contentGroup3', '')
-        // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
-        window.ga('send', 'pageview', { title: `${get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
+        window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+        window.ga('send', 'pageview', { title: `${_get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       sendGaClickEvent,
       updateJSONLDScript () {
@@ -916,13 +937,13 @@
       this.insertMediafarmersScript()
       this.checkLockJS()
       this.updateSysStage()
-      // this.abIndicator = this.getMmid()
+      this.abIndicator = this.getMmid()
       const scrollTriggerRegister = new ScrollTriggerRegister([
         { target: '.dable-widget', offset: 400, cb: this.initializeFBComments }
       ])
       scrollTriggerRegister.init()
 
-      if (!isEmpty(this.articleData)) {
+      if (!_isEmpty(this.articleData)) {
         this.sendGA(this.articleData)
         this.hasSentFirstEnterGA = true
       }
@@ -931,11 +952,14 @@
        * Fetch latests after window.onload.
        */
       window.addEventListener('load', () => {
-        !this.isMobile && fetchLatestArticle(this.$store, {
+        (!this.isMobile || this.abIndicator === 'B') && fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: { 'sections': this.sectionId }
-        })        
+        })
       })
+
+      window.addEventListener('resize', this.handleWWChange)
+      window.addEventListener('orientationChange', this.handleWWChange)
 
       /**
        * Data's supposed to be loaded later.
@@ -983,13 +1007,17 @@
         this.checkLockJS()
       },
       sectionId: function () {
-        !this.isMobile && fetchLatestArticle(this.$store, {
+        (!this.isMobile || this.abIndicator === 'B') && fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: {
             'sections': this.sectionId
           }
         })
       }   
+    },
+    beforeDestroy () {
+      window.removeEventListener('resize', this.handleWWChange)
+      window.removeEventListener('orientationChange', this.handleWWChange)
     }
   }
 

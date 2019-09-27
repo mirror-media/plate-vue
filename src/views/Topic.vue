@@ -387,8 +387,7 @@ export default {
       return _.slice(this.articles, 12)
     },
     candidateData () {
-      // todo need to use _.uniqBy?
-      this.persidentCandidateData.forEach((cand) => cand.articles = _.get(this.$store.state, [ 'articlesByUUID', TAG, cand.tagId, 'items' ]))
+      this.persidentCandidateData.forEach((cand) => cand.articles = _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', TAG, cand.tagId, 'items' ]), 'slug'))
       return this.persidentCandidateData
     },
     customCSS () {

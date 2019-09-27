@@ -2,7 +2,7 @@
   <div class="latest-list-container">
     <div class="title"><h4 v-text="$t('article.latest')"></h4></div>
     <div class="list">
-      <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
+      <div class="item" v-for="o in latests.slice(0, 6)" :key="o.slug">
         <div class="thumbnail">
           <a :href="`${site_url}${getHref(o, isAppPage)}`" target="_blank" @click="sendGaClickEvent('article', 'latest')"><LazyImage :src="getImage(o, 'tiny')" :alt="getValue(o, [ 'title' ])"/></a>
           <!-- <router-link :to="{ path: getHref(o) }" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'" @click.native="sendGaClickEvent('article', 'latest')"></router-link> -->
@@ -26,23 +26,16 @@
   import LazyImage from 'src/components/common/LazyImage.vue'
   import { SITE_URL } from '../../constants'
   import { getHref, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
-  import _ from 'lodash'
 
   // const debug = require('debug')('CLIENT:LatestList')
 
   export default {
     components: {
-      LazyImage,
+      LazyImage
     },
     computed: {
       site_url () {
         return SITE_URL
-      },
-      pureLatest () {
-        return _.filter(this.latestList, (o) => { return _.get(o, [ 'slug' ], '') !== this.currArticleSlug })
-      },
-      latestList () {
-        return _.get(this.$store, 'state.latestArticle.items', [])
       }
     },
     methods: {
@@ -54,13 +47,14 @@
     },
     name: 'LatestList',
     props: {
-      currArticleSlug: {
-        default: ''
+      latests: {
+        type: Array,
+        default: []
       },
       isAppPage: {
         type: Boolean,
         default: false
-      },
+      }
     }
   }
 </script>

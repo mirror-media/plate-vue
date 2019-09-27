@@ -43,6 +43,12 @@
     //   updateViewport(this.$store)
     // },
     mounted () {
+      /**
+       * todo
+       * updateViewport() 從 beforeMount 改放到 mounted 後，更新的速度變得比螢幕尺寸變化還慢
+       * 如果你是在組件的 mounted 處取得螢幕尺寸（比如使用 viewportWidth），那這個變數紀錄的值會是在螢幕變化前的值（因為 updateViewport() 會比較慢執行）
+       * 但現在又不能把 updateViewport() 改放回到 beforeMount，不然網頁會出現難以理解的錯誤
+       */
       updateViewport(this.$store)
       
       this.doc = document

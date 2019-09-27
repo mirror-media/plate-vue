@@ -93,9 +93,6 @@
       <div class="article_main_pop">
         <slot name="poplist"></slot>
       </div>
-      <div class="article_main_proj">
-        <proj-list :projects="projlistData" :viewport="viewport" />
-      </div>
       <slot name="slot_fb_comment"></slot>
     </main>
     <slot name="aside"></slot>
@@ -155,10 +152,6 @@ export default {
       const normalizedDt = new Date(publishedDate)
       const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
       return datetime
-    },
-    popularlist () {
-      const { report } = _.get(this.$store, [ 'state', 'articlesPopList' ], { report: [] })
-      return report
     },
     styleForCurrArticle () {
       switch (this.articleStyle) {
@@ -358,9 +351,6 @@ export default {
   props: {
     articleData: {
       default: () => { return {} }
-    },
-    projlistData: {
-      default: () => { return [] }
     },
     viewport: {
       default: () => { return undefined }
