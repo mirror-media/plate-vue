@@ -142,6 +142,8 @@ $color-external = #ee5a24
 
 .header-nav
   display none
+  position relative
+  z-index 100
 
 @media (min-width: 1200px)
   .header-nav
