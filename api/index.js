@@ -1,5 +1,5 @@
 const { get, map, isString, toNumber, concat, compact } = require('lodash')
-const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/redisHandler') 
+const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/ioredisHandler') 
 const { handlerError } = require('./comm')
 const config = require('./config')
 const bodyParser = require('body-parser')
