@@ -15,7 +15,7 @@
 
   const resetAdCoverFlag = store => store.dispatch('RESET_AD_COVER')
   const updateViewport = (store) => {
-    const width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+    const width = Math.min(window.innerWidth, document.documentElement.clientWidth)
     const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
     const viewport = { width: width, height: height }
     return store.dispatch('UPDATE_VIEWPORT', viewport)

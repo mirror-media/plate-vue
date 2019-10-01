@@ -686,7 +686,7 @@ export default {
     },
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
-        this.viewport = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+        this.viewport = Math.min(window.innerWidth, document.documentElement.clientWidth)
       }
     },
     updateSysStage () {

@@ -133,7 +133,7 @@ export default {
       }
     },
     initialTransformValue () {
-      const wWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+      const wWidth = Math.min(window.innerWidth, document.documentElement.clientWidth)
       if (wWidth < 900) {
         this.imagesTransform = 0
         this.timeTransform = -(0.175 * wWidth)
