@@ -57,6 +57,7 @@
     "express": "^4.16.4",
     "forever": "^0.15.3",
     "humps": "^2.0.0",
+    "ioredis": "^4.14.1",
     "jshashtable": "^0.1.0",
     "kc-scroll": "^0.2.71",
     "lodash": "^4.17.11",

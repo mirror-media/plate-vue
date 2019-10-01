@@ -16,8 +16,7 @@ const resolve = file => path.resolve(__dirname, file)
 const uuidv4 = require('uuid/v4')
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
-const { fetchFromRedis, redisWriting } = require('./api/middle/redisHandler') 
-
+const { fetchFromRedis, redisWriting } = require('./api/middle/ioredisHandler') 
 
 const formatMem = (bytes) => {
   return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
