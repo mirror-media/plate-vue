@@ -1,6 +1,6 @@
 <template>
   <transition name="fade">
-    <div class="relateds-over-content" v-show="showContent">
+    <div class="relateds-over-content" v-show="showContent" :class="{ 'to-top': isToTop }">
       <div>
         <a :href="`/story/${_get(articles[0], 'slug', '')}`" class="related">
           <div class="related__arrow"></div>
@@ -35,24 +35,33 @@ export default {
     return {
       showContent: false,
       wEl: null,
-      scrollY: 0
+      scrollY: 0,
+      isToTop: false,
+      ww: 0
     }
   },
   mounted () {
     this.wEl = window
+    this.ww = Math.min(this.wEl.innerWidth, document.documentElement.clientWidth)
     this.scrollY = this.wEl.pageYOffset
     this.wEl.addEventListener('scroll', this.displayContent)
+    this.wEl.addEventListener('scroll', this.locateContent)
+  },
+  computed: {
+    isLapW () {
+      return this.ww >= 1200
+    }
   },
   methods: {
     _get,
     displayContent () {
       const currentScrollY = this.wEl.pageYOffset
-      if (currentScrollY >= this.scrollY) {
-        this.showContent = false
-      } else {
-        this.showContent = true
-      }
+      this.showContent = (currentScrollY < this.scrollY)
       this.scrollY = currentScrollY
+    },
+    locateContent () {
+      const topOffset = (this.isLapW ? 160 : 118)
+      this.isToTop = (this.scrollY >= topOffset)
     }
   }
 }
@@ -61,7 +70,7 @@ export default {
 <style lang="stylus" scoped>
 .relateds-over-content
   position fixed
-  top 118px
+  top 122px
   z-index 99
   padding-right 4px
   padding-left 4px
@@ -70,12 +79,17 @@ export default {
   left 50%
   transform translateX(-50%)
   justify-content center
+  transition top 0.4s ease-out
   @media (min-width 731px)
     padding-right 0
     padding-left 0
   @media (min-width 1200px)
     justify-content flex-start
     top 160px
+  &.to-top
+    top 82px
+    @media (min-width 1200px)
+      top 4px
   & > div
     display flex
     justify-content center
@@ -156,7 +170,8 @@ export default {
         outline-offset -2px
 .fade
   &-enter-active, &-leave-active
-    transition opacity 0.2s ease-in-out
+    transition all 0.2s ease-in-out
   &-enter, &-leave-to
     opacity 0
+    transform translateX(-52%)
 </style>
