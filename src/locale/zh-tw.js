@@ -20,6 +20,7 @@ export default {
     'LINE': 'Line',
     'MAGAZINE': '訂閱電子雜誌',
     'MIRRORFICTION': '鏡文學',
+    'MIRRORVOICE': '鏡好聽',
     'MORE': '更多',
     'READR': 'READR 讀+',
     'RSS': 'RSS',

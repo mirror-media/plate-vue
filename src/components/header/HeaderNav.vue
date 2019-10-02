@@ -64,11 +64,38 @@
         </a>
       </div>
       <a href="/section/topic" class="more" @click="sendGaClickEvent('header', `topic ${$t('HEADER.MORE')}`)" v-text="$t('HEADER.MORE')"></a>
-      <a href="https://www.mirrorfiction.com/" class="link--external mirrorfiction" target="_blank" @click="sendGaClickEvent('header', `section mirrorfiction`)">
-        <LazyImage src="/assets/mirrormedia/icon/mirrorfiction.png" :caption="$t('HEADER.MIRRORFICTION')" />
+      <a
+        href="https://voice.mirrorfiction.com/"
+        class="link--external mirrorvoice"
+        target="_blank"
+        @click="sendGaClickEvent('header', `section mirrorfiction`)"
+      >
+        <LazyImage
+          src="/assets/mirrormedia/icon/mirrorvoice.png"
+          :caption="$t('HEADER.MIRRORVOICE')"
+        />
       </a>
-      <a href="https://www.readr.tw/" class="link--external readr" target="_blank" @click="sendGaClickEvent('header', `section readr`)">
-        <LazyImage src="/assets/mirrormedia/icon/readrlogo-gary.png" :caption="$t('HEADER.READR')" />
+      <a
+        href="https://www.mirrorfiction.com/"
+        class="link--external mirrorfiction"
+        target="_blank"
+        @click="sendGaClickEvent('header', `section mirrorfiction`)"
+      >
+        <LazyImage
+          src="/assets/mirrormedia/icon/mirrorfiction.png"
+          :caption="$t('HEADER.MIRRORFICTION')"
+        />
+      </a>
+      <a
+        href="https://www.readr.tw/"
+        class="link--external readr"
+        target="_blank"
+        @click="sendGaClickEvent('header', `section readr`)"
+      >
+        <LazyImage
+          src="/assets/mirrormedia/icon/readrlogo-gary.png"
+          :caption="$t('HEADER.READR')"
+        />
       </a>
     </nav>
   </section>
