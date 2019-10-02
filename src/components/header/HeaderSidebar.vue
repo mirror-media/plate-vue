@@ -52,11 +52,32 @@
           </a>
         </div>
       </div>
+      <div class="section mirrorvoice">
+        <a
+          href="https://voice.mirrorfiction.com/"
+          class="link--external mirrorvoice"
+          target="_blank"
+          @click="sendGaClickEvent('header', `section mirrorfiction`)"
+          v-text="$t('HEADER.MIRRORVOICE')"
+        />
+      </div>
       <div class="section mirrorfiction">
-        <a href="https://www.mirrorfiction.com/" class="link--external mirrorfiction" target="_blank" @click="sendGaClickEvent('header', `section mirrorfiction`)" v-text="$t('HEADER.MIRRORFICTION')"></a>
+        <a
+          href="https://www.mirrorfiction.com/"
+          class="link--external mirrorfiction"
+          target="_blank"
+          @click="sendGaClickEvent('header', `section mirrorfiction`)"
+          v-text="$t('HEADER.MIRRORFICTION')"
+        />
       </div>
       <div class="section">
-        <a href="https://www.readr.tw/" class="link--external readr" target="_blank" @click="sendGaClickEvent('header', `section readr`)" v-text="$t('HEADER.READR')"></a>
+        <a
+          href="https://www.readr.tw/"
+          class="link--external readr"
+          target="_blank"
+          @click="sendGaClickEvent('header', `section readr`)"
+          v-text="$t('HEADER.READR')"
+        />
       </div>
     </div>
     <div class="others">
@@ -186,6 +207,8 @@ export default {
       border-bottom none
     &.external
       border-left-color #ee5a24
+    &.mirrorvoice
+      border-left-color #FF521D
     &.mirrorfiction
       border-left-color #968375
     > a
