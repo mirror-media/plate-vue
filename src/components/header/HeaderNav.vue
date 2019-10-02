@@ -68,7 +68,7 @@
         href="https://voice.mirrorfiction.com/"
         class="link--external mirrorvoice"
         target="_blank"
-        @click="sendGaClickEvent('header', `section mirrorfiction`)"
+        @click="sendGaClickEvent('header', `section mirrorvoice`)"
       >
         <LazyImage
           src="/assets/mirrormedia/icon/mirrorvoice.png"
