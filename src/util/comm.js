@@ -252,7 +252,7 @@ export function mmLog ({ category, eventType, target, description, referrer, ...
 }
 
 export function sendGaClickEvent (eventCategory, eventLabel) {
-  window.ga && window.ga('send', 'event', eventCategory, 'click', eventLabel, { nonInteraction: false })
+  window.ga && window.ga('send', 'event', eventCategory, 'click', eventLabel)
 }
 
 export function isEleFixed (ele) {

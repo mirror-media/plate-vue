@@ -2,7 +2,7 @@
   <transition name="fade">
     <div class="relateds-over-content" v-show="showContent" :class="{ 'to-top': isToTop }">
       <div>
-        <a :href="`/story/${_get(articles[0], 'slug', '')}`" class="related">
+        <a  class="related" @click="sendGaClickEvent(`${relatedCategory ? 'related' : 'latest'} news`, 'left')">
           <div class="related__arrow"></div>
           <div class="related__txt">
             <div class="related__category">{{ relatedCategory || _get(articles[0], 'categories.0.title', '新聞') }}</div>
@@ -11,7 +11,7 @@
             </div>
           </div>
         </a>
-        <a :href="`/story/${_get(articles[1], 'slug', '')}`" class="related">
+        <a  class="related" @click="sendGaClickEvent(`${relatedCategory ? 'related' : 'latest'} news`, 'right')">
           <div class="related__txt">
             <div class="related__category">{{ relatedCategory || _get(articles[1], 'categories.0.title', '新聞') }}</div>
             <div class="related__title">
@@ -27,6 +27,7 @@
 
 <script>
 import { get as _get } from 'lodash'
+import { sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'RelatedListOverContent',
@@ -54,9 +55,10 @@ export default {
   },
   methods: {
     _get,
+    sendGaClickEvent,
     displayContent () {
       const currentScrollY = this.wEl.pageYOffset
-      this.showContent = (currentScrollY < this.scrollY)
+      this.showContent = (this.articles.length && (currentScrollY < this.scrollY))
       this.scrollY = currentScrollY
     },
     locateContent () {
@@ -85,7 +87,7 @@ export default {
     padding-left 0
   @media (min-width 1200px)
     justify-content flex-start
-    top 160px
+    top 164px
   &.to-top
     top 82px
     @media (min-width 1200px)
@@ -173,5 +175,5 @@ export default {
     transition all 0.2s ease-in-out
   &-enter, &-leave-to
     opacity 0
-    transform translateX(-52%)
+    transform translate(-50%, -16px)
 </style>
