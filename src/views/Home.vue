@@ -196,7 +196,8 @@ const fetchLatestArticle = (store, page) => store.dispatch('FETCH_LATESTARTICLES
   params: {
     max_results: MAX_RESULT,
     page,
-    sort: '-publishedDate'
+    sort: '-publishedDate',
+    where: { isAudioSiteOnly: false }
   }
 })
 
