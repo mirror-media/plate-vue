@@ -75,9 +75,8 @@ import VideoLeading from '../components/video/VideoLeading.vue'
 import VideoList from '../components/video/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
-import titleMetaMixin from '../util/mixinTitleMeta'
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, FB_APP_ID, FB_PAGE_ID, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
 import { get, truncate, } from 'lodash'
@@ -206,13 +205,13 @@ export default {
     }
     return Promise.all(jobs)
   },
-  mixins: [ titleMetaMixin ],
-  metaSet () {
-    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
+  metaInfo () {
+    const ogUrl = `${SITE_URL}${this.$route.path}`
+    const relUrl = `${SITE_MOBILE_URL}${this.$route.path}`
     const sections = get(this.$store, 'state.commonData.sections.items', []) || []
     const videohub = sections.filter(section => section.name === 'videohub')[0]
-    
+    const isListing = this.$route.path.match(/(\/section\/|\/category\/)/)
+
     let title
     let description = get(this.video, 'description') || get(videohub, 'ogDescription') || get(videohub, 'description')
     let image = get(videohub, 'ogImage') || get(videohub, 'image')
@@ -220,10 +219,10 @@ export default {
     image = image ? get(image, 'image.resizedTargets.desktop.url') : SITE_OGIMAGE
 
     switch (true) {
-      case /\/category\//.test(this.$route.fullPath):
+      case /\/category\//.test(this.$route.path):
         title = get(this.playlist[0], 'name')
         break
-      case /\/video\//.test(this.$route.fullPath):
+      case /\/video\//.test(this.$route.path):
         title = get(this.video, 'name')
         image = get(this.video, 'feedThumbnail.url') || image
         break
@@ -238,32 +237,24 @@ export default {
       throw e
     }
 
-    if (this.$route.fullPath.match(/(\/section\/|\/category\/)/)) {
-      title = `${title} - ${SITE_TITLE}`
-    }
-
     return {
-      url: relUrl,
-      title: title,
-      meta: `
-        <meta name="robots" content="index">
-        <meta name="keywords" content="${SITE_KEYWORDS}">
-        <meta name="description" content="${description}">
-        <meta name="section-name" content="videohub">
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="${title}">
-        <meta name="twitter:description" content="${description}">
-        <meta name="twitter:image" content="${image}">
-        <meta property="fb:app_id" content="${FB_APP_ID}">
-        <meta property="fb:pages" content="${FB_PAGE_ID}">
-        <meta property="og:site_name" content="${SITE_TITLE}">
-        <meta property="og:locale" content="zh_TW">
-        <meta property="og:type" content="article">
-        <meta property="og:title" content="${title}">
-        <meta property="og:description" content="${description}">
-        <meta property="og:url" content="${ogUrl}">
-        <meta property="og:image" content="${image}">
-      `
+      title,
+      titleTemplate: isListing ? `%s - ${SITE_TITLE}` : null,
+      meta: [
+        { name: 'robots', content: 'index' },
+        { vmid: 'description', name: 'description', content: description },
+        { vmid: 'og:title', property: 'og:title', content: title },
+        { vmid: 'og:description', property: 'og:description', content: description },
+        { vmid: 'og:url', property: 'og:url', content: ogUrl },
+        { vmid: 'og:image', property: 'og:image', content: image },
+        { vmid: 'twitter:title', name: 'twitter:title', content: title },
+        { vmid: 'twitter:description', name: 'twitter:description', content: description },
+        { vmid: 'twitter:image', name: 'twitter:image', content: image },
+        { name: 'section-name', content: 'videohub' },
+      ],
+      link: [
+        { rel: 'alternate', href: relUrl }
+      ]
     }
   },
   data () {

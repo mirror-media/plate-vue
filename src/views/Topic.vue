@@ -96,8 +96,8 @@
 <script>
 
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from '../constants'
-import { FB_APP_ID, FB_PAGE_ID, TAG, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { TAG, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
 import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
@@ -125,7 +125,6 @@ import TimelineBody from '../components/timeline/TimelineBody.vue'
 import TimelineHeadline from '../components/timeline/TimelineHeadline.vue'
 import WineWarning from '../components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -279,8 +278,7 @@ export default {
   asyncData ({ store, route }) {
     return fetchData(store, route.params.topicId)
   },
-  mixins: [ titleMetaMixin ],
-  metaSet () {
+  metaInfo () {
     if (!this.topic && process.env.VUE_ENV === 'server') {
       return this.pageNotFoundHandler()
     }
@@ -294,34 +292,26 @@ export default {
 
     const metaTitle = ogTitle || name
     const metaDescription = ogDescription ? getTruncatedVal(ogDescription, 50) : SITE_DESCRIPTION
-    const metaImage = ogImage ? _.get(ogImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) : _.get(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ], SITE_OGIMAGE)
-    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
-    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
-    if (!metaTitle && process.env.VUE_ENV === 'server') {
-      return this.pageNotFoundHandler()
-    }
+    const metaImage = ogImage ? _.get(ogImage, 'image.resizedTargets.mobile.url') : _.get(heroImage, 'image.resizedTargets.mobile.url', SITE_OGIMAGE)
+    const ogUrl = `${SITE_URL}${this.$route.path}`
+    const relUrl = `${SITE_MOBILE_URL}${this.$route.path}`
 
     return {
-      url: relUrl,
-      title: `${metaTitle} - ${SITE_TITLE}`,
-      meta: `
-        <meta name="robots" content="index">
-        <meta name="keywords" content="${SITE_KEYWORDS}">
-        <meta name="description" content="${metaDescription}">
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="${metaTitle}">
-        <meta name="twitter:description" content="${metaDescription}">
-        <meta name="twitter:image" content="${metaImage}">
-        <meta property="fb:app_id" content="${FB_APP_ID}">
-        <meta property="fb:pages" content="${FB_PAGE_ID}">
-        <meta property="og:site_name" content="${SITE_TITLE}">
-        <meta property="og:locale" content="zh_TW">
-        <meta property="og:type" content="article">
-        <meta property="og:title" content="${metaTitle}">
-        <meta property="og:description" content="${metaDescription}">
-        <meta property="og:url" content="${ogUrl}">
-        <meta property="og:image" content="${metaImage}">
-      ` // <meta name="mm-opt" content="">
+      title: metaTitle,
+      meta: [
+        { name: 'robots', content: 'index' },
+        { vmid: 'description', name: 'description', content: metaDescription },
+        { vmid: 'og:title', property: 'og:title', content: metaTitle },
+        { vmid: 'og:description', property: 'og:description', content: metaDescription },
+        { vmid: 'og:url', property: 'og:url', content: ogUrl },
+        { vmid: 'og:image', property: 'og:image', content: metaImage },
+        { vmid: 'twitter:title', name: 'twitter:title', content: metaTitle },
+        { vmid: 'twitter:description', name: 'twitter:description', content: metaDescription },
+        { vmid: 'twitter:image', name: 'twitter:image', content: metaImage },
+      ],
+      link: [
+        { rel: 'alternate', href: relUrl }
+      ]
     }
   },
   data () {

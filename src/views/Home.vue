@@ -125,8 +125,8 @@
 </template>
 
 <script>
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, FB_APP_ID, FB_PAGE_ID } from 'src/constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from 'src/constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from 'src/constants'
+import { SITE_MOBILE_URL, SITE_TITLE } from 'src/constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
@@ -145,7 +145,6 @@ import Loading from 'src/components/Loading.vue'
 import MirrorMediaTVAside from 'src/components/MirrorMediaTVAside.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
-import titleMetaMixin from 'src/util/mixinTitleMeta'
 import verge from 'verge'
 
 const MAX_RESULT = 20
@@ -219,30 +218,14 @@ export default {
   asyncData ({ store }) {
     return fetchSSRData(store)
   },
-  mixins: [ titleMetaMixin ],
-  metaSet () {
-    return {
-      url: SITE_MOBILE_URL,
-      title: SITE_TITLE,
-      meta: `
-        <meta name="robots" content="index">
-        <meta name="keywords" content="${SITE_KEYWORDS}">
-        <meta name="description" content="${SITE_DESCRIPTION}">
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="${SITE_TITLE}">
-        <meta name="twitter:description" content="${SITE_DESCRIPTION}">
-        <meta name="twitter:image" content="${SITE_OGIMAGE}">
-        <meta property="fb:app_id" content="${FB_APP_ID}">
-        <meta property="fb:pages" content="${FB_PAGE_ID}">
-        <meta property="og:site_name" content="${SITE_TITLE}">
-        <meta property="og:locale" content="zh_TW">
-        <meta property="og:type" content="article">
-        <meta property="og:title" content="${SITE_TITLE}">
-        <meta property="og:description" content="${SITE_DESCRIPTION}">
-        <meta property="og:url" content="${SITE_URL}">
-        <meta property="og:image" content="${SITE_OGIMAGE}">
-      `
-    }
+  metaInfo: {
+    titleTemplate: null,
+    meta: [
+      { name: 'robots', content: 'index' }
+    ],
+    link: [
+      { rel: 'alternate', href: SITE_MOBILE_URL }
+    ]
   },
   data () {
     return {
