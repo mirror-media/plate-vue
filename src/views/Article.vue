@@ -340,7 +340,7 @@
     isEmpty as _isEmpty,
     map as _map
   } from 'lodash'
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SECTION_WATCH_ID } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID, SECTION_WATCH_ID } from '../constants'
   import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
@@ -375,6 +375,7 @@
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
   import sanitizeHtml from 'sanitize-html'
+  import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
   import verge from 'verge'
 
@@ -470,15 +471,19 @@
       debug('RUN asyncData')
       return !process.browser ? fetchData(store) : Promise.resolve()
     },
-    metaInfo () {
+    mixins: [ titleMetaMixin ],
+    metaSet () {
+      debug('About to change the metaSet.')
+      debug('this.articleData.slug', this.articleData.slug)
+      debug('process.env.VUE_ENV', process.env.VUE_ENV)
       if (!this.articleData.slug && process.env.VUE_ENV === 'server') {
         const e = new Error()
         e.massage = 'Page Not Found'
         e.code = '404'
         throw e
       }
-
       const {
+        adTrace = '',
         brief = {},
         categories = [],
         heroImage = {},
@@ -494,7 +499,6 @@
         topics = {},
         writers = []
       } = this.articleData
-
       const author = _get(writers, '0.name', '')
       const categorieName = _get(categories, '0.name', '')
       const categorieTitle = _get(categories, '0.title', '')
@@ -504,132 +508,41 @@
       const publishedTime = publishedDate ? new Date(publishedDate).toISOString() : ''
       const pureBrief = truncate(sanitizeHtml(_map(_get(brief, 'apiData', []), o => _map(_get(o, 'content', []), str => str)).join(''), { allowedTags: [] }), 197)
       const pureTags = _map(tags, t => _get(t, 'name', ''))
-      const keywords = _get(categories, '0.title') + ',' + pureTags.toString()
       const sectionName = _get(sections, '0.name', '')
       const sectionTitle = _get(sections, '0.title', '')
       const topicId = _get(topics, '_id', '')
-      const ogUrl = `${SITE_URL}/story/${slug}/`
-
-      const metaTitle = ogTitle.length > 0 ? ogTitle : title
-      const metaDescription = ogDescription.length > 0 ? truncate(ogDescription, 197) : pureBrief
-      const metaImage = ogImageUrl.length > 0 ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)
 
       return {
-        title,
-        titleTemplate: null,
-        meta: [
-          { name: 'robots', content: robotsValue },
-          { vmid: 'keywords', name: 'keywords', content: keywords },
-          { vmid: 'description', name: 'description', content: pureBrief },
-          { vmid: 'og:title', property: 'og:title', content: metaTitle },
-          { vmid: 'og:description', property: 'og:description', content: metaDescription },
-          { vmid: 'og:url', property: 'og:url', content: ogUrl },
-          { vmid: 'og:image', property: 'og:image', content: metaImage },
-          { name: 'section-name', content: sectionName },
-          { name: 'category-name', content: categorieName },
-          { name: 'topic-id', content: topicId },
-          { vmid: 'twitter:title', name: 'twitter:title', content: metaTitle },
-          { vmid: 'twitter:description', name: 'twitter:description', content: metaDescription },
-          { vmid: 'twitter:image', name: 'twitter:image', content: metaImage },
-          { property: 'dable:item_id', content: slug },
-          { property: 'dable:author', content: author },
-          { property: 'article:section', content: sectionTitle },
-          { property: 'article:section2', content: categorieTitle },
-          { property: 'article:published_time', content: publishedTime }
-        ],
-        link: [
-          { rel: 'alternate', href: `${SITE_MOBILE_URL}/story/${slug}/` },
-          { rel: 'amphtml', href: `${SITE_URL}/story/amp/${slug}/` }
-        ],
-        script: [
-          {
-            type: 'application/ld+json',
-            json: {
-              '@context': 'http://schema.org',
-              '@type': 'NewsArticle',
-              headline: title,
-              url: ogUrl,
-              thumbnailUrl: metaImage,
-              articleSection: sectionTitle,
-              keywords: keywords,
-              mainEntityOfPage: {
-                '@type': 'WebPage',
-                '@id': ogUrl
-              },
-              image: {
-                '@type': 'ImageObject',
-                url: metaImage,
-                height: _get(this.heroImage, 'image.resizedTargets.desktop.height'),
-                width: _get(this.heroImage, 'image.resizedTargets.desktop.width')
-              },
-              datePublished: publishedTime,
-              dateModified: _get(this.articleData, 'updatedAt'),
-              author: {
-                '@type': 'Person',
-                name: author
-              },
-              publisher: {
-                '@type': 'Organization',
-                name: SITE_TITLE,
-                logo: {
-                  '@type': 'ImageObject',
-                  url: 'https://www.mirrormedia.mg/assets/images/logo.png'
-                }
-              },
-              description: metaDescription
-            }
-          },
-          {
-            type: 'application/ld+json',
-            json: {
-              '@context': 'http://schema.org',
-              '@type': 'Person',
-              name: author,
-              url: `${SITE_URL}/author/${_get(this.articleData, 'writers.0.id')}`,
-              brand: {
-                '@type': 'Brand',
-                name: SITE_TITLE,
-                url: SITE_URL,
-                image: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
-                logo: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
-                description: SITE_DESCRIPTION
-              }
-            }
-          },
-          {
-            type: 'application/ld+json',
-            json: {
-              '@context': 'http://schema.org',
-              '@type': 'BreadcrumbList',
-              itemListElement: [
-                {
-                  '@type': 'ListItem',
-                  position: 1,
-                  item: {
-                    '@id': SITE_URL,
-                    name: SITE_TITLE
-                  }
-                },
-                {
-                  '@type': 'ListItem',
-                  position: 2,
-                  item: {
-                    '@id': `${SITE_URL}/section/${_get(this.articleData, 'sections.0.name')}`,
-                    name: sectionTitle
-                  }
-                },
-                {
-                  '@type': 'ListItem',
-                  position: 3,
-                  item: {
-                    '@id': ogUrl,
-                    name: title
-                  }
-                }
-              ]
-            }
-          }
-        ]
+        url: `${SITE_MOBILE_URL}/story/${slug}/`,
+        title: title,
+        meta: `
+          <meta name="robots" content="${robotsValue}">
+          <meta name="keywords" content="${_get(categories, '0.title') + ',' + pureTags.toString()}">
+          <meta name="description" content="${pureBrief}">
+          <meta name="section-name" content="${sectionName}">
+          <meta name="category-name" content="${categorieName}">
+          <meta name="topic-id" content="${topicId}">
+          <meta name="twitter:card" content="summary_large_image">
+          <meta name="twitter:title" content="${ogTitle.length > 0 ? ogTitle : title}">
+          <meta name="twitter:description" content="${ogDescription.length > 0 ? truncate(ogDescription, 197) : pureBrief}">
+          <meta name="twitter:image" content="${ogImageUrl.length > 0 ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
+          <meta property="fb:app_id" content="${FB_APP_ID}">
+          <meta property="fb:pages" content="${FB_PAGE_ID}">
+          <meta property="og:site_name" content="${SITE_TITLE}">
+          <meta property="og:locale" content="zh_TW">
+          <meta property="og:type" content="article">
+          <meta property="og:title" content="${ogTitle.length > 0 ? ogTitle : title}">
+          <meta property="og:description" content="${ogDescription.length > 0 ? truncate(ogDescription, 197) : pureBrief}">
+          <meta property="og:url" content="${SITE_URL}/story/${slug}/">
+          <meta property="og:image" content="${(ogImageUrl.length > 0) ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)}">
+          <meta property="dable:item_id" content="${slug}">
+          <meta property="dable:author" content="${author}">
+          <meta property="article:section" content="${sectionTitle}">
+          <meta property="article:section2" content="${categorieTitle}">
+          <meta property="article:published_time" content="${publishedTime}">
+        `,
+        link: `<link rel="amphtml" href="${SITE_URL}/story/amp/${slug}/">`,
+        adTrace: adTrace
       }
     },
     beforeRouteUpdate (to, from, next) {
@@ -859,6 +772,33 @@
       isMobile () {
         return this.viewportWidth < 1200
       },
+      jsonLDBreadcrumbList () {
+        return `{ "@context": "http://schema.org", "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "item": { "@id": "${SITE_URL}", "name": "${SITE_TITLE}" } },
+            { "@type": "ListItem", "position": 2, "item": { "@id": "${SITE_URL + '/section/' + _get(this.articleData, 'sections.0.name')}", "name": "${_get(this.articleData, 'sections.0.title')}" } },
+            { "@type": "ListItem", "position": 3, "item": { "@id": "${SITE_URL + _get(this.$route, 'path')}", "name": "${_get(this.articleData, 'title')}" } }
+          ]
+        }`
+      },
+      jsonLDNewsArticle () {
+        return `{ "@context": "http://schema.org", "@type": "NewsArticle", "headline": "${_get(this.articleData, 'title')}",
+          "url": "${SITE_URL + _get(this.$route, 'path')}", "thumbnailUrl": "${_get(this.heroImage, 'image.resizedTargets.desktop.url')}",
+          "articleSection": "${_get(this.articleData, 'sections.0.title')}",
+          "keywords": [ ${_map(_get(this.articleData, 'tags'), t => `"${_get(t, 'name')}"`)} ],
+          "mainEntityOfPage": { "@type": "WebPage", "@id": "${SITE_URL + _get(this.$route, 'path')}" },
+          "image": { "@type": "ImageObject", "url": "${_get(this.heroImage, 'image.resizedTargets.desktop.url')}", "height": ${_get(this.heroImage, 'image.resizedTargets.desktop.height')}, "width": ${_get(this.heroImage, 'image.resizedTargets.desktop.width')} },
+          "datePublished": "${_get(this.articleData, 'publishedDate')}", "dateModified": "${_get(this.articleData, 'updatedAt')}", "author": { "@type": "Person", "name": "${_get(this.articleData, 'writers.0.name')}" },
+          "publisher": { "@type": "Organization", "name": "${SITE_TITLE}", "logo": { "@type": "ImageObject", "url": "https://www.mirrormedia.mg/assets/images/logo.png" } },
+          "description": "${_get(this.articleData, 'brief.apiData.0.content.0')}"
+        }`
+      },
+      jsonLDPerson () {
+        return `{ "@context": "http://schema.org", "@type": "Person", "name": "${_get(this.articleData, 'writers.0.name')}",
+          "url": "${SITE_URL + '/author/' + _get(this.articleData, 'writers.0.id')}",
+          "brand": { "@type": "Brand", "name": "${SITE_TITLE}", "url": "${SITE_URL}", "image": "https://www.mirrormedia.mg/assets/mirrormedia/logo.svg", "logo": "https://www.mirrormedia.mg/assets/mirrormedia/logo.svg", "description": "${SITE_DESCRIPTION}" }
+        }`
+      },
       latests () {
         return _get(this.$store, 'state.latestArticle.items', [])
                 .filter((latest) => _get(latest, 'slug', '') !== this.currArticleSlug)
@@ -929,6 +869,29 @@
           window.FB.XFBML.parse()
         }
       },
+      insertJSONLDScript () {
+        const newsArticleScript = document.createElement('script')
+        const personScript = document.createElement('script')
+        const breadcrumbScript = document.createElement('script')
+        newsArticleScript.setAttribute('id', 'js-newsArticle')
+        newsArticleScript.setAttribute('type', 'application/ld+json')
+        newsArticleScript.innerHTML = this.jsonLDNewsArticle
+        personScript.setAttribute('id', 'js-person')
+        personScript.setAttribute('type', 'application/ld+json')
+        personScript.innerHTML = this.jsonLDPerson
+        breadcrumbScript.setAttribute('id', 'js-breadcrumb')
+        breadcrumbScript.setAttribute('type', 'application/ld+json')
+        breadcrumbScript.innerHTML = this.jsonLDBreadcrumbList
+        if (!document.getElementById('js-newsArticle')) {
+          document.querySelector('head').appendChild(newsArticleScript)
+        }
+        if (!document.getElementById('js-person')) {
+          document.querySelector('head').appendChild(personScript)
+        }
+        if (!document.getElementById('js-breadcrumb')) {
+          document.querySelector('head').appendChild(breadcrumbScript)
+        }
+      },
       insertMediafarmersScript () {
         const mediafarmersScript = document.createElement('script')
         mediafarmersScript.setAttribute('id', 'mediafarmersJS')
@@ -950,6 +913,17 @@
         window.ga('send', 'pageview', { title: `${_get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
       },
       sendGaClickEvent,
+      updateJSONLDScript () {
+        const newsArticleScript = document.querySelector('#js-newsArticle')
+        const personScript = document.querySelector('#js-person')
+        const breadcrumbScript = document.querySelector('#js-breadcrumb')
+        if (newsArticleScript) {
+          document.querySelector('head').removeChild(newsArticleScript)
+          document.querySelector('head').removeChild(personScript)
+          document.querySelector('head').removeChild(breadcrumbScript)
+        }
+        this.insertJSONLDScript()
+      },
       updateMediafarmersScript () {
         const mediafarmersScript = document.querySelector('#mediafarmersJS')
         document.querySelector('body').removeChild(mediafarmersScript)
@@ -1027,6 +1001,7 @@
           const relatedImages = value.relateds.filter(related => related).map(related => related.heroImage)
           fetchImages(this.$store, { ids: relatedImages, max_results: relatedImages.length  })
         }
+        this.updateJSONLDScript()
       },
       isLockJS () {
         this.checkLockJS()

@@ -31,7 +31,8 @@
 
 import _ from 'lodash'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from '../constants'
-import { SITE_MOBILE_URL, SITE_TITLE, SITE_URL } from '../constants'
+import { FB_APP_ID, FB_PAGE_ID } from '../constants'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { currEnv, unLockJS } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
@@ -44,6 +45,7 @@ import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import Loading from '../components/Loading.vue'
 import More from '../components/More.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
+import titleMetaMixin from '../util/mixinTitleMeta'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -111,19 +113,32 @@ export default {
   asyncData ({ store, route }) {
     return fetchData(store, route)
   },
-  metaInfo () {
-    const ogTitle = `${this.title} - ${SITE_TITLE}`
+  mixins: [ titleMetaMixin ],
+  metaSet () {
+    const title = (this.title) ? `${this.title} - ${SITE_TITLE}` : SITE_TITLE
+    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
     return {
-      title: this.title,
-      meta: [
-        { name: 'robots', content: 'index' },
-        { vmid: 'og:title', property: 'og:title', content: ogTitle },
-        { vmid: 'og:url', property: 'og:url', content: `${SITE_URL}${this.$route.path}` },
-        { vmid: 'twitter:title', name: 'twitter:title', content: ogTitle },
-      ],
-      link: [
-        { rel: 'alternate', href: `${SITE_MOBILE_URL}${this.$route.path}` }
-      ]
+      url: relUrl,
+      title: title,
+      meta: `
+        <meta name="robots" content="index">
+        <meta name="keywords" content="${SITE_KEYWORDS}">
+        <meta name="description" content="${SITE_DESCRIPTION}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:description" content="${SITE_DESCRIPTION}">
+        <meta name="twitter:image" content="${SITE_OGIMAGE}">
+        <meta property="fb:app_id" content="${FB_APP_ID}">
+        <meta property="fb:pages" content="${FB_PAGE_ID}">
+        <meta property="og:site_name" content="${SITE_TITLE}">
+        <meta property="og:locale" content="zh_TW">
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="${title}">
+        <meta property="og:description" content="${SITE_DESCRIPTION}">
+        <meta property="og:url" content="${ogUrl}">
+        <meta property="og:image" content="${SITE_OGIMAGE}">
+      ` // <meta name="mm-opt" content="">
     }
   },
   data () {

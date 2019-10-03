@@ -7,7 +7,6 @@
 </template>
 
 <script>
-  import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from 'src/constants'
   import { mmLog } from './util/comm.js'
   import { visibleTracking } from './util/visibleTracking'
   import Tap from 'tap.js'
@@ -23,27 +22,6 @@
   }
 
   export default {
-    metaInfo: {
-      title: SITE_TITLE,
-      titleTemplate: `%s - ${SITE_TITLE}`,
-      meta: [
-        { vmid: 'keywords', name: 'keywords', content: SITE_KEYWORDS },
-        { vmid: 'description', name: 'description', content: SITE_DESCRIPTION },
-        { vmid: 'og:title', property: 'og:title', content: SITE_TITLE },
-        { vmid: 'og:description', property: 'og:description', content: SITE_DESCRIPTION },
-        { vmid: 'og:url', property: 'og:url', content: SITE_URL },
-        { vmid: 'og:image', property: 'og:image', content: SITE_OGIMAGE },
-        { vmid: 'og:site_name', property: 'og:site_name', content: SITE_TITLE },
-        { vmid: 'og:locale', property: 'og:locale', content: 'zh_TW' },
-        { vmid: 'og:type', property: 'og:type', content: 'article' },
-        { vmid: 'fb:app_id', property: 'fb:app_id', content: FB_APP_ID },
-        { vmid: 'fb:pages', property: 'fb:pages', content: FB_PAGE_ID },
-        { vmid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
-        { vmid: 'twitter:title', name: 'twitter:title', content: SITE_TITLE },
-        { vmid: 'twitter:description', name: 'twitter:description', content: SITE_DESCRIPTION },
-        { vmid: 'twitter:image', name: 'twitter:image', content: SITE_OGIMAGE },
-      ],
-    },
     data () {
       return {
         doc: {},

@@ -16,15 +16,17 @@
     '" type="text/javascript" charset="utf-8"><\/sc'+'ript>')})();
   </script>-->
   <!-- End of Google Analytics Content Experiment code -->
-  {{{ meta.inject().title.text() }}}
   <meta charset="utf-8" fixed='true'>
   <meta name="keywords" content="827dd55a5e613a43faad" fixed='true'>
-  {{{ meta.inject().meta.text() }}}
-  {{{ meta.inject().link.text() }}}
+  <title>{{ title }}</title>
+  {{{ meta }}}
+  {{{ link }}}
+  <!--meta name="description" content=""-->
   <meta name="mobile-web-app-capable" content="yes" fixed='true'>
   <meta name=”apple-mobile-web-app-capable” content=”yes”>
   <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" fixed='true'>
   <meta name="msvalidate.01" content="B035299087E538EBEC13FDDFEA238C8C" fixed='true'>
+  <link rel="alternate" href="{{ url }}" hreflang="x" />
   <link rel="icon" sizes="32x32" type="image/png" href="/assets/mirrormedia/favicon-32x32.png">
   <link rel="icon" sizes="16x16" type="image/png" href="/assets/mirrormedia/favicon-16x16.png">
   <link rel="icon" sizes="192x192" href="/assets/mirrormedia/favicon-192x192.png">
@@ -89,7 +91,8 @@
         background-color: #000;
     }
   </style>
-  {{{ meta.inject().script.text() }}}
+  {{{ custom }}}
+  {{{ adTrace }}}
 </head>
 
 <body>

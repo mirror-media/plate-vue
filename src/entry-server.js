@@ -10,7 +10,7 @@ const isDev = process.env.NODE_ENV !== 'production'
 export default context => {
   return new Promise((resolve, reject) => {
     const s = Date.now()
-    const { app, router, store, meta } = createApp()
+    const { app, router, store } = createApp()
 
     const { url } = context
     const { fullPath } = router.resolve(url).route
@@ -45,7 +45,6 @@ export default context => {
         // store to pick-up the server-side state without having to duplicate
         // the initial data fetching on the client.
         context.state = store.state
-        context.meta = meta
         context.resstack = store.state.resStack
         resolve(app)
       }).catch(reject)
