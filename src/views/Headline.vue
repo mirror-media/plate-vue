@@ -14,8 +14,6 @@
 
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
-import titleMetaMixin from '../util/mixinTitleMeta'
-import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { get } from 'lodash'
 
 const fetchCommonData = (store) => {
@@ -44,37 +42,21 @@ export default {
       fetchPartners(store)
     ])
   },
+  metaInfo: {
+    title: '今日頭條',
+    meta: [
+      { name: 'robots', content: 'index' }
+    ],
+    link: [
+      { rel: 'stylesheet', href: 'https://load-balancer.likr.com.tw/news_page_new/css_and_js/include_iframe.css' }
+    ],
+    script: [
+      { src: 'https://load-balancer.likr.com.tw/news_page_new/css_and_js/include_iframe.js' }
+    ]
+  },
   components: {
     Footer,
     Header
-  },
-  mixins: [ titleMetaMixin ],
-  metaSet () {
-    return {
-      title: `今日頭條 - ${SITE_TITLE}`,
-      meta: `
-        <meta name="robots" content="index">
-        <meta name="keywords" content="${SITE_KEYWORDS}">
-        <meta name="description" content="${SITE_DESCRIPTION}">
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:title" content="${SITE_TITLE}">
-        <meta name="twitter:description" content="${SITE_DESCRIPTION}">
-        <meta name="twitter:image" content="${SITE_OGIMAGE}">
-        <meta property="fb:app_id" content="${FB_APP_ID}">
-        <meta property="fb:pages" content="${FB_PAGE_ID}">
-        <meta property="og:site_name" content="${SITE_TITLE}">
-        <meta property="og:locale" content="zh_TW">
-        <meta property="og:type" content="article">
-        <meta property="og:title" content="${SITE_TITLE}">
-        <meta property="og:description" content="${SITE_DESCRIPTION}">
-        <meta property="og:url" content="${SITE_URL}">
-        <meta property="og:image" content="${SITE_OGIMAGE}">
-      `,
-      custom: `
-        <script src="https://load-balancer.likr.com.tw/news_page_new/css_and_js/include_iframe.js"><\/script>
-        <link href="https://load-balancer.likr.com.tw/news_page_new/css_and_js/include_iframe.css" rel="stylesheet">
-      `
-    }
   }
 }
 </script>

@@ -68,8 +68,8 @@
 </template>
 
 <script>
-  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, FB_APP_ID, FB_PAGE_ID } from '../constants'
-  import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
+  import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS } from '../constants'
+  import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
   import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
   import { adtracker } from 'src/util/adtracking'
   import { consoleLogOnDev, currEnv, getValue, sendAdCoverGA, updateCookie } from '../util/comm'
@@ -92,7 +92,6 @@
   import ShareTools from '../components/article/ShareTools.vue'
   import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
   import moment from 'moment'
-  import titleMetaMixin from '../util/mixinTitleMeta'
   import truncate from 'truncate'
 
   const fetchCommonData = (store) => {
@@ -164,6 +163,54 @@
     asyncData ({ store, route: { params: { name }}}) {
       return fetchData(store, name)
     },
+    metaInfo () {
+      const {
+        title = '',
+        brief = '',
+        name = '',
+        partner = {},
+        publishedDate = '',
+        thumb = ''
+      } = this.articleData
+
+      if (!name && process.env.VUE_ENV === 'server') {
+        const e = new Error()
+        e.massage = 'Page Not Found'
+        e.code = '404'
+        throw e
+      }
+      
+      const ogTitle = `${title} - ${SITE_TITLE_SHORT}`
+      const category = _.get(partner, 'name') || ''
+      const ogDescription = truncate(brief, 197) || SITE_DESCRIPTION
+      const imageUrl = thumb || SITE_OGIMAGE
+      const partnerDisplay = _.get(partner, 'display') || ''
+      const publishedTime = publishedDate ? new Date(publishedDate).toISOString() : ''
+
+      return {
+        title,
+        meta: [
+          { name: 'robots', content: 'index' },
+          { vmid: 'description', name: 'description', content: ogDescription },
+          { vmid: 'og:title', property: 'og:title', content: ogTitle },
+          { vmid: 'og:description', property: 'og:description', content: ogDescription },
+          { vmid: 'og:url', property: 'og:url', content: `${SITE_URL}/external/${name}/` },
+          { vmid: 'og:image', property: 'og:image', content: imageUrl },
+          { vmid: 'twitter:title', name: 'twitter:title', content: ogTitle },
+          { vmid: 'twitter:description', name: 'twitter:description', content: ogDescription },
+          { vmid: 'twitter:image', name: 'twitter:image', content: imageUrl },
+          { name: 'section-name', content: 'externals' },
+          { name: 'category-name', content: category },
+          { property: 'dable:item_id', content: name },
+          { property: 'article:section', content: this.$t('HEADER.EXTERNAL') },
+          { property: 'article:section2', content: partnerDisplay },
+          { property: 'article:published_time', content: publishedTime },
+        ],
+        link: [
+          { rel: 'alternate', href: `${SITE_MOBILE_URL}/external/${name}/` }
+        ]
+      }
+    },
     components: {
       'app-footer': Footer,
       'article-aside-fixed': ArticleAsideFixed,
@@ -179,56 +226,6 @@
       DfpCover,
       DfpST,
       Header
-    },
-    mixins: [ titleMetaMixin ],
-    metaSet () {
-      if (!this.articleData.name && process.env.VUE_ENV === 'server') {
-        const e = new Error()
-        e.massage = 'Page Not Found'
-        e.code = '404'
-        throw e
-      }
-      const {
-        brief = '',
-        name = '',
-        partner = {},
-        publishedDate = '',
-        thumb = ''
-      } = this.articleData
-      const title = `${_.get(this.articleData, [ 'title' ])} - ${SITE_TITLE_SHORT}`
-      const category = _.get(partner, [ 'name' ], '')
-      const ogDescription = truncate(brief, 197) || SITE_DESCRIPTION
-      const imageUrl = thumb || SITE_OGIMAGE
-      const partnerDisplay = _.get(partner, 'display', '')
-      const publishedTime = publishedDate ? new Date(publishedDate).toISOString() : ''
-
-      return {
-        url: `${SITE_MOBILE_URL}/external/${name}/`,
-        title: `${title} - ${SITE_TITLE_SHORT}`,
-        meta: `
-          <meta name="robots" content="index">
-          <meta name="description" content="${ogDescription}">
-          <meta name="section-name" content="externals">
-          <meta name="category-name" content="${category}">
-          <meta name="twitter:card" content="summary_large_image">
-          <meta name="twitter:title" content="${title}">
-          <meta name="twitter:description" content="${ogDescription}">
-          <meta name="twitter:image" content="${imageUrl}">
-          <meta property="fb:app_id" content="${FB_APP_ID}">
-          <meta property="fb:pages" content="${FB_PAGE_ID}">
-          <meta property="og:site_name" content="${SITE_TITLE}">
-          <meta property="og:locale" content="zh_TW">
-          <meta property="og:type" content="article">
-          <meta property="og:title" content="${title}">
-          <meta property="og:description" content="${ogDescription}">
-          <meta property="og:url" content="${SITE_URL}/external/${name}/">
-          <meta property="og:image" content="${imageUrl}">
-          <meta property="dable:item_id" content="${name}">
-          <meta property="article:section" content="${this.$t('HEADER.EXTERNAL')}">
-          <meta property="article:section2" content="${partnerDisplay}">
-          <meta property="article:published_time" content="${publishedTime}">
-        `
-      }
     },
     data () {
       return {
