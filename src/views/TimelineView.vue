@@ -40,7 +40,6 @@
 </template>
 
 <script>
-import { SITE_URL } from '../constants'
 import { getValue, unLockJS } from '../util/comm'
 import _ from 'lodash'
 import FooterFull from '../components/FooterFull.vue'
@@ -48,6 +47,7 @@ import HeaderFull from '../components/HeaderFull.vue'
 import More from '../components/More.vue'
 import Spinner from '../components/Spinner.vue'
 import moment from 'moment'
+import titleMetaMixin from '../util/mixinTitleMeta'
 import twitter from 'twitter-text'
 
 const fetchCommonData = (store) => {
@@ -76,21 +76,6 @@ function fetchTwitter (url) {
 
 export default {
   name: 'timeline-view',
-  metaInfo () {
-    const title = `Timeline :: ${_.upperCase(this.$route.params.title)}`
-    return {
-      title,
-      titleTemplate: null,
-      meta: [
-        { vmid: 'description', name: 'description', content: title },
-        { vmid: 'og:title', property: 'og:title', content: title },
-        { vmid: 'og:description', property: 'og:description', content: title },
-        { vmid: 'og:url', property: 'og:url', content: `${SITE_URL}/timeline/${this.$route.params.title}` },
-        { vmid: 'twitter:title', name: 'twitter:title', content: title },
-        { vmid: 'twitter:description', name: 'twitter:description', content: title }
-      ]
-    }
-  },
   data () {
     return {
       commonData: this.$store.state.commonData,
@@ -110,6 +95,15 @@ export default {
   computed: {
     lastItemId () {
       return _.get(_.last(this.rep), 'id', 0)
+    }
+  },
+  mixins: [ titleMetaMixin ],
+  metaSet () {
+    return {
+      title: 'Timeline :: ' + _.upperCase(this.$route.params.title),
+      meta: `
+        <meta name="description" content="${'Timeline :: ' + _.upperCase(this.$route.params.title)}">
+      `
     }
   },
   methods: {

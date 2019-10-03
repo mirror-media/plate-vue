@@ -28,7 +28,7 @@
 
 <script>
 
-import { SECTION_MAP } from '../constants'
+import { SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { getValue } from '../util/comm'
 import _ from 'lodash'
 
@@ -38,9 +38,6 @@ const fetchPop = (store) => {
 
 export default {
   name: 'notFound-view',
-  metaInfo: {
-    titleTemplate: null
-  },
   data () {
     return {
       viewport: 0
@@ -97,6 +94,29 @@ export default {
     })
 
     window.ga('send', 'pageview', { title: '404 - Page Not Found', location: document.location.href })
+  },
+  metaInfo () {
+    const title = SITE_TITLE
+    const description = SITE_DESCRIPTION
+    console.log('404 vue')
+    return {
+      title,
+      meta: [
+          { name: 'keywords', content: SITE_KEYWORDS },
+          { name: 'description', content: description },
+          { name: 'twitter:card', content: 'summary_large_image' },
+          { name: 'twitter:title', content: title },
+          { name: 'twitter:description', content: description },
+          { name: 'twitter:image', content: SITE_OGIMAGE },
+          { property: 'og:site_name', content: SITE_TITLE },
+          { property: 'og:locale', content: 'zh_TW' },
+          { property: 'og:type', content: 'article' },
+          { property: 'og:title', content: title },
+          { property: 'og:description', content: description },
+          { property: 'og:url', content: SITE_URL },
+          { property: 'og:image', content: SITE_OGIMAGE }
+      ]
+    }
   }
 }
 

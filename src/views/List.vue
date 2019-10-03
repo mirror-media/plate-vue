@@ -265,9 +265,9 @@
 </template>
 <script>
 
-import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, EXTERNALS,
-  MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID } from 'src/constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from 'src/constants'
+import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, EXTERNALS, FB_APP_ID,
+  FB_PAGE_ID, MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID } from 'src/constants'
+import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL} from 'src/constants'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from 'src/constants'
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
@@ -299,6 +299,7 @@ import Share from 'src/components/Share.vue'
 import WineWarning from 'src/components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import moment from 'moment'
+import titleMetaMixin from 'src/util/mixinTitleMeta'
 import verge from 'verge'
 
 const MAXRESULT = 12
@@ -605,65 +606,74 @@ export default {
   asyncData ({ store, route }) {
     return fetchCommonData(store, route)
   },
-  metaInfo () {
+  mixins: [ titleMetaMixin ],
+  metaSet () {
     const type = this.type
-    const ogUrl = `${SITE_URL}${this.$route.path}`
-    const relUrl = `${SITE_MOBILE_URL}${this.$route.path}`
-
-    const getTitle = {
-      SECTION: get(this.section, 'ogTitle') || get(this.section, 'title', this.title),
-      default: this.title || ''
+    const ogUrl = `${SITE_URL}${this.$route.fullPath}`
+    const relUrl = `${SITE_MOBILE_URL}${this.$route.fullPath}`
+    let ogImage
+    let ogTitle
+    let ogDescription
+    let sectionName
+    switch (type) {
+      case SECTION:
+        sectionName = this.sectionName
+        ogImage = get(this.section, 'ogImage.image.resizedTargets.desktop.url') || get(this.section, 'heroImage.image.resizedTargets.desktop.url') || SITE_OGIMAGE
+        ogTitle = get(this.section, 'ogTitle') ? getTruncatedVal(get(this.section, 'ogTitle'), 11) : getTruncatedVal(get(this.section, 'title', this.title), 11)
+        ogDescription = get(this.section, 'ogDescription', null) ? getTruncatedVal(get(this.section, 'ogDescription'), 197) : get(this.section, 'description')
+        ogDescription !== '' ? getTruncatedVal(ogDescription, 197) : SITE_DESCRIPTION
+        break
+      case CATEGORY:
+        sectionName = this.sectionName
+        ogTitle = getTruncatedVal(this.title, 11)
+        const ogDesc = get(find(get(this.commonData, 'categories'), { 'name': this.$route.params.title }), 'ogDescription')
+        const ogImg = get(this.$store, 'state.ogimage.image.resizedTargets.desktop.url')
+        ogImage = ogImg || SITE_OGIMAGE
+        ogDescription = ogDesc || SITE_DESCRIPTION
+        break
+      case EXTERNALS:
+        sectionName = ''
+        ogTitle = getTruncatedVal(this.title, 11)
+        ogImage = SITE_OGIMAGE
+        ogDescription = SITE_DESCRIPTION
+        break
+      default:
+        ogTitle = getTruncatedVal(this.title, 11) || ''
+        ogImage = SITE_OGIMAGE
+        ogDescription = SITE_DESCRIPTION
     }
 
-    const getDescription = {
-      SECTION: get(this.section, 'ogDescription') || get(this.section, 'description'),
-      CATEGORY: get(find(get(this.commonData, 'categories'), { 'name': this.$route.params.title }), 'ogDescription'),
-      default: SITE_DESCRIPTION
-    }
-
-    const getOgImage = {
-      SECTION: get(this.section, 'ogImage.image.resizedTargets.desktop.url') || get(this.section, 'heroImage.image.resizedTargets.desktop.url'),
-      CATEGORY: get(this.$store, 'state.ogimage.image.resizedTargets.desktop.url'),
-      default: SITE_OGIMAGE
-    }
-
-    const getSectionName = {
-      SECTION: this.sectionName,
-      CATEGORY: this.sectionName,
-      default: ''
-    }
-    
-    const ogTitle = getTruncatedVal((getTitle[type] || getTitle.default), 11)
-    const title = ogTitle ? `${ogTitle} - ${SITE_TITLE}` : SITE_TITLE
-    const ogDescription = getTruncatedVal((getDescription[type] || getDescription.default), 197)
-    const ogImage = getOgImage[type] || getOgImage.default
-    const sectionName = getSectionName[type] || getSectionName.default
-    
-    if (!ogTitle && process.env.VUE_ENV === 'server') {
+    if (!ogTitle && process.env.VUE_ENV === 'server' && type !== AUTHOR) {
       const e = new Error()
       e.massage = 'Page Not Found'
       e.code = '404'
       throw e
     }
 
+    const title = ogTitle === '' ? SITE_TITLE : ogTitle + ` - ${SITE_TITLE}`
+    this.titleBase = title
     return {
-      title,
-      titleTemplate: null,
-      meta: [
-        { name: 'robots', content: 'index' },
-        { vmid: 'description', name: 'description', content: ogDescription },
-        { vmid: 'og:title', property: 'og:title', content: title },
-        { vmid: 'og:description', property: 'og:description', content: ogDescription },
-        { vmid: 'og:url', property: 'og:url', content: ogUrl },
-        { vmid: 'og:image', property: 'og:image', content: ogImage },
-        { name: 'section-name', content: sectionName },
-        { vmid: 'twitter:title', name: 'twitter:title', content: title },
-        { vmid: 'twitter:description', name: 'twitter:description', content: ogDescription },
-        { vmid: 'twitter:image', name: 'twitter:image', content: ogImage }
-      ],
-      link: [
-        { rel: 'alternate', href: relUrl }
-      ]
+      url: relUrl,
+      title: title,
+      meta: `
+        <meta name="robots" content="index">
+        <meta name="keywords" content="${SITE_KEYWORDS}">
+        <meta name="description" content="${ogDescription}">
+        <meta name="section-name" content="${sectionName}">
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:description" content="${ogDescription}">
+        <meta name="twitter:image" content="${ogImage}">
+        <meta property="fb:app_id" content="${FB_APP_ID}">
+        <meta property="fb:pages" content="${FB_PAGE_ID}">
+        <meta property="og:site_name" content="${SITE_TITLE}">
+        <meta property="og:locale" content="zh_TW">
+        <meta property="og:type" content="article">
+        <meta property="og:title" content="${title}">
+        <meta property="og:description" content="${ogDescription}">
+        <meta property="og:url" content="${ogUrl}">
+        <meta property="og:image" content="${ogImage}">
+      `
     }
   },
   data () {
