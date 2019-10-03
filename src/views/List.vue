@@ -379,7 +379,8 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
         default:
           return fetchArticlesByUuid(store, uuid, CATEGORY, {
             page: page,
-            max_results: MAXRESULT
+            max_results: MAXRESULT,
+            where: { isAudioSiteOnly: false }
           })
       }
     case SECTION:
@@ -388,7 +389,8 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
           return fetchArticlesByUuid(store, uuid, SECTION, {
             page: page,
             max_results: MAXRESULT,
-            related: 'full'
+            related: 'full',
+            where: { isAudioSiteOnly: false }
           })
         default:
           if (uuid === 'topic' && isLoadMore) {
@@ -400,7 +402,8 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
           if (uuid !== 'topic') {
             return fetchArticlesByUuid(store, uuid, SECTION, {
               page: page,
-              max_results: MAXRESULT
+              max_results: MAXRESULT,
+              where: { isAudioSiteOnly: false }
             })
           }
           return Promise.resolve()
@@ -410,13 +413,15 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
         return fetchTag(store, uuid).then(() => {
           return fetchArticlesByUuid(store, uuid, TAG, {
             page: page,
-            max_results: MAXRESULT
+            max_results: MAXRESULT,
+            where: { isAudioSiteOnly: false }
           })
         })
       } else {
         return fetchArticlesByUuid(store, uuid, TAG, {
           page: page,
-          max_results: MAXRESULT
+          max_results: MAXRESULT,
+          where: { isAudioSiteOnly: false }
         })
       }
     case EXTERNALS:
