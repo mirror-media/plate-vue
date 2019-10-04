@@ -504,7 +504,7 @@
                 .filter((latest) => _get(latest, 'slug', '') !== this.currArticleSlug)
       },
       needWineWarning () {
-        const cats = this.articleData.categories
+        const cats = this.articleData.categories || []
         return cats.some((cat) => cat.name === 'wine')
       },
       popularlist () {
