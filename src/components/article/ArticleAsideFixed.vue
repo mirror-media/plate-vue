@@ -40,23 +40,24 @@ export default {
       let fixedPosBtm
       const shouldFixAfter = '.readr-embedded-promotions'
       fixedPos = document.querySelector(`.article_aside ${shouldFixAfter}`) || document.querySelector(`.article_aside ${shouldFixAfter}`)
-      fixedPosBtm = elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight || elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight
-
-      if (articleMain.offsetHeight > articleAsideHeight) {
-        if (currPos > fixedPosBtm && (articleMainPosBtm - currPos - 20) > articleAsideFixed.clientHeight) {
-          articleAsideFixed.classList.remove('fixed')
-          articleAsideFixed.classList.add('fixed-top')
-          articleAsideFixed.style.top = 0
-          articleAsideFixed.style.bottom = `auto`
-        } else if (articleMainPosBtm - currPos - 20 <= articleAsideFixed.clientHeight) {
-          articleAsideFixed.classList.remove('fixed-top')
-          articleAsideFixed.classList.add('fixed')
-          articleAsideFixed.style.bottom = `20px`
-        } else {
-          articleAsideFixed.classList.remove('fixed-top')
-          articleAsideFixed.classList.remove('fixed')
-          articleAsideFixed.style.top = `auto`
-          articleAsideFixed.style.bottom = `auto`
+      if (fixedPos) {
+        fixedPosBtm = elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight || elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight
+        if (articleMain.offsetHeight > articleAsideHeight) {
+          if (currPos > fixedPosBtm && (articleMainPosBtm - currPos - 20) > articleAsideFixed.clientHeight) {
+            articleAsideFixed.classList.remove('fixed')
+            articleAsideFixed.classList.add('fixed-top')
+            articleAsideFixed.style.top = 0
+            articleAsideFixed.style.bottom = `auto`
+          } else if (articleMainPosBtm - currPos - 20 <= articleAsideFixed.clientHeight) {
+            articleAsideFixed.classList.remove('fixed-top')
+            articleAsideFixed.classList.add('fixed')
+            articleAsideFixed.style.bottom = `20px`
+          } else {
+            articleAsideFixed.classList.remove('fixed-top')
+            articleAsideFixed.classList.remove('fixed')
+            articleAsideFixed.style.top = `auto`
+            articleAsideFixed.style.bottom = `auto`
+          }
         }
       }
     }

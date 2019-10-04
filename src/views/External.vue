@@ -486,6 +486,10 @@
 
 <style lang="stylus" scoped>
 
+.fbComment
+  >>> iframe
+    min-width 100%
+
 .dfp
   margin 20px auto
   text-align center

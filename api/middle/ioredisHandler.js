@@ -72,7 +72,6 @@ const promiseTimeout = (promise) => {
 }
 
 const redisFetching = (url, callback) => {
-  console.log('[IOREDIS]redisFetching url', url)
   let start = Date.now()
   let decodedUrl
   let afterGet

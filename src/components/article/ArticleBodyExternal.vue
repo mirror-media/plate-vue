@@ -91,7 +91,7 @@
         return _.split(orig, `\r\n\r\n`)
       },
       contentWithHtmlTag () {
-        const orig = _.get(this.articleData, 'content')
+        const orig = _.get(this.articleData, 'content') || []
         return orig.includes('<p>')
       },
       credit () {

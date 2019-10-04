@@ -2,7 +2,7 @@
   <div class="latest-list-container">
     <div class="title"><h4 v-text="$t('article.latest')"></h4></div>
     <div class="list">
-      <div class="item" v-for="o in latests.slice(0, 6)" :key="o.slug">
+      <div class="item" v-for="o in latest.slice(0, 6)" :key="o.slug">
         <div class="thumbnail">
           <a :href="`${site_url}${getHref(o, isAppPage)}`" target="_blank" @click="sendGaClickEvent('article', 'latest')"><LazyImage :src="getImage(o, 'tiny')" :alt="getValue(o, [ 'title' ])"/></a>
           <!-- <router-link :to="{ path: getHref(o) }" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'" @click.native="sendGaClickEvent('article', 'latest')"></router-link> -->
@@ -47,9 +47,9 @@
     },
     name: 'LatestList',
     props: {
-      latests: {
+      latest: {
         type: Array,
-        default: []
+        default: () => []
       },
       isAppPage: {
         type: Boolean,

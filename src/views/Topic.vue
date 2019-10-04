@@ -99,7 +99,6 @@ import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from '../constants'
 import { TAG, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
-import { camelize } from 'humps'
 import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { getRole } from '../util/mmABRoleAssign'
@@ -509,7 +508,7 @@ export default {
       }
     },
     topicType () {
-      return this.camelize(_.get(this.topic, [ 'type' ]))
+      return _.camelCase(_.get(this.topic, 'type'))
     },
     mediaData () {
       return {
@@ -569,7 +568,6 @@ export default {
     if (this.topicType === 'timeline') { window.addEventListener('scroll', this.timelineScrollHandler) }
   },
   methods: {
-    camelize,
     checkIfLockJS () {
       unLockJS()
     },
