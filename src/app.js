@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import App from './App.vue'
-// import store from './store'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
 import titleMetaMixin from './util/mixinTitleMeta'
 import ZHTW from './locale/zh-tw.js'
 import * as filters from './filters'
-
 
 // mixin for handling title
 Vue.mixin(titleMetaMixin)
@@ -45,9 +43,10 @@ export function createApp () {
     store,
     render: h => h(App)
   })
+  const meta = app.$meta()
 
   // expose the app, the router and the store.
   // note we are not mounting the app here, since bootstrapping will be
   // different depending on whether we are in a browser or on the server.
-  return { app, router, store }
+  return { app, router, store, meta }
 }
