@@ -245,11 +245,12 @@ $color-external = #ee5a24
         vertical-align top // IE
       .link--external
         display inline-block // IE
-        min-width 64px
+        min-width 40px
         padding 7.5px 0
         font-size 0
         text-align center
         vertical-align top // IE
+        margin 0 10px
         img
           width auto
           height 30px
