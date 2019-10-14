@@ -348,8 +348,8 @@ export default {
         },
         {
           tagId: '5d65fbb6486faa3919afaebb',
-          title: '民眾黨',
-          img: '/assets/mirrormedia/2020-3.jpg',
+          title: '第三勢力',
+          img: '/assets/mirrormedia/2020-4.jpg',
           color: '#9b9b9b',
           articles: []
         }
