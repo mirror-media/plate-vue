@@ -176,8 +176,7 @@ export default {
 
 <style lang="stylus" scoped>
 .player
-  margin-left 6px
-  margin-right 6px
+  margin 1em 0
   border solid 2px #efefef
 
 .player-navs
@@ -197,9 +196,4 @@ export default {
     left 0
     top 4px
     width 100%
-
-@media (max-width 768px)
-  .player
-    margin-left 0
-    margin-right 0
 </style>
