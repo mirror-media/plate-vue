@@ -287,6 +287,8 @@
       &__aside
         display block
         margin-top 10px
+        .latest-list
+          width 300px
         &--fbPage
           width 300px
           margin 20px auto 15px

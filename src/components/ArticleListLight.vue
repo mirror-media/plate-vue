@@ -5,7 +5,7 @@
         <list-article-block-light :key="item.id" :article="item" :viewport="viewport"></list-article-block-light>
       </template>
     </div>
-    <latest-list :latest="latest" v-if="showLatestList"/>
+    <latest-list :latests="latest" v-if="showLatestList"/>
   </section>
 </template>
 

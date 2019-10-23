@@ -14,7 +14,7 @@
           <vue-dfp :is="props.vueDfp" pos="PCE2" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
         </div>
         <vue-dfp :is="props.vueDfp" slot="dfp-PCR1" pos="PCR1" class="dfp--desktop" :config="props.config" ></vue-dfp>
-        <latest-list slot="latestList" :latest="latestArticle"></latest-list>
+        <latest-list slot="latestList" :latests="latestArticle"></latest-list>
         <vue-dfp :is="props.vueDfp" slot="dfp-PCR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
         <pop-list slot="popularList" class="popularList" :pop="popularList" >
           <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
