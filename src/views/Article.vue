@@ -11,7 +11,7 @@
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
 
-      <RelatedListOverContent :articles="articlesOverContent" :relatedCategory="relatedCategory" />
+      <RelatedListOverContent v-if="abIndicator !== 'B'" :articles="relateds" :relatedCategory="relatedCategory" />
 
       <div class="article-container" v-if="!isArticlePhotography" >
         <ClientOnly>
@@ -55,7 +55,7 @@
                   :config="props.config"
                 />
               </LazyItemWrapper>
-              <LazyItemWrapper v-if="latests.length > 0" :position="verge.viewportH() / 2" :strict="true">
+              <LazyItemWrapper v-if="abIndicator !== 'B' && latests.length > 0" :position="verge.viewportH() / 2" :strict="true">
                 <LatestList :latests="latests" />
               </LazyItemWrapper>
               <LazyItemWrapper :loadAfterPageLoaded="true" :style="{ minHeight: '300px' }">
@@ -717,11 +717,8 @@
       articleStyle () {
         return _get(this.articleData, 'style', '')
       },
-      articlesOverContent () {
-        return this.abIndicator === 'A' ? this.relateds : this.latests
-      },
       relatedCategory () {
-        return this.abIndicator === 'A' ? _get(this.articleData, 'categories.0.title', '新聞') : ''
+        return _get(this.articleData, 'categories.0.title', '新聞')
       },
       currArticleSlug () {
         return _get(this.$store, 'state.route.params.slug', '')
@@ -978,7 +975,7 @@
        * Fetch latests after window.onload.
        */
       window.addEventListener('load', () => {
-        (!this.isMobile || this.abIndicator === 'B') && fetchLatestArticle(this.$store, {
+        !this.isMobile && fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: { 'sections': this.sectionId }
         })
@@ -1032,7 +1029,7 @@
         this.checkLockJS()
       },
       sectionId: function () {
-        (!this.isMobile || this.abIndicator === 'B') && fetchLatestArticle(this.$store, {
+        !this.isMobile && fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
           where: {
             'sections': this.sectionId
