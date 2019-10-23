@@ -670,6 +670,9 @@
         padding-top 10px
         width 310px
         margin-top -30px
+        .latest-list
+          width 300px
+          margin 20px auto 0
       
       .article_footer
         text-align center

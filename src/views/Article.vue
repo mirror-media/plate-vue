@@ -55,7 +55,7 @@
                   :config="props.config"
                 />
               </LazyItemWrapper>
-              <LazyItemWrapper :position="verge.viewportH() / 2" :strict="true">
+              <LazyItemWrapper v-if="latests.length > 0" :position="verge.viewportH() / 2" :strict="true">
                 <LatestList :latests="latests" />
               </LazyItemWrapper>
               <LazyItemWrapper :loadAfterPageLoaded="true" :style="{ minHeight: '300px' }">
@@ -1075,6 +1075,9 @@
           margin 20px 5px 15px
         &_popList
           margin 10px 0 0
+        .latest-list
+          width 300px
+          margin 20px auto 0
       
       .article_footer
         text-align center
