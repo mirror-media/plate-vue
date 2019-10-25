@@ -220,7 +220,7 @@ $color-external = #ee5a24
       box-shadow 0 0 5px 0 #ccc
       .topics-container
         display inline-block // IE
-        max-width 754px
+        max-width 582px
         vertical-align top // IE
         overflow hidden
         > a

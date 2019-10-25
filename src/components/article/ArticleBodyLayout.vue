@@ -511,48 +511,20 @@
           .info-box 
             p, ul 
               padding 0
-                
-    .per-slide 
-      // height 500px
-      width 100%
-      margin 1.5em 0
-
-      .swiper-wrapper 
-        // height 450px
-        display flex
-        align-items center
-
-        .swiper-slide 
-          display flex
-          align-items center
-          justify-content center
-
-          > div
-            width 100%
-
-          .slideshowImg
-            & div
-              padding-left 52px
-              padding-right 52px
-            & img 
-              width 100%
-              object-fit contain
-              object-position center center
-              max-height 450px
-
-            .img-caption
-              width 100%
-              margin 0 auto
-              padding 8px 0
-              color rgba(0,0,0,0.498)
-              font-size 1rem
-              // text-align left
-              text-align center
-              line-height 1.4rem
-
-      .swiper-pagination
-        .swiper-pagination-bullet.swiper-pagination-bullet-active
-          background-color rgba(179, 179, 179, 0.61)
+    .swiper-slide
+      text-align center
+      img
+        width calc(100% - 104px)
+        max-height 450px
+        object-fit contain
+        object-position center center
+      &__caption
+        padding 8px 0
+        color rgba(0,0,0,0.498)
+        font-size 1rem
+        text-align center
+        line-height 1.4rem
+    
   .fbPagePlugin
     display none
     margin-top 15px
@@ -781,17 +753,13 @@
 
   @media (min-width 768px)
     .article_body
-      .per-slide 
-        .swiper-wrapper 
-          .swiper-slide 
-            .slideshowImg
-              & div
-                padding-left 60px
-                padding-right 60px
-              & .img-caption
-                width 70%
-                padding 8px
-                // text-align center
+      .swiper-slide
+        img
+          width calc(100% - 120px)
+        &__caption
+          width 70%
+          margin 0 auto
+
   @media (min-width 900px) and (max-width 1199px)
     .article_body
       // .article_basic-info
@@ -819,13 +787,9 @@
 
   @media (min-width 900px)
     .article_body
-      .per-slide 
-        .swiper-wrapper 
-          .swiper-slide 
-            .slideshowImg
-              & div
-                padding-left 76px
-                padding-right 76px
+      .swiper-slide
+        img
+          width calc(100% - 152px)
 
   @media (min-width 1200px)
     .article_body

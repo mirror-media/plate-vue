@@ -57,7 +57,7 @@
       
       <div class="split-line"></div>
       <article class="content" id="article-body-content" itemprop="articleBody">
-        <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`" :is="blockWrapper(index)">
+        <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`" :is="blockWrapper(p, index)">
           <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
@@ -66,24 +66,27 @@
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
-          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
-            <template slot-scope="props">
-              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
-                <div>
-                  <div class="slideshowImg">
-                    <div>
-                      <img :alt="getValue(o, [ 'description' ], '')"
-                            :src="getValue(o, [ 'url' ], '')"
-                            :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
-                                        ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
-                                        ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
-                    </div>
-                    <div class="img-caption" v-text="getValue(o, [ 'description' ], '')"></div>
-                  </div>
-                </div>
-              </swiper-slide>
-            </template>
-          </div>
+          <Slider
+            v-else-if="p.type === 'slideshow'"
+            :autoplay="false"
+            :showSwiperPagination="false"
+            class="swiper-container--article"
+          >
+            <div
+              v-for="(o, i) in getValue(p, 'content', [])"
+              :key="`${i}-${Date.now()}`"
+              class="swiper-slide"
+            >
+              <img
+                :alt="getValue(o, 'description', '')"
+                :src="getValue(o, 'url', '')"
+                :srcset="`${getValue(o, 'mobile.url', '')} 800w,
+                  ${getValue(o, 'tablet.url', '')} 1200w,
+                  ${getValue(o, 'desktop.url', '')} 2000w`"
+              >
+              <div class="swiper-slide__caption" v-text="getValue(o, 'description', '')" />
+            </div>
+          </Slider>
           <div v-else-if="p.type === 'annotation'" class="content--annotation">
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div>
@@ -159,7 +162,6 @@ import moment from 'moment'
 // const debug = require('debug')('CLIENT:ArticleBody')
 export default {
   components: {
-    'app-slider': Slider,
     'audio-box': AudioBox,
     'newsletter': Newsletter,
     Annotation,
@@ -168,6 +170,7 @@ export default {
     ArticleImg,
     LazyItemWrapper,
     ShareLight,
+    Slider,
     AudioPlayer
   },
   computed: {
@@ -294,15 +297,20 @@ export default {
     }
   },
   methods: {
-    blockWrapper (index) {
-      switch (index) {
-        case this.firstTwoUnstyledParagraph[ 0 ]:
-        case this.firstTwoUnstyledParagraph[ 1 ]:
-        case this.nonEmptyParagraphsIndexs[0]:
-        case this.nonEmptyParagraphsIndexs[4]:
-          return 'div'
-        default:
-          return LazyItemWrapper
+    blockWrapper (p, index) {
+      // workaround: LazyItemWrapper 導致 swiper navigation 異常
+      if (p.type === 'slideshow') {
+        return 'div'
+      } else {
+        switch (index) {
+          case this.firstTwoUnstyledParagraph[ 0 ]:
+          case this.firstTwoUnstyledParagraph[ 1 ]:
+          case this.nonEmptyParagraphsIndexs[0]:
+          case this.nonEmptyParagraphsIndexs[4]:
+            return 'div'
+          default:
+            return LazyItemWrapper
+        }
       }
     },
     getValue,
