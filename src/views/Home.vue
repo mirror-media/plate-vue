@@ -65,7 +65,7 @@
               :viewport="viewportWidth">
             </LatestArticleMain>
           </main>
-          <aside v-if="!isMobile">
+          <aside>
             <div>
               <MirrorMediaTVAside v-if="viewportWidth >= 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
               <div class="aside-title" ref="aside_title"><h2 v-text="$t('homepage.focus')"></h2></div>
@@ -583,6 +583,8 @@ export default {
 .home-mainContent
   width 100%
   flex-wrap wrap
+  aside
+    display none
   .latest-main-container
     width 90%
     margin 0 auto
@@ -739,6 +741,7 @@ section.footer
     main
       width 75%
     aside
+      display block
       width 25%
       padding-left 30px
       .aside-title
@@ -751,11 +754,18 @@ section.footer
           line-height 1.15
           &::after
             display none
+    .aside-title
+      h2
+        display none
 
     .latest-main-container
       margin-top 25px
 
   section.footer
     width 1024px
+  
+  .focusNewsContainer
+    &__latest-mobile-b
+      display none
     
 </style>

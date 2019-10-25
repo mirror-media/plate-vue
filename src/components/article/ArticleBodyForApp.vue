@@ -10,44 +10,12 @@
     <div class="article_subtitle" v-if="subtitle.length > 0"><h2 v-text="subtitle"></h2></div>
     <div class="article_credit" v-html="credit"></div>
     <main class="article_main">
-      <div class="brief fb-quotable">
-        <div v-for="p in briefArr">
-          <div v-if="p.type === 'image'" :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`">
-            <img class="thumbnail"
-                  :alt="`${getValue(p.content, [ 0, 'description' ], '')}`"
-                  v-lazy="`${getValue(p.content, [ 0, 'url' ], '')}`"
-                  :data-srcset="`
-                      ${getValue(p.content, [ 0, 'mobile', 'url' ], '')} 800w,
-                      ${getValue(p.content, [ 0, 'tablet', 'url' ], '')} 1200w,
-                      ${getValue(p.content, [ 0, 'desktop', 'url' ], '')} 2000w`">
-            <div class="caption" v-text="getValue(p.content, [ 0, 'description' ], '')"></div>
-          </div>
-          <div v-else-if="p.type === 'video'" is="article-video" 
-            :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
-          <div v-else-if="p.type === 'audio'" is="audio-box" 
-            :audio="getValue(p, [ 'content', 0], {})"></div>
-          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
-            <template slot-scope="props">
-              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
-                <div>
-                  <div class="slideshowImg">
-                    <div>
-                      <img :alt="getValue(o, [ 'description' ], '')" 
-                            :src="getValue(o, [ 'url' ], '')"
-                            :srcset="`${getValue(o, [ 'mobile', 'url' ], '')} 800w,
-                                        ${getValue(o, [ 'tablet', 'url' ], '')} 1200w,
-                                        ${getValue(o, [ 'desktop', 'url' ], '')} 2000w`">
-                    </div>
-                    <div class="img-caption" v-text="getValue(o, [ 'description' ], '')"></div>
-                  </div>
-                </div>
-              </swiper-slide>
-            </template>
-          </div>
-          <div v-else-if="p.type === 'annotation'">
-            <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
-          </div>
-          <div v-else :style="{ backgroundColor: category.color || '#bcbcbc' }" v-html="paragraphComposer(p)"></div>
+      <div
+        :style="{ backgroundColor: category.color || '#bcbcbc' }"
+        class="brief fb-quotable"
+      >
+        <div v-for="(p, i) in briefArr" :key="`brief-${i}`">
+          <div v-if="p.type === 'unstyled'" v-html="paragraphComposer(p)"></div>
         </div>      
       </div>
       <div v-if="viewport <= 768" class="dfp-at--mobile">
@@ -60,13 +28,27 @@
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
           <div v-else-if="p.type === 'audio'" is="audio-box" 
             :audio="getValue(p, [ 'content', 0], {})"></div>
-          <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
-            <template slot-scope="props">
-              <swiper-slide :is="props.slide" v-for="(o, i) in getValue(p, [ 'content'], [])" :key="`${i}-${Date.now()}`">
-                <div v-html="paragraphComposer({ type: 'slideshow', content: [ o ] })"></div>
-              </swiper-slide>
-            </template>
-          </div>
+          <Slider
+            v-else-if="p.type === 'slideshow'"
+            :autoplay="false"
+            :showSwiperPagination="false"
+            class="swiper-container--article"
+          >
+            <div
+              v-for="(o, i) in getValue(p, 'content', [])"
+              :key="`${i}-${Date.now()}`"
+              class="swiper-slide"
+            >
+              <img
+                :alt="getValue(o, 'description', '')"
+                :src="getValue(o, 'url', '')"
+                :srcset="`${getValue(o, 'mobile.url', '')} 800w,
+                  ${getValue(o, 'tablet.url', '')} 1200w,
+                  ${getValue(o, 'desktop.url', '')} 2000w`"
+              >
+              <div class="swiper-slide__caption" v-text="getValue(o, 'description', '')" />
+            </div>
+          </Slider>
           <div v-else-if="p.type === 'annotation'">
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div>
@@ -111,11 +93,11 @@ import moment from 'moment'
 
 export default {
   components: {
-    'app-slider': Slider,
     'audio-box': AudioBox,
     'proj-list': ProjectList,
     Annotation,
-    ArticleVideo
+    ArticleVideo,
+    Slider
   },
   computed: {
     articleStyle () {
@@ -557,7 +539,6 @@ export default {
           font-size 1.2rem
           
           strong 
-            color rgba(65, 65, 65, 0.61)
             font-weight bold
 
           em
@@ -919,47 +900,20 @@ export default {
           .info-box 
             p, ul 
               padding 0
-                
-    .per-slide 
-      // height 500px
-      width 100%
-      margin 1.5em 0
-
-      .swiper-wrapper 
-        // height 450px
-        display flex
-        align-items center
-
-        .swiper-slide 
-          display flex
-          align-items center
-          justify-content center
-
-          > div
-            width 100%
-
-          .slideshowImg
-            & div
-              padding-left 52px
-              padding-right 52px
-            img 
-              width 100%
-              object-fit contain
-              object-position center center
-              max-height 450px
-
-            .img-caption
-              width 100%
-              margin 0 auto
-              padding 8px 0
-              color rgba(0,0,0,0.498)
-              font-size 1rem
-              text-align center
-              line-height 1.4rem
-
-      .swiper-pagination
-        .swiper-pagination-bullet.swiper-pagination-bullet-active
-          background-color rgba(179, 179, 179, 0.61)
+    .swiper-slide
+      text-align center
+      img
+        width calc(100% - 104px)
+        max-height 450px
+        object-fit contain
+        object-position center center
+      &__caption
+        padding 8px 0
+        color rgba(0,0,0,0.498)
+        font-size 1rem
+        text-align center
+        line-height 1.4rem           
+    
   .herbsapi
     display flex
     align-items center
@@ -1069,6 +1023,11 @@ export default {
      .article_body
         > .article_basic-info, > .article_title, > .article_credit
           padding 0 25px !important
+        .article_main
+          .brief 
+            width calc(100% - 40px)
+            margin-left auto
+            margin-right auto
 
   @media (min-width 0px) and (max-width 767px)
     .article_body
@@ -1141,17 +1100,12 @@ export default {
 
   @media (min-width 768px)
     .article_body
-      .per-slide 
-        .swiper-wrapper 
-          .swiper-slide 
-            .slideshowImg
-              & div
-                padding-left 60px
-                padding-right 60px
-              & .img-caption
-                width 70%
-                padding 8px
-                // text-align center
+      .swiper-slide
+        img
+          width calc(100% - 120px)
+        &__caption
+          width 70%
+          margin 0 auto
   @media (min-width 900px) and (max-width 1199px)
     .article_body
       .article_basic-info
@@ -1172,13 +1126,5 @@ export default {
         width 695px
         max-width 695px
         margin 0 auto 15px
-  @media (min-width 900px)
-    .article_body
-      .per-slide 
-        .swiper-wrapper 
-          .swiper-slide 
-            .slideshowImg
-              & div
-                padding-left 76px
-                padding-right 76px
+  
 </style>

@@ -1,148 +1,105 @@
 <template>
-  <swiper :options="swiperOption" :ref="slideId">
-    <slot :slide="slideComp"></slot>
-    <slot name="custNav" :thisSwiperId="slideId"></slot>
-    <div class="swiper-pagination" :id="swiperPagiantionId" slot="pagination" :style="custStyle"></div>
-    <div class="swiper-button swiper-button-prev" :class="navBtnClass" slot="button-prev" :style="[ navBtnStyle, navBtnPrevStyle ]"></div>
-    <div class="swiper-button swiper-button-next" :class="navBtnClass" slot="button-next" :style="[ navBtnStyle, navBtnNextStyle ]"></div>
-  </swiper>
+  <div v-swiper:[uuid]="swiperOption" :ref="uuid" class="swiper-container">
+    <slot name="swiper-out-of-wrapper" />
+    <div class="swiper-wrapper">
+      <!-- remember add "swiper-slide" class name to each slot components -->
+      <slot />
+    </div>
+    <div
+      v-if="showSwiperPagination"
+      :class="`${uuid}-swiper-pagination`"
+      class="swiper-pagination"
+    />
+    <div
+      v-if="showSwiperButton"
+      :class="`${uuid}-swiper-button-prev`"
+      class="swiper-button-prev"
+    />
+    <div
+      v-if="showSwiperButton"
+      :class="`${uuid}-swiper-button-next`"
+      class="swiper-button-next"
+    />
+  </div>
 </template>
 <script>
-  import Swiper from 'vue-awesome-swiper/src/swiper.vue'
-  import SwiperSlide from 'vue-awesome-swiper/src/slide.vue'
+  import uuidv4 from 'uuid/v4'
+  import Vue from 'vue'
 
-  if (process.env.VUE_ENV === 'client') {
-    require('swiper/dist/css/swiper.css')
+  if (process.browser) {
+    const VueAwesomeSwiper = require('vue-awesome-swiper/dist/ssr')
+    Vue.use(VueAwesomeSwiper)
   }
 
   export default {
-    components: {
-      Swiper,
-      SwiperSlide
-    },
-    computed: {
-      navBtnClass () {
-        // return `${this.slideId}-navbtn`
-        return {
-          enabled: (this.option[ 'setNavBtn' ])
+    name: 'Slider',
+    props: {
+      autoplay: {
+        type: [ Boolean, Object ],
+        default () {
+          return {
+            delay: 5000,
+            disableOnInteraction: false
+          }
         }
       },
-      navBtnStyle () {
-        return this.option[ 'navBtnStyle' ] || {}
+      initialSlide: {
+        type: Number,
+        default: 0
       },
-      navBtnNextStyle () {
-        return this.option[ 'navBtnNextStyle' ] || {}
+      loop: {
+        type: Boolean,
+        default: true
       },
-      navBtnPrevStyle () {
-        return this.option[ 'navBtnPrevStyle' ] || {}
+      showSwiperPagination: {
+        type: Boolean,
+        default: true
       },
-      swiperPagiantionId () {
-        return `${this.slideId}-pagination`
+      showSwiperButton: {
+        type: Boolean,
+        default: true
       },
-      swiper () {
-        return this.$refs[ this.slideId ].swiper
+      slidesPerView: {
+        type: [ Number, String ],
+        default: 'auto'
       },
-      slideComp () {
-        return SwiperSlide
-      },
-      swiperOption () {
-        const defaultOpt = {
-          notNextTick: true,
-          direction: 'horizontal',
-          grabCursor: true,
-          setWrapperSize: true,
-          loop: true,
-          initialSlide: 1,
-          // effect: 'coverflow',
-          // coverflow: {
-          //   stretch: 100,
-          //   modifier: 3,
-          // },
-          // pagination: `#${this.swiperPagiantionId}`,
-          // paginationClickable: true,
-          // paginationHide: false,
-          uniqueNavElements: true,
-          // mousewheelControl: true,
-          // preloadImages: true,
-          // updateOnImagesReady : true,
-          lazyLoading: true,
-          lazyLoadingInPrevNext: true,
-          lazyLoadingOnTransitionStart: true,
-          // zoom : true,
-
-          prevButton: '.swiper-button-prev',
-          nextButton: '.swiper-button-next',
-          observer: true,
-          observeParents: true
-          // virtualTranslate : true,
-        }
-        if (this.option[ 'paginationable' ]) {
-          this.option[ 'pagination' ] = `#${this.swiperPagiantionId}`
-        }
-        if (this.option['showPagination']) {
-          this.custStyle = 'top: 1px'
-        }
-        if (this.$refs[ this.slideId ]) {
-          this.swiper.update()
-        }
-        return Object.assign(defaultOpt, this.option)
+      speed: {
+        type: Number,
+        default: 1000
       }
     },
     data () {
       return {
-        custStyle: ''
-      }
-    },
-    methods: {
-      slideTo () {
-        return this.swiper.slideNext()
-      }
-    },
-    mounted () {
-      // this.swiper.update()
-      // this.swiper.slideTo(2, 1000, true)
-      // this.swiper.update(true)
-      if (!window[ 'refs' ]) window[ 'refs' ] = {}
-      window[ 'refs' ][ this.slideId ] = this.swiper
-      window[ 'refs' ][ this.slideId ].init()
-    },
-    name: 'app-slider',
-    props: {
-      slideId: {
-        default: () => {
-          const id = `id-${Date.now()}`
-          return id
+        uuid: uuidv4(),
+        swiperOption: {
+          initialSlide: this.initialSlide,
+          loop: this.loop,
+          slidesPerView: this.slidesPerView,
+          watchSlidesVisibility: true,
+          centeredSlides: true,
+          spaceBetween: 0,
+          speed: this.speed,
+          autoplay: this.autoplay,
+          pagination: {
+            el: `.swiper-pagination`,
+          },
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          }
         }
-      },
-      option: { default: () => { return {} } }
+      }
     }
   }
 </script>
-<style lang="stylus">
-  .swiper-container
-    .swiper-pagination
-      position relative
-      top 20px
 
-      &.swiper-pagination-bullets
-        bottom 0
-      
-      .swiper-pagination-bullet
-        bottom 0
-        box-shadow 0 0 7px rgba(65, 65, 65, 0.61)
-        border 2px solid #000000
-        background-color #fff
-        width 15px
-        height 15px
+<style src="swiper/dist/css/swiper.css" scoped></style>
 
-        &.swiper-pagination-bullet-active
-          background #4d4d4d
-          border none
-        
-      
-    
-    .swiper-button
-      display none
+<style lang="stylus" scoped>
+
+.swiper-container
+  &--article
+    >>> .swiper-button-prev, >>> .swiper-button-next
       width 30px
       height 40px
       margin-top -50px
@@ -151,45 +108,43 @@
       background-position 45% 50%
       background-repeat no-repeat
       border-radius 4px
-
       &:hover
         background-color #064f77
-        &.swiper-button-prev
-          background-image url(/assets/mirrormedia/icon/arrow-slideshow-white-left.png)
-        &.swiper-button-next
-          background-image url(/assets/mirrormedia/icon/arrow-slideshow-white-right.png)
-
-      &.enabled
-        display block
-      
-    
-    .swiper-button-prev
+    >>> .swiper-button-prev
       left 5px
       background-image url(/assets/mirrormedia/icon/arrow-slideshow-blue-left.png)
-    //   background-image url(/assets/mirrormedia/icon/arrow1-2017.png)
-    
-    .swiper-button-next
+      &:hover
+        background-image url(/assets/mirrormedia/icon/arrow-slideshow-white-left.png)
+    >>> .swiper-button-next
       right 5px
       background-image url(/assets/mirrormedia/icon/arrow-slideshow-blue-right.png)
-    //   background-image url(/assets/mirrormedia/icon/arrow2-2017.png)
-
-@media (min-width 900px)
-  .swiper-container
-    .swiper-button-prev
-      left 20px
-    .swiper-button-next
-      right 20px
+      &:hover
+        background-image url(/assets/mirrormedia/icon/arrow-slideshow-white-right.png)
+.swiper-slide
+  box-sizing border-box
+.swiper-pagination
+  >>> .swiper-pagination-bullet
+    display inline-block
+    width 8px
+    height 8px
+    background-color #b5b5b5
+    border-radius 8px
+    transition background-color 0.5s ease
+    & + .swiper-pagination-bullet
+      margin-left 10px
+  >>> .swiper-pagination-bullet-active
+    background-color #fff
 
 @media (min-width 1200px)
   .swiper-container
-    .swiper-button
-      width 60px
-      height 80px
-      margin-top -60px
-      background-size 28px auto
-    .swiper-button-prev
-      left 0
-    .swiper-button-next
-      right 0
-
+    &--article
+      >>> .swiper-button-prev, >>> .swiper-button-next
+        width 60px
+        height 80px
+        margin-top -60px
+        background-size 28px auto
+      >>> .swiper-button-prev
+        left 0
+      >>> .swiper-button-next
+        right 0
 </style>

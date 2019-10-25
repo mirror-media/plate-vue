@@ -1,37 +1,23 @@
 <template>
   <section id="editorChoice" class="editorChoice">
-    <div class="slider">
-      <h2>編輯精選</h2>
-      <div class="slider-container" :style="{ width: `${editorChoice.length * 100}%`, transform: `translateX(-${100 / editorChoice.length * sliderCurrent}%)` }">
-        <a v-for="item in editorChoice"
-          :key="item.slug"
-          :href="getHref(item)"
-          :style="{ width: `${100 / editorChoice.length}%`, backgroundImage: `url(${item.heroImage.image.resizedTargets.tablet.url})` }"
-          class="slider__item"
-          target="_blank"
-          @click="sendGaClickEvent('home', 'choice')">
-          <div class="slider__item-curtain"></div>
-          <p class="slider__item-title" v-text="item.title"></p>
-        </a>
-      </div>
-      <div class="slider__nav">
-        <div class="nav-container" :style="{ width: `${ editorChoice.length * 8 + (editorChoice.length - 1) * 10 }px` }">
-          <div v-for="(item, index) in editorChoice"
-            :key="`btn-${item.slug}`"
-            :class="{ active: sliderCurrent === index}"
-            class="dot"
-            @click="sliderCurrent = index">
-          </div>
-        </div>
-      </div>
-      <div class="slider__arrow next" @click="handleNextSlider">
-        <img src="/assets/mirrormedia/icon/arrow2-2017.png" alt="下一則" >
-      </div>
-      <div class="slider__arrow previous" @click="handlePrevSlider">
-        <img src="/assets/mirrormedia/icon/arrow1-2017.png" alt="上一則" >
-      </div>
-    </div>
-    <div class="editorChoice--mobile">
+    <Slider v-if="!isMobile">
+      <template v-slot:swiper-out-of-wrapper>
+        <h2>編輯精選</h2>
+      </template>
+      <a
+        v-for="item in editorChoice"
+        :key="`swiper-slide-${item.slug}`"
+        :href="getHref(item)"
+        :style="{ backgroundImage: `url(${item.heroImage.image.resizedTargets.tablet.url})` }"
+        class="swiper-slide"
+        target="_blank"
+        @click="sendGaClickEvent('home', 'choice')"
+      >
+        <div class="swiper-slide__curtain" />
+        <p class="swiper-slide__title" v-text="item.title" />
+      </a>
+    </Slider>
+    <div v-if="isMobile" class="editorChoice--mobile">
       <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
       <div v-for="item in editorChoice" :href="getHref(item)" class="editorChoice__block" :key="item.slug">
         <template>
@@ -42,9 +28,9 @@
             class="editorChoice__block--img"
             @click="sendGaClickEvent('home', 'choice')">
             <LatestAriticleImg class="figure"
-              :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
-              :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
-            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
+              :src="getImage(item, 'mobile')" :id="get(item, 'heroImage.id', Date.now())"
+              :key="get(item, 'heroImage.id', Date.now())"></LatestAriticleImg>
+            <div :style="getSectionStyle(get(item, 'sections.0', ''))" v-text="get(item, 'sections.0.title', '')"></div>
           </a>
           <a
             v-if="item.style === 'projects'"
@@ -53,13 +39,13 @@
             class="editorChoice__block--img"
             @click.native="sendGaClickEvent('home', 'choice')">
             <LatestAriticleImg class="figure"
-              :src="getImage(item, 'mobile')" :id="getValue(item, [ 'heroImage', 'id' ], Date.now())"
-              :key="getValue(item, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
-            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
+              :src="getImage(item, 'mobile')" :id="get(item, 'heroImage.id', Date.now())"
+              :key="get(item, 'heroImage.id', Date.now())"></LatestAriticleImg>
+            <div :style="getSectionStyle(get(item, 'sections.0', ''))" v-text="get(item, 'sections.0.title', '')"></div>
           </a>
         </template>
         <div class="editorChoice__block--title" :class="getSection(item)">
-          <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
+          <div :style="getSectionStyle(get(item, 'sections.0', ''))" v-text="get(item, 'sections.0.title', '')"></div>
           <template>
             <a
               v-if="item.style !== 'projects'"
@@ -84,17 +70,17 @@
 <script>
 
 import { SECTION_MAP } from 'src/constants'
-import { getHref, getImage, getSection, getValue, sendGaClickEvent } from 'src/util/comm'
+import { getHref, getImage, getSection, sendGaClickEvent } from 'src/util/comm'
 import LatestAriticleImg from 'src/components/LatestAriticleImg.vue'
 import Slider from 'src/components/Slider.vue'
 import truncate from 'truncate'
-import _ from 'lodash'
+import { get } from 'lodash'
 
 export default {
   name: 'editorChoice',
   components: {
-    'app-slider': Slider,
-    LatestAriticleImg
+    LatestAriticleImg,
+    Slider
   },
   props: {
     editorChoice: {
@@ -102,134 +88,81 @@ export default {
     },
     target: {
       default: () => ('_self')
-    },
-    viewport: {
-      default: () => { return undefined }
-    }
-  },
-  data () {
-    return {
-      sliderCurrent: 0,
-      sliderTimer: undefined,
-      sliderTouchEndX: 0,
-      sliderTouchStartX: 0,
     }
   },
   computed: {
-    sliderOption () {
-      return {
-        setNavBtn: false,
-        grabCursor: false,
-        autoplay: 5000,
-        autoplayDisableOnInteraction: false,
-        onSlideChangeStart: (swiper) => {
-          this.updateNavStatus(swiper.activeIndex)
-        }
-      }
+    isMobile () {
+      return get(this.$store, 'state.viewport.width') < 1200
     }
   },
   methods: {
-    jumpToSlide (e, pTarget) {
-      if (!e && !pTarget) { return }
-      const targ = pTarget || e.target
-      const targOld = targ.parentNode.getAttribute('class')
-      // const targSect = targ.getAttribute('section')
-      const i = Number(targ.getAttribute('index'))
-      window.refs[ 'editorChoiceSlider' ].slideTo((i + 1), 1000, false)
-      const lastTarg = document.querySelector(`.${targOld}.active`)
-      if (lastTarg) {
-        lastTarg.setAttribute('class', `${targOld}`)
-        lastTarg.removeAttribute('style')
-      }
-      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
-      targ.parentNode.setAttribute('class', `${targOld} active`)
-    },
-    jumpToSlideForParent (e) {
-      this.jumpToSlide(null, e.target.children[0])
-    },
+    get,
     getHref,
-    getSrcSet (img) {
-      return `${img.resizedTargets.mobile.url} 600w, ${img.resizedTargets.tablet.url} 900w, ${img.resizedTargets.desktop.url} 1200w`
-    },
     getImage,
     getSection,
     getTitle (article) {
-      return truncate(_.get(article, 'title'), 24)
+      return truncate(get(article, 'title'), 24)
     },
-    getValue,
     getSectionStyle (sect) {
-      const sectionId = _.get(sect, [ 'id' ])
+      const sectionId = get(sect, 'id')
       const style = {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
+        backgroundColor: get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
       }
       return style
     },
-    handleNextSlider () {
-      clearInterval(this.sliderTimer)
-      this.sliderCurrent = (this.sliderCurrent + 1 < this.editorChoice.length) ? this.sliderCurrent + 1 : 0
-      this.setTimer()
-    },
-    handlePrevSlider () {
-      clearInterval(this.sliderTimer)
-      this.sliderCurrent = (this.sliderCurrent - 1 > -1) ? this.sliderCurrent - 1 : this.editorChoice.length - 1
-      this.setTimer()
-    },
     sendGaClickEvent,
-    setHoverEvent () {
-      const _targ = document.querySelectorAll('.editorChoice__menu--item')
-      const _targChilde = document.querySelectorAll('.editorChoice__menu--item > span')
-      _.map(_targ, (o) => {
-        o.onmouseover = (e) => {
-          this.jumpToSlide(null, e.target.children[0])
-        }
-      })
-      _.map(_targChilde, (o) => {
-        o.onmouseover = (e) => {
-          this.jumpToSlide(e)
-        }
-      })
-    },
-    setTimer () {
-      this.sliderTimer = setInterval(() => {
-        if (this.sliderCurrent + 1 < this.editorChoice.length) {
-          this.sliderCurrent += 1
-        } else {
-          this.sliderCurrent = 0
-        }
-      }, 5000)
-    },
-    styleFor1stitem (sect) {
-      return {
-        borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
-      }
-    },
-    updateNavStatus (ind) {
-      const index = (ind !== 6) ? (ind % 6) : 1
-      const targ = document.querySelector(`.editorChoice__menu--item span[index="${(index - 1)}"]`)
-      const targOld = targ.parentNode.getAttribute('class')
-      // const targSect = targ.getAttribute('section')
-      const lastTarg = document.querySelector(`.${targOld}.active`)
-      if (lastTarg) {
-        lastTarg.setAttribute('class', `${targOld}`)
-        lastTarg.removeAttribute('style')
-      }
-      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
-      targ.parentNode.setAttribute('class', `${targOld} active`)
-    }
-  },
-  mounted () {
-    this.setHoverEvent()
-    this.setTimer()
-  },
-  updated () {
-    this.setHoverEvent()
-  },
-  beforeDestroy () {
-    clearInterval(this.sliderTimer)
-  },
+  }
 }
 </script>
 <style lang="stylus" scoped>
+
+.editorChoice
+  .swiper-container
+    h2
+      position absolute
+      top 20px
+      left 20px
+      z-index 10
+      margin 0
+      color #fff
+      font-size 1rem
+      font-weight 500
+      user-select none
+      text-shadow #000 .1em .1em .5em
+  .swiper-slide
+    padding-top 56.25%
+    background-size cover
+    background-position center center
+    background-repeat no-repeat
+    &__title
+      position absolute
+      left 10%
+      bottom 45px
+      width 80%
+      color #fff
+      text-align justify
+      font-size 2rem
+      font-weight 500
+      line-height 1.5
+    &__curtain
+      position absolute
+      left 0
+      right 0
+      bottom 0
+      height 60%
+      background-image linear-gradient(transparent, rgba(0,0,0,1))
+
+  >>> .swiper-button-prev, >>> .swiper-button-next
+    width 30px
+    height 57px
+    margin-top -29px
+    background-image url(/assets/mirrormedia/icon/arrow1-2017.png)
+    background-size contain
+  >>> .swiper-button-prev
+    left 15px
+  >>> .swiper-button-next
+    right 15px
+    transform rotate(180deg)
 
 .editorChoice
   > h2
@@ -303,94 +236,6 @@ export default {
         margin-right -100%
         margin-left 10px
         border-top 5px solid #356d9c
-
-.slider
-  display none
-  position relative
-  width 100%
-  padding-top 56.25%
-  margin 0 auto
-  overflow hidden
-  > h2
-    position absolute
-    top 20px
-    left 20px
-    z-index 1
-    margin 0
-    color #fff
-    font-size 1rem
-    font-weight 500
-    user-select none
-    text-shadow #000 .1em .1em .5em
-  &-container
-    position absolute
-    top 0
-    left 0
-    display flex
-    height 100%
-    transition transform 1s ease-out 0s
-  &__item
-    position relative
-    display block
-    height 100%
-    background-size cover
-    background-position center center
-    background-repeat no-repeat
-    &-title
-      position absolute
-      left 10%
-      bottom 45px
-      width 80%
-      margin 0
-      color #fff
-      text-align justify
-      font-size 2rem
-      font-weight 500
-      line-height 1.5
-    &-curtain
-      position absolute
-      left 0
-      right 0
-      bottom 0
-      height 60%
-      background-image linear-gradient(transparent, rgba(0,0,0,1))
-  &__nav
-    display flex
-    align-items center
-    position absolute
-    left 50%
-    bottom 10px
-    transform translateX(-50%)
-    max-width 115px
-    height 10px
-    overflow hidden
-    .nav-container
-      display flex
-    .dot
-      width 8px
-      height 8px
-      background-color #b5b5b5
-      border-radius 8px
-      transition background-color .5s ease
-      cursor pointer
-      & + .dot
-        margin-left 10px
-      &:hover
-        background-color #fff
-      &.active
-        background-color #fff
-  &__arrow
-    position absolute
-    top 50%
-    z-index 10
-    transform translateY(-50%)
-    cursor pointer
-    img
-      width 30px
-    &.next
-      right 15px
-    &.previous
-      left 15px
 
 @media (max-width: 599px)
   .editorChoice--mobile
@@ -494,8 +339,5 @@ export default {
           color #fff
     &--mobile
       display none
-      
-  .slider
-    display block
 
 </style>
