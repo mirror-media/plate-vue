@@ -98,6 +98,7 @@
 <style lang="stylus" scoped>
 
 .swiper-container
+  clear both
   &--article
     >>> .swiper-button-prev, >>> .swiper-button-next
       width 30px
@@ -122,6 +123,11 @@
         background-image url(/assets/mirrormedia/icon/arrow-slideshow-white-right.png)
 .swiper-slide
   box-sizing border-box
+  display flex
+  flex-direction column
+  justify-content center
+  align-items center
+  height auto
 .swiper-pagination
   >>> .swiper-pagination-bullet
     display inline-block
