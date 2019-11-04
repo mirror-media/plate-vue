@@ -47,7 +47,6 @@
               <LazyItemWrapper
                 v-if="!hiddenAdvertised"
                 :loadAfterPageLoaded="true"
-                :style="{ minHeight: '250px', backgroundColor: '#f5f5f5' }"
               >
                 <vue-dfp
                   :is="props.vueDfp"
@@ -67,7 +66,6 @@
                   slot="dfpR2"
                   :position="verge.viewportH()"
                   :strict="true"
-                  :style="{ minHeight: '250px', backgroundColor: '#f5f5f5' }"
                 >
                   <vue-dfp
                     :is="props.vueDfp"
