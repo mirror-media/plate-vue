@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { alexa, autoAdsAsyncSrc, autoAdsScript, dableScript, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from './dynamicScript'
+import { alexa, autoAdsAsyncSrc, autoAdsScript, dableScript, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from '../constants/thirdPartyScripts'
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
 let isScriptLoaded = false
