@@ -740,6 +740,9 @@ section.footer
 
     main
       width 75%
+      .aside-title
+        h2
+          display none
     aside
       display block
       width 25%
@@ -754,10 +757,7 @@ section.footer
           line-height 1.15
           &::after
             display none
-    .aside-title
-      h2
-        display none
-
+            
     .latest-main-container
       margin-top 25px
 
