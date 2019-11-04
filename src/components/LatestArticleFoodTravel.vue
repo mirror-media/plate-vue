@@ -104,7 +104,7 @@ export default {
     },
     topics () {
       return this.commonData.topics.items.filter((o) => {
-        if (o.hasOwnProperty('sections')) return o.sections[0] === SECTION_FOODTRAVEL_ID // foodtravel
+        if (Object.prototype.hasOwnProperty.call(o, 'sections')) return o.sections[0] === SECTION_FOODTRAVEL_ID // foodtravel
       })
     }
   }

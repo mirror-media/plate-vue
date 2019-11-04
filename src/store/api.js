@@ -12,7 +12,7 @@ function _buildQuery (params = {}) {
   let query = {}
   const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id', 'keyword', 'offset' ]
   whitelist.forEach((ele) => {
-    if (params.hasOwnProperty(ele)) {
+    if (Object.prototype.hasOwnProperty.call(params, ele)) {
       if (ele === 'where' || ele === 'embedded') {
         query[ele] = JSON.stringify(params[ele])
       } else if (ele === 'id') {
