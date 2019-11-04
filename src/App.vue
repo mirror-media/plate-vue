@@ -10,6 +10,7 @@
   import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from 'src/constants'
   import { mmLog } from './util/comm.js'
   import { visibleTracking } from './util/visibleTracking'
+  import loadScripts from './mixin/loadScripts.js'
   import Tap from 'tap.js'
   
   const debug = require('debug')('CLIENT:App')
@@ -44,6 +45,7 @@
         { vmid: 'twitter:image', name: 'twitter:image', content: SITE_OGIMAGE },
       ],
     },
+    mixins: [ loadScripts ],
     data () {
       return {
         doc: {},

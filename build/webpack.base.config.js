@@ -34,12 +34,13 @@ module.exports = {
           compilerOptions: {
             preserveWhitespace: false
           }
-        }
+        },
+        exclude: /deprecated/
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /(node_modules|deprecated)/
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
@@ -58,7 +59,8 @@ module.exports = {
             options: { minimize: isProd }
           },
           'postcss-loader'
-        ]
+        ],
+        exclude: /deprecated/
       },
       {
         test: /\.styl(us)?$/,

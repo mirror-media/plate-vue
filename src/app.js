@@ -4,12 +4,9 @@ import App from './App.vue'
 import { createStore } from './store'
 import { createRouter } from './router'
 import { sync } from 'vuex-router-sync'
-import titleMetaMixin from './util/mixinTitleMeta'
 import ZHTW from './locale/zh-tw.js'
 import * as filters from './filters'
 
-// mixin for handling title
-Vue.mixin(titleMetaMixin)
 Vue.use(VueI18n)
 
 // register global utility filters.
