@@ -12,7 +12,7 @@
   import { visibleTracking } from './util/visibleTracking'
   import loadScripts from './mixin/loadScripts.js'
   import Tap from 'tap.js'
-  
+
   const debug = require('debug')('CLIENT:App')
 
   const resetAdCoverFlag = store => store.dispatch('RESET_AD_COVER')
@@ -74,7 +74,7 @@
        * 但現在又不能把 updateViewport() 改放回到 beforeMount，不然網頁會出現難以理解的錯誤
        */
       updateViewport(this.$store)
-      
+
       this.doc = document
       this.launchLogger()
       this.setUpVisibleTracking()

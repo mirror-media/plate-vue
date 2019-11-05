@@ -1,6 +1,6 @@
 import { SITE_DOMAIN, SITE_URL, SITE_PROJ_URL, } from '../constants'
 import _ from 'lodash'
-import Browser from 'bowser'
+import Bowser from 'bowser'
 import Cookie from 'vue-cookie'
 import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
@@ -315,16 +315,18 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
     const exp_related = /^related/g
     const exp_recoommend = /^recommend/g
 
+    const browser = Bowser.parse(window.navigator.userAgent)
+
     const log = {
       'browser': {
-        name: Browser.name,
-        version: Browser.version
+        name: browser.browser.name,
+        version: browser.browser.version
       },
       'category': category,
       'client-id': '',
       'client-os': {
         name: clientOs,
-        version: Browser.osversion
+        version: browser.os.osversion
       },
       'curr-url': window.location.href,
       'datetime': moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),

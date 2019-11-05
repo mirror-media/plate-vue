@@ -54,10 +54,7 @@ module.exports = {
         test: /\.css$/,
         use: [
           'vue-style-loader',
-          {
-            loader: 'css-loader',
-            options: { minimize: isProd }
-          },
+          'css-loader',
           'postcss-loader'
         ],
         exclude: /deprecated/
@@ -66,10 +63,7 @@ module.exports = {
         test: /\.styl(us)?$/,
         use: [
           'vue-style-loader',
-          {
-            loader: 'css-loader',
-            options: { minimize: isProd }
-          },
+          'css-loader',
           'postcss-loader',
           'stylus-loader'
         ]
