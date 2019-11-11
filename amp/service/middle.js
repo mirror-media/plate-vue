@@ -1,5 +1,4 @@
 require("@babel/register")
-// require("@babel/polyfill")
 
 const _ = require('lodash')
 const { handlerError } = require('../../api/comm')

@@ -3,6 +3,9 @@
       "eslint:recommended",
       "plugin:vue/base"
     ],
+    // If you want to use custom parsers such as babel-eslint or @typescript-eslint/parser,
+    // you have to use parserOptions.parser option instead of parser option. 
+    // https://eslint.vuejs.org/user-guide/#usage
     "parserOptions": {
       "parser": "babel-eslint"
     },
