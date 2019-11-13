@@ -74,12 +74,8 @@
                     pos="PCR2"
                   />
                 </LazyItemWrapper>
-                <LazyItemWrapper :position="verge.viewportH()" :strict="true">
-                  <div slot="fbPage" class="article_aside_fbPage fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-width="300" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-                    <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-                      <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-                    </blockquote>
-                  </div>
+                <LazyItemWrapper :position="verge.viewportH()" slot="fbPage" :strict="true">
+                  <FbSocialPlugins  />
                 </LazyItemWrapper>
                 <LazyItemWrapper :position="verge.viewportH()" slot="popListVert" :strict="true">
                   <PopListVert :pop="popularlist" class="article_aside_popList" />
@@ -354,6 +350,7 @@
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
   import DfpST from '../components/DfpST.vue'
+  import FbSocialPlugins from 'src/components/FbSocialPlugins.vue'
   import Footer from '../components/Footer.vue'
   import Header from '../components/Header.vue'
   import HeroImage from '../components/article/HeroImage.vue'
@@ -665,6 +662,7 @@
       DfpCover,
       DfpFixed,
       DfpST,
+      FbSocialPlugins,
       Footer,
       Header,
       HeroImage,
@@ -1074,6 +1072,10 @@
           width 300px
           margin 20px auto 0
       
+      .articleAsideFixed
+        .fb-social-plugins
+          margin-top 20px
+
       .article_footer
         text-align center
         clear both

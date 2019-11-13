@@ -118,13 +118,7 @@
         </div>
       </div>
       <div class="split-line"></div>
-      <div class="fbPagePlugin">
-        <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-          <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
-            <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-          </blockquote>
-        </div>
-      </div>
+      <FbSocialPlugins v-if="viewport < 768"/>
       <div class="herbsapi">
         <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
         <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
@@ -152,6 +146,7 @@ import ArticleVideo from './Video.vue'
 import AudioBox from 'src/components/audioPlayerAsset/index.vue'
 // import Cookie from 'vue-cookie'
 import ArticleImg from 'src/components/article/ArticleImg.vue'
+import FbSocialPlugins from 'src/components/FbSocialPlugins.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import Newsletter from '../../components/Newsletter.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
@@ -168,6 +163,7 @@ export default {
     ArticleBodyLayout,
     ArticleVideo,
     ArticleImg,
+    FbSocialPlugins,
     LazyItemWrapper,
     ShareLight,
     Slider,

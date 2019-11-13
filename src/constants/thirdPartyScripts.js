@@ -13,23 +13,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 'https://www.googletagmanager.com/gtm.js?id='+i+dl+'&timestamp='+new Date().getTime();f.parentNode.insertBefore(j,f);
 })(window,document,'script','dataLayer','GTM-TV7N2SW');`
 
-export const fb_sdk = `window.fbAsyncInit = function() {
-  FB.init({
-  appId            : '175313259598308',
-  autoLogAppEvents : true,
-  xfbml            : true,
-  version          : 'v2.9'
-  });
-  FB.AppEvents.logPageView();
-};
-(function(d, s, id){
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) {return;}
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/zh_TW/sdk.js";
-  js.async=true;
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));`
+export const fb_sdk = `
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId            : '175313259598308',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v5.0'
+    });
+    FB.AppEvents.logPageView();
+  };
+`
 
 export const scorecardresearch = `var _comscore = _comscore || [];
 _comscore.push({ c1: "2", c2: "24318560" });

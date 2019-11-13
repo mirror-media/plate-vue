@@ -11,9 +11,10 @@ import {
 
 const debug = require('debug')('CLIENT:loadScripts')
 
-async function insertScript ({ async, codes, id, src, position }) {
+async function insertScript ({ async, codes, defer, id, src, position }) {
   const script = document.createElement('script')
   async ? script.setAttribute('async', true) : ''
+  defer ? script.setAttribute('defer', true) : ''
   id ? script.setAttribute('id', id) : ''
   src ? script.setAttribute('src', src) : ''
   codes ? script.innerHTML = codes : ''
@@ -33,6 +34,7 @@ export default {
     const jobs = [
       insertScript({ codes: gtm_mirrormedia }).then(() => insertScript({ codes: gtm_likr })),
       insertScript({ codes: fb_sdk }),
+      insertScript({ async: true, defer: true, src: 'https://connect.facebook.net/zh_TW/sdk.js' }),
       insertScript({ codes: scorecardresearch }).then(() => insertScript({ codes: alexa })),
       insertScript({ codes: dableScript, position: 'body' })
     ]
