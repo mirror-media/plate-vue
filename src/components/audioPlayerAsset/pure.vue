@@ -37,6 +37,8 @@ import PlayerTimestamp from './components/PlayerTimestamp.vue'
 import initEventEmitters from './util/eventEmitters'
 import initEventHandlers from './util/eventHandlers'
 
+import { sendGaClickEvent } from 'src/util/comm'
+
 export default {
   props: {
     sound: {
@@ -157,6 +159,7 @@ export default {
           this.$emit('playingError')
         })
       }
+      sendGaClickEvent('article', 'voice-play')
     },
     pause() {
       const promise = this.audio.pause()

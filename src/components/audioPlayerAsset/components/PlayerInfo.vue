@@ -6,7 +6,7 @@
     />
     <a
       class="info__link link"
-      href="https://voice.mirrorfiction.com"
+      href="https://voice.mirrorfiction.com?utm_source=mmplayer&utm_medium=referral"
       target="_blank"
       rel="noopener noreferrer"
     >

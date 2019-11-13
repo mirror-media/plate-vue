@@ -525,12 +525,6 @@
         text-align center
         line-height 1.4rem
     
-  .fbPagePlugin
-    display none
-    margin-top 15px
-    .fb-page, .fb-page span, .fb-page span iframe[style]
-      width 100% !important
-  
   .kianGi
     margin-top 1em
   
@@ -745,8 +739,6 @@
       .article_basic-info
         margin-top 0
       
-    .fbPagePlugin
-      display block
     .herbsapi
       br
         display inline
