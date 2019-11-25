@@ -376,6 +376,8 @@ export default {
 @media (min-width: 1200px)
   .header
     &__logo-layer
+      position relative
+      z-index 110
       height 70px
       padding 0 calc((100% - 1024px) / 2)
       button
