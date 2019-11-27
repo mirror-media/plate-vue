@@ -21,6 +21,8 @@
           />
         </LazyItemWrapper>
         <section class="home-mainContent">
+          <FlashNews :articles="flashNewsArticle" />
+
           <EditorChoice :editorChoice='editorChoice' :viewport="viewportWidth" target="_blank" />
           <main>
             <LazyItemWrapper :loadAfterPageLoaded="true">
@@ -131,9 +133,10 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, union, unionBy, uniqBy } from 'lodash'
+import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, take, union, unionBy, uniqBy } from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
+import FlashNews from 'src/components/FlashNews.vue'
 import EditorChoice from 'src/components/EditorChoice.vue'
 import Header from 'src/components/Header.vue'
 import LatestArticleAside from 'src/components/LatestArticleAside.vue'
@@ -203,6 +206,7 @@ const fetchLatestArticle = (store, page) => store.dispatch('FETCH_LATESTARTICLES
 export default {
   name: 'AppHome',
   components: {
+    FlashNews,
     EditorChoice,
     LiveStream,
     Loading,
@@ -328,6 +332,9 @@ export default {
     },
     eventMod () {
       return get(this.$store, 'state.eventMod.items.0')
+    },
+    flashNewsArticle () {
+      return take(this.articlesGroupedList.latest, 10)
     },
     groupedArticle () {
       return slice(get(this.articlesGroupedList, 'grouped'))
@@ -507,7 +514,8 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .editorChoice
-  margin-top 40px
+  // margin-top 40px
+  padding-top 10px
 
 .articleList-block
   display block
@@ -735,7 +743,8 @@ section.footer
   .home-mainContent
     display flex
     width 1024px
-    margin 40px auto 0
+    // margin 40px auto 0
+    margin 10px auto 0
     padding 0
 
     main
