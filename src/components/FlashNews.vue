@@ -1,17 +1,12 @@
 <template>
-  <section class="flash-news">
+  <section class="flash-news" v-if="articles.length">
     <div class="flash-news__name">快訊</div>
     <div class="flash-news__container">
-      <div class="flash-news__titles" :style="{ transform: `translateY(${distance}%)` }">
-        <!-- <a href="#" target="_blank">1 【澳洲共諜疑雲 4】「叛逃從來不是容易事」</a>
-        <a href="#" target="_blank">2 【我哥是立委2】受害人想退場 他當場叩立委哥喬驗</a>
-        <a href="#" target="_blank">3 【韓國瑜專訪4】如何證明比蔡英文懂得處理兩岸？</a>
-        <a href="#" target="_blank">4 沈玉琳尾牙80場起跳 「錢來就幹」榮登尾牙王</a>
-        <a href="#" target="_blank">5 西雅圖濾掛式咖啡摻低價豆 13款商品免費退換貨</a> -->
+      <div :style="{ transform: `translateY(${distance}%)` }" :class="[ 'flash-news__titles', { transition: isTransition } ]" @transitionend="handleTransitionEnd" @oTransitionEnd="handleTransitionEnd" @webkitTransitionEnd="handleTransitionEnd">
         <a v-for="news in articles" :key="news.slug" :href="`${siteUrl}/story/${news.slug}`" target="_blank">{{ news.title }}</a>
       </div>
       <div class="flash-news__arrows">
-        <div class="next" @click="slideToNextNews"></div>
+        <div class="next" @click="slideToNextNews(false)"></div>
         <div class="prev" @click="slideToPrevNews"></div>
       </div>
     </div>
@@ -30,9 +25,14 @@ export default {
       required: true
     }
   },
+  mounted () {
+    this.AutoSlideToNextNews()
+  },
   data () {
     return {
-      order: 0
+      order: 1,
+      isTransition: false,
+      isAutoSlide: true
     }
   },
   computed: {
@@ -44,11 +44,39 @@ export default {
     }
   },
   methods: {
-    slideToNextNews () {
+    slideToNextNews (isAuto) {
+      if (this.isTransition) return
+      this.isTransition = true
+      this.isAutoSlide = isAuto
       this.order += 1
     },
     slideToPrevNews () {
+      if (this.isTransition) return
+      this.isTransition = true
+      this.isAutoSlide = false
       this.order -= 1
+    },
+    AutoSlideToNextNews () {
+      setTimeout(() => {
+        if (this.isAutoSlide) {
+          this.slideToNextNews(true)
+        }
+        this.isAutoSlide = true
+        this.AutoSlideToNextNews()
+      }, 3000);
+    },
+    handleTransitionEnd () {
+      this.isTransition = false
+      switch (this.order) {
+        case this.articles.length - 1:
+          this.order -= 1
+          this.articles.push(this.articles.shift())
+          break
+        case 0:
+          this.order += 1
+          this.articles.unshift(this.articles.pop())
+          break
+      }
     }
   }
 }
@@ -85,7 +113,6 @@ export default {
     background-color #eee
     border-radius 2px
     display flex
-    // overflow hidden
     width calc(100% - 56px)
     padding-right 6px
     @media (min-width 768px)
@@ -95,10 +122,14 @@ export default {
     width calc(100% - 52px)
     padding-right 10px
     padding-left 10px
+    &.transition
+      transition transform 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95)
     @media (min-width 768px)
       padding-right 19px
       padding-left 19px
+      width calc(100% - 70px)
     & a
+      display block
       white-space nowrap
       color #e51731
       overflow hidden
