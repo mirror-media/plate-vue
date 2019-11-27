@@ -26,7 +26,7 @@ export default {
     }
   },
   mounted () {
-    this.AutoSlideToNextNews()
+    this.autoSlideToNextNews()
   },
   data () {
     return {
@@ -45,24 +45,24 @@ export default {
   },
   methods: {
     slideToNextNews (isAuto) {
-      if (this.isTransition) return
+      if (this.isTransition) { return }
       this.isTransition = true
       this.isAutoSlide = isAuto
       this.order += 1
     },
     slideToPrevNews () {
-      if (this.isTransition) return
+      if (this.isTransition) { return }
       this.isTransition = true
       this.isAutoSlide = false
       this.order -= 1
     },
-    AutoSlideToNextNews () {
+    autoSlideToNextNews () {
       setTimeout(() => {
         if (this.isAutoSlide) {
           this.slideToNextNews(true)
         }
         this.isAutoSlide = true
-        this.AutoSlideToNextNews()
+        this.autoSlideToNextNews()
       }, 3000);
     },
     handleTransitionEnd () {
