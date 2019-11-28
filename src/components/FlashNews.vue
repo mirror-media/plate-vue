@@ -3,11 +3,11 @@
     <div class="flash-news__name">快訊</div>
     <div class="flash-news__container">
       <div :style="{ transform: `translateY(${distance}%)` }" :class="[ 'flash-news__titles', { transition: isTransition } ]" @transitionend="handleTransitionEnd" @oTransitionEnd="handleTransitionEnd" @webkitTransitionEnd="handleTransitionEnd">
-        <a v-for="news in articles" :key="news.slug" :href="`${siteUrl}/story/${news.slug}`" target="_blank">{{ news.title }}</a>
+        <a v-for="news in articles" :key="news.slug" :href="`${siteUrl}/story/${news.slug}`" target="_blank" @click="sendGA('breakingnews title')">{{ news.title }}</a>
       </div>
       <div class="flash-news__arrows">
-        <div class="next" @click="slideToNextNews(false)"></div>
-        <div class="prev" @click="slideToPrevNews"></div>
+        <div class="next" @click="slideToNextNews(false); sendGA('breakingnews up')"></div>
+        <div class="prev" @click="slideToPrevNews(); sendGA('breakingnews down')"></div>
       </div>
     </div>
   </section>
@@ -21,7 +21,7 @@ export default {
   props: {
     articles: {
       type: Array,
-      default: [],
+      default: () => [],
       required: true
     }
   },
@@ -68,7 +68,7 @@ export default {
     handleTransitionEnd () {
       this.isTransition = false
       switch (this.order) {
-        case this.articles.length - 1:
+        case (this.articles.length - 1):
           this.order -= 1
           this.articles.push(this.articles.shift())
           break
@@ -77,6 +77,9 @@ export default {
           this.articles.unshift(this.articles.pop())
           break
       }
+    },
+    sendGA (label) {
+      window.ga('send', 'event', 'home', 'click', label)
     }
   }
 }
