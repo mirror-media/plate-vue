@@ -265,7 +265,7 @@
 </template>
 <script>
 
-import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY＿INTERVIEW_ID, CATEGORY＿ORALREADING_ID, EXTERNALS,
+import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY_INTERVIEW_ID, CATEGORY_ORALREADING_ID, EXTERNALS,
   MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID } from 'src/constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from 'src/constants'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from 'src/constants'
@@ -357,7 +357,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
 
     case CATEGORY:
       switch (uuid) {
-        case CATEGORY＿ORALREADING_ID:
+        case CATEGORY_ORALREADING_ID:
           return fetchAudios(store, {
             page: page,
             max_results: MAXRESULT,
@@ -366,7 +366,7 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
               tags: TAG_ORALREADING_ID
             }
           })
-        case CATEGORY＿INTERVIEW_ID:
+        case CATEGORY_INTERVIEW_ID:
           return fetchAudios(store, {
             page: page,
             max_results: MAXRESULT,
@@ -557,11 +557,11 @@ const getUUID = (store, type, to) => {
         case 'campaign':
           return CAMPAIGN_ID
         case 'interview':
-          return CATEGORY＿INTERVIEW_ID
+          return CATEGORY_INTERVIEW_ID
         case 'marketing':
           return MARKETING_ID
         case 'oralreading':
-          return CATEGORY＿ORALREADING_ID
+          return CATEGORY_ORALREADING_ID
         default:
           return get(find(get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
       }

@@ -3,17 +3,18 @@
     <div class="flash-news__name">快訊</div>
     <div class="flash-news__container">
       <div :style="{ transform: `translateY(${distance}%)` }" :class="[ 'flash-news__titles', { transition: isTransition } ]" @transitionend="handleTransitionEnd" @oTransitionEnd="handleTransitionEnd" @webkitTransitionEnd="handleTransitionEnd">
-        <a v-for="news in articles" :key="news.slug" :href="`${siteUrl}/story/${news.slug}`" target="_blank">{{ news.title }}</a>
+        <a v-for="news in articles" :key="news.slug" :href="`${siteUrl}/story/${news.slug}`" target="_blank" @click="sendGaClickEvent('home', 'breakingnews title')">{{ news.title }}</a>
       </div>
       <div class="flash-news__arrows">
-        <div class="next" @click="slideToNextNews(false)"></div>
-        <div class="prev" @click="slideToPrevNews"></div>
+        <div class="next" @click="slideToNextNews(false); sendGaClickEvent('home', 'breakingnews up')"></div>
+        <div class="prev" @click="slideToPrevNews(); sendGaClickEvent('home', 'breakingnews down')"></div>
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import { sendGaClickEvent } from '../util/comm'
 import { SITE_URL } from 'src/constants'
 
 export default {
@@ -21,7 +22,7 @@ export default {
   props: {
     articles: {
       type: Array,
-      default: [],
+      default: () => [],
       required: true
     }
   },
@@ -68,7 +69,7 @@ export default {
     handleTransitionEnd () {
       this.isTransition = false
       switch (this.order) {
-        case this.articles.length - 1:
+        case (this.articles.length - 1):
           this.order -= 1
           this.articles.push(this.articles.shift())
           break
@@ -77,7 +78,8 @@ export default {
           this.articles.unshift(this.articles.pop())
           break
       }
-    }
+    },
+    sendGaClickEvent
   }
 }
 </script>

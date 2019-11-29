@@ -154,6 +154,12 @@ function loadExternals (params = {}) {
   return _doFetch(url)
 }
 
+function loadFlashNews (params = {}) {
+  const query = _buildQuery(params)
+  const url = `${_host}/api/getposts?${query}`
+  return _doFetch(url)
+}
+
 function loadImages (uuid = '', type = '', params = {}) {
   switch (type) {
     case SECTION:
@@ -329,6 +335,10 @@ export function fetchEvent (params = {}) {
 
 export function fetchExternals (params = {}) {
   return loadExternals(params)
+}
+
+export function fetchFlashNews (params = {}) {
+  return loadFlashNews(params)
 }
 
 export function fetchImage (uuid = '') {

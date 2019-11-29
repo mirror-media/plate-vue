@@ -127,13 +127,13 @@
 </template>
 
 <script>
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from 'src/constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, CATEGORY_POLITICAL_ID, CATEGORY_CITY_NEWS_ID, CATEGORY_BUSINESS_ID, CATEGORY_LATESTNEWS_ID } from 'src/constants'
 import { SITE_MOBILE_URL, SITE_TITLE } from 'src/constants'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, take, union, unionBy, uniqBy } from 'lodash'
+import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, union, unionBy, uniqBy } from 'lodash'
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import FlashNews from 'src/components/FlashNews.vue'
@@ -202,6 +202,21 @@ const fetchLatestArticle = (store, page) => store.dispatch('FETCH_LATESTARTICLES
     where: { isAudioSiteOnly: false }
   }
 })
+
+const fetchFlashNews = (store) => {
+  store.dispatch('FETCH_FLASH_NEWS', {
+    params: {
+      where: { 
+        categories: { $in: [ CATEGORY_POLITICAL_ID, CATEGORY_CITY_NEWS_ID, CATEGORY_BUSINESS_ID, CATEGORY_LATESTNEWS_ID ] },
+        isAudioSiteOnly: false
+      },
+      clean: 'content',
+      max_results: 10,
+      page: 1,
+      sort: '-publishedDate'
+    }
+  })
+}
 
 export default {
   name: 'AppHome',
@@ -334,7 +349,7 @@ export default {
       return get(this.$store, 'state.eventMod.items.0')
     },
     flashNewsArticle () {
-      return take(this.articlesGroupedList.latest, 10)
+      return this.$store.state.flashNews.items || []
     },
     groupedArticle () {
       return slice(get(this.articlesGroupedList, 'grouped'))
@@ -479,6 +494,8 @@ export default {
     unLockJS()
     this.handleScrollForLoadmore()
     this.updateSysStage()
+
+    fetchFlashNews(this.$store)
     
     window.addEventListener('scroll', this.detectFixProject)
 

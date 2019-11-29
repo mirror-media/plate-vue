@@ -16,6 +16,7 @@ import { fetchActivities,
   fetchEditorChoice,
   fetchEvent,
   fetchExternals,
+  fetchFlashNews,
   fetchImage,
   fetchImages,
   fetchImagesById,
@@ -62,6 +63,7 @@ export function createStore () {
       eventMod: {},
       external: {},
       externals: {},
+      flashNews: {},
       fbAppId: FB_APP_ID,
       fbPagesId: FB_PAGES_ID,
       highlightNodes: {},
@@ -203,6 +205,12 @@ export function createStore () {
           }) : fetchExternals(params).then(externals => {
             commit('SET_EXTERNALS', { externals })
           })
+      },
+
+      FETCH_FLASH_NEWS: ({ commit }, { params }) => {
+        fetchFlashNews(params).then((news) => {
+          commit('SET_FLASH_NEWS', { news })
+        })
       },
 
       FETCH_IMAGE: ({ commit, state }, { uuid, type }) => {
@@ -454,6 +462,10 @@ export function createStore () {
           Vue.set(state['external'], e.name, e)
         })
         Vue.set(state, 'externals', externals)
+      },
+
+      SET_FLASH_NEWS: (state, { news }) => {
+        Vue.set(state, 'flashNews', news)
       },
 
       SET_HIGHLIGHTNODES: (state, { nodes }) => {
