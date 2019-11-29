@@ -218,6 +218,9 @@ h2
   font-weight 600
   color #fff
   text-shadow 0 0 1px rgba(0, 0, 0, 0.2)
+  padding-right 8px
+  padding-left 8px
+  text-align center
   @media (min-width 345px)
     font-size 17px
   @media (min-width 768px)

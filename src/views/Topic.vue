@@ -348,8 +348,8 @@ export default {
         },
         {
           tagId: '5d65fbb6486faa3919afaebb',
-          title: '第三勢力',
-          img: '/assets/mirrormedia/2020-4.jpg',
+          title: '親民黨及第三勢力',
+          img: '/assets/mirrormedia/2020-5.jpg',
           color: '#9b9b9b',
           articles: []
         }
