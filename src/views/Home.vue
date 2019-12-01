@@ -211,7 +211,7 @@ const fetchFlashNews = (store) => {
         isAudioSiteOnly: false
       },
       clean: 'content',
-      max_results: 10,
+      max_results: 15,
       page: 1,
       sort: '-publishedDate'
     }
@@ -349,7 +349,7 @@ export default {
       return get(this.$store, 'state.eventMod.items.0')
     },
     flashNewsArticle () {
-      return this.$store.state.flashNews.items || []
+      return slice(this.$store.state.flashNews.items, 0, 10) || []
     },
     groupedArticle () {
       return slice(get(this.articlesGroupedList, 'grouped'))
