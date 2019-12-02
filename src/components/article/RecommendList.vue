@@ -51,7 +51,7 @@
 </template>
 <script>
   import _ from 'lodash'
-  import { SECTION_MAP, RELATED_LIST_MAX, RECOMM_HITORY_MAX_IN_LOCALSTORAGE } from '../../constants'
+  import { RELATED_LIST_MAX, RECOMM_HITORY_MAX_IN_LOCALSTORAGE, SECTION_MAP } from '../../constants'
   import { extractSlugFromReferrer, getHrefFull, getValue, sendGaClickEvent } from '../../util/comm'
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
@@ -68,8 +68,38 @@
   }
 
   export default {
+    name: 'RecommendList',
     components: {
       'popin-ad': PopInAd
+    },
+    props: {
+      currArticleId: {
+        default: () => ''
+      },
+      excludingArticle: {
+        default: () => ('N/A')
+      },
+      isAd: {
+        default: () => false
+      },
+      isAppPage: {
+        type: Boolean,
+        default: false
+      },
+      recommends: {
+        default: () => ([])
+      },
+      relateds: {
+        default: () => ([])
+      },
+      sectionId: {
+        default: () => ('')
+      }
+    },
+    data () {
+      return {
+        referrerSlug: 'N/A'
+      }
     },
     computed: {
       filteredRecommends () {
@@ -97,23 +127,39 @@
         return this.filteredRecommends.length < 3 ? this.filteredRecommends.length - 1 : 3
       }
     },
-    data () {
-      return {
-        referrerSlug: 'N/A'
-      }
+    watch: {
+      currArticleId: function () {
+        debug('currArticleId change detected.')
+        fetchRecommendList(this.$store, this.currArticleId)
+      },
+      sectionId: function () {
+        document.querySelector('.relatedBtmStyle').innerHTML = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+      },
+    },
+    beforeMount () {
+      debug('beforeMount')
+      fetchRecommendList(this.$store, this.currArticleId)
+    },
+    mounted () {
+      const customCSS = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+      const custCss = document.createElement('style')
+      custCss.setAttribute('class', 'relatedBtmStyle')
+      custCss.appendChild(document.createTextNode(customCSS))
+      document.querySelector('body').appendChild(custCss)
+      this.referrerSlug = extractSlugFromReferrer(document.referrer)
     },
     methods: {
-      getHrefFull,
-      getValue,
       containerStyle () {
         return { border: `2px solid ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141')}` }
       },
+      getHrefFull,
       getRecommClickHistory () {
         const recommsClickHistory = (process.browser) && localStorage.getItem('recommsClickHistory')
         const dqueue = new Deque(RECOMM_HITORY_MAX_IN_LOCALSTORAGE)
         recommsClickHistory && dqueue.push(...recommsClickHistory.split(','))
         return dqueue
       },
+      getValue,
       recommendsClickHandler (slug) {
         try {
           const dqueue = this.getRecommClickHistory()
@@ -134,52 +180,6 @@
       // },
       titleStyle () {
         return { color: _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
-      }
-    },
-    beforeMount () {
-      debug('beforeMount')
-      fetchRecommendList(this.$store, this.currArticleId)
-    },
-    mounted () {
-      const customCSS = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
-      const custCss = document.createElement('style')
-      custCss.setAttribute('class', 'relatedBtmStyle')
-      custCss.appendChild(document.createTextNode(customCSS))
-      document.querySelector('body').appendChild(custCss)
-      this.referrerSlug = extractSlugFromReferrer(document.referrer)
-    },
-    watch: {
-      currArticleId: function () {
-        debug('currArticleId change detected.')
-        fetchRecommendList(this.$store, this.currArticleId)
-      },
-      sectionId: function () {
-        document.querySelector('.relatedBtmStyle').innerHTML = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
-      },
-    },
-    name: 'RecommendList',
-    props: {
-      excludingArticle: {
-        default: () => ('N/A')
-      },
-      isAppPage: {
-        type: Boolean,
-        default: false
-      },
-      isAd: {
-        default: () => false
-      },
-      recommends: {
-        default: () => ([])
-      },
-      currArticleId: {
-        default: () => ''
-      },
-      relateds: {
-        default: () => ([])
-      },
-      sectionId: {
-        default: () => ('')
       }
     }
   }
