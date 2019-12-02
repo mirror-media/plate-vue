@@ -19,10 +19,10 @@
           >
             <div class="title">
               <a
-                @click="recommendsClickHandler(getValue(o, [ 'slug' ]))"
+                @click="recommendsClickHandler(get(o, 'slug'))"
                 :href="getHrefFull(o, isAppPage)"
                 target="_blank"
-                v-text="getValue(o, [ 'title' ], '')"
+                v-text="get(o, 'title', '')"
               >
               </a>
             </div>
@@ -50,9 +50,9 @@
   </div>
 </template>
 <script>
-  import _ from 'lodash'
+  import { get, map, take } from 'lodash'
   import { RELATED_LIST_MAX, RECOMM_HITORY_MAX_IN_LOCALSTORAGE, SECTION_MAP } from '../../constants'
-  import { extractSlugFromReferrer, getHrefFull, getValue, sendGaClickEvent } from '../../util/comm'
+  import { extractSlugFromReferrer, getHrefFull, sendGaClickEvent } from '../../util/comm'
   import Deque from 'double-ended-queue'
   import HashTable from 'jshashtable'
   import PopInAd from '../PopInAd.vue'
@@ -108,15 +108,15 @@
         const recommendListHash = this.recommendsHash
         if (this.referrerSlug !== 'N/A') { recommendListHash.remove(this.referrerSlug) }
         if (this.excludingArticle !== 'N/A') { recommendListHash.remove(this.excludingArticle) }
-        for (let i = 0; i < excludingArticlesLen; i += 1) { recommendListHash.remove(_.get(this.relateds[ i ], [ 'slug' ], '')) }
+        for (let i = 0; i < excludingArticlesLen; i += 1) { recommendListHash.remove(get(this.relateds[ i ], 'slug', '')) }
         dqueue.toArray().map((slug) => { recommendListHash.remove(slug) })
         debug(recommendListHash.values())
-        return _.take(recommendListHash.values(), RELATED_LIST_MAX - excludingArticlesLen)
+        return take(recommendListHash.values(), RELATED_LIST_MAX - excludingArticlesLen)
       },
       recommendsHash () {
         const hashtable = new HashTable()
-        _.map(this.recommends, (a) => {
-          hashtable.put(_.get(a, [ 'slug' ]), a)
+        map(this.recommends, (a) => {
+          hashtable.put(get(a, 'slug'), a)
         })
         return hashtable
       },
@@ -129,19 +129,17 @@
     },
     watch: {
       currArticleId: function () {
-        debug('currArticleId change detected.')
         fetchRecommendList(this.$store, this.currArticleId)
       },
       sectionId: function () {
-        document.querySelector('.relatedBtmStyle').innerHTML = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+        document.querySelector('.relatedBtmStyle').innerHTML = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
       },
     },
     beforeMount () {
-      debug('beforeMount')
       fetchRecommendList(this.$store, this.currArticleId)
     },
     mounted () {
-      const customCSS = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
+      const customCSS = `.related-list .related-list__list > .related-list__list__title::before { content: ""; border-color: transparent transparent transparent ${get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;')} }`
       const custCss = document.createElement('style')
       custCss.setAttribute('class', 'relatedBtmStyle')
       custCss.appendChild(document.createTextNode(customCSS))
@@ -150,7 +148,7 @@
     },
     methods: {
       containerStyle () {
-        return { border: `2px solid ${_.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141')}` }
+        return { border: `2px solid ${get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141')}` }
       },
       getHrefFull,
       getRecommClickHistory () {
@@ -159,7 +157,7 @@
         recommsClickHistory && dqueue.push(...recommsClickHistory.split(','))
         return dqueue
       },
-      getValue,
+      get,
       recommendsClickHandler (slug) {
         try {
           const dqueue = this.getRecommClickHistory()
@@ -174,12 +172,8 @@
           debug(e)
         }
       },
-      sendGaClickEvent,
-      // shouldShowItem (article) {
-      //   return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
-      // },
       titleStyle () {
-        return { color: _.get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
+        return { color: get(SECTION_MAP, [ this.sectionId, 'bgcolor' ], '#414141;') }
       }
     }
   }
