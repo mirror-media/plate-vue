@@ -156,7 +156,7 @@ function loadExternals (params = {}) {
 
 function loadFlashNews (params = {}) {
   const query = _buildQuery(params)
-  const url = `${_host}/api/getposts?${query}`
+  const url = `${_host}/api/posts?${query}`
   return _doFetch(url)
 }
 
