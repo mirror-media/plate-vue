@@ -95,9 +95,16 @@ export default {
     margin-right 0
     margin-left 0
     width 100%
+    padding-right 2rem
+    padding-left 2rem
   @media (min-width 768px)
     font-size 1.25rem
     height 54px
+  @media (min-width 1200px)
+    max-width 1024px
+    padding-right 0
+    padding-left 0
+    margin 10px auto 0 auto
   &__name
     background-color #e51731
     color #fff

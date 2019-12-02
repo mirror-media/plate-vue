@@ -5,6 +5,7 @@
         <section style="width: 100%;">
           <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
         </section>
+        <FlashNews :articles="flashNewsArticle" />
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp
             :is="props.vueDfp"
@@ -21,8 +22,6 @@
           />
         </LazyItemWrapper>
         <section class="home-mainContent">
-          <FlashNews :articles="flashNewsArticle" />
-
           <EditorChoice :editorChoice='editorChoice' :viewport="viewportWidth" target="_blank" />
           <main>
             <LazyItemWrapper :loadAfterPageLoaded="true">
