@@ -181,7 +181,6 @@
             <RecommendList
               slot="relatedlistBottom" 
               v-if="!isAd"
-              :isAd="isAd"
               :sectionId="sectionId"
               :relateds="relateds"
               :currArticleId="currArticleId"
@@ -430,6 +429,12 @@ const fetchPartners = store => {
 
 const fetchPop = store => store.dispatch('FETCH_ARTICLES_POP_LIST', {})
 
+const fetchRecommendList = (store, id) => store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
+  params: {
+    id: id
+  }
+})
+
 const fetchSSRData = store => {
   const timestamp = Date.now()
   return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] }).then(response => {
@@ -654,7 +659,7 @@ export default {
     next()
   },
   beforeMount () {
-    debug('beforeMount')
+    fetchRecommendList(this.$store, this.currArticleId)
   },
   components: {
     AdultContentAlert,
