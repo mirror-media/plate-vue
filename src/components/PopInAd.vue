@@ -17,7 +17,7 @@ export default {
   },
   mounted () {
     debug('PopInAd mounted')
-    insertPopInAdScript(this)
+    insertPopInAdScript()
   }
 }
 </script>
