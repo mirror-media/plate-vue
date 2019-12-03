@@ -31,7 +31,6 @@
             <RecommendList
               v-if="recommendlist.length > 0 && !isAd"
               slot="relatedlistBottom"
-              :isAd="isAd"
               :isAppPage="true"
               :sectionId="sectionId"
               :relateds="relateds"
