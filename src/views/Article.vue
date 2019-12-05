@@ -182,9 +182,9 @@
               slot="relatedlistBottom" 
               v-if="!isAd"
               :sectionId="sectionId"
-              :relateds="[]"
+              :relateds="relateds"
               :currArticleId="currArticleId"
-              :recommends="relateds"
+              :recommends="recommendlist"
               :excludingArticle="routeUpateReferrerSlug"
             />            
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
