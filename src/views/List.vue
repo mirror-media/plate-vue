@@ -225,7 +225,7 @@
       <WineWarning v-if="needWineWarning" />
       <ClientOnly>
         <DfpCover
-          v-if="isMobile"
+          v-if="isMobile && !needWineWarning"
           v-show="showDfpCoverAdFlag"
         >
           <vue-dfp
@@ -236,7 +236,7 @@
           />
         </DfpCover>
         <DfpCover
-          v-if="showDfpCoverAd2Flag && isMobile"
+          v-if="!needWineWarning && showDfpCoverAd2Flag && isMobile"
           :showCloseBtn="false"
           class="raw"
         >
@@ -248,7 +248,7 @@
           />
         </DfpCover>
         <DfpCover
-          v-if="showDfpCoverInnityFlag && isMobile"
+          v-if="!needWineWarning && showDfpCoverInnityFlag && isMobile"
           :showCloseBtn="false"
           class="raw"
         >

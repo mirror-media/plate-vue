@@ -271,7 +271,7 @@
             </DfpST>
           </LazyItemWrapper>
           <DfpCover
-            v-if="!hiddenAdvertised"
+            v-if="!hiddenAdvertised && !needWineWarning"
             v-show="showDfpCoverAdFlag"
           > 
             <vue-dfp
@@ -282,7 +282,7 @@
             /> 
           </DfpCover> 
           <DfpCover
-            v-if="!hiddenAdvertised && showDfpCoverAd2Flag"
+            v-if="!hiddenAdvertised && !needWineWarning && showDfpCoverAd2Flag"
             :showCloseBtn="false"
             class="raw"
           > 
@@ -294,7 +294,7 @@
             /> 
           </DfpCover>
           <DfpCover
-            v-if="!hiddenAdvertised && showDfpCoverInnityFlag"
+            v-if="!hiddenAdvertised && !needWineWarning && showDfpCoverInnityFlag"
             :showCloseBtn="false"
             class="raw"
           >
