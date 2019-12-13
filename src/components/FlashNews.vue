@@ -1,9 +1,11 @@
 <template>
-  <section class="flash-news" v-if="articles.length">
+  <section class="flash-news" v-if="articles.length" :class="[ abIndicator === 'A' ? 'one-line' : 'two-lines' ]">
     <div class="flash-news__name">快訊</div>
     <div class="flash-news__container">
       <div :style="{ transform: `translateY(${distance}%)` }" :class="[ 'flash-news__titles', { transition: isTransition } ]" @transitionend="handleTransitionEnd" @oTransitionEnd="handleTransitionEnd" @webkitTransitionEnd="handleTransitionEnd">
-        <a v-for="news in articles" :key="news.slug" :href="`${siteUrl}/story/${news.slug}`" target="_blank" @click="sendGaClickEvent('home', 'breakingnews title')">{{ news.title }}</a>
+        <div v-for="news in articles" :key="news.slug" class="flash-news__title-wrapper">
+          <a :href="`${siteUrl}/story/${news.slug}`" target="_blank" @click="sendGaClickEvent('home', 'breakingnews title')">{{ news.title }}</a>
+        </div>
       </div>
       <div class="flash-news__arrows">
         <div class="next" @click="slideToNextNews(false); sendGaClickEvent('home', 'breakingnews up')"></div>
@@ -24,7 +26,8 @@ export default {
       type: Array,
       default: () => [],
       required: true
-    }
+    },
+    abIndicator: String
   },
   mounted () {
     this.autoSlideToNextNews()
@@ -86,10 +89,43 @@ export default {
 
 <style lang="stylus" scoped>
 .flash-news
+  &.one-line
+    height 44px
+    font-size 1rem
+    @media (min-width 768px)
+      font-size 1.25rem
+      height 54px
+    & .flash-news__name
+      line-height 44px
+      @media (min-width 768px)
+        line-height 54px
+    & .flash-news__titles
+      & a
+        white-space nowrap
+        line-height 44px
+        @media (min-width 768px)
+          line-height 54px
+  &.two-lines
+    height 58px  
+    & .flash-news__name
+      line-height 58px
+    & .flash-news__titles
+      font-size 0.875rem
+      @media (min-width 768px)
+        font-size 1.125rem
+      & a
+        line-height normal
+        display -webkit-box
+        -webkit-line-clamp 2
+        -webkit-box-orient vertical
+    & .flash-news__title-wrapper
+      height 100%
+      display flex
+      align-items center
+
+.flash-news
   display flex
-  height 44px
   overflow hidden
-  font-size 1rem
   margin 8px 6px
   @media (min-width 600px)
     margin-right 0
@@ -97,9 +133,6 @@ export default {
     width 100%
     padding-right 2rem
     padding-left 2rem
-  @media (min-width 768px)
-    font-size 1.25rem
-    height 54px
   @media (min-width 1200px)
     max-width 1024px
     padding-right 0
@@ -110,14 +143,14 @@ export default {
     color #fff
     border-radius 2px
     text-align center
-    line-height 44px
     font-weight 600
     width 52px
     margin-right 4px
+    font-size 1rem
     @media (min-width 768px)
       width 92px
-      line-height 54px
       margin-right 8px
+      font-size 1.25rem
   &__container
     background-color #eee
     border-radius 2px
@@ -139,15 +172,11 @@ export default {
       width calc(100% - 70px)
     & a
       display block
-      white-space nowrap
       color #e51731
       overflow hidden
       text-overflow ellipsis
       margin 0
-      line-height 44px
-      font-weight 600
-      @media (min-width 768px)
-        line-height 54px
+      font-weight 500
   &__arrows
     width 52px
     display flex
