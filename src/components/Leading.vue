@@ -2,26 +2,21 @@
   <div class="leading">
     <div class="leading-container">
       <div class="leading-slideshow" v-if="type === 'slideshow' && slideshowImgs.length > 0">
-        <app-slider :option="sliderOption">
-          <template slot-scope="props">
-            <swiper-slide :is="props.slide" v-for="(o, i) in slideshowImgs" :key="`${i}-${Date.now()}`">
-              <template v-if="$_leading_detectImgHref(o)">
-                <a :href="$_leading_getHref(o)" target="_blank">
-                  <img  :src="getValue(o, [ 'image', 'url' ])"
-                        :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
-                </a>
-              </template>
-              <template v-else>
-                <img  :src="getValue(o, [ 'image', 'url' ])"
-                        :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
-              </template>
-            </swiper-slide>
+        <Slider>
+          <template v-for="(o, i) in slideshowImgs">
+            <a v-if="$_leading_detectImgHref(o)" :key="`${i}-${Date.now()}`" :href="$_leading_getHref(o)" class="swiper-slide" target="_blank">
+              <img  :src="getValue(o, [ 'image', 'url' ])"
+                    :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
+                                ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
+                                ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+            </a>
+            <img v-else :key="`${i}-${Date.now()}`" :src="getValue(o, [ 'image', 'url' ])"
+              :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
+                          ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
+                          ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`"
+              class="swiper-slide" />
           </template>
-        </app-slider>
+        </Slider>
       </div>
       <div class="leading-image" v-else-if="type === 'image' && leadingImg">
         <div class="img">
@@ -52,7 +47,7 @@ import Slider from './Slider.vue'
 
 export default {
   components: {
-    'app-slider': Slider
+    Slider
   },
   computed: {
     sliderOption () {
