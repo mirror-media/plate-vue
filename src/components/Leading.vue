@@ -5,25 +5,47 @@
         <Slider>
           <template v-for="(o, i) in slideshowImgs">
             <a v-if="$_leading_detectImgHref(o)" :key="`${i}-${Date.now()}`" :href="$_leading_getHref(o)" class="swiper-slide" target="_blank">
-              <img  :src="getValue(o, [ 'image', 'url' ])"
-                    :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                                ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                                ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+              <img
+                :src="getValue(o, [ 'image', 'url' ])"
+                :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 400w,
+                  ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 800w`"
+                sizes="(max-width: 499px) 100vw,
+                  (min-width 500px) and (max-width 599px) 90vw,
+                  (min-width 600px) and (max-width 767px) 80vw,
+                  (min-width 768px) and (max-width 830px) 70vw,
+                  (min-width 831px) and (max-width 1023px) 60vw,
+                  55vw"
+                />
             </a>
-            <img v-else :key="`${i}-${Date.now()}`" :src="getValue(o, [ 'image', 'url' ])"
-              :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                          ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                          ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`"
-              class="swiper-slide" />
+            <img v-else
+              :key="`${i}-${Date.now()}`"
+              :src="getValue(o, [ 'image', 'url' ])"
+              :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 600w,
+                ${getValue(o, [ 'image', 'url' ])}`"
+              sizes="(max-width: 499px) 100vw,
+                  (min-width 500px) and (max-width 599px) 90vw,
+                  (min-width 600px) and (max-width 767px) 80vw,
+                  (min-width 768px) and (max-width 830px) 70vw,
+                  (min-width 831px) and (max-width 1023px) 60vw,
+                  55vw"
+              class="swiper-slide"
+            />
           </template>
         </Slider>
       </div>
       <div class="leading-image" v-else-if="type === 'image' && leadingImg">
         <div class="img">
-          <img :src="getValue(leadingImg, [ 'image', 'url' ])"
-                :srcset="`${getValue(leadingImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                          ${getValue(leadingImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                          ${getValue(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+          <img
+            :src="getValue(leadingImg, [ 'image', 'url' ])"
+            :srcset="`${getValue(leadingImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 400w,
+              ${getValue(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 800w`"
+            sizes="(max-width: 499px) 100vw,
+              (min-width 500px) and (max-width 599px) 90vw,
+              (min-width 600px) and (max-width 767px) 80vw,
+              (min-width 768px) and (max-width 830px) 70vw,
+              (min-width 831px) and (max-width 1023px) 60vw,
+              55vw"
+            />
         </div>
       </div>
       <div class="leading-video" v-else-if="type === 'video' && leadingVideo">
@@ -109,17 +131,26 @@ export default {
         top 0
         left 0
         width 100%
-        height 100%        
-        .swiper-container
+        height 100%
+        >>> .swiper-container
           height 100%
-          .swiper-wrapper
-            height 100%
-            .swiper-slide
-              img
-                width 100%
-                object-fit contain
-                max-height 100%
-
+        >>> .swiper-slide
+          object-fit contain
+        >>> .swiper-button-prev, >>> .swiper-button-next
+          width 30px
+          height 40px
+          margin-top -20px
+          background-color rgba(245, 245, 245, .25)
+          background-size 15px auto
+          background-position 45% 50%
+          background-repeat no-repeat
+          border-radius 4px
+          background-image url(/assets/mirrormedia/icon/arrow-slideshow-blue-left.png)
+        >>> .swiper-button-prev
+          left 5px
+        >>> .swiper-button-next
+          right 5px
+          transform rotate(180deg)
       .img
         position absolute
         top 0
