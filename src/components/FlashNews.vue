@@ -1,5 +1,5 @@
 <template>
-  <section class="flash-news" v-if="articles.length" :class="[ abIndicator === 'A' ? 'one-line' : 'two-lines' ]">
+  <section class="flash-news" v-if="articles.length">
     <div class="flash-news__name">快訊</div>
     <div class="flash-news__container">
       <div :style="{ transform: `translateY(${distance}%)` }" :class="[ 'flash-news__titles', { transition: isTransition } ]" @transitionend="handleTransitionEnd" @oTransitionEnd="handleTransitionEnd" @webkitTransitionEnd="handleTransitionEnd">
@@ -26,8 +26,7 @@ export default {
       type: Array,
       default: () => [],
       required: true
-    },
-    abIndicator: String
+    }
   },
   mounted () {
     this.autoSlideToNextNews()
@@ -89,44 +88,14 @@ export default {
 
 <style lang="stylus" scoped>
 .flash-news
-  &.one-line
-    height 44px
-    font-size 1rem
-    @media (min-width 768px)
-      font-size 1.25rem
-      height 54px
-    & .flash-news__name
-      line-height 44px
-      @media (min-width 768px)
-        line-height 54px
-    & .flash-news__titles
-      & a
-        white-space nowrap
-        line-height 44px
-        @media (min-width 768px)
-          line-height 54px
-  &.two-lines
-    height 58px  
-    & .flash-news__name
-      line-height 58px
-    & .flash-news__titles
-      font-size 0.875rem
-      @media (min-width 768px)
-        font-size 1.125rem
-      & a
-        line-height normal
-        display -webkit-box
-        -webkit-line-clamp 2
-        -webkit-box-orient vertical
-    & .flash-news__title-wrapper
-      height 100%
-      display flex
-      align-items center
-
-.flash-news
   display flex
   overflow hidden
   margin 8px 6px
+  height 44px
+  font-size 1rem
+  @media (min-width 768px)
+    font-size 1.25rem
+    height 54px
   @media (min-width 600px)
     margin-right 0
     margin-left 0
@@ -147,7 +116,9 @@ export default {
     width 52px
     margin-right 4px
     font-size 1rem
+    line-height 44px
     @media (min-width 768px)
+      line-height 54px
       width 92px
       margin-right 8px
       font-size 1.25rem
@@ -177,6 +148,10 @@ export default {
       text-overflow ellipsis
       margin 0
       font-weight 500
+      white-space nowrap
+      line-height 44px
+      @media (min-width 768px)
+        line-height 54px
   &__arrows
     width 52px
     display flex
