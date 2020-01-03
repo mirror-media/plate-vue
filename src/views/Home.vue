@@ -5,7 +5,7 @@
         <section style="width: 100%;">
           <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
         </section>
-        <FlashNews :articles="flashNewsArticle" :abIndicator="abIndicator" />
+        <FlashNews :articles="flashNewsArticle" />
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp
             :is="props.vueDfp"
@@ -481,7 +481,7 @@ export default {
     // },
   },
   beforeMount () {
-    this.abIndicator = this.getMmid()
+    // this.abIndicator = this.getMmid()
     const jobs = [
       fetchEvent(this.$store, 'embedded'),
       fetchEvent(this.$store, 'logo'),
@@ -508,8 +508,8 @@ export default {
 
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
-    // window.ga('set', 'contentGroup3', '')
-    window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
     window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
   },
   updated () {

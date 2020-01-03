@@ -11,7 +11,7 @@
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
 
-      <RelatedListOverContent :articles="articlesOverContent" :relatedCategory="relatedCategory" />
+      <RelatedListOverContent :articles="relateds" :relatedCategory="relatedCategory" />
 
       <div class="article-container" v-if="!isArticlePhotography" >
         <ClientOnly>
@@ -382,8 +382,6 @@ const debug = require('debug')('CLIENT:VIEWS:article')
 const debugDFP = require('debug')('CLIENT:DFP')
 const debugDataLoad = require('debug')('CLIENT:DATALOAD')
 
-const fetchArticlesGroupedList = (store) => store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
-
 const fetchArticles = (store, slug) => {
   debug('Going to fetch article data.', slug)
   const timestamp = Date.now()
@@ -718,14 +716,11 @@ export default {
       const _data = _find(_get(this.$store, 'state.articles.items'), { 'slug': this.currArticleSlug })
       return _data || {}
     },
-    articlesOverContent () {
-      return this.abIndicator === 'A' ? this.relateds : this.editorChoice
-    },
     articleStyle () {
       return _get(this.articleData, 'style', '')
     },
     relatedCategory () {
-      return this.abIndicator === 'A' ? _get(this.articleData, 'categories.0.title', '新聞') : ''
+      return _get(this.articleData, 'categories.0.title', '新聞')
     },
     currArticleSlug () {
       return _get(this.$store, 'state.route.params.slug', '')
@@ -952,7 +947,7 @@ export default {
         window.ga('set', 'contentGroup1', `${_get(articleData, 'sections.0.name')}`)
         window.ga('set', 'contentGroup2', `${_get(articleData, 'categories.0.name')}`)
       }
-      window.ga('set', 'contentGroup3', '')
+      // window.ga('set', 'contentGroup3', '')
       window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
       window.ga('send', 'pageview', { title: `${_get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
     },
@@ -979,10 +974,6 @@ export default {
     if (!_isEmpty(this.articleData)) {
       this.sendGA(this.articleData)
       this.hasSentFirstEnterGA = true
-    }
-    
-    if (this.abIndicator === 'B') {
-      fetchArticlesGroupedList(this.$store)
     }
 
     /**

@@ -2,18 +2,18 @@
   <transition name="fade">
     <div class="relateds-over-content" v-show="showContent" :class="{ 'to-top': isToTop }">
       <div>
-        <a :href="`/story/${_get(articles[ 0 ], 'slug', '')}`" class="related" @click="sendGaClickEvent('article', `${relatedCategory ? 'related' : 'editor'} news left`)">
+        <a :href="`/story/${_get(articles[ 0 ], 'slug', '')}`" class="related" @click="sendGaClickEvent('article', 'related news left')">
           <div class="related__arrow"></div>
           <div class="related__txt">
-            <div class="related__category">{{ relatedCategory || _get(articles[ 0 ], 'categories.0.title', '新聞') }}</div>
+            <div class="related__category">{{ relatedCategory }}</div>
             <div class="related__title">
               <p>{{ _get(articles[ 0 ], 'title', '') }}</p>
             </div>
           </div>
         </a>
-        <a :href="`/story/${_get(articles[ 1 ], 'slug', '')}`" class="related" @click="sendGaClickEvent('article', `${relatedCategory ? 'related' : 'editor'} news right`)">
+        <a :href="`/story/${_get(articles[ 1 ], 'slug', '')}`" class="related" @click="sendGaClickEvent('article', 'related news right')">
           <div class="related__txt">
-            <div class="related__category">{{ relatedCategory || _get(articles[ 1 ], 'categories.0.title', '新聞') }}</div>
+            <div class="related__category">{{ relatedCategory }}</div>
             <div class="related__title">
               <p>{{ _get(articles[ 1 ], 'title', '') }}</p>
             </div>
