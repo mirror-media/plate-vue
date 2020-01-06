@@ -6,6 +6,9 @@
           <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
         </section>
         <FlashNews :articles="flashNewsArticle" />
+
+        <EmbeddedIframe />
+
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp
             :is="props.vueDfp"
@@ -33,7 +36,7 @@
                 pos="LMBL1"
               />
             </LazyItemWrapper>
-            <MirrorMediaTVAside v-if="isMobile && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
+            <MirrorMediaTVAside v-if="isMobile && hasEventMod" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="isMobile"><h2 v-text="$t('homepage.focus')"></h2></div>
             <div class="focusNewsContainer" id="homepage-focus-news">
               <div v-show="isMobile"
@@ -68,7 +71,7 @@
           </main>
           <aside>
             <div>
-              <MirrorMediaTVAside v-if="viewportWidth >= 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
+              <MirrorMediaTVAside v-if="viewportWidth >= 1200 && hasEventMod" :mediaData="eventMod"></MirrorMediaTVAside>
               <div class="aside-title" ref="aside_title"><h2 v-text="$t('homepage.focus')"></h2></div>
               <LatestArticleAside v-for="(o, i) in groupedArticle" target="_blank"
                 :groupedArticle="o"
@@ -84,7 +87,7 @@
         <Loading :show="loading" />
         <LazyItemWrapper :position="verge.viewportH()" :strict="true">
           <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
-          <LiveStream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
+          <LiveStream v-else-if="hasEventMod" :mediaData="eventMod" type="mod" />
         </LazyItemWrapper>
         <template v-if="isMobile">
           <DfpCover v-show="showDfpCoverAdFlag">
@@ -137,6 +140,7 @@ import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import FlashNews from 'src/components/FlashNews.vue'
 import EditorChoice from 'src/components/EditorChoice.vue'
+import EmbeddedIframe from 'src/components/EmbeddedIframe.vue'
 import Header from 'src/components/Header.vue'
 import LatestArticleAside from 'src/components/LatestArticleAside.vue'
 import LatestArticleFocus from 'src/components/list/LatestArticleFocus.vue'
@@ -222,6 +226,7 @@ export default {
   components: {
     FlashNews,
     EditorChoice,
+    EmbeddedIframe,
     LiveStream,
     Loading,
     DfpCover,
