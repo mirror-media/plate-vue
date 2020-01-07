@@ -7,7 +7,7 @@
         </section>
         <FlashNews :articles="flashNewsArticle" />
 
-        <EmbeddedIframe />
+        <EmbeddedIframe v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
 
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp
@@ -86,8 +86,9 @@
         </section>
         <Loading :show="loading" />
         <LazyItemWrapper :position="verge.viewportH()" :strict="true">
-          <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
-          <LiveStream v-else-if="hasEventMod" :mediaData="eventMod" type="mod" />
+          <!-- <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" /> -->
+          <!-- <LiveStream v-else-if="hasEventMod" :mediaData="eventMod" type="mod" /> -->
+          <LiveStream v-if="hasEventMod" :mediaData="eventMod" type="mod" />
         </LazyItemWrapper>
         <template v-if="isMobile">
           <DfpCover v-show="showDfpCoverAdFlag">
@@ -359,13 +360,14 @@ export default {
       return slice(get(this.articlesGroupedList, 'grouped'))
     },
     hasEventEmbedded () {
-      const _now = moment()
-      const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
-      let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
-      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
-      }
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
+      // const _now = moment()
+      // const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
+      // let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
+      // if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+      //   _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
+      // }
+      // return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
+      return true
     },
     hasEventMod () {
       const _now = moment()
