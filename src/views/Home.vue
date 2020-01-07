@@ -727,7 +727,7 @@ section.footer
 
 @media (min-width: 1200px)
   .embedded-iframe--home
-    margin-top 10px
+    padding-top 10px
     padding-right 0
     padding-left 0
     max-width 1024px
