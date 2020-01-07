@@ -13,6 +13,8 @@
 
       <RelatedListOverContent :articles="relateds" :relatedCategory="relatedCategory" />
 
+      <EmbeddedIframe class="embedded-iframe--article" v-if="hasEventEmbedded" :mediaData="eventEmbedded" gaEventCategory="article" />
+
       <div class="article-container" v-if="!isArticlePhotography" >
         <ClientOnly>
           <LazyItemWrapper :loadAfterPageLoaded="true">
@@ -255,7 +257,7 @@
           </ClientOnly>
         </ArticleBodyPhotography>
       </div>
-      <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+      <!-- <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
       <WineWarning v-if="needWineWarning" />
       <!-- DFP MB ST, Cover -->
       <ClientOnly>
@@ -349,6 +351,7 @@ import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import DfpFixed from '../components/DfpFixed.vue'
 import DfpST from '../components/DfpST.vue'
+import EmbeddedIframe from 'src/components/EmbeddedIframe.vue'
 import FbSocialPlugins from 'src/components/FbSocialPlugins.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
@@ -668,6 +671,7 @@ export default {
     DfpCover,
     DfpFixed,
     DfpST,
+    EmbeddedIframe,
     FbSocialPlugins,
     Footer,
     Header,
@@ -1050,6 +1054,13 @@ export default {
 
 </script>
 <style lang="stylus" scoped>
+  .embedded-iframe--article
+    max-width 1160px
+    margin-right auto
+    margin-left auto
+    padding-top 20px
+    padding-left 50px
+    padding-right 50px
   .article-container
     width 100%
     background-color #414141

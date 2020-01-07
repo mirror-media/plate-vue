@@ -1,5 +1,5 @@
 <template>
-  <div class="embedded-iframe" v-html="mediaDataEmbed" @click="sendGaClickEvent('home', 'embedded')"></div>
+  <div class="embedded-iframe" v-html="mediaDataEmbed" @click="sendGaClickEvent(gaEventCategory, 'embedded')"></div>
 </template>
 
 <script>
@@ -11,6 +11,10 @@ export default {
   props: {
     mediaData: {
       required: true
+    },
+    gaEventCategory: {
+      type: String,
+      default: 'undefined'
     }
   },
   computed: {
@@ -27,14 +31,4 @@ export default {
 <style lang="stylus" scoped>
 .embedded-iframe
   cursor pointer
-  @media (min-width 600px)
-    padding-right 2rem
-    padding-left 2rem
-  @media (min-width 1200px)
-    margin-top 10px
-    padding-right 0
-    padding-left 0
-    max-width 1024px
-    margin-right auto
-    margin-left auto
 </style>

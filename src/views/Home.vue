@@ -7,7 +7,7 @@
         </section>
         <FlashNews :articles="flashNewsArticle" />
 
-        <EmbeddedIframe v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
+        <EmbeddedIframe class="embedded-iframe--home" v-if="hasEventEmbedded" :mediaData="eventEmbedded" gaEventCategory="home" />
 
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp
@@ -360,14 +360,13 @@ export default {
       return slice(get(this.articlesGroupedList, 'grouped'))
     },
     hasEventEmbedded () {
-      // const _now = moment()
-      // const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
-      // let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
-      // if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-      //   _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
-      // }
-      // return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
-      return true
+      const _now = moment()
+      const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
+      let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
+      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+        _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
+      }
+      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     hasEventMod () {
       const _now = moment()
@@ -668,6 +667,10 @@ section.footer
     border solid 2px #224f73
 
 @media (min-width: 600px)
+  .embedded-iframe--home
+    padding-right 2rem
+    padding-left 2rem
+
   .list
     &.container
       width 100%
@@ -723,6 +726,14 @@ section.footer
     padding 0 2rem
 
 @media (min-width: 1200px)
+  .embedded-iframe--home
+    margin-top 10px
+    padding-right 0
+    padding-left 0
+    max-width 1024px
+    margin-right auto
+    margin-left auto
+
   .home-view
     h2
       &.project-title--desktop
