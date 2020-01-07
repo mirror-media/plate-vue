@@ -1,5 +1,5 @@
 <template>
-  <div class="embedded-iframe" v-html="mediaDataEmbed" @click="sendGaClickEvent(gaEventCategory, 'embedded')"></div>
+  <div class="embedded-iframe" @click="sendGaClickEvent(gaEventCategory, 'embedded')"></div>
 </template>
 
 <script>
@@ -17,12 +17,32 @@ export default {
       default: 'undefined'
     }
   },
+  mounted () {
+    const unwatch = this.$watch('mediaDataEmbed', (obj) => {
+      if (obj) {
+        this.loadIframe()
+        unwatch()
+      }
+    })
+    window.addEventListener('scroll', this.loadIframe)
+  },
   computed: {
     mediaDataEmbed () {
       return _get(this.mediaData, [ 'embed' ], '')
     }
   },
   methods: {
+    loadIframe () {
+      if (!this.mediaDataEmbed) { return }
+
+      const { top } = this.$el.getBoundingClientRect()
+      const { height } = this.$store.state.viewport
+
+      if (top <= height) {
+        this.$el.innerHTML = this.mediaDataEmbed
+        window.removeEventListener('scroll', this.loadIframe)        
+      }
+    },
     sendGaClickEvent
   }
 }
