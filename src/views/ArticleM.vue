@@ -2,9 +2,10 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
 
-      <EmbeddedIframe v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
+      <!-- <EmbeddedIframe v-if="hasEventEmbedded" :mediaData="eventEmbedded" /> -->
 
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
+        <EmbeddedIframe class="embedded-iframe--article-m" v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
         <vue-dfp :is="props.vueDfp" pos="APPHD" extClass="full mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')" />
         <div class="split-line"></div>
         <div class="article-heromedia" v-if="heroVideo" >
@@ -645,6 +646,11 @@
 
 </script>
 <style lang="stylus" scoped>
+  .embedded-iframe--article-m
+    max-width 1160px
+    background-color #fff
+    margin-right auto
+    margin-left auto
   .article-container
     width 100%
     background-color #414141

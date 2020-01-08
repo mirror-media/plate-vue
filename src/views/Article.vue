@@ -13,9 +13,8 @@
 
       <RelatedListOverContent :articles="relateds" :relatedCategory="relatedCategory" />
 
-      <EmbeddedIframe class="embedded-iframe--article" v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
-
       <div class="article-container" v-if="!isArticlePhotography" >
+        <EmbeddedIframe class="embedded-iframe--article" v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
         <ClientOnly>
           <LazyItemWrapper :loadAfterPageLoaded="true">
             <vue-dfp
@@ -660,6 +659,7 @@ export default {
     next()
   },
   beforeMount () {
+    fetchEvent(this.$store, 'embedded')
     fetchRecommendList(this.$store, this.currArticleId)
   },
   components: {
@@ -1006,7 +1006,7 @@ export default {
       }        
       Promise.all([
         fetchPop(this.$store),
-        fetchEvent(this.$store, 'embedded'),
+        // fetchEvent(this.$store, 'embedded'),
         fetchEvent(this.$store, 'logo'),
       ]).then(() => {
         window.removeEventListener('scroll', lowPriorityDataLoader)
@@ -1061,6 +1061,7 @@ export default {
     padding-top 20px
     padding-left 50px
     padding-right 50px
+    background-color #fff
   .article-container
     width 100%
     background-color #414141
