@@ -1,18 +1,24 @@
 const { get, map, isString, toNumber, concat, compact } = require('lodash')
-const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/ioredisHandler') 
-const { handlerError } = require('./comm')
-const config = require('./config')
+const { google, } = require('googleapis')
+const { Logging } = require('@google-cloud/logging')
 const bodyParser = require('body-parser')
 const debug = require('debug')('PLATEVUE:api')
 const express = require('express')
-// const isProd = process.env.NODE_ENV === 'production'
-const router = express.Router()
-const superagent = require('./agent')
 const Twitter = require('twitter')
 
+const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/ioredisHandler')
+const { handlerError } = require('./comm')
+const { validateSubscribeParams } = require('./validator')
+const { authGoogleAPI } = require('./service/google')
+const superagent = require('./agent')
+const config = require('./config')
+const tappay = require('./service/tappay')
+const ezpay = require('./service/ezpay')
+
+// const isProd = process.env.NODE_ENV === 'production'
+const router = express.Router()
 const jsonParser = bodyParser.json()
 
-const { Logging } = require('@google-cloud/logging')
 const loggingClient = new Logging({
   projectId: config.GCP_PROJECT_ID,
   keyFilename: config.GCP_KEYFILE
@@ -332,6 +338,93 @@ router.use('/related_news', (req, res) => {
     }
   })
 })
+
+router.post('/mgzsubscribe', jsonParser, authGoogleAPI, validateSubscribeParams, async (req, res, next) => {
+
+  // Fetch latest order id from google spreadsheet, plus 1 to be the id of new order
+  try {
+    const sheets = google.sheets({version: 'v4', auth: req.google_auth})
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: config.MAGZINE_SUBSCRIPTION_SHEET_ID,
+      range: `${config.MAGZINE_SUBSCRIPTION_SHEET_NAME}!A2:A`,
+      majorDimension: 'COLUMNS'
+    })
+
+    let new_index = "1"
+    if (response.data.values) {
+      if (!response.data.values.length || !response.data.values[0].length){
+        return res.status(500).send(`The Google Sheet API returned unexpected result while get.`, error)
+      }
+      const order_id = response.data.values[0].slice(-1).pop()
+      new_index = (parseInt(order_id.slice(2)) + 1).toString()
+    }
+    req.body.order_id = 'MI' + '0'.repeat(config.MAGZINE_SUBSCRIPTION_ORDER_ID_DIGITS - new_index.length) + new_index
+
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(`Error while fetching data from Google Sheet.`, error)
+  }
+
+  //return res.status(200).json(req.body)
+  next()
+}, tappay.payByPrime, ezpay.issueInvoice, async (req, res, next) => {
+
+  const subscription_record = [
+    req.body.order_id,
+    req.body.item_name,
+    req.body.item_amount,
+    req.body.discount_code,
+    req.body.pur_name,
+    req.body.pur_cell,
+    req.body.pur_phone,
+    req.body.pur_addr,
+    req.body.pur_mail,
+    req.body.rec_name,
+    req.body.rec_cell,
+    req.body.rec_phone,
+    req.body.rec_addr,
+    req.body.rec_remark,
+    req.body.delivery,
+    config.TAPPAY.PAYMENT_METHOD,
+    get(req.body, ['invoice', 'Status']) === 'SUCCESS' ?
+      '發票開立成功\n' + JSON.stringify(req.body.invoice) :
+      '發票開立失敗\n' + JSON.stringify(req.body.invoice),
+    get(req.body, ['tappay', 'status']) !== 0 ?
+      '付款失敗\n' + JSON.stringify(req.body.tappay) :
+      '付款成功\n' + JSON.stringify(req.body.tappay),
+    new Date().toLocaleString('zh-TW', {timeZone: 'Asia/Taipei'}),
+  ]
+
+  try {
+    const sheets = google.sheets({version: 'v4', auth: req.google_auth})
+    const response = await sheets.spreadsheets.values.append({
+      spreadsheetId: config.MAGZINE_SUBSCRIPTION_SHEET_ID,
+      range: `${config.MAGZINE_SUBSCRIPTION_SHEET_NAME}!A1`,
+      valueInputOption: 'RAW',
+      insertDataOption: 'INSERT_ROWS',
+      resource: {
+        majorDimension: 'ROWS',
+        values: [subscription_record],
+      },
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).send(`Error while writing to Google Sheet.`, error)
+  }
+
+  if (get(req.body.tappay, 'status') !== 0) {
+    return res.status(500).send('Error tappay payment', JSON.stringify({
+      status: req.body.tappay.status,
+      message: req.body.tappay.msg,
+      bank_result_code: req.body.tappay.bank_result_code,
+      bank_result_msg: req.body.tappay.bank_result_msg
+    }))
+  } else {
+    return res.status(200).json(req.body)
+  }
+
+})
+
 
 router.get('*', (req, res, next) => {
   req.startTime = Date.now()
