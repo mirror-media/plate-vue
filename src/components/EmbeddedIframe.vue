@@ -9,6 +9,8 @@ export default {
   name: 'EmbeddedIframe',
   props: {
     mediaData: {
+      type: Object,
+      default: () => {},
       required: true
     }
   },
