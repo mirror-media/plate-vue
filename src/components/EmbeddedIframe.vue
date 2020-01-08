@@ -15,19 +15,14 @@ export default {
     }
   },
   mounted () {
-    const unwatchMediaDataEmbed = this.$watch('mediaDataEmbed', (data) => {
-      if (data) {
-        const { top } = this.$el.getBoundingClientRect()
-        const { height } = this.$store.state.viewport
+    const { top } = this.$el.getBoundingClientRect()
+    const { height } = this.$store.state.viewport
 
-        if (top <= height) {
-          this.$el.innerHTML = data
-        } else {
-          window.addEventListener('scroll', this.loadIframe)
-        }
-        unwatchMediaDataEmbed()
-      }
-    })
+    if (top <= height) {
+      this.$el.innerHTML = this.mediaDataEmbed
+    } else {
+      window.addEventListener('scroll', this.loadIframe)
+    }
   },
   computed: {
     mediaDataEmbed () {
