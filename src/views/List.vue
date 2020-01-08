@@ -29,7 +29,7 @@
           </LazyItemWrapper>
         </ClientOnly>
         <FooterFoodTravel :commonData='commonData' :sectionName='sectionName' />
-        <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+        <!-- <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
       </div>
 
       <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
@@ -120,7 +120,7 @@
         <section class="footer container">
           <Footer />
         </section>
-        <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+        <!-- <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
         <Share :right="`20px`" :bottom="`20px`" />
       </div>
 
@@ -204,7 +204,7 @@
         <section class="footer container">
           <Footer />
         </section>
-        <lLiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" />
+        <!-- <lLiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
         <Share :right="`20px`" :bottom="`20px`" />
       </div>
       <ClientOnly>
@@ -298,7 +298,7 @@ import MoreFull from 'src/components/MoreFull.vue'
 import Share from 'src/components/Share.vue'
 import WineWarning from 'src/components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import moment from 'moment'
+// import moment from 'moment'
 import verge from 'verge'
 
 const MAXRESULT = 12
@@ -797,9 +797,9 @@ export default {
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
-    eventEmbedded () {
-      return get(this.$store, 'state.eventEmbedded.items.0')
-    },
+    // eventEmbedded () {
+    //   return get(this.$store, 'state.eventEmbedded.items.0')
+    // },
     hasAutoScroll () {
       switch (this.type) {
         case AUTHOR:
@@ -819,15 +819,15 @@ export default {
     hasDFP () {
       return !(this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading' || this.$route.params.title === 'topic')
     },
-    hasEventEmbedded () {
-      const _now = moment()
-      const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
-      let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
-      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
-      }
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
-    },
+    // hasEventEmbedded () {
+    //   const _now = moment()
+    //   const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
+    //   let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
+    //   if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+    //     _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
+    //   }
+    //   return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
+    // },
     hasMore () {
       switch (this.$route.params.title) {
         case 'interview':
@@ -1124,7 +1124,7 @@ export default {
   beforeMount () {
     // only fetch at first time after preFetch
     fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
-    fetchEvent(this.$store, 'embedded')
+    // fetchEvent(this.$store, 'embedded')
     fetchEvent(this.$store, 'logo')
     // this.abIndicator = this.getMmid()
   },

@@ -6,6 +6,9 @@
           <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
         </section>
         <FlashNews :articles="flashNewsArticle" />
+
+        <EmbeddedIframe class="embedded-iframe--home" v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
+
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp
             :is="props.vueDfp"
@@ -33,7 +36,7 @@
                 pos="LMBL1"
               />
             </LazyItemWrapper>
-            <MirrorMediaTVAside v-if="isMobile && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
+            <MirrorMediaTVAside v-if="isMobile && hasEventMod" :mediaData="eventMod"></MirrorMediaTVAside>
             <div class="aside-title" ref="aside_title" v-show="isMobile"><h2 v-text="$t('homepage.focus')"></h2></div>
             <div class="focusNewsContainer" id="homepage-focus-news">
               <div v-show="isMobile"
@@ -68,7 +71,7 @@
           </main>
           <aside>
             <div>
-              <MirrorMediaTVAside v-if="viewportWidth >= 1200 && hasEventEmbedded" :mediaData="eventMod"></MirrorMediaTVAside>
+              <MirrorMediaTVAside v-if="viewportWidth >= 1200 && hasEventMod" :mediaData="eventMod"></MirrorMediaTVAside>
               <div class="aside-title" ref="aside_title"><h2 v-text="$t('homepage.focus')"></h2></div>
               <LatestArticleAside v-for="(o, i) in groupedArticle" target="_blank"
                 :groupedArticle="o"
@@ -83,8 +86,9 @@
         </section>
         <Loading :show="loading" />
         <LazyItemWrapper :position="verge.viewportH()" :strict="true">
-          <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
-          <LiveStream v-else-if="!hasEventEmbedded && hasEventMod" :mediaData="eventMod" type="mod" />
+          <!-- <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" /> -->
+          <!-- <LiveStream v-else-if="hasEventMod" :mediaData="eventMod" type="mod" /> -->
+          <LiveStream v-if="hasEventMod" :mediaData="eventMod" type="mod" />
         </LazyItemWrapper>
         <template v-if="isMobile">
           <DfpCover v-show="showDfpCoverAdFlag">
@@ -137,6 +141,7 @@ import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import FlashNews from 'src/components/FlashNews.vue'
 import EditorChoice from 'src/components/EditorChoice.vue'
+import EmbeddedIframe from 'src/components/EmbeddedIframe.vue'
 import Header from 'src/components/Header.vue'
 import LatestArticleAside from 'src/components/LatestArticleAside.vue'
 import LatestArticleFocus from 'src/components/list/LatestArticleFocus.vue'
@@ -222,6 +227,7 @@ export default {
   components: {
     FlashNews,
     EditorChoice,
+    EmbeddedIframe,
     LiveStream,
     Loading,
     DfpCover,
@@ -661,6 +667,10 @@ section.footer
     border solid 2px #224f73
 
 @media (min-width: 600px)
+  .embedded-iframe--home
+    padding-right 2rem
+    padding-left 2rem
+
   .list
     &.container
       width 100%
@@ -716,6 +726,14 @@ section.footer
     padding 0 2rem
 
 @media (min-width: 1200px)
+  .embedded-iframe--home
+    padding-top 10px
+    padding-right 0
+    padding-left 0
+    max-width 1024px
+    margin-right auto
+    margin-left auto
+
   .home-view
     h2
       &.project-title--desktop

@@ -1,6 +1,9 @@
 <template>
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
+
+      <EmbeddedIframe v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
+
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="APPHD" extClass="full mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')" />
         <div class="split-line"></div>
@@ -98,6 +101,7 @@
   import DfpCover from '../components/DfpCover.vue'
   import DfpFixed from '../components/DfpFixed.vue'
   import DfpST from '../components/DfpST.vue'
+  import EmbeddedIframe from 'src/components/EmbeddedIframe.vue'
   import LatestList from '../components/article/LatestList.vue'
   import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
   import PopList from '../components/article/PopList.vue'
@@ -317,6 +321,7 @@
       WineWarning,
       DfpCover,
       DfpST,
+      EmbeddedIframe,
       LazyItemWrapper,
       PopList,
       RelatedListInContent,

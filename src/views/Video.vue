@@ -41,7 +41,7 @@
       <section class="footer container">
         <Footer />
       </section>
-      <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
+      <!-- <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" /> -->
       <Share v-if="!isSingleVideoPage" left="20px" bottom="20px" />
       <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewportWidth < 550)">
         <DfpST :props="props">
@@ -74,7 +74,7 @@ import ShareLight from '../components/share/ShareLight.vue'
 import VideoLeading from '../components/video/VideoLeading.vue'
 import VideoList from '../components/video/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import moment from 'moment'
+// import moment from 'moment'
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
 import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
@@ -346,21 +346,21 @@ export default {
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
-    eventEmbedded () {
-      return get(this.$store, 'state.eventEmbedded.items.0')
-    },
+    // eventEmbedded () {
+    //   return get(this.$store, 'state.eventEmbedded.items.0')
+    // },
     eventLogo () {
       return get(this.$store, 'state.eventLogo.items.0')
     },
-    hasEventEmbedded () {
-      const _now = moment()
-      const _eventStartTime = moment(new Date(get(this.eventEmbedded, [ 'startDate' ])))
-      let _eventEndTime = moment(new Date(get(this.eventEmbedded, [ 'endDate' ])))
-      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
-      }
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
-    },
+    // hasEventEmbedded () {
+    //   const _now = moment()
+    //   const _eventStartTime = moment(new Date(get(this.eventEmbedded, [ 'startDate' ])))
+    //   let _eventEndTime = moment(new Date(get(this.eventEmbedded, [ 'endDate' ])))
+    //   if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
+    //     _eventEndTime = moment(new Date(get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
+    //   }
+    //   return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
+    // },
     isCategoryPage () {
       return this.$route.fullPath.match(/category/)
     },
@@ -413,7 +413,10 @@ export default {
   },
   beforeMount () {
     // this.abIndicator = this.getMmid()
-    const jobs = [ fetchEvent(this.$store, 'embedded'), fetchEvent(this.$store, 'logo') ]
+    const jobs = [
+      // fetchEvent(this.$store, 'embedded'),
+      fetchEvent(this.$store, 'logo')
+    ]
     if (this.$route.fullPath.match(/\/section\//)) {
       fetchFullPlaylist(this.$store, jobs)
     }
