@@ -13,7 +13,7 @@
 
       <RelatedListOverContent :articles="relateds" :relatedCategory="relatedCategory" />
 
-      <EmbeddedIframe class="embedded-iframe--article" v-if="hasEventEmbedded" :mediaData="eventEmbedded" gaEventCategory="article" />
+      <EmbeddedIframe class="embedded-iframe--article" v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
 
       <div class="article-container" v-if="!isArticlePhotography" >
         <ClientOnly>

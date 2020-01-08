@@ -7,7 +7,7 @@
         </section>
         <FlashNews :articles="flashNewsArticle" />
 
-        <EmbeddedIframe class="embedded-iframe--home" v-if="hasEventEmbedded" :mediaData="eventEmbedded" gaEventCategory="home" />
+        <EmbeddedIframe class="embedded-iframe--home" v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
 
         <LazyItemWrapper :loadAfterPageLoaded="true">
           <vue-dfp

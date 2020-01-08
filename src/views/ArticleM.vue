@@ -2,7 +2,7 @@
   <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
     <template slot-scope="props" slot="dfpPos">
 
-      <EmbeddedIframe v-if="hasEventEmbedded" :mediaData="eventEmbedded" gaEventCategory="article-m" />
+      <EmbeddedIframe v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
 
       <div class="article-container" v-if="(articleStyle !== 'photography')" >
         <vue-dfp :is="props.vueDfp" pos="APPHD" extClass="full mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')" />
