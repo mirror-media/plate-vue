@@ -10,7 +10,7 @@ export default {
   props: {
     mediaData: {
       type: Object,
-      default: () => {},
+      default: () => ({}),
       required: true
     }
   },
