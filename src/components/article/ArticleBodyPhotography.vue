@@ -28,7 +28,7 @@
         <div class="brief">
           <div :class="captionStyle">
             <div v-text="heroCaption"></div>
-            <span v-text="getValue(brief, [ 'apiData', 0, 'content', 0 ], '')"></span>
+            <span v-for="paragraph in brief" :key="getValue(paragraph, 'id')" v-text="getValue(paragraph, 'content.0')" />
           </div>
         </div>
         <div class="img">
@@ -81,8 +81,7 @@
     },
     computed: {
       brief () {
-        const { brief } = this.articleData
-        return brief
+        return _.get(this.articleData, 'brief.apiData') || []
       },
       captionStyle () {
         return {
@@ -227,7 +226,7 @@
           defaultInitialPage: 1,
           easing: 'ease',
           pageContainer: '.pic-section',
-          quietPeriod: 750
+          quietPeriod: 550
         })
       },
       mouseWheelHandlerN (evt) {
@@ -487,8 +486,8 @@
         & > div
           position absolute
           z-index 10
-          height 20vh
           width 100vw
+          padding 2em 0
           display flex
           justify-content flex-start
           align-items center
@@ -504,15 +503,13 @@
           span
             width 70%
             color #fff
-            text-align left
+            text-align center
             word-break break-all
-            display flex
-            align-items center
-            justify-content center
-            bottom 0
             line-height 20px
             text-shadow 0.9px 0.5px 0 rgba(0, 0, 0, 0.8)
             font-size 16px
+            & + span
+              margin-top 1em
 
           &.hide
             display none
@@ -843,7 +840,7 @@
         .title
           span
             text-align center
-            padding 20px          
+            padding 80px 20px 0          
             margin-bottom 0!important
             position relative
             height auto
@@ -868,6 +865,10 @@
             height auto
             background-image none
             position relative
+            span
+              width 80%
+              &:not(:nth-child(2))
+                display none
     .go-next-page
       &.center
         left 50%
@@ -889,6 +890,7 @@
         margin 40px auto 0
     .article_body
       > .pic-wrapper
+        padding 0 !important
         > .pic-container
           > .pic-section
             .img

@@ -85,6 +85,7 @@
     .related_list
       margin-top 10px
       display flex
+      flex-direction row !important
       align-content flex-start
       flex-wrap wrap
 

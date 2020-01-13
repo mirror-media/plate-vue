@@ -11,7 +11,7 @@
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
       </section>
 
-      <RelatedListOverContent :articles="relateds" :relatedCategory="relatedCategory" />
+      <RelatedListOverContent v-if="!isArticlePhotography" :articles="relateds" :relatedCategory="relatedCategory" />
 
       <div class="article-container" v-if="!isArticlePhotography" >
         <EmbeddedIframe class="embedded-iframe--article" v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
@@ -233,7 +233,7 @@
         </div>
         <ShareTools v-if="viewportWidth > 767" />
       </div>
-      <div v-else-if="(articleStyle === 'photography')">
+      <div v-else-if="isArticlePhotography">
         <ArticleBodyPhotography :articleData="articleData" :viewport="viewportWidth" :initFBComment="initializeFBComments">
           <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
           <ClientOnly>
@@ -260,7 +260,7 @@
       <WineWarning v-if="needWineWarning" />
       <!-- DFP MB ST, Cover -->
       <ClientOnly>
-        <template v-if="isMobile">
+        <template v-if="isMobile && !isArticlePhotography">
           <LazyItemWrapper :loadAfterPageLoaded="true" v-if="!needWineWarning">
             <DfpST :props="props">
               <vue-dfp
@@ -720,9 +720,6 @@ export default {
       const _data = _find(_get(this.$store, 'state.articles.items'), { 'slug': this.currArticleSlug })
       return _data || {}
     },
-    articleStyle () {
-      return _get(this.articleData, 'style', '')
-    },
     relatedCategory () {
       return _get(this.articleData, 'categories.0.title', '新聞')
     },
@@ -807,9 +804,6 @@ export default {
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
-    editorChoice () { 
-      return _get(this.$store, 'state.articlesGroupedList.choices', [])
-    },
     eventEmbedded () {
       return _get(this.$store, 'state.eventEmbedded.items.0')
     },
@@ -860,7 +854,7 @@ export default {
       return _get(this.articleData, 'lockJS')
     },
     ifSingleCol () {
-      return (this.articleStyle === 'wide' || this.isMobile)
+      return (_get(this.articleData, 'style', '') === 'wide' || this.isMobile)
     },
     isMobile () {
       return this.viewportWidth < 1200
