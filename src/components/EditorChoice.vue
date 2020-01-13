@@ -7,7 +7,7 @@
       <a
         v-for="item in editorChoice"
         :key="`swiper-slide-${item.slug}`"
-        :href="getHref(item)"
+        :href="getLinkHref(item)"
         :style="{ backgroundImage: `url(${item.heroImage.image.resizedTargets.tablet.url})` }"
         class="swiper-slide"
         target="_blank"
@@ -19,49 +19,25 @@
     </Slider>
     <div v-if="isMobile" class="editorChoice--mobile">
       <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
-      <div v-for="item in editorChoice" :href="getHref(item)" class="editorChoice__block" :key="item.slug">
-        <template>
-          <a
-            v-if="item.style !== 'projects'"
-            :href="getHref(item)"
-            :target="target"
-            class="editorChoice__block--img"
-            @click="sendGaClickEvent('home', 'choice')">
-            <LatestAriticleImg class="figure"
-              :src="getImage(item, 'mobile')" :id="get(item, 'heroImage.id', Date.now())"
-              :key="get(item, 'heroImage.id', Date.now())"></LatestAriticleImg>
-            <div :style="getSectionStyle(get(item, 'sections.0', ''))" v-text="get(item, 'sections.0.title', '')"></div>
-          </a>
-          <a
-            v-if="item.style === 'projects'"
-            :href="`https://www.mirrormedia.mg${getHref(item)}`"
-            :target="target"
-            class="editorChoice__block--img"
-            @click.native="sendGaClickEvent('home', 'choice')">
-            <LatestAriticleImg class="figure"
-              :src="getImage(item, 'mobile')" :id="get(item, 'heroImage.id', Date.now())"
-              :key="get(item, 'heroImage.id', Date.now())"></LatestAriticleImg>
-            <div :style="getSectionStyle(get(item, 'sections.0', ''))" v-text="get(item, 'sections.0.title', '')"></div>
-          </a>
-        </template>
+      <div v-for="item in editorChoice" class="editorChoice__block" :key="item.slug">
+        <a
+          :href="getLinkHref(item)"
+          :target="target"
+          class="editorChoice__block--img"
+          @click="sendGaClickEvent('home', 'choice')">
+          <LatestAriticleImg class="figure"
+            :src="getImage(item, 'mobile')" :id="get(item, 'heroImage.id', Date.now())"
+            :key="get(item, 'heroImage.id', Date.now())"></LatestAriticleImg>
+          <div :style="getSectionStyle(get(item, 'sections.0', ''))" v-text="get(item, 'sections.0.title', '')"></div>
+        </a>
         <div class="editorChoice__block--title" :class="getSection(item)">
           <div :style="getSectionStyle(get(item, 'sections.0', ''))" v-text="get(item, 'sections.0.title', '')"></div>
-          <template>
-            <a
-              v-if="item.style !== 'projects'"
-              :href="getHref(item)"
-              :target="target"
-              @click="sendGaClickEvent('home', 'choice')">
-              <h2 v-text="getTitle(item)"></h2>
-            </a>
-            <a
-              v-if="item.style === 'projects'"
-              :href="`https://www.mirrormedia.mg${getHref(item)}`"
-              :target="target"
-              @click="sendGaClickEvent('home', 'choice')">
-              <h2 v-text="getTitle(item)"></h2>
-            </a>
-          </template>
+          <a
+            :href="getLinkHref(item)"
+            :target="target"
+            @click="sendGaClickEvent('home', 'choice')">
+            <h2 v-text="getTitle(item)"></h2>
+          </a>
         </div>
       </div>
     </div>
@@ -75,6 +51,8 @@ import LatestAriticleImg from 'src/components/LatestAriticleImg.vue'
 import Slider from 'src/components/Slider.vue'
 import truncate from 'truncate'
 import { get } from 'lodash'
+
+const GA_TRACE_QUERY = '?source=mmweb_editorchoice'
 
 export default {
   name: 'editorChoice',
@@ -97,8 +75,12 @@ export default {
   },
   methods: {
     get,
-    getHref,
     getImage,
+    getLinkHref (article) {
+      return article.style === 'projects'
+        ? `https://www.mirrormedia.mg${getHref(article)}`
+        : `${getHref(article)}${GA_TRACE_QUERY}`
+    },
     getSection,
     getTitle (article) {
       return truncate(get(article, 'title'), 24)
