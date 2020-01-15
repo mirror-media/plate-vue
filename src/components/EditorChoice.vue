@@ -52,7 +52,7 @@ import Slider from 'src/components/Slider.vue'
 import truncate from 'truncate'
 import { get } from 'lodash'
 
-const GA_TRACE_QUERY = '?source=mmweb_editorchoice'
+const GA_TRACE_QUERY = '?utm_source=mmweb&utm_medium=editorchoice'
 
 export default {
   name: 'editorChoice',
