@@ -1,4 +1,4 @@
-const { get, map, isString, toNumber, concat, compact } = require('lodash')
+const { get, map, toNumber, concat, compact } = require('lodash')
 const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/ioredisHandler') 
 const { handlerError } = require('./comm')
 const config = require('./config')
@@ -8,7 +8,6 @@ const express = require('express')
 // const isProd = process.env.NODE_ENV === 'production'
 const router = express.Router()
 const superagent = require('./agent')
-const Twitter = require('twitter')
 
 const jsonParser = bodyParser.json()
 
@@ -278,24 +277,6 @@ router.use('/search', (req, res) => {
       })
     }
   })
-})
-
-router.use('/twitter', (req, res) => {
-  const query = req.query
-  const client = new Twitter(config.TWITTER_API)
-
-  if (!('screen_name' in query) || query.screen_name === '') {
-    res.status(400).send('empty screen_name')
-  } else {
-    client.get('statuses/user_timeline', query, (err, data) => {
-      if (err) {
-        console.error(`\n[ERROR] GET twitter api: ${err}.`, req.url)
-        res.status(500).send(err)
-      } else {
-        res.json(data)
-      }
-    })
-  }
 })
 
 router.use('/tracking', (req, res) => {
