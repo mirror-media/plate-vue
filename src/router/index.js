@@ -24,7 +24,6 @@ const List = () => import('../views/List.vue')
 const NotFound = () => import('../views/404.vue')
 const Project = () => import('../views/Project.vue')
 const Search = () => import('../views/Search.vue')
-const TimelineView = () => import('../views/TimelineView.vue')
 const Topic = () => import('../views/Topic.vue')
 const Video = () => import('../views/Video.vue')
 
@@ -61,7 +60,6 @@ export function createRouter () {
       { path: '/search/:keyword', component: Search },
       { path: '/section/videohub', component: Video, alias: [ ...oathCategories, '/video/:slug' ] },
       { path: '/section/:title', component: List, alias: [ '/category/:title', '/externals/:title' ] },
-      { path: '/timeline/:title', component: TimelineView },
       { path: '/tag/:tagId', component: List },
       { path: '/topic/:topicId', component: Topic },
       { path: '/404', component: NotFound },
