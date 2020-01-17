@@ -2,9 +2,17 @@
   <div class="heroimageFoodTravel">
     <div class="heroimage-container">
       <!--<img class="heroimage" src="/assets/mirrormedia/foodtravelheroimg.jpg" alt="">-->
-      <img class="heroimage" :src="getValue(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])" alt="">
+      <img
+        class="heroimage"
+        :src="getValue(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+        alt=""
+      >
     </div>
-    <img class="section-title" :src="getSectionLogoUrl()" alt="">
+    <img
+      class="section-title"
+      :src="getSectionLogoUrl()"
+      alt=""
+    >
   </div>
 </template>
 
@@ -13,6 +21,7 @@ import { getValue } from '../util/comm'
 import _ from 'lodash'
 
 export default {
+  props: ['commonData', 'sectionName'],
   computed: {
     leadingImg () {
       return _.get(this.commonData.sections.items.find((o) => o.name === 'foodtravel'), ['heroImage'])
@@ -26,8 +35,7 @@ export default {
     getSectionLogoUrl () {
       return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/asset/logo.png'
     }
-  },
-  props: ['commonData', 'sectionName']
+  }
 }
 </script>
 

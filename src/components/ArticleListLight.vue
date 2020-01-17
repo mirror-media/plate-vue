@@ -2,10 +2,17 @@
   <section class="articleListLight">
     <div class="listContainer">
       <template v-for="item in articles">
-        <list-article-block-light :key="item.id" :article="item" :viewport="viewport"></list-article-block-light>
+        <list-article-block-light
+          :key="item.id"
+          :article="item"
+          :viewport="viewport"
+        />
       </template>
     </div>
-    <latest-list :latests="latest" v-if="showLatestList"/>
+    <latest-list
+      v-if="showLatestList"
+      :latests="latest"
+    />
   </section>
 </template>
 

@@ -1,8 +1,13 @@
 <template>
   <section class="video-leading">
-    <slot name="LPCHD"></slot>
-    <slot name="LMBHD"></slot>
-    <OathPlayer :combinedId="combinedId" :playerId="playerId" :scriptSrc="scriptSrc" class="video-leading__player"></OathPlayer>
+    <slot name="LPCHD" />
+    <slot name="LMBHD" />
+    <OathPlayer
+      :combined-id="combinedId"
+      :player-id="playerId"
+      :script-src="scriptSrc"
+      class="video-leading__player"
+    />
   </section>
 </template>
 <script>
@@ -28,6 +33,7 @@ export default {
         const categoryName = path.split('/')[2]
         return OATH_PLAYER_LIST.category[categoryName][type]
       }
+      return ''
     },
     scriptSrc () {
       return `//delivery.vidible.tv/jsonp/pid=${this.playerId}/${OATH_COPMANY_ID}.js`

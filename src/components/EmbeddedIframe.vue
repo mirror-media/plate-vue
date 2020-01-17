@@ -1,5 +1,5 @@
 <template>
-  <div class="embedded-iframe"></div>
+  <div class="embedded-iframe" />
 </template>
 
 <script>
@@ -14,6 +14,11 @@ export default {
       required: true
     }
   },
+  computed: {
+    mediaDataEmbed () {
+      return _get(this.mediaData, ['embed'], '')
+    }
+  },
   mounted () {
     const { top } = this.$el.getBoundingClientRect()
     const { height } = this.$store.state.viewport
@@ -22,11 +27,6 @@ export default {
       this.$el.innerHTML = this.mediaDataEmbed
     } else {
       window.addEventListener('scroll', this.loadIframe)
-    }
-  },
-  computed: {
-    mediaDataEmbed () {
-      return _get(this.mediaData, ['embed'], '')
     }
   },
   methods: {

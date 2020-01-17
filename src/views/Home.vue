@@ -1,15 +1,34 @@
 <template>
-  <vue-dfp-provider :dfpUnits="DFP_UNITS" :dfpid="DFP_ID" section="home" :options="dfpOptions" :mode="dfpMode" :key="`homepage`">
-    <template slot-scope="props" slot="dfpPos">
+  <vue-dfp-provider
+    :key="`homepage`"
+    :dfp-units="DFP_UNITS"
+    :dfpid="DFP_ID"
+    section="home"
+    :options="dfpOptions"
+    :mode="dfpMode"
+  >
+    <template
+      slot="dfpPos"
+      slot-scope="props"
+    >
       <div class="home-view">
         <section style="width: 100%;">
-          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="home" />
+          <Header
+            :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+            :props="props"
+            :show-dfp-header-logo="showDfpHeaderLogo"
+            active-section="home"
+          />
         </section>
         <FlashNews :articles="flashNewsArticle" />
 
-        <EmbeddedIframe class="embedded-iframe--home" v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
+        <EmbeddedIframe
+          v-if="hasEventEmbedded"
+          class="embedded-iframe--home"
+          :media-data="eventEmbedded"
+        />
 
-        <LazyItemWrapper :loadAfterPageLoaded="true">
+        <LazyItemWrapper :load-after-page-loaded="true">
           <vue-dfp
             :is="props.vueDfp"
             v-if="isMobile"
@@ -25,9 +44,13 @@
           />
         </LazyItemWrapper>
         <section class="home-mainContent">
-          <EditorChoice :editorChoice='editorChoice' :viewport="viewportWidth" target="_blank" />
+          <EditorChoice
+            :editor-choice="editorChoice"
+            :viewport="viewportWidth"
+            target="_blank"
+          />
           <main>
-            <LazyItemWrapper :loadAfterPageLoaded="true">
+            <LazyItemWrapper :load-after-page-loaded="true">
               <vue-dfp
                 :is="props.vueDfp"
                 v-if="isMobile"
@@ -36,20 +59,33 @@
                 pos="LMBL1"
               />
             </LazyItemWrapper>
-            <MirrorMediaTVAside v-if="isMobile && hasEventMod" :mediaData="eventMod"></MirrorMediaTVAside>
-            <div class="aside-title" ref="aside_title" v-show="isMobile"><h2 v-text="$t('homepage.focus')"></h2></div>
-            <div class="focusNewsContainer" id="homepage-focus-news">
-              <div v-show="isMobile"
+            <MirrorMediaTVAside
+              v-if="isMobile && hasEventMod"
+              :media-data="eventMod"
+            />
+            <div
+              v-show="isMobile"
+              ref="aside_title"
+              class="aside-title"
+            >
+              <h2 v-text="$t('homepage.focus')" />
+            </div>
+            <div
+              id="homepage-focus-news"
+              class="focusNewsContainer"
+            >
+              <div
+                v-show="isMobile"
                 class="focusNewsContainer__latest-mobile-b"
               >
                 <LatestArticleFocus
                   v-for="(o, i) in groupedArticle"
                   :key="`${i}-groupedlist-mobile-b`"
-                  :groupedArticle="o"
+                  :grouped-article="o"
                 />
               </div>
             </div>
-            <LazyItemWrapper :loadAfterPageLoaded="true">
+            <LazyItemWrapper :load-after-page-loaded="true">
               <vue-dfp
                 :is="props.vueDfp"
                 v-if="isMobile"
@@ -64,31 +100,51 @@
                 pos="LPCB1"
               />
             </LazyItemWrapper>
-            <LatestArticleMain id="latestArticle" target="_blank"
-              :latestList="latestArticle"
-              :viewport="viewportWidth">
-            </LatestArticleMain>
+            <LatestArticleMain
+              id="latestArticle"
+              target="_blank"
+              :latest-list="latestArticle"
+              :viewport="viewportWidth"
+            />
           </main>
           <aside>
             <div>
-              <MirrorMediaTVAside v-if="viewportWidth >= 1200 && hasEventMod" :mediaData="eventMod"></MirrorMediaTVAside>
-              <div class="aside-title" ref="aside_title"><h2 v-text="$t('homepage.focus')"></h2></div>
-              <LatestArticleAside v-for="(o, i) in groupedArticle" target="_blank"
-                :groupedArticle="o"
+              <MirrorMediaTVAside
+                v-if="viewportWidth >= 1200 && hasEventMod"
+                :media-data="eventMod"
+              />
+              <div
+                ref="aside_title"
+                class="aside-title"
+              >
+                <h2 v-text="$t('homepage.focus')" />
+              </div>
+              <LatestArticleAside
+                v-for="(o, i) in groupedArticle"
+                :key="`${i}-groupedlist`"
+                target="_blank"
+                :grouped-article="o"
                 :index="i"
-                :needStick="false"
+                :need-stick="false"
                 :viewport="viewportWidth"
-                :isLast="(i === (groupedArticle.length - 1)) ? '-last' : ''"
+                :is-last="(i === (groupedArticle.length - 1)) ? '-last' : ''"
                 :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0 }"
-                :key="`${i}-groupedlist`" />
+              />
             </div>
           </aside>
         </section>
         <Loading :show="loading" />
-        <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+        <LazyItemWrapper
+          :position="verge.viewportH()"
+          :strict="true"
+        >
           <!-- <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" /> -->
           <!-- <LiveStream v-else-if="hasEventMod" :mediaData="eventMod" type="mod" /> -->
-          <LiveStream v-if="hasEventMod" :mediaData="eventMod" type="mod" />
+          <LiveStream
+            v-if="hasEventMod"
+            :media-data="eventMod"
+            type="mod"
+          />
         </LazyItemWrapper>
         <template v-if="isMobile">
           <DfpCover v-show="showDfpCoverAdFlag">
@@ -101,7 +157,7 @@
           </DfpCover>
           <DfpCover
             v-if="showDfpCoverAd2Flag"
-            :showCloseBtn="false"
+            :show-close-btn="false"
             class="raw"
           >
             <vue-dfp
@@ -113,7 +169,7 @@
           </DfpCover>
           <DfpCover
             v-if="showDfpCoverInnityFlag"
-            :showCloseBtn="false"
+            :show-close-btn="false"
             class="raw"
           >
             <vue-dfp
@@ -408,6 +464,46 @@ export default {
       return get(this.$store, 'state.viewport.width') || 0
     }
   },
+  beforeMount () {
+    // this.abIndicator = this.getMmid()
+    const jobs = [
+      fetchEvent(this.$store, 'embedded'),
+      fetchEvent(this.$store, 'logo'),
+      fetchEvent(this.$store, 'mod')
+    ]
+    Promise.all(jobs)
+  },
+  mounted () {
+    unLockJS()
+    this.handleScrollForLoadmore()
+    this.updateSysStage()
+
+    fetchFlashNews(this.$store)
+
+    window.addEventListener('scroll', this.detectFixProject)
+
+    /**
+     * Have ad-cover be rendered as soon as #homepage-focus-news gets visible.
+     */
+    /**
+     *  Dont show ad cover on listing page for now.
+     *  window.addEventListener('scroll', this.scrollEventHandlerForAd)
+     */
+
+    window.ga('set', 'contentGroup1', '')
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
+    window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
+  },
+  updated () {
+    this.initHasScrollLoadMore()
+    this.handleScrollForLoadmore()
+    this.updateSysStage()
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.detectFixProject)
+  },
   methods: {
     detectFixProject: function () {
       if (!this.isMobile) {
@@ -487,46 +583,6 @@ export default {
     //     window.removeEventListener('scroll', this.scrollEventHandlerForAd)
     //   }
     // },
-  },
-  beforeMount () {
-    // this.abIndicator = this.getMmid()
-    const jobs = [
-      fetchEvent(this.$store, 'embedded'),
-      fetchEvent(this.$store, 'logo'),
-      fetchEvent(this.$store, 'mod')
-    ]
-    Promise.all(jobs)
-  },
-  mounted () {
-    unLockJS()
-    this.handleScrollForLoadmore()
-    this.updateSysStage()
-
-    fetchFlashNews(this.$store)
-
-    window.addEventListener('scroll', this.detectFixProject)
-
-    /**
-     * Have ad-cover be rendered as soon as #homepage-focus-news gets visible.
-     */
-    /**
-     *  Dont show ad cover on listing page for now.
-     *  window.addEventListener('scroll', this.scrollEventHandlerForAd)
-     */
-
-    window.ga('set', 'contentGroup1', '')
-    window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `home${this.abIndicator}`)
-    window.ga('send', 'pageview', { title: SITE_TITLE, location: document.location.href })
-  },
-  updated () {
-    this.initHasScrollLoadMore()
-    this.handleScrollForLoadmore()
-    this.updateSysStage()
-  },
-  destroyed () {
-    window.removeEventListener('scroll', this.detectFixProject)
   }
   // watch: {
   //   abIndicator: function () {

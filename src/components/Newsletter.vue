@@ -1,25 +1,69 @@
 <template>
   <section class="newsletter">
-    <form ref="emailForm" v-on:submit.prevent="checkEmailValid">
-      <input type="email" v-model="email" v-on:focus="focusEvent" v-on:focusout="focusoutEvent" v-on:input="cleanCheckInfo" :disabled="emailInputDisabled" placeholder="請輸入您的 Email:" required>
-      <label></label>
+    <form
+      ref="emailForm"
+      @submit.prevent="checkEmailValid"
+    >
+      <input
+        v-model="email"
+        type="email"
+        :disabled="emailInputDisabled"
+        placeholder="請輸入您的 Email:"
+        required
+        @focus="focusEvent"
+        @focusout="focusoutEvent"
+        @input="cleanCheckInfo"
+      >
+      <label />
     </form>
     <div class="newsletterCategories">
-      <div ref="peopleBlock" class="newsletterCategories__category">
-        <input ref="people" type="checkbox" :disabled="checkboxDisabled" v-on:change="checkboxChanged('people')">
+      <div
+        ref="peopleBlock"
+        class="newsletterCategories__category"
+      >
+        <input
+          ref="people"
+          type="checkbox"
+          :disabled="checkboxDisabled"
+          @change="checkboxChanged('people')"
+        >
         <label>鏡人物</label>
         <p>《鏡週刊》人物組的鬥陣俱樂部：「一鏡到底」，「鏡相人間」，「心內話」三大單元，紙本未盡之處，這裡細說從頭。</p>
       </div>
-      <div class="newsletterCategories__line"></div>
-      <div ref="foodtravelBlock" class="newsletterCategories__category">
-        <input ref="foodtravel" type="checkbox" :disabled="checkboxDisabled" v-on:change="checkboxChanged('foodtravel')">
+      <div class="newsletterCategories__line" />
+      <div
+        ref="foodtravelBlock"
+        class="newsletterCategories__category"
+      >
+        <input
+          ref="foodtravel"
+          type="checkbox"
+          :disabled="checkboxDisabled"
+          @change="checkboxChanged('foodtravel')"
+        >
         <label>鏡食旅</label>
         <p>《鏡週刊》美食旅遊團隊，堅持實地採訪紀錄，帶你發掘全世界好食好旅，偶爾還有好酒情報。</p>
       </div>
-      <div class="newsletterCategories__curtain" v-show="loading">
+      <div
+        v-show="loading"
+        class="newsletterCategories__curtain"
+      >
         <transition>
-          <svg class="spinner" width="44px" height="44px" viewBox="0 0 44 44">
-            <circle class="path" fill="none" stroke-width="4" stroke-linecap="round" cx="22" cy="22" r="20"></circle>
+          <svg
+            class="spinner"
+            width="44px"
+            height="44px"
+            viewBox="0 0 44 44"
+          >
+            <circle
+              class="path"
+              fill="none"
+              stroke-width="4"
+              stroke-linecap="round"
+              cx="22"
+              cy="22"
+              r="20"
+            />
           </svg>
         </transition>
       </div>
@@ -51,7 +95,7 @@ function fetchNewsletter (url) {
 }
 
 export default {
-  name: 'newsletter',
+  name: 'Newsletter',
   data () {
     return {
       checkboxDisabled: false,
@@ -60,6 +104,22 @@ export default {
       isAdCoverCalledYet: false,
       loading: false
     }
+  },
+  watch: {
+    '$route.fullPath': function () {
+      window.removeEventListener('scroll', this.scrollEventHandlerForAd)
+      this.isAdCoverCalledYet = false
+      window.addEventListener('scroll', this.scrollEventHandlerForAd)
+    }
+  },
+  mounted () {
+    const cookie = Cookie.get('mm-newsletter')
+    this.updateInfo(cookie)
+
+    /**
+     * Have ad-cover be rendered as soon as #article-body-content gets visible.
+     */
+    window.addEventListener('scroll', this.scrollEventHandlerForAd)
   },
   methods: {
     checkEmailValid (category) {
@@ -219,22 +279,6 @@ export default {
         })
         this.email = mail
       }
-    }
-  },
-  mounted () {
-    const cookie = Cookie.get('mm-newsletter')
-    this.updateInfo(cookie)
-
-    /**
-     * Have ad-cover be rendered as soon as #article-body-content gets visible.
-     */
-    window.addEventListener('scroll', this.scrollEventHandlerForAd)
-  },
-  watch: {
-    '$route.fullPath': function () {
-      window.removeEventListener('scroll', this.scrollEventHandlerForAd)
-      this.isAdCoverCalledYet = false
-      window.addEventListener('scroll', this.scrollEventHandlerForAd)
     }
   }
 }

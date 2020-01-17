@@ -1,12 +1,17 @@
 <template>
-  <div v-show="hasRecommendList" class="recommend-list">
+  <div
+    v-show="hasRecommendList"
+    class="recommend-list"
+  >
     <div
       v-if="hasRecommendList"
       :class="sectionInfo.name"
       :style="{ borderColor: sectionInfo.color }"
       class="recommend-list-container"
     >
-      <h4 :style="{ color: sectionInfo.color }">相關文章</h4>
+      <h4 :style="{ color: sectionInfo.color }">
+        相關文章
+      </h4>
       <template v-for="(post, index) in filteredRecommends">
         <div
           :key="`recommend-${post.slug}`"
@@ -24,22 +29,22 @@
           :key="`popIn-2-${index}`"
           class="recommend-list__item"
         >
-          <div id="_popIn_recommend_ad_1"></div>
+          <div id="_popIn_recommend_ad_1" />
         </PopInAd>
         <PopInAd
           v-if="showPopInAdAtSpecificPos && index === 2"
           :key="`popIn-1-${index}`"
           class="recommend-list__item"
         >
-          <div id="_popIn_recommend_ad_2"></div>
+          <div id="_popIn_recommend_ad_2" />
         </PopInAd>
       </template>
       <template v-if="!showPopInAdAtSpecificPos">
         <PopInAd class="recommend-list__item">
-          <div id="_popIn_recommend_ad_1"></div>
+          <div id="_popIn_recommend_ad_1" />
         </PopInAd>
         <PopInAd class="recommend-list__item">
-          <div id="_popIn_recommend_ad_2"></div>
+          <div id="_popIn_recommend_ad_2" />
         </PopInAd>
       </template>
     </div>

@@ -1,11 +1,33 @@
 <template>
-  <div class="video-container" @mouseover="mouseoverHandler" @click="videoPlay" >
-    <video width="100%" height="100%" controls controlsList="nodownload" preload="metadata" playsinline :ref="videoId" :id="videoId"
-          :poster="poster" :style="posterStyle">
-            <source :src="getValue(video, [ 'url' ])" :type="getValue(video, [ 'filetype' ])">
-            Your browser does not support the video tag.
+  <div
+    class="video-container"
+    @mouseover="mouseoverHandler"
+    @click="videoPlay"
+  >
+    <video
+      :id="videoId"
+      :ref="videoId"
+      width="100%"
+      height="100%"
+      controls
+      controlsList="nodownload"
+      preload="metadata"
+      playsinline
+      :poster="poster"
+      :style="posterStyle"
+    >
+      <source
+        :src="getValue(video, [ 'url' ])"
+        :type="getValue(video, [ 'filetype' ])"
+      >
+      Your browser does not support the video tag.
     </video>
-    <div class="playpause" :class="videoClass" :target-video="videoId" :style="playPauseStyle" ></div>
+    <div
+      class="playpause"
+      :class="videoClass"
+      :target-video="videoId"
+      :style="playPauseStyle"
+    />
   </div>
 </template>
 <script>
@@ -13,7 +35,17 @@ import { get, map } from 'lodash'
 import { getClientOS } from '../../util/comm.js'
 
 export default {
-  name: 'article-video',
+  name: 'ArticleVideo',
+  props: ['video'],
+  data () {
+    return {
+      hoverFlag: false,
+      played: false,
+      playingFlag: false,
+      opacity: 1,
+      videoId: `video-${get(this.video, ['id'])}-${Math.floor(Math.random() * (10000000000 - 100000) + 100000)}`
+    }
+  },
   computed: {
     playPauseStyle () {
       return this.playingFlag ? {
@@ -39,14 +71,22 @@ export default {
       }
     }
   },
-  data () {
-    return {
-      hoverFlag: false,
-      played: false,
-      playingFlag: false,
-      opacity: 1,
-      videoId: `video-${get(this.video, ['id'])}-${Math.floor(Math.random() * (10000000000 - 100000) + 100000)}`
-    }
+  mounted () {
+    this.$refs[this.videoId].addEventListener('play', () => {
+      const videosThisPAge = document.querySelectorAll('video')
+      map(videosThisPAge, (v) => {
+        if (v.getAttribute('id') !== this.videoId) {
+          v.pause()
+        }
+      })
+      this.playingFlag = true
+      this.pausingFlag = false
+      this.fadeOutPauseBtn()
+    })
+    this.$refs[this.videoId].addEventListener('pause', () => {
+      this.playingFlag = false
+      this.pausingFlag = true
+    })
   },
   methods: {
     fadeOutPauseBtn () {
@@ -83,25 +123,7 @@ export default {
         this.$refs[this.videoId].pause()
       }
     }
-  },
-  mounted () {
-    this.$refs[this.videoId].addEventListener('play', () => {
-      const videosThisPAge = document.querySelectorAll('video')
-      map(videosThisPAge, (v) => {
-        if (v.getAttribute('id') !== this.videoId) {
-          v.pause()
-        }
-      })
-      this.playingFlag = true
-      this.pausingFlag = false
-      this.fadeOutPauseBtn()
-    })
-    this.$refs[this.videoId].addEventListener('pause', () => {
-      this.playingFlag = false
-      this.pausingFlag = true
-    })
-  },
-  props: ['video']
+  }
 }
 </script>
 <style lang="stylus" scoped>

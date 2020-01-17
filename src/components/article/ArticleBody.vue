@@ -1,29 +1,50 @@
 <template>
-  <ArticleBodyLayout class="article_body" v-if="!isArticleEmpty()" :class="[ styleForCurrArticle ]">
+  <ArticleBodyLayout
+    v-if="!isArticleEmpty()"
+    class="article_body"
+    :class="[ styleForCurrArticle ]"
+  >
     <main class="article_main">
       <div class="article_basic-info">
         <div class="category">
-          <span v-if="!isAd" class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
+          <span
+            v-if="!isAd"
+            class="categorySquare"
+            :style="category[ 'style' ]"
+            v-text="category[ 'categoryTitle' ]"
+          />
         </div>
-        <div class="date" v-text="date"></div>
+        <div
+          class="date"
+          v-text="date"
+        />
       </div>
-      <h1 v-text="title"></h1>
-      <h2 v-if="subtitle.length > 0" v-text="subtitle"></h2>
+      <h1 v-text="title" />
+      <h2
+        v-if="subtitle.length > 0"
+        v-text="subtitle"
+      />
       <div class="article__basic-info">
         <div class="article__basic-info-wrapper">
-          <div class="article__credit" v-html="credit"></div>
+          <div
+            class="article__credit"
+            v-html="credit"
+          />
           <div class="article__audioplayer-share">
             <AudioPlayer :post="articleData" />
-            <ShareLight :gtmCategory="'article'" />
+            <ShareLight :gtm-category="'article'" />
           </div>
         </div>
       </div>
-      <slot name="hero"></slot>
+      <slot name="hero" />
       <div
         :style="{ backgroundColor: category.color || '#bcbcbc' }"
         class="brief fb-quotable"
       >
-        <div v-for="(p, i) in briefArr" :key="`brief-${i}`">
+        <div
+          v-for="(p, i) in briefArr"
+          :key="`brief-${i}`"
+        >
           <!-- <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
@@ -51,25 +72,45 @@
           <div v-else-if="p.type === 'annotation'">
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div> -->
-          <div v-if="p.type === 'unstyled'" v-html="paragraphComposer(p)"></div>
+          <div
+            v-if="p.type === 'unstyled'"
+            v-html="paragraphComposer(p)"
+          />
         </div>
       </div>
 
-      <div class="split-line"></div>
-      <article class="content" id="article-body-content" itemprop="articleBody">
-        <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`" :is="blockWrapper(p, index)">
-          <ArticleImg v-if="p.type === 'image'"
+      <div class="split-line" />
+      <article
+        id="article-body-content"
+        class="content"
+        itemprop="articleBody"
+      >
+        <div
+          :is="blockWrapper(p, index)"
+          v-for="(p, index) in contArr"
+          :key="`${articleData.slug}-content-${index}`"
+        >
+          <ArticleImg
+            v-if="p.type === 'image'"
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
-            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>
-          <div v-else-if="p.type === 'video'" is="article-video"
-            :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
-          <div v-else-if="p.type === 'audio'" is="audio-box"
-            :audio="getValue(p, [ 'content', 0], {})"></div>
+            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"
+          />
+          <div
+            is="article-video"
+            v-else-if="p.type === 'video'"
+            :video="getValue(p, [ 'content', 0], {})"
+            :class="`video ${getValue(p, [ 'alignment' ], '')}`"
+          />
+          <div
+            is="audio-box"
+            v-else-if="p.type === 'audio'"
+            :audio="getValue(p, [ 'content', 0], {})"
+          />
           <Slider
             v-else-if="p.type === 'slideshow'"
             :autoplay="false"
-            :showSwiperPagination="false"
+            :show-swiper-pagination="false"
             class="swiper-container--article"
           >
             <div
@@ -84,55 +125,110 @@
                   ${getValue(o, 'tablet.url', '')} 1200w,
                   ${getValue(o, 'desktop.url', '')} 2000w`"
               >
-              <div class="swiper-slide__caption" v-text="getValue(o, 'description', '')" />
+              <div
+                class="swiper-slide__caption"
+                v-text="getValue(o, 'description', '')"
+              />
             </div>
           </Slider>
-          <div v-else-if="p.type === 'annotation'" class="content--annotation">
-            <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
+          <div
+            v-else-if="p.type === 'annotation'"
+            class="content--annotation"
+          >
+            <annotation :annotation-str="getValue(p, [ 'content' ])" />
           </div>
-          <div v-else v-html="paragraphComposer(p)"></div>
-          <slot name="dfpad-AR1-PC" v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 0 ]"></slot>
-          <slot name="dfpad-AR2-PC" v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 1 ]"></slot>
-          <div v-if="shouldShowADAR1 && index === nonEmptyParagraphsIndexs[0]" class="dfp-at--mobile">
-            <slot name="dfpad-AR1-MB"></slot>
+          <div
+            v-else
+            v-html="paragraphComposer(p)"
+          />
+          <slot
+            v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 0 ]"
+            name="dfpad-AR1-PC"
+          />
+          <slot
+            v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 1 ]"
+            name="dfpad-AR2-PC"
+          />
+          <div
+            v-if="shouldShowADAR1 && index === nonEmptyParagraphsIndexs[0]"
+            class="dfp-at--mobile"
+          >
+            <slot name="dfpad-AR1-MB" />
           </div>
-          <div v-if="shouldShowADAR2 && index === nonEmptyParagraphsIndexs[4]" class="dfp-at--mobile">
-            <slot name="dfpad-AR2-MB"></slot>
+          <div
+            v-if="shouldShowADAR2 && index === nonEmptyParagraphsIndexs[4]"
+            class="dfp-at--mobile"
+          >
+            <slot name="dfpad-AR2-MB" />
           </div>
-          <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
+          <slot
+            v-if="index === lastUnstyledParagraph - 1"
+            name="relatedListInContent"
+          />
         </div>
-        <p v-if="articleData.updatedAt !== articleData.publishedDate" class="updated-time">更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span></p>
+        <p
+          v-if="articleData.updatedAt !== articleData.publishedDate"
+          class="updated-time"
+        >
+          更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span>
+        </p>
       </article>
       <div class="article_main_related_bottom">
-        <slot name="relatedlistBottom"></slot>
+        <slot name="relatedlistBottom" />
       </div>
       <div class="dfp-at--mobile">
-        <slot name="dfpad-AR3-MB"></slot>
+        <slot name="dfpad-AR3-MB" />
       </div>
-      <newsletter></newsletter>
-      <div>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a>、<a :href="socialLink.AUTH" target="_blank">了解內容授權資訊</a>。</div>
+      <newsletter />
+      <div>
+        更多內容，歡迎<a
+          :href="socialLink.SUBSCRIBE"
+          target="_blank"
+        >訂閱鏡週刊</a>、<a
+          :href="socialLink.AUTH"
+          target="_blank"
+        >了解內容授權資訊</a>。
+      </div>
       <div class="article_main_tags">
         <p>相關關鍵字：</p>
-        <div class="tags" v-if="tags.length > 0">
-          <a v-for="tag in tags" :key="tag.id" :href="`/tag/${tag.id}`" target="_blank" @click="sendGaClickEvent('article', 'tag')" v-text="tag.name"></a>
+        <div
+          v-if="tags.length > 0"
+          class="tags"
+        >
+          <a
+            v-for="tag in tags"
+            :key="tag.id"
+            :href="`/tag/${tag.id}`"
+            target="_blank"
+            @click="sendGaClickEvent('article', 'tag')"
+            v-text="tag.name"
+          />
         </div>
       </div>
-      <div class="split-line"></div>
-      <FbSocialPlugins v-if="viewport < 768"/>
+      <div class="split-line" />
+      <FbSocialPlugins v-if="viewport < 768" />
       <div class="herbsapi">
-        <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
+        <div
+          id="herbsapi"
+          hb-width="100"
+          hb-height="auto"
+          hb-icon="https://mediafarmers.org/api/images/icon_2.png"
+        />
         <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
       </div>
-      <div class="dfpad-set" :class="{ mobile: viewport < 1000 }">
-        <slot name="dfpad-set"></slot>
+      <div
+        class="dfpad-set"
+        :class="{ mobile: viewport < 1000 }"
+      >
+        <slot name="dfpad-set" />
       </div>
-      <slot name="recommendList"></slot>
+      <slot name="recommendList" />
       <div class="article_main_pop">
-        <slot name="poplist"></slot>
+        <slot name="poplist" />
       </div>
-      <slot name="slot_fb_comment"></slot>
+      <slot name="slot_fb_comment" />
     </main>
-    <slot name="aside"></slot>
+    <slot name="aside" />
   </ArticleBodyLayout>
 </template>
 <script>
@@ -156,6 +252,7 @@ import moment from 'moment'
 
 // const debug = require('debug')('CLIENT:ArticleBody')
 export default {
+  name: 'ArticleBody',
   components: {
     'audio-box': AudioBox,
     newsletter: Newsletter,
@@ -168,6 +265,22 @@ export default {
     ShareLight,
     Slider,
     AudioPlayer
+  },
+  props: {
+    articleData: {
+      default: () => { return {} }
+    },
+    viewport: {
+      default: () => { return undefined }
+    },
+    isAd: {
+      default: () => false
+    }
+  },
+  data () {
+    return {
+      renderingStartTime: undefined
+    }
   },
   computed: {
     articleStyle () {
@@ -287,10 +400,11 @@ export default {
       return _.get(this.nonEmptyParagraphsIndexs, 4, -1) !== -1
     }
   },
-  data () {
-    return {
-      renderingStartTime: undefined
-    }
+  mounted () {
+    /* global twttr */
+    window.addEventListener('load', () => {
+      window.twttr && twttr.widgets.load()
+    })
   },
   methods: {
     blockWrapper (p, index) {
@@ -385,24 +499,6 @@ export default {
       }
     },
     sendGaClickEvent
-  },
-  mounted () {
-    /* global twttr */
-    window.addEventListener('load', () => {
-      window.twttr && twttr.widgets.load()
-    })
-  },
-  name: 'article-body',
-  props: {
-    articleData: {
-      default: () => { return {} }
-    },
-    viewport: {
-      default: () => { return undefined }
-    },
-    isAd: {
-      default: () => false
-    }
   }
 }
 </script>

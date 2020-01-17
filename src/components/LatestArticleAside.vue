@@ -1,55 +1,70 @@
 <template>
-  <div class="latest-aside-container" v-if="groupedArticle">
+  <div
+    v-if="groupedArticle"
+    class="latest-aside-container"
+  >
     <div class="latest-list">
       <div class="latest-list_item">
         <a
-          :href="getHref(groupedArticle)"
           v-if="groupedArticle.style !== 'projects' && groupedArticle.style !== 'campaign' && groupedArticle.style !== 'readr'"
+          :href="getHref(groupedArticle)"
           :target="target"
-          @click="sendGaClickEvent('home', 'group')">
-          <div class="latest-list_item_img" v-lazy:background-image="getImage(groupedArticle, 'mobile')"></div>
+          @click="sendGaClickEvent('home', 'group')"
+        >
+          <div
+            v-lazy:background-image="getImage(groupedArticle, 'mobile')"
+            class="latest-list_item_img"
+          />
         </a>
         <a
-          :href="getHrefFull(groupedArticle)"
           v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'"
+          :href="getHrefFull(groupedArticle)"
           :target="target"
-          @click="sendGaClickEvent('home', 'group')">
-          <div class="latest-list_item_img" v-lazy:background-image="getImage(groupedArticle, 'mobile')"></div>
+          @click="sendGaClickEvent('home', 'group')"
+        >
+          <div
+            v-lazy:background-image="getImage(groupedArticle, 'mobile')"
+            class="latest-list_item_img"
+          />
         </a>
         <div class="latest-list_item_title">
           <a
-            :href="getHref(groupedArticle)"
-            v-text="getTruncatedVal(groupedArticle.title, 22)"
             v-if="groupedArticle.style !== 'projects' && groupedArticle !== 'campaign' && groupedArticle !== 'readr'"
+            :href="getHref(groupedArticle)"
             :target="target"
-            @click="sendGaClickEvent('home', 'group')">
-          </a>
-          <a
-            :href="getHrefFull(groupedArticle)"
+            @click="sendGaClickEvent('home', 'group')"
             v-text="getTruncatedVal(groupedArticle.title, 22)"
+          />
+          <a
             v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'"
+            :href="getHrefFull(groupedArticle)"
             :target="target"
-            @click="sendGaClickEvent('home', 'group')">
-          </a>
+            @click="sendGaClickEvent('home', 'group')"
+            v-text="getTruncatedVal(groupedArticle.title, 22)"
+          />
         </div>
       </div>
 
-      <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])" v-if="i < 3">
+      <div
+        v-for="(o, i) in (getValue(groupedArticle, [ 'relateds' ]) || []).slice(0, 2)"
+        :key="`latest-list_item-${i}`"
+        class="latest-list_item"
+      >
         <div class="latest-list_item_title">
           <a
-            :href="getHref(o)"
-            v-text="getTruncatedVal(o.title, 22)"
             v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'"
+            :href="getHref(o)"
             :target="target"
-            @click="sendGaClickEvent('home', 'group')">
-          </a>
-          <a
-            :href="getHrefFull(o)"
+            @click="sendGaClickEvent('home', 'group')"
             v-text="getTruncatedVal(o.title, 22)"
+          />
+          <a
             v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'"
+            :href="getHrefFull(o)"
             :target="target"
-            @click="sendGaClickEvent('home', 'group')">
-          </a>
+            @click="sendGaClickEvent('home', 'group')"
+            v-text="getTruncatedVal(o.title, 22)"
+          />
         </div>
       </div>
     </div>
@@ -61,13 +76,37 @@ import { SECTION_MAP } from '../constants'
 import { getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../util/comm'
 
 export default {
-  name: 'latest-list-aside',
+  name: 'LatestListAside',
+  props: {
+    groupedArticle: {
+      default: () => { return undefined }
+    },
+    index: {
+      default: () => { return 0 }
+    },
+    needStick: {
+      default: () => { return true }
+    },
+    target: {
+      default: () => ('_self')
+    },
+    viewport: {
+      default: () => { return undefined }
+    },
+    isLast: null
+  },
   data () {
     return {
       nodeTopStatic: 0,
       nodeLeftStatic: 0,
       nodeWidthStatic: 0
     }
+  },
+  mounted () {
+    this.needStick && this.setUpEventHandler()
+  },
+  updated () {
+    this.needStick && this.setUpEventHandler()
   },
   methods: {
     getHref,
@@ -151,30 +190,6 @@ export default {
         }
       }
     }
-  },
-  props: {
-    groupedArticle: {
-      default: () => { return undefined }
-    },
-    index: {
-      default: () => { return 0 }
-    },
-    needStick: {
-      default: () => { return true }
-    },
-    target: {
-      default: () => ('_self')
-    },
-    viewport: {
-      default: () => { return undefined }
-    },
-    isLast: null
-  },
-  mounted () {
-    this.needStick && this.setUpEventHandler()
-  },
-  updated () {
-    this.needStick && this.setUpEventHandler()
   }
 }
 </script>

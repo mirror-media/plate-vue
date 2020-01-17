@@ -1,62 +1,124 @@
 <template>
   <section class="articleBodyExternal">
     <div class="articleBodyExternalContainer">
-      <slot name="dfp-PCHD"></slot>
-      <slot name="dfp-MBHD"></slot>
+      <slot name="dfp-PCHD" />
+      <slot name="dfp-MBHD" />
       <div class="articleBodyExternal__heroImage">
-        <img v-if="heroImage" v-lazy="heroImage">
+        <img
+          v-if="heroImage"
+          v-lazy="heroImage"
+        >
       </div>
-      <article class="article" itemprop="articleBody">
+      <article
+        class="article"
+        itemprop="articleBody"
+      >
         <div class="article__info">
-          <div class="article__info--section">健康醫療</div>
-          <div class="article__info--date" v-text="date"></div>
+          <div class="article__info--section">
+            健康醫療
+          </div>
+          <div
+            class="article__info--date"
+            v-text="date"
+          />
         </div>
-        <h1 v-text="title"></h1>
-        <div v-if="credit" class="article__credit">文｜<span v-html="credit"></span></div>
+        <h1 v-text="title" />
+        <div
+          v-if="credit"
+          class="article__credit"
+        >
+          文｜<span v-html="credit" />
+        </div>
         <main>
           <section class="article__main">
-            <p class="article__main--brief" v-text="brief"></p>
+            <p
+              class="article__main--brief"
+              v-text="brief"
+            />
             <template v-if="contentWithHtmlTag">
-              <div class="article__main--content" v-html="content" id="article-body-content">
-              </div>
+              <div
+                id="article-body-content"
+                class="article__main--content"
+                v-html="content"
+              />
             </template>
             <template v-else>
-              <div class="article__main--content" id="article-body-content">
+              <div
+                id="article-body-content"
+                class="article__main--content"
+              >
                 <template v-for="(p, index) in content">
-                  <p :key="`content-${index}`" v-html="p"></p>
-                  <slot v-if="index === 1" name="dfp-AT1"></slot>
-                  <slot v-if="index === 4" name="dfp-AT2"></slot>
+                  <p
+                    :key="`content-${index}`"
+                    v-html="p"
+                  />
+                  <slot
+                    v-if="index === 1"
+                    name="dfp-AT1"
+                  />
+                  <slot
+                    v-if="index === 4"
+                    name="dfp-AT2"
+                  />
                 </template>
               </div>
             </template>
-            <p v-if="source" class="article__main--ref">【<strong>本文經</strong><span v-text="partner"></span><strong>授權轉載</strong><a :href="source" target="_blank">看原文</a>】</p>
-            <newsletter></newsletter>
-            <p>更多內容，歡迎<a :href="socialLink.SUBSCRIBE" target="_blank">訂閱鏡週刊</a></p>
+            <p
+              v-if="source"
+              class="article__main--ref"
+            >
+              【<strong>本文經</strong><span v-text="partner" /><strong>授權轉載</strong><a
+                :href="source"
+                target="_blank"
+              >看原文</a>】
+            </p>
+            <newsletter />
+            <p>
+              更多內容，歡迎<a
+                :href="socialLink.SUBSCRIBE"
+                target="_blank"
+              >訂閱鏡週刊</a>
+            </p>
             <div class="article__main--fbPage">
-              <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-                <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
+              <div
+                class="fb-page"
+                data-href="https://www.facebook.com/mirrormediamg/"
+                data-adapt-container-width="true"
+                data-small-header="true"
+                data-hide-cover="true"
+                data-show-facepile="false"
+              >
+                <blockquote
+                  cite="https://www.facebook.com/mirrormediamg/"
+                  class="fb-xfbml-parse-ignore"
+                >
                   <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
                 </blockquote>
               </div>
             </div>
             <div class="herbsapi">
-              <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
+              <div
+                id="herbsapi"
+                hb-width="100"
+                hb-height="auto"
+                hb-icon="https://mediafarmers.org/api/images/icon_2.png"
+              />
               <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
             </div>
-            <slot name="dfp-MBE1"></slot>
-            <slot name="dfp-PCE1E2"></slot>
-            <slot name="recommendList"></slot>
-            <slot name="popularList"></slot>
-            <slot name="projectList"></slot>
-            <slot name="fbComment"></slot>
+            <slot name="dfp-MBE1" />
+            <slot name="dfp-PCE1E2" />
+            <slot name="recommendList" />
+            <slot name="popularList" />
+            <slot name="projectList" />
+            <slot name="fbComment" />
           </section>
           <section class="article__aside">
-            <slot name="dfp-PCR1"></slot>
-            <slot name="latestList"></slot>
-            <slot name="articleAsideFixed"></slot>
+            <slot name="dfp-PCR1" />
+            <slot name="latestList" />
+            <slot name="articleAsideFixed" />
           </section>
         </main>
-        <slot name="footer"></slot>
+        <slot name="footer" />
       </article>
     </div>
   </section>
@@ -106,9 +168,7 @@ export default {
     },
     heroImage () {
       const link = _.get(this.articleData, ['thumb'])
-      if (link) {
-        return link
-      }
+      return link
     },
     partner () {
       return _.get(this.articleData, ['partner', 'display'])

@@ -1,10 +1,19 @@
 <template>
   <div class="leading">
     <div class="leading-container">
-      <div class="leading-slideshow" v-if="type === 'slideshow' && slideshowImgs.length > 0">
+      <div
+        v-if="type === 'slideshow' && slideshowImgs.length > 0"
+        class="leading-slideshow"
+      >
         <Slider>
           <template v-for="(o, i) in slideshowImgs">
-            <a v-if="$_leading_detectImgHref(o)" :key="`${i}-${Date.now()}`" :href="$_leading_getHref(o)" class="swiper-slide" target="_blank">
+            <a
+              v-if="$_leading_detectImgHref(o)"
+              :key="`${i}-${Date.now()}`"
+              :href="$_leading_getHref(o)"
+              class="swiper-slide"
+              target="_blank"
+            >
               <img
                 :src="getValue(o, [ 'image', 'url' ])"
                 :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 400w,
@@ -15,9 +24,10 @@
                   (min-width 768px) and (max-width 830px) 70vw,
                   (min-width 831px) and (max-width 1023px) 60vw,
                   55vw"
-                />
+              >
             </a>
-            <img v-else
+            <img
+              v-else
               :key="`${i}-${Date.now()}`"
               :src="getValue(o, [ 'image', 'url' ])"
               :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 600w,
@@ -29,11 +39,14 @@
                   (min-width 831px) and (max-width 1023px) 60vw,
                   55vw"
               class="swiper-slide"
-            />
+            >
           </template>
         </Slider>
       </div>
-      <div class="leading-image" v-else-if="type === 'image' && leadingImg">
+      <div
+        v-else-if="type === 'image' && leadingImg"
+        class="leading-image"
+      >
         <div class="img">
           <img
             :src="getValue(leadingImg, [ 'image', 'url' ])"
@@ -45,18 +58,33 @@
               (min-width 768px) and (max-width 830px) 70vw,
               (min-width 831px) and (max-width 1023px) 60vw,
               55vw"
-            />
+          >
         </div>
       </div>
-      <div class="leading-video" v-else-if="type === 'video' && leadingVideo">
+      <div
+        v-else-if="type === 'video' && leadingVideo"
+        class="leading-video"
+      >
         <div class="video">
-          <video controls ref="video">
-            <source :src="getValue(leadingVideo, [ 'video', 'url' ])" :type="getValue(leadingVideo, [ 'video', 'filetype' ])" />
+          <video
+            ref="video"
+            controls
+          >
+            <source
+              :src="getValue(leadingVideo, [ 'video', 'url' ])"
+              :type="getValue(leadingVideo, [ 'video', 'filetype' ])"
+            >
           </video>
         </div>
       </div>
-      <div class="leading-embedded" v-else-if="type === 'embedded' && leadingEmedded">
-        <div class="embedded" v-html="leadingEmedded"></div>
+      <div
+        v-else-if="type === 'embedded' && leadingEmedded"
+        class="leading-embedded"
+      >
+        <div
+          class="embedded"
+          v-html="leadingEmedded"
+        />
       </div>
     </div>
   </div>
@@ -68,8 +96,17 @@ import _ from 'lodash'
 import Slider from './Slider.vue'
 
 export default {
+  name: 'Leading',
   components: {
     Slider
+  },
+  props: {
+    mediaData: {
+      default: () => { return {} }
+    },
+    type: {
+      default: () => { return {} }
+    }
   },
   computed: {
     sliderOption () {
@@ -102,15 +139,6 @@ export default {
       return _.split(item.keywords, '@-')[1]
     },
     getValue
-  },
-  name: 'leading',
-  props: {
-    mediaData: {
-      default: () => { return {} }
-    },
-    type: {
-      default: () => { return {} }
-    }
   }
 }
 

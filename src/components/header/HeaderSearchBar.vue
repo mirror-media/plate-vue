@@ -1,9 +1,22 @@
 <template>
   <section class="header-search-bar">
-    <form action="" @submit.prevent="search" @focusout="search">
-      <input v-model="keyword" type="search" :placeholder="$t('HEADER.SEARCH')">
+    <form
+      action=""
+      @submit.prevent="search"
+      @focusout="search"
+    >
+      <input
+        v-model="keyword"
+        type="search"
+        :placeholder="$t('HEADER.SEARCH')"
+      >
     </form>
-    <button @click="closeSearchBar()"><img src="/assets/mirrormedia/icon/close.png" :alt="$t('HEADER.CLOSE')"></button>
+    <button @click="closeSearchBar()">
+      <img
+        src="/assets/mirrormedia/icon/close.png"
+        :alt="$t('HEADER.CLOSE')"
+      >
+    </button>
   </section>
 </template>
 <script>

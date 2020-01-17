@@ -1,17 +1,45 @@
 <template>
   <section class="listChoice container">
-    <h1 :style="{ color: sectionColor }">編輯精選</h1>
-    <div class="listChoice__block" v-for="(item, index) in sectionfeatured" :class="[ index%2 !== 0 ? 'right' : '' ]">
+    <h1 :style="{ color: sectionColor }">
+      編輯精選
+    </h1>
+    <div
+      v-for="(item, index) in sectionfeatured"
+      :key="`listChoice__block-${index}`"
+      class="listChoice__block"
+      :class="[ index%2 !== 0 ? 'right' : '' ]"
+    >
       <figure>
         <template>
-          <router-link :to="getHref(item)" target="_blank" @click.native="sendGaClickEvent('listing', 'choice')">
-            <img :src="getImage(item, viewportTarget)" />
+          <router-link
+            :to="getHref(item)"
+            target="_blank"
+            @click.native="sendGaClickEvent('listing', 'choice')"
+          >
+            <img :src="getImage(item, viewportTarget)">
           </router-link>
         </template>
       </figure>
-      <div class="listChoice__block--content" :style="{ borderColor: sectionColor }">
-        <h2><router-link :to="getHref(item)" target="_blank" v-text="getTruncatedVal(getValue(item, [ 'title' ]), 30)" @click.native="sendGaClickEvent('listing', 'choice')"></router-link></h2>
-        <p><router-link :to="getHref(item)" target="_blank" v-text="getBrief(item, 45)" @click.native="sendGaClickEvent('listing', 'choice')"></router-link></p>
+      <div
+        class="listChoice__block--content"
+        :style="{ borderColor: sectionColor }"
+      >
+        <h2>
+          <router-link
+            :to="getHref(item)"
+            target="_blank"
+            @click.native="sendGaClickEvent('listing', 'choice')"
+            v-text="getTruncatedVal(getValue(item, [ 'title' ]), 30)"
+          />
+        </h2>
+        <p>
+          <router-link
+            :to="getHref(item)"
+            target="_blank"
+            @click.native="sendGaClickEvent('listing', 'choice')"
+            v-text="getBrief(item, 45)"
+          />
+        </p>
       </div>
     </div>
   </section>
@@ -24,7 +52,7 @@ import { getBrief, getHref, getImage, getTruncatedVal, getValue, sendGaClickEven
 import _ from 'lodash'
 
 export default {
-  name: 'listChoice',
+  name: 'ListChoice',
   props: ['initialSection', 'initialSectionfeatured', 'viewport'],
   computed: {
     section () {

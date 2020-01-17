@@ -9,7 +9,7 @@ import { insertPopInAdScript } from '../util/comm'
 const debug = require('debug')('CLIENT:PopInAd')
 
 export default {
-  name: 'popin-ad',
+  name: 'PopinAd',
   data () {
     return {
       adScriptLoaded: false

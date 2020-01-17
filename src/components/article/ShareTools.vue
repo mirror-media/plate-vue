@@ -1,8 +1,17 @@
 <template>
   <div class="share-toolbox">
-    <div class="item mm-icon" @click="goHome"></div>
-    <div class="item line" @click="shareLine"></div>
-    <div class="item facebook" @click="shareFacebook"></div>
+    <div
+      class="item mm-icon"
+      @click="goHome"
+    />
+    <div
+      class="item line"
+      @click="shareLine"
+    />
+    <div
+      class="item facebook"
+      @click="shareFacebook"
+    />
   </div>
 </template>
 <script>

@@ -1,67 +1,259 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :mode="dfpMode" :section="'other'">
-    <template slot-scope="props" slot="dfpPos">
-      <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-      <article-body-external :articleData="articleData">
-        <vue-dfp :is="props.vueDfp" slot="dfp-PCHD" :config="props.config" :dfpId="props.dfpId" pos="PCHD" class="dfp dfp--desktop" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-MBHD" :config="props.config" :dfpId="props.dfpId" :size="getValue($store, 'getters.adSize')" pos="MBHD" class="dfp dfp--mobile" style="margin: 0 auto; padding: 20px 0;"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" v-if="viewport > 1200" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" pos="PCAR"  class="dfp dfp--desktop"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" v-if="viewport < 1199" slot="dfp-AT1" :config="props.config" :dfpId="props.dfpId" :size="getValue($store, 'getters.adSize')" pos="MBAR1" class="dfp dfp--mobile"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-AT2" :config="props.config" :dfpId="props.dfpId" pos="MBAR2" class="dfp dfp--mobile"></vue-dfp>
-        <vue-dfp :is="props.vueDfp" slot="dfp-MBE1" pos="MBE1" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" class="dfp dfp--mobile"></vue-dfp>
-        <div slot="dfp-PCE1E2" class="dfp--PCE1E2 dfp--desktop">
-          <vue-dfp :is="props.vueDfp" pos="PCE1" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
-          <vue-dfp :is="props.vueDfp" pos="PCE2" :dfpId="props.dfpId" :config="props.config"></vue-dfp>
+  <vue-dfp-provider
+    :dfp-units="dfpUnits"
+    :dfpid="dfpid"
+    :mode="dfpMode"
+    :section="'other'"
+  >
+    <template
+      slot="dfpPos"
+      slot-scope="props"
+    >
+      <Header
+        :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+        :props="props"
+        :show-dfp-header-logo="showDfpHeaderLogo"
+      />
+      <article-body-external :article-data="articleData">
+        <vue-dfp
+          :is="props.vueDfp"
+          slot="dfp-PCHD"
+          :config="props.config"
+          :dfp-id="props.dfpId"
+          pos="PCHD"
+          class="dfp dfp--desktop"
+          style="margin: 0 auto; padding: 20px 0;"
+        />
+        <vue-dfp
+          :is="props.vueDfp"
+          slot="dfp-MBHD"
+          :config="props.config"
+          :dfp-id="props.dfpId"
+          :size="getValue($store, 'getters.adSize')"
+          pos="MBHD"
+          class="dfp dfp--mobile"
+          style="margin: 0 auto; padding: 20px 0;"
+        />
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="viewport > 1200"
+          slot="dfp-AT1"
+          :config="props.config"
+          :dfp-id="props.dfpId"
+          pos="PCAR"
+          class="dfp dfp--desktop"
+        />
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="viewport < 1199"
+          slot="dfp-AT1"
+          :config="props.config"
+          :dfp-id="props.dfpId"
+          :size="getValue($store, 'getters.adSize')"
+          pos="MBAR1"
+          class="dfp dfp--mobile"
+        />
+        <vue-dfp
+          :is="props.vueDfp"
+          slot="dfp-AT2"
+          :config="props.config"
+          :dfp-id="props.dfpId"
+          pos="MBAR2"
+          class="dfp dfp--mobile"
+        />
+        <vue-dfp
+          :is="props.vueDfp"
+          slot="dfp-MBE1"
+          pos="MBE1"
+          :dfp-id="props.dfpId"
+          :config="props.config"
+          :size="getValue($store, 'getters.adSize')"
+          class="dfp dfp--mobile"
+        />
+        <div
+          slot="dfp-PCE1E2"
+          class="dfp--PCE1E2 dfp--desktop"
+        >
+          <vue-dfp
+            :is="props.vueDfp"
+            pos="PCE1"
+            :dfp-id="props.dfpId"
+            :config="props.config"
+          />
+          <vue-dfp
+            :is="props.vueDfp"
+            pos="PCE2"
+            :dfp-id="props.dfpId"
+            :config="props.config"
+          />
         </div>
-        <vue-dfp :is="props.vueDfp" slot="dfp-PCR1" pos="PCR1" class="dfp--desktop" :config="props.config" ></vue-dfp>
-        <latest-list slot="latestList" :latests="latestArticle"></latest-list>
-        <vue-dfp :is="props.vueDfp" slot="dfp-PCR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
-        <pop-list slot="popularList" class="popularList" :pop="popularList" >
-          <micro-ad  v-for="(a, i) in getValue(microAds, [ 'article' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-            :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-            class="pop_item margin-top-0" :slot="`microAd${i}`"></micro-ad>
+        <vue-dfp
+          :is="props.vueDfp"
+          slot="dfp-PCR1"
+          pos="PCR1"
+          class="dfp--desktop"
+          :config="props.config"
+        />
+        <latest-list
+          slot="latestList"
+          :latests="latestArticle"
+        />
+        <vue-dfp
+          :is="props.vueDfp"
+          slot="dfp-PCR2"
+          pos="PCR2"
+          class="dfp--desktop"
+          :config="props.config"
+        />
+        <pop-list
+          slot="popularList"
+          class="popularList"
+          :pop="popularList"
+        >
+          <micro-ad
+            v-for="(a, i) in getValue(microAds, [ 'article' ])"
+            :id="`${getValue(a, [ 'pcId' ])}`"
+            :key="`${getValue(a, [ 'pcId' ])}`"
+            :slot="`microAd${i}`"
+            :curr-env="dfpMode"
+            :curr-url="articleUrl"
+            class="pop_item margin-top-0"
+          />
         </pop-list>
-        <proj-list slot="projectList" :projects="projectList" :viewport="viewport"></proj-list>
-        <div slot="fbComment" class="fbComment" v-html="fbCommentHtml"></div>
-        <div slot="footer" class="footer">
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="PCFT" class="dfp dfp--desktop"></vue-dfp>
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBFT" class="dfp dfp--mobile" :extClass="`${styleDfpAd}`" :size="getValue($store, 'getters.adSize')"></vue-dfp>
-          <app-footer/>
+        <proj-list
+          slot="projectList"
+          :projects="projectList"
+          :viewport="viewport"
+        />
+        <div
+          slot="fbComment"
+          class="fbComment"
+        >
+          {{ fbCommentHtml }}
+        </div>
+        <div
+          slot="footer"
+          class="footer"
+        >
+          <vue-dfp
+            :is="props.vueDfp"
+            :config="props.config"
+            pos="PCFT"
+            class="dfp dfp--desktop"
+          />
+          <vue-dfp
+            :is="props.vueDfp"
+            :config="props.config"
+            pos="MBFT"
+            class="dfp dfp--mobile"
+            :ext-class="`${styleDfpAd}`"
+            :size="getValue($store, 'getters.adSize')"
+          />
+          <app-footer />
         </div>
         <template slot="recommendList">
-          <div id="dablewidget_GlYwenoy" class="dable-widget" data-widget_id="GlYwenoy"></div>
+          <div
+            id="dablewidget_GlYwenoy"
+            class="dable-widget"
+            data-widget_id="GlYwenoy"
+          />
         </template>
         <article-aside-fixed slot="articleAsideFixed">
-          <vue-dfp :is="props.vueDfp" slot="dfpR2" pos="PCR2" class="dfp--desktop" :config="props.config"></vue-dfp>
-          <div slot="fbPage" class="article__aside--fbPage">
-            <div class="fb-page" data-href="https://www.facebook.com/mirrormediamg/" data-adapt-container-width="true" data-small-header="true" data-hide-cover="true" data-show-facepile="false">
-              <blockquote cite="https://www.facebook.com/mirrormediamg/" class="fb-xfbml-parse-ignore">
+          <vue-dfp
+            :is="props.vueDfp"
+            slot="dfpR2"
+            pos="PCR2"
+            class="dfp--desktop"
+            :config="props.config"
+          />
+          <div
+            slot="fbPage"
+            class="article__aside--fbPage"
+          >
+            <div
+              class="fb-page"
+              data-href="https://www.facebook.com/mirrormediamg/"
+              data-adapt-container-width="true"
+              data-small-header="true"
+              data-hide-cover="true"
+              data-show-facepile="false"
+            >
+              <blockquote
+                cite="https://www.facebook.com/mirrormediamg/"
+                class="fb-xfbml-parse-ignore"
+              >
                 <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
               </blockquote>
             </div>
           </div>
-          <pop-list-vert :pop="popularList" slot="popListVert">
-            <micro-ad  v-for="a in getValue(microAds, [ 'articleFixed' ])" :currEnv="dfpMode" :currUrl="articleUrl"
-              :id="`${getValue(a, [ 'pcId' ])}`" :key="`${getValue(a, [ 'pcId' ])}`"
-              class="popListVert-list__item" :slot="`microAd${getValue(a, [ 'pos' ])}`"></micro-ad>
+          <pop-list-vert
+            slot="popListVert"
+            :pop="popularList"
+          >
+            <micro-ad
+              v-for="a in getValue(microAds, [ 'articleFixed' ])"
+              :id="`${getValue(a, [ 'pcId' ])}`"
+              :key="`${getValue(a, [ 'pcId' ])}`"
+              :slot="`microAd${getValue(a, [ 'pos' ])}`"
+              :curr-env="dfpMode"
+              :curr-url="articleUrl"
+              class="popListVert-list__item"
+            />
           </pop-list-vert>
         </article-aside-fixed>
       </article-body-external>
-      <share-tools v-if="viewport > 1200"></share-tools>
+      <share-tools v-if="viewport > 1200" />
       <!-- <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded"></live-stream> -->
-      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+      <LazyItemWrapper
+        v-if="(viewport < 550)"
+        :load-after-page-loaded="true"
+      >
         <DfpST :props="props">
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+          <vue-dfp
+            :is="props.vueDfp"
+            slot="dfpST"
+            :config="props.config"
+            pos="MBST"
+          />
         </DfpST>
       </LazyItemWrapper>
-      <DfpCover v-if="isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199">
-        <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR" :config="props.config"></vue-dfp>
+      <DfpCover
+        v-if="isTimeToShowAdCover"
+        v-show="showDfpCoverAdFlag && viewport < 1199"
+      >
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="(viewport < 550)"
+          slot="ad-cover"
+          pos="MBCVR"
+          :config="props.config"
+        />
       </DfpCover>
-      <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" v-if="(viewport < 550)" slot="ad-cover" pos="MBCVR2" :config="props.config"></vue-dfp>
+      <DfpCover
+        v-if="showDfpCoverAd2Flag && viewport < 1199"
+        :show-close-btn="false"
+        class="raw"
+      >
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="(viewport < 550)"
+          slot="ad-cover"
+          pos="MBCVR2"
+          :config="props.config"
+        />
       </DfpCover>
-      <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="MBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      <DfpCover
+        v-if="showDfpCoverInnityFlag && viewport < 1199"
+        :show-close-btn="false"
+        class="raw"
+      >
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="(viewport < 550)"
+          slot="ad-cover"
+          pos="MBCVR3"
+          :config="props.config"
+        />
       </DfpCover>
     </template>
   </vue-dfp-provider>
@@ -160,6 +352,22 @@ const fetchSSRData = (store) => {
 
 export default {
   name: 'External',
+  components: {
+    'app-footer': Footer,
+    'article-aside-fixed': ArticleAsideFixed,
+    'article-body-external': ArticleBodyExternal,
+    'latest-list': LatestList,
+    'live-stream': LiveStream,
+    'micro-ad': MicroAd,
+    'pop-list': PopList,
+    'pop-list-vert': PopListVert,
+    'proj-list': ProjectList,
+    'share-tools': ShareTools,
+    'vue-dfp-provider': VueDfpProvider,
+    DfpCover,
+    DfpST,
+    Header
+  },
   asyncData ({ store, route: { params: { name } } }) {
     return fetchData(store, name)
   },
@@ -210,22 +418,6 @@ export default {
         { rel: 'alternate', href: `${SITE_MOBILE_URL}/external/${name}/` }
       ]
     }
-  },
-  components: {
-    'app-footer': Footer,
-    'article-aside-fixed': ArticleAsideFixed,
-    'article-body-external': ArticleBodyExternal,
-    'latest-list': LatestList,
-    'live-stream': LiveStream,
-    'micro-ad': MicroAd,
-    'pop-list': PopList,
-    'pop-list-vert': PopListVert,
-    'proj-list': ProjectList,
-    'share-tools': ShareTools,
-    'vue-dfp-provider': VueDfpProvider,
-    DfpCover,
-    DfpST,
-    Header
   },
   data () {
     return {

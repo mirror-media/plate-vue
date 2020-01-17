@@ -1,26 +1,47 @@
 <template>
   <div class="project-container">
-    <div v-if="(filteredProjects.length > 0)" class="proj_list">
-      <Slider :autoplay="false" :initialSlide="1" :showSwiperPagination="false">
+    <div
+      v-if="(filteredProjects.length > 0)"
+      class="proj_list"
+    >
+      <Slider
+        :autoplay="false"
+        :initial-slide="1"
+        :show-swiper-pagination="false"
+      >
         <div
           v-for="(o, i) in filteredProjects"
           :key="`${i}-${Date.now()}`"
           class="proj_item swiper-slide"
         >
           <div>
-            <a :href="`${getHrefFull(o)}`" :target="target" @click="sendGaClickEvent('article', 'projects')">
-              <div class="proj_item_img" :title="get(o, 'title')"
-                :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }">
-              </div>
+            <a
+              :href="`${getHrefFull(o)}`"
+              :target="target"
+              @click="sendGaClickEvent('article', 'projects')"
+            >
+              <div
+                class="proj_item_img"
+                :title="get(o, 'title')"
+                :style="{ backgroundImage: 'url(' + getImage(o, 'mobile') + ')' }"
+              />
             </a>
           </div>
           <div class="proj_item_title">
-            <a :href="`${getHrefFull(o)}`" :target="target" @click="sendGaClickEvent('article', 'projects')">
+            <a
+              :href="`${getHrefFull(o)}`"
+              :target="target"
+              @click="sendGaClickEvent('article', 'projects')"
+            >
               {{ getTruncatedVal(o.title, 20) }}
             </a>
           </div>
           <div class="proj_item_desc">
-            <a :href="`${getHrefFull(o)}`" :target="target" @click="sendGaClickEvent('article', 'projects')">
+            <a
+              :href="`${getHrefFull(o)}`"
+              :target="target"
+              @click="sendGaClickEvent('article', 'projects')"
+            >
               {{ getTruncatedVal(sanitizeHtml( get(o, 'brief.html', ''), { allowedTags: [ ] }), 20) }}
             </a>
           </div>
@@ -36,8 +57,20 @@ import Slider from '../Slider.vue'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
+  name: 'ProjectList',
   components: {
     Slider
+  },
+  props: {
+    excludingProjects: {
+      default: () => { return [] }
+    },
+    projects: {
+      default: () => { return [] }
+    },
+    target: {
+      default: () => ('_self')
+    }
   },
   computed: {
     filteredProjects () {
@@ -53,18 +86,6 @@ export default {
     getTruncatedVal,
     sanitizeHtml,
     sendGaClickEvent
-  },
-  name: 'project-list',
-  props: {
-    excludingProjects: {
-      default: () => { return [] }
-    },
-    projects: {
-      default: () => { return [] }
-    },
-    target: {
-      default: () => ('_self')
-    }
   }
 }
 </script>

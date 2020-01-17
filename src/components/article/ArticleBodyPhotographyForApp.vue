@@ -1,56 +1,99 @@
 <template>
   <div>
-    <div class="btn-toggle-description" :class="switchStatus" @click="toggleDesc">
-      <div class="hint">開啟／關閉圖說</div>
+    <div
+      class="btn-toggle-description"
+      :class="switchStatus"
+      @click="toggleDesc"
+    >
+      <div class="hint">
+        開啟／關閉圖說
+      </div>
     </div>
-    <div class="go-next-page" @click="goNextPage" :class="goNextPageClass"></div>
-    <div class="progress-wrap progress mobile-only" data-progress-percent="25">
-      <div class="progress-bar progress"></div>
+    <div
+      class="go-next-page"
+      :class="goNextPageClass"
+      @click="goNextPage"
+    />
+    <div
+      class="progress-wrap progress mobile-only"
+      data-progress-percent="25"
+    >
+      <div class="progress-bar progress" />
     </div>
-    <div class="progress-sidebar desktop-only" v-if="ifRenderProgressSidebar">
+    <div
+      v-if="ifRenderProgressSidebar"
+      class="progress-sidebar desktop-only"
+    >
       <div class="stick-container">
-        <div class="stick" v-for="(o, i) in imgArr" :style="stickBottom((i))" :class="{ 'passed' : stickflag[i] }" :index="i" @click="goPage"></div>
+        <div
+          v-for="(o, i) in imgArr"
+          :key="`stick-${i}`"
+          class="stick"
+          :style="stickBottom((i))"
+          :class="{ 'passed' : stickflag[i] }"
+          :index="i"
+          @click="goPage"
+        />
       </div>
     </div>
     <div class="article_body">
       <div class="pic-container">
         <section class="pic-section active">
           <div class="title">
-            <span><h2 v-text="title"></h2></span>
+            <span><h2 v-text="title" /></span>
           </div>
           <div class="brief">
             <div :class="captionStyle">
-              <div v-text="heroCaption"></div>
-              <span v-text="getValue(brief, [ 'apiData', 0, 'content', 0 ], '')"></span>
+              <div v-text="heroCaption" />
+              <span v-text="getValue(brief, [ 'apiData', 0, 'content', 0 ], '')" />
             </div>
           </div>
           <div class="img">
-            <img :src="getValue(heroImg, [ 'image', 'url' ])" :class="landscapeClass"
-                  :srcset="`${getValue(heroImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
+            <img
+              :src="getValue(heroImg, [ 'image', 'url' ])"
+              :class="landscapeClass"
+              :srcset="`${getValue(heroImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
                             ${getValue(heroImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                            ${getValue(heroImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+                            ${getValue(heroImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`"
+            >
           </div>
         </section>
-        <section class="pic-section" v-for="(o, i) in imgArr">
+        <section
+          v-for="(o, i) in imgArr"
+          :key="`pic-${i}-${getValue(o, [ 'content', 0, 'url' ])}`"
+          class="pic-section"
+        >
           <div class="brief">
             <div :class="captionStyle">
-              <span v-text="getValue(o, [ 'content', 0, 'description' ], '')"></span>
+              <span v-text="getValue(o, [ 'content', 0, 'description' ], '')" />
             </div>
           </div>
           <div class="img">
-            <img :src="getValue(o, [ 'content', 0, 'url' ])" :class="landscapeClass"
-                  :srcset="`${getValue(o, [ 'content', 0, 'mobile', 'url' ])} 800w,
+            <img
+              :src="getValue(o, [ 'content', 0, 'url' ])"
+              :class="landscapeClass"
+              :srcset="`${getValue(o, [ 'content', 0, 'mobile', 'url' ])} 800w,
                             ${getValue(o, [ 'content', 0, 'tablet', 'url' ])} 1200w,
-                            ${getValue(o, [ 'content', 0, 'desktop', 'url' ])} 2000w`" />
+                            ${getValue(o, [ 'content', 0, 'desktop', 'url' ])} 2000w`"
+            >
           </div>
         </section>
       </div>
     </div>
-    <div class="credit-comment" :class="creditCommentClass">
-      <div class="credit" v-html="credit"></div>
-      <related-list-thumbnail :isApp="true" :relatedList="relatedList"/>
+    <div
+      class="credit-comment"
+      :class="creditCommentClass"
+    >
+      <div
+        class="credit"
+        v-html="credit"
+      />
+      <related-list-thumbnail
+        :is-app="true"
+        :related-list="relatedList"
+      />
       <!--slot name="slot_dfpFT"></slot-->
-      <slot name="slot_fb_comment"></slot>
+      <slot name="slot_fb_comment" />
     </div>
   </div>
 </template>
@@ -62,8 +105,40 @@ import _ from 'lodash'
 import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
 
 export default {
+  name: 'AriticleBodyPhoto',
   components: {
     'related-list-thumbnail': RelatedListWithThumbnail
+  },
+  props: {
+    articleData: {
+      default: () => { return {} }
+    },
+    viewport: {
+      default: () => { return {} }
+    },
+    initFBComment: {
+      default: () => {
+        return () => {
+          console.log('init fb comment')
+        }
+      }
+    }
+  },
+  data () {
+    return {
+      currIndex: 1,
+      creditCommentShow: false,
+      descHide: false,
+      descSwitch: _.get(this.articleData, ['isAdvertised'], false),
+      lastAnimation: 0,
+      ifLandscape: false,
+      goNextPageHide: false,
+      onePageScroll: (new OnePageScroller()),
+      quietPeriod: 700,
+      scrollingFlag: false,
+      stickflag: [],
+      touchStartY: 0
+    }
   },
   computed: {
     brief () {
@@ -136,20 +211,22 @@ export default {
       return title
     }
   },
-  data () {
-    return {
-      currIndex: 1,
-      creditCommentShow: false,
-      descHide: false,
-      descSwitch: _.get(this.articleData, ['isAdvertised'], false),
-      lastAnimation: 0,
-      ifLandscape: false,
-      goNextPageHide: false,
-      onePageScroll: (new OnePageScroller()),
-      quietPeriod: 700,
-      scrollingFlag: false,
-      stickflag: [],
-      touchStartY: 0
+  mounted () {
+    this.updateIfLandscape()
+    this.smoothScroll(null, 0)
+
+    Promise.all([
+      this.setUpHtmlHeight(),
+      this.setUpResizeHandler(),
+      this.setUpScrollHandler()
+    ])
+
+    if (window === undefined) {
+      window.addEventListener('load', () => {
+        this.initOnepage()
+      })
+    } else {
+      this.initOnepage()
     }
   },
   methods: {
@@ -367,24 +444,6 @@ export default {
       this.ifLandscape = browser && window.innerHeight < window.innerWidth
     }
   },
-  mounted () {
-    this.updateIfLandscape()
-    this.smoothScroll(null, 0)
-
-    Promise.all([
-      this.setUpHtmlHeight(),
-      this.setUpResizeHandler(),
-      this.setUpScrollHandler()
-    ])
-
-    if (window === undefined) {
-      window.addEventListener('load', () => {
-        this.initOnepage()
-      })
-    } else {
-      this.initOnepage()
-    }
-  },
   beforeRouteLeave (to, from, next) {
     if (process.env.VUE_ENV === 'client') {
       this.creditCommentShow = false
@@ -394,22 +453,6 @@ export default {
       removeClass(document.documentElement, 'limited-height')
     }
     next()
-  },
-  name: 'ariticle-body-photo',
-  props: {
-    articleData: {
-      default: () => { return {} }
-    },
-    viewport: {
-      default: () => { return {} }
-    },
-    initFBComment: {
-      default: () => {
-        return () => {
-          console.log('init fb comment')
-        }
-      }
-    }
   }
 }
 </script>

@@ -1,9 +1,17 @@
 <template>
   <section class="ActivityLightboxMenu">
-    <h1 v-text="getValue(activity, [ 'name' ])"/>
+    <h1 v-text="getValue(activity, [ 'name' ])" />
     <div class="ActivityLightboxMenu__images">
-      <div class="ActivityLightboxMenu__images--block" v-for="(item, index) in nodeContents">
-        <div class="ActivityLightboxMenu__images--image" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }" @click="goToContentIndex(index)" />
+      <div
+        v-for="(item, index) in nodeContents"
+        :key="`images--block-${index}`"
+        class="ActivityLightboxMenu__images--block"
+      >
+        <div
+          class="ActivityLightboxMenu__images--image"
+          :style="{ backgroundImage: 'url(' + getImage(item) + ')' }"
+          @click="goToContentIndex(index)"
+        />
       </div>
     </div>
   </section>

@@ -1,7 +1,13 @@
 <template>
-  <div class="plate-vue-lazy-item-wrapper" :id="`lazyitemwrp-${id}`">
-    <div v-show="isVisibleYet || isServerSide" v-if="isVisibleYet || !strict">
-      <slot></slot>
+  <div
+    :id="`lazyitemwrp-${id}`"
+    class="plate-vue-lazy-item-wrapper"
+  >
+    <div
+      v-show="isVisibleYet || isServerSide"
+      v-if="isVisibleYet || !strict"
+    >
+      <slot />
     </div>
   </div>
 </template>
@@ -12,9 +18,15 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 // const debug = require('debug')('CLIENT:LAZYITEM')
 export default {
   name: 'LazyItemWrapper',
-  computed: {
-    isServerSide () {
-      return process.env.VUE_ENV === 'server'
+  props: {
+    offset: {},
+    position: {},
+    loadAfterPageLoaded: {
+      default: false
+    },
+    strict: {
+      // on strict mode, content won't be rendered on server-side
+      default: false
     }
   },
   data () {
@@ -23,6 +35,34 @@ export default {
       isVisibleYet: false,
       handler: {}
     }
+  },
+  computed: {
+    isServerSide () {
+      return process.env.VUE_ENV === 'server'
+    }
+  },
+  watch: {
+    id () {
+      if (!this.loadAfterPageLoaded) {
+        this.handler()
+      }
+    },
+    '$route.fullPath': function () {
+      if (!this.loadAfterPageLoaded) {
+        window.removeEventListener('scroll', this.handler)
+        this.isVisibleYet = false
+        this.setupEventListener()
+        this.handler()
+      } else {
+        window.removeEventListener('load', this.handler)
+        this.isVisibleYet = true
+        this.handler = null
+      }
+    }
+  },
+  mounted () {
+    this.setupEventListener()
+    this.id = uuidv4()
   },
   methods: {
     setupEventListener () {
@@ -53,40 +93,6 @@ export default {
         } else {
           window.addEventListener('load', this.handler)
         }
-      }
-    }
-  },
-  mounted () {
-    this.setupEventListener()
-    this.id = uuidv4()
-  },
-  props: {
-    offset: {},
-    position: {},
-    loadAfterPageLoaded: {
-      default: false
-    },
-    strict: {
-      // on strict mode, content won't be rendered on server-side
-      default: false
-    }
-  },
-  watch: {
-    id () {
-      if (!this.loadAfterPageLoaded) {
-        this.handler()
-      }
-    },
-    '$route.fullPath': function () {
-      if (!this.loadAfterPageLoaded) {
-        window.removeEventListener('scroll', this.handler)
-        this.isVisibleYet = false
-        this.setupEventListener()
-        this.handler()
-      } else {
-        window.removeEventListener('load', this.handler)
-        this.isVisibleYet = true
-        this.handler = null
       }
     }
   }

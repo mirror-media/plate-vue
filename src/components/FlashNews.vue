@@ -1,15 +1,40 @@
 <template>
-  <section class="flash-news" v-if="articles.length">
-    <div class="flash-news__name">快訊</div>
+  <section
+    v-if="articles.length"
+    class="flash-news"
+  >
+    <div class="flash-news__name">
+      快訊
+    </div>
     <div class="flash-news__container">
-      <div :style="{ transform: `translateY(${distance}%)` }" :class="[ 'flash-news__titles', { transition: isTransition } ]" @transitionend="handleTransitionEnd" @oTransitionEnd="handleTransitionEnd" @webkitTransitionEnd="handleTransitionEnd">
-        <div v-for="news in articles" :key="news.slug" class="flash-news__title-wrapper">
-          <a :href="`${siteUrl}/story/${news.slug}`" target="_blank" @click="sendGaClickEvent('home', 'breakingnews title')">{{ news.title }}</a>
+      <div
+        :style="{ transform: `translateY(${distance}%)` }"
+        :class="[ 'flash-news__titles', { transition: isTransition } ]"
+        @transitionend="handleTransitionEnd"
+        @oTransitionEnd="handleTransitionEnd"
+        @webkitTransitionEnd="handleTransitionEnd"
+      >
+        <div
+          v-for="news in articles"
+          :key="news.slug"
+          class="flash-news__title-wrapper"
+        >
+          <a
+            :href="`${siteUrl}/story/${news.slug}`"
+            target="_blank"
+            @click="sendGaClickEvent('home', 'breakingnews title')"
+          >{{ news.title }}</a>
         </div>
       </div>
       <div class="flash-news__arrows">
-        <div class="next" @click="slideToNextNews(false); sendGaClickEvent('home', 'breakingnews up')"></div>
-        <div class="prev" @click="slideToPrevNews(); sendGaClickEvent('home', 'breakingnews down')"></div>
+        <div
+          class="next"
+          @click="slideToNextNews(false); sendGaClickEvent('home', 'breakingnews up')"
+        />
+        <div
+          class="prev"
+          @click="slideToPrevNews(); sendGaClickEvent('home', 'breakingnews down')"
+        />
       </div>
     </div>
   </section>
@@ -28,9 +53,6 @@ export default {
       required: true
     }
   },
-  mounted () {
-    this.autoSlideToNextNews()
-  },
   data () {
     return {
       order: 1,
@@ -45,6 +67,9 @@ export default {
     siteUrl () {
       return SITE_URL
     }
+  },
+  mounted () {
+    this.autoSlideToNextNews()
   },
   methods: {
     slideToNextNews (isAuto) {

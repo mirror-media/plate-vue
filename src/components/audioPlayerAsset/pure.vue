@@ -40,6 +40,12 @@ import initEventHandlers from './util/eventHandlers'
 import { sendGaClickEvent } from 'src/util/comm'
 
 export default {
+  components: {
+    PlayerNavs,
+    PlayerInfo,
+    PlayerSlider,
+    PlayerTimestamp
+  },
   props: {
     sound: {
       type: Object,
@@ -65,12 +71,6 @@ export default {
       type: Number,
       default: 1.0
     }
-  },
-  components: {
-    PlayerNavs,
-    PlayerInfo,
-    PlayerSlider,
-    PlayerTimestamp
   },
   data () {
     return {

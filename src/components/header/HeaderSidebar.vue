@@ -1,24 +1,51 @@
 <template>
   <section class="header-sidebar">
-    <button class="header-sidebar__close" @click="closeSidebar()"><img src="/assets/mirrormedia/icon/close_white@2x.png" :alt="$t('HEADER.CLOSE')"></button>
-    <div v-if="topics.length > 0" class="topics">
+    <button
+      class="header-sidebar__close"
+      @click="closeSidebar()"
+    >
+      <img
+        src="/assets/mirrormedia/icon/close_white@2x.png"
+        :alt="$t('HEADER.CLOSE')"
+      >
+    </button>
+    <div
+      v-if="topics.length > 0"
+      class="topics"
+    >
       <a
         v-for="topic in activeTopics"
         :key="`sidebar-topic-${topic.id}`"
         :href="`/topic/${topic.id}`"
         @click="sendGaClickEvent('header', `topic ${topic.name}`)"
-        v-text="topic.name">
-      </a>
-      <a href="/section/topic" class="topic--more" @click="sendGaClickEvent('header', `topic ${$t('HEADER.MORE')}`)" v-text="$t('HEADER.MORE')"></a>
+        v-text="topic.name"
+      />
+      <a
+        href="/section/topic"
+        class="topic--more"
+        @click="sendGaClickEvent('header', `topic ${$t('HEADER.MORE')}`)"
+        v-text="$t('HEADER.MORE')"
+      />
     </div>
     <div class="sections">
       <div
         v-for="section in activeSections"
         :key="`sidebar-section-${section.id}`"
         :style="{ borderLeftColor: getColor(section) }"
-        class="section">
-        <a v-if="section.name !== 'videohub'" :href="`/section/${section.name}`" @click="sendGaClickEvent('header', `section ${section.name}`)" v-text="section.title"></a>
-        <a v-else :href="`/section/${section.name}`" @click="sendGaClickEvent('header', `section ${section.name}`)" v-text="section.title"></a>
+        class="section"
+      >
+        <a
+          v-if="section.name !== 'videohub'"
+          :href="`/section/${section.name}`"
+          @click="sendGaClickEvent('header', `section ${section.name}`)"
+          v-text="section.title"
+        />
+        <a
+          v-else
+          :href="`/section/${section.name}`"
+          @click="sendGaClickEvent('header', `section ${section.name}`)"
+          v-text="section.title"
+        />
         <div class="categories">
           <template v-if="section.name === 'videohub'">
             <a
@@ -26,8 +53,8 @@
               :key="`sidebar-category-${category.id}`"
               :href="`/category/${category.name}`"
               @click="sendGaClickEvent('header', `category ${category.name}`)"
-              v-text="category.title">
-            </a>
+              v-text="category.title"
+            />
           </template>
           <template v-else>
             <a
@@ -35,21 +62,24 @@
               :key="`sidebar-category-${category.id}`"
               :href="`/category/${category.name}`"
               @click="sendGaClickEvent('header', `category ${category.name}`)"
-              v-text="category.title">
-            </a>
+              v-text="category.title"
+            />
           </template>
         </div>
       </div>
       <div class="section external">
-        <a v-text="$t('HEADER.EXTERNAL')"></a>
-        <div v-if="partners.length > 0" class="categories">
+        <a v-text="$t('HEADER.EXTERNAL')" />
+        <div
+          v-if="partners.length > 0"
+          class="categories"
+        >
           <a
             v-for="partner in activePartners"
             :key="`sidebar-partner-${partner.id}`"
             :href="`/externals/${partner.name}`"
             @click="sendGaClickEvent('header', `external ${partner.name}`)"
-            v-text="partner.display">
-          </a>
+            v-text="partner.display"
+          />
         </div>
       </div>
       <div class="section mirrorvoice">
@@ -81,20 +111,98 @@
       </div>
     </div>
     <div class="others">
-      <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('header', `more subscribe`)" v-text="$t('HEADER.SUBSCRIBE')"></a>
-      <a :href="SOCIAL_LINK.MAGAZINE" target="_blank" @click="sendGaClickEvent('header', `more magazine`)" v-text="$t('HEADER.MAGAZINE')"></a>
-      <a :href="SOCIAL_LINK.AUTH" target="_blank" @click="sendGaClickEvent('header', `more auth`)" v-text="$t('HEADER.AUTH')"></a>
-      <a :href="SOCIAL_LINK.AD" target="_blank" @click="sendGaClickEvent('header', `more ad`)" v-text="$t('HEADER.AD')"></a>
-      <a href="/category/campaign" target="_blank" @click="sendGaClickEvent('header', `more campaign`)" v-text="$t('HEADER.CAMPAIGN')"></a>
-      <a :href="SOCIAL_LINK.DOWNLOADAPP" target="_blank" @click="sendGaClickEvent('header', `more download`)" v-text="$t('HEADER.DOWNLOADAPP')"></a>
+      <a
+        :href="SOCIAL_LINK.SUBSCRIBE"
+        target="_blank"
+        @click="sendGaClickEvent('header', `more subscribe`)"
+        v-text="$t('HEADER.SUBSCRIBE')"
+      />
+      <a
+        :href="SOCIAL_LINK.MAGAZINE"
+        target="_blank"
+        @click="sendGaClickEvent('header', `more magazine`)"
+        v-text="$t('HEADER.MAGAZINE')"
+      />
+      <a
+        :href="SOCIAL_LINK.AUTH"
+        target="_blank"
+        @click="sendGaClickEvent('header', `more auth`)"
+        v-text="$t('HEADER.AUTH')"
+      />
+      <a
+        :href="SOCIAL_LINK.AD"
+        target="_blank"
+        @click="sendGaClickEvent('header', `more ad`)"
+        v-text="$t('HEADER.AD')"
+      />
+      <a
+        href="/category/campaign"
+        target="_blank"
+        @click="sendGaClickEvent('header', `more campaign`)"
+        v-text="$t('HEADER.CAMPAIGN')"
+      />
+      <a
+        :href="SOCIAL_LINK.DOWNLOADAPP"
+        target="_blank"
+        @click="sendGaClickEvent('header', `more download`)"
+        v-text="$t('HEADER.DOWNLOADAPP')"
+      />
     </div>
     <div class="social-media">
-      <a :href="SOCIAL_LINK.LINE" target="_blank" @click="sendGaClickEvent('header', `social line`)"><img class="sprite sprite-line" src="/assets/mirrormedia/transperent.png" :alt="$t('HEADER.LINE')"></a>
-      <a :href="SOCIAL_LINK.WEIBO" target="_blank" @click="sendGaClickEvent('header', `social weibo`)"><img class="sprite sprite-weibo" src="/assets/mirrormedia/transperent.png" :alt="$t('HEADER.WEIBO')"></a>
-      <a :href="SOCIAL_LINK.FACEBOOK" target="_blank" @click="sendGaClickEvent('header', `social facebook`)"><img class="sprite sprite-facebook" src="/assets/mirrormedia/transperent.png" :alt="$t('HEADER.FACEBOOK')"></a>
-      <a :href="SOCIAL_LINK.INSTAGRAM" target="_blank" @click="sendGaClickEvent('header', `social instagram`)"><img class="sprite sprite-instagram" src="/assets/mirrormedia/transperent.png" :alt="$t('HEADER.INSTAGRAM')"></a>
-      <a :href="SOCIAL_LINK.FEED" target="_blank" @click="sendGaClickEvent('header', `social rss`)"><img class="sprite sprite-rss" src="/assets/mirrormedia/transperent.png" :alt="$t('HEADER.RSS')"></a>
-      <a :href="SOCIAL_LINK.EMAIL" target="_blank" @click="sendGaClickEvent('header', `social mail`)"><img class="sprite sprite-mail" src="/assets/mirrormedia/transperent.png" :alt="$t('HEADER.EMAIL')"></a>
+      <a
+        :href="SOCIAL_LINK.LINE"
+        target="_blank"
+        @click="sendGaClickEvent('header', `social line`)"
+      ><img
+        class="sprite sprite-line"
+        src="/assets/mirrormedia/transperent.png"
+        :alt="$t('HEADER.LINE')"
+      ></a>
+      <a
+        :href="SOCIAL_LINK.WEIBO"
+        target="_blank"
+        @click="sendGaClickEvent('header', `social weibo`)"
+      ><img
+        class="sprite sprite-weibo"
+        src="/assets/mirrormedia/transperent.png"
+        :alt="$t('HEADER.WEIBO')"
+      ></a>
+      <a
+        :href="SOCIAL_LINK.FACEBOOK"
+        target="_blank"
+        @click="sendGaClickEvent('header', `social facebook`)"
+      ><img
+        class="sprite sprite-facebook"
+        src="/assets/mirrormedia/transperent.png"
+        :alt="$t('HEADER.FACEBOOK')"
+      ></a>
+      <a
+        :href="SOCIAL_LINK.INSTAGRAM"
+        target="_blank"
+        @click="sendGaClickEvent('header', `social instagram`)"
+      ><img
+        class="sprite sprite-instagram"
+        src="/assets/mirrormedia/transperent.png"
+        :alt="$t('HEADER.INSTAGRAM')"
+      ></a>
+      <a
+        :href="SOCIAL_LINK.FEED"
+        target="_blank"
+        @click="sendGaClickEvent('header', `social rss`)"
+      ><img
+        class="sprite sprite-rss"
+        src="/assets/mirrormedia/transperent.png"
+        :alt="$t('HEADER.RSS')"
+      ></a>
+      <a
+        :href="SOCIAL_LINK.EMAIL"
+        target="_blank"
+        @click="sendGaClickEvent('header', `social mail`)"
+      ><img
+        class="sprite sprite-mail"
+        src="/assets/mirrormedia/transperent.png"
+        :alt="$t('HEADER.EMAIL')"
+      ></a>
     </div>
   </section>
 </template>

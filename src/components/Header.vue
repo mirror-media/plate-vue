@@ -1,26 +1,115 @@
 <template>
   <header :class="[{ scrolled: isScrolled }, 'header']">
     <section class="header__logo-layer">
-      <button class="btn--menu" @click="openSidebar = true"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt="" @click="sendGaClickEvent('header', 'menu open')"></button>
+      <button
+        class="btn--menu"
+        @click="openSidebar = true"
+      >
+        <img
+          src="/assets/mirrormedia/icon/hamburger@2x.png"
+          alt=""
+          @click="sendGaClickEvent('header', 'menu open')"
+        >
+      </button>
       <!-- logo -->
-      <a v-show="!isScrolled" href="/" class="logo" @click="sendGaClickEvent('header', 'logo')"><img src="/assets/mirrormedia/logo.svg" :alt="SITE_TITLE"></a>
-      <a v-show="isScrolled" href="/" class="logo" @click="sendGaClickEvent('header', 'logo')"><img src="/assets/mirrormedia/icon/logo@2x.png" :alt="SITE_TITLE"></a>
-      <a v-if="logoFromEvent" v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded" :href="get(logoFromEvent, 'link', '/')" class="logo event" target="_blank" @click.native="sendGaClickEvent('header', 'logo event')">
+      <a
+        v-show="!isScrolled"
+        href="/"
+        class="logo"
+        @click="sendGaClickEvent('header', 'logo')"
+      ><img
+        src="/assets/mirrormedia/logo.svg"
+        :alt="SITE_TITLE"
+      ></a>
+      <a
+        v-show="isScrolled"
+        href="/"
+        class="logo"
+        @click="sendGaClickEvent('header', 'logo')"
+      ><img
+        src="/assets/mirrormedia/icon/logo@2x.png"
+        :alt="SITE_TITLE"
+      ></a>
+      <a
+        v-if="logoFromEvent"
+        v-show="!isScrolled && !showDfpHeaderLogo && dfpHeaderLogoLoaded"
+        :href="get(logoFromEvent, 'link', '/')"
+        class="logo event"
+        target="_blank"
+        @click.native="sendGaClickEvent('header', 'logo event')"
+      >
         <LazyImage :src="get(logoFromEvent, 'image.image.resizedTargets.mobile.url')" />
       </a>
-      <LazyItemWrapper :loadAfterPageLoaded="true" class="logo dfp">
-        <vue-dfp :is="props.vueDfp" v-if="props" v-show="!isScrolled" ref="logoDfp" :config="props.config" :dfpId="props.dfpId" :dfpUnits="props.dfpUnits" :section="props.section" pos="LOGO" @click.native="sendGaClickEvent('header', 'logo dfp')" />
+      <LazyItemWrapper
+        :load-after-page-loaded="true"
+        class="logo dfp"
+      >
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="props"
+          v-show="!isScrolled"
+          ref="logoDfp"
+          :config="props.config"
+          :dfp-id="props.dfpId"
+          :dfp-units="props.dfpUnits"
+          :section="props.section"
+          pos="LOGO"
+          @click.native="sendGaClickEvent('header', 'logo dfp')"
+        />
       </LazyItemWrapper>
       <!-- search and more -->
-      <div :class="{ open: openMore }" class="more" v-click-outside="handleClickMoreOutside">
-        <button class="btn--more" @click="openMore = true"><img src="/assets/mirrormedia/icon/more_grey@2x.png" alt="" @click="sendGaClickEvent('header', 'more open')"></button>
+      <div
+        v-click-outside="handleClickMoreOutside"
+        :class="{ open: openMore }"
+        class="more"
+      >
+        <button
+          class="btn--more"
+          @click="openMore = true"
+        >
+          <img
+            src="/assets/mirrormedia/icon/more_grey@2x.png"
+            alt=""
+            @click="sendGaClickEvent('header', 'more open')"
+          >
+        </button>
         <div class="others">
-          <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('header', 'more subscribe')" v-text="$t('HEADER.SUBSCRIBE')"></a>
-          <a :href="SOCIAL_LINK.MAGAZINE" target="_blank" @click="sendGaClickEvent('header', 'more magazine')" v-text="$t('HEADER.MAGAZINE')"></a>
-          <a :href="SOCIAL_LINK.AUTH" target="_blank" @click="sendGaClickEvent('header', 'more auth')" v-text="$t('HEADER.AUTH')"></a>
-          <a :href="SOCIAL_LINK.AD" target="_blank" @click="sendGaClickEvent('header', 'more ad')" v-text="$t('HEADER.AD')"></a>
-          <a href="/category/campaign" target="_blank" @click="sendGaClickEvent('header', 'more campaign')" v-text="$t('HEADER.CAMPAIGN')"></a>
-          <a :href="SOCIAL_LINK.DOWNLOADAPP" target="_blank" @click="sendGaClickEvent('header', 'more download')" v-text="$t('HEADER.DOWNLOADAPP')"></a>
+          <a
+            :href="SOCIAL_LINK.SUBSCRIBE"
+            target="_blank"
+            @click="sendGaClickEvent('header', 'more subscribe')"
+            v-text="$t('HEADER.SUBSCRIBE')"
+          />
+          <a
+            :href="SOCIAL_LINK.MAGAZINE"
+            target="_blank"
+            @click="sendGaClickEvent('header', 'more magazine')"
+            v-text="$t('HEADER.MAGAZINE')"
+          />
+          <a
+            :href="SOCIAL_LINK.AUTH"
+            target="_blank"
+            @click="sendGaClickEvent('header', 'more auth')"
+            v-text="$t('HEADER.AUTH')"
+          />
+          <a
+            :href="SOCIAL_LINK.AD"
+            target="_blank"
+            @click="sendGaClickEvent('header', 'more ad')"
+            v-text="$t('HEADER.AD')"
+          />
+          <a
+            href="/category/campaign"
+            target="_blank"
+            @click="sendGaClickEvent('header', 'more campaign')"
+            v-text="$t('HEADER.CAMPAIGN')"
+          />
+          <a
+            :href="SOCIAL_LINK.DOWNLOADAPP"
+            target="_blank"
+            @click="sendGaClickEvent('header', 'more download')"
+            v-text="$t('HEADER.DOWNLOADAPP')"
+          />
         </div>
       </div>
       <SearchNav
@@ -29,18 +118,22 @@
       />
       <SearchNavMobile
         :sections="sections"
-        :isScrolled="isScrolled"
+        :is-scrolled="isScrolled"
         class="search-nav-mobile"
       />
-      <ShareLight class="share"/>
+      <ShareLight class="share" />
     </section>
     <!-- scrollable header -->
-    <section v-if="mounted" class="header__section-layer">
+    <section
+      v-if="mounted"
+      class="header__section-layer"
+    >
       <div>
         <a
           :class="{ active: activeSection === 'home' }"
           href="/"
-          @click="sendGaClickEvent('header', 'section home out')">首頁
+          @click="sendGaClickEvent('header', 'section home out')"
+        >首頁
         </a>
         <template v-for="section in activeSections">
           <a
@@ -49,22 +142,39 @@
             :class="{ active: activeSection === section.name }"
             href="/section/videohub"
             @click="sendGaClickEvent('header', 'section videohub out')"
-            v-text="section.title">
-          </a>
+            v-text="section.title"
+          />
           <a
             v-else
             :key="`section-layer-${section.id}`"
             :class="{ active: activeSection === section.name }"
             :href="`/section/${section.name}`"
             @click.native="sendGaClickEvent('header', `section ${section.name} out`)"
-            v-text="section.title">
-          </a>
+            v-text="section.title"
+          />
         </template>
       </div>
     </section>
-    <HeaderNav v-show="!isMobile" :partners="partners" :sections="sections" :topics="topics" />
-    <HeaderSidebar :class="{ open: openSidebar }" :partners="partners" :sections="sections" :topics="topics" class="header__sidebar" @closeSidebar="openSidebar = false" />
-    <HeaderSearchBar :class="{ open: openSearchBar }" class="header__search-bar" @closeSearchBar="openSearchBar = false" @search="search" />
+    <HeaderNav
+      v-show="!isMobile"
+      :partners="partners"
+      :sections="sections"
+      :topics="topics"
+    />
+    <HeaderSidebar
+      :class="{ open: openSidebar }"
+      :partners="partners"
+      :sections="sections"
+      :topics="topics"
+      class="header__sidebar"
+      @closeSidebar="openSidebar = false"
+    />
+    <HeaderSearchBar
+      :class="{ open: openSearchBar }"
+      class="header__search-bar"
+      @closeSearchBar="openSearchBar = false"
+      @search="search"
+    />
   </header>
 </template>
 <script>
@@ -160,6 +270,12 @@ export default {
       return topics.filter(topic => topic.isFeatured).sort((a, b) => a.sortOrder - b.sortOrder).slice(0, 7)
     }
   },
+  watch: {
+    '$route.fullPath' () {
+      this.openSidebar = false
+      this.openSearchBar = false
+    }
+  },
   beforeMount () {
     window.addEventListener('scroll', this.handleScroll)
   },
@@ -173,12 +289,6 @@ export default {
   },
   beforeDestroy () {
     window.removeEventListener('scroll', this.handleScroll)
-  },
-  watch: {
-    '$route.fullPath' () {
-      this.openSidebar = false
-      this.openSearchBar = false
-    }
   },
   methods: {
     get,

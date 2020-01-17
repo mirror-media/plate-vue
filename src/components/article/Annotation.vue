@@ -1,13 +1,38 @@
 <template>
   <div class="annotation">
-    <span class='part-1' v-html="annotationPart1"></span>
-    <span class='part-2 tooltip' :class="isActive" @mouseover="mouseover" @mouseout="mouseout" @touchstart="touchstart" @touchend="touchend">
-      <span v-html="annotationPart2"></span>
-      <span class="tooltiptext" v-html="annotationText" :style="annotationTextStyle"></span>
-      <img src='/assets/mirrormedia/icon/info.png' style="height: 1.3rem; margin-left: 3px;">
+    <span
+      class="part-1"
+      v-html="annotationPart1"
+    />
+    <span
+      class="part-2 tooltip"
+      :class="isActive"
+      @mouseover="mouseover"
+      @mouseout="mouseout"
+      @touchstart="touchstart"
+      @touchend="touchend"
+    >
+      <span v-html="annotationPart2" />
+      <span
+        class="tooltiptext"
+        :style="annotationTextStyle"
+        v-html="annotationText"
+      />
+      <img
+        src="/assets/mirrormedia/icon/info.png"
+        style="height: 1.3rem; margin-left: 3px;"
+      >
     </span>
-    <span v-if="!isPart3HasAnnotation" class='part-3' v-html="annotationPart3"></span>
-    <annotation v-if="isPart3HasAnnotation" class="recursive-annotation" :annotationStr="annotationPart3"></annotation>
+    <span
+      v-if="!isPart3HasAnnotation"
+      class="part-3"
+      v-html="annotationPart3"
+    />
+    <annotation
+      v-if="isPart3HasAnnotation"
+      class="recursive-annotation"
+      :annotation-str="annotationPart3"
+    />
   </div>
 </template>
 <script>
@@ -15,8 +40,16 @@ import _ from 'lodash'
 import { getClientOS } from '../../util/comm'
 
 export default {
-  name: 'annotation',
+  name: 'Annotation',
   props: ['annotationStr'],
+  data () {
+    return {
+      annotationTextTagStart: '<!--__ANNOTATION__=',
+      annotationTextTagEnd: '-->',
+      annotationTextStyle: '',
+      mouseovered: false
+    }
+  },
   computed: {
     annotationPart1 () {
       return this.annotationComposer.annotationPart1
@@ -64,14 +97,6 @@ export default {
       } else {
         return undefined
       }
-    }
-  },
-  data () {
-    return {
-      annotationTextTagStart: '<!--__ANNOTATION__=',
-      annotationTextTagEnd: '-->',
-      annotationTextStyle: '',
-      mouseovered: false
     }
   },
   methods: {

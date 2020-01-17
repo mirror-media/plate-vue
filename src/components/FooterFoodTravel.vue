@@ -1,31 +1,76 @@
 <template>
   <footer class="footer-foodtravel">
     <div class="footer-foodtravel__logo">
-      <a :href="'/section/' + this.sectionName" @click="sendGaClickEvent('footer', `footer backToTop ${sectionName}`)">
-        <img :src="getSectionLogoUrl()"/>
+      <a
+        :href="'/section/' + this.sectionName"
+        @click="sendGaClickEvent('footer', `footer backToTop ${sectionName}`)"
+      >
+        <img :src="getSectionLogoUrl()">
       </a>
     </div>
 
     <div class="footer-foodtravel__menu">
-      <a :href="item.href" v-for="(item, i) in menuItem.section"  v-text="item.title" :key="`${i}-${Date.now()}`" @click="sendGaClickEvent('footer', `footer ${item.name}`)"></a>
-      <a :href="item.href" v-for="(item, i) in menuItem.category" v-text="item.title" :key="`${i}-${Date.now()}`" @click="sendGaClickEvent('footer', `footer ${item.name}`)"></a>
+      <a
+        v-for="(item, i) in menuItem.section"
+        :key="`${i}-${Date.now()}`"
+        :href="item.href"
+        @click="sendGaClickEvent('footer', `footer ${item.name}`)"
+        v-text="item.title"
+      />
+      <a
+        v-for="(item, i) in menuItem.category"
+        :key="`${i}-${Date.now()}`"
+        :href="item.href"
+        @click="sendGaClickEvent('footer', `footer ${item.name}`)"
+        v-text="item.title"
+      />
     </div>
 
-    <div class="footer-foodtravel__vertDivider"></div>
+    <div class="footer-foodtravel__vertDivider" />
 
-    <div class="footer-foodtravel--horizDivider"></div>
+    <div class="footer-foodtravel--horizDivider" />
 
     <div class="footer-foodtravel__link">
       <div class="footer-foodtravel__link--subscribe">
-        <a :href="socialLink.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('footer', 'footer subscribe')">訂閱鏡週刊</a> - <a :href="socialLink.AD" @click="sendGaClickEvent('footer', 'footer ad')">廣告合作</a>
+        <a
+          :href="socialLink.SUBSCRIBE"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer subscribe')"
+        >訂閱鏡週刊</a> - <a
+          :href="socialLink.AD"
+          @click="sendGaClickEvent('footer', 'footer ad')"
+        >廣告合作</a>
       </div>
       <div class="footer-foodtravel__link--socialMedia">
-        <a :href="socialLink.FACEBOOK" target="_blank" @click="sendGaClickEvent('footer', 'footer fb')"><img class="facebook" src="/assets/mirrormedia/icon/facebook_white.png" alt="Facebook"></a>
-        <a :href="socialLink.LINE" target="_blank" @click="sendGaClickEvent('footer', 'footer line')"><img class="line" src="/assets/mirrormedia/icon/line_white.png" alt="Line"></a>
-        <a :href="socialLink.WEIBO" target="_blank" @click="sendGaClickEvent('footer', 'footer weibo')"><img class="weibo" src="/assets/mirrormedia/icon/weibo_white.png" alt="微博"></a>
+        <a
+          :href="socialLink.FACEBOOK"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer fb')"
+        ><img
+          class="facebook"
+          src="/assets/mirrormedia/icon/facebook_white.png"
+          alt="Facebook"
+        ></a>
+        <a
+          :href="socialLink.LINE"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer line')"
+        ><img
+          class="line"
+          src="/assets/mirrormedia/icon/line_white.png"
+          alt="Line"
+        ></a>
+        <a
+          :href="socialLink.WEIBO"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer weibo')"
+        ><img
+          class="weibo"
+          src="/assets/mirrormedia/icon/weibo_white.png"
+          alt="微博"
+        ></a>
       </div>
     </div>
-
   </footer>
 </template>
 <script>
@@ -34,10 +79,12 @@ import { SOCIAL_LINK } from '../constants/index'
 import { sendGaClickEvent } from '../util/comm'
 import _ from 'lodash'
 export default {
-  name: 'footer-full',
+  name: 'FooterFull',
   props: {
     commonData: {},
-    sectionName: ''
+    sectionName: {
+      default: ''
+    }
   },
   data () {
     return {

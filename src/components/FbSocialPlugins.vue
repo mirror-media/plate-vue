@@ -9,7 +9,10 @@
       data-hide-cover="false"
       data-show-facepile="false"
     >
-      <blockquote cite="https://www.facebook.com/mirrormediamg" class="fb-xfbml-parse-ignore">
+      <blockquote
+        cite="https://www.facebook.com/mirrormediamg"
+        class="fb-xfbml-parse-ignore"
+      >
         <a href="https://www.facebook.com/mirrormediamg">鏡週刊</a>
       </blockquote>
     </div>

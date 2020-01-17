@@ -1,31 +1,67 @@
 <template>
-  <section class="activityTimeline" v-on:touchstart="touchstart" v-on:touchend="touchend">
-    <div class="activityTimeline__time" :style="{ width: timeWidth, transform: `translate3d(${timeTransform}px,0,0)` }">
-      <div class="activityTimeline__timeBlock" v-show="windowViewport < 900" />
-      <div class="activityTimeline__timeBlock" v-for="(item, index) in nodes">
+  <section
+    class="activityTimeline"
+    @touchstart="touchstart"
+    @touchend="touchend"
+  >
+    <div
+      class="activityTimeline__time"
+      :style="{ width: timeWidth, transform: `translate3d(${timeTransform}px,0,0)` }"
+    >
+      <div
+        v-show="windowViewport < 900"
+        class="activityTimeline__timeBlock"
+      />
+      <div
+        v-for="(item, index) in nodes"
+        :key="`timeBlock-${index}`"
+        class="activityTimeline__timeBlock"
+      >
         <div class="activityTimeline__timeBlock--vertLine" />
-        <p v-text="getValue(item, [ 'subtitle' ])"/>
+        <p v-text="getValue(item, [ 'subtitle' ])" />
       </div>
-      <div class="activityTimeline__timeBlock" v-show="windowViewport < 900" />
+      <div
+        v-show="windowViewport < 900"
+        class="activityTimeline__timeBlock"
+      />
     </div>
-    <div class="activityTimeline__images" :style="{ width: imagesWidth, transform: `translate3d(${imagesTransform}px,0,0)` }">
+    <div
+      class="activityTimeline__images"
+      :style="{ width: imagesWidth, transform: `translate3d(${imagesTransform}px,0,0)` }"
+    >
       <template v-for="(item, index) in nodes">
-        <div class="activityTimeline__imageBlock" :class="[ index % 2 === 0 ? '' : 'deeper', getNodeStyle(item) ]" @click="openLightbox(index)">
+        <div
+          :key="`imageBlock-${index}`"
+          class="activityTimeline__imageBlock"
+          :class="[ index % 2 === 0 ? '' : 'deeper', getNodeStyle(item) ]"
+          @click="openLightbox(index)"
+        >
           <figure>
-            <img v-lazy="getNodeImage(item)" v-show="getNodeImage(item)" />
+            <img
+              v-show="getNodeImage(item)"
+              v-lazy="getNodeImage(item)"
+            >
           </figure>
-          <div class="activityTimeline__imageBlock--text" >
+          <div class="activityTimeline__imageBlock--text">
             <h2 v-text="getTruncatedVal(getValue(item, [ 'name' ]), 16)" />
             <div class="activityTimeline__imageBlock--textIcon" />
           </div>
         </div>
       </template>
     </div>
-    <div class="activityTimeline__arrow left" @click="goToPrev()" v-show="hasPrev">
-      <img src="/assets/mirrormedia/icon/arrow-left_white.png" />
+    <div
+      v-show="hasPrev"
+      class="activityTimeline__arrow left"
+      @click="goToPrev()"
+    >
+      <img src="/assets/mirrormedia/icon/arrow-left_white.png">
     </div>
-    <div class="activityTimeline__arrow right" @click="goToNext()" v-show="hasNext">
-      <img src="/assets/mirrormedia/icon/arrow-right_white.png" />
+    <div
+      v-show="hasNext"
+      class="activityTimeline__arrow right"
+      @click="goToNext()"
+    >
+      <img src="/assets/mirrormedia/icon/arrow-right_white.png">
     </div>
   </section>
 </template>
@@ -79,6 +115,12 @@ export default {
         return `${this.nodeAmount * 100}vw`
       }
     }
+  },
+  mounted () {
+    this.initialTransformValue()
+    window.addEventListener('resize', () => {
+      this.initialTransformValue()
+    })
   },
   methods: {
     getNodeImage (item) {
@@ -158,12 +200,6 @@ export default {
     openLightbox (index) {
       this.$emit('openLightbox', index)
     }
-  },
-  mounted () {
-    this.initialTransformValue()
-    window.addEventListener('resize', () => {
-      this.initialTransformValue()
-    })
   }
 }
 

@@ -1,13 +1,39 @@
 <template>
   <section class="portraitWallList">
-    <div class="portraitWallList__imageGroup" :class="[ index%2 === 0 ? 'color' : '' ]" v-for="(item, index) in images">
-      <div class="portraitWallList__block" :class="[ getOrder(image) %2 === 0 ? '' : 'color' ]" v-for="(image, index) in item">
-        <a :href="getHref(image)" target="_blank" class="portraitWallList__block--image" :style="{ backgroundImage: 'url(' + getImage(image) + ')' }">
-          <p v-text="getTitle(image, false)"></p>
+    <div
+      v-for="(item, index) in images"
+      :key="`imageGroup-${index}`"
+      class="portraitWallList__imageGroup"
+      :class="[ index%2 === 0 ? 'color' : '' ]"
+    >
+      <div
+        v-for="(image, index) in item"
+        :key="`block-${index}`"
+        class="portraitWallList__block"
+        :class="[ getOrder(image) %2 === 0 ? '' : 'color' ]"
+      >
+        <a
+          :href="getHref(image)"
+          target="_blank"
+          class="portraitWallList__block--image"
+          :style="{ backgroundImage: 'url(' + getImage(image) + ')' }"
+        >
+          <p v-text="getTitle(image, false)" />
         </a>
         <div class="portraitWallList__block--content">
-          <h2><a :href="getHref(image)" target="_blank" v-text="getValue(image, [ 'description' ])"></a></h2>
-          <p><a target="_blank" v-text="getTitle(image, true)"></a></p>
+          <h2>
+            <a
+              :href="getHref(image)"
+              target="_blank"
+              v-text="getValue(image, [ 'description' ])"
+            />
+          </h2>
+          <p>
+            <a
+              target="_blank"
+              v-text="getTitle(image, true)"
+            />
+          </p>
         </div>
       </div>
     </div>
@@ -20,7 +46,7 @@ import { getTruncatedVal, getValue } from '../util/comm'
 import _ from 'lodash'
 
 export default {
-  name: 'portraitWallList',
+  name: 'PortraitWallList',
   props: ['articles', 'initialMediaData'],
   computed: {
     images () {

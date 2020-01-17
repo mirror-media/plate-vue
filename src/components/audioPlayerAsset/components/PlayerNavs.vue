@@ -1,9 +1,9 @@
 <template>
   <nav class="navs">
     <img
-      class="navs__play"
-      v-lazy="navIcon"
       :key="nextState"
+      v-lazy="navIcon"
+      class="navs__play"
       alt=""
       @click="$emit(nextState)"
     >

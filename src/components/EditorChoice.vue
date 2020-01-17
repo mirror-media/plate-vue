@@ -1,5 +1,8 @@
 <template>
-  <section id="editorChoice" class="editorChoice">
+  <section
+    id="editorChoice"
+    class="editorChoice"
+  >
     <Slider v-if="!isMobile">
       <template v-slot:swiper-out-of-wrapper>
         <h2>編輯精選</h2>
@@ -14,29 +17,55 @@
         @click="sendGaClickEvent('home', 'choice')"
       >
         <div class="swiper-slide__curtain" />
-        <p class="swiper-slide__title" v-text="item.title" />
+        <p
+          class="swiper-slide__title"
+          v-text="item.title"
+        />
       </a>
     </Slider>
-    <div v-if="isMobile" class="editorChoice--mobile">
-      <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
-      <div v-for="item in editorChoice" class="editorChoice__block" :key="item.slug">
+    <div
+      v-if="isMobile"
+      class="editorChoice--mobile"
+    >
+      <div class="editorChoice__eyebrow">
+        <h2>編輯精選</h2>
+      </div>
+      <div
+        v-for="item in editorChoice"
+        :key="item.slug"
+        class="editorChoice__block"
+      >
         <a
           :href="getLinkHref(item)"
           :target="target"
           class="editorChoice__block--img"
-          @click="sendGaClickEvent('home', 'choice')">
-          <LatestAriticleImg class="figure"
-            :src="getImage(item, 'mobile')" :id="get(item, 'heroImage.id', Date.now())"
-            :key="get(item, 'heroImage.id', Date.now())"></LatestAriticleImg>
-          <div :style="getSectionStyle(get(item, 'sections.0', ''))" v-text="get(item, 'sections.0.title', '')"></div>
+          @click="sendGaClickEvent('home', 'choice')"
+        >
+          <LatestAriticleImg
+            :id="get(item, 'heroImage.id', Date.now())"
+            :key="get(item, 'heroImage.id', Date.now())"
+            class="figure"
+            :src="getImage(item, 'mobile')"
+          />
+          <div
+            :style="getSectionStyle(get(item, 'sections.0', ''))"
+            v-text="get(item, 'sections.0.title', '')"
+          />
         </a>
-        <div class="editorChoice__block--title" :class="getSection(item)">
-          <div :style="getSectionStyle(get(item, 'sections.0', ''))" v-text="get(item, 'sections.0.title', '')"></div>
+        <div
+          class="editorChoice__block--title"
+          :class="getSection(item)"
+        >
+          <div
+            :style="getSectionStyle(get(item, 'sections.0', ''))"
+            v-text="get(item, 'sections.0.title', '')"
+          />
           <a
             :href="getLinkHref(item)"
             :target="target"
-            @click="sendGaClickEvent('home', 'choice')">
-            <h2 v-text="getTitle(item)"></h2>
+            @click="sendGaClickEvent('home', 'choice')"
+          >
+            <h2 v-text="getTitle(item)" />
           </a>
         </div>
       </div>
@@ -55,7 +84,7 @@ import { get } from 'lodash'
 const GA_TRACE_QUERY = '?utm_source=mmweb&utm_medium=editorchoice'
 
 export default {
-  name: 'editorChoice',
+  name: 'EditorChoice',
   components: {
     LatestAriticleImg,
     Slider

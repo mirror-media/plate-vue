@@ -1,12 +1,19 @@
 <template>
   <section class="articleList container">
-
     <template v-for="(item, index) in articles">
-      <listArticle-block :index="index" :initialArticle="item" :id="`list-item-${index}`"
-        :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" :key="getValue(item, [ 'id' ], Date.now())"/>
-      <slot :name="`microAd${getMicroAdName(index)}`" v-if="(index === 1 || index === 2 || index === 5) && hasDFP"></slot>
+      <listArticle-block
+        :id="`list-item-${index}`"
+        :key="getValue(item, [ 'id' ], Date.now())"
+        :index="index"
+        :initial-article="item"
+        :initial-toggle-pause="togglePause"
+        @pauseAllAudio="pauseAllAudio"
+      />
+      <slot
+        v-if="(index === 1 || index === 2 || index === 5) && hasDFP"
+        :name="`microAd${getMicroAdName(index)}`"
+      />
     </template>
-
   </section>
 </template>
 
@@ -21,7 +28,7 @@ const showAdCover = store => store.dispatch('SHOW_AD_COVER')
 const debugDFP = require('debug')('CLIENT:DFP')
 
 export default {
-  name: 'articleList',
+  name: 'ArticleList',
   components: {
     'listArticle-block': ListArticleBlock
   },
@@ -30,6 +37,16 @@ export default {
     return {
       togglePause: undefined
     }
+  },
+  mounted () {
+    /**
+     *  Have ad-cover be rendered as soon as #list-item-${index} gets visible.
+     */
+    /**
+     *  Dont show ad cover on listing page for now.
+     *  window.addEventListener('scroll', this.scrollEventHandlerForAd)
+     */
+
   },
   methods: {
     getMicroAdName (index) {
@@ -51,16 +68,6 @@ export default {
         window.removeEventListener('scroll', this.scrollEventHandlerForAd)
       }
     }
-  },
-  mounted () {
-    /**
-     *  Have ad-cover be rendered as soon as #list-item-${index} gets visible.
-     */
-    /**
-     *  Dont show ad cover on listing page for now.
-     *  window.addEventListener('scroll', this.scrollEventHandlerForAd)
-     */
-
   }
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div
-    class="select-wrapper"
     v-click-outside="hideOptionList"
+    class="select-wrapper"
   >
     <button
       class="select-wrapper__button button"

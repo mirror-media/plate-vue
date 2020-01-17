@@ -1,12 +1,19 @@
 <template>
   <section class="candidate-progress">
-    <div class="candidate-progress__event" v-for="(event, idx) in events" :key="event.id"
-         ref="event"
-         :style="{ zIndex: (8 - idx) }"
-         :class="{ active: activeIdx === idx }"
+    <div
+      v-for="(event, idx) in events"
+      :key="event.id"
+      ref="event"
+      class="candidate-progress__event"
+      :style="{ zIndex: (8 - idx) }"
+      :class="{ active: activeIdx === idx }"
     >
-      <div class="candidate-progress__date">{{ event.date }}</div>
-      <div class="candidate-progress__name">{{ event.name }}</div>
+      <div class="candidate-progress__date">
+        {{ event.date }}
+      </div>
+      <div class="candidate-progress__name">
+        {{ event.name }}
+      </div>
     </div>
   </section>
 </template>

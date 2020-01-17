@@ -1,20 +1,52 @@
 <template>
   <section class="popListVert">
-    <div class="popListVert__title">熱門文章</div>
+    <div class="popListVert__title">
+      熱門文章
+    </div>
     <div class="popListVert-list">
       <template v-for="(o, i) in popArticles">
-        <div class="popListVert-list__item" :key="`popListVert${i}`">
-          <a :href="o.slug" class="popListVert-list__item--img" target="_blank" @click="sendGaClickEvent('article', 'popular')">
-            <LazyImage :src="getImage(o, 'tiny')" :alt="get(o, 'title')" />
+        <div
+          :key="`popListVert${i}`"
+          class="popListVert-list__item"
+        >
+          <a
+            :href="o.slug"
+            class="popListVert-list__item--img"
+            target="_blank"
+            @click="sendGaClickEvent('article', 'popular')"
+          >
+            <LazyImage
+              :src="getImage(o, 'tiny')"
+              :alt="get(o, 'title')"
+            />
           </a>
           <div class="popListVert-list__item--text">
-            <div :style="getSectionStyle(get(o, 'sections.0', ''))" v-text="get(o, 'sections.0.title')"></div>
-            <h2><a :href="o.slug" @click="sendGaClickEvent('article', 'popular')" target="_blank" v-text="o.title"></a></h2>
+            <div
+              :style="getSectionStyle(get(o, 'sections.0', ''))"
+              v-text="get(o, 'sections.0.title')"
+            />
+            <h2>
+              <a
+                :href="o.slug"
+                target="_blank"
+                @click="sendGaClickEvent('article', 'popular')"
+                v-text="o.title"
+              />
+            </h2>
           </div>
         </div>
-        <slot name="microAdNA3" v-if="i === 1"></slot>
-        <slot name="microAdNA5" v-if="i === 2"></slot>
-        <slot name="microAdNA9" v-if="i === 5"></slot>
+        <slot
+          v-if="i === 1"
+          name="microAdNA3"
+        />
+        <slot
+          v-if="i === 2"
+          name="microAdNA5"
+        />
+        <slot
+          v-if="i === 5"
+          name="microAdNA9"
+        />
       </template>
     </div>
   </section>
@@ -27,15 +59,15 @@ import { getImage, getTruncatedVal, sendGaClickEvent } from '../../util/comm'
 import { get, take } from 'lodash'
 
 export default {
-  name: 'popListVert',
+  name: 'PopListVert',
+  components: {
+    LazyImage
+  },
   props: {
     pop: {
       type: Array,
-      default: []
+      default: () => []
     }
-  },
-  components: {
-    LazyImage
   },
   computed: {
     popArticles () {

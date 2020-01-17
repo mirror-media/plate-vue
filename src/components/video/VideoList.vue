@@ -1,23 +1,39 @@
 <template>
   <section class="video-list">
-    <h2><a :href="`/category/${OATH_PLAYLIST[playlist.id].categoryName}`" v-text="playlist.name"></a></h2>
+    <h2>
+      <a
+        :href="`/category/${OATH_PLAYLIST[playlist.id].categoryName}`"
+        v-text="playlist.name"
+      />
+    </h2>
     <div class="video-list__list">
       <template v-for="(item, index) in itemsFiltered">
-        <a :key="item.id"
+        <a
+          :key="item.id"
           :href="`/video/${item.id}`"
           class="video-list__block"
           target="_blank"
-          @click="sendGaClickEvent('listing', 'video latest')">
+          @click="sendGaClickEvent('listing', 'video latest')"
+        >
           <figure>
-            <img :src="getThumbnails(item)" :alt="item.name">
+            <img
+              :src="getThumbnails(item)"
+              :alt="item.name"
+            >
           </figure>
-          <h3 v-text="item.name"></h3>
+          <h3 v-text="item.name" />
         </a>
-        <slot v-if="index === 19" name="LPCFT"></slot>
-        <slot v-if="index === 11" name="LMBFT"></slot>
+        <slot
+          v-if="index === 19"
+          name="LPCFT"
+        />
+        <slot
+          v-if="index === 11"
+          name="LMBFT"
+        />
       </template>
     </div>
-    <slot name="more"></slot>
+    <slot name="more" />
   </section>
 </template>
 <script>
@@ -30,10 +46,12 @@ export default {
   name: 'VideoList',
   props: {
     items: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     playlist: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   data () {

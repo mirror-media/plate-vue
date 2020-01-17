@@ -1,40 +1,59 @@
 <template>
   <section class="single-video">
-    <slot name="PCHD"></slot>
-    <slot name="MBHD"></slot>
+    <slot name="PCHD" />
+    <slot name="MBHD" />
     <div class="single-video__video">
-      <OathPlayer :combinedId="combinedId" :playerId="playerId" :scriptSrc="scriptSrc" :videoId="video.id"></OathPlayer>
-      <h1 v-text="video.name"></h1>
+      <OathPlayer
+        :combined-id="combinedId"
+        :player-id="playerId"
+        :script-src="scriptSrc"
+        :video-id="video.id"
+      />
+      <h1 v-text="video.name" />
       <div class="single-video__video-info">
-        <p class="small" v-text="moment(video.publishDate).format('YYYY. MM. DD')"></p>
-        <slot name="share"></slot>
+        <p
+          class="small"
+          v-text="moment(video.publishDate).format('YYYY. MM. DD')"
+        />
+        <slot name="share" />
       </div>
-      <p v-text="video.description"></p>
+      <p v-text="video.description" />
       <div class="single-video__comments">
-        <div v-if="mounted" :href="`${SITE_URL}/video/${video.id}`" class="fb-comments" data-numposts="5" data-width="100%"></div>
+        <div
+          v-if="mounted"
+          :href="`${SITE_URL}/video/${video.id}`"
+          class="fb-comments"
+          data-numposts="5"
+          data-width="100%"
+        />
       </div>
     </div>
     <template v-if="latest.length > 0">
       <div class="single-video__latest">
-        <slot name="PCR1"></slot>
-        <slot name="MBE1"></slot>
+        <slot name="PCR1" />
+        <slot name="MBE1" />
         <h3>最新影音</h3>
-        <a v-for="video in latest"
-          :key="video.id"
-          :href="`/video/${video.id}`"
+        <a
+          v-for="item in latest"
+          :key="item.id"
+          :href="`/video/${item.id}`"
           class="latest"
           target="_blank"
-          @click="sendGaClickEvent('article', 'video latest')">
+          @click="sendGaClickEvent('article', 'video latest')"
+        >
           <figure>
-              <img :src="getThumbnails(video)" :alt="video.name">
+            <img
+              :src="getThumbnails(item)"
+              :alt="item.name"
+            >
           </figure>
-          <p v-text="video.name"></p>
+          <p v-text="item.name" />
         </a>
       </div>
     </template>
 
-    <slot name="PCFT"></slot>
-    <slot name="MBFT"></slot>
+    <slot name="PCFT" />
+    <slot name="MBFT" />
   </section>
 </template>
 <script>
@@ -47,16 +66,18 @@ import { sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'SingleVideoBody',
-  props: {
-    video: {
-      type: Object
-    },
-    videos: {
-      type: Array
-    }
-  },
   components: {
     OathPlayer
+  },
+  props: {
+    video: {
+      type: Object,
+      default: () => ({})
+    },
+    videos: {
+      type: Array,
+      default: () => []
+    }
   },
   data () {
     return {

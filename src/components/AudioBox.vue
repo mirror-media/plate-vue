@@ -1,24 +1,54 @@
 <template>
-  <div class="audioBox" v-click-outside="handleClickOutside">
+  <div
+    v-click-outside="handleClickOutside"
+    class="audioBox"
+  >
     <div class="audioBox__action">
-      <button :class="{ paused: !isPlaying && !isEnded, playing: isPlaying && !isEnded, ended: isEnded }" @click="handleAudioClick"></button>
+      <button
+        :class="{ paused: !isPlaying && !isEnded, playing: isPlaying && !isEnded, ended: isEnded }"
+        @click="handleAudioClick"
+      />
     </div>
     <div class="audioBox__info">
-      <h1 v-text="getValue(audio, 'title')"></h1>
-      <div ref="audioProgress" class="progress">
-        <div class="progress__line" @click="changeProgress($event)">
-          <div></div>
+      <h1 v-text="getValue(audio, 'title')" />
+      <div
+        ref="audioProgress"
+        class="progress"
+      >
+        <div
+          class="progress__line"
+          @click="changeProgress($event)"
+        >
+          <div />
         </div>
-        <div class="progress__current" :style="{ left: `calc(${progress}% - 10px)` }"></div>
+        <div
+          class="progress__current"
+          :style="{ left: `calc(${progress}% - 10px)` }"
+        />
       </div>
       <div class="info">
-        <h1 v-text="getValue(audio, 'title')"></h1>
-        <p v-show="audioDuration !== 0 && canPlay">{{ getAudioTime(audioCurrent) }} / {{ getAudioTime(audioDuration) }}</p>
-        <p v-show="audioDuration !== 0 && !canPlay" >讀取中...</p>
+        <h1 v-text="getValue(audio, 'title')" />
+        <p v-show="audioDuration !== 0 && canPlay">
+          {{ getAudioTime(audioCurrent) }} / {{ getAudioTime(audioDuration) }}
+        </p>
+        <p v-show="audioDuration !== 0 && !canPlay">
+          讀取中...
+        </p>
       </div>
     </div>
-    <audio ref="audio" preload="none" @loadeddata="isLoaded = true" @ended="isEnded = true" @timeupdate="renewAudioCurrent" @loadedmetadata="renewAudioDuration" @canplay="canPlay = true">
-      <source :src="getValue(audio, 'url')" :type="getValue(audio, 'filetype')">
+    <audio
+      ref="audio"
+      preload="none"
+      @loadeddata="isLoaded = true"
+      @ended="isEnded = true"
+      @timeupdate="renewAudioCurrent"
+      @loadedmetadata="renewAudioDuration"
+      @canplay="canPlay = true"
+    >
+      <source
+        :src="getValue(audio, 'url')"
+        :type="getValue(audio, 'filetype')"
+      >
     </audio>
   </div>
 </template>
@@ -28,7 +58,7 @@ import { getValue } from '../util/comm'
 import moment from 'moment'
 
 export default {
-  name: 'audioBox',
+  name: 'AudioBox',
   directives: {
     'click-outside': {
       bind (el, binding, vnode) {

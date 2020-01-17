@@ -9,7 +9,7 @@
     <SearchSelect
       class="nav__select"
       :sections="sections"
-      :currentOption.sync="currentOption"
+      :current-option.sync="currentOption"
     />
     <SearchButtonSubmit
       class="nav__button-submit"
@@ -28,6 +28,11 @@ import SearchButtonSubmit from './SearchButtonSubmit.vue'
 import { sendGaClickEvent } from 'src/util/comm'
 
 export default {
+  components: {
+    SearchInput,
+    SearchSelect,
+    SearchButtonSubmit
+  },
   props: {
     sections: {
       type: Array,
@@ -36,11 +41,6 @@ export default {
       },
       required: true
     }
-  },
-  components: {
-    SearchInput,
-    SearchSelect,
-    SearchButtonSubmit
   },
   data () {
     return {

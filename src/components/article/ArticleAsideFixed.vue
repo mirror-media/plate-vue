@@ -1,8 +1,11 @@
 <template>
-  <section ref="articleAsideFixed" class="articleAsideFixed">
-    <slot name="dfpR2"></slot>
-    <slot name="fbPage"></slot>
-    <slot name="popListVert"></slot>
+  <section
+    ref="articleAsideFixed"
+    class="articleAsideFixed"
+  >
+    <slot name="dfpR2" />
+    <slot name="fbPage" />
+    <slot name="popListVert" />
   </section>
 </template>
 

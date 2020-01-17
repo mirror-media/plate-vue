@@ -1,10 +1,17 @@
 <template>
-  <div class="ad-cover" :class="{ transparent: !showDefaultSet, }" v-if="switcher">
+  <div
+    v-if="switcher"
+    class="ad-cover"
+    :class="{ transparent: !showDefaultSet, }"
+  >
     <div class="ad-cover--wrapper">
-      <slot name="ad-cover">
-      </slot>
-      <div class="ad-cover--wrapper_close" @click="closeCover" v-if="displayBtnClose">
-        <div class="icon"></div>
+      <slot name="ad-cover" />
+      <div
+        v-if="displayBtnClose"
+        class="ad-cover--wrapper_close"
+        @click="closeCover"
+      >
+        <div class="icon" />
       </div>
     </div>
   </div>
@@ -13,16 +20,20 @@
 const debug = require('debug')('CLIENT:DfpCover')
 export default {
   name: 'DfpCover',
-  computed: {
-    displayBtnClose () {
-      return this.showCloseBtn !== undefined ? this.showCloseBtn : true
-    }
-  },
+  props: ['showCloseBtn'],
   data () {
     return {
       showDefaultSet: true,
       switcher: true
     }
+  },
+  computed: {
+    displayBtnClose () {
+      return this.showCloseBtn !== undefined ? this.showCloseBtn : true
+    }
+  },
+  mounted () {
+    this.setupCloseEventListener()
   },
   methods: {
     closeCover () {
@@ -40,11 +51,7 @@ export default {
         resolve()
       })
     }
-  },
-  mounted () {
-    this.setupCloseEventListener()
-  },
-  props: ['showCloseBtn']
+  }
 }
 </script>
 <style lang="stylus" scoped>

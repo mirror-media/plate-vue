@@ -1,7 +1,7 @@
 {
     "extends": [
       "standard",
-      "plugin:vue/base"
+      "plugin:vue/recommended"
     ],
     // If you want to use custom parsers such as babel-eslint or @typescript-eslint/parser,
     // you have to use parserOptions.parser option instead of parser option. 

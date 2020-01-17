@@ -1,8 +1,14 @@
 <template>
   <section class="timelineBody">
     <article>
-      <div v-html="getBrief()" class="timelineBody__brief" />
-      <timeline-menu :initialHighlightNodes="highlightNodes" :viewport="windowViewport" />
+      <div
+        class="timelineBody__brief"
+        v-html="getBrief()"
+      />
+      <timeline-menu
+        :initial-highlight-nodes="highlightNodes"
+        :viewport="windowViewport"
+      />
     </article>
   </section>
 </template>

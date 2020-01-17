@@ -1,6 +1,9 @@
 <template>
   <div class="oath-player">
-    <div id="vdbPlayer" class="vdb_player"></div>
+    <div
+      id="vdbPlayer"
+      class="vdb_player"
+    />
   </div>
 </template>
 <script>

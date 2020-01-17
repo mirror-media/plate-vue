@@ -1,18 +1,64 @@
 <template>
-  <VueDfpProvider :dfpUnits="DFP_UNITS" :dfpid="DFP_ID" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
-    <template slot-scope="props" slot="dfpPos">
-      <div class="foodtravel-redesign" v-if="pageStyle === 'video'">
+  <VueDfpProvider
+    :dfp-units="DFP_UNITS"
+    :dfpid="DFP_ID"
+    :section="sectionId"
+    :options="dfpOptions"
+    :mode="dfpMode"
+  >
+    <template
+      slot="dfpPos"
+      slot-scope="props"
+    >
+      <div
+        v-if="pageStyle === 'video'"
+        class="foodtravel-redesign"
+      >
         <section>
-          <HeaderFoodTravel :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections' />
+          <HeaderFoodTravel
+            :common-data="commonData"
+            :section-name="sectionName"
+            :sections="commonData.sections"
+          />
         </section>
-        <HeroImageFoodTravel :commonData='commonData' :sectionName='sectionName'/>
-        <EditorChoiceFoodTravel :sectionfeatured='sectionfeatured' :viewport="viewportWidth" />
-        <LatestArticleFoodTravel :articles='autoScrollArticles' :commonData='commonData' :props="props" v-if="type === 'SECTION'" ref="articleList" id="articleList" :showLatestOnly="false"/>
-        <LatestArticleFoodTravel :articles='autoScrollArticlesLoadMore' :commonData='commonData' :props="props" v-if="type === 'SECTION'" v-show="hasAutoScroll" ref="articleListAutoScroll" id="articleListAutoScroll" :showLatestOnly="true"/>
-        <MoreFull v-if="hasMore && (!loading)" v-on:loadMore="loadMore" :className="'moreFoodTravel'" />
+        <HeroImageFoodTravel
+          :common-data="commonData"
+          :section-name="sectionName"
+        />
+        <EditorChoiceFoodTravel
+          :sectionfeatured="sectionfeatured"
+          :viewport="viewportWidth"
+        />
+        <LatestArticleFoodTravel
+          v-if="type === 'SECTION'"
+          id="articleList"
+          ref="articleList"
+          :articles="autoScrollArticles"
+          :common-data="commonData"
+          :props="props"
+          :show-latest-only="false"
+        />
+        <LatestArticleFoodTravel
+          v-if="type === 'SECTION'"
+          v-show="hasAutoScroll"
+          id="articleListAutoScroll"
+          ref="articleListAutoScroll"
+          :articles="autoScrollArticlesLoadMore"
+          :common-data="commonData"
+          :props="props"
+          :show-latest-only="true"
+        />
+        <MoreFull
+          v-if="hasMore && (!loading)"
+          :class-name="'moreFoodTravel'"
+          @loadMore="loadMore"
+        />
         <Loading :show="loading" />
         <ClientOnly>
-          <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+          <LazyItemWrapper
+            :position="verge.viewportH()"
+            :strict="true"
+          >
             <vue-dfp
               :is="props.vueDfp"
               v-if="isMobile"
@@ -28,23 +74,47 @@
             />
           </LazyItemWrapper>
         </ClientOnly>
-        <FooterFoodTravel :commonData='commonData' :sectionName='sectionName' />
+        <FooterFoodTravel
+          :common-data="commonData"
+          :section-name="sectionName"
+        />
         <!-- <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
       </div>
 
-      <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'">
-        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
-        <ListSlider v-if="imagesForGS.length > 0" :images="imagesForGS" class="gs" />
-        <ArticleList ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode" />
+      <div
+        v-else-if="pageStyle === 'grand-seiko-2018'"
+        class="list-view"
+      >
+        <Header
+          :active-section="sectionName"
+          :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+          :props="props"
+          :show-dfp-header-logo="showDfpHeaderLogo"
+        />
+        <ListSlider
+          v-if="imagesForGS.length > 0"
+          :images="imagesForGS"
+          class="gs"
+        />
+        <ArticleList
+          id="articleList"
+          ref="articleList"
+          :articles="autoScrollArticles"
+          :has-d-f-p="hasDFP"
+          :curr-env="dfpMode"
+        />
         <ClientOnly>
-          <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+          <LazyItemWrapper
+            :position="verge.viewportH()"
+            :strict="true"
+          >
             <div v-if="isMobile">
               <vue-dfp
                 :is="props.vueDfp"
                 :config="props.config"
                 :size="get($store, 'getters.adSize')"
                 pos="LMBFT"
-                unitId="mirror_RWD_GS_970250-300250_FT"
+                unit-id="mirror_RWD_GS_970250-300250_FT"
               />
             </div>
             <div v-else>
@@ -52,29 +122,40 @@
                 :is="props.vueDfp"
                 :config="props.config"
                 pos="LPCFT"
-                unitId="mirror_RWD_GS_970250-300250_FT"
+                unit-id="mirror_RWD_GS_970250-300250_FT"
               />
             </div>
           </LazyItemWrapper>
         </ClientOnly>
         <ArticleList
-          ref="articleListAutoScroll"
-          id="articleListAutoScroll"
-          :articles="autoScrollArticlesLoadMore"
-          :hasDFP="false"
           v-show="hasAutoScroll"
+          id="articleListAutoScroll"
+          ref="articleListAutoScroll"
+          :articles="autoScrollArticlesLoadMore"
+          :has-d-f-p="false"
         />
         <Loading :show="loading" />
         <section class="footer container">
           <Footer />
         </section>
-        <Share right="20px" bottom="20px" />
+        <Share
+          right="20px"
+          bottom="20px"
+        />
       </div>
 
-      <div class="list-view" v-else-if="pageStyle === 'light'">
-        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <div
+        v-else-if="pageStyle === 'light'"
+        class="list-view"
+      >
+        <Header
+          :active-section="sectionName"
+          :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+          :props="props"
+          :show-dfp-header-logo="showDfpHeaderLogo"
+        />
         <ClientOnly>
-          <LazyItemWrapper :loadAfterPageLoaded="true">
+          <LazyItemWrapper :load-after-page-loaded="true">
             <div v-if="hasDFP && isMobile">
               <vue-dfp
                 :is="props.vueDfp"
@@ -92,13 +173,36 @@
             </div>
           </LazyItemWrapper>
         </ClientOnly>
-        <div class="list-title container" >
-          <a :href="get(section, 'website')" :style="{ color: sectionColor }" class="list-title__text" target="_blank" v-text="title"></a>
+        <div class="list-title container">
+          <a
+            :href="get(section, 'website')"
+            :style="{ color: sectionColor }"
+            class="list-title__text"
+            target="_blank"
+            v-text="title"
+          />
         </div>
-        <ArticleListLight id="articleList" ref="articleList" :articles="autoScrollArticles" :latest="latestList" :showLatest="true" :viewport="viewportWidth" />
-        <ArticleListLight v-show="hasAutoScroll" id="articleListAutoScroll" ref="articleListAutoScroll" :articles="autoScrollArticlesLoadMore" :latest="latestList" :viewport="viewportWidth" />
+        <ArticleListLight
+          id="articleList"
+          ref="articleList"
+          :articles="autoScrollArticles"
+          :latest="latestList"
+          :show-latest="true"
+          :viewport="viewportWidth"
+        />
+        <ArticleListLight
+          v-show="hasAutoScroll"
+          id="articleListAutoScroll"
+          ref="articleListAutoScroll"
+          :articles="autoScrollArticlesLoadMore"
+          :latest="latestList"
+          :viewport="viewportWidth"
+        />
         <ClientOnly>
-          <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+          <LazyItemWrapper
+            :position="verge.viewportH()"
+            :strict="true"
+          >
             <div v-if="title !== 'Topic' && isMobile">
               <vue-dfp
                 :is="props.vueDfp"
@@ -121,14 +225,25 @@
           <Footer />
         </section>
         <!-- <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
-        <Share :right="`20px`" :bottom="`20px`" />
+        <Share
+          :right="`20px`"
+          :bottom="`20px`"
+        />
       </div>
 
-      <div class="list-view" v-else>
-        <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+      <div
+        v-else
+        class="list-view"
+      >
+        <Header
+          :active-section="sectionName"
+          :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+          :props="props"
+          :show-dfp-header-logo="showDfpHeaderLogo"
+        />
         <ClientOnly>
           <LazyItemWrapper
-            :loadAfterPageLoaded="true"
+            :load-after-page-loaded="true"
           >
             <div v-if="hasDFP && isMobile">
               <vue-dfp
@@ -147,12 +262,28 @@
             </div>
           </LazyItemWrapper>
         </ClientOnly>
-        <div class="list-title container" :style="{ color: sectionColor }">
-          <span class="list-title__text" v-text="title"></span>
+        <div
+          class="list-title container"
+          :style="{ color: sectionColor }"
+        >
+          <span
+            class="list-title__text"
+            v-text="title"
+          />
         </div>
-        <ArticleList ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv="dfpMode">
+        <ArticleList
+          id="articleList"
+          ref="articleList"
+          :articles="autoScrollArticles"
+          :has-d-f-p="hasDFP"
+          :curr-env="dfpMode"
+        >
           <ClientOnly>
-            <LazyItemWrapper :position="verge.viewportH()" :strict="true" slot="dfpL1">
+            <LazyItemWrapper
+              slot="dfpL1"
+              :position="verge.viewportH()"
+              :strict="true"
+            >
               <vue-dfp
                 :is="props.vueDfp"
                 v-if="hasDFP && isMobile"
@@ -168,14 +299,17 @@
               :id="`${get(a, 'pcId')}`"
               :key="`${get(a, 'pcId')}`"
               :slot="`microAd${i}`"
-              :currEnv="dfpMode"
-              :currUrl="currUrl"
+              :curr-env="dfpMode"
+              :curr-url="currUrl"
               class="listArticleBlock nativeDFP margin-top-0"
             />
           </template>
         </ArticleList>
         <ClientOnly>
-          <LazyItemWrapper :position="verge.viewportH()" :strict="true">
+          <LazyItemWrapper
+            :position="verge.viewportH()"
+            :strict="true"
+          >
             <div v-if="title !== 'Topic' && !isMobile">
               <vue-dfp
                 :is="props.vueDfp"
@@ -194,23 +328,26 @@
           </LazyItemWrapper>
         </ClientOnly>
         <ArticleList
-          ref="articleListAutoScroll"
-          id="articleListAutoScroll"
-          :articles="autoScrollArticlesLoadMore"
-          :hasDFP="false"
           v-show="hasAutoScroll"
+          id="articleListAutoScroll"
+          ref="articleListAutoScroll"
+          :articles="autoScrollArticlesLoadMore"
+          :has-d-f-p="false"
         />
         <Loading :show="loading" />
         <section class="footer container">
           <Footer />
         </section>
         <!-- <lLiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
-        <Share :right="`20px`" :bottom="`20px`" />
+        <Share
+          :right="`20px`"
+          :bottom="`20px`"
+        />
       </div>
       <ClientOnly>
         <LazyItemWrapper
           v-if="isMobile && !needWineWarning"
-          :loadAfterPageLoaded="true"
+          :load-after-page-loaded="true"
         >
           <DfpST :props="props">
             <vue-dfp
@@ -237,7 +374,7 @@
         </DfpCover>
         <DfpCover
           v-if="!needWineWarning && showDfpCoverAd2Flag && isMobile"
-          :showCloseBtn="false"
+          :show-close-btn="false"
           class="raw"
         >
           <vue-dfp
@@ -249,7 +386,7 @@
         </DfpCover>
         <DfpCover
           v-if="!needWineWarning && showDfpCoverInnityFlag && isMobile"
-          :showCloseBtn="false"
+          :show-close-btn="false"
           class="raw"
         >
           <vue-dfp
@@ -968,6 +1105,8 @@ export default {
             return '校園'
           }
           return get(this.section, 'display')
+        default:
+          return ''
       }
     },
     type () {
@@ -994,13 +1133,72 @@ export default {
           }
         case TAG:
           return this.$route.params.tagId
-        case EXTERNALS:
+        default:
           return this.$route.params.title
       }
     },
     viewportWidth () {
       return get(this.$store, 'state.viewport.width') || 0
     }
+  },
+  watch: {
+    // abIndicator: function () {
+    //   this.$forceUpdate()
+    // },
+    articleListAutoScrollHeight: function () {
+      if (this.uuid === SECTION_FOODTRAVEL_ID && this.page >= 2) {
+        this.canScrollLoadMord = false
+      } else {
+        this.canScrollLoadMord = true
+      }
+      // this.canScrollLoadMord = true
+    },
+    customCSS: function () {
+      this.updateCustomizedMarkup()
+    },
+    uuid: function () {
+      this.articleListAutoScrollHeight = 0
+      if (process.env.VUE_ENV === 'client') {
+        if (this.sectionName === 'other') {
+          window.ga('set', 'contentGroup1', '')
+        } else {
+          window.ga('set', 'contentGroup1', this.sectionName)
+        }
+        window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
+      }
+    }
+  },
+  beforeMount () {
+    // only fetch at first time after preFetch
+    fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
+    // fetchEvent(this.$store, 'embedded')
+    fetchEvent(this.$store, 'logo')
+    // this.abIndicator = this.getMmid()
+  },
+  mounted () {
+    unLockJS()
+    this.updateSysStage()
+    this.insertCustomizedMarkup()
+    window.addEventListener('scroll', this.scrollHandler)
+    if (this.type === EXTERNALS) {
+      window.ga('set', 'contentGroup1', 'external')
+      window.ga('set', 'contentGroup2', this.uuid)
+    } else if (this.sectionName === 'other') {
+      window.ga('set', 'contentGroup1', '')
+      window.ga('set', 'contentGroup2', '')
+    } else {
+      window.ga('set', 'contentGroup1', this.sectionName)
+      window.ga('set', 'contentGroup2', '')
+    }
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
+  },
+  updated () {
+    this.updateSysStage()
+  },
+  destroyed () {
+    window.removeEventListener('scroll', this.scrollHandler)
   },
   methods: {
     currentYPosition,
@@ -1085,33 +1283,6 @@ export default {
       this.dfpMode = currEnv()
     }
   },
-  watch: {
-    // abIndicator: function () {
-    //   this.$forceUpdate()
-    // },
-    articleListAutoScrollHeight: function () {
-      if (this.uuid === SECTION_FOODTRAVEL_ID && this.page >= 2) {
-        this.canScrollLoadMord = false
-      } else {
-        this.canScrollLoadMord = true
-      }
-      // this.canScrollLoadMord = true
-    },
-    customCSS: function () {
-      this.updateCustomizedMarkup()
-    },
-    uuid: function () {
-      this.articleListAutoScrollHeight = 0
-      if (process.env.VUE_ENV === 'client') {
-        if (this.sectionName === 'other') {
-          window.ga('set', 'contentGroup1', '')
-        } else {
-          window.ga('set', 'contentGroup1', this.sectionName)
-        }
-        window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
-      }
-    }
-  },
   beforeRouteUpdate (to, from, next) {
     const type = toUpper(split(to.path, '/')[1])
     const pageStyle = get(find(get(this.$store, 'state.commonData.sections.items'), { name: to.params.title }), 'style', 'feature')
@@ -1126,38 +1297,6 @@ export default {
       custScript.innerHTML = ''
     }
     next()
-  },
-  beforeMount () {
-    // only fetch at first time after preFetch
-    fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
-    // fetchEvent(this.$store, 'embedded')
-    fetchEvent(this.$store, 'logo')
-    // this.abIndicator = this.getMmid()
-  },
-  mounted () {
-    unLockJS()
-    this.updateSysStage()
-    this.insertCustomizedMarkup()
-    window.addEventListener('scroll', this.scrollHandler)
-    if (this.type === EXTERNALS) {
-      window.ga('set', 'contentGroup1', 'external')
-      window.ga('set', 'contentGroup2', this.uuid)
-    } else if (this.sectionName === 'other') {
-      window.ga('set', 'contentGroup1', '')
-      window.ga('set', 'contentGroup2', '')
-    } else {
-      window.ga('set', 'contentGroup1', this.sectionName)
-      window.ga('set', 'contentGroup2', '')
-    }
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
-    window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
-  },
-  updated () {
-    this.updateSysStage()
-  },
-  destroyed () {
-    window.removeEventListener('scroll', this.scrollHandler)
   }
 }
 

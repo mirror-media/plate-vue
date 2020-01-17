@@ -1,7 +1,7 @@
 <template>
   <div
-    class="nav-wrapper"
     v-click-outside="hideNav"
+    class="nav-wrapper"
   >
     <button
       class="nav-wrapper__button button"
@@ -30,7 +30,7 @@
       <SearchSelect
         class="nav__select"
         :sections="sections"
-        :currentOption.sync="currentOption"
+        :current-option.sync="currentOption"
       />
       <SearchInput
         class="nav__input"
@@ -64,6 +64,10 @@ export default {
       }
     }
   },
+  components: {
+    SearchInput,
+    SearchSelect
+  },
   props: {
     sections: {
       type: Array,
@@ -77,10 +81,6 @@ export default {
       default: false,
       required: true
     }
-  },
-  components: {
-    SearchInput,
-    SearchSelect
   },
   data () {
     return {

@@ -1,9 +1,15 @@
 <template>
   <div class="headline">
-    <Header/>
+    <Header />
     <main>
-      <iframe src="https://load-balancer.likr.com.tw/news_page_new/main_page/mirrormedia.php" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" id="Iframe">
-      </iframe>
+      <iframe
+        id="Iframe"
+        src="https://load-balancer.likr.com.tw/news_page_new/main_page/mirrormedia.php"
+        marginwidth="0"
+        marginheight="0"
+        scrolling="no"
+        frameborder="0"
+      />
     </main>
     <section class="footer container">
       <Footer />
@@ -36,6 +42,10 @@ const fetchPartners = (store) => {
 
 export default {
   name: 'HeadlinePage',
+  components: {
+    Footer,
+    Header
+  },
   asyncData ({ store }) {
     return Promise.all([
       fetchCommonData(store),
@@ -53,10 +63,6 @@ export default {
     script: [
       { src: 'https://load-balancer.likr.com.tw/news_page_new/css_and_js/include_iframe.js' }
     ]
-  },
-  components: {
-    Footer,
-    Header
   }
 }
 </script>

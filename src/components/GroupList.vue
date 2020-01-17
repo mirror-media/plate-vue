@@ -5,13 +5,38 @@
       :key="tag.id"
       class="groupListBlockContainer"
       :class="`tag-${tag.id}`"
-      :style="[ getPostAmountByTag(tag.id) < 3 ? { 'justify-content': 'center' } : {} ]">
-      <div class="groupListBlockContainer__title"><h1 v-text="tag.name"></h1></div>
-      <div v-for="post in getPostByTag(tag.id)" :key="post.id" class="groupListBlock">
-        <figure class="groupListBlock__img"><a :href="getHref(post)" target="_blank" :style="{ backgroundImage: 'url(' + getImage(post, 'mobile') + ')' }"></a></figure>
+      :style="[ getPostAmountByTag(tag.id) < 3 ? { 'justify-content': 'center' } : {} ]"
+    >
+      <div class="groupListBlockContainer__title">
+        <h1 v-text="tag.name" />
+      </div>
+      <div
+        v-for="post in getPostByTag(tag.id)"
+        :key="post.id"
+        class="groupListBlock"
+      >
+        <figure class="groupListBlock__img">
+          <a
+            :href="getHref(post)"
+            target="_blank"
+            :style="{ backgroundImage: 'url(' + getImage(post, 'mobile') + ')' }"
+          />
+        </figure>
         <div class="groupListBlock__content">
-          <h2><a :href="getHref(post)" target="_blank" v-text="viewport < 600 ? getTruncatedVal(post.title, 19) : post.title"></a></h2>
-          <p><a :href="getHref(post)" target="_blank" v-text="getBrief(post, 45)"></a></p>
+          <h2>
+            <a
+              :href="getHref(post)"
+              target="_blank"
+              v-text="viewport < 600 ? getTruncatedVal(post.title, 19) : post.title"
+            />
+          </h2>
+          <p>
+            <a
+              :href="getHref(post)"
+              target="_blank"
+              v-text="getBrief(post, 45)"
+            />
+          </p>
         </div>
       </div>
     </div>
@@ -25,15 +50,15 @@ import _ from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
-  name: 'groupList',
+  name: 'GroupList',
   props: {
     articles: {
       type: Array,
-      default: []
+      default: () => []
     },
     tags: {
       type: Array,
-      default: []
+      default: () => []
     },
     viewport: {
       type: Number,

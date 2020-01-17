@@ -1,15 +1,25 @@
 <template>
   <div class="latest-list">
-    <div class="latest-list__heading" v-text="$t('article.latest')" />
+    <div
+      class="latest-list__heading"
+      v-text="$t('article.latest')"
+    />
     <div class="latest-list__items">
-      <div v-for="item in items" :key="`latest-${item.slug}`" class="latest">
+      <div
+        v-for="item in items"
+        :key="`latest-${item.slug}`"
+        class="latest"
+      >
         <a
           class="latest__thumbnail"
           :href="getHref(item, isAppPage)"
           target="_blank"
           @click="sendGaClickEvent('article', 'latest')"
         >
-          <LazyImage :src="getImage(item, 'tiny')" :alt="get(item, 'title')"/>
+          <LazyImage
+            :src="getImage(item, 'tiny')"
+            :alt="get(item, 'title')"
+          />
         </a>
         <a
           class="latest__content"
@@ -17,8 +27,14 @@
           target="_blank"
           @click="sendGaClickEvent('article', 'latest')"
         >
-          <div class="latest__content-category" v-text="get(item, 'categories.0.title', '新聞')" />
-          <p class="latest__content-title" v-text="item.title" />
+          <div
+            class="latest__content-category"
+            v-text="get(item, 'categories.0.title', '新聞')"
+          />
+          <p
+            class="latest__content-title"
+            v-text="item.title"
+          />
         </a>
       </div>
     </div>
