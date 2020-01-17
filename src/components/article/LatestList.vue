@@ -25,37 +25,37 @@
   </div>
 </template>
 <script>
-  import LazyImage from 'src/components/common/LazyImage.vue'
-  import { get } from 'lodash'
-  import { getHref, getImage, sendGaClickEvent } from '../../util/comm'
+import LazyImage from 'src/components/common/LazyImage.vue'
+import { get } from 'lodash'
+import { getHref, getImage, sendGaClickEvent } from '../../util/comm'
 
-  export default {
-    name: 'LatestList',
-    components: {
-      LazyImage
+export default {
+  name: 'LatestList',
+  components: {
+    LazyImage
+  },
+  props: {
+    latests: {
+      type: Array,
+      default: () => []
     },
-    props: {
-      latests: {
-        type: Array,
-        default: () => []
-      },
-      isAppPage: {
-        type: Boolean,
-        default: false
-      }
-    },
-    computed: {
-      items () {
-        return this.latests.slice(0, 6) || []
-      }
-    },
-    methods: {
-      get,
-      getHref,
-      getImage,
-      sendGaClickEvent
+    isAppPage: {
+      type: Boolean,
+      default: false
     }
+  },
+  computed: {
+    items () {
+      return this.latests.slice(0, 6) || []
+    }
+  },
+  methods: {
+    get,
+    getHref,
+    getImage,
+    sendGaClickEvent
   }
+}
 </script>
 <style lang="stylus" scoped>
 

@@ -44,7 +44,7 @@ export default {
     sound: {
       type: Object,
       required: true,
-      validator(object) {
+      validator (object) {
         return 'title' in object && 'src' in object
       }
     },
@@ -53,7 +53,7 @@ export default {
     volume: {
       type: Number,
       default: 1,
-      validator(value) {
+      validator (value) {
         return value >= 0 && value <= 1
       }
     },
@@ -64,7 +64,7 @@ export default {
     playbackRate: {
       type: Number,
       default: 1.0
-    },
+    }
   },
   components: {
     PlayerNavs,
@@ -72,7 +72,7 @@ export default {
     PlayerSlider,
     PlayerTimestamp
   },
-  data() {
+  data () {
     return {
       internalSound: this.sound,
       internalVolume: this.volume,
@@ -89,54 +89,54 @@ export default {
   },
   computed: {
     // alias of audio element
-    audio() {
+    audio () {
       return this.$refs.audio
     },
 
     // observers
     // inform parent component in setters
     currentSound: {
-      get() {
+      get () {
         return this.internalSound
       },
-      set(val) {
+      set (val) {
         this.$emit('update:sound', val)
         this.internalSound = val
       }
     },
     currentVolume: {
-      get() {
+      get () {
         return this.internalVolume
       },
-      set(val) {
+      set (val) {
         this.$emit('update:volume', val)
         this.internalVolume = val
       }
     },
     currentMuted: {
-      get() {
+      get () {
         return this.internalMuted
       },
-      set(val) {
+      set (val) {
         this.$emit('update:muted', val)
         this.internalMuted = val
       }
     },
     currentPlaybackRate: {
-      get() {
+      get () {
         return this.internalPlaybackRate
       },
-      set(val) {
+      set (val) {
         this.$emit('update:playbackRate', val)
         this.internalPlaybackRate = val
       }
     }
   },
-  mounted() {
+  mounted () {
     this.initAudio()
   },
   methods: {
-    initAudio() {
+    initAudio () {
       // set exposed properties as their init value which is passing from props
       this.audio.volume = this.volume
       this.audio.muted = this.muted
@@ -151,7 +151,7 @@ export default {
         this.audio.src = this.currentSound.src
       }
     },
-    play() {
+    play () {
       const promise = this.audio.play()
 
       if (promise) {
@@ -161,7 +161,7 @@ export default {
       }
       sendGaClickEvent('article', 'voice-play')
     },
-    pause() {
+    pause () {
       const promise = this.audio.pause()
 
       if (promise) {
@@ -170,7 +170,7 @@ export default {
         })
       }
     },
-    seek(percentage) {
+    seek (percentage) {
       this.audio.currentTime = this.audio.duration * percentage
     }
   }

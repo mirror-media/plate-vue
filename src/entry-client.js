@@ -51,11 +51,11 @@ router.onReady(() => {
 
     bar.start()
     Promise.all(asyncDataHooks.map(hook => hook({ store, route: to })))
-    .then(() => {
-      bar.finish()
-      next()
-    })
-    .catch(next)
+      .then(() => {
+        bar.finish()
+        next()
+      })
+      .catch(next)
   })
 
   // actually mount to DOM
@@ -66,11 +66,11 @@ router.onReady(() => {
 const debugSW = require('debug')('CLIENT:SERVICE-WORKER')
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js')
-  .then(() => {
-    debugSW('REGISTERING SW SUCCESSFULLY.')
-  })
-  .catch(() => {
-    debugSW('REGISTERING SW IN FAIL.')
-  })
+    .then(() => {
+      debugSW('REGISTERING SW SUCCESSFULLY.')
+    })
+    .catch(() => {
+      debugSW('REGISTERING SW IN FAIL.')
+    })
   navigator.serviceWorker.addEventListener('message', event => debugSW('Got Msg from dervice-worker!' + event.data))
 }

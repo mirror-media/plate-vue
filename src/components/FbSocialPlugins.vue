@@ -17,7 +17,7 @@
 </template>
 <script>
 export default {
-  name: 'FbSocialPlugins'  
+  name: 'FbSocialPlugins'
 }
 </script>
 <style lang="stylus" scoped>

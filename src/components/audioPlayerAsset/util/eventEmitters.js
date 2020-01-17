@@ -27,7 +27,7 @@ const mediaEvents = [
   'waiting'
 ]
 
-export default function(player) {
+export default function (player) {
   mediaEvents.forEach(event => {
     player.audio.addEventListener(event, e => player.$emit(event, e))
   })

@@ -36,7 +36,7 @@ import { getImage } from '../util/comm'
 
 export default {
   name: 'leadingWatch',
-  props: [ 'tag', 'topic', 'type' ],
+  props: ['tag', 'topic', 'type'],
   methods: {
     getImageURL () {
       if (this.type === 'TOPIC') {
@@ -104,7 +104,7 @@ export default {
       display none
     &--mobile
       display block
-        
+
   > a
     border-left 1px solid #fff
   > a:first-child

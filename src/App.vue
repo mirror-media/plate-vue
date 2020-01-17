@@ -7,122 +7,124 @@
 </template>
 
 <script>
-  import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from 'src/constants'
-  import { mmLog } from './util/comm.js'
-  import { visibleTracking } from './util/visibleTracking'
-  import loadScripts from './mixin/loadScripts.js'
-  import Tap from 'tap.js'
+import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from 'src/constants'
+import { mmLog } from './util/comm.js'
+import { visibleTracking } from './util/visibleTracking'
+import loadScripts from './mixin/loadScripts.js'
+import Tap from 'tap.js'
 
-  const debug = require('debug')('CLIENT:App')
+const debug = require('debug')('CLIENT:App')
 
-  const resetAdCoverFlag = store => store.dispatch('RESET_AD_COVER')
-  const updateViewport = (store) => {
-    const width = Math.min(window.innerWidth, document.documentElement.clientWidth)
-    const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-    const viewport = { width: width, height: height }
-    return store.dispatch('UPDATE_VIEWPORT', viewport)
-  }
+const resetAdCoverFlag = store => store.dispatch('RESET_AD_COVER')
+const updateViewport = (store) => {
+  const width = Math.min(window.innerWidth, document.documentElement.clientWidth)
+  const height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  const viewport = { width: width, height: height }
+  return store.dispatch('UPDATE_VIEWPORT', viewport)
+}
 
-  export default {
-    metaInfo: {
-      title: SITE_TITLE,
-      titleTemplate: `%s - ${SITE_TITLE}`,
-      meta: [
-        { vmid: 'keywords', name: 'keywords', content: SITE_KEYWORDS },
-        { vmid: 'description', name: 'description', content: SITE_DESCRIPTION },
-        { vmid: 'og:title', property: 'og:title', content: SITE_TITLE },
-        { vmid: 'og:description', property: 'og:description', content: SITE_DESCRIPTION },
-        { vmid: 'og:url', property: 'og:url', content: SITE_URL },
-        { vmid: 'og:image', property: 'og:image', content: SITE_OGIMAGE },
-        { vmid: 'og:site_name', property: 'og:site_name', content: SITE_TITLE },
-        { vmid: 'og:locale', property: 'og:locale', content: 'zh_TW' },
-        { vmid: 'og:type', property: 'og:type', content: 'article' },
-        { vmid: 'fb:app_id', property: 'fb:app_id', content: FB_APP_ID },
-        { vmid: 'fb:pages', property: 'fb:pages', content: FB_PAGE_ID },
-        { vmid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
-        { vmid: 'twitter:title', name: 'twitter:title', content: SITE_TITLE },
-        { vmid: 'twitter:description', name: 'twitter:description', content: SITE_DESCRIPTION },
-        { vmid: 'twitter:image', name: 'twitter:image', content: SITE_OGIMAGE },
-      ],
-    },
-    mixins: [ loadScripts ],
-    data () {
-      return {
-        doc: {},
-        globalTapevent: {}
-      }
-    },
-    computed: {
-      currPath () {
-        return this.$route.fullPath
-      }
-    },
-    watch: {
-      currPath: function () {
-        this.setUpVisibleTracking()
-        resetAdCoverFlag(this.$store)
-      }
-    },
-    // beforeMount () {
-    //   updateViewport(this.$store)
-    // },
-    mounted () {
-      /**
+export default {
+  metaInfo: {
+    title: SITE_TITLE,
+    titleTemplate: `%s - ${SITE_TITLE}`,
+    meta: [
+      { vmid: 'keywords', name: 'keywords', content: SITE_KEYWORDS },
+      { vmid: 'description', name: 'description', content: SITE_DESCRIPTION },
+      { vmid: 'og:title', property: 'og:title', content: SITE_TITLE },
+      { vmid: 'og:description', property: 'og:description', content: SITE_DESCRIPTION },
+      { vmid: 'og:url', property: 'og:url', content: SITE_URL },
+      { vmid: 'og:image', property: 'og:image', content: SITE_OGIMAGE },
+      { vmid: 'og:site_name', property: 'og:site_name', content: SITE_TITLE },
+      { vmid: 'og:locale', property: 'og:locale', content: 'zh_TW' },
+      { vmid: 'og:type', property: 'og:type', content: 'article' },
+      { vmid: 'fb:app_id', property: 'fb:app_id', content: FB_APP_ID },
+      { vmid: 'fb:pages', property: 'fb:pages', content: FB_PAGE_ID },
+      { vmid: 'twitter:card', name: 'twitter:card', content: 'summary_large_image' },
+      { vmid: 'twitter:title', name: 'twitter:title', content: SITE_TITLE },
+      { vmid: 'twitter:description', name: 'twitter:description', content: SITE_DESCRIPTION },
+      { vmid: 'twitter:image', name: 'twitter:image', content: SITE_OGIMAGE }
+    ]
+  },
+  mixins: [loadScripts],
+  data () {
+    return {
+      doc: {},
+      globalTapevent: {}
+    }
+  },
+  computed: {
+    currPath () {
+      return this.$route.fullPath
+    }
+  },
+  watch: {
+    currPath: function () {
+      this.setUpVisibleTracking()
+      resetAdCoverFlag(this.$store)
+    }
+  },
+  // beforeMount () {
+  //   updateViewport(this.$store)
+  // },
+  mounted () {
+    /**
        * todo
        * updateViewport() 從 beforeMount 改放到 mounted 後，更新的速度變得比螢幕尺寸變化還慢
        * 如果你是在組件的 mounted 處取得螢幕尺寸（比如使用 viewportWidth），那這個變數紀錄的值會是在螢幕變化前的值（因為 updateViewport() 會比較慢執行）
        * 但現在又不能把 updateViewport() 改放回到 beforeMount，不然網頁會出現難以理解的錯誤
        */
-      updateViewport(this.$store)
+    updateViewport(this.$store)
 
-      this.doc = document
-      this.launchLogger()
-      this.setUpVisibleTracking()
-      window.addEventListener('resize', this.updateViewport)
-    },
-    beforeDestroy () {
-      window.removeEventListener('resize', this.updateViewport)
-    },
-    methods: {
-      doLog (event) {
-        mmLog({
-          category: 'whole-site',
-          description: '',
-          eventType: 'click',
-          target: event.target,
-        }).then(log => {
-          debug('log', log)
-          return this.$store.dispatch('LOG_CLIENT', { params: {
+    this.doc = document
+    this.launchLogger()
+    this.setUpVisibleTracking()
+    window.addEventListener('resize', this.updateViewport)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.updateViewport)
+  },
+  methods: {
+    doLog (event) {
+      mmLog({
+        category: 'whole-site',
+        description: '',
+        eventType: 'click',
+        target: event.target
+      }).then(log => {
+        debug('log', log)
+        return this.$store.dispatch('LOG_CLIENT', {
+          params: {
             clientInfo: log
-          }})
-        }).catch(err => {
-          console.log(err)
+          }
         })
-      },
-      launchLogger () {
-        this.globalTapevent = new Tap(this.doc)
-        this.doc.addEventListener('tap', (event) => {
-          this.doLog(event)
-        })
-      },
-      setUpVisibleTracking () {
-        this.visibleTracking(
-          [
-            { target: '.article_body > .article_main .poplist-container', seenFlag: false, desc: 'popular' },
-            { target: '.article_body > .article_main .article_main_tags', seenFlag: false, desc: 'tag' },
-            { target: '.article_body > .article_main .newsletter', seenFlag: false, desc: 'end' },
-            { target: '.article_body > .article_main .dable-widget', seenFlag: false, desc: 'matched' },
-            { target: '.article__main .newsletter', seenFlag: false, desc: 'end' },
-            { target: '.article__main .dable-widget', seenFlag: false, desc: 'matched' }
-          ]
-        )
-      },
-      updateViewport () {
-        updateViewport(this.$store)
-      },
-      visibleTracking
+      }).catch(err => {
+        console.log(err)
+      })
     },
+    launchLogger () {
+      this.globalTapevent = new Tap(this.doc)
+      this.doc.addEventListener('tap', (event) => {
+        this.doLog(event)
+      })
+    },
+    setUpVisibleTracking () {
+      this.visibleTracking(
+        [
+          { target: '.article_body > .article_main .poplist-container', seenFlag: false, desc: 'popular' },
+          { target: '.article_body > .article_main .article_main_tags', seenFlag: false, desc: 'tag' },
+          { target: '.article_body > .article_main .newsletter', seenFlag: false, desc: 'end' },
+          { target: '.article_body > .article_main .dable-widget', seenFlag: false, desc: 'matched' },
+          { target: '.article__main .newsletter', seenFlag: false, desc: 'end' },
+          { target: '.article__main .dable-widget', seenFlag: false, desc: 'matched' }
+        ]
+      )
+    },
+    updateViewport () {
+      updateViewport(this.$store)
+    },
+    visibleTracking
   }
+}
 </script>
 
 <style lang="stylus">
@@ -153,7 +155,7 @@ a
   color #34495e
   text-decoration none
   cursor pointer
-  
+
   u
     text-decoration none
 
@@ -167,7 +169,7 @@ a
 p, h2, h3
   font-weight normal
 
-section.tweet 
+section.tweet
   .content
     a, a:hover, a:link, a:visited
         color #0b4fa2
@@ -278,7 +280,6 @@ button:focus {
   object-fit contain
   object-position center center
   background-size 40% 40%
-
 
 @media (min-width 0px) and (max-width 320px)
   .dfp-cover

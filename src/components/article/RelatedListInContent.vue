@@ -20,7 +20,7 @@ import { getHref, sendGaClickEvent } from '../../util/comm'
 export default {
   name: 'RelatedListInContent',
   components: {
-    LazyImage,
+    LazyImage
   },
   props: {
     isAppPage: {
@@ -39,10 +39,10 @@ export default {
     getImage (id) {
       const item = this.$store.state.imagesById.find(image => image.id === id)
       const image = get(item, 'image.resizedTargets.mobile.url') || get(item, 'image.url')
-      return image ? image : undefined
+      return image || undefined
     },
     sendGaClickEvent
-  },
+  }
 }
 </script>
 <style lang="stylus" scoped>
@@ -89,7 +89,7 @@ export default {
         overflow hidden
     &__img
       position relative
-      width 33% 
+      width 33%
       padding 0 !important
       border-bottom none !important
       &::after
@@ -153,7 +153,6 @@ export default {
           text-overflow ellipsis
           border none
           overflow hidden
-          
 
 @media (min-width 767px)
   .relateds-in-content

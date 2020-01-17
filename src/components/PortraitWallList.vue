@@ -21,30 +21,30 @@ import _ from 'lodash'
 
 export default {
   name: 'portraitWallList',
-  props: [ 'articles', 'initialMediaData' ],
+  props: ['articles', 'initialMediaData'],
   computed: {
     images () {
-      return _.chunk(_.sortBy(this.initialMediaData, [ function (o) {
+      return _.chunk(_.sortBy(this.initialMediaData, [function (o) {
         return _.toNumber(_.split(o.keywords, '-')[0])
-      } ]), 5)
+      }]), 5)
     }
   },
   methods: {
     getHref (item) {
-      return `/story/${_.split(_.get(item, [ 'keywords' ]), '-')[1]}`
+      return `/story/${_.split(_.get(item, ['keywords']), '-')[1]}`
     },
     getImage (item) {
-      return _.get(item, [ 'image', 'resizedTargets', 'desktop', 'url' ])
+      return _.get(item, ['image', 'resizedTargets', 'desktop', 'url'])
     },
     getOrder (item) {
-      return _.split(_.get(item, [ 'keywords' ]), '-')[0]
+      return _.split(_.get(item, ['keywords']), '-')[0]
     },
     getTitle (item, needComplete) {
-      const slug = _.split(_.get(item, [ 'keywords' ]), '-')[1]
+      const slug = _.split(_.get(item, ['keywords']), '-')[1]
       if (needComplete) {
-        return _.get(_.find(this.articles, { 'slug': slug }), [ 'title' ])
+        return _.get(_.find(this.articles, { slug: slug }), ['title'])
       }
-      return getTruncatedVal(_.get(_.find(this.articles, { 'slug': slug }), [ 'title' ]), 19)
+      return getTruncatedVal(_.get(_.find(this.articles, { slug: slug }), ['title']), 19)
     },
     getValue
   }
@@ -63,7 +63,7 @@ export default {
       order 2
     .portraitWallList__block--content
       order 1
-      
+
     &.color
       .portraitWallList__block--image
         order 1
@@ -86,7 +86,7 @@ export default {
         padding-top 100%
       img
         width 100%
-        height auto        
+        height auto
       p
         display none
     &--content
@@ -121,9 +121,9 @@ export default {
         order 1
       .portraitWallList__block--content
         order 1
-      &.color 
-        a 
-          color #fff !important 
+      &.color
+        a
+          color #fff !important
     &__block
       flex-direction column
       width 18%

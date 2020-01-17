@@ -17,7 +17,7 @@ import Header from '../components/Header.vue'
 import { get } from 'lodash'
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
+  return store.dispatch('FETCH_COMMONDATA', { endpoints: ['sectionfeatured', 'sections', 'topics'] })
 }
 
 const fetchPartners = (store) => {

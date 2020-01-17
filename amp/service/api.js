@@ -12,7 +12,7 @@ const {
 router.get(
   '/:slug?',
   validateSlugIsEmpty,
-  [ fetchFromRedis, fetchStory ],
+  [fetchFromRedis, fetchStory],
   getArticleData,
   validateArticle,
   sendArticleData

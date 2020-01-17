@@ -1,5 +1,5 @@
 import verge from 'verge'
-import { currentYPosition, elmYPosition, } from 'kc-scroll'
+import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { isEleFixed, isEleShown } from 'src/util/comm'
 const debug = require('debug')('CLIENT:ADTRACKER')
 export const adtracker = async ({ el, slot, position, isAdEmpty, sessionId }) => {
@@ -17,10 +17,10 @@ export const adtracker = async ({ el, slot, position, isAdEmpty, sessionId }) =>
 
       position === 'MBST' && debug('sessionId', sessionId, elTop)
       if (elTop === undefined) { return window.removeEventListener('scroll', handler) }
-      
+
       const elHeight = el.clientHeight || 0
       const elMid = elTop + elHeight / 2
-      position === 'MBAR1' && debug(`POS: ${position}`, currPosTop, elMid, currPosBottom, `. IS IT FIXED?`, isPositionFixed, '. IS IT SHOWN?', isAdShown)
+      position === 'MBAR1' && debug(`POS: ${position}`, currPosTop, elMid, currPosBottom, '. IS IT FIXED?', isPositionFixed, '. IS IT SHOWN?', isAdShown)
       if (elMid >= currPosTop && elMid <= currPosBottom && isAdShown) {
         isEverInSight = true
         setTimeout(() => {
@@ -30,16 +30,15 @@ export const adtracker = async ({ el, slot, position, isAdEmpty, sessionId }) =>
             window.removeEventListener('scroll', handler)
             handler = null
             window.ga && window.ga('send', 'event', 'ad', 'visible', slot, {
-                location: document.location.href,
-                nonInteraction: false
-              })
+              location: document.location.href,
+              nonInteraction: false
+            })
             debug(`##${position}# SEND TRACK TICKET.`, {
               slot,
               sessionId
             })
           }
         }, 1000)
-        
       } else {
         isEverInSight = false
       }

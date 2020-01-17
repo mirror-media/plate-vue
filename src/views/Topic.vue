@@ -95,9 +95,8 @@
 
 <script>
 
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from '../constants'
-import { TAG, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID } from '../constants/index'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, TAG, TOPIC, TOPIC_PROTEST_ID, TOPIC_WATCH_ID, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+
 import { adtracker } from 'src/util/adtracking'
 import { currEnv, getTruncatedVal, getValue, unLockJS } from '../util/comm'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
@@ -136,27 +135,27 @@ const PRESIDENT_ELECTION_ID = '5c766e19315ec51000909259'
 
 const fetchData = (store, id) => {
   return Promise.all([
-    store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'projects', 'topics' ] }),
+    store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections', 'projects', 'topics'] }),
     fetchPartners(store)
   ])
-  .then(() => {
-    if (!(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': id }))) {
-      return fetchTopicByUuid(store, id)
-    }
-  })
-  .then(() => {
-    const topicType = _.get(_.find(_.get(store.getters.topics, [ 'items' ]), { 'id': id }), [ 'type' ]) || _.get(store.getters.topic, [ 'items', '0', 'type' ])
-    if (topicType === 'timeline') {
-      return fetchTimeline(store, id)
-    }
-  })
+    .then(() => {
+      if (!(_.find(_.get(store.getters.topics, ['items']), { id: id }))) {
+        return fetchTopicByUuid(store, id)
+      }
+    })
+    .then(() => {
+      const topicType = _.get(_.find(_.get(store.getters.topics, ['items']), { id: id }), ['type']) || _.get(store.getters.topic, ['items', '0', 'type'])
+      if (topicType === 'timeline') {
+        return fetchTimeline(store, id)
+      }
+    })
 }
 
 const fetchEvent = (store, eventType = 'embedded') => {
   return store.dispatch('FETCH_EVENT', {
     params: {
-      'max_results': 1,
-      'where': {
+      max_results: 1,
+      where: {
         isFeatured: true,
         eventType: eventType
       }
@@ -165,14 +164,14 @@ const fetchEvent = (store, eventType = 'embedded') => {
 }
 
 const fetchPartners = (store) => {
-  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  const page = _.get(store.state, ['partners', 'meta', 'page'], 0) + 1
   return store.dispatch('FETCH_PARTNERS', {
     params: {
       max_results: 25,
       page: page
     }
   }).then(() => {
-    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+    if (_.get(store.state, ['partners', 'items', 'length']) < _.get(store.state, ['partners', 'meta', 'total'])) {
       fetchPartners(store)
     }
   })
@@ -180,13 +179,13 @@ const fetchPartners = (store) => {
 
 const fetchTimeline = (store, id) => {
   return store.dispatch('FETCH_TIMELINE', {
-    'id': id
+    id: id
   })
 }
 
 const fetchTopicByUuid = (store, uuid) => {
   return store.dispatch('FETCH_TOPIC_BY_UUID', {
-    'params': {
+    params: {
       where: {
         _id: uuid
       }
@@ -196,25 +195,25 @@ const fetchTopicByUuid = (store, uuid) => {
 
 const fetchTopicImages = (store, uuid) => {
   return store.dispatch('FETCH_IMAGES', {
-    'uuid': uuid,
-    'type': TOPIC,
-    'params': {
+    uuid: uuid,
+    type: TOPIC,
+    params: {
       max_results: 25
     }
   })
 }
 
 const fetchTopicAllImages = (store, uuid) => {
-  const page = _.get(store.state, [ 'images', 'meta', 'page' ], 0) + 1
+  const page = _.get(store.state, ['images', 'meta', 'page'], 0) + 1
   return store.dispatch('FETCH_IMAGES', {
-    'uuid': uuid,
-    'type': TOPIC,
-    'params': {
+    uuid: uuid,
+    type: TOPIC,
+    params: {
       max_results: 25,
       page: page
     }
   }).then(() => {
-    if (_.get(store.state, [ 'images', 'items', 'length' ]) < _.get(store.state, [ 'images', 'meta', 'total' ])) {
+    if (_.get(store.state, ['images', 'items', 'length']) < _.get(store.state, ['images', 'meta', 'total'])) {
       fetchTopicAllImages(store, uuid)
     }
   })
@@ -223,9 +222,9 @@ const fetchTopicAllImages = (store, uuid) => {
 const fetchArticlesByUuid = (store, uuid, type, isLoadMore, useMetaEndpoint, maxResult = MAXRESULT) => {
   const page = isLoadMore || PAGE
   return store.dispatch('FETCH_ARTICLES_BY_UUID', {
-    'uuid': uuid,
-    'type': type,
-    'params': {
+    uuid: uuid,
+    type: type,
+    params: {
       page: page,
       max_results: maxResult,
       useMetaEndpoint: useMetaEndpoint
@@ -234,17 +233,17 @@ const fetchArticlesByUuid = (store, uuid, type, isLoadMore, useMetaEndpoint, max
 }
 
 const fetchAllArticlesByUuid = (store, uuid, type, useMetaEndpoint) => {
-  const page = _.get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'meta', 'page' ], 0) + 1
+  const page = _.get(store.state, ['articlesByUUID', 'TOPIC', uuid, 'meta', 'page'], 0) + 1
   return store.dispatch('FETCH_ARTICLES_BY_UUID', {
-    'uuid': uuid,
-    'type': type,
-    'params': {
+    uuid: uuid,
+    type: type,
+    params: {
       page: page,
       max_results: 10,
       useMetaEndpoint: useMetaEndpoint
     }
   }).then(() => {
-    if (_.get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'items', 'length' ]) < _.get(store.state, [ 'articlesByUUID', 'TOPIC', uuid, 'meta', 'total' ])) {
+    if (_.get(store.state, ['articlesByUUID', 'TOPIC', uuid, 'items', 'length']) < _.get(store.state, ['articlesByUUID', 'TOPIC', uuid, 'meta', 'total'])) {
       fetchAllArticlesByUuid(store, uuid, type, useMetaEndpoint)
     }
   })
@@ -259,12 +258,12 @@ export default {
     'footer-full': FooterFull,
     'group-list': GroupList,
     'header-full': HeaderFull,
-    'leading': Leading,
+    leading: Leading,
     'leading-watch': LeadingWatch,
-    'loading': Loading,
+    loading: Loading,
     'more-full': MoreFull,
     'portraitWall-list': PortraitWallList,
-    'share': Share,
+    share: Share,
     'timeline-body': TimelineBody,
     'timeline-headline': TimelineHeadline,
     'vue-dfp-provider': VueDfpProvider,
@@ -306,7 +305,7 @@ export default {
         { vmid: 'og:image', property: 'og:image', content: metaImage },
         { vmid: 'twitter:title', name: 'twitter:title', content: metaTitle },
         { vmid: 'twitter:description', name: 'twitter:description', content: metaDescription },
-        { vmid: 'twitter:image', name: 'twitter:image', content: metaImage },
+        { vmid: 'twitter:image', name: 'twitter:image', content: metaImage }
       ],
       link: [
         { rel: 'alternate', href: relUrl }
@@ -358,7 +357,7 @@ export default {
   },
   computed: {
     articles () {
-      return _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items' ]), 'slug')
+      return _.uniqBy(_.get(this.$store.state, ['articlesByUUID', TOPIC, this.uuid, 'items']), 'slug')
     },
     articleUrl () {
       return `${SITE_URL}/topic/${this.currArticleSlug}/`
@@ -376,20 +375,23 @@ export default {
       return _.slice(this.articles, 12)
     },
     candidateData () {
-      this.persidentCandidateData.forEach((cand) => cand.articles = _.uniqBy(_.get(this.$store.state, [ 'articlesByUUID', TAG, cand.tagId, 'items' ]), 'slug'))
+      this.persidentCandidateData
+        .forEach((cand) => {
+          cand.articles = _.uniqBy(_.get(this.$store.state, ['articlesByUUID', TAG, cand.tagId, 'items']), 'slug')
+        })
       return this.persidentCandidateData
     },
     customCSS () {
-      return _.get(this.topic, [ 'style' ], null)
+      return _.get(this.topic, ['style'], null)
     },
     customJS () {
-      return _.get(this.topic, [ 'javascript' ], null)
+      return _.get(this.topic, ['javascript'], null)
     },
     currArticleSlug () {
       return this.$store.state.route.params.topicId
     },
     dfp () {
-      return _.get(this.topic, [ 'dfp' ], null)
+      return _.get(this.topic, ['dfp'], null)
     },
     dfpOptions () {
       const currentInstance = this
@@ -404,7 +406,7 @@ export default {
            */
           const elSessionId = dfpCover.getAttribute('sessionId')
           if (elSessionId !== this.sessionId) { return }
-          
+
           const adDisplayStatus = dfpCover.currentStyle ? dfpCover.currentStyle.display : window.getComputedStyle(dfpCover, null).display
 
           switch (position) {
@@ -421,55 +423,55 @@ export default {
             position,
             isAdEmpty: adDisplayStatus === 'none',
             sessionId: elSessionId
-          }) 
+          })
         },
         setCentering: true,
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
     eventLogo () {
-      return _.get(this.$store.state.eventLogo, [ 'items', '0' ])
+      return _.get(this.$store.state.eventLogo, ['items', '0'])
     },
     fbCommentDiv () {
       return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
     },
     fbAppId () {
-      return _.get(this.$store, [ 'state', 'fbAppId' ])
+      return _.get(this.$store, ['state', 'fbAppId'])
     },
     hasAutoScroll () {
-      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'page' ], PAGE) !== 1
+      return _.get(this.$store.state, ['articlesByUUID', TOPIC, this.uuid, 'meta', 'page'], PAGE) !== 1
     },
     hasDFP () {
       return this.dfp !== '' || this.mobileDfp !== ''
     },
     hasMore () {
-      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'items', 'length' ], 0) < _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'total' ], 0)
+      return _.get(this.$store.state, ['articlesByUUID', TOPIC, this.uuid, 'items', 'length'], 0) < _.get(this.$store.state, ['articlesByUUID', TOPIC, this.uuid, 'meta', 'total'], 0)
     },
     isPresidentElectionId () {
       return this.uuid === PRESIDENT_ELECTION_ID
     },
     mobileDfp () {
-      return _.get(this.topic, [ 'mobileDfp' ], null)
+      return _.get(this.topic, ['mobileDfp'], null)
     },
     highlightNodes () {
-      return _.get(this.$store.state, [ 'timeline', 'nodes' ])
+      return _.get(this.$store.state, ['timeline', 'nodes'])
     },
     isTimeline () {
       return this.$route.params.topicId === TOPIC_PROTEST_ID
     },
     page () {
-      return _.get(this.$store.state, [ 'articlesByUUID', TOPIC, this.uuid, 'meta', 'page' ], PAGE)
+      return _.get(this.$store.state, ['articlesByUUID', TOPIC, this.uuid, 'meta', 'page'], PAGE)
     },
     pageStyle () {
-      return _.get(this.topic, [ 'pageStyle' ])
+      return _.get(this.topic, ['pageStyle'])
     },
     portraitWallListImages () {
-      return _.filter(_.get(this.mediaData, [ 'images', 'items' ]), (i) => {
+      return _.filter(_.get(this.mediaData, ['images', 'items']), (i) => {
         return _.indexOf(i.keywords, '@') === -1
       })
     },
     portraitWallSlideImages () {
-      const slideImages = _.filter(_.get(this.$store.state, [ 'images', 'items' ]), (i) => {
+      const slideImages = _.filter(_.get(this.$store.state, ['images', 'items']), (i) => {
         return _.indexOf(i.keywords, '@') !== -1
       })
       return {
@@ -479,7 +481,7 @@ export default {
       }
     },
     projects () {
-      return _.get(this.commonData, [ 'projects', 'items' ])
+      return _.get(this.commonData, ['projects', 'items'])
     },
     sectionId () {
       return 'other'
@@ -493,18 +495,18 @@ export default {
       }
     },
     tags () {
-      return _.filter(_.get(this.$store.state, [ 'tags' ]), (t) => {
-        return _.includes(_.get(this.topic, [ 'tags' ]), t.id)
+      return _.filter(_.get(this.$store.state, ['tags']), (t) => {
+        return _.includes(_.get(this.topic, ['tags']), t.id)
       })
     },
     timeline () {
-      return _.get(this.$store.state, [ 'timeline' ])
+      return _.get(this.$store.state, ['timeline'])
     },
     topic () {
-      if (_.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })) {
-        return _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': this.uuid })
+      if (_.find(_.get(this.$store.state.topics, ['items']), { id: this.uuid })) {
+        return _.find(_.get(this.$store.state.topics, ['items']), { id: this.uuid })
       } else {
-        return _.get(this.$store.state, [ 'topic', 'items', '0' ])
+        return _.get(this.$store.state, ['topic', 'items', '0'])
       }
     },
     topicType () {
@@ -512,7 +514,7 @@ export default {
     },
     mediaData () {
       return {
-        images: _.get(this.$store.state, [ 'images', this.uuid ])
+        images: _.get(this.$store.state, ['images', this.uuid])
       }
     },
     needWineWarning () {
@@ -561,7 +563,7 @@ export default {
     window.ga('set', 'contentGroup2', '')
     window.ga('set', 'contentGroup3', '')
     // window.ga('set', 'contentGroup3', `topic${this.abIndicator}`)
-    window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
+    window.ga('send', 'pageview', { title: `${_.get(this.topic, ['name'])} - ${SITE_TITLE}`, location: document.location.href })
 
     window.addEventListener('resize', this.updateViewport)
     if (this.topicType === 'list' || this.topicType === 'wide') { window.addEventListener('scroll', this.scrollHandler) }
@@ -575,13 +577,15 @@ export default {
     elmYPosition,
     getMmid () {
       const mmid = Cookie.get('mmid')
-      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      let assisgnedRole = _.get(this.$route, ['query', 'ab'])
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
-      const role = getRole({ mmid, distribution: [
-        { id: 'A', weight: 50 },
-        { id: 'B', weight: 50 } ]
+      const role = getRole({
+        mmid,
+        distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 }]
       })
       return assisgnedRole || role
     },
@@ -613,10 +617,10 @@ export default {
       this.loading = true
 
       fetchArticlesByUuid(this.$store, this.uuid, TOPIC, currentPage, false, maxResult)
-      .then(() => {
-        this.loading = false
-        this.canScrollLoadMord = true
-      })
+        .then(() => {
+          this.loading = false
+          this.canScrollLoadMord = true
+        })
     },
     loadMorePresident (tagId, page) {
       fetchArticlesByUuid(this.$store, tagId, TAG, page, false, 3)
@@ -684,45 +688,45 @@ export default {
   beforeRouteUpdate (to, from, next) {
     let topicType
     const uuid = _.split(to.path, '/')[2]
-    const topic = _.find(_.get(this.$store.state.topics, [ 'items' ]), { 'id': uuid }, undefined)
+    const topic = _.find(_.get(this.$store.state.topics, ['items']), { id: uuid }, undefined)
     if (!topic) {
       fetchTopicByUuid(this.$store, uuid)
-      .then(() => {
-        topicType = _.camelCase(_.get(this.$store.state.topic, [ 'items', '0', 'type' ]))
-        if (topicType === 'group') {
-          Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, true), fetchTopicImages(this.$store, uuid) ])
-          .then(next())
-        } else if (topicType === 'portraitWall') {
-          Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, false), fetchTopicImages(this.$store, uuid) ])
-          .then(next())
-        } else if (topicType === 'timeline') {
-          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
-          .then(next())
-        } else if (topicType === 'wide') {
-          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid) ])
-          .then(next())
-        } else {
-          Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
-          .then(next())
-        }
-      })
+        .then(() => {
+          topicType = _.camelCase(_.get(this.$store.state.topic, ['items', '0', 'type']))
+          if (topicType === 'group') {
+            Promise.all([fetchAllArticlesByUuid(this.$store, uuid, TOPIC, true), fetchTopicImages(this.$store, uuid)])
+              .then(next())
+          } else if (topicType === 'portraitWall') {
+            Promise.all([fetchAllArticlesByUuid(this.$store, uuid, TOPIC, false), fetchTopicImages(this.$store, uuid)])
+              .then(next())
+          } else if (topicType === 'timeline') {
+            Promise.all([fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid)])
+              .then(next())
+          } else if (topicType === 'wide') {
+            Promise.all([fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid)])
+              .then(next())
+          } else {
+            Promise.all([fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid)])
+              .then(next())
+          }
+        })
     } else {
-      topicType = _.camelCase(_.get(topic, [ 'type' ]))
+      topicType = _.camelCase(_.get(topic, ['type']))
       if (topicType === 'group') {
-        Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, true), fetchTopicImages(this.$store, uuid) ])
-        .then(next())
+        Promise.all([fetchAllArticlesByUuid(this.$store, uuid, TOPIC, true), fetchTopicImages(this.$store, uuid)])
+          .then(next())
       } else if (topicType === 'portraitWall') {
-        Promise.all([ fetchAllArticlesByUuid(this.$store, uuid, TOPIC, false), fetchTopicImages(this.$store, uuid) ])
-        .then(next())
+        Promise.all([fetchAllArticlesByUuid(this.$store, uuid, TOPIC, false), fetchTopicImages(this.$store, uuid)])
+          .then(next())
       } else if (topicType === 'timeline') {
-        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid) ])
-        .then(next())
+        Promise.all([fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid), fetchTimeline(this.$store, uuid)])
+          .then(next())
       } else if (topicType === 'wide') {
-        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid) ])
-        .then(next())
+        Promise.all([fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false, 3), fetchTopicImages(this.$store, uuid)])
+          .then(next())
       } else {
-        Promise.all([ fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid) ])
-        .then(next())
+        Promise.all([fetchArticlesByUuid(this.$store, uuid, TOPIC, false, false), fetchTopicImages(this.$store, uuid)])
+          .then(next())
       }
     }
   },
@@ -743,11 +747,11 @@ export default {
     window.removeEventListener('scroll', this.scrollHandler)
     window.removeEventListener('scroll', this.timelineScrollHandler)
   },
-  watch: {   
+  watch: {
     uuid: function () {
       this.$forceUpdate()
       if (process.env.VUE_ENV === 'client') {
-        window.ga('send', 'pageview', { title: `${_.get(this.topic, [ 'name' ])} - ${SITE_TITLE}`, location: document.location.href })
+        window.ga('send', 'pageview', { title: `${_.get(this.topic, ['name'])} - ${SITE_TITLE}`, location: document.location.href })
         if (this.topicType === 'list' || this.topicType === 'wide') {
           window.removeEventListener('scroll', this.scrollHandler)
           window.addEventListener('scroll', this.scrollHandler)
@@ -873,7 +877,7 @@ export default {
           padding .5em
           color #fff
           letter-spacing 1px
-          
+
   .topicTimeline
     &__projects
       padding 5% 10%

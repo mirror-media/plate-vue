@@ -7,15 +7,15 @@
   </div>
 </template>
 <script>
-  import ArticleVideo from 'src/components/article/Video.vue'
+import ArticleVideo from 'src/components/article/Video.vue'
 
-  export default {
-    name: 'HeroVideo',
-    components: {
-      ArticleVideo
-    },
-    props: [ 'heroCaption', 'video' ]
-  }
+export default {
+  name: 'HeroVideo',
+  components: {
+    ArticleVideo
+  },
+  props: ['heroCaption', 'video']
+}
 </script>
 <style lang="stylus" scoped>
   .hero-video
@@ -53,5 +53,5 @@
   .hero-video
     &__caption
       margin-top .5em
-    
+
 </style>

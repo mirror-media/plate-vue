@@ -20,52 +20,52 @@
   </div>
 </template>
 <script>
-  import LazyImage from 'src/components/common/LazyImage.vue'
-  import { SECTION_MAP } from '../../constants'
-  import { getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
-  import { get, take } from 'lodash'
-  export default {
-    name: 'pop-list',
-    props: [ 'pop', 'currEnv' ],
-    components: {
-      LazyImage
-    },
-    computed: {
-      popArticles () {
-        return take(this.pop, 9)
-      }
-    },
-    methods: {
-      getImage,
-      getTruncatedVal,
-      getValue,
-      getSectionStyle (sect) {
-        const sectionId = get(sect, [ 'id' ])
-        return { backgroundColor: get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc') }
-      },
-      getMicroAdName (index) {
-        return index === 1 ? 0 : index === 2 ? 1 : 2
-      },
-      sendGaClickEvent
+import LazyImage from 'src/components/common/LazyImage.vue'
+import { SECTION_MAP } from '../../constants'
+import { getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
+import { get, take } from 'lodash'
+export default {
+  name: 'pop-list',
+  props: ['pop', 'currEnv'],
+  components: {
+    LazyImage
+  },
+  computed: {
+    popArticles () {
+      return take(this.pop, 9)
     }
+  },
+  methods: {
+    getImage,
+    getTruncatedVal,
+    getValue,
+    getSectionStyle (sect) {
+      const sectionId = get(sect, ['id'])
+      return { backgroundColor: get(SECTION_MAP, [sectionId, 'bgcolor'], '#bcbcbc') }
+    },
+    getMicroAdName (index) {
+      return index === 1 ? 0 : index === 2 ? 1 : 2
+    },
+    sendGaClickEvent
   }
+}
 </script>
 
 <style lang="stylus" scoped>
-.poplist-container 
+.poplist-container
   font-size 18px
   padding 0 20px
   margin 40px auto
   .pop_title
     > h3
       font-size 1.5rem
-  .pop_list 
+  .pop_list
     margin-top 10px
     display flex
     align-content flex-start
     flex-wrap wrap
     justify-content space-between
-    .pop_item 
+    .pop_item
       display block
       width calc(50% - 5px)
       vertical-align top
@@ -74,7 +74,7 @@
         width 100%
       > div:not([class="pop_item_title"])
         height 0
-        position relative          
+        position relative
         padding-top 66.67%
       figure
         position relative
@@ -108,16 +108,16 @@
         letter-spacing 1px
         white-space nowrap
         padding 0 10px
-  
-      .pop_item_title 
+
+      .pop_item_title
         background-color #fff
         border-top-width 0
         line-height 1.5rem
         font-size 1.2rem
         display flex
         justify-content center
-        align-items flex-start    
-        a 
+        align-items flex-start
+        a
           width 100%
           max-height 100%
           padding .2em 0 0

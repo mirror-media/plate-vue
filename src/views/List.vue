@@ -32,7 +32,7 @@
         <!-- <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
       </div>
 
-      <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'"> 
+      <div class="list-view" v-else-if="pageStyle === 'grand-seiko-2018'">
         <Header :activeSection="sectionName" :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
         <ListSlider v-if="imagesForGS.length > 0" :images="imagesForGS" class="gs" />
         <ArticleList ref="articleList" id="articleList" :articles='autoScrollArticles' :hasDFP='hasDFP' :currEnv = "dfpMode" />
@@ -259,23 +259,25 @@
             pos="LMBCVR3"
           />
         </DfpCover>
-      </ClientOnly>        
+      </ClientOnly>
     </template>
   </VueDfpProvider>
 </template>
 <script>
 
-import { AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY_INTERVIEW_ID, CATEGORY_ORALREADING_ID, EXTERNALS,
-  MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID } from 'src/constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from 'src/constants'
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from 'src/constants'
+import {
+  AUTHOR, CAMPAIGN_ID, CATEGORY, CATEGORY_INTERVIEW_ID, CATEGORY_ORALREADING_ID, EXTERNALS,
+  MARKETING_ID, SECTION, SECTION_FOODTRAVEL_ID, SECTION_MAP, TAG, TAG_INTERVIEW_ID, TAG_ORALREADING_ID
+  , SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL, DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING
+} from 'src/constants'
+
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, getTruncatedVal, unLockJS, sendAdCoverGA, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { microAds } from 'src/constants/microAds'
-import { find, get, pick, slice, split, take, toUpper, uniqBy, xorBy  } from 'lodash'
+import { find, get, pick, slice, split, take, toUpper, uniqBy, xorBy } from 'lodash'
 import ArticleList from 'src/components/ArticleList.vue'
 import ArticleListLight from 'src/components/ArticleListLight.vue'
 import ClientOnly from 'vue-client-only'
@@ -309,7 +311,7 @@ const GS_CATEGORY_NAME = 'grand-seiko-2018' // dev gslecture
 const GS_TAG_ID = '5bbf08301e598f1000fc8e52' // dev 5bbc2069f39162100007c8bc
 
 const fetchCommonData = (store, route) => Promise.all([
-  store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] }),
+  store.dispatch('FETCH_COMMONDATA', { endpoints: ['sectionfeatured', 'sections', 'topics'] }),
   fetchPartners(store)
 ]).then(() => {
   const jobs = []
@@ -425,8 +427,8 @@ const fetchListData = (store, type, pageStyle, uuid, isLoadMore, hasPrefetch = f
       }
     case EXTERNALS:
       if (uuid !== 'external') {
-        const partner = find(get(store.state, [ 'commonData', 'partners', 'items' ]), { 'name': uuid })
-        const partnerId = get(partner, [ 'id' ])
+        const partner = find(get(store.state, ['commonData', 'partners', 'items']), { name: uuid })
+        const partnerId = get(partner, ['id'])
         if (isLoadMore) {
           return fetchExternals(store, {
             page: page,
@@ -473,7 +475,7 @@ const fetchArticlesByAuthor = (store, uuid, params) => store.dispatch('FETCH_ART
     page: PAGE,
     max_results: MAXRESULT,
     where: {
-      '$or': [
+      $or: [
         { writers: uuid },
         { photographers: uuid },
         { camera_man: uuid },
@@ -563,7 +565,7 @@ const getUUID = (store, type, to) => {
         case 'oralreading':
           return CATEGORY_ORALREADING_ID
         default:
-          return get(find(get(store.state.commonData, [ 'categories' ]), { 'name': to.params.title }), [ 'id' ])
+          return get(find(get(store.state.commonData, ['categories']), { name: to.params.title }), ['id'])
       }
     case EXTERNALS:
       return to.params.title
@@ -571,7 +573,7 @@ const getUUID = (store, type, to) => {
       if (to.params.title === 'topic') {
         return 'topic'
       }
-      return get(find(get(store.state.commonData, [ 'sections', 'items' ]), { 'name': to.params.title }), [ 'id' ])
+      return get(find(get(store.state.commonData, ['sections', 'items']), { name: to.params.title }), ['id'])
     case TAG:
       return to.params.tagId
   }
@@ -600,7 +602,7 @@ export default {
     MoreFull,
     Share,
     VueDfpProvider,
-    WineWarning,
+    WineWarning
   },
   asyncData ({ store, route }) {
     return fetchCommonData(store, route)
@@ -617,7 +619,7 @@ export default {
 
     const getDescription = {
       SECTION: get(this.section, 'ogDescription') || get(this.section, 'description'),
-      CATEGORY: get(find(get(this.commonData, 'categories'), { 'name': this.$route.params.title }), 'ogDescription'),
+      CATEGORY: get(find(get(this.commonData, 'categories'), { name: this.$route.params.title }), 'ogDescription'),
       default: SITE_DESCRIPTION
     }
 
@@ -632,13 +634,13 @@ export default {
       CATEGORY: this.sectionName,
       default: ''
     }
-    
+
     const ogTitle = getTruncatedVal((getTitle[type] || getTitle.default), 11)
     const title = ogTitle ? `${ogTitle} - ${SITE_TITLE}` : SITE_TITLE
     const ogDescription = getTruncatedVal((getDescription[type] || getDescription.default), 197)
     const ogImage = getOgImage[type] || getOgImage.default
     const sectionName = getSectionName[type] || getSectionName.default
-    
+
     if (!ogTitle && process.env.VUE_ENV === 'server') {
       const e = new Error()
       e.massage = 'Page Not Found'
@@ -681,7 +683,7 @@ export default {
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
       showDfpHeaderLogo: false,
-      verge,
+      verge
     }
   },
   computed: {
@@ -719,7 +721,7 @@ export default {
     customCSS () {
       switch (this.type) {
         case SECTION:
-          return get(find(get(this.commonData, 'sections.items'), { 'name': this.$route.params.title }), 'css', null)
+          return get(find(get(this.commonData, 'sections.items'), { name: this.$route.params.title }), 'css', null)
         case TAG:
           return get(this.tag, 'css')
         default:
@@ -727,7 +729,7 @@ export default {
       }
     },
     customJS () {
-      return this.type === SECTION ? get(find(get(this.commonData, 'sections.items'), { 'name': this.$route.params.title }), 'javascript', null) : ''
+      return this.type === SECTION ? get(find(get(this.commonData, 'sections.items'), { name: this.$route.params.title }), 'javascript', null) : ''
     },
     dfpOptions () {
       const currentInstance = this
@@ -791,7 +793,7 @@ export default {
             position,
             isAdEmpty: adDisplayStatus === 'none',
             sessionId: elSessionId
-          })   
+          })
         },
         setCentering: true,
         sizeMapping: DFP_SIZE_MAPPING
@@ -881,17 +883,17 @@ export default {
           if (this.$route.params.title === GS_CATEGORY_NAME) {
             return this.$route.params.title
           }
-          return get(find(get(this.commonData, 'sections.items'), { 'name': this.$route.params.title }), 'style', 'feature')
+          return get(find(get(this.commonData, 'sections.items'), { name: this.$route.params.title }), 'style', 'feature')
         case EXTERNALS:
           return 'light'
         default:
-          return get(find(get(this.commonData, 'sections.items'), { 'name': this.$route.params.title }), 'style', 'feature')
+          return get(find(get(this.commonData, 'sections.items'), { name: this.$route.params.title }), 'style', 'feature')
       }
     },
     section () {
       return this.type === EXTERNALS
-        ? find(get(this.commonData, 'partners.items'), { 'name': this.$route.params.title })
-        : find(get(this.commonData, 'sections.items'), { 'name': this.$route.params.title })
+        ? find(get(this.commonData, 'partners.items'), { name: this.$route.params.title })
+        : find(get(this.commonData, 'sections.items'), { name: this.$route.params.title })
     },
     sectionColor () {
       return this.type === EXTERNALS
@@ -908,22 +910,22 @@ export default {
       switch (this.type) {
         case CATEGORY:
           _sectionId = get(find(get(this.commonData, 'sections.items'), (s) => {
-            return find(s.categories, { 'id': this.uuid })
+            return find(s.categories, { id: this.uuid })
           }), 'id')
           break
         case SECTION:
-          _sectionId = get(find(get(this.commonData, 'sections.items'), { 'name': this.$route.params.title }), 'id')
+          _sectionId = get(find(get(this.commonData, 'sections.items'), { name: this.$route.params.title }), 'id')
           break
         default:
           _sectionId = 'other'
       }
-      return DFP_UNITS[ _sectionId ] ? _sectionId : 'other'
+      return DFP_UNITS[_sectionId] ? _sectionId : 'other'
     },
     sectionName () {
       switch (this.type) {
         case CATEGORY:
           return get(find(get(this.commonData, 'sections.items'), (s) => {
-            return find(s.categories, { 'id': this.uuid })
+            return find(s.categories, { id: this.uuid })
           }), 'name', 'other')
         case SECTION:
           if (this.$route.params.title === 'topic') {
@@ -951,13 +953,13 @@ export default {
             case 'campaign':
               return '活動專區'
             default:
-              return get(find(get(this.commonData, 'categories'), { 'name': this.$route.params.title }), 'title')
+              return get(find(get(this.commonData, 'categories'), { name: this.$route.params.title }), 'title')
           }
         case SECTION:
           if (this.$route.params.title === 'topic') {
             return 'Topic'
           } else {
-            return get(find(get(this.commonData, 'sections.items'), { 'name': this.$route.params.title }), 'title')
+            return get(find(get(this.commonData, 'sections.items'), { name: this.$route.params.title }), 'title')
           }
         case TAG:
           return get(this.$store.state, 'tag.name')
@@ -982,13 +984,13 @@ export default {
             case 'campaign':
               return CAMPAIGN_ID
             default:
-              return get(find(get(this.commonData, 'categories'), { 'name': this.$route.params.title }), 'id')
+              return get(find(get(this.commonData, 'categories'), { name: this.$route.params.title }), 'id')
           }
         case SECTION:
           if (this.$route.params.title === 'topic') {
             return 'topic'
           } else {
-            return get(find(get(this.commonData, 'sections.items'), { 'name': this.$route.params.title }), 'id')
+            return get(find(get(this.commonData, 'sections.items'), { name: this.$route.params.title }), 'id')
           }
         case TAG:
           return this.$route.params.tagId
@@ -1007,13 +1009,15 @@ export default {
     get,
     getMmid () {
       const mmid = Cookie.get('mmid')
-      let assisgnedRole = get(this.$route, [ 'query', 'ab' ])
+      let assisgnedRole = get(this.$route, ['query', 'ab'])
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
-      const role = getRole({ mmid, distribution: [
-        { id: 'A', weight: 50 },
-        { id: 'B', weight: 50 } ]
+      const role = getRole({
+        mmid,
+        distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 }]
       })
       return assisgnedRole || role
     },
@@ -1041,7 +1045,9 @@ export default {
       currentPage += 1
       this.loading = true
       return fetchListData(this.$store, this.type, this.pageStyle, this.uuid, currentPage, false)
-        .then(() => this.loading = false)
+        .then(() => {
+          this.loading = false
+        })
     },
     scrollHandler () {
       if (this.$refs.articleList) {
@@ -1060,7 +1066,7 @@ export default {
           this.loadMore()
         }
       }
-    },   
+    },
     updateCustomizedMarkup () {
       if (process.env.VUE_ENV === 'client') {
         const custCss = document.querySelector('#custCSS')
@@ -1077,7 +1083,7 @@ export default {
     },
     updateSysStage () {
       this.dfpMode = currEnv()
-    },
+    }
   },
   watch: {
     // abIndicator: function () {
@@ -1108,9 +1114,9 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     const type = toUpper(split(to.path, '/')[1])
-    const pageStyle = get(find(get(this.$store, 'state.commonData.sections.items'), { 'name': to.params.title }), 'style', 'feature')
+    const pageStyle = get(find(get(this.$store, 'state.commonData.sections.items'), { name: to.params.title }), 'style', 'feature')
     fetchListData(this.$store, type, pageStyle, getUUID(this.$store, type, to), false, false)
-    .then(() => next())
+      .then(() => next())
   },
   beforeRouteLeave (to, from, next) {
     if (process.env.VUE_ENV === 'client') {
@@ -1172,7 +1178,7 @@ export default {
 
     &__text
       font-size 1.5rem
-      
+
 .listFull
   &-view
     background-color #f5f5f5

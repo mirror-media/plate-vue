@@ -9,14 +9,14 @@ export default {
     }
   },
   computed: {
-    sound() {
+    sound () {
       return {
         title: get(this.audio, 'title', ''),
         src: get(this.audio, 'url', '')
       }
-    },
+    }
   },
-  render() {
+  render () {
     return this.$scopedSlots.default({
       sound: this.sound
     })

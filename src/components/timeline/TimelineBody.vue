@@ -16,7 +16,7 @@ export default {
   components: {
     'timeline-menu': TimelineMenu
   },
-  props: [ 'initialTimeline', 'initialHighlightNodes', 'viewport' ],
+  props: ['initialTimeline', 'initialHighlightNodes', 'viewport'],
   computed: {
     timeline () {
       return this.initialTimeline
@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     getBrief () {
-      return _.get(this.timeline, [ 'topic', 'brief', 'html' ])
+      return _.get(this.timeline, ['topic', 'brief', 'html'])
     }
   }
 }

@@ -33,7 +33,7 @@ export default {
   },
   computed: {
     mediaDataEmbed () {
-      return _.get(this.mediaData, [ 'embed' ])
+      return _.get(this.mediaData, ['embed'])
     }
   },
   methods: {

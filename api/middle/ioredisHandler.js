@@ -1,8 +1,8 @@
 const isProd = process.env.NODE_ENV === 'production'
 
-const Redis = require("ioredis")
+const Redis = require('ioredis')
 
-const { 
+const {
   REDIS_AUTH,
   REDIS_READ_HOST,
   REDIS_READ_PORT,
@@ -59,10 +59,10 @@ recommendNewsClient.on('error', err => console.error('[IOREDIS]Recommend news cl
 
 const promiseTimeout = (promise) => {
   const time = REDIS_CONNECTION_TIMEOUT || 200
-  let timeout = new Promise((resolve, reject) => {
-    let timer = setTimeout(() => {
+  const timeout = new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
       clearTimeout(timer)
-      reject('Timed out in '+ time + 'ms.')
+      reject(new Error(`Timed out in ${time} ms.`))
     }, time)
   })
   return Promise.race([
@@ -72,7 +72,7 @@ const promiseTimeout = (promise) => {
 }
 
 const redisFetching = (url, callback) => {
-  let start = Date.now()
+  const start = Date.now()
   let decodedUrl
   let afterGet
   let redisPoolReadError
@@ -82,8 +82,8 @@ const redisFetching = (url, callback) => {
     console.error('[IOREDIS]Decoding url in fail while fetching data to Redis. URIError: URI malformed.', url)
     decodedUrl = url
   }
-  let beforeGet = Date.now() - start
-  
+  const beforeGet = Date.now() - start
+
   promiseTimeout(readClient.get(decodedUrl))
     .then(data => {
       afterGet = Date.now() - start
@@ -97,11 +97,12 @@ const redisFetching = (url, callback) => {
       redisPoolReadError = error
     })
     .then(data => {
-      let timePeriod = Date.now() - start
+      const timePeriod = Date.now() - start
       if (afterGet > REDIS_CONNECTION_TIMEOUT) {
         console.warn('[IOREDIS]Redis operating total:', `${timePeriod}ms`, 'before get: ', `${beforeGet}ms`, 'after get: ', `${afterGet}ms`, decodedUrl)
       }
-      callback && callback({ error: redisPoolReadError, data })
+      const callbackArgument = { error: redisPoolReadError, data }
+      callback && callback(callbackArgument)
     })
 }
 
@@ -121,11 +122,15 @@ const redisWriting = (url, data, callback, timeout) => {
 }
 
 const redisFetchingRecommendNews = (field, callback) => {
-  promiseTimeout(recommendNewsClient.mget([ ...field ]))
-    .then(data => callback && callback({ data }))
-    .catch(err =>{
+  promiseTimeout(recommendNewsClient.mget([...field]))
+    .then(data => {
+      const callbackArgument = { data }
+      return callback && callback(callbackArgument)
+    })
+    .catch(err => {
+      const callbackArgument = { err }
       console.error('[IOREDIS]Fetch recommend news ' + field + ' failed', 'Error: ', err)
-      callback && callback({ err })
+      callback && callback(callbackArgument)
     })
 }
 

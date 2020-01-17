@@ -4,28 +4,28 @@ import dfpUnitId from './dfpUnit.js'
 export const MARKETING_CATGORY_ID = '57fca2f5c9b7a70e004e6df9'
 export const SECTION_MAP = {
   // news
-  '57e1e0e5ee85930e00cad4e9': { 'sectionName': 'news', 'bgcolor': '#30bac8', 'latestNewsOrder': 1 },
+  '57e1e0e5ee85930e00cad4e9': { sectionName: 'news', bgcolor: '#30bac8', latestNewsOrder: 1 },
   // entertainment
-  '57e1e11cee85930e00cad4ea': { 'sectionName': 'entertainment', 'bgcolor': '#bf3284', 'latestNewsOrder': 2 },
+  '57e1e11cee85930e00cad4ea': { sectionName: 'entertainment', bgcolor: '#bf3284', latestNewsOrder: 2 },
   // businessmoney category-business-money
-  '596441d04bbe120f002a319a': { 'sectionName': 'businessmoney', 'bgcolor': '#009045', 'latestNewsOrder': 3 },
-  'category-business-money': { 'sectionName': 'businessmoney', 'bgcolor': '#009045' },
+  '596441d04bbe120f002a319a': { sectionName: 'businessmoney', bgcolor: '#009045', latestNewsOrder: 3 },
+  'category-business-money': { sectionName: 'businessmoney', bgcolor: '#009045' },
   // people
-  '596441604bbe120f002a3197': { 'sectionName': 'people', 'bgcolor': '#efa256' , 'latestNewsOrder': 4 },
+  '596441604bbe120f002a3197': { sectionName: 'people', bgcolor: '#efa256', latestNewsOrder: 4 },
   // videohub
-  '5975ab2de531830d00e32b2f': { 'sectionName': 'videohub', 'bgcolor': '#969696' },
+  '5975ab2de531830d00e32b2f': { sectionName: 'videohub', bgcolor: '#969696' },
   // international
-  '5964400d4bbe120f002a3191': { 'sectionName': 'international', 'bgcolor': '#911f27', 'latestNewsOrder': 5 },
+  '5964400d4bbe120f002a3191': { sectionName: 'international', bgcolor: '#911f27', latestNewsOrder: 5 },
   // foodtravel
-  '57dfe399ee85930e00cad4d6': { 'sectionName': 'foodtravel', 'bgcolor': '#eac151', 'latestNewsOrder': 6 },
+  '57dfe399ee85930e00cad4d6': { sectionName: 'foodtravel', bgcolor: '#eac151', latestNewsOrder: 6 },
   // mafalda
-  '5971aa8ce531830d00e32812': { 'sectionName': 'mafalda', 'bgcolor': '#662d8e', 'latestNewsOrder': 9 },
+  '5971aa8ce531830d00e32812': { sectionName: 'mafalda', bgcolor: '#662d8e', latestNewsOrder: 9 },
   // culture
-  '5964418a4bbe120f002a3198': { 'sectionName': 'culture', 'bgcolor': '#009245', 'latestNewsOrder': 7 },
+  '5964418a4bbe120f002a3198': { sectionName: 'culture', bgcolor: '#009245', latestNewsOrder: 7 },
   // watch
-  '57dfe3b0ee85930e00cad4d7': { 'sectionName': 'watch', 'bgcolor': '#003153', 'latestNewsOrder': 8 },
+  '57dfe3b0ee85930e00cad4d7': { sectionName: 'watch', bgcolor: '#003153', latestNewsOrder: 8 },
   // external
-  'external': { 'sectionName': 'external', 'bgcolor': '#ee5a24' }
+  external: { sectionName: 'external', bgcolor: '#ee5a24' }
 }
 
 export const OATH_PLAYLIST = {
@@ -37,7 +37,7 @@ export const OATH_PLAYLIST = {
   '5c4152b1bd70380001962365': { order: 6, name: '鏡人物', categoryName: 'video_people', id: '5c4152b1bd70380001962365' },
   '5c4150842274b40001ccc6a8': { order: 7, name: '鏡食旅', categoryName: 'video_foodtravel', id: '5c4150842274b40001ccc6a8' },
   '5c4152dd84dc1c0001266e4b': { order: 8, name: '娛樂透視', categoryName: 'video_ent_perspective', id: '5c4152dd84dc1c0001266e4b' },
-  '5c50116a4d981a0001477ead': { order: 9, name: '汽車鐘錶', categoryName: 'video_carandwatch', id: '5c50116a4d981a0001477ead'  }
+  '5c50116a4d981a0001477ead': { order: 9, name: '汽車鐘錶', categoryName: 'video_carandwatch', id: '5c50116a4d981a0001477ead' }
 }
 
 export const OATH_ALL_VIDEO_PLAYLIST_ID = '5c418881b1d38a000134ef54'
@@ -54,39 +54,39 @@ export const OATH_PLAYER_LIST = {
     desktop: '5c0f55eddbaab306353048ec'
   },
   category: {
-    'video_coverstory': {
+    video_coverstory: {
       mobile: '5c637faf0ca7c818a67f5666',
       desktop: '5c637bf6655b6811301dc253'
     },
-    'video_ent_headline': {
+    video_ent_headline: {
       mobile: '5c637fdfbc03933c303087e7',
       desktop: '5c637c3ffcd67b64d6bcb72a'
     },
-    'video_society': {
+    video_society: {
       mobile: '5c638012901437133811e74f',
       desktop: '5c637c63f79c416e58c84bf4'
     },
-    'video_foodtravel': {
+    video_foodtravel: {
       mobile: '5c638048f674e0279ef0da2e',
       desktop: '5c637c8a47e8a27bc1c5ff6f'
     },
-    'video_people': {
+    video_people: {
       mobile: '5c63807c0822e834ba8786c3',
       desktop: '5c637ca6367f6d2729a33334'
     },
-    'video_investigation': {
+    video_investigation: {
       mobile: '5c6380b3f344784fcf660775',
       desktop: '5c637cce0822e834ba8785af'
     },
-    'video_finance': {
+    video_finance: {
       mobile: '5c6381350ca7c818a67f56db',
       desktop: '5c637cf1f79c416e58c84c1e'
     },
-    'video_ent_perspective': {
+    video_ent_perspective: {
       mobile: '5c63817b600c9a19e8d49eb5',
       desktop: '5c637d27cd15ef2e5cdfcc97'
     },
-    'video_carandwatch': {
+    video_carandwatch: {
       mobile: '5c63817b497fa178dc9bcfeb',
       desktop: '5c637d4e98f45d75d802f77d'
     }
@@ -94,17 +94,17 @@ export const OATH_PLAYER_LIST = {
 }
 
 export const DFP_SIZE_MAPPING = {
-  'default': [
-    { browser: [ 0, 0 ], ad_sizes: [] },
-    { browser: [ 970, 200 ], ad_sizes: [ [ 1, 1 ], [ 970, 90 ], [ 970, 250 ], [ 300, 250 ], [ 300, 600 ] ] }
+  default: [
+    { browser: [0, 0], ad_sizes: [] },
+    { browser: [970, 200], ad_sizes: [[1, 1], [970, 90], [970, 250], [300, 250], [300, 600]] }
   ],
   'mobile-only': [
-    { browser: [ 1, 1 ], ad_sizes: [ [ 1, 1 ], [ 320, 100 ], [ 300, 250 ], [ 320, 480 ], [ 336, 280 ] ] },
-    { browser: [ 970, 200 ], ad_sizes: [] }
+    { browser: [1, 1], ad_sizes: [[1, 1], [320, 100], [300, 250], [320, 480], [336, 280]] },
+    { browser: [970, 200], ad_sizes: [] }
   ],
   'less-than-320-only': [
-    { browser: [ 1, 1 ], ad_sizes: [ [ 1, 1 ], [ 320, 100 ], [ 300, 250 ], [ 320, 480 ] ] },
-    { browser: [ 970, 200 ], ad_sizes: [] }
+    { browser: [1, 1], ad_sizes: [[1, 1], [320, 100], [300, 250], [320, 480]] },
+    { browser: [970, 200], ad_sizes: [] }
   ]
 }
 

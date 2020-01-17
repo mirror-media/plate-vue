@@ -1,10 +1,11 @@
-/*eslint no-unused-vars: 0*/
+/* eslint no-unused-vars: 0 */
 import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
 import moment from 'moment'
-import { fetchActivities,
+import {
+  fetchActivities,
   fetchArticles,
   fetchArticlesByUuid,
   fetchArticlesGroupedList,
@@ -31,7 +32,8 @@ import { fetchActivities,
   fetchTimeline,
   fetchTopic,
   fetchYoutubePlaylist,
-  logClient } from './api'
+  logClient
+} from './api'
 import { OATH_PLAYLIST } from '../constants'
 
 Vue.use(Vuex)
@@ -89,7 +91,7 @@ export function createStore () {
       viewport: {
         height: 0,
         width: 0
-      },
+      }
     },
 
     actions: {
@@ -102,9 +104,9 @@ export function createStore () {
         })
       },
       FETCH_ARTICLES: ({ commit, state }, { params, preview }) => {
-        const orig = _.values(state.articles[ 'items' ])
+        const orig = _.values(state.articles.items)
         return fetchArticles(params, preview).then(articles => {
-          articles[ 'items' ] = _.concat(orig, _.get(articles, [ 'items' ]))
+          articles.items = _.concat(orig, _.get(articles, ['items']))
           commit('SET_ARTICLES', { articles })
           commit('SET_AUTHORS', articles)
           commit('SET_TAGS', articles)
@@ -112,13 +114,12 @@ export function createStore () {
         })
       },
       FETCH_ARTICLES_BY_UUID: ({ commit, state }, { uuid, type, params }) => {
-        const orig = _.values(_.get(state, [ 'articlesByUUID', type, uuid, 'items' ]))
+        const orig = _.values(_.get(state, ['articlesByUUID', type, uuid, 'items']))
         if (state.articlesByUUID[type][uuid]) {
-          if ((state.uuid === uuid && params.page > 1) || 
-              (uuid === '5d65fbaa486faa3919afaeb9' || uuid === '5d65fbaf486faa3919afaeba' || uuid === '5d65fbb6486faa3919afaebb'))
-          {
+          if ((state.uuid === uuid && params.page > 1) ||
+              (uuid === '5d65fbaa486faa3919afaeb9' || uuid === '5d65fbaf486faa3919afaeba' || uuid === '5d65fbb6486faa3919afaebb')) {
             return fetchArticlesByUuid(uuid, type, params).then(articles => {
-              articles[ 'items' ] = _.concat(orig, _.get(articles, [ 'items' ]))
+              articles.items = _.concat(orig, _.get(articles, ['items']))
               commit('SET_ARTICLES_BY_UUID', { articles, type, uuid })
               commit('SET_TAGS', articles)
             })
@@ -135,23 +136,23 @@ export function createStore () {
         }
       },
 
-      FETCH_ARTICLES_GROUPED_LIST: ({ commit, state }, { params = {}}) => {
+      FETCH_ARTICLES_GROUPED_LIST: ({ commit, state }, { params = {} }) => {
         return fetchArticlesGroupedList(params).then(articlesGroupedList => commit('SET_ARTICLES_GROUPED_LIST', { articlesGroupedList }))
       },
 
-      FETCH_ARTICLES_POP_LIST: ({ commit, state }, { params = {}}) => {
+      FETCH_ARTICLES_POP_LIST: ({ commit, state }, { params = {} }) => {
         return fetchArticlesPopList(params).then(articlesPopList => commit('SET_ARTICLES_POP_LIST', { articlesPopList }))
       },
 
-      FETCH_ARTICLE_RECOMMEND_LIST: ({ commit, state }, { params = {}}) => {
+      FETCH_ARTICLE_RECOMMEND_LIST: ({ commit, state }, { params = {} }) => {
         return fetchRecommendList(params).then(articlesRecommendList => commit('SET_ARTICLE_RECOMMEND_LIST', { articlesRecommendList }))
       },
 
       FETCH_AUDIOS: ({ commit, state }, { params }) => {
-        const orig = _.values(state.audios[ 'items' ])
+        const orig = _.values(state.audios.items)
         return state.audios.items && (params.page > 1)
           ? fetchAudios(params).then(audios => {
-            audios[ 'items' ] = _.concat(orig, _.get(audios, [ 'items' ]))
+            audios.items = _.concat(orig, _.get(audios, ['items']))
             commit('SET_AUDIOS', { audios })
           }) : fetchAudios(params).then(audios => {
             commit('SET_AUDIOS', { audios })
@@ -164,11 +165,11 @@ export function createStore () {
           ? Promise.resolve(state.commonData)
           : fetchCommonData(endpointsNeedFetch).then(commonData => {
             const orig = state.commonData
-            Object.keys(commonData).map(endpoint => orig[endpoint] = commonData[endpoint])
-            _.get(state, 'latestArticles.items.length', 0) !== 0 ? null : commit('SET_POSTVUE', { commonData })
+            Object.keys(commonData).map(endpoint => { orig[endpoint] = commonData[endpoint] })
+            _.get(state, 'latestArticles.items.length', 0) === 0 && commit('SET_POSTVUE', { commonData })
             const _latestArticles = _.get(commonData, 'postsVue')
-            _latestArticles ? commit('SET_AUTHORS', _latestArticles) : null
-            _latestArticles ? commit('SET_TAGS', _latestArticles) : null
+            _latestArticles && commit('SET_AUTHORS', _latestArticles)
+            _latestArticles && commit('SET_TAGS', _latestArticles)
             return commit('SET_COMMONDATA', { commonData: orig })
           })
       },
@@ -197,10 +198,10 @@ export function createStore () {
       },
 
       FETCH_EXTERNALS: ({ commit, state }, { params }) => {
-        const orig = _.values(state.externals[ 'items' ])
+        const orig = _.values(state.externals.items)
         return state.externals.items && (params.page > 1)
           ? fetchExternals(params).then(externals => {
-            externals[ 'items' ] = _.concat(orig, _.get(externals, [ 'items' ]))
+            externals.items = _.concat(orig, _.get(externals, ['items']))
             commit('SET_EXTERNALS', { externals })
           }) : fetchExternals(params).then(externals => {
             commit('SET_EXTERNALS', { externals })
@@ -223,7 +224,7 @@ export function createStore () {
         if (params.page !== 1) {
           const orig = _.values(state.images.items)
           return fetchImages(uuid, type, params).then(images => {
-            images.items = _.concat(orig, _.get(images, [ 'items' ]))
+            images.items = _.concat(orig, _.get(images, ['items']))
             commit('SET_IMAGES', { uuid, images })
           })
         }
@@ -232,8 +233,8 @@ export function createStore () {
         })
       },
 
-      FETCH_IMAGES_BY_ID: ({ commit }, { ids, max_results }) => {
-        return fetchImagesById({ max_results: max_results, where: { _id: { $in: ids }}}).then(images => {
+      FETCH_IMAGES_BY_ID: ({ commit }, { ids, maxResults }) => {
+        return fetchImagesById({ max_results: maxResults, where: { _id: { $in: ids } } }).then(images => {
           commit('SET_IMAGES_BY_ID', { images: images.items })
         })
       },
@@ -249,35 +250,35 @@ export function createStore () {
       },
       // For Home Page
       FETCH_LATESTARTICLES: ({ commit, state }, { params }) => {
-        const orig = _.values(state.latestArticles[ 'items' ])
+        const orig = _.values(state.latestArticles.items)
         return state.latestArticles.items && params.page < 2
           ? Promise.resolve(state.latestArticles)
           : fetchLatestArticle(params).then(latestArticles => {
-            latestArticles[ 'items' ] = _.concat(orig, _.get(latestArticles, [ 'items' ]))
+            latestArticles.items = _.concat(orig, _.get(latestArticles, ['items']))
             commit('SET_LATESTARTICLES', { latestArticles })
           })
       },
 
       FETCH_NODES: ({ commit, state }, { params }) => {
-        const orig = _.values(state.nodes[ 'items' ])
-        if (_.get(params, [ 'where', 'isFeatured' ])) {
+        const orig = _.values(state.nodes.items)
+        if (_.get(params, ['where', 'isFeatured'])) {
           return fetchNodes(params).then(nodes => {
             commit('SET_HIGHLIGHTNODES', { nodes })
           })
         }
         return fetchNodes(params).then(nodes => {
-          nodes[ 'items' ] = _.sortBy(_.concat(orig, _.get(nodes, [ 'items' ])), [ function (o) {
+          nodes.items = _.sortBy(_.concat(orig, _.get(nodes, ['items'])), [function (o) {
             return moment(new Date(o.nodeDate))
-          } ])
+          }])
           commit('SET_NODES', { nodes })
         })
       },
-      
+
       FETCH_OATH_PLAYLIST: ({ commit, state }, { id, params }) => {
         const playlistAmount = Object.keys(OATH_PLAYLIST).length || 0
         return fetchOathPlaylist({ id, params }).then(playlist => commit('SET_OATH_PLAYLIST', { id: id, playlist: playlist.data[0] }))
       },
-      
+
       FETCH_OATH_VIDEO: ({ commit, state }, { id }) => {
         return state.videos.id
           ? Promise.resolve(state.videos[id])
@@ -301,10 +302,10 @@ export function createStore () {
       },
 
       FETCH_PARTNERS: ({ commit, state }, { params }) => {
-        const orig = _.values(_.get(state, [ 'commonData', 'partners', 'items' ]))
+        const orig = _.values(_.get(state, ['commonData', 'partners', 'items']))
         return orig && (params.page > 1)
           ? fetchPartners(params).then(partners => {
-            partners[ 'items' ] = _.concat(orig, _.get(partners, [ 'items' ]))
+            partners.items = _.concat(orig, _.get(partners, ['items']))
             commit('SET_PARTNERS', { partners })
           }) : fetchPartners(params).then(partners => {
             commit('SET_PARTNERS', { partners })
@@ -312,8 +313,9 @@ export function createStore () {
       },
 
       FETCH_SEARCH: async ({ commit, state }, { params }) => {
-        const orig = _.values(state.searchResult[ 'items' ])
-        const searchResult = await fetchSearch(params).catch(err => ({}))
+        const orig = _.values(state.searchResult.items)
+        // need error handle
+        const searchResult = await fetchSearch(params)
         if (state.searchResult.items && (params.page > 1)) {
           searchResult.items = _.concat(orig, _.get(searchResult, 'hits.hits'))
           return commit('SET_SEARCH', { searchResult })
@@ -344,16 +346,16 @@ export function createStore () {
       FETCH_TOPICS: ({ commit, state }, { params }) => {
         const orig = _.values(state.topics.items)
         return fetchTopic(params).then(topics => {
-          topics[ 'items' ] = _.concat(orig, _.get(topics, [ 'items' ]))
+          topics.items = _.concat(orig, _.get(topics, ['items']))
           commit('SET_TOPICS', { topics })
         })
       },
 
       FETCH_YOUTUBE_PLAY_LIST: ({ commit, state }, { limit, pageToken }) => {
-        const orig = _.values(state.playlist[ 'items' ])
+        const orig = _.values(state.playlist.items)
         return !pageToken ? fetchYoutubePlaylist(limit, pageToken).then(playlist => commit('SET_YOUTUBE_PLAY_LIST', { playlist }))
           : fetchYoutubePlaylist(limit, pageToken).then(playlist => {
-            playlist[ 'items' ] = _.concat(orig, _.get(playlist, [ 'items' ]))
+            playlist.items = _.concat(orig, _.get(playlist, ['items']))
             commit('SET_YOUTUBE_PLAY_LIST', { playlist })
           })
       },
@@ -371,13 +373,13 @@ export function createStore () {
 
       TRACE_RES_STACK: ({ commit }, { log }) => {
         commit('SET_RES_STACK', log)
-      },
+      }
 
     },
 
     mutations: {
       SET_AD_COVER_FLAG: (state, flag) => {
-        state[ 'isTimeToShowAdCover' ] = flag
+        state.isTimeToShowAdCover = flag
       },
 
       SET_ACTIVITIES: (state, { activities }) => {
@@ -389,7 +391,7 @@ export function createStore () {
       },
 
       SET_ARTICLES_BY_UUID: (state, { articles, type, uuid }) => {
-        Vue.set(state['articlesByUUID'][type], uuid, articles)
+        Vue.set(state.articlesByUUID[type], uuid, articles)
       },
 
       SET_ARTICLES_GROUPED_LIST: (state, { articlesGroupedList }) => {
@@ -411,7 +413,7 @@ export function createStore () {
       SET_AUTHORS: (state, articles) => {
         let authors = []
         const origAuthors = _.values(state.authors)
-        _.map(_.get(articles, [ 'items' ]), (article) => {
+        _.map(_.get(articles, ['items']), (article) => {
           const { cameraMan, designers, engineers, photographers, writers } = article
           _.map(_.concat(cameraMan, designers, engineers, photographers, writers), (o) => {
             if (o) {
@@ -426,7 +428,7 @@ export function createStore () {
       SET_COMMONDATA: (state, { commonData }) => {
         Vue.set(state, 'commonData', commonData)
         Vue.set(state, 'topics', commonData.topics)
-        _.get(commonData, [ 'choices' ], false) ? Vue.set(state, 'editorChoice', _.get(commonData, [ 'choices' ])) : ''
+        _.get(commonData, ['choices'], false) && Vue.set(state, 'editorChoice', _.get(commonData, ['choices']))
       },
 
       SET_CONTACT: (state, { contact }) => {
@@ -438,7 +440,7 @@ export function createStore () {
       },
 
       SET_EVENT: (state, { event }) => {
-        const eventType = _.get(event, [ 'items', '0', 'eventType' ])
+        const eventType = _.get(event, ['items', '0', 'eventType'])
         switch (eventType) {
           case 'embedded':
             Vue.set(state, 'eventEmbedded', event)
@@ -453,13 +455,13 @@ export function createStore () {
       },
 
       SET_EXTERNAL: (state, { external }) => {
-        Vue.set(state['external'], _.get(external, 'items.0.name', ''), external.items[0])
+        Vue.set(state.external, _.get(external, 'items.0.name', ''), external.items[0])
       },
 
       SET_EXTERNALS: (state, { externals }) => {
-        const items = _.get(externals, [ 'items' ])
+        const items = _.get(externals, ['items'])
         items.forEach((e) => {
-          Vue.set(state['external'], e.name, e)
+          Vue.set(state.external, e.name, e)
         })
         Vue.set(state, 'externals', externals)
       },
@@ -483,11 +485,11 @@ export function createStore () {
       },
 
       SET_IMAGES: (state, { uuid, images }) => {
-        Vue.set(state['images'], uuid, images)
+        Vue.set(state.images, uuid, images)
       },
 
       SET_IMAGES_BY_ID: (state, { images }) => {
-        state['imagesById'] = images
+        state.imagesById = images
       },
 
       SET_LATESTARTICLE: (state, { latestArticle }) => {
@@ -503,9 +505,9 @@ export function createStore () {
       },
 
       SET_OATH_PLAYLIST: (state, { id, playlist }) => {
-        Vue.set(state['playlist']['info'], id, playlist)
+        Vue.set(state.playlist.info, id, playlist)
       },
-      
+
       SET_OATH_VIDEO: (state, { id, video }) => {
         Vue.set(state.videos, id, video)
       },
@@ -515,11 +517,11 @@ export function createStore () {
       },
 
       SET_POSTVUE: (state, { commonData }) => {
-        Vue.set(state, 'latestArticles', _.get(commonData, [ 'postsVue' ]))
+        Vue.set(state, 'latestArticles', _.get(commonData, ['postsVue']))
       },
 
       SET_PARTNERS: (state, { partners }) => {
-        Vue.set(state['commonData'], 'partners', partners)
+        Vue.set(state.commonData, 'partners', partners)
       },
 
       SET_SEARCH: (state, { searchResult }) => {
@@ -533,7 +535,7 @@ export function createStore () {
       SET_TAGS: (state, articles) => {
         let _tags = []
         const origTags = _.values(state.tags)
-        _.map(_.get(articles, [ 'items' ]), (article) => {
+        _.map(_.get(articles, ['items']), (article) => {
           const { tags } = article
           _.map(tags, (o) => {
             if (o) {
@@ -558,7 +560,7 @@ export function createStore () {
       },
 
       SET_RES_STACK: (state, log) => {
-        state[ 'resStack' ] += `${log}\n`
+        state.resStack += `${log}\n`
       },
 
       SET_USER: (state, { user }) => {
@@ -575,13 +577,13 @@ export function createStore () {
 
       SET_YOUTUBE_PLAY_LIST: (state, { playlist }) => {
         Vue.set(state, 'playlist', playlist)
-      },
+      }
 
     },
 
     getters: {
       adSize (state) {
-        return _.get(state, 'viewport.width')  > 320 ? '' : 'less-than-320-only'
+        return _.get(state, 'viewport.width') > 320 ? '' : 'less-than-320-only'
       },
       searchResultNormalized: state => {
         return _.map(state.searchResult.items, item => Object.assign({ id: _.get(item, 'id') }, _.get(item, 'source')))
@@ -598,4 +600,3 @@ export function createStore () {
     }
   })
 }
-

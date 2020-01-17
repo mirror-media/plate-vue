@@ -80,7 +80,7 @@ export default {
     letter-spacing 1px
     line-height 26px
     background-color #4d4d4d
-    
+
 .editorChoiceFoodBlock
   display flex
   flex-direction column
@@ -120,7 +120,7 @@ export default {
     &__img
       position relative
       width 48%
-      
+
     &__content
       display flex
       flex-direction column

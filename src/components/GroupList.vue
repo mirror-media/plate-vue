@@ -42,20 +42,20 @@ export default {
   },
   methods: {
     getBrief (article, count) {
-      const brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], _.get(article, [ 'brief' ])), { allowedTags: [ '' ] })
+      const brief = sanitizeHtml(_.get(article, ['brief', 'html'], _.get(article, ['brief'])), { allowedTags: [''] })
       return this.getTruncatedVal(brief, count)
     },
     getHref,
     getImage,
     getPostAmountByTag (tagId) {
       const posts = _.filter(this.articles, (a) => {
-        return _.find(_.get(a, [ 'tags' ]), { 'id': tagId })
+        return _.find(_.get(a, ['tags']), { id: tagId })
       })
       return _.get(posts, 'length', 0)
     },
     getPostByTag (tagId) {
       return _.filter(this.articles, (a) => {
-        return _.find(_.get(a, [ 'tags' ]), { 'id': tagId })
+        return _.find(_.get(a, ['tags']), { id: tagId })
       })
     },
     getTruncatedVal
@@ -69,7 +69,7 @@ export default {
   display flex
   flex-direction column
   padding 1em 0
-  
+
 .groupListBlockContainer
   width 90%
   margin 0 auto
@@ -121,7 +121,7 @@ export default {
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
-      
+
   &__content
     display flex
     flex-direction column
@@ -184,10 +184,10 @@ export default {
         width 20px
     > div:nth-of-type(2)
       margin-top 2.2em
-    
+
     &__title
       margin-bottom 1em
-    
+
   .groupListBlock
     width calc(33.33% - 30px)
     margin-top 2.2em

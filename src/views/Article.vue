@@ -129,7 +129,7 @@
               slot="dfpad-AR1-PC"
             >
               <span id="innity-custom-adnetwork-span-63518"></span>
-              <span id="innity-custom-premium-span-12738"></span>     
+              <span id="innity-custom-premium-span-12738"></span>
               <vue-dfp
                 :is="props.vueDfp"
                 v-if="!hiddenAdvertised"
@@ -180,14 +180,14 @@
               </PopInAd>
             </RelatedListInContent>
             <RecommendList
-              slot="relatedlistBottom" 
+              slot="relatedlistBottom"
               v-if="!isAd"
               :sectionId="sectionId"
               :relateds="relateds"
               :currArticleId="currArticleId"
               :recommends="recommendlist"
               :excludingArticle="routeUpateReferrerSlug"
-            />            
+            />
             <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
             <!-- dable -->
             <template v-if="!hiddenAdvertised" slot="recommendList">
@@ -274,25 +274,25 @@
           <DfpCover
             v-if="!hiddenAdvertised && !needWineWarning"
             v-show="showDfpCoverAdFlag"
-          > 
+          >
             <vue-dfp
               :is="props.vueDfp"
               pos="MBCVR"
               :config="props.config"
               slot="ad-cover"
-            /> 
-          </DfpCover> 
+            />
+          </DfpCover>
           <DfpCover
             v-if="!hiddenAdvertised && !needWineWarning && showDfpCoverAd2Flag"
             :showCloseBtn="false"
             class="raw"
-          > 
+          >
             <vue-dfp
               :is="props.vueDfp"
               slot="ad-cover"
               :config="props.config"
               pos="MBCVR2"
-            /> 
+            />
           </DfpCover>
           <DfpCover
             v-if="!hiddenAdvertised && !needWineWarning && showDfpCoverInnityFlag"
@@ -305,7 +305,7 @@
               pos="MBCVR3"
               :config="props.config"
             />
-          </DfpCover>  
+          </DfpCover>
         </template>
       </ClientOnly>
       <!-- DFP FF -->
@@ -334,8 +334,8 @@ import {
   isEmpty as _isEmpty,
   map as _map
 } from 'lodash'
-import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SECTION_WATCH_ID } from '../constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
+import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SECTION_WATCH_ID, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
+
 import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
 import { adtracker } from 'src/util/adtracking'
 import { currEnv, getImage, lockJS, sendAdCoverGA, sendGaClickEvent, unLockJS, updateCookie } from '../util/comm'
@@ -391,7 +391,7 @@ const fetchArticles = (store, slug) => {
     params: {
       // related: 'full',
       clean: 'content',
-      where: { 'slug': slug, isAudioSiteOnly: false }
+      where: { slug: slug, isAudioSiteOnly: false }
     },
     preview: _get(store, 'state.route.query.preview')
   }).then(article => {
@@ -437,7 +437,7 @@ const fetchRecommendList = (store, id) => store.dispatch('FETCH_ARTICLE_RECOMMEN
 
 const fetchSSRData = store => {
   const timestamp = Date.now()
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] }).then(response => {
+  return store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections', 'topics'] }).then(response => {
     traceResponse(store, { log: `fetch sections and topics data: ${Date.now() - timestamp}ms` })
     return response
   })
@@ -445,7 +445,7 @@ const fetchSSRData = store => {
 
 const fetchCommonData = store => {
   const timestamp = Date.now()
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] }).then(response => {
+  return store.dispatch('FETCH_COMMONDATA', { endpoints: ['projects'] }).then(response => {
     traceResponse(store, { log: `fetch projects data: ${Date.now() - timestamp}ms` })
     return response
   })
@@ -459,9 +459,9 @@ const fetchData = store => Promise.all([
 ])
 
 const fetchLatestArticle = (store, params) => store.dispatch('FETCH_LATESTARTICLE', { params: params })
-const fetchImages = (store, { ids = [], max_results = 10 }) => store.dispatch('FETCH_IMAGES_BY_ID', {
+const fetchImages = (store, { ids = [], maxResults = 10 }) => store.dispatch('FETCH_IMAGES_BY_ID', {
   ids,
-  max_results
+  maxResults
 })
 
 const traceResponse = (store, log) => (process.env.VUE_ENV === 'server' ? store.dispatch('TRACE_RES_STACK', log) : Promise.resolve())
@@ -639,13 +639,12 @@ export default {
     debug('beforeRouteUpdate')
     fetchArticles(this.$store, to.params.slug)
       .then(() => {
-        const thisItem = _find(_get(this.$store, 'state.articles.items'), { 'slug': to.params.slug })
+        const thisItem = _find(_get(this.$store, 'state.articles.items'), { slug: to.params.slug })
         const theComingArticleSlug = _get(thisItem, 'slug')
 
         debug('this.articleData', theComingArticleSlug)
         if (!theComingArticleSlug) { location.replace('/404') }
         this.routeUpateReferrerSlug = _get(from, 'params.slug', 'N/A')
-        return
       })
       .then(() => next())
   },
@@ -690,7 +689,7 @@ export default {
     ShareTools,
     READrEmbeddedPromotions,
     VueDfpProvider,
-    WineWarning,
+    WineWarning
   },
   data () {
     return {
@@ -705,7 +704,7 @@ export default {
       routeUpateReferrerSlug: 'N/A',
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
-      showDfpCoverInnityFlag: false,        
+      showDfpCoverInnityFlag: false,
       showDfpFixedBtn: false,
       showDfpHeaderLogo: false,
       state: {},
@@ -717,7 +716,7 @@ export default {
       return `${SITE_URL}/story/${this.currArticleSlug}/`
     },
     articleData () {
-      const _data = _find(_get(this.$store, 'state.articles.items'), { 'slug': this.currArticleSlug })
+      const _data = _find(_get(this.$store, 'state.articles.items'), { slug: this.currArticleSlug })
       return _data || {}
     },
     relatedCategory () {
@@ -727,7 +726,7 @@ export default {
       return _get(this.$store, 'state.route.params.slug', '')
     },
     currArticleId () {
-      return _get(_find(_get(this.$store, 'state.articles.items'), { 'slug': this.$store.state.route.params.slug }), 'id', '')
+      return _get(_find(_get(this.$store, 'state.articles.items'), { slug: this.$store.state.route.params.slug }), 'id', '')
     },
     dfpOptions () {
       const currentInstance = this
@@ -743,7 +742,6 @@ export default {
           const elSessionId = dfpCurrAd.getAttribute('sessionId')
           debug('this.sessionId', this.sessionId, elSessionId)
           if (elSessionId !== this.sessionId) { return }
-
 
           const adDisplayStatus = dfpCurrAd.currentStyle ? dfpCurrAd.currentStyle.display : window.getComputedStyle(dfpCurrAd, null).display
           const loadInnityAd = () => {
@@ -773,13 +771,13 @@ export default {
             case 'MBCVR2':
               debugDFP('ad2 loaded')
               sendAdCoverGA('ad2')
-              adDisplayStatus === 'none' &&  debugDFP('dfp response no ad2')
+              adDisplayStatus === 'none' && debugDFP('dfp response no ad2')
               break
             case 'MBCVR3':
               debugDFP('adInnity loaded')
               sendAdCoverGA('innity')
               adDisplayStatus === 'none' && debugDFP('dfp response no innity')
-              break                
+              break
             case 'PCFF':
               currentInstance.showDfpFixedBtn = !(adDisplayStatus === 'none')
               break
@@ -798,7 +796,7 @@ export default {
             position,
             isAdEmpty: adDisplayStatus === 'none',
             sessionId: elSessionId
-          }) 
+          })
         },
         setCentering: true,
         sizeMapping: DFP_SIZE_MAPPING
@@ -826,10 +824,10 @@ export default {
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     heroCaption () {
-      return _get(this.articleData, [ 'heroCaption' ], '')
+      return _get(this.articleData, ['heroCaption'], '')
     },
     heroImage () {
-      return _get(this.articleData, 'heroImage') || { image: {}, }
+      return _get(this.articleData, 'heroImage') || { image: {} }
     },
     heroVideo () {
       const { heroVideo } = this.articleData
@@ -842,7 +840,7 @@ export default {
       return _get(this.articleData, 'hiddenAdvertised')
     },
     isAd () {
-      return _get(this.articleData, [ 'isAdvertised' ], false)
+      return _get(this.articleData, ['isAdvertised'], false)
     },
     isAdultContent () {
       return _get(this.articleData, 'isAdult')
@@ -861,7 +859,7 @@ export default {
     },
     latests () {
       return _get(this.$store, 'state.latestArticle.items', [])
-              .filter((latest) => _get(latest, 'slug', '') !== this.currArticleSlug)
+        .filter((latest) => _get(latest, 'slug', '') !== this.currArticleSlug)
     },
     needWineWarning () {
       const cats = this.articleData.categories || []
@@ -884,14 +882,14 @@ export default {
     },
     sectionId () {
       const _sectionId = _get(this.articleData, 'sections.0.id')
-      return DFP_UNITS[ _sectionId ] ? _sectionId : 'other'
+      return DFP_UNITS[_sectionId] ? _sectionId : 'other'
     },
     styleDfpAd () {
       return this.viewportWidth < 321 ? 'ad-fit' : ''
     },
     viewportWidth () {
       return _get(this.$store, 'state.viewport.width') || 0
-    },
+    }
   },
   methods: {
     checkLockJS () {
@@ -900,13 +898,15 @@ export default {
     _get,
     getMmid () {
       const mmid = Cookie.get('mmid')
-      let assisgnedRole = _get(this.$route, [ 'query', 'ab' ])
+      let assisgnedRole = _get(this.$route, ['query', 'ab'])
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
-      const role = getRole({ mmid, distribution: [
-        { id: 'A', weight: 50 },
-        { id: 'B', weight: 50 } ]
+      const role = getRole({
+        mmid,
+        distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 }]
       })
       return assisgnedRole || role
     },
@@ -915,7 +915,7 @@ export default {
       if (isLapW && !this.latests.length) {
         fetchLatestArticle(this.$store, {
           sort: '-publishedDate',
-          where: { 'sections': this.sectionId }
+          where: { sections: this.sectionId }
         })
       }
     },
@@ -957,7 +957,7 @@ export default {
     },
     updateSysStage () {
       this.dfpMode = currEnv()
-    },
+    }
   },
   mounted () {
     this.insertMediafarmersScript()
@@ -980,7 +980,7 @@ export default {
     window.addEventListener('load', () => {
       !this.isMobile && fetchLatestArticle(this.$store, {
         sort: '-publishedDate',
-        where: { 'sections': this.sectionId }
+        where: { sections: this.sectionId }
       })
     })
 
@@ -991,22 +991,22 @@ export default {
      * Data's supposed to be loaded later.
      */
     const lowPriorityDataLoader = () => {
-      if (this.isLowPriorityDataLoaded) { return }        
+      if (this.isLowPriorityDataLoaded) { return }
       debugDataLoad('GO LOAD DATA!')
       this.isLowPriorityDataLoaded = true
       if (this.articleData.relateds && this.articleData.relateds.length > 0) {
         const relatedImages = this.articleData.relateds.filter(related => related).map(related => related.heroImage)
-        fetchImages(this.$store, { ids: relatedImages, max_results: relatedImages.length  })
-      }        
+        fetchImages(this.$store, { ids: relatedImages, maxResults: relatedImages.length })
+      }
       Promise.all([
         fetchPop(this.$store),
         // fetchEvent(this.$store, 'embedded'),
-        fetchEvent(this.$store, 'logo'),
+        fetchEvent(this.$store, 'logo')
       ]).then(() => {
         window.removeEventListener('scroll', lowPriorityDataLoader)
       })
-      }
-      window.addEventListener('scroll', lowPriorityDataLoader)
+    }
+    window.addEventListener('scroll', lowPriorityDataLoader)
   },
   updated () {
     this.updateSysStage()
@@ -1025,7 +1025,7 @@ export default {
       }
       if (value.relateds && value.relateds.length > 0) {
         const relatedImages = value.relateds.filter(related => related).map(related => related.heroImage)
-        fetchImages(this.$store, { ids: relatedImages, max_results: relatedImages.length  })
+        fetchImages(this.$store, { ids: relatedImages, maxResults: relatedImages.length })
       }
     },
     isLockJS () {
@@ -1035,10 +1035,10 @@ export default {
       !this.isMobile && fetchLatestArticle(this.$store, {
         sort: '-publishedDate',
         where: {
-          'sections': this.sectionId
+          sections: this.sectionId
         }
       })
-    }   
+    }
   },
   beforeDestroy () {
     window.removeEventListener('resize', this.handleWWChange)
@@ -1065,7 +1065,7 @@ export default {
       background-color #fff
       max-width 1160px
       position relative
-    
+
     .article
       font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
       max-width 1160px
@@ -1086,7 +1086,7 @@ export default {
         .latest-list
           width 300px
           margin 20px auto 0
-      
+
       .articleAsideFixed
         .fb-social-plugins
           margin-top 20px
@@ -1094,7 +1094,7 @@ export default {
       .article_footer
         text-align center
         clear both
-      
+
       .split-line
         overflow hidden
         clear both
@@ -1107,7 +1107,7 @@ export default {
           width 100%
           margin 30px -100% 30px 0
           border-top 1px solid #c5c5c5
-        
+
     .ad-container.full
       max-width 1160px
       background-color #fff
@@ -1134,8 +1134,8 @@ export default {
     .article-container
       .article
         padding 0 25px
-  
-  @media (min-width 0px) and (max-width 767px)  
+
+  @media (min-width 0px) and (max-width 767px)
     .article-container
       .article-heromedia, .article
          max-width 100%
@@ -1149,7 +1149,7 @@ export default {
       display none !important
 
   @media (min-width 768px) and (max-width 1199px)
-    .article-container      
+    .article-container
       .article
         padding 0
         .article_footer

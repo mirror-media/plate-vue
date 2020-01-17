@@ -33,7 +33,7 @@ export default {
     'click-outside': {
       bind (el, binding, vnode) {
         el.clickOutsideEvent = function (event) {
-          if (!(el == event.target || el.contains(event.target))) {
+          if (!(el === event.target || el.contains(event.target))) {
             vnode.context[binding.expression](event)
           }
         }
@@ -44,7 +44,7 @@ export default {
       }
     }
   },
-  props: [ 'audio' ],
+  props: ['audio'],
   data () {
     return {
       audioCurrent: 0,
@@ -87,7 +87,7 @@ export default {
     },
     handleClickOutside (e) {
       const parent = e.target.parentNode
-      const parentClassList = [ ...parent.classList ]
+      const parentClassList = [...parent.classList]
       if (parentClassList.includes('audioBox__action') && this.isPlaying) {
         const audioEle = this.$refs.audio
         if (audioEle) {
@@ -95,7 +95,7 @@ export default {
           audioEle.pause()
         }
       }
-    } ,
+    },
     changeProgress (e) {
       const audioEle = this.$refs.audio
       if (!this.isLoaded) {

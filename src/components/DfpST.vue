@@ -21,7 +21,7 @@ export default {
     window.removeEventListener('scroll', this.handleScroll)
   },
   methods: {
-    handleScroll: throttle(function() {
+    handleScroll: throttle(function () {
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop
       if (scrollTop > this.scrollTop) {
         this.showDfp = true

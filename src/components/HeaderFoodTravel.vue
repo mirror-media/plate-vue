@@ -49,66 +49,66 @@
 </template>
 
 <script>
-  import {
-    SOCIAL_LINK
-  } from '../constants/index'
-  import { sendGaClickEvent } from '../util/comm'
-  import _ from 'lodash'
-  export default {
-    name: 'header-full',
-    props: [ 'commonData', 'sectionName', 'sections' ],
-    data () {
-      return {
-        blackNav: false,
-        defaultNav: true,
-        opacity: 1,
-        openSearch: false,
-        openSide: false,
-        searchVal: ''
-      }
+import {
+  SOCIAL_LINK
+} from '../constants/index'
+import { sendGaClickEvent } from '../util/comm'
+import _ from 'lodash'
+export default {
+  name: 'header-full',
+  props: ['commonData', 'sectionName', 'sections'],
+  data () {
+    return {
+      blackNav: false,
+      defaultNav: true,
+      opacity: 1,
+      openSearch: false,
+      openSide: false,
+      searchVal: ''
+    }
+  },
+  methods: {
+    closeSearchBar () {
+      this.openSearch = false
+      sendGaClickEvent('header', 'search close')
     },
-    methods: {
-      closeSearchBar () {
-        this.openSearch = false
-        sendGaClickEvent('header', `search close`)
-      },
-      closeSideBar () {
-        this.openSide = false
-        sendGaClickEvent('header', `search close`)
-      },
-      getHeaderDFPHeight () {
-        this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
-      },
-      getSectionLogoUrl () {
-        return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
-      },
-      openSearchBar () {
-        this.openSearch = true
-      },
-      openSideBar () {
-        this.openSide = true
-      },
-      search () {
-        this.$router.push('/search/' + this.searchVal)
-      },
-      sendGaClickEvent
+    closeSideBar () {
+      this.openSide = false
+      sendGaClickEvent('header', 'search close')
     },
-    computed: {
-      menuItem () {
-        return _.get(_.find(_.get(this.sections, [ 'items' ]), {
-          name: this.sectionName
-        }), [ 'categories' ])
-      },
-      sectionLogo () {
-        return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), {
-          name: this.sectionName
-        }), [ 'image' ], null)
-      },
-      socialLink () {
-        return SOCIAL_LINK
-      }
+    getHeaderDFPHeight () {
+      this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
+    },
+    getSectionLogoUrl () {
+      return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/asset/logo.png'
+    },
+    openSearchBar () {
+      this.openSearch = true
+    },
+    openSideBar () {
+      this.openSide = true
+    },
+    search () {
+      this.$router.push('/search/' + this.searchVal)
+    },
+    sendGaClickEvent
+  },
+  computed: {
+    menuItem () {
+      return _.get(_.find(_.get(this.sections, ['items']), {
+        name: this.sectionName
+      }), ['categories'])
+    },
+    sectionLogo () {
+      return _.get(_.find(_.get(this.commonData, ['sections', 'items']), {
+        name: this.sectionName
+      }), ['image'], null)
+    },
+    socialLink () {
+      return SOCIAL_LINK
     }
   }
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -124,11 +124,11 @@
   height 50px
   padding 5px 10px 5px 10px
   background-color white
-  
+
   a
     // display block
     // line-height 1
-  
+
   > div
     font-size 0
 
@@ -152,7 +152,7 @@
         height 40px
     display flex
     justify-content space-between
-    
+
     &--item
       justify-content flex-end
       align-items center
@@ -181,7 +181,7 @@
     a
       margin-left 10px
       margin-right 10px
-      
+
   &--black
     align-items center
     height 55px
@@ -268,7 +268,7 @@
       box-shadow none
     > a
       font-size 0
-      
+
   &-curtain
     position fixed
     top 0

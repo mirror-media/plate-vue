@@ -19,10 +19,10 @@ export default {
     }
   },
   computed: {
-    nextState() {
+    nextState () {
       return this.isPlaying ? 'pause' : 'play'
     },
-    navIcon() {
+    navIcon () {
       return `/assets/mirrormedia/icon/audio_player_icon_${this.nextState}_mirrorvoice.png`
     }
   }

@@ -32,7 +32,7 @@ export default {
     scriptSrc () {
       return `//delivery.vidible.tv/jsonp/pid=${this.playerId}/${OATH_COPMANY_ID}.js`
     }
-  },
+  }
 }
 </script>
 <style lang="stylus" scoped>

@@ -1,4 +1,4 @@
-require("@babel/register")
+require('@babel/register')
 
 const _ = require('lodash')
 const { handlerError } = require('../../api/comm')
@@ -16,17 +16,17 @@ const errorDispatcher = (error, res) => {
       res.status(404).render('404')
       break
     case 500:
-      res.status(500).render('500', { err: error, timestamp: (new Date).toString() })
+      res.status(500).render('500', { err: error, timestamp: (new Date()).toString() })
       break
     default:
       res.status(error.status).send({
         status: error.status,
         text: error.text
-      })  
+      })
   }
 }
 const validateSlugIsEmpty = (req, res, next) => {
-  const slug = _.get(req, [ 'params', 'slug' ], '')
+  const slug = _.get(req, ['params', 'slug'], '')
   if (_.isEmpty(slug)) {
     res.status(404).render('404')
   } else {
@@ -38,7 +38,7 @@ const fetchFromRedis = (req, res, next) => {
   const slug = req.params.slug
   const url = `/getposts?where={"slug":"${slug}","isAudioSiteOnly":false}&clean=content`
   req.fetchURL = url
-  
+
   redisFetching(req.fetchURL, ({ error, data }) => {
     if (!error) {
       console.log('[AMP] Fetch data from Redis success\n[AMP]', req.fetchURL)
@@ -51,7 +51,7 @@ const fetchFromRedis = (req, res, next) => {
       next()
     }
   })
- }
+}
 
 const fetchStory = async (req, res, next) => {
   if (res.redis) {
@@ -66,8 +66,8 @@ const fetchStory = async (req, res, next) => {
         .get(fetchURLAPI)
         .timeout(
           {
-            response: API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-            deadline: API_DEADLINE ? API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+            response: API_TIMEOUT, // Wait 5 seconds for the server to start sending,
+            deadline: API_DEADLINE || 60000 // but allow 1 minute for the file to finish loading.
           }
         )
 
@@ -78,8 +78,8 @@ const fetchStory = async (req, res, next) => {
         //  * If req target is post, have the redis ttl be 7 days.
         //  */
         // const exp_post_query = /^\/getposts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*/
-        // redisWriting(req.fetchURL, response.text, null, exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)        
-        
+        // redisWriting(req.fetchURL, response.text, null, exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)
+
         console.log(`[AMP] Data exist from API: ${fetchURLAPI}`)
         res.resData = data
         next()
@@ -87,13 +87,12 @@ const fetchStory = async (req, res, next) => {
         console.warn(`[AMP] Data not exist from API: ${fetchURLAPI}`)
         res.status(404).render('404')
       }
-
     } catch (error) {
       const errWrapped = handlerError(error)
       errorDispatcher(errWrapped, res)
 
       if (errWrapped.status !== 404) {
-        console.error(`[AMP] Error occurred during fetching data from api.\n`, `[AMP] ${fetchURLAPI}\n`, error)
+        console.error('[AMP] Error occurred during fetching data from api.\n', `[AMP] ${fetchURLAPI}\n`, error)
       } else {
         console.warn(`[AMP] Not Found: ${fetchURLAPI}`)
       }
@@ -103,7 +102,7 @@ const fetchStory = async (req, res, next) => {
 
 const getArticleData = (req, res, next) => {
   const data = res.resData
-  const articleData = _.get(data, [ '_items', 0 ], {})
+  const articleData = _.get(data, ['_items', 0], {})
   res.articleData = articleData
   next()
 }
@@ -112,7 +111,7 @@ const validateArticle = (req, res, next) => {
   if (_.isEmpty(res.articleData)) {
     console.warn(`[AMP] Article data is empty, response 404: ${req.fetchURL}`)
     res.status(404).render('404')
-  } else if (_.get(res.articleData, [ 'publishedDate' ], '') === '') {
+  } else if (_.get(res.articleData, ['publishedDate'], '') === '') {
     console.warn(`[AMP] Article's publishedDate is empty, response 404: ${req.fetchURL}`)
     res.status(404).render('404')
   }
@@ -122,22 +121,22 @@ const validateArticle = (req, res, next) => {
 
 const sendArticleData = (req, res, next) => {
   const createArticleData = articleData => {
-    const _sectionTitle =            _.get(articleData, [ 'sections', 0, 'title' ])
-    const _sectionTitleCategories =  _.get(articleData, [ 'categories', 0, 'title' ], '')
-    const _sectionId =               _.get(articleData, [ 'sections', 0, '_id' ])
-    const _sectionDFPUnits =         _.get(DFP_UNITS, [ _sectionId, 'AMP' ], _.get(DFP_UNITS, [ 'other', 'AMP' ], {}))
-    const _storyPublishedDate =      _.get(articleData, [ 'publishedDate' ], '')
-    const _storyUpdatedAt =          _.get(articleData, [ 'updatedAt' ], '')
-    const _storyTitle =              _.get(articleData, [ 'title' ], '')
-    const _storySlug =               _.get(articleData, [ 'slug' ], '')
-    const _storyHeroVideoSrc =       _.get(articleData, [ 'heroVideo', 'video', 'url' ], '')
-    const _storyHeroCaption =        _.get(articleData, [ 'heroCaption' ], '')
-    const _storyBriefs =             _.get(articleData, [ 'brief', 'apiData' ], [])
-    const _storyBriefsAnnotation =   _.get(_.find(_storyBriefs, [ 'type', 'annotation' ]), [ 'content' ], '')
-    const _storyContent =            _.get(articleData, [ 'content', 'apiData' ], [])
-    const _storyContentsAnnotation = _.get(_.find(_storyContent, [ 'type', 'annotation' ]), [ 'content' ], '')
-    const _storyAdTrace =            _.get(articleData, 'adTrace', '')
-    const _storyRelateds =           _.get(articleData, [ 'relateds' ], [])
+    const _sectionTitle = _.get(articleData, ['sections', 0, 'title'])
+    const _sectionTitleCategories = _.get(articleData, ['categories', 0, 'title'], '')
+    const _sectionId = _.get(articleData, ['sections', 0, '_id'])
+    const _sectionDFPUnits = _.get(DFP_UNITS, [_sectionId, 'AMP'], _.get(DFP_UNITS, ['other', 'AMP'], {}))
+    const _storyPublishedDate = _.get(articleData, ['publishedDate'], '')
+    const _storyUpdatedAt = _.get(articleData, ['updatedAt'], '')
+    const _storyTitle = _.get(articleData, ['title'], '')
+    const _storySlug = _.get(articleData, ['slug'], '')
+    const _storyHeroVideoSrc = _.get(articleData, ['heroVideo', 'video', 'url'], '')
+    const _storyHeroCaption = _.get(articleData, ['heroCaption'], '')
+    const _storyBriefs = _.get(articleData, ['brief', 'apiData'], [])
+    const _storyBriefsAnnotation = _.get(_.find(_storyBriefs, ['type', 'annotation']), ['content'], '')
+    const _storyContent = _.get(articleData, ['content', 'apiData'], [])
+    const _storyContentsAnnotation = _.get(_.find(_storyContent, ['type', 'annotation']), ['content'], '')
+    const _storyAdTrace = _.get(articleData, 'adTrace', '')
+    const _storyRelateds = _.get(articleData, ['relateds'], [])
 
     return {
       storyInfo: {
@@ -175,7 +174,7 @@ const sendArticleData = (req, res, next) => {
       MATCHED_CONTENT_AD_CLIENT,
       MATCHED_CONTENT_AD_SLOT,
       ALEXA_ATRK_ACCT,
-      SITE_DOMAIN,
+      SITE_DOMAIN
     }
   }
 
@@ -184,7 +183,7 @@ const sendArticleData = (req, res, next) => {
   // Let ejs can use lodash methods
   res.locals._ = _
   res.locals.getTweetIdFromEmbeddedCode = getTweetIdFromEmbeddedCode
-  
+
   res.status(200).render('amp/index.amp.ejs', articleData)
 }
 

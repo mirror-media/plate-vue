@@ -48,23 +48,22 @@ export function createRouter () {
       {
         path: '/story/:slug',
         component: Article,
-        children: [ {
+        children: [{
           path: 'index.html',
           component: Article
-        } ]
+        }]
       },
       { path: '/app/:slug', component: ArticleM },
       { path: '/headlinenews', component: Headline }, // 禾多推播用頁面
       { path: '/project-list/:style?', component: Project },
       // { path: '/homeb', component: HomeB },
       { path: '/search/:keyword', component: Search },
-      { path: '/section/videohub', component: Video, alias: [ ...oathCategories, '/video/:slug' ] },
-      { path: '/section/:title', component: List, alias: [ '/category/:title', '/externals/:title' ] },
+      { path: '/section/videohub', component: Video, alias: [...oathCategories, '/video/:slug'] },
+      { path: '/section/:title', component: List, alias: ['/category/:title', '/externals/:title'] },
       { path: '/tag/:tagId', component: List },
       { path: '/topic/:topicId', component: Topic },
       { path: '/404', component: NotFound },
-      { path: '/', component: Home },
+      { path: '/', component: Home }
     ]
   })
 }
-

@@ -22,7 +22,7 @@ export default {
   height 30px
   margin 20px 0
   padding 0 1em
-    
+
   > button
     display: flex
     justify-content: center

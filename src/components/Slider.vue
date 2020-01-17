@@ -23,74 +23,74 @@
   </div>
 </template>
 <script>
-  import uuidv4 from 'uuid/v4'
-  import Vue from 'vue'
+import uuidv4 from 'uuid/v4'
+import Vue from 'vue'
 
-  if (process.browser) {
-    const VueAwesomeSwiper = require('vue-awesome-swiper/dist/ssr')
-    Vue.use(VueAwesomeSwiper)
-  }
+if (process.browser) {
+  const VueAwesomeSwiper = require('vue-awesome-swiper/dist/ssr')
+  Vue.use(VueAwesomeSwiper)
+}
 
-  export default {
-    name: 'Slider',
-    props: {
-      autoplay: {
-        type: [ Boolean, Object ],
-        default () {
-          return {
-            delay: 5000,
-            disableOnInteraction: false
-          }
+export default {
+  name: 'Slider',
+  props: {
+    autoplay: {
+      type: [Boolean, Object],
+      default () {
+        return {
+          delay: 5000,
+          disableOnInteraction: false
         }
-      },
-      initialSlide: {
-        type: Number,
-        default: 0
-      },
-      loop: {
-        type: Boolean,
-        default: true
-      },
-      showSwiperPagination: {
-        type: Boolean,
-        default: true
-      },
-      showSwiperButton: {
-        type: Boolean,
-        default: true
-      },
-      slidesPerView: {
-        type: [ Number, String ],
-        default: 'auto'
-      },
-      speed: {
-        type: Number,
-        default: 1000
       }
     },
-    data () {
-      return {
-        uuid: uuidv4(),
-        swiperOption: {
-          initialSlide: this.initialSlide,
-          loop: this.loop,
-          slidesPerView: this.slidesPerView,
-          watchSlidesVisibility: true,
-          centeredSlides: true,
-          spaceBetween: 0,
-          speed: this.speed,
-          autoplay: this.autoplay,
-          pagination: {
-            el: `.swiper-pagination`,
-          },
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          }
+    initialSlide: {
+      type: Number,
+      default: 0
+    },
+    loop: {
+      type: Boolean,
+      default: true
+    },
+    showSwiperPagination: {
+      type: Boolean,
+      default: true
+    },
+    showSwiperButton: {
+      type: Boolean,
+      default: true
+    },
+    slidesPerView: {
+      type: [Number, String],
+      default: 'auto'
+    },
+    speed: {
+      type: Number,
+      default: 1000
+    }
+  },
+  data () {
+    return {
+      uuid: uuidv4(),
+      swiperOption: {
+        initialSlide: this.initialSlide,
+        loop: this.loop,
+        slidesPerView: this.slidesPerView,
+        watchSlidesVisibility: true,
+        centeredSlides: true,
+        spaceBetween: 0,
+        speed: this.speed,
+        autoplay: this.autoplay,
+        pagination: {
+          el: '.swiper-pagination'
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
         }
       }
     }
   }
+}
 </script>
 
 <style src="swiper/dist/css/swiper.css" scoped></style>

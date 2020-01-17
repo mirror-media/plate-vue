@@ -27,10 +27,10 @@
           <!-- <ArticleImg v-if="p.type === 'image'"
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
-            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>            
-          <div v-else-if="p.type === 'video'" is="article-video" 
+            :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>
+          <div v-else-if="p.type === 'video'" is="article-video"
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
-          <div v-else-if="p.type === 'audio'" is="audio-box" 
+          <div v-else-if="p.type === 'audio'" is="audio-box"
             :audio="getValue(p, [ 'content', 0], {})"></div>
           <div v-else-if="p.type === 'slideshow'" is="app-slider" class="per-slide" :option="sliderOption" :slideId="p.id">
             <template slot-scope="props">
@@ -52,9 +52,9 @@
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div> -->
           <div v-if="p.type === 'unstyled'" v-html="paragraphComposer(p)"></div>
-        </div>        
+        </div>
       </div>
-      
+
       <div class="split-line"></div>
       <article class="content" id="article-body-content" itemprop="articleBody">
         <div v-for="(p, index) in contArr" :key="`${articleData.slug}-content-${index}`" :is="blockWrapper(p, index)">
@@ -62,9 +62,9 @@
             :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
             :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"></ArticleImg>
-          <div v-else-if="p.type === 'video'" is="article-video" 
+          <div v-else-if="p.type === 'video'" is="article-video"
             :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
-          <div v-else-if="p.type === 'audio'" is="audio-box" 
+          <div v-else-if="p.type === 'audio'" is="audio-box"
             :audio="getValue(p, [ 'content', 0], {})"></div>
           <Slider
             v-else-if="p.type === 'slideshow'"
@@ -158,7 +158,7 @@ import moment from 'moment'
 export default {
   components: {
     'audio-box': AudioBox,
-    'newsletter': Newsletter,
+    newsletter: Newsletter,
     Annotation,
     ArticleBodyLayout,
     ArticleVideo,
@@ -171,37 +171,37 @@ export default {
   },
   computed: {
     articleStyle () {
-      return _.get(this.articleData, [ 'style' ], '')
+      return _.get(this.articleData, ['style'], '')
     },
     briefArr () {
-      return _.filter(_.get(this.articleData, [ 'brief', 'apiData' ], []), p => {
+      return _.filter(_.get(this.articleData, ['brief', 'apiData'], []), p => {
         const content = p.content || []
         const reduce = _.reduce(content, (sum, n) => sum + _.isObject(n) ? '(OBJECT)' : n.trim(), '')
         return reduce ? p : undefined
       })
     },
     category () {
-      const sectionId = _.get(this.articleData, [ 'sections', 0, 'id' ], '')
-      const sectionTitle = _.get(this.articleData, [ 'sections', 0, 'title' ], '')
-      const categoryId = _.get(this.articleData, [ 'categories', 0, 'id' ], '')
-      const categoryTitle = _.get(this.articleData, [ 'categories', 0, 'title' ], sectionTitle)
-      const shouldShow = !_.get(this.articleData, [ 'isAdvertised' ], false) ? {} : { display: 'none;' }
-      const style = { borderLeft: `7px solid ${_.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')}` }
-      const color = _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
+      const sectionId = _.get(this.articleData, ['sections', 0, 'id'], '')
+      const sectionTitle = _.get(this.articleData, ['sections', 0, 'title'], '')
+      const categoryId = _.get(this.articleData, ['categories', 0, 'id'], '')
+      const categoryTitle = _.get(this.articleData, ['categories', 0, 'title'], sectionTitle)
+      const shouldShow = !_.get(this.articleData, ['isAdvertised'], false) ? {} : { display: 'none;' }
+      const style = { borderLeft: `7px solid ${_.get(SECTION_MAP, [sectionId, 'bgcolor'], '#bcbcbc')}` }
+      const color = _.get(SECTION_MAP, [sectionId, 'bgcolor'], '#bcbcbc')
       return { categoryId, categoryTitle, style: Object.assign(style, shouldShow), color }
     },
     contArr () {
-      return _.get(this.articleData, [ 'content', 'apiData' ], [])
+      return _.get(this.articleData, ['content', 'apiData'], [])
     },
     credit () {
       const { cameraMan = [], designers = [], engineers = [], extendByline = '', photographers = [], writers = [] } = this.articleData
-      const creditWriterStr = (writers.length > 0) ? '文｜' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-      const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"blue\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditWriterStr = (writers.length > 0) ? '文｜' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="blue" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="blue" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="blue" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="blue" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="blue" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
       const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
-      return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
+      return [creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
     },
     date () {
       const { publishedDate = '' } = this.articleData
@@ -251,8 +251,8 @@ export default {
       let count = 0
       let index = 0
       let lastUnstyled = 0
-      while (count < 2 && index < content[ 'apiData' ].length) {
-        if (content[ 'apiData' ][ index ][ 'type' ] === 'unstyled' && (lastUnstyled + 4) < index) {
+      while (count < 2 && index < content.apiData.length) {
+        if (content.apiData[index].type === 'unstyled' && (lastUnstyled + 4) < index) {
           count++
           lastUnstyled = index
           records.push(index)
@@ -285,7 +285,7 @@ export default {
     },
     shouldShowADAR2 () {
       return _.get(this.nonEmptyParagraphsIndexs, 4, -1) !== -1
-    },
+    }
   },
   data () {
     return {
@@ -299,8 +299,8 @@ export default {
         return 'div'
       } else {
         switch (index) {
-          case this.firstTwoUnstyledParagraph[ 0 ]:
-          case this.firstTwoUnstyledParagraph[ 1 ]:
+          case this.firstTwoUnstyledParagraph[0]:
+          case this.firstTwoUnstyledParagraph[1]:
           case this.nonEmptyParagraphsIndexs[0]:
           case this.nonEmptyParagraphsIndexs[4]:
             return 'div'
@@ -317,22 +317,22 @@ export default {
     paragraphComposer (item) {
       switch (item.type) {
         case 'blockquote':
-          return `<blockquote class="quote"><i class="quoteIcon"></i><div class="quote-content">${_.get(item.content, [ 0 ], '')}</div></blockquote>`
+          return `<blockquote class="quote"><i class="quoteIcon"></i><div class="quote-content">${_.get(item.content, [0], '')}</div></blockquote>`
         case 'code-block':
-          return `<code>${_.get(item.content, [ 0 ], '')}</code>`
+          return `<code>${_.get(item.content, [0], '')}</code>`
         case 'embeddedcode':
-          return `<div class=\"embedded\ ${_.get(item.content, [ 0, 'alignment' ], '')}">${_.get(item.content, [ 0, 'embeddedCode' ], '')}<div class=\"caption\">${_.get(item.content, [ 0, 'caption' ], '')}</div></div>`
+          return `<div class="embedded ${_.get(item.content, [0, 'alignment'], '')}">${_.get(item.content, [0, 'embeddedCode'], '')}<div class="caption">${_.get(item.content, [0, 'caption'], '')}</div></div>`
         case 'header-two':
           return `<h2>${item.content.toString()}</h2>`
         case 'infobox':
-          return `<div class="info-box-container ${_.get(item, [ 'alignment' ], '')}">
+          return `<div class="info-box-container ${_.get(item, ['alignment'], '')}">
                     <span class="info-box-icon"></span>
                     <div class="info-box">
-                      <div class="info-box-title">${_.get(item.content, [ 0, 'title' ], '')}</div>
-                      <div class="info-box-body">${_.get(item.content, [ 0, 'body' ], '')}</div>
+                      <div class="info-box-title">${_.get(item.content, [0, 'title'], '')}</div>
+                      <div class="info-box-body">${_.get(item.content, [0, 'body'], '')}</div>
                     </div>
                   </div>`
-        case 'ordered-list-item':
+        case 'ordered-list-item': {
           const _liStrOrdered = item.content.map((i) => {
             if (typeof i !== 'object') {
               return `<li>${i}</li>`
@@ -340,26 +340,28 @@ export default {
               return i.map((j) => (`<li>${j}</li>`)).join('')
             }
           }).join('')
-          return `<ol class="${_.get(item, [ 'alignment' ], '')} ordered-list-item">${_liStrOrdered}</ol>`
-        case 'quoteby':
-          const quoteBy = _.get(item.content, [ 0, 'quoteBy' ], '')
+          return `<ol class="${_.get(item, ['alignment'], '')} ordered-list-item">${_liStrOrdered}</ol>`
+        }
+        case 'quoteby': {
+          const quoteBy = _.get(item.content, [0, 'quoteBy'], '')
           return `<blockquote class="blockquote">
                     <div class="content">
-                      <span class="triangle"></span><div class="quote-body">${_.get(item.content, [ 0, 'quote' ], '').replace(/\n/g, '<br>')}</div>
-                      ${(quoteBy.length > 0) ? `<div class="quote-by">${quoteBy}</div>` : ``}
+                      <span class="triangle"></span><div class="quote-body">${_.get(item.content, [0, 'quote'], '').replace(/\n/g, '<br>')}</div>
+                      ${(quoteBy.length > 0) ? `<div class="quote-by">${quoteBy}</div>` : ''}
                     </div>
                   </blockquote>`
+        }
         case 'slideshow':
-          return `<div class=\"slideshowImg\">
+          return `<div class="slideshowImg">
                     <div>
-                      <img alt="${_.get(item.content, [ 0, 'description' ], '')}" src="${_.get(item.content, [ 0, 'url' ], '')}" width=\"\"
-                          srcset=\"${_.get(item.content, [ 0, 'mobile', 'url' ], '')} 800w,
-                                        ${_.get(item.content, [ 0, 'tablet', 'url' ], '')} 1200w,
-                                        ${_.get(item.content, [ 0, 'desktop', 'url' ], '')} 2000w\" />
+                      <img alt="${_.get(item.content, [0, 'description'], '')}" src="${_.get(item.content, [0, 'url'], '')}" width=""
+                          srcset="${_.get(item.content, [0, 'mobile', 'url'], '')} 800w,
+                                        ${_.get(item.content, [0, 'tablet', 'url'], '')} 1200w,
+                                        ${_.get(item.content, [0, 'desktop', 'url'], '')} 2000w" />
                     </div>
-                    <div class=\"img-caption\">${_.get(item.content, [ 0, 'description' ], '')}</div>
+                    <div class="img-caption">${_.get(item.content, [0, 'description'], '')}</div>
                   </div>`
-        case 'unordered-list-item':
+        case 'unordered-list-item': {
           const _liStrUnordered = item.content.map((i) => {
             if (typeof i !== 'object') {
               return `<li>${i}</li>`
@@ -367,27 +369,27 @@ export default {
               return i.map((j) => (`<li>${j}</li>`)).join('')
             }
           }).join('')
-          return `<ul class="${_.get(item, [ 'alignment' ], '')} unordered-list-item">${_liStrUnordered}</ul>`
+          return `<ul class="${_.get(item, ['alignment'], '')} unordered-list-item">${_liStrUnordered}</ul>`
+        }
         case 'unstyled':
           return (item.content.toString().length > 0) ? `<p>${item.content.toString()}</p>` : ''
 
         case 'youtube':
-          return `<div class=\"youtube\">
-                    <div class=\"youtube-container\">
-                      <iframe width=\"560\" alt=\"\" height=\"315\" src=\"https://www.youtube.com/embed/${_.get(item.content, [ 0, 'youtubeId' ], '')}\" frameborder=\"0\" allowfullscreen> </iframe>
+          return `<div class="youtube">
+                    <div class="youtube-container">
+                      <iframe width="560" alt="" height="315" src="https://www.youtube.com/embed/${_.get(item.content, [0, 'youtubeId'], '')}" frameborder="0" allowfullscreen> </iframe>
                     </div>
-                    <div class=\"caption\">${_.get(item.content, [ 0, 'description' ], '')}</div>
+                    <div class="caption">${_.get(item.content, [0, 'description'], '')}</div>
                   </div>`
         default:
-          return
       }
-    }, 
-    sendGaClickEvent 
+    },
+    sendGaClickEvent
   },
   mounted () {
-    /*global twttr*/
+    /* global twttr */
     window.addEventListener('load', () => {
-      window.twttr && twttr.widgets.load() 
+      window.twttr && twttr.widgets.load()
     })
   },
   name: 'article-body',

@@ -1,4 +1,4 @@
-require("@babel/register")
+require('@babel/register')
 
 const moment = require('moment')
 const { get } = require('lodash')
@@ -15,7 +15,7 @@ const getDate = (date, offsetHour = 0) => {
     }
   } catch (e) {
     console.warn(`[AMP] Invalid time value encounter in getDate: ${date}`)
-    console.warn(`[AMP] Return current time`)
+    console.warn('[AMP] Return current time')
     return {
       dateFormatted: moment().add(offsetHour, 'hours').format('YYYY.MM.DD HH:mm'),
       dateISO: new Date().toISOString()
@@ -24,17 +24,17 @@ const getDate = (date, offsetHour = 0) => {
 }
 
 const getSectionColorModifier = (sectionId) => {
-  return get(SECTION_MAP, [ sectionId, 'sectionName' ], '')
+  return get(SECTION_MAP, [sectionId, 'sectionName'], '')
 }
 
 const getCredit = ({ cameraMan = [], designers = [], engineers = [], extendByline = '', photographers = [], writers = [] }) => {
-  const creditWriterStr = (writers.length > 0) ? '文/' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href=\"/author/${o._id}\">${o.name}</a>`)).join('&nbsp;') : ''
-  const creditPhotoStr = (photographers.length > 0) ? '攝影/' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href=\"/author/${o._id}\">${o.name}</a>`)).join('&nbsp;') : ''
-  const creditDesignStr = (designers.length > 0) ? '設計/' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href=\"/author/${o._id}\">${o.name}</a>`)).join('&nbsp;') : ''
-  const creditEnginStr = (engineers.length > 0) ? '工程/' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href=\"/author/${o._id}\">${o.name}</a>`)).join('&nbsp;') : ''
-  const creditCamStr = (cameraMan.length > 0) ? '影音/' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href=\"/author/${o._id}\">${o.name}</a>`)).join('&nbsp;') : ''
+  const creditWriterStr = (writers.length > 0) ? '文/' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
+  const creditPhotoStr = (photographers.length > 0) ? '攝影/' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
+  const creditDesignStr = (designers.length > 0) ? '設計/' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
+  const creditEnginStr = (engineers.length > 0) ? '工程/' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
+  const creditCamStr = (cameraMan.length > 0) ? '影音/' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
   const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
-  return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
+  return [creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
 }
 
 const getStoryHeroImageSrc = (heroImage) => {
@@ -42,7 +42,7 @@ const getStoryHeroImageSrc = (heroImage) => {
     desktop: get(heroImage, 'image.resizedTargets.desktop.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
     tablet: get(heroImage, 'image.resizedTargets.tablet.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
     mobile: get(heroImage, 'image.resizedTargets.mobile.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
-    tiny: get(heroImage, 'image.resizedTargets.tiny.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`)),
+    tiny: get(heroImage, 'image.resizedTargets.tiny.url', get(heroImage, 'image.url', `${SERVER_PROTOCOL}://${SERVER_HOST}/assets/mirrormedia/notImage.png`))
   }
   return dimensions
 }
@@ -66,7 +66,7 @@ const composeAnnotation = (annotationStr) => {
 
   let paragraph = annotationStr.toString()
 
-  if (get(annotationContentObj, [ 'text' ])) {
+  if (get(annotationContentObj, ['text'])) {
     paragraph = paragraph.replace(`--><!--${annotationContentObj.text}-->`, '')
   }
 
@@ -74,7 +74,7 @@ const composeAnnotation = (annotationStr) => {
     annotationPart1: annotationStr.toString().substring(0, annotationContentStart),
     annotationPart2: annotationContentObj.text,
     annotationPart3: hasAnnotation(paragraph.substring(annotationContentEnd)) ? composeAnnotation(paragraph.substring(annotationContentEnd)) : paragraph.substring(annotationContentEnd),
-    annotationText: get(annotationContentObj, [ 'pureAnnotationText' ], '')
+    annotationText: get(annotationContentObj, ['pureAnnotationText'], '')
   }
 }
 
@@ -85,7 +85,7 @@ const firstTwoUnstyledParagraph = (apiData) => {
   let index = 0
   let lastUnstyled = 0
   while (count < 2 && index < apiData.length) {
-    if (apiData[ index ][ 'type' ] === 'unstyled' && (lastUnstyled + 4) < index) {
+    if (apiData[index].type === 'unstyled' && (lastUnstyled + 4) < index) {
       count++
       lastUnstyled = index
       records.push(index)
@@ -101,7 +101,7 @@ const getTweetIdFromURL = (url) => {
   if (url.includes('?')) {
     url = url.split('?')[0]
   }
-  
+
   url = url.replace('https://', '').split('/')
   return url[url.length - 1]
 }
@@ -111,14 +111,14 @@ const getTweetIdFromEmbeddedCode = (code) => {
 
   const regex = /href=["']([^"']*)["']/g
   let m
-  let matchs = []
-  
+  const matchs = []
+
   while ((m = regex.exec(code)) !== null) {
     // This is necessary to avoid infinite loops with zero-width matches
     if (m.index === regex.lastIndex) {
       regex.lastIndex++
     }
-    
+
     // The result can be accessed through the `m`-variable.
     m.forEach((match, groupIndex) => {
       if (groupIndex === 1) {

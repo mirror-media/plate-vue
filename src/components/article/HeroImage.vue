@@ -13,49 +13,49 @@
   </div>
 </template>
 <script>
-  import { get } from 'lodash'
-  const debug = require('debug')('CLIENT:HeroImage')
-  
-  const constructImages = (heroImage) => {
-    return {
-      desktop: get(heroImage, 'image.resizedTargets.desktop.url', get(heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
-      tablet: get(heroImage, 'image.resizedTargets.tablet.url', get(heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
-      mobile: get(heroImage, 'image.resizedTargets.mobile.url', get(heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
-      tiny: get(heroImage, 'image.resizedTargets.tiny.url', get(heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
-    } 
-  }
+import { get } from 'lodash'
+const debug = require('debug')('CLIENT:HeroImage')
 
-  export default {
-    name: 'HeroImage',
-    props: [ 'heroCaption', 'heroImage', ],
-    data () {
-      return {
-        images: {},
-        loading: false
-      }
-    },
-    methods: {
-      get,
-    },
-    watch: {
-      '$route.fullPath' () {
-        this.loading = true
-      },
-      heroImage (value) {
-        debug('Mutation detected: heroImage', value)
-        this.images = constructImages(value)
-      },
-      images () {
-        if (this.loading) {
-          const heroImage = document.querySelector('#hero-image')
-          heroImage.onload = () => { this.loading = false }
-        }
-      }
-    },
-    created () {
-      this.images = constructImages(this.heroImage)
-    },
+const constructImages = (heroImage) => {
+  return {
+    desktop: get(heroImage, 'image.resizedTargets.desktop.url', get(heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
+    tablet: get(heroImage, 'image.resizedTargets.tablet.url', get(heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
+    mobile: get(heroImage, 'image.resizedTargets.mobile.url', get(heroImage, 'image.url', '/assets/mirrormedia/notImage.png')),
+    tiny: get(heroImage, 'image.resizedTargets.tiny.url', get(heroImage, 'image.url', '/assets/mirrormedia/notImage.png'))
   }
+}
+
+export default {
+  name: 'HeroImage',
+  props: ['heroCaption', 'heroImage'],
+  data () {
+    return {
+      images: {},
+      loading: false
+    }
+  },
+  methods: {
+    get
+  },
+  watch: {
+    '$route.fullPath' () {
+      this.loading = true
+    },
+    heroImage (value) {
+      debug('Mutation detected: heroImage', value)
+      this.images = constructImages(value)
+    },
+    images () {
+      if (this.loading) {
+        const heroImage = document.querySelector('#hero-image')
+        heroImage.onload = () => { this.loading = false }
+      }
+    }
+  },
+  created () {
+    this.images = constructImages(this.heroImage)
+  }
+}
 </script>
 <style lang="stylus" scoped>
   .hero-image
@@ -102,7 +102,7 @@
 @media (min-width: 1200px)
   .hero-image
     figure
-      width 100% 
+      width 100%
       height auto
       overflow hidden
     figcaption

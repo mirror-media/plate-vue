@@ -21,7 +21,7 @@
           <a :href="SOCIAL_LINK.AD" target="_blank" @click="sendGaClickEvent('header', 'more ad')" v-text="$t('HEADER.AD')"></a>
           <a href="/category/campaign" target="_blank" @click="sendGaClickEvent('header', 'more campaign')" v-text="$t('HEADER.CAMPAIGN')"></a>
           <a :href="SOCIAL_LINK.DOWNLOADAPP" target="_blank" @click="sendGaClickEvent('header', 'more download')" v-text="$t('HEADER.DOWNLOADAPP')"></a>
-        </div>     
+        </div>
       </div>
       <SearchNav
         :sections="sections"
@@ -77,7 +77,7 @@ import ShareLight from '../components/share/ShareLight.vue'
 import SearchNav from '../components/searchNav/SearchNav.vue'
 import SearchNavMobile from '../components/searchNav/mobile/SearchNav.vue'
 import { SECTION_MAP, SITE_TITLE, SOCIAL_LINK } from '../constants/index'
-import { get, } from 'lodash'
+import { get } from 'lodash'
 import { sendGaClickEvent } from '../util/comm'
 
 export default {
@@ -96,7 +96,7 @@ export default {
     'click-outside': {
       bind (el, binding, vnode) {
         el.clickOutsideEvent = function (event) {
-          if (!(el == event.target || el.contains(event.target))) {
+          if (!(el === event.target || el.contains(event.target))) {
             vnode.context[binding.expression](event)
           }
         }
@@ -142,9 +142,9 @@ export default {
       return this.$store.state.viewport.width < 1200
     },
     logoFromEvent () {
-      if (new Date() >= new Date(get(this.$store, 'state.eventLogo.items.0.startDate'))
-        && new Date() < new Date(get(this.$store, 'state.eventLogo.items.0.endDate'))) {
-          return get(this.$store, 'state.eventLogo.items.0')
+      if (new Date() >= new Date(get(this.$store, 'state.eventLogo.items.0.startDate')) &&
+        new Date() < new Date(get(this.$store, 'state.eventLogo.items.0.endDate'))) {
+        return get(this.$store, 'state.eventLogo.items.0')
       }
       return undefined
     },
@@ -183,7 +183,7 @@ export default {
   methods: {
     get,
     getColor (section) {
-      return get(SECTION_MAP, [ section.id, 'bgcolor' ]) 
+      return get(SECTION_MAP, [section.id, 'bgcolor'])
     },
     handleScroll () {
       const top = window.pageYOffset || document.documentElement.scrollTop
@@ -447,7 +447,7 @@ export default {
           object-position center center
     &__section-layer, &__sidebar, &__search-bar
       display none
-  
+
   .search-nav
     display flex
     order 1

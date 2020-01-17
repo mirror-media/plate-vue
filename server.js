@@ -1,5 +1,5 @@
 const _ = require('lodash')
-const Cookies = require( "cookies" )
+const Cookies = require('cookies')
 const LRU = require('lru-cache')
 const compression = require('compression')
 const express = require('express')
@@ -9,14 +9,14 @@ const http = require('http')
 const maxMemUsageLimit = 1000 * 1024 * 1024
 const memwatch = require('node-memwatch')
 const moment = require('moment')
-const microcache = require('route-cache')
+// const microcache = require('route-cache')
 const path = require('path')
 const requestIp = require('request-ip')
 const resolve = file => path.resolve(__dirname, file)
-const uuidv4 = require('uuid/v4')
+// const uuidv4 = require('uuid/v4')
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
-const { fetchFromRedis, redisWriting } = require('./api/middle/ioredisHandler') 
+const { fetchFromRedis, redisWriting } = require('./api/middle/ioredisHandler')
 
 const formatMem = (bytes) => {
   return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
@@ -104,15 +104,14 @@ app.use('/public', (req, res) => {
 app.use('/manifest.json', serve('./manifest.json', true), staticNotFound)
 app.use('/service-worker.js', serve('./dist/service-worker.js'), staticNotFound)
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   let err = null
   try {
     decodeURIComponent(req.path)
-  }
-  catch(e) {
+  } catch (e) {
     err = e
   }
-  if (err){
+  if (err) {
     console.error('Bad request:', req.path)
     return res.status(400).send('400 | Bad Request')
   }
@@ -126,21 +125,21 @@ app.use(function(req, res, next) {
 // 1-second microcache.
 // https://www.nginx.com/blog/benefits-of-microcaching-nginx/
 // app.use(microcache.cacheSeconds(1, req => useMicroCache && req.originalUrl))
- 
-const exp_preview_mode = /\b(preview=true)\b/
-const exp_dev = /^(dev|localhost)\b/
+
+const expPreviewMode = /\b(preview=true)\b/
+const expDev = /^(dev|localhost)\b/
 function render (req, res, next) {
   const s = Date.now()
   let isPageNotFound = false
-  let isErrorOccurred = false  
+  let isErrorOccurred = false
 
   const checkoutMem = () => {
     const mem = process.memoryUsage()
-    //console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
+    // console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
     if (mem.heapUsed > maxMemUsageLimit) {
       for (let i = 0; i < 10; i += 1) {
         console.error('MEMORY WAS RUNNING OUT')
-      } 
+      }
       console.error(`KILLING PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
       process.exit(1)
     }
@@ -150,10 +149,10 @@ function render (req, res, next) {
       } catch (e) {
         // process.exit(1)
       }
-    }    
+    }
   }
-  const isPreview = exp_preview_mode.test(req.url)
-  const rendererEjsCB = function (err, html) { 
+  const isPreview = expPreviewMode.test(req.url)
+  const rendererEjsCB = function (err, html) {
     if (!err) {
       res.status(rendererEjsCB.code).send(html)
 
@@ -161,7 +160,6 @@ function render (req, res, next) {
        * Save every single page which's processing with problem.
        */
       isProd && !isPreview && redisWriting(req.hostname + req.url, rendererEjsCB.code || 500, null, 60)
-      
     } else {
       console.error('ERROR OCCURRED WHEN RENDERING EJS. \n', err)
       res.status(500).send('Internal Server Error')
@@ -175,11 +173,10 @@ function render (req, res, next) {
     const isValidReq = _.filter(VALID_PREVIEW_IP_ADD, i => (req.clientIp.indexOf(i) > -1)).length > 0
     console.info('Is there any preview permission limit?', _.get(VALID_PREVIEW_IP_ADD, 'length', 0) > 0)
     console.info('Is allowed?', isValidReq)
-    res.header("Cache-Control", "no-cache, no-store, must-revalidate")
-    res.header("Pragma", "no-cache")
-    res.header("Expires", "0")
+    res.header('Cache-Control', 'no-cache, no-store, must-revalidate')
+    res.header('Pragma', 'no-cache')
+    res.header('Expires', '0')
     if (!isValidReq) {
-
       rendererEjsCB.code = 404
       res.render('404', rendererEjsCB)
       // response 404 instead of 403 to avoid this page be indexed by search engin.
@@ -192,7 +189,7 @@ function render (req, res, next) {
   res.setHeader('Content-Type', 'text/html')
   res.setHeader('Server', serverInfo)
 
-  const cookies = new Cookies( req, res, {} )
+  const cookies = new Cookies(req, res, {})
   const mmid = cookies.get('mmid')
   if (!mmid) {
     // cookies.set('mmid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
@@ -200,21 +197,19 @@ function render (req, res, next) {
   const handleError = err => {
     if (err.url) {
       res.redirect(err.url)
-    } else if (err && err.code == 404) {
+    } else if (err && Number(err.code) === 404) {
       isPageNotFound = true
       rendererEjsCB.code = 404
       res.render('404', rendererEjsCB)
 
-      console.error(`##########REQUEST URL(404)############\n`,
-        `ERROR OCCURRED WHEN RUNNING renderToString()\n`,
+      console.error('##########REQUEST URL(404)############\n',
+        'ERROR OCCURRED WHEN RUNNING renderToString()\n',
         `REQUEST URL: ${req.url}\n`,
         `REQUEST IP: ${req.clientIp}\n`,
         `REFERER: ${req.headers.referer}\n`,
         err, '\n######################')
-
-      return
     } else {
-      console.error(`ERROR OCCURRED WHEN RUNNING renderToString()\n`,
+      console.error('ERROR OCCURRED WHEN RUNNING renderToString()\n',
         `REQUEST URL: ${req.url}\n`,
         `REQUEST IP: ${req.clientIp}\n`,
         `REFERER: ${req.headers.referer}\n`,
@@ -223,31 +218,28 @@ function render (req, res, next) {
       isErrorOccurred = true
       err.status = err.status || 500
 
-      if ('403' == err.status) {
+      if (Number(err.status) === 403) {
         res.status(403).send('403 | Forbidden')
-        return
-      } else if ('404' == err.status) {
+      } else if (Number(err.status) === 404) {
         rendererEjsCB.code = 404
         res.render('404', rendererEjsCB)
-        return
       } else {
         rendererEjsCB.code = 500
-        res.render('500', { err, timestamp: (new Date).toString() }, rendererEjsCB)
-        return
+        res.render('500', { err, timestamp: (new Date()).toString() }, rendererEjsCB)
       }
-    } 
+    }
   }
-  
+
   const context = {
     title: '',
-    meta: '',    
+    meta: '',
     url: req.url,
     link: '',
     adTrace: '',
     custom: '',
-    resStack: '',
+    resStack: ''
   }
-  
+
   res.on('finish', function () {
     checkoutMem()
   })
@@ -270,11 +262,11 @@ app.use('/story/amp', require('./amp/service/api'))
 app.use('/api', require('./api/index'), () => { /** END */ })
 app.get('*', (req, res, next) => {
   req.s = Date.now()
-  console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), exp_dev.test(_.get(req, 'headers.host', '')))
-  let urlRegex
-  if (req.url.match(/\/story\//) && !req.url.match(exp_preview_mode)) {
+  console.log('CURRENT HOST:', _.get(req, 'headers.host', ''), expDev.test(_.get(req, 'headers.host', '')))
+  const urlRegex = req.url.match(/(\/story\/[\w\d-_]*)/)
+  if (req.url.match(/\/story\//) && !req.url.match(expPreviewMode)) {
     req.url = req.url.split('?')[0]
-	if (urlRegex = req.url.match(/(\/story\/[\w\d-_]*)/)) {
+    if (urlRegex) {
       req.url = urlRegex[1]
     }
   }
@@ -285,10 +277,10 @@ app.get('*', (req, res, next) => {
     if (res.redis.length > 3) {
       res.status(200).send(res.redis)
     } else {
-      if (res.redis != '500') {
+      if (res.redis !== '500') {
         res.status(res.redis).render(res.redis)
       } else {
-        res.status(res.redis).render(res.redis, { err: '', timestamp: (new Date).toString() })
+        res.status(res.redis).render(res.redis, { err: '', timestamp: (new Date()).toString() })
       }
     }
   } else {
@@ -300,7 +292,7 @@ app.get('*', (req, res, next) => {
 })
 
 process.on('unhandledRejection', reason => {
-  console.error(`\n[Unhandled Rejection]`)
+  console.error('\n[Unhandled Rejection]')
   console.error(`${reason}\n`)
 })
 
@@ -314,34 +306,34 @@ module.exports = {
   }
 }
 
-memwatch.on('leak', function(info) {
+memwatch.on('leak', function (info) {
   const growth = formatMem(info.growth)
-  const mem = process.memoryUsage()
-  console.error('GETING MEMORY LEAK:', [ 'growth ' + growth, 'reason ' + info.reason ].join(', '))
-  //console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
+  // const mem = process.memoryUsage()
+  console.error('GETING MEMORY LEAK:', ['growth ' + growth, 'reason ' + info.reason].join(', '))
+  // console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
 })
-memwatch.on('stats', function(stats) {
+memwatch.on('stats', function (stats) {
   const estBase = formatMem(stats.estimated_base)
   const currBase = formatMem(stats.current_base)
   const min = formatMem(stats.min)
   const max = formatMem(stats.max)
 
-  console.info(`=======================================\n`,
+  console.info('=======================================\n',
     `GC STATs(${moment().format('YYYY-MM-DD HH:mm:SS')}):\n`, [
-    'num_full_gc ' + stats.num_full_gc,
-    'num_inc_gc ' + stats.num_inc_gc,
-    'heap_compactions ' + stats.heap_compactions,
-    'usage_trend ' + stats.usage_trend,
-    'estimated_base ' + estBase,
-    'current_base ' + currBase,
-    'min ' + min,
-    'max ' + max
-  ].join(', '), `\n=======================================`)
+      'num_full_gc ' + stats.num_full_gc,
+      'num_inc_gc ' + stats.num_inc_gc,
+      'heap_compactions ' + stats.heap_compactions,
+      'usage_trend ' + stats.usage_trend,
+      'estimated_base ' + estBase,
+      'current_base ' + currBase,
+      'min ' + min,
+      'max ' + max
+    ].join(', '), '\n=======================================')
 
   if (stats.current_base > maxMemUsageLimit) {
-    //for (let i = 0; i < 10; i += 1) {
-      console.error('MEMORY WAS RUNNING OUT')
-    //} 
+    // for (let i = 0; i < 10; i += 1) {
+    console.error('MEMORY WAS RUNNING OUT')
+    // }
     /**
      * kill this process gracefully
      */

@@ -15,7 +15,7 @@ import { getValue } from '../../util/comm'
 import _ from 'lodash'
 
 export default {
-  props: [ 'currentNodeContents', 'initialActivity', 'viewport' ],
+  props: ['currentNodeContents', 'initialActivity', 'viewport'],
   data () {
     return {
       activity: this.initialActivity
@@ -32,18 +32,18 @@ export default {
   methods: {
     getValue,
     getImage (item) {
-      const contentStyle = _.get(item, [ 'type' ])
+      const contentStyle = _.get(item, ['type'])
       if (this.windowViewport < 600) {
         if (contentStyle === 'video') {
-          return _.get(item, [ 'content', '0', 'coverPhoto', 'mobile', 'url' ])
+          return _.get(item, ['content', '0', 'coverPhoto', 'mobile', 'url'])
         } else {
-          return _.get(item, [ 'content', '0', 'mobile', 'url' ])
+          return _.get(item, ['content', '0', 'mobile', 'url'])
         }
       } else {
         if (contentStyle === 'video') {
-          return _.get(item, [ 'content', '0', 'coverPhoto', 'desktop', 'url' ])
+          return _.get(item, ['content', '0', 'coverPhoto', 'desktop', 'url'])
         } else {
-          return _.get(item, [ 'content', '0', 'desktop', 'url' ])
+          return _.get(item, ['content', '0', 'desktop', 'url'])
         }
       }
     },

@@ -45,7 +45,7 @@ export default {
     sound: {
       type: Object,
       required: true,
-      default() {
+      default () {
         return {
           title: '',
           src: ''
@@ -54,7 +54,7 @@ export default {
     },
     list: {
       type: Array,
-      default() {
+      default () {
         return []
       }
     },
@@ -63,7 +63,7 @@ export default {
     volume: {
       type: Number,
       default: 1,
-      validator(value) {
+      validator (value) {
         return value >= 0 && value <= 1
       }
     },
@@ -80,7 +80,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       internalSound: this.sound,
       internalVolume: this.volume,
@@ -95,17 +95,17 @@ export default {
       playStatPlayedTime: 0
     }
   },
-computed: {
+  computed: {
     // alias of audio element
-    audio() {
+    audio () {
       return this.$refs.audio
     },
 
     playIndex: {
-      get() {
+      get () {
         return findIndex(this.list, o => o.src === this.currentSound.src)
       },
-      set(val) {
+      set (val) {
         if (val >= 0 && val <= this.list.length - 1) {
           this.currentSound = this.list[val]
         }
@@ -115,37 +115,37 @@ computed: {
     // observers
     // inform parent component in setters
     currentSound: {
-      get() {
+      get () {
         return this.internalSound
       },
-      set(val) {
+      set (val) {
         this.$emit('update:sound', val)
         this.internalSound = val
       }
     },
     currentVolume: {
-      get() {
+      get () {
         return this.internalVolume
       },
-      set(val) {
+      set (val) {
         this.$emit('update:volume', val)
         this.internalVolume = val
       }
     },
     currentMuted: {
-      get() {
+      get () {
         return this.internalMuted
       },
-      set(val) {
+      set (val) {
         this.$emit('update:muted', val)
         this.internalMuted = val
       }
     },
     currentPlaybackRate: {
-      get() {
+      get () {
         return this.internalPlaybackRate
       },
-      set(val) {
+      set (val) {
         this.$emit('update:playbackRate', val)
         this.internalPlaybackRate = val
       }
@@ -153,54 +153,54 @@ computed: {
   },
   watch: {
     // observe mutable properties
-    currentSound() {
+    currentSound () {
       this.audio.src = this.currentSound.src
       // if (this.currentSound.src && this.currentSound.src !== '') {
       //   // this.play()
       //   this.thenPlay()
       // }
     },
-    currentVolume() {
+    currentVolume () {
       this.audio.volume = this.currentVolume
     },
-    currentMuted() {
+    currentMuted () {
       this.audio.muted = this.currentMuted
     },
-    currentPlaybackRate() {
+    currentPlaybackRate () {
       this.audio.playbackRate = this.currentPlaybackRate
     },
 
     // sync muted, volume if parent component mutate the props
-    sound() {
+    sound () {
       this.internalSound = this.sound
     },
-    volume() {
+    volume () {
       this.internalVolume = this.volume
     },
-    muted() {
+    muted () {
       this.internalMuted = this.muted
     },
-    playbackRate() {
+    playbackRate () {
       this.internalPlaybackRate = this.playbackRate
     },
 
     // coordinate volume and muted
-    internalVolume() {
+    internalVolume () {
       this.internalMuted = this.internalVolume <= 0
     },
-    internalMuted() {
+    internalMuted () {
       this.internalVolume = this.internalMuted ? 0 : this.volume
     },
 
-    shouldPlaying() {
+    shouldPlaying () {
       this.shouldPlaying ? this.play() : this.pause()
     }
   },
-  mounted() {
+  mounted () {
     this.initAudio()
   },
   methods: {
-    initAudio() {
+    initAudio () {
       // set exposed properties as their init value which is passing from props
       this.audio.volume = this.volume
       this.audio.muted = this.muted
@@ -215,12 +215,12 @@ computed: {
         this.audio.src = this.currentSound.src
       }
     },
-    thenPlay() {
+    thenPlay () {
       this.$nextTick(() => {
         this.play()
       })
     },
-    play() {
+    play () {
       const promise = this.audio.play()
 
       if (promise) {
@@ -229,7 +229,7 @@ computed: {
         })
       }
     },
-    pause() {
+    pause () {
       const promise = this.audio.pause()
 
       if (promise) {
@@ -238,7 +238,7 @@ computed: {
         })
       }
     },
-    seek(percentage) {
+    seek (percentage) {
       this.audio.currentTime = this.audio.duration * percentage
     }
   }

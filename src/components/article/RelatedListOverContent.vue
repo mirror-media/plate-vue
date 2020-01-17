@@ -31,7 +31,7 @@ import { sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'RelatedListOverContent',
-  props: [ 'articles', 'relatedCategory' ],
+  props: ['articles', 'relatedCategory'],
   data () {
     return {
       showContent: false,

@@ -27,7 +27,7 @@
           <img src="/assets/mirrormedia/refresh.png" alt="refresh">
           <div>看更多</div>
         </div>
-        
+
       </div>
     </section>
   </article>
@@ -38,7 +38,7 @@ import { debounce, isTouchDevice } from '../util/comm.js'
 
 export default {
   name: 'PresidentElectionList',
-  props: [ 'candidateData' ],
+  props: ['candidateData'],
   data () {
     return {
       artTitleEl: null,
@@ -49,7 +49,7 @@ export default {
       wEl: null,
       // ww = window width
       ww: 0,
-      pages: [ 1, 1, 1 ],
+      pages: [1, 1, 1],
       isTouchDevice: isTouchDevice()
     }
   },
@@ -75,7 +75,7 @@ export default {
     loadMoreArts (arts) {
       return arts ? arts.slice(3) : []
     },
-    loadMore (tagId, idx) {   
+    loadMore (tagId, idx) {
       this.pages[idx] += 1
       this.$emit('loadMore', tagId, this.pages[idx])
     },

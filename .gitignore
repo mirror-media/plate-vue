@@ -4,6 +4,7 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+npmlist.txt
 
 # Coverage directory
 coverage
@@ -56,3 +57,5 @@ archives
 src/utils/jquery.dfp.min.js
 src/utils/swiper/
 yarn.lock
+.jshintignore
+.jshintrc

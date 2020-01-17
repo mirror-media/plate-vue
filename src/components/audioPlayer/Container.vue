@@ -24,7 +24,7 @@ export default {
   props: {
     post: {
       type: Object,
-      default() {
+      default () {
         return {}
       }
     }
@@ -33,7 +33,7 @@ export default {
     HOC,
     Player
   },
-  data() {
+  data () {
     return {
       playerVolume: 1,
       playerMuted: false,
@@ -41,7 +41,7 @@ export default {
     }
   },
   methods: {
-    onPlay() {
+    onPlay () {
       window.ga('send', 'event', 'article', 'click', 'audio-play')
     }
   }

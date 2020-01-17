@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     popArticles () {
-      return _.take(_.get(this.$store.state, [ 'articlesPopList', 'report' ]), 3)
+      return _.take(_.get(this.$store.state, ['articlesPopList', 'report']), 3)
     },
     viewportTarget () {
       if (this.viewport < 600) {
@@ -63,7 +63,7 @@ export default {
   methods: {
     getValue,
     getSectionStyle (item) {
-      return { backgroundColor: _.get(SECTION_MAP, [ _.get(item, [ 'sections', '0', 'id' ]), 'bgcolor' ], '#bcbcbc') }
+      return { backgroundColor: _.get(SECTION_MAP, [_.get(item, ['sections', '0', 'id']), 'bgcolor'], '#bcbcbc') }
     },
     insertGoogleFonts () {
       const googleFonts = document.createElement('link')

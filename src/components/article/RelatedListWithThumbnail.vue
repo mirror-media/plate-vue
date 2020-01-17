@@ -46,36 +46,36 @@
   </div>
 </template>
 <script>
-  import { getHref, getTruncatedVal, getValue } from '../../util/comm'
-  import { mapState } from 'vuex'
-  import { find } from 'lodash'
+import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+import { mapState } from 'vuex'
+import { find } from 'lodash'
 
-  export default {
-    name: 'related-list-thumbnail',
-    methods: {
-      getHref,
-      getTruncatedVal,
-      getValue,
-      getBackgroundImage (id) {
-        const imageData = find(this.imagesById, [ 'id', id ])
-        const imageUrl = getValue(imageData, [ 'image', 'resizedTargets', 'mobile', 'url' ], '')
-        return `url(${imageUrl})`
-      }
-    },
-    props: {
-      isApp: {
-        default: () => false
-      },
-      relatedList: {
-        default: () => { return [] }
-      }
-    },
-    computed: {
-      ...mapState({
-        imagesById: state => state.imagesById
-      })
+export default {
+  name: 'related-list-thumbnail',
+  methods: {
+    getHref,
+    getTruncatedVal,
+    getValue,
+    getBackgroundImage (id) {
+      const imageData = find(this.imagesById, ['id', id])
+      const imageUrl = getValue(imageData, ['image', 'resizedTargets', 'mobile', 'url'], '')
+      return `url(${imageUrl})`
     }
+  },
+  props: {
+    isApp: {
+      default: () => false
+    },
+    relatedList: {
+      default: () => { return [] }
+    }
+  },
+  computed: {
+    ...mapState({
+      imagesById: state => state.imagesById
+    })
   }
+}
 </script>
 <style lang="stylus">
   .related-container
@@ -101,7 +101,6 @@
           background-position center center
           padding-top: 75%;
 
-
         .related_item_title
           background-color #fff
           border-left 7px solid rgba(140, 140, 140, 0.18)
@@ -121,11 +120,11 @@
               font-weight normal
               border none
 
-  @media (max-width 767px) and (min-width 0px)            
+  @media (max-width 767px) and (min-width 0px)
     .related-container
       width 100%
       margin 0
-      
+
       .related_list
         flex-direction column
         width 100%
@@ -137,10 +136,10 @@
           .related_item_title
             font-size 1rem
 
-  @media (max-width 320px) and (min-width 0px)            
+  @media (max-width 320px) and (min-width 0px)
     .related-container
       .related_list
         .related_item
           width 280px
-  
+
 </style>

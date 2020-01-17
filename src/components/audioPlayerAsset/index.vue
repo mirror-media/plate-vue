@@ -28,7 +28,7 @@ export default {
     composition,
     pure
   },
-  data() {
+  data () {
     return {
       playerVolume: 1,
       playerMuted: false,
@@ -36,7 +36,7 @@ export default {
     }
   },
   methods: {
-    onPlay() {
+    onPlay () {
       // window.ga('send', 'event', 'article', 'click', 'audio-play')
     }
   }

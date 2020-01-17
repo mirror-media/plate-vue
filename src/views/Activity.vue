@@ -39,7 +39,7 @@ const fetchData = (store) => {
 
 const fetchActivities = (store, id) => {
   return store.dispatch('FETCH_ACTIVITIES', {
-    'params': {
+    params: {
       where: {
         _id: id
       }
@@ -48,17 +48,17 @@ const fetchActivities = (store, id) => {
 }
 
 const fetchAllNodes = (store) => {
-  const page = get(store.state, [ 'nodes', 'meta', 'page' ], 0) + 1
+  const page = get(store.state, ['nodes', 'meta', 'page'], 0) + 1
 
   return store.dispatch('FETCH_NODES', {
-    'params': {
+    params: {
       page: page,
       where: {
-        activity: get(store.state, [ 'route', 'params', 'activityId' ])
+        activity: get(store.state, ['route', 'params', 'activityId'])
       }
     }
   }).then(() => {
-    if (get(store.state, [ 'nodes', 'items', 'length' ]) < get(store.state, [ 'nodes', 'meta', 'total' ])) {
+    if (get(store.state, ['nodes', 'items', 'length']) < get(store.state, ['nodes', 'meta', 'total'])) {
       fetchAllNodes(store)
     }
   })
@@ -69,7 +69,7 @@ export default {
   components: {
     'activity-lightbox': ActivityLightbox,
     'activity-timeline': ActivityTimeline,
-    'share': Share
+    share: Share
   },
   asyncData ({ store }) {
     return fetchData(store)
@@ -92,7 +92,7 @@ export default {
         { vmid: 'og:image', property: 'og:image', content: image },
         { vmid: 'twitter:title', name: 'twitter:title', content: ogTitle },
         { vmid: 'twitter:description', name: 'twitter:description', content: description },
-        { vmid: 'twitter:image', name: 'twitter:image', content: image },
+        { vmid: 'twitter:image', name: 'twitter:image', content: image }
       ]
     }
   },
@@ -106,22 +106,22 @@ export default {
   },
   computed: {
     activity () {
-      return get(this.$store.state, [ 'activities', 'items', '0' ])
+      return get(this.$store.state, ['activities', 'items', '0'])
     },
     initialNodeIndex () {
-      return findIndex(get(this.$store.state, [ 'nodes', 'items' ]), this.featureNode)
+      return findIndex(get(this.$store.state, ['nodes', 'items']), this.featureNode)
     },
     featureNode () {
-      return find(get(this.$store.state, [ 'nodes', 'items' ]), { 'isFeatured': true })
+      return find(get(this.$store.state, ['nodes', 'items']), { isFeatured: true })
     },
     hasAllNodes () {
-      return get(this.$store.state, [ 'nodes', 'items', 'length' ]) >= get(this.$store.state, [ 'nodes', 'meta', 'total' ])
+      return get(this.$store.state, ['nodes', 'items', 'length']) >= get(this.$store.state, ['nodes', 'meta', 'total'])
     },
     initialNodes () {
-      return get(this.$store.state, [ 'nodes', 'items' ])
+      return get(this.$store.state, ['nodes', 'items'])
     },
     topicId () {
-      return get(this.$route, [ 'params', 'topicId' ])
+      return get(this.$route, ['params', 'topicId'])
     }
   },
   methods: {
@@ -155,7 +155,7 @@ export default {
     window.ga('set', 'contentGroup1', '')
     window.ga('set', 'contentGroup2', '')
     window.ga('set', 'contentGroup3', '')
-    window.ga('send', 'pageview', { title: `${get(this.activity, [ 'name' ])} - ${SITE_TITLE}`, location: `${SITE_URL}/activity/${this.$route.params.activityId}` })
+    window.ga('send', 'pageview', { title: `${get(this.activity, ['name'])} - ${SITE_TITLE}`, location: `${SITE_URL}/activity/${this.$route.params.activityId}` })
   }
 }
 </script>
@@ -274,7 +274,7 @@ export default {
       top 5px
       line-height 40px
 
-@media only screen and (max-width: 900px) and (orientation: landscape) 
+@media only screen and (max-width: 900px) and (orientation: landscape)
   .activity
     &__landscape
       display flex

@@ -10,7 +10,7 @@ const _host = getHost()
 
 function _buildQuery (params = {}) {
   let query = {}
-  const whitelist = [ 'where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id', 'keyword', 'offset' ]
+  const whitelist = ['where', 'embedded', 'max_results', 'page', 'sort', 'related', 'clean', 'clientInfo', 'id', 'keyword', 'offset']
   whitelist.forEach((ele) => {
     if (Object.prototype.hasOwnProperty.call(params, ele)) {
       if (ele === 'where' || ele === 'embedded') {
@@ -30,9 +30,9 @@ const debugFetch = require('debug')('FETCH')
 function _doFetch (url) {
   debugFetch('PROMISE SUPERAGENT ONINE.', url)
   return superagent
-  .get(url)
-  .then(res => camelizeKeys(res.body))
-  .catch(err => Promise.reject(err))
+    .get(url)
+    .then(res => camelizeKeys(res.body))
+    .catch(err => Promise.reject(err))
 }
 
 function _logClient (params = {}) {
@@ -44,12 +44,12 @@ function _logClient (params = {}) {
 
 function _setupWhereInParam (key, value, params = {}) {
   params = params || {}
-  value = Array.isArray(value) ? value : [ value ]
+  value = Array.isArray(value) ? value : [value]
   const where = {}
   if (value.length > 0) {
     _.merge(where, params.where, {
       [key]: {
-        '$in': value
+        $in: value
       }
     })
   }
@@ -84,21 +84,21 @@ function loadArticlesPopList () {
 function loadArticlesByUuid (uuid = '', type = '', params = {}) {
   switch (type) {
     case SECTION:
-      params = _setupWhereInParam('sections', [ uuid ], params)
+      params = _setupWhereInParam('sections', [uuid], params)
       break
     case CATEGORY:
-      params = _setupWhereInParam('categories', [ uuid ], params)
+      params = _setupWhereInParam('categories', [uuid], params)
       break
     case TAG:
-      params = _setupWhereInParam('tags', [ uuid ], params)
+      params = _setupWhereInParam('tags', [uuid], params)
       break
     case TOPIC:
-      params = _setupWhereInParam('topics', [ uuid ], params)
+      params = _setupWhereInParam('topics', [uuid], params)
       break
     default:
       return Promise.resolve()
   }
-  params.related ? (params.useMetaEndpoint = true) : ''
+  params.related && (params.useMetaEndpoint = true)
   params.sort = params.sort || '-publishedDate'
   let url = params.useMetaEndpoint ? `${_host}/api/getmeta` : `${_host}/api/getlist`
   const query = _buildQuery(params)
@@ -163,16 +163,16 @@ function loadFlashNews (params = {}) {
 function loadImages (uuid = '', type = '', params = {}) {
   switch (type) {
     case SECTION:
-      params = _setupWhereInParam('sections', [ uuid ], params)
+      params = _setupWhereInParam('sections', [uuid], params)
       break
     case CATEGORY:
-      params = _setupWhereInParam('categories', [ uuid ], params)
+      params = _setupWhereInParam('categories', [uuid], params)
       break
     case TAG:
-      params = _setupWhereInParam('tags', [ uuid ], params)
+      params = _setupWhereInParam('tags', [uuid], params)
       break
     case TOPIC:
-      params = _setupWhereInParam('topics', [ uuid ], params)
+      params = _setupWhereInParam('topics', [uuid], params)
       break
     default:
       return Promise.resolve()
@@ -218,7 +218,6 @@ function loadOathPlaylist ({ id, params }) {
   }
   return _doFetch(url)
 }
-
 
 function loadOathVideo ({ id, params }) {
   const query = _buildQuery(params)
@@ -304,21 +303,21 @@ export function fetchAudios (params = {}) {
 }
 
 export function fetchCommonData (endpoints = []) {
-  return Promise.all([ loadCommonData(endpoints) ])
-  .then((data) => {
-    const commonData = {}
-    _.map(Object.keys(_.get(data[0], [ 'endpoints' ])), (e) => {
-      commonData[e] = _.get(data[0], [ 'endpoints', e ])
-      if (e === 'sections') {
-        _.forEach(_.get(data[0], [ 'endpoints', e, 'items' ]), (s) => {
-          _.forEach(s.categories, (c) => {
-            _.set(commonData, [ 'categories', c.name ], c)
+  return Promise.all([loadCommonData(endpoints)])
+    .then((data) => {
+      const commonData = {}
+      _.map(Object.keys(_.get(data[0], ['endpoints'])), (e) => {
+        commonData[e] = _.get(data[0], ['endpoints', e])
+        if (e === 'sections') {
+          _.forEach(_.get(data[0], ['endpoints', e, 'items']), (s) => {
+            _.forEach(s.categories, (c) => {
+              _.set(commonData, ['categories', c.name], c)
+            })
           })
-        })
-      }
+        }
+      })
+      return commonData
     })
-    return commonData
-  })
 }
 
 export function fetchContacts (params = {}) {

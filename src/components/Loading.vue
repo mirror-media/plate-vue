@@ -10,7 +10,7 @@
 
 export default {
   name: 'loading',
-  props: [ 'show' ]
+  props: ['show']
 }
 
 </script>
