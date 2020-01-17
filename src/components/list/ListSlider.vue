@@ -1,23 +1,31 @@
 <template>
   <section class="gs-list">
     <div class="gs-list__slider slider">
-      <div class="slider-container" :style="{ width: `${imagesSorted.length * 100}%`, transform: `translateX(-${100 / imagesSorted.length * current}%)` }">
-        <a v-for="item in imagesSorted"
+      <div
+        class="slider-container"
+        :style="{ width: `${imagesSorted.length * 100}%`, transform: `translateX(-${100 / imagesSorted.length * current}%)` }"
+      >
+        <a
+          v-for="item in imagesSorted"
           :key="item.id"
           :style="{ width: `${100 / imagesSorted.length}%`, backgroundImage: `url(${item.image.resizedTargets.desktop.url})` }"
           class="slider__item"
           :href="getHref(item)"
-          target="_blank">
-        </a>
+          target="_blank"
+        />
       </div>
       <div class="slider__nav">
-        <div class="nav-container" :style="{ width: `${ imagesSorted.length * 15 + (imagesSorted.length - 1) * 10 }px` }">
-          <div v-for="(item, index) in images"
+        <div
+          class="nav-container"
+          :style="{ width: `${ imagesSorted.length * 15 + (imagesSorted.length - 1) * 10 }px` }"
+        >
+          <div
+            v-for="(item, index) in images"
             :key="`btn-${item.id}`"
             :class="{ active: current === index}"
             class="dot"
-            @click="current = index">
-          </div>
+            @click="current = index"
+          />
         </div>
       </div>
     </div>
@@ -45,6 +53,7 @@ export default {
   computed: {
     imagesSorted () {
       return this.images
+        .slice(0)
         .sort((a, b) => Number(a.keywords.split('_')[0]) - Number(b.keywords.split('_')[0]))
     }
   },

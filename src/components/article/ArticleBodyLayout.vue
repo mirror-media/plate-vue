@@ -1,11 +1,11 @@
 <template>
-  <div><slot></slot></div>
+  <div><slot /></div>
 </template>
 <script>
 export default {
   name: 'ArticleBodyLayout',
-  methods: {},
-  mounted () {}
+  mounted () {},
+  methods: {}
 }
 </script>
 <style lang="stylus">

@@ -1,15 +1,33 @@
 <template>
   <section class="timelineMenu">
-    <div class="timelineMenu-line" :style="[windowViewport > 600 ? { height: nodesAmount * 125 + 'px' } : {} ]">
+    <div
+      class="timelineMenu-line"
+      :style="[windowViewport > 600 ? { height: nodesAmount * 125 + 'px' } : {} ]"
+    >
       <div class="timelineMenu-line__colorLine" />
       <div class="timelineMenu-line__bottomLine" />
     </div>
-    <div class="timelineMenu-activityBox" v-for="(item, index) in highlightNodes"
-      :class="[index%2 === 0 ? 'right' : 'left']" :style="[windowViewport > 600 ? { top: `calc(${index* 112}px + 1em)` } : {} ]">
-      <h2 v-html="item.subtitle"></h2>
-      <a :href="`/activity/${item.activity.id}/${topicId}`" class="timelineMenu-activityBox__imgBox">
-        <div class="timelineMenu-activityBox__imgBox--title" v-html="item.activity.name" />
-        <div class="timelineMenu-activityBox__imgBox--img" :style="{ backgroundImage: 'url(' + getImage(item) + ')' }"/>
+    <div
+      v-for="(item, index) in highlightNodes"
+      :key="`timelineMenu-${index}-${item.activity.id}`"
+      class="timelineMenu-activityBox"
+      :class="[index%2 === 0 ? 'right' : 'left']"
+      :style="[windowViewport > 600 ? { top: `calc(${index* 112}px + 1em)` } : {} ]"
+    >
+      <h2>{{ item.subtitle }}</h2>
+      <a
+        :href="`/activity/${item.activity.id}/${topicId}`"
+        class="timelineMenu-activityBox__imgBox"
+      >
+        <div
+          class="timelineMenu-activityBox__imgBox--title"
+        >
+          {{ item.activity.name }}
+        </div>
+        <div
+          class="timelineMenu-activityBox__imgBox--img"
+          :style="{ backgroundImage: 'url(' + getImage(item) + ')' }"
+        />
       </a>
     </div>
   </section>

@@ -1,13 +1,18 @@
 <template>
- <div class="more">
-   <button @click="loadMore()" id="loadmore"><span>更多文章</span></button>
- </div>
+  <div class="more">
+    <button
+      id="loadmore"
+      @click="loadMore()"
+    >
+      <span>更多文章</span>
+    </button>
+  </div>
 </template>
 
 <script>
 
 export default {
-  name: 'more',
+  name: 'More',
   methods: {
     loadMore () {
       this.$emit('loadMore')

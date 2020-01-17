@@ -7,7 +7,10 @@
       rel="noopener"
       @click="sendGaClickEvent('home', 'group')"
     >
-      <img v-lazy="getImage(groupedArticle, 'mobile')" alt="">
+      <img
+        v-lazy="getImage(groupedArticle, 'mobile')"
+        alt=""
+      >
     </a>
     <div class="group__articles articles">
       <a
@@ -17,8 +20,7 @@
         rel="noopener"
         @click="sendGaClickEvent('home', 'group')"
         v-text="getTruncatedVal(groupedArticle.title, 22)"
-      >
-      </a>
+      />
       <a
         v-for="(article, i) in getValue(groupedArticle, [ 'relateds' ]).slice(0, 3)"
         :key="i"
@@ -28,8 +30,7 @@
         rel="noopener"
         @click="sendGaClickEvent('home', 'group')"
         v-text="getTruncatedVal(article.title, 22)"
-      >
-      </a>
+      />
     </div>
   </div>
 </template>

@@ -1,23 +1,59 @@
 <template>
   <main class="activity">
-    <a href="/" class="activity__logo" id="home">
-      <img src="/assets/mirrormedia/icon/logo_black.png" srcset="/assets/mirrormedia/icon/logo_black@2x.png 2x" alt="鏡週刊 Mirror Media" />
+    <a
+      id="home"
+      href="/"
+      class="activity__logo"
+    >
+      <img
+        src="/assets/mirrormedia/icon/logo_black.png"
+        srcset="/assets/mirrormedia/icon/logo_black@2x.png 2x"
+        alt="鏡週刊 Mirror Media"
+      >
     </a>
-    <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`" :sharePath="`/activity/${get(activity, 'id')}`" class="activity__share" />
-    <div class="activity__menu" v-if="topicId">
-      <a :href="`/topic/${topicId}`"><img src="/assets/mirrormedia/icon/home.png" srcset="/assets/mirrormedia/icon/home@2x.png 2x" /></a>
+    <share
+      :direction="`right`"
+      :top="`5px`"
+      :left="`55px`"
+      :color="`#000`"
+      :share-path="`/activity/${get(activity, 'id')}`"
+      class="activity__share"
+    />
+    <div
+      v-if="topicId"
+      class="activity__menu"
+    >
+      <a :href="`/topic/${topicId}`"><img
+        src="/assets/mirrormedia/icon/home.png"
+        srcset="/assets/mirrormedia/icon/home@2x.png 2x"
+      ></a>
     </div>
-    <img :src="getImage(activity, 'desktop')" />
+    <img :src="getImage(activity, 'desktop')">
     <h1 v-text="get(activity, 'name')" />
-    <activity-timeline :initialNodeIndex="initialNodeIndex" :initialNodes="initialNodes" :viewport="viewport" v-on:openLightbox="openLightbox" />
-    <activity-lightbox :initialActivity="activity" :initialNodes="initialNodes" :lightboxIndex="lightboxIndex" :viewport="viewport" v-show="isLightboxOpen" v-on:closeLightbox="closeLightbox" />
+    <activity-timeline
+      :initial-node-index="initialNodeIndex"
+      :initial-nodes="initialNodes"
+      :viewport="viewport"
+      @openLightbox="openLightbox"
+    />
+    <activity-lightbox
+      v-show="isLightboxOpen"
+      :initial-activity="activity"
+      :initial-nodes="initialNodes"
+      :lightbox-index="lightboxIndex"
+      :viewport="viewport"
+      @closeLightbox="closeLightbox"
+    />
     <div class="activity__landscape">
       <figure>
-        <img v-lazy="`/assets/mirrormedia/icon/landscape_white.svg`" />
+        <img v-lazy="`/assets/mirrormedia/icon/landscape_white.svg`">
         <p>請將您的裝置轉至直向來繼續閱讀</p>
       </figure>
     </div>
-    <div class="activity__curtain" v-show="loadind">
+    <div
+      v-show="loadind"
+      class="activity__curtain"
+    >
       Loading...
     </div>
   </main>
@@ -124,6 +160,22 @@ export default {
       return get(this.$route, ['params', 'topicId'])
     }
   },
+  beforeMount () {
+    if (!this.hasAllNodes) {
+      fetchAllNodes(this.$store)
+    }
+  },
+  mounted () {
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
+    this.loadind = false
+    window.ga('set', 'contentGroup1', '')
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    window.ga('send', 'pageview', { title: `${get(this.activity, ['name'])} - ${SITE_TITLE}`, location: `${SITE_URL}/activity/${this.$route.params.activityId}` })
+  },
   methods: {
     closeLightbox () {
       this.isLightboxOpen = false
@@ -140,22 +192,6 @@ export default {
         this.windowHeight = document.documentElement.clientHeight || document.body.clientHeight
       }
     }
-  },
-  beforeMount () {
-    if (!this.hasAllNodes) {
-      fetchAllNodes(this.$store)
-    }
-  },
-  mounted () {
-    this.updateViewport()
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
-    this.loadind = false
-    window.ga('set', 'contentGroup1', '')
-    window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    window.ga('send', 'pageview', { title: `${get(this.activity, ['name'])} - ${SITE_TITLE}`, location: `${SITE_URL}/activity/${this.$route.params.activityId}` })
   }
 }
 </script>

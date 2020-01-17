@@ -1,11 +1,39 @@
 <template>
-  <div class="content-image" :class="`img-${id}`" @click="openLightBox">
-    <span class="thumbnail" v-show="!isVirtualImgLoaded"><img src="/assets/mirrormedia/icon/loading.gif" :alt="caption"></span>
-    <span class="thumbnail" v-show="isVirtualImgLoaded" ref="lazyImg"></span>
-    <div class="caption" v-text="caption"></div>
-    <div class="lightbox" v-show="isLightboxActive">
-      <div class="lightbox-close" @click="closeLightBox"></div>
-      <img class="lightbox-img" :class="{ loading: !isLightboxImgLoaded }" src="/assets/mirrormedia/icon/loading.gif" ref="lightboxImg">
+  <div
+    class="content-image"
+    :class="`img-${id}`"
+    @click="openLightBox"
+  >
+    <span
+      v-show="!isVirtualImgLoaded"
+      class="thumbnail"
+    ><img
+      src="/assets/mirrormedia/icon/loading.gif"
+      :alt="caption"
+    ></span>
+    <span
+      v-show="isVirtualImgLoaded"
+      ref="lazyImg"
+      class="thumbnail"
+    />
+    <div
+      class="caption"
+      v-text="caption"
+    />
+    <div
+      v-show="isLightboxActive"
+      class="lightbox"
+    >
+      <div
+        class="lightbox-close"
+        @click="closeLightBox"
+      />
+      <img
+        ref="lightboxImg"
+        class="lightbox-img"
+        :class="{ loading: !isLightboxImgLoaded }"
+        src="/assets/mirrormedia/icon/loading.gif"
+      >
     </div>
   </div>
 </template>
@@ -19,9 +47,12 @@ const debug = require('debug')('CLIENT:ArticleImg')
 // const debugLazy = require('debug')('CLIENT:LAZYIMAGE')
 export default {
   name: 'ArticleImg',
-  computed: {
-    caption () {
-      return get(this.image, 'description', '')
+  props: {
+    viewport: {
+      type: Number
+    },
+    image: {
+      type: Object
     }
   },
   data () {
@@ -33,6 +64,49 @@ export default {
       isVirtualImgLoaded: false,
       isVirtualImgCheckedOut: false
     }
+  },
+  computed: {
+    caption () {
+      return get(this.image, 'description', '')
+    }
+  },
+  watch: {
+    image () {
+      debug('Mutation detected: image', this.image)
+      this.isVirtualImgLoaded = false
+      this.isVirtualImgCheckedOut = false
+      this.isLightboxActive = false
+      this.isLightboxImgLoaded = false
+      const firstChild = this.$refs.lazyImg.firstChild
+      firstChild && this.$refs.lazyImg.removeChild(firstChild)
+      this.images = this.constructImages()
+      preventScroll.off()
+    },
+    isLightboxActive () {
+      if (this.isLightboxActive) {
+        preventScroll.on()
+        if (!this.isLightboxImgLoaded) {
+          this.lazyLoadLightboxImg()
+        }
+      } else {
+        preventScroll.off()
+      }
+      debug('Mutation detected: isLightboxActive', this.isLightboxActive)
+    }
+  },
+  mounted () {
+    this.images = this.constructImages()
+    window.addEventListener('scroll', () => {
+      if (this.isVirtualImgCheckedOut) { return }
+      const deviceHeight = verge.viewportH()
+      const currPosMid = currentYPosition() + deviceHeight / 2
+      const thisEle = elmYPosition(`.content-image.img-${this.id}`)
+      if (thisEle > 0 && currPosMid < thisEle + 500 && currPosMid > thisEle - 500) {
+        this.isVirtualImgCheckedOut = true
+        this.lazyLoad()
+      }
+    })
+    preventScroll.off()
   },
   methods: {
     closeLightBox (e) {
@@ -72,52 +146,6 @@ export default {
     },
     openLightBox () {
       this.isLightboxActive = true
-    }
-  },
-  mounted () {
-    this.images = this.constructImages()
-    window.addEventListener('scroll', () => {
-      if (this.isVirtualImgCheckedOut) { return }
-      const deviceHeight = verge.viewportH()
-      const currPosMid = currentYPosition() + deviceHeight / 2
-      const thisEle = elmYPosition(`.content-image.img-${this.id}`)
-      if (thisEle > 0 && currPosMid < thisEle + 500 && currPosMid > thisEle - 500) {
-        this.isVirtualImgCheckedOut = true
-        this.lazyLoad()
-      }
-    })
-    preventScroll.off()
-  },
-  props: {
-    viewport: {
-      type: Number
-    },
-    image: {
-      type: Object
-    }
-  },
-  watch: {
-    image () {
-      debug('Mutation detected: image', this.image)
-      this.isVirtualImgLoaded = false
-      this.isVirtualImgCheckedOut = false
-      this.isLightboxActive = false
-      this.isLightboxImgLoaded = false
-      const firstChild = this.$refs.lazyImg.firstChild
-      firstChild && this.$refs.lazyImg.removeChild(firstChild)
-      this.images = this.constructImages()
-      preventScroll.off()
-    },
-    isLightboxActive () {
-      if (this.isLightboxActive) {
-        preventScroll.on()
-        if (!this.isLightboxImgLoaded) {
-          this.lazyLoadLightboxImg()
-        }
-      } else {
-        preventScroll.off()
-      }
-      debug('Mutation detected: isLightboxActive', this.isLightboxActive)
     }
   }
 }

@@ -5,18 +5,21 @@
         v-for="section in activeSections"
         :key="`section-${section.id}`"
         :style="{ minWidth: `calc(100% / ${sections.length + 1})`,borderTopColor: getColor(section) }"
-        :class="[ section.name, 'section' ]">
+        :class="[ section.name, 'section' ]"
+      >
         <a
           v-if="section.name !== 'videohub'"
           :href="`/section/${section.name}`"
-          @click="sendGaClickEvent('header', `section ${section.name}`)">
-          <span v-text="section.title"></span>
+          @click="sendGaClickEvent('header', `section ${section.name}`)"
+        >
+          <span v-text="section.title" />
         </a>
         <a
           v-else
           :href="`/section/${section.name}`"
-          @click="sendGaClickEvent('header', `section ${section.name}`)">
-          <span v-text="section.title"></span>
+          @click="sendGaClickEvent('header', `section ${section.name}`)"
+        >
+          <span v-text="section.title" />
         </a>
         <div class="dropdown">
           <template v-if="section.name === 'videohub'">
@@ -25,7 +28,8 @@
               :key="`dropdown-${category.id}`"
               :href="`/category/${category.name}`"
               @click="sendGaClickEvent('header', `category ${category.name}`)"
-              v-text="category.title"></a>
+              v-text="category.title"
+            />
           </template>
           <template v-else>
             <a
@@ -33,14 +37,17 @@
               :key="`dropdown-${category.id}`"
               :href="`/category/${category.name}`"
               @click="sendGaClickEvent('header', `category ${category.name}`)"
-              v-text="category.title">
-            </a>
+              v-text="category.title"
+            />
           </template>
         </div>
       </div>
-      <div :style="{ minWidth: `calc(100% / ${sections.length + 1})` }" class="section external">
+      <div
+        :style="{ minWidth: `calc(100% / ${sections.length + 1})` }"
+        class="section external"
+      >
         <a>
-          <span v-text="$t('HEADER.EXTERNAL')"></span>
+          <span v-text="$t('HEADER.EXTERNAL')" />
         </a>
         <div class="dropdown">
           <a
@@ -48,8 +55,8 @@
             :key="`dropdown-${partner.id}`"
             :href="`/externals/${partner.name}`"
             @click="sendGaClickEvent('header', `external ${partner.name}`)"
-            v-text="partner.display">
-          </a>
+            v-text="partner.display"
+          />
         </div>
       </div>
     </nav>
@@ -60,10 +67,15 @@
           :key="`topic-${topic.id}`"
           :href="`/topic/${topic.id}`"
           @click="sendGaClickEvent('header', `topic ${topic.name}`)"
-          v-text="topic.name">
-        </a>
+          v-text="topic.name"
+        />
       </div>
-      <a href="/section/topic" class="more" @click="sendGaClickEvent('header', `topic ${$t('HEADER.MORE')}`)" v-text="$t('HEADER.MORE')"></a>
+      <a
+        href="/section/topic"
+        class="more"
+        @click="sendGaClickEvent('header', `topic ${$t('HEADER.MORE')}`)"
+        v-text="$t('HEADER.MORE')"
+      />
       <a
         href="https://voice.mirrorfiction.com/"
         class="link--external mirrorvoice"
@@ -108,6 +120,9 @@ import { sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'HeaderNav',
+  components: {
+    LazyImage
+  },
   props: {
     partners: {
       type: Array,
@@ -127,9 +142,6 @@ export default {
         return []
       }
     }
-  },
-  components: {
-    LazyImage
   },
   computed: {
     activePartners () {

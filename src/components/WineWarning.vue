@@ -1,6 +1,6 @@
 <template>
   <div class="wine-warning-wrapper">
-    <div class="wine-warning-img"></div>
+    <div class="wine-warning-img" />
   </div>
 </template>
 

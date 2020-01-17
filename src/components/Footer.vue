@@ -1,24 +1,120 @@
 <template>
   <footer class="left">
     <div class="left mobile-hide">
-      <div><span><a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('footer', 'footer subscribe')">訂閱鏡週刊</a></span></div>
-      <div><span><a :href="SOCIAL_LINK.AD" target="_blank" @click="sendGaClickEvent('footer', 'footer ad')">廣告合作</a></span></div>
-      <div><span><a href="https://www.mirrormedia.mg/category/campaign" target="_blank" @click="sendGaClickEvent('footer', 'footer activity')">活動專區</a></span></div>
-      <div><span><a href="https://www.mirrormedia.mg/story/20161228corpmkt001/" target="_blank" @click="sendGaClickEvent('footer', 'footer download')">下載ＡＰＰ</a></span></div>
-      <div><span><a href="https://www.mirrormedia.mg/story/webauthorize/" target="_blank" @click="sendGaClickEvent('footer', 'footer auth')">內容授權</a></span></div>
+      <div>
+        <span><a
+          :href="SOCIAL_LINK.SUBSCRIBE"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer subscribe')"
+        >訂閱鏡週刊</a></span>
+      </div>
+      <div>
+        <span><a
+          :href="SOCIAL_LINK.AD"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer ad')"
+        >廣告合作</a></span>
+      </div>
+      <div>
+        <span><a
+          href="https://www.mirrormedia.mg/category/campaign"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer activity')"
+        >活動專區</a></span>
+      </div>
+      <div>
+        <span><a
+          href="https://www.mirrormedia.mg/story/20161228corpmkt001/"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer download')"
+        >下載ＡＰＰ</a></span>
+      </div>
+      <div>
+        <span><a
+          href="https://www.mirrormedia.mg/story/webauthorize/"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer auth')"
+        >內容授權</a></span>
+      </div>
     </div>
     <div class="follow mobile-hide">
-      <a class="item" :href="SOCIAL_LINK.LINE" target="_blank" @click="sendGaClickEvent('footer', 'footer line')"><img src="/assets/mirrormedia/icon/line@2x.png" alt="Line" class="footer-icon line" /></a>
-      <a class="item" :href="SOCIAL_LINK.WEIBO" target="_blank" @click="sendGaClickEvent('footer', 'footer weibo')"><img src="/assets/mirrormedia/icon/weibo@2x.png" alt="微博" class="footer-icon weibo" /></a>
-      <a class="item" :href="SOCIAL_LINK.FACEBOOK" target="_blank" @click="sendGaClickEvent('footer', 'footer fb')"><img src="/assets/mirrormedia/icon/facebook@2x.png" alt="Facebook" class="footer-icon facebook" /></a>
-      <a class="item" :href="SOCIAL_LINK.INSTAGRAM" target="_blank" @click="sendGaClickEvent('footer', 'footer ig')"><img src="/assets/mirrormedia/icon/instagram@2x.png" alt="Instagram" class="footer-icon instagram" /></a>
-      <a class="item" :href="SOCIAL_LINK.FEED" target="_blank" @click="sendGaClickEvent('footer', 'footer feed')"><img src="/assets/mirrormedia/icon/feed@2x.png" alt="RSS" class="footer-icon feed" /></a>
-      <a class="item" :href="SOCIAL_LINK.EMAIL" target="_blank" @click="sendGaClickEvent('footer', 'footer email')"><img src="/assets/mirrormedia/icon/mail@2x.png" alt="聯絡我們" class="footer-icon mail" /></a>
+      <a
+        class="item"
+        :href="SOCIAL_LINK.LINE"
+        target="_blank"
+        @click="sendGaClickEvent('footer', 'footer line')"
+      ><img
+        src="/assets/mirrormedia/icon/line@2x.png"
+        alt="Line"
+        class="footer-icon line"
+      ></a>
+      <a
+        class="item"
+        :href="SOCIAL_LINK.WEIBO"
+        target="_blank"
+        @click="sendGaClickEvent('footer', 'footer weibo')"
+      ><img
+        src="/assets/mirrormedia/icon/weibo@2x.png"
+        alt="微博"
+        class="footer-icon weibo"
+      ></a>
+      <a
+        class="item"
+        :href="SOCIAL_LINK.FACEBOOK"
+        target="_blank"
+        @click="sendGaClickEvent('footer', 'footer fb')"
+      ><img
+        src="/assets/mirrormedia/icon/facebook@2x.png"
+        alt="Facebook"
+        class="footer-icon facebook"
+      ></a>
+      <a
+        class="item"
+        :href="SOCIAL_LINK.INSTAGRAM"
+        target="_blank"
+        @click="sendGaClickEvent('footer', 'footer ig')"
+      ><img
+        src="/assets/mirrormedia/icon/instagram@2x.png"
+        alt="Instagram"
+        class="footer-icon instagram"
+      ></a>
+      <a
+        class="item"
+        :href="SOCIAL_LINK.FEED"
+        target="_blank"
+        @click="sendGaClickEvent('footer', 'footer feed')"
+      ><img
+        src="/assets/mirrormedia/icon/feed@2x.png"
+        alt="RSS"
+        class="footer-icon feed"
+      ></a>
+      <a
+        class="item"
+        :href="SOCIAL_LINK.EMAIL"
+        target="_blank"
+        @click="sendGaClickEvent('footer', 'footer email')"
+      ><img
+        src="/assets/mirrormedia/icon/mail@2x.png"
+        alt="聯絡我們"
+        class="footer-icon mail"
+      ></a>
     </div>
     <div class="mobile-follow mobile-only">
-      <a :href="SOCIAL_LINK.SUBSCRIBE" target="_blank" @click="sendGaClickEvent('footer', 'footer subscribe')">訂閱鏡週刊</a> -
-      <a :href="SOCIAL_LINK.AD" target="_blank" @click="sendGaClickEvent('footer', 'footer ad')">廣告合作</a> -
-      <a href="/category/campaign" target="_blank" @click="sendGaClickEvent('footer', 'footer activity')">活動專區</a>
+      <a
+        :href="SOCIAL_LINK.SUBSCRIBE"
+        target="_blank"
+        @click="sendGaClickEvent('footer', 'footer subscribe')"
+      >訂閱鏡週刊</a> -
+      <a
+        :href="SOCIAL_LINK.AD"
+        target="_blank"
+        @click="sendGaClickEvent('footer', 'footer ad')"
+      >廣告合作</a> -
+      <a
+        href="/category/campaign"
+        target="_blank"
+        @click="sendGaClickEvent('footer', 'footer activity')"
+      >活動專區</a>
     </div>
   </footer>
 </template>

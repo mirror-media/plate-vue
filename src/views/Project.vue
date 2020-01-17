@@ -1,5 +1,11 @@
 <template>
-  <ProjectList :projects="projects" :viewport="viewport" :class="projectClass" target="_blank" :excludingProjects="excludingProjects" />
+  <ProjectList
+    :projects="projects"
+    :viewport="viewport"
+    :class="projectClass"
+    target="_blank"
+    :excluding-projects="excludingProjects"
+  />
 </template>
 
 <script>
@@ -12,17 +18,17 @@ const fetchProjects = (store) => {
 }
 
 export default {
-  name: 'project-list',
+  name: 'ProjectList',
   components: {
     ProjectList
+  },
+  asyncData ({ store }) {
+    return fetchProjects(store)
   },
   data () {
     return {
       viewport: undefined
     }
-  },
-  asyncData ({ store }) {
-    return fetchProjects(store)
   },
   computed: {
     excludingProjects () {
@@ -39,18 +45,18 @@ export default {
       }
     }
   },
+  mounted () {
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
+  },
   methods: {
     updateViewport () {
       if (process.env.VUE_ENV === 'client') {
         this.viewport = document.documentElement.clientWidth || document.body.clientWidth
       }
     }
-  },
-  mounted () {
-    this.updateViewport()
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
   }
 }
 

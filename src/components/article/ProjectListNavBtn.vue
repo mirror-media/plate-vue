@@ -1,9 +1,16 @@
 <template>
-  <div ref="navBtn" @click="clickHandler"></div>
+  <div
+    ref="navBtn"
+    @click="clickHandler"
+  />
 </template>
 <script>
 export default {
-  name: 'nav-btn',
+  name: 'NavBtn',
+  props: ['clickHandlerEvt'],
+  mounted () {
+    Promise.all([this.stopNavBtnBehavior()])
+  },
   methods: {
     clickHandler () {
       this.$emit(this.clickHandlerEvt)
@@ -15,10 +22,6 @@ export default {
         resolve()
       })
     }
-  },
-  mounted () {
-    Promise.all([this.stopNavBtnBehavior()])
-  },
-  props: ['clickHandlerEvt']
+  }
 }
 </script>

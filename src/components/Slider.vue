@@ -1,5 +1,9 @@
 <template>
-  <div v-swiper:[uuid]="swiperOption" :ref="uuid" class="swiper-container">
+  <div
+    :ref="uuid"
+    v-swiper:[uuid]="swiperOption"
+    class="swiper-container"
+  >
     <slot name="swiper-out-of-wrapper" />
     <div class="swiper-wrapper">
       <!-- remember add "swiper-slide" class name to each slot components -->

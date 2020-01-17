@@ -1,93 +1,258 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
-    <template slot-scope="props" slot="dfpPos">
-      <div :class="[ { 'topic-view': !isTimeline }, topicType ]" :style="needWineWarning ? { paddingBottom: '10px' } : ''">
-
+  <vue-dfp-provider
+    :dfp-units="dfpUnits"
+    :dfpid="dfpid"
+    :section="`other`"
+    :options="dfpOptions"
+    :mode="dfpMode"
+  >
+    <template
+      slot="dfpPos"
+      slot-scope="props"
+    >
+      <div
+        :class="[ { 'topic-view': !isTimeline }, topicType ]"
+        :style="needWineWarning ? { paddingBottom: '10px' } : ''"
+      >
         <template v-if="pageStyle === 'wide'">
           <section>
-            <header-full :commonData='commonData' :sectionName='sectionName' :sections='commonData.sections'></header-full>
+            <header-full
+              :common-data="commonData"
+              :section-name="sectionName"
+              :sections="commonData.sections"
+            />
           </section>
-          <leading-watch :topic='topic' :type='`TOPIC`'></leading-watch>
-          <article-list-full :articles='articles'></article-list-full>
-          <more-full v-if="hasMore && (!loading)" v-on:loadMore="loadMore"></more-full>
-          <loading :show="loading"></loading>
-          <footer-full :commonData='commonData' :sectionName='sectionName'></footer-full>
-          <share :right="`20px`" :bottom="`20px`"></share>
+          <leading-watch
+            :topic="topic"
+            :type="`TOPIC`"
+          />
+          <article-list-full :articles="articles" />
+          <more-full
+            v-if="hasMore && (!loading)"
+            @loadMore="loadMore"
+          />
+          <loading :show="loading" />
+          <footer-full
+            :common-data="commonData"
+            :section-name="sectionName"
+          />
+          <share
+            :right="`20px`"
+            :bottom="`20px`"
+          />
         </template>
 
         <template v-else-if="topicType === 'timeline'">
-          <a href="/" class="topicTimeline__logo">
-            <img src="/assets/mirrormedia/icon/logo_black@3x.png" :alt="siteTitle">
+          <a
+            href="/"
+            class="topicTimeline__logo"
+          >
+            <img
+              src="/assets/mirrormedia/icon/logo_black@3x.png"
+              :alt="siteTitle"
+            >
           </a>
-          <share :direction="`right`" :top="`5px`" :left="`55px`" :color="`#000`"></share>
-          <timeline-headline :initialTimeline="timeline"></timeline-headline>
-          <timeline-body :initialTimeline="timeline" :initialHighlightNodes="highlightNodes" :viewport="viewport"></timeline-body>
+          <share
+            :direction="`right`"
+            :top="`5px`"
+            :left="`55px`"
+            :color="`#000`"
+          />
+          <timeline-headline :initial-timeline="timeline" />
+          <timeline-body
+            :initial-timeline="timeline"
+            :initial-highlight-nodes="highlightNodes"
+            :viewport="viewport"
+          />
           <div class="topicTimeline__projects">
             <h1>更多專題文章</h1>
-            <ProjectList :projects="projects" :viewport="viewport"></ProjectList>
+            <ProjectList
+              :projects="projects"
+              :viewport="viewport"
+            />
           </div>
-          <div class="topicTimeline__fbComment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+          <div
+            slot="slot_fb_comment"
+            class="topicTimeline__fbComment"
+          >
+            {{ fbCommentDiv }}
+          </div>
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
-          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <Header
+            :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+            :props="props"
+            :show-dfp-header-logo="showDfpHeaderLogo"
+          />
           <div class="topic">
-            <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="portraitWallSlideImages"></leading>
+            <div class="topic-title">
+              <h1 />
+            </div>
+            <leading
+              v-if="getValue(topic, [ 'leading' ])"
+              :type="getValue(topic, [ 'leading' ])"
+              :media-data="portraitWallSlideImages"
+            />
           </div>
-          <portraitWall-list :articles="articles" :initialMediaData="portraitWallListImages"></portraitWall-list>
-          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
-          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="getValue($store, 'getters.adSize')"></vue-dfp></div>
+          <portraitWall-list
+            :articles="articles"
+            :initial-media-data="portraitWallListImages"
+          />
+          <div>
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="hasDFP && (viewport > 1000)"
+              pos="LPCFT"
+              :dfp-units="props.dfpUnits"
+              :section="props.section"
+              :dfp-id="props.dfpId"
+              :unit-id="dfp"
+            />
+          </div>
+          <div>
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="hasDFP && (viewport < 900)"
+              pos="LMBFT"
+              :dfp-units="props.dfpUnits"
+              :section="props.section"
+              :dfp-id="props.dfpId"
+              :unit-id="mobileDfp"
+              :size="getValue($store, 'getters.adSize')"
+            />
+          </div>
           <section class="footer container">
-            <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
+            <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
           </section>
-          <share :right="`20px`" :bottom="`20px`"></share>
+          <share
+            :right="`20px`"
+            :bottom="`20px`"
+          />
         </template>
 
         <template v-else-if="topicType === 'group'">
-          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <Header
+            :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+            :props="props"
+            :show-dfp-header-logo="showDfpHeaderLogo"
+          />
           <div class="topic">
-            <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
+            <div class="topic-title">
+              <h1 />
+            </div>
+            <leading
+              v-if="getValue(topic, [ 'leading' ])"
+              :type="getValue(topic, [ 'leading' ])"
+              :media-data="mediaData"
+            />
           </div>
-          <group-list :articles='articles' :tags="tags" :viewport="viewport"></group-list>
-          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
-          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="getValue($store, 'getters.adSize')"></vue-dfp></div>
+          <group-list
+            :articles="articles"
+            :tags="tags"
+            :viewport="viewport"
+          />
+          <div>
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="hasDFP && (viewport > 1000)"
+              pos="LPCFT"
+              :dfp-units="props.dfpUnits"
+              :section="props.section"
+              :dfp-id="props.dfpId"
+              :unit-id="dfp"
+            />
+          </div>
+          <div>
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="hasDFP && (viewport < 900)"
+              pos="LMBFT"
+              :dfp-units="props.dfpUnits"
+              :section="props.section"
+              :dfp-id="props.dfpId"
+              :unit-id="mobileDfp"
+              :size="getValue($store, 'getters.adSize')"
+            />
+          </div>
           <section class="footer container">
-            <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
+            <app-footer style="padding: 0 2rem; margin-bottom: 40px;" />
           </section>
         </template>
 
         <template v-else>
-          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <Header
+            :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+            :props="props"
+            :show-dfp-header-logo="showDfpHeaderLogo"
+          />
           <div class="topic">
-            <div class="topic-title"><h1></h1></div>
-            <leading :type="getValue(topic, [ 'leading' ])" v-if="getValue(topic, [ 'leading' ])" :mediaData="mediaData"></leading>
+            <div class="topic-title">
+              <h1 />
+            </div>
+            <leading
+              v-if="getValue(topic, [ 'leading' ])"
+              :type="getValue(topic, [ 'leading' ])"
+              :media-data="mediaData"
+            />
           </div>
 
           <PresidentElectionProgress v-if="isPresidentElectionId" />
-          <PresidentElectionList v-if="isPresidentElectionId" :candidateData="candidateData" @loadMore="loadMorePresident" />
+          <PresidentElectionList
+            v-if="isPresidentElectionId"
+            :candidate-data="candidateData"
+            @loadMore="loadMorePresident"
+          />
 
-          <article-list ref="articleList" id="articleList" v-if="!isPresidentElectionId" :articles='autoScrollArticles' :hasDFP='false'></article-list>
-          <div><vue-dfp v-if="hasDFP && (viewport > 1000)" :is="props.vueDfp" pos="LPCFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="dfp"></vue-dfp></div>
-          <div><vue-dfp v-if="hasDFP && (viewport < 900)" :is="props.vueDfp" pos="LMBFT" :dfpUnits="props.dfpUnits"
-            :section="props.section" :dfpId="props.dfpId" :unitId="mobileDfp" :size="getValue($store, 'getters.adSize')"></vue-dfp></div>
-          <article-list ref="articleListAutoScroll" id="articleListAutoScroll" v-if="!isPresidentElectionId" :articles='autoScrollArticlesLoadMore' :hasDFP='false'
-            v-show="hasAutoScroll"></article-list>
-          <loading :show="loading"></loading>
+          <article-list
+            v-if="!isPresidentElectionId"
+            id="articleList"
+            ref="articleList"
+            :articles="autoScrollArticles"
+            :has-d-f-p="false"
+          />
+          <div>
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="hasDFP && (viewport > 1000)"
+              pos="LPCFT"
+              :dfp-units="props.dfpUnits"
+              :section="props.section"
+              :dfp-id="props.dfpId"
+              :unit-id="dfp"
+            />
+          </div>
+          <div>
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="hasDFP && (viewport < 900)"
+              pos="LMBFT"
+              :dfp-units="props.dfpUnits"
+              :section="props.section"
+              :dfp-id="props.dfpId"
+              :unit-id="mobileDfp"
+              :size="getValue($store, 'getters.adSize')"
+            />
+          </div>
+          <article-list
+            v-if="!isPresidentElectionId"
+            v-show="hasAutoScroll"
+            id="articleListAutoScroll"
+            ref="articleListAutoScroll"
+            :articles="autoScrollArticlesLoadMore"
+            :has-d-f-p="false"
+          />
+          <loading :show="loading" />
           <!--<section class="footer container">
             <app-footer style="padding: 0 2rem; margin-bottom: 40px;"></app-footer>
           </section>-->
-          <share :right="`20px`" :bottom="`20px`"></share>
+          <share
+            :right="`20px`"
+            :bottom="`20px`"
+          />
         </template>
 
         <WineWarning v-if="needWineWarning" />
-
       </div>
     </template>
   </vue-dfp-provider>
@@ -533,6 +698,41 @@ export default {
       }
     }
   },
+  watch: {
+    uuid: function () {
+      this.$forceUpdate()
+      if (process.env.VUE_ENV === 'client') {
+        window.ga('send', 'pageview', { title: `${_.get(this.topic, ['name'])} - ${SITE_TITLE}`, location: document.location.href })
+        if (this.topicType === 'list' || this.topicType === 'wide') {
+          window.removeEventListener('scroll', this.scrollHandler)
+          window.addEventListener('scroll', this.scrollHandler)
+        } else {
+          window.removeEventListener('scroll', this.scrollHandler)
+        }
+        if (this.topicType === 'timeline') {
+          window.removeEventListener('scroll', this.timelineScrollHandler)
+          window.addEventListener('scroll', this.timelineScrollHandler)
+        } else {
+          window.removeEventListener('scroll', this.timelineScrollHandler)
+        }
+      }
+    },
+    customCSS: function () {
+      if (process.env.VUE_ENV === 'client') {
+        this.updateCustomizedMarkup()
+      }
+    },
+    articleUrl: function () {
+      if (process.env.VUE_ENV === 'client') {
+        window.FB && window.FB.init({
+          appId: this.fbAppId,
+          xfbml: true,
+          version: 'v2.0'
+        })
+        window.FB && window.FB.XFBML.parse()
+      }
+    }
+  },
   beforeMount () {
     fetchEvent(this.$store, 'logo')
     if (this.topicType !== 'timeline') {
@@ -568,6 +768,14 @@ export default {
     window.addEventListener('resize', this.updateViewport)
     if (this.topicType === 'list' || this.topicType === 'wide') { window.addEventListener('scroll', this.scrollHandler) }
     if (this.topicType === 'timeline') { window.addEventListener('scroll', this.timelineScrollHandler) }
+  },
+  updated () {
+    this.updateSysStage()
+  },
+  destroyed () {
+    window.removeEventListener('resize', this.updateViewport)
+    window.removeEventListener('scroll', this.scrollHandler)
+    window.removeEventListener('scroll', this.timelineScrollHandler)
   },
   methods: {
     checkIfLockJS () {
@@ -738,49 +946,6 @@ export default {
       custScript.innerHTML = ''
     }
     next()
-  },
-  updated () {
-    this.updateSysStage()
-  },
-  destroyed () {
-    window.removeEventListener('resize', this.updateViewport)
-    window.removeEventListener('scroll', this.scrollHandler)
-    window.removeEventListener('scroll', this.timelineScrollHandler)
-  },
-  watch: {
-    uuid: function () {
-      this.$forceUpdate()
-      if (process.env.VUE_ENV === 'client') {
-        window.ga('send', 'pageview', { title: `${_.get(this.topic, ['name'])} - ${SITE_TITLE}`, location: document.location.href })
-        if (this.topicType === 'list' || this.topicType === 'wide') {
-          window.removeEventListener('scroll', this.scrollHandler)
-          window.addEventListener('scroll', this.scrollHandler)
-        } else {
-          window.removeEventListener('scroll', this.scrollHandler)
-        }
-        if (this.topicType === 'timeline') {
-          window.removeEventListener('scroll', this.timelineScrollHandler)
-          window.addEventListener('scroll', this.timelineScrollHandler)
-        } else {
-          window.removeEventListener('scroll', this.timelineScrollHandler)
-        }
-      }
-    },
-    customCSS: function () {
-      if (process.env.VUE_ENV === 'client') {
-        this.updateCustomizedMarkup()
-      }
-    },
-    articleUrl: function () {
-      if (process.env.VUE_ENV === 'client') {
-        window.FB && window.FB.init({
-          appId: this.fbAppId,
-          xfbml: true,
-          version: 'v2.0'
-        })
-        window.FB && window.FB.XFBML.parse()
-      }
-    }
   }
 }
 </script>

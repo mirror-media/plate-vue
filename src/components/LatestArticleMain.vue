@@ -1,48 +1,101 @@
 <template>
-  <div v-if="(latestList.length > 0)" class="latest-main-container" >
-    <div class="latest-main-container_title"><h3>最新文章</h3></div>
+  <div
+    v-if="(latestList.length > 0)"
+    class="latest-main-container"
+  >
+    <div class="latest-main-container_title">
+      <h3>最新文章</h3>
+    </div>
     <div class="latest-list">
       <template v-for="(articles, index) in latestArticleArr">
-        <div class="latest-list_item" v-for="(o, i) in latestArticleArr[ index ]">
-          <a :href="getHref(o)"
+        <div
+          v-for="(o, i) in latestArticleArr[ index ]"
+          :key="`latest-list_item-${i}`"
+          class="latest-list_item"
+        >
+          <a
             v-if="shouldShowItem(o)"
+            :href="getHref(o)"
             :target="target"
-            @click="sendGaClickEvent('home', 'latest')">
-            <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="getValue(o, [ 'heroImage', 'id' ], Date.now())" :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
-            <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
+            @click="sendGaClickEvent('home', 'latest')"
+          >
+            <LatestAriticleImg
+              :id="getValue(o, [ 'heroImage', 'id' ], Date.now())"
+              :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"
+              class="latest-list_item_img"
+              :src="getImage(o, 'mobile')"
+            />
+            <div
+              class="latest-list_item_label tablet-only desktop-hidden"
+              :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))"
+              v-text="getLabel(o)"
+            />
           </a>
-          <a :href="getHrefFull(o)" v-if="!shouldShowItem(o)" tid="ee" :target="target" @click="sendGaClickEvent('home', 'latest')">
-            <LatestAriticleImg class="latest-list_item_img" :src="getImage(o, 'mobile')" :id="getValue(o, [ 'heroImage', 'id' ], Date.now())" :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"></LatestAriticleImg>
-            <div class="latest-list_item_label tablet-only desktop-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
+          <a
+            v-if="!shouldShowItem(o)"
+            :href="getHrefFull(o)"
+            tid="ee"
+            :target="target"
+            @click="sendGaClickEvent('home', 'latest')"
+          >
+            <LatestAriticleImg
+              :id="getValue(o, [ 'heroImage', 'id' ], Date.now())"
+              :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"
+              class="latest-list_item_img"
+              :src="getImage(o, 'mobile')"
+            />
+            <div
+              class="latest-list_item_label tablet-only desktop-hidden"
+              :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))"
+              v-text="getLabel(o)"
+            />
           </a>
           <div class="latest-list_item_title">
-            <div class="latest-list_item_label tablet-hidden" :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getLabel(o)"></div>
+            <div
+              class="latest-list_item_label tablet-hidden"
+              :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))"
+              v-text="getLabel(o)"
+            />
             <a
               v-if="shouldShowItem(o)"
               :href="getHref(o)"
               :target="target"
-              @click="sendGaClickEvent('home', 'latest')">
-              <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
-              <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
+              @click="sendGaClickEvent('home', 'latest')"
+            >
+              <h3 v-text="getTruncatedVal(o.title, 22)" />
+              <span
+                class="brief tablet-only desktop-hidden"
+                v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"
+              />
             </a>
-            <a :href="getHrefFull(o)" v-if="!shouldShowItem(o)" :target="target" @click="sendGaClickEvent('home', 'latest')">
-              <h3 v-text="getTruncatedVal(o.title, 22)"></h3>
-              <span class="brief tablet-only desktop-hidden" v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"></span>
+            <a
+              v-if="!shouldShowItem(o)"
+              :href="getHrefFull(o)"
+              :target="target"
+              @click="sendGaClickEvent('home', 'latest')"
+            >
+              <h3 v-text="getTruncatedVal(o.title, 22)" />
+              <span
+                class="brief tablet-only desktop-hidden"
+                v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"
+              />
             </a>
           </div>
         </div>
         <micro-ad
-          :currEnv="currEnv" :currUrl="currUrl"
-          :id="`${getValue(microAds, [ 'homepage', index, 'pcId' ])}`"
           v-if="index < 3 && viewport > 1199"
+          :id="`${getValue(microAds, [ 'homepage', index, 'pcId' ])}`"
           :key="`pc-microAd-${index}`"
+          :curr-env="currEnv"
+          :curr-url="currUrl"
           class="latest-list_item nativeDFP margin-top-0"
         />
         <micro-ad
-          :currEnv="currEnv" :currUrl="currUrl"
-          :id="`${getValue(microAds, [ 'homepage', index, 'mobileId' ])}`"
           v-if="index < 3 && viewport < 600"
+          :id="`${getValue(microAds, [ 'homepage', index, 'mobileId' ])}`"
           :key="`mb-microAd-${index}`"
+          :curr-env="currEnv"
+          :curr-url="currUrl"
           class="latest-list_item nativeDFP margin-top-0"
         />
       </template>
@@ -59,7 +112,29 @@ import MicroAd from '../components/MicroAd.vue'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
-  name: 'latest-list-main',
+  name: 'LatestListMain',
+  components: {
+    LatestAriticleImg,
+    MicroAd
+  },
+  props: {
+    latestList: {
+      default: () => { return [] }
+    },
+    target: {
+      default: () => ('_self')
+    },
+    viewport: {
+      default: () => { return undefined }
+    }
+  },
+  data () {
+    return {
+      currEnv: 'prod',
+      microAdLoded: {},
+      microAds
+    }
+  },
   computed: {
     currUrl () {
       return this.$route.fullPath
@@ -80,16 +155,8 @@ export default {
       return [this.latestListBeforeDFPNA3, this.latestListBeforeDFPNA5, this.latestListBeforeDFPNA9, this.latestListAfterDFPNA9]
     }
   },
-  components: {
-    LatestAriticleImg,
-    MicroAd
-  },
-  data () {
-    return {
-      currEnv: 'prod',
-      microAdLoded: {},
-      microAds
-    }
+  mounted () {
+    this.updateSysStage()
   },
   methods: {
     getHref,
@@ -122,20 +189,6 @@ export default {
     sendGaClickEvent,
     shouldShowItem (article) {
       return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
-    }
-  },
-  mounted () {
-    this.updateSysStage()
-  },
-  props: {
-    latestList: {
-      default: () => { return [] }
-    },
-    target: {
-      default: () => ('_self')
-    },
-    viewport: {
-      default: () => { return undefined }
     }
   }
 }

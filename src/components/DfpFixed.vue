@@ -1,14 +1,18 @@
 <template>
   <div class="dfp-fixed ">
-    <slot name="dfpFF"></slot>
-    <img src="/assets/mirrormedia/icon/close-btn.png" @click="closeDfpFixed()" alt="關閉">
+    <slot name="dfpFF" />
+    <img
+      src="/assets/mirrormedia/icon/close-btn.png"
+      alt="關閉"
+      @click="closeDfpFixed()"
+    >
   </div>
 </template>
 
 <script>
 
 export default {
-  name: 'dfpFixed',
+  name: 'DfpFixed',
   methods: {
     closeDfpFixed () {
       this.$emit('closeDfpFixed')

@@ -1,82 +1,240 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="sectionId" :options="dfpOptions" :mode="dfpMode">
-    <template slot-scope="props" slot="dfpPos">
-
+  <vue-dfp-provider
+    :dfp-units="dfpUnits"
+    :dfpid="dfpid"
+    :section="sectionId"
+    :options="dfpOptions"
+    :mode="dfpMode"
+  >
+    <template
+      slot="dfpPos"
+      slot-scope="props"
+    >
       <!-- <EmbeddedIframe v-if="hasEventEmbedded" :mediaData="eventEmbedded" /> -->
 
-      <div class="article-container" v-if="(articleStyle !== 'photography')" >
-        <EmbeddedIframe class="embedded-iframe--article-m" v-if="hasEventEmbedded" :mediaData="eventEmbedded" />
-        <vue-dfp :is="props.vueDfp" pos="APPHD" extClass="full mobile-only" :config="props.config" :size="getValue($store, 'getters.adSize')" />
-        <div class="split-line"></div>
-        <div class="article-heromedia" v-if="heroVideo" >
-          <article-video :video="heroVideo" class="heroimg" />
-          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
+      <div
+        v-if="(articleStyle !== 'photography')"
+        class="article-container"
+      >
+        <EmbeddedIframe
+          v-if="hasEventEmbedded"
+          class="embedded-iframe--article-m"
+          :media-data="eventEmbedded"
+        />
+        <vue-dfp
+          :is="props.vueDfp"
+          pos="APPHD"
+          ext-class="full mobile-only"
+          :config="props.config"
+          :size="getValue($store, 'getters.adSize')"
+        />
+        <div class="split-line" />
+        <div
+          v-if="heroVideo"
+          class="article-heromedia"
+        >
+          <article-video
+            :video="heroVideo"
+            class="heroimg"
+          />
+          <div
+            v-show="(heroCaption && heroCaption.length > 0)"
+            class="heroimg-caption"
+            v-text="heroCaption"
+          />
         </div>
-        <div class="article-heromedia" v-else-if="heroImage">
-          <img v-if="heroImage && heroImage.image" class="heroimg" :alt="heroCaption" :src="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
-          :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
-          getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'" />
-          <div class="heroimg-caption" v-text="heroCaption" v-show="(heroCaption && heroCaption.length > 0)"></div>
+        <div
+          v-else-if="heroImage"
+          class="article-heromedia"
+        >
+          <img
+            v-if="heroImage && heroImage.image"
+            class="heroimg"
+            :alt="heroCaption"
+            :src="getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ])"
+            :srcset="getValue(heroImage, [ 'image', 'resizedTargets', 'mobile', 'url' ]) + ' 800w, ' +
+              getValue(heroImage, [ 'image', 'resizedTargets', 'tablet', 'url' ]) + ' 1200w, ' +
+              getValue(heroImage, [ 'image', 'resizedTargets', 'desktop', 'url' ]) + ' 2000w'"
+          >
+          <div
+            v-show="(heroCaption && heroCaption.length > 0)"
+            class="heroimg-caption"
+            v-text="heroCaption"
+          />
         </div>
-        <div class="article" v-if="articleData">
-
-          <article-body :articleData="articleData" :viewport="viewport">
-            <aside class="article_aside mobile-hidden" slot="aside" v-if="!ifSingleCol">
-              <latest-list :latests="latests" :isAppPage="true" v-if="ifRenderAside" />
+        <div
+          v-if="articleData"
+          class="article"
+        >
+          <article-body
+            :article-data="articleData"
+            :viewport="viewport"
+          >
+            <aside
+              v-if="!ifSingleCol"
+              slot="aside"
+              class="article_aside mobile-hidden"
+            >
+              <latest-list
+                v-if="ifRenderAside"
+                :latests="latests"
+                :is-app-page="true"
+              />
             </aside>
-            <vue-dfp :is="props.vueDfp" pos="APPE1" extClass="mobile-only" slot="dfpad-set" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
-            <vue-dfp :is="props.vueDfp" pos="APPAT1" extClass="mobile-only" slot="dfpad-AR1-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
-            <vue-dfp :is="props.vueDfp" pos="APPAT2" extClass="mobile-only" slot="dfpad-AR2-MB" :dfpId="props.dfpId" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="dfpad-set"
+              pos="APPE1"
+              ext-class="mobile-only"
+              :dfp-id="props.dfpId"
+              :config="props.config"
+              :size="getValue($store, 'getters.adSize')"
+            />
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="dfpad-AR1-MB"
+              pos="APPAT1"
+              ext-class="mobile-only"
+              :dfp-id="props.dfpId"
+              :config="props.config"
+              :size="getValue($store, 'getters.adSize')"
+            />
+            <vue-dfp
+              :is="props.vueDfp"
+              slot="dfpad-AR2-MB"
+              pos="APPAT2"
+              ext-class="mobile-only"
+              :dfp-id="props.dfpId"
+              :config="props.config"
+              :size="getValue($store, 'getters.adSize')"
+            />
 
-            <PopList :pop="popularlist" slot="poplist" :currEnv="dfpMode" />
+            <PopList
+              slot="poplist"
+              :pop="popularlist"
+              :curr-env="dfpMode"
+            />
 
-            <RelatedListInContent slot="relatedListInContent" :isAppPage="true" :relateds="relateds" />
+            <RelatedListInContent
+              slot="relatedListInContent"
+              :is-app-page="true"
+              :relateds="relateds"
+            />
             <RecommendList
               v-if="recommendlist.length > 0 && !isAd"
               slot="relatedlistBottom"
-              :isAppPage="true"
-              :sectionId="sectionId"
+              :is-app-page="true"
+              :section-id="sectionId"
               :relateds="relateds"
-              :currArticleId="currArticleId"
+              :curr-article-id="currArticleId"
               :recommends="recommendlist"
-              :excludingArticle="routeUpateReferrerSlug"
+              :excluding-article="routeUpateReferrerSlug"
             />
-            <div class="article_fb_comment" style="margin: 1.5em 0;" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+            <div
+              slot="slot_fb_comment"
+              class="article_fb_comment"
+              style="margin: 1.5em 0;"
+            >
+              {{ fbCommentDiv }}
+            </div>
             <template slot="recommendList">
-              <div id="dablewidget_GlYwenoy" class="dable-widget" data-widget_id="GlYwenoy"></div>
+              <div
+                id="dablewidget_GlYwenoy"
+                class="dable-widget"
+                data-widget_id="GlYwenoy"
+              />
             </template>
           </article-body>
           <div class="article_footer">
-            <vue-dfp :is="props.vueDfp" pos="APPFT" :extClass="`full mobile-only`" :config="props.config" :size="getValue($store, 'getters.adSize')" />
+            <vue-dfp
+              :is="props.vueDfp"
+              pos="APPFT"
+              :ext-class="`full mobile-only`"
+              :config="props.config"
+              :size="getValue($store, 'getters.adSize')"
+            />
           </div>
         </div>
       </div>
       <div v-else-if="(articleStyle === 'photography')">
-        <article-body-photography :articleData="articleData" :viewport="viewport" :initFBComment="initializeFBComments" :isApp="true">
-          <div class="article_fb_comment" slot="slot_fb_comment" v-html="fbCommentDiv"></div>
+        <article-body-photography
+          :article-data="articleData"
+          :viewport="viewport"
+          :init-f-b-comment="initializeFBComments"
+          :is-app="true"
+        >
+          <div
+            slot="slot_fb_comment"
+            class="article_fb_comment"
+          >
+            {{ fbCommentDiv }}
+          </div>
           <div slot="slot_dfpFT">
-            <vue-dfp :is="props.vueDfp" pos="APPFT" :extClass="`full mobile-only`" :config="props.config" :size="getValue($store, 'getters.adSize')" v-if="viewport < 767" />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="viewport < 767"
+              pos="APPFT"
+              :ext-class="`full mobile-only`"
+              :config="props.config"
+              :size="getValue($store, 'getters.adSize')"
+            />
           </div>
         </article-body-photography>
       </div>
-      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550) && !needWineWarning">
+      <LazyItemWrapper
+        v-if="(viewport < 550) && !needWineWarning"
+        :load-after-page-loaded="true"
+      >
         <DfpST :props="props">
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="APPST" slot="dfpST" />
+          <vue-dfp
+            :is="props.vueDfp"
+            slot="dfpST"
+            :config="props.config"
+            pos="APPST"
+          />
         </DfpST>
       </LazyItemWrapper>
       <WineWarning v-if="needWineWarning" />
-      <DfpCover v-if="!hiddenAdvertised && isTimeToShowAdCover" v-show="showDfpCoverAdFlag && viewport < 1199">
-        <vue-dfp :is="props.vueDfp" pos="MBCVR" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      <DfpCover
+        v-if="!hiddenAdvertised && isTimeToShowAdCover"
+        v-show="showDfpCoverAdFlag && viewport < 1199"
+      >
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="(viewport < 550)"
+          slot="ad-cover"
+          pos="MBCVR"
+          :config="props.config"
+        />
       </DfpCover>
-      <DfpCover v-if="showDfpCoverAd2Flag && viewport < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="MBCVR2" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      <DfpCover
+        v-if="showDfpCoverAd2Flag && viewport < 1199"
+        :show-close-btn="false"
+        class="raw"
+      >
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="(viewport < 550)"
+          slot="ad-cover"
+          pos="MBCVR2"
+          :config="props.config"
+        />
       </DfpCover>
-      <DfpCover v-if="showDfpCoverInnityFlag && viewport < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="MBCVR3" v-if="(viewport < 550)" :config="props.config" slot="ad-cover" />
+      <DfpCover
+        v-if="showDfpCoverInnityFlag && viewport < 1199"
+        :show-close-btn="false"
+        class="raw"
+      >
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="(viewport < 550)"
+          slot="ad-cover"
+          pos="MBCVR3"
+          :config="props.config"
+        />
       </DfpCover>
       <adult-content-alert v-if="isAdultContent" />
-      <div class="fb-quote"></div>
+      <div class="fb-quote" />
     </template>
   </vue-dfp-provider>
 </template>
@@ -173,8 +331,24 @@ const fetchImages = (store, { ids = [], maxResults = 10 }) => store.dispatch('FE
 })
 
 export default {
-  name: 'article-view',
+  name: 'ArticleView',
   preFetch: fetchData,
+  components: {
+    'adult-content-alert': AdultContentAlert,
+    'article-body': ArticleBody,
+    'article-body-photography': ArticleBodyPhotography,
+    'dfp-fixed': DfpFixed,
+    'latest-list': LatestList,
+    'vue-dfp-provider': VueDfpProvider,
+    WineWarning,
+    DfpCover,
+    DfpST,
+    EmbeddedIframe,
+    LazyItemWrapper,
+    PopList,
+    RelatedListInContent,
+    RecommendList
+  },
   asyncData ({ store }) { // asyncData ({ store, route: { params: { id }}})
     return fetchData(store)
   },
@@ -298,35 +472,6 @@ export default {
       }
     }
     next()
-  },
-  beforeMount () {
-    const { sections } = _get(this.$store, ['state', 'articles', 'items', 0], {})
-    fetchLatestArticle(this.$store, {
-      sort: '-publishedDate',
-      where: {
-        sections: _get(sections, [0, 'id'])
-      }
-    })
-    fetchPop(this.$store)
-    fetchCommonData(this.$store)
-    fetchEvent(this.$store, 'embedded')
-    fetchEvent(this.$store, 'logo')
-  },
-  components: {
-    'adult-content-alert': AdultContentAlert,
-    'article-body': ArticleBody,
-    'article-body-photography': ArticleBodyPhotography,
-    'dfp-fixed': DfpFixed,
-    'latest-list': LatestList,
-    'vue-dfp-provider': VueDfpProvider,
-    WineWarning,
-    DfpCover,
-    DfpST,
-    EmbeddedIframe,
-    LazyItemWrapper,
-    PopList,
-    RelatedListInContent,
-    RecommendList
   },
   data () {
     return {
@@ -531,6 +676,59 @@ export default {
       return (this.viewport < 321) ? 'ad-fit' : ''
     }
   },
+  watch: {
+    articleUrl: function () {
+      window.FB && window.FB.init({
+        appId: this.fbAppId,
+        xfbml: true,
+        version: 'v2.0'
+      })
+      window.FB && window.FB.XFBML.parse()
+      this.checkIfLockJS()
+      this.updateMediafarmersScript()
+      this.sendGA(this.articleData)
+    },
+    articleData: function (value) {
+      if (value.relateds && value.relateds.length > 0) {
+        const relatedImages = value.relateds.filter(related => related).map(related => related.heroImage)
+        fetchImages(this.$store, { ids: relatedImages, maxResults: relatedImages.length })
+      }
+    }
+  },
+  beforeMount () {
+    const { sections } = _get(this.$store, ['state', 'articles', 'items', 0], {})
+    fetchLatestArticle(this.$store, {
+      sort: '-publishedDate',
+      where: {
+        sections: _get(sections, [0, 'id'])
+      }
+    })
+    fetchPop(this.$store)
+    fetchCommonData(this.$store)
+    fetchEvent(this.$store, 'embedded')
+    fetchEvent(this.$store, 'logo')
+  },
+  mounted () {
+    this.initializeFBComments()
+    this.insertMediafarmersScript()
+    this.updateViewport()
+    this.clientSideFlag = process.env.VUE_ENV === 'client'
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
+    this.checkIfLockJS()
+    this.updateSysStage()
+    // this.abIndicator = this.getMmid()
+    this.sendGA(this.articleData)
+
+    const scrollTriggerRegister = new ScrollTriggerRegister([
+      { target: '.dable-widget', offset: 400, cb: this.initializeFBComments }
+    ])
+    scrollTriggerRegister.init()
+  },
+  updated () {
+    this.updateSysStage()
+  },
   methods: {
     checkIfLockJS () {
       if (this.ifLockJS) {
@@ -602,46 +800,6 @@ export default {
     },
     updateSysStage () {
       this.dfpMode = currEnv()
-    }
-  },
-  mounted () {
-    this.initializeFBComments()
-    this.insertMediafarmersScript()
-    this.updateViewport()
-    this.clientSideFlag = process.env.VUE_ENV === 'client'
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
-    this.checkIfLockJS()
-    this.updateSysStage()
-    // this.abIndicator = this.getMmid()
-    this.sendGA(this.articleData)
-
-    const scrollTriggerRegister = new ScrollTriggerRegister([
-      { target: '.dable-widget', offset: 400, cb: this.initializeFBComments }
-    ])
-    scrollTriggerRegister.init()
-  },
-  updated () {
-    this.updateSysStage()
-  },
-  watch: {
-    articleUrl: function () {
-      window.FB && window.FB.init({
-        appId: this.fbAppId,
-        xfbml: true,
-        version: 'v2.0'
-      })
-      window.FB && window.FB.XFBML.parse()
-      this.checkIfLockJS()
-      this.updateMediafarmersScript()
-      this.sendGA(this.articleData)
-    },
-    articleData: function (value) {
-      if (value.relateds && value.relateds.length > 0) {
-        const relatedImages = value.relateds.filter(related => related).map(related => related.heroImage)
-        fetchImages(this.$store, { ids: relatedImages, maxResults: relatedImages.length })
-      }
     }
   }
 }

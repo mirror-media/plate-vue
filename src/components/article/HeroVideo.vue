@@ -1,8 +1,15 @@
 <template>
   <div class="hero-video">
     <template v-if="video">
-      <ArticleVideo :video="video" class="hero-video__video"></ArticleVideo>
-      <div v-show="heroCaption && heroCaption.length > 0" class="hero-video__caption" v-text="heroCaption"></div>
+      <ArticleVideo
+        :video="video"
+        class="hero-video__video"
+      />
+      <div
+        v-show="heroCaption && heroCaption.length > 0"
+        class="hero-video__caption"
+        v-text="heroCaption"
+      />
     </template>
   </div>
 </template>

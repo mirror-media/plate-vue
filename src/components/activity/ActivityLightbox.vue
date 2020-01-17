@@ -1,33 +1,73 @@
 <template>
-  <section class="ActivityLightbox" :style="[ isLightboxMenuOpen ? { overflow: 'hidden' } : {} ]">
+  <section
+    class="ActivityLightbox"
+    :style="[ isLightboxMenuOpen ? { overflow: 'hidden' } : {} ]"
+  >
     <h1 v-text="getValue(activity, [ 'name' ])" />
-    <figure class="ActivityLightbox__close" @click="closeLightbox()">
-      <img v-lazy="`/assets/mirrormedia/icon/timelineClose@2x.png`" />
+    <figure
+      class="ActivityLightbox__close"
+      @click="closeLightbox()"
+    >
+      <img v-lazy="`/assets/mirrormedia/icon/timelineClose@2x.png`">
     </figure>
-    <div class="ActivityLightbox__slider" v-if="currentContentStyle !== 'text'" v-on:touchstart="touchstart" v-on:touchend="touchend">
-      <div class="ActivityLightbox__slider--arrow left" v-show="nodeContentMoreThanOne" @click="goToPrev()" />
+    <div
+      v-if="currentContentStyle !== 'text'"
+      class="ActivityLightbox__slider"
+      @touchstart="touchstart"
+      @touchend="touchend"
+    >
+      <div
+        v-show="nodeContentMoreThanOne"
+        class="ActivityLightbox__slider--arrow left"
+        @click="goToPrev()"
+      />
       <template v-for="(item, index) in currentNodeContents">
-        <activity-lightboxSlider :initialContent="item" :class="[ index === currentContentIndex ? 'active' : 'unactive' ]" :viewport="viewport" />
+        <activity-lightboxSlider
+          :key="`lightboxSlider-${index}`"
+          :initial-content="item"
+          :class="[ index === currentContentIndex ? 'active' : 'unactive' ]"
+          :viewport="viewport"
+        />
       </template>
-      <div class="ActivityLightbox__slider--arrow right" v-show="nodeContentMoreThanOne" @click="goToNext()" />
+      <div
+        v-show="nodeContentMoreThanOne"
+        class="ActivityLightbox__slider--arrow right"
+        @click="goToNext()"
+      />
     </div>
-    <div class="ActivityLightbox__slideshowInfo" v-if="currentContentStyle !== 'text'">
+    <div
+      v-if="currentContentStyle !== 'text'"
+      class="ActivityLightbox__slideshowInfo"
+    >
       <p v-text="currentContentCredit" />
       <div class="ActivityLightbox__slideshowInfoAmountBox">
         <span>{{ currentContentIndex + 1 }} | {{ getValue(currentNodeContents, [ 'length' ]) }}</span>
-        <img v-lazy="`/assets/mirrormedia/icon/square_gray@2x.png`" v-show="nodeContentMoreThanOne" @click="openLightboxMenu()" />
+        <img
+          v-show="nodeContentMoreThanOne"
+          v-lazy="`/assets/mirrormedia/icon/square_gray@2x.png`"
+          @click="openLightboxMenu()"
+        >
       </div>
     </div>
-    <div class="ActivityLightbox__content" :class="currentContentStyle">
+    <div
+      class="ActivityLightbox__content"
+      :class="currentContentStyle"
+    >
       <h3 v-text="getValue(nodes, [ currentNodeIndex, 'subtitle' ])" />
       <h2 v-text="getValue(nodes, [ currentNodeIndex, 'name' ])" />
       <p v-text="getValue(nodes, [ currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])" />
       <figure @click="share()">
-        <img v-lazy="`/assets/mirrormedia/icon/facebook_white.png`" />
+        <img v-lazy="`/assets/mirrormedia/icon/facebook_white.png`">
       </figure>
     </div>
-    <activity-lightboxMenu :currentNodeContents="currentNodeContents" :initialActivity="activity" :viewport="viewport"
-      v-on:goToContentIndex="goToContentIndex" v-show="isLightboxMenuOpen" v-if="nodeContentMoreThanOne" />
+    <activity-lightboxMenu
+      v-show="isLightboxMenuOpen"
+      v-if="nodeContentMoreThanOne"
+      :current-node-contents="currentNodeContents"
+      :initial-activity="activity"
+      :viewport="viewport"
+      @goToContentIndex="goToContentIndex"
+    />
   </section>
 </template>
 
@@ -82,6 +122,11 @@ export default {
     },
     windowViewport () {
       return this.viewport
+    }
+  },
+  watch: {
+    currentNodeIndex: function () {
+      this.currentContentIndex = 0
     }
   },
   methods: {
@@ -159,11 +204,6 @@ export default {
     },
     touchstart (e) {
       this.touchStartValueX = e.touches[0].pageX
-    }
-  },
-  watch: {
-    currentNodeIndex: function () {
-      this.currentContentIndex = 0
     }
   }
 }

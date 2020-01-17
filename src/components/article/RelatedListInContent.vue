@@ -1,15 +1,33 @@
 <template>
   <section class="relateds-in-content">
     <h3>文章未完 往下繼續閱讀</h3>
-    <div v-for="related in relateds" :key="related.id" class="related">
+    <div
+      v-for="related in relateds"
+      :key="related.id"
+      class="related"
+    >
       <div class="related__title">
-        <a :href="getHref(related, isAppPage)" target="_blank" v-text="related.title" @click="sendGaClickEvent('article', 'related')"></a>
+        <a
+          :href="getHref(related, isAppPage)"
+          target="_blank"
+          @click="sendGaClickEvent('article', 'related')"
+          v-text="related.title"
+        />
       </div>
-      <a v-if="getImage(related.heroImage)" :href="getHref(related, isAppPage)" class="related__img" target="_blank" @click="sendGaClickEvent('article', 'related')">
-        <LazyImage :src="getImage(related.heroImage)" :alt="related.title" />
+      <a
+        v-if="getImage(related.heroImage)"
+        :href="getHref(related, isAppPage)"
+        class="related__img"
+        target="_blank"
+        @click="sendGaClickEvent('article', 'related')"
+      >
+        <LazyImage
+          :src="getImage(related.heroImage)"
+          :alt="related.title"
+        />
       </a>
     </div>
-    <slot></slot>
+    <slot />
   </section>
 </template>
 <script>

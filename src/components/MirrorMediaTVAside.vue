@@ -1,13 +1,42 @@
 <template>
   <div class="mmtv-aside">
-    <div class="mmtv-aside--title" v-if="showTitle"><h2 v-text="$t('mmtv')"></h2></div>
-    <div class="mmtv-aside--curtain" @click="toggleLightbox"></div>
-    <div class="mmtv-aside--container" :class="containerClass" v-html="mediaDataEmbed" ref="embed-code" @click="toggleLightbox"></div>
+    <div
+      v-if="showTitle"
+      class="mmtv-aside--title"
+    >
+      <h2 v-text="$t('mmtv')" />
+    </div>
+    <div
+      class="mmtv-aside--curtain"
+      @click="toggleLightbox"
+    />
+    <div
+      ref="embed-code"
+      class="mmtv-aside--container"
+      :class="containerClass"
+      @click="toggleLightbox"
+      v-html="mediaDataEmbed"
+    />
   </div>
 </template>
 <script>
 import _ from 'lodash'
 export default {
+  name: 'MmtvAside',
+  props: {
+    mediaData: {
+      default: () => ({})
+    },
+    showTitle: {
+      default: () => true
+    }
+  },
+  data () {
+    return {
+      isGaEventSentYet: false,
+      showAsLightbox: false
+    }
+  },
   computed: {
     containerClass () {
       return {
@@ -18,13 +47,7 @@ export default {
       return _.get(this.mediaData, ['embed'])
     }
   },
-  data () {
-    return {
-      isGaEventSentYet: false,
-      showAsLightbox: false
-    }
-  },
-  name: 'mmtv-aside',
+  mounted () {},
   methods: {
     toggleLightbox () {
       this.showAsLightbox = !this.showAsLightbox
@@ -33,15 +56,6 @@ export default {
         nonInteraction: false
       })
       this.isGaEventSentYet = true
-    }
-  },
-  mounted () {},
-  props: {
-    mediaData: {
-      default: () => ({})
-    },
-    showTitle: {
-      default: () => true
     }
   }
 }

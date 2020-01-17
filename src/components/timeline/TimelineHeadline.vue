@@ -1,7 +1,10 @@
 <template>
   <section class="timelineHeadline">
-    <div class="timelineHeadline__heroImage" :style="{ backgroundImage: `url(${topicImage})` }">
-      <div class="timelineHeadline__heroImage--title"></div>
+    <div
+      class="timelineHeadline__heroImage"
+      :style="{ backgroundImage: `url(${topicImage})` }"
+    >
+      <div class="timelineHeadline__heroImage--title" />
     </div>
   </section>
 </template>

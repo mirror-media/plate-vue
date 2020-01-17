@@ -1,33 +1,63 @@
 <template>
   <article class="candidates">
-    <section v-for="(cand, idx) in candidateData" :key="cand.tagId" class="candidate-card">
+    <section
+      v-for="(cand, idx) in candidateData"
+      :key="cand.tagId"
+      class="candidate-card"
+    >
       <div class="candidate-card__wrapper">
-
         <div class="candidate-card__content">
           <div class="candidate-card__head">
-            <div class="candidate-card__img" :style="{ backgroundImage: `url(${cand.img})`} "></div>
-            <h2 :style="{ backgroundColor: cand.color }">{{ cand.title }}</h2>
+            <div
+              class="candidate-card__img"
+              :style="{ backgroundImage: `url(${cand.img})`} "
+            />
+            <h2 :style="{ backgroundColor: cand.color }">
+              {{ cand.title }}
+            </h2>
           </div>
           <div class="candidate-card__body">
             <template v-for="art in beginningArts(cand.articles)">
-              <a :href="`/story/${art.slug}`" target="_blank" :key="`a-${art.id}`">{{ getArtTitle(art.title) }}</a>
-              <hr :style="{ backgroundColor: cand.color }" :key="`hr-${art.id}`" />
+              <a
+                :key="`a-${art.id}`"
+                :href="`/story/${art.slug}`"
+                target="_blank"
+              >{{ getArtTitle(art.title) }}</a>
+              <hr
+                :key="`hr-${art.id}`"
+                :style="{ backgroundColor: cand.color }"
+              >
             </template>
           </div>
         </div>
 
-        <div class="candidate-card__load-more-body" :style="loadMoreBodyStyle(idx)">
+        <div
+          class="candidate-card__load-more-body"
+          :style="loadMoreBodyStyle(idx)"
+        >
           <template v-for="art in loadMoreArts(cand.articles)">
-            <a :href="`/story/${art.slug}`" target="_blank" :key="`a-${art.id}`">{{ getArtTitle(art.title, true) }}</a>
-            <hr :style="{ backgroundColor: cand.color }" :key="`hr-${art.id}`" />
+            <a
+              :key="`a-${art.id}`"
+              :href="`/story/${art.slug}`"
+              target="_blank"
+            >{{ getArtTitle(art.title, true) }}</a>
+            <hr
+              :key="`hr-${art.id}`"
+              :style="{ backgroundColor: cand.color }"
+            >
           </template>
         </div>
 
-        <div :class="['candidate-card__load-more-btn', isTouchDevice ? '' : 'no-touch']" @click="loadMore(cand.tagId, idx)">
-          <img src="/assets/mirrormedia/refresh.png" alt="refresh">
+        <div
+          :class="['candidate-card__load-more-btn', isTouchDevice ? '' : 'no-touch']"
+          @click="loadMore(cand.tagId, idx)"
+        >
+          <img
+            src="/assets/mirrormedia/refresh.png"
+            alt="refresh"
+          >
           <div>看更多</div>
         </div>
-
       </div>
     </section>
   </article>
@@ -53,6 +83,11 @@ export default {
       isTouchDevice: isTouchDevice()
     }
   },
+  computed: {
+    isLap () {
+      return this.ww >= 768
+    }
+  },
   mounted () {
     this.wEl = window
     this.ww = this.wEl.innerWidth
@@ -62,11 +97,6 @@ export default {
     this.artTitleLMW = this.artTitleLMEl.clientWidth
     this.wEl.addEventListener('resize', debounce(this.handleWWChange, 300))
     this.wEl.addEventListener('orientationChange', debounce(this.handleWWChange, 300))
-  },
-  computed: {
-    isLap () {
-      return this.ww >= 768
-    }
   },
   methods: {
     beginningArts (arts) {

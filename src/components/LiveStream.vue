@@ -1,9 +1,32 @@
 <template>
-  <div class="liveStream" v-if="showLiveStream" ref="pop">
-    <div class="liveStream__curtain" v-show="!hasZoomIn" @click="toggleZoomIn()"></div>
-    <div class="liveStream-container" :class="{ zoomIn: hasZoomIn }" v-html="mediaDataEmbed" @click="toggleZoomIn()"></div>
-    <img class="liveStream__close" src="/assets/mirrormedia/icon/close-btn.png"  alt="關閉" v-show="!hasZoomIn" @click="closeLiveStream()">
-    <span class="liveStream__prompt" v-show="!hasZoomIn" v-if="type === 'live'">LIVE</span>
+  <div
+    v-if="showLiveStream"
+    ref="pop"
+    class="liveStream"
+  >
+    <div
+      v-show="!hasZoomIn"
+      class="liveStream__curtain"
+      @click="toggleZoomIn()"
+    />
+    <div
+      class="liveStream-container"
+      :class="{ zoomIn: hasZoomIn }"
+      @click="toggleZoomIn()"
+      v-html="mediaDataEmbed"
+    />
+    <img
+      v-show="!hasZoomIn"
+      class="liveStream__close"
+      src="/assets/mirrormedia/icon/close-btn.png"
+      alt="關閉"
+      @click="closeLiveStream()"
+    >
+    <span
+      v-show="!hasZoomIn"
+      v-if="type === 'live'"
+      class="liveStream__prompt"
+    >LIVE</span>
   </div>
 </template>
 
@@ -14,7 +37,7 @@ import Cookie from 'vue-cookie'
 import { sendGaClickEvent } from '../util/comm'
 
 export default {
-  name: 'live-stream',
+  name: 'LiveStream',
   props: {
     mediaData: {
       required: true
@@ -36,6 +59,12 @@ export default {
       return _.get(this.mediaData, ['embed'])
     }
   },
+  mounted () {
+    const cookie = Cookie.get('liveStreamClosed')
+    if (cookie) {
+      this.showLiveStream = !cookie
+    }
+  },
   methods: {
     closeLiveStream () {
       Cookie.set('liveStreamClosed', 'true', { expires: '10m' })
@@ -54,12 +83,6 @@ export default {
     toggleZoomIn () {
       this.hasZoomIn = !this.hasZoomIn
       this.hasZoomIn ? this.sendGaClickEvent('open') : this.sendGaClickEvent('close')
-    }
-  },
-  mounted () {
-    const cookie = Cookie.get('liveStreamClosed')
-    if (cookie) {
-      this.showLiveStream = !cookie
     }
   }
 }

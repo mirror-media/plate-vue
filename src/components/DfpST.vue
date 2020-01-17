@@ -1,6 +1,9 @@
 <template>
-  <div v-show="showDfp" class="dfp-st">
-    <slot name="dfpST"></slot>
+  <div
+    v-show="showDfp"
+    class="dfp-st"
+  >
+    <slot name="dfpST" />
   </div>
 </template>
 <script>

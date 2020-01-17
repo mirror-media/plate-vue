@@ -2,48 +2,125 @@
   <header>
     <nav class="headerFoodTravel">
       <div class="headerFoodTravel__logo">
-        <a href="/" @click="sendGaClickEvent('header', 'logo')">
-          <img class="headerFoodTravel__link--icon" src="/assets/mirrormedia/icon/logo_black@3x.png" alt="鏡週刊 Mirror Media">
+        <a
+          href="/"
+          @click="sendGaClickEvent('header', 'logo')"
+        >
+          <img
+            class="headerFoodTravel__link--icon"
+            src="/assets/mirrormedia/icon/logo_black@3x.png"
+            alt="鏡週刊 Mirror Media"
+          >
         </a>
       </div>
       <div class="headerFoodTravel__menu">
-        <a class="headerFoodTravel__menu--ham mobile-only" @click="openSideBar()"><img src="/assets/mirrormedia/icon/hamburger@2x.png" alt="開啟側邊欄"></a>
-        <a class="headerFoodTravel__menu--item desktop-only" :href="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :key="`${i}-${Date.now()}`" @click="sendGaClickEvent('header', `category ${item.name}`)"></a>
+        <a
+          class="headerFoodTravel__menu--ham mobile-only"
+          @click="openSideBar()"
+        ><img
+          src="/assets/mirrormedia/icon/hamburger@2x.png"
+          alt="開啟側邊欄"
+        ></a>
+        <a
+          v-for="(item, i) in menuItem"
+          :key="`${i}-${Date.now()}`"
+          class="headerFoodTravel__menu--item desktop-only"
+          :href="'/category/' + item.name"
+          @click="sendGaClickEvent('header', `category ${item.name}`)"
+          v-text="item.title"
+        />
       </div>
       <div class="headerFoodTravel__social-and-search">
-        <a :href="socialLink.FACEBOOK_FOODTRAVEL" target="_blank" @click="sendGaClickEvent('header', `header facebook`)">
-          <img class="headerFoodTravel__link--icon desktop-only" src="/assets/mirrormedia/icon/facebook@2x.png" alt="Facebook">
+        <a
+          :href="socialLink.FACEBOOK_FOODTRAVEL"
+          target="_blank"
+          @click="sendGaClickEvent('header', `header facebook`)"
+        >
+          <img
+            class="headerFoodTravel__link--icon desktop-only"
+            src="/assets/mirrormedia/icon/facebook@2x.png"
+            alt="Facebook"
+          >
         </a>
-        <a :href="socialLink.LINE" target="_blank" @click="sendGaClickEvent('header', `header line`)">
-          <img class="headerFoodTravel__link--icon desktop-only" src="/assets/mirrormedia/icon/line@2x.png" alt="Line">
+        <a
+          :href="socialLink.LINE"
+          target="_blank"
+          @click="sendGaClickEvent('header', `header line`)"
+        >
+          <img
+            class="headerFoodTravel__link--icon desktop-only"
+            src="/assets/mirrormedia/icon/line@2x.png"
+            alt="Line"
+          >
         </a>
         <a @click="openSearchBar()">
-          <img class="headerFoodTravel__link--icon" src="/assets/mirrormedia/icon/search@2x.png" alt="開啟搜尋列">
+          <img
+            class="headerFoodTravel__link--icon"
+            src="/assets/mirrormedia/icon/search@2x.png"
+            alt="開啟搜尋列"
+          >
         </a>
       </div>
     </nav>
     <div class="sidebarFull">
-      <div class="sidebarFull-container" :class="{ open: openSide }">
+      <div
+        class="sidebarFull-container"
+        :class="{ open: openSide }"
+      >
         <div class="sidebarFull__close">
-          <a class="sidebarFull__close--icon" @click="closeSideBar()">
-            <img src="/assets/mirrormedia/icon/close.png" alt="關閉側邊欄">
+          <a
+            class="sidebarFull__close--icon"
+            @click="closeSideBar()"
+          >
+            <img
+              src="/assets/mirrormedia/icon/close.png"
+              alt="關閉側邊欄"
+            >
           </a>
-          <a class="sidebarFull__close--text" @click="closeSideBar()"></a>
+          <a
+            class="sidebarFull__close--text"
+            @click="closeSideBar()"
+          />
         </div>
         <nav class="sidebarFull__menu">
-          <a class="sidebarFull__menu--item" :href="'/category/' + item.name" v-for="(item, i) in menuItem" v-text="item.title" :key="`${i}-${Date.now()}`" @click="sendGaClickEvent('header', `category ${item.name}`)"></a>
+          <a
+            v-for="(item, i) in menuItem"
+            :key="`${i}-${Date.now()}`"
+            class="sidebarFull__menu--item"
+            :href="'/category/' + item.name"
+            @click="sendGaClickEvent('header', `category ${item.name}`)"
+            v-text="item.title"
+          />
         </nav>
       </div>
-      <div class="sidebarFull-curtain" @click="closeSideBar()" v-show="openSide"></div>
+      <div
+        v-show="openSide"
+        class="sidebarFull-curtain"
+        @click="closeSideBar()"
+      />
     </div>
-    <div class="searchFull" v-show="openSearch">
+    <div
+      v-show="openSearch"
+      class="searchFull"
+    >
       <div class="searchFull-container">
-        <input type="text" placeholder="Search" v-model="searchVal" @keyup.enter="search(searchVal)">
+        <input
+          v-model="searchVal"
+          type="text"
+          placeholder="Search"
+          @keyup.enter="search(searchVal)"
+        >
         <a @click="closeSearchBar()">
-          <img src="/assets/mirrormedia/icon/close.png" alt="關閉搜尋列">
+          <img
+            src="/assets/mirrormedia/icon/close.png"
+            alt="關閉搜尋列"
+          >
         </a>
       </div>
-      <div class="searchFull-curtain" @click="closeSearchBar()"></div>
+      <div
+        class="searchFull-curtain"
+        @click="closeSearchBar()"
+      />
     </div>
   </header>
 </template>
@@ -55,7 +132,7 @@ import {
 import { sendGaClickEvent } from '../util/comm'
 import _ from 'lodash'
 export default {
-  name: 'header-full',
+  name: 'HeaderFull',
   props: ['commonData', 'sectionName', 'sections'],
   data () {
     return {
@@ -65,6 +142,21 @@ export default {
       openSearch: false,
       openSide: false,
       searchVal: ''
+    }
+  },
+  computed: {
+    menuItem () {
+      return _.get(_.find(_.get(this.sections, ['items']), {
+        name: this.sectionName
+      }), ['categories'])
+    },
+    sectionLogo () {
+      return _.get(_.find(_.get(this.commonData, ['sections', 'items']), {
+        name: this.sectionName
+      }), ['image'], null)
+    },
+    socialLink () {
+      return SOCIAL_LINK
     }
   },
   methods: {
@@ -92,21 +184,6 @@ export default {
       this.$router.push('/search/' + this.searchVal)
     },
     sendGaClickEvent
-  },
-  computed: {
-    menuItem () {
-      return _.get(_.find(_.get(this.sections, ['items']), {
-        name: this.sectionName
-      }), ['categories'])
-    },
-    sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, ['sections', 'items']), {
-        name: this.sectionName
-      }), ['image'], null)
-    },
-    socialLink () {
-      return SOCIAL_LINK
-    }
   }
 }
 </script>

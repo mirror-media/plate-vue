@@ -1,9 +1,17 @@
 <template>
   <transition name="fade">
-    <div class="relateds-over-content" v-show="showContent" :class="{ 'to-top': isToTop }">
+    <div
+      v-show="showContent"
+      class="relateds-over-content"
+      :class="{ 'to-top': isToTop }"
+    >
       <div>
-        <a :href="`/story/${_get(articles[ 0 ], 'slug', '')}`" class="related" @click="sendGaClickEvent('article', 'related news left')">
-          <div class="related__arrow"></div>
+        <a
+          :href="`/story/${_get(articles[ 0 ], 'slug', '')}`"
+          class="related"
+          @click="sendGaClickEvent('article', 'related news left')"
+        >
+          <div class="related__arrow" />
           <div class="related__txt">
             <div class="related__category">{{ relatedCategory }}</div>
             <div class="related__title">
@@ -11,14 +19,18 @@
             </div>
           </div>
         </a>
-        <a :href="`/story/${_get(articles[ 1 ], 'slug', '')}`" class="related" @click="sendGaClickEvent('article', 'related news right')">
+        <a
+          :href="`/story/${_get(articles[ 1 ], 'slug', '')}`"
+          class="related"
+          @click="sendGaClickEvent('article', 'related news right')"
+        >
           <div class="related__txt">
             <div class="related__category">{{ relatedCategory }}</div>
             <div class="related__title">
               <p>{{ _get(articles[ 1 ], 'title', '') }}</p>
             </div>
           </div>
-          <div class="related__arrow"></div>
+          <div class="related__arrow" />
         </a>
       </div>
     </div>
@@ -41,17 +53,17 @@ export default {
       ww: 0
     }
   },
+  computed: {
+    isLapW () {
+      return this.ww >= 1200
+    }
+  },
   mounted () {
     this.wEl = window
     this.ww = Math.min(this.wEl.innerWidth, document.documentElement.clientWidth)
     this.scrollY = this.wEl.pageYOffset
     this.wEl.addEventListener('scroll', this.displayContent)
     this.wEl.addEventListener('scroll', this.locateContent)
-  },
-  computed: {
-    isLapW () {
-      return this.ww >= 1200
-    }
   },
   methods: {
     _get,

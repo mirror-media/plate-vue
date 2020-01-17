@@ -1,40 +1,166 @@
 <template>
-  <VueDfpProvider :dfpid="DFP_ID" :dfpUnits="DFP_UNITS" :options="dfpOptions" :mode="currEnv()" section="5975ab2de531830d00e32b2f">
-    <template slot-scope="props" slot="dfpPos">
-      <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" activeSection="videohub" />
+  <VueDfpProvider
+    :dfpid="DFP_ID"
+    :dfp-units="DFP_UNITS"
+    :options="dfpOptions"
+    :mode="currEnv()"
+    section="5975ab2de531830d00e32b2f"
+  >
+    <template
+      slot="dfpPos"
+      slot-scope="props"
+    >
+      <Header
+        :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+        :props="props"
+        :show-dfp-header-logo="showDfpHeaderLogo"
+        active-section="videohub"
+      />
       <template v-if="isSingleVideoPage">
-        <SingleVideoBody :video="video" :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]">
-          <ShareLight slot="share" :gtmCategory="'article'" />
+        <SingleVideoBody
+          :video="video"
+          :videos="$store.state.playlist[OATH_ALL_VIDEO_PLAYLIST_ID]"
+        >
+          <ShareLight
+            slot="share"
+            :gtm-category="'article'"
+          />
           <template v-if="mounted">
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCHD" :config="props.config" class="dfp" pos="PCHD" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBHD" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="MBHD" />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="viewportWidth >= 1200"
+              slot="PCHD"
+              :config="props.config"
+              class="dfp"
+              pos="PCHD"
+            />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-else
+              slot="MBHD"
+              :config="props.config"
+              :size="get($store, 'getters.adSize')"
+              class="dfp"
+              pos="MBHD"
+            />
           </template>
           <template v-if="mounted">
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCFT" :config="props.config" class="dfp" pos="PCFT" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBFT" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="MBFT" />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="viewportWidth >= 1200"
+              slot="PCFT"
+              :config="props.config"
+              class="dfp"
+              pos="PCFT"
+            />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-else
+              slot="MBFT"
+              :config="props.config"
+              :size="get($store, 'getters.adSize')"
+              class="dfp"
+              pos="MBFT"
+            />
           </template>
           <template v-if="mounted">
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" slot="PCR1" :config="props.config" class="dfp" pos="PCR1" style="margin-top: 0;" />
-            <vue-dfp :is="props.vueDfp" v-else slot="MBE1" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="MBE1" />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="viewportWidth >= 1200"
+              slot="PCR1"
+              :config="props.config"
+              class="dfp"
+              pos="PCR1"
+              style="margin-top: 0;"
+            />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-else
+              slot="MBE1"
+              :config="props.config"
+              :size="get($store, 'getters.adSize')"
+              class="dfp"
+              pos="MBE1"
+            />
           </template>
         </SingleVideoBody>
       </template>
       <template v-else>
         <VideoLeading>
-          <vue-dfp :is="props.vueDfp" v-if="mounted && viewportWidth >= 1200" slot="LPCHD" :config="props.config" class="dfp" pos="LPCHD" />
-          <vue-dfp :is="props.vueDfp" v-if="mounted && viewportWidth < 1200" slot="LMBHD" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="LMBHD" />
+          <vue-dfp
+            :is="props.vueDfp"
+            v-if="mounted && viewportWidth >= 1200"
+            slot="LPCHD"
+            :config="props.config"
+            class="dfp"
+            pos="LPCHD"
+          />
+          <vue-dfp
+            :is="props.vueDfp"
+            v-if="mounted && viewportWidth < 1200"
+            slot="LMBHD"
+            :config="props.config"
+            :size="get($store, 'getters.adSize')"
+            class="dfp"
+            pos="LMBHD"
+          />
         </VideoLeading>
         <template v-for="(item, index) in playlist">
-          <VideoList :key="item.id" :items="$store.state.playlist[item.id]" :playlist="item" @loadmore="handleLoadmore">
-            <a v-if="!isCategoryPage" slot="more" :href="`/category/${OATH_PLAYLIST[item.id].categoryName}`" class="btn--more">看更多<img src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png" alt="看更多"></a>
+          <VideoList
+            :key="item.id"
+            :items="$store.state.playlist[item.id]"
+            :playlist="item"
+            @loadmore="handleLoadmore"
+          >
+            <a
+              v-if="!isCategoryPage"
+              slot="more"
+              :href="`/category/${OATH_PLAYLIST[item.id].categoryName}`"
+              class="btn--more"
+            >看更多<img
+              src="/assets/mirrormedia/icon/arrow-slideshow-blue-right.png"
+              alt="看更多"
+            ></a>
             <template v-if="mounted && isCategoryPage">
-              <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200" :key="`${index}-LPCFT`" slot="LPCFT" :config="props.config" class="dfp" pos="LPCFT" />
-              <vue-dfp :is="props.vueDfp" v-else :key="`${index}-LMBFT`" slot="LMBFT" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="LMBFT" />
+              <vue-dfp
+                :is="props.vueDfp"
+                v-if="viewportWidth >= 1200"
+                :key="`${index}-LPCFT`"
+                slot="LPCFT"
+                :config="props.config"
+                class="dfp"
+                pos="LPCFT"
+              />
+              <vue-dfp
+                :is="props.vueDfp"
+                v-else
+                :key="`${index}-LMBFT`"
+                slot="LMBFT"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                class="dfp"
+                pos="LMBFT"
+              />
             </template>
           </VideoList>
           <template v-if="mounted && !isCategoryPage">
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth >= 1200 && index === 4" :key="`${index}-LPCFT`" :config="props.config" class="dfp" pos="LPCFT" />
-            <vue-dfp :is="props.vueDfp" v-if="viewportWidth < 1200 && index === 2" :key="`${index}-LMBFT`" :config="props.config" :size="get($store, 'getters.adSize')" class="dfp" pos="LMBFT" />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="viewportWidth >= 1200 && index === 4"
+              :key="`${index}-LPCFT`"
+              :config="props.config"
+              class="dfp"
+              pos="LPCFT"
+            />
+            <vue-dfp
+              :is="props.vueDfp"
+              v-if="viewportWidth < 1200 && index === 2"
+              :key="`${index}-LMBFT`"
+              :config="props.config"
+              :size="get($store, 'getters.adSize')"
+              class="dfp"
+              pos="LMBFT"
+            />
           </template>
         </template>
       </template>
@@ -42,20 +168,58 @@
         <Footer />
       </section>
       <!-- <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" /> -->
-      <Share v-if="!isSingleVideoPage" left="20px" bottom="20px" />
-      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewportWidth < 550)">
+      <Share
+        v-if="!isSingleVideoPage"
+        left="20px"
+        bottom="20px"
+      />
+      <LazyItemWrapper
+        v-if="(viewportWidth < 550)"
+        :load-after-page-loaded="true"
+      >
         <DfpST :props="props">
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+          <vue-dfp
+            :is="props.vueDfp"
+            slot="dfpST"
+            :config="props.config"
+            pos="MBST"
+          />
         </DfpST>
       </LazyItemWrapper>
       <DfpCover v-if="mounted && showDfpCoverAdFlag && viewportWidth < 1199">
-        <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="(viewportWidth < 550)"
+          slot="ad-cover"
+          pos="LMBCVR"
+          :config="props.config"
+        />
       </DfpCover>
-      <DfpCover v-if="mounted && showDfpCoverAd2Flag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="LMBCVR2" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
+      <DfpCover
+        v-if="mounted && showDfpCoverAd2Flag && viewportWidth < 1199"
+        :show-close-btn="false"
+        class="raw"
+      >
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="(viewportWidth < 550)"
+          slot="ad-cover"
+          pos="LMBCVR2"
+          :config="props.config"
+        />
       </DfpCover>
-      <DfpCover v-if="mounted && showDfpCoverInnityFlag && viewportWidth < 1199" :showCloseBtn="false" class="raw">
-        <vue-dfp :is="props.vueDfp" pos="LMBCVR3" v-if="(viewviewportWidthport < 550)" :config="props.config" slot="ad-cover" />
+      <DfpCover
+        v-if="mounted && showDfpCoverInnityFlag && viewportWidth < 1199"
+        :show-close-btn="false"
+        class="raw"
+      >
+        <vue-dfp
+          :is="props.vueDfp"
+          v-if="(viewviewportWidthport < 550)"
+          slot="ad-cover"
+          pos="LMBCVR3"
+          :config="props.config"
+        />
       </DfpCover>
     </template>
   </VueDfpProvider>
@@ -395,6 +559,7 @@ export default {
         const id = this.$route.fullPath.split('/')[2]
         return this.$store.state.videos[id]
       }
+      return ({})
     },
     videos () {
       const videos = []

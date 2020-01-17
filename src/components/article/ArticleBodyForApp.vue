@@ -1,37 +1,77 @@
 <template>
-  <div class="article_body" v-if="!isArticleEmpay()" :class="styleForCurrArticle">
+  <div
+    v-if="!isArticleEmpay()"
+    class="article_body"
+    :class="styleForCurrArticle"
+  >
     <div class="article_basic-info">
       <div class="category">
-        <span class="categorySquare" :style="category[ 'style' ]" v-text="category[ 'categoryTitle' ]"></span>
+        <span
+          class="categorySquare"
+          :style="category[ 'style' ]"
+          v-text="category[ 'categoryTitle' ]"
+        />
       </div>
-      <div class="date" v-text="date"></div>
+      <div
+        class="date"
+        v-text="date"
+      />
     </div>
-    <div class="article_title"><h1 v-text="title"></h1></div>
-    <div class="article_subtitle" v-if="subtitle.length > 0"><h2 v-text="subtitle"></h2></div>
-    <div class="article_credit" v-html="credit"></div>
+    <div class="article_title">
+      <h1 v-text="title" />
+    </div>
+    <div
+      v-if="subtitle.length > 0"
+      class="article_subtitle"
+    >
+      <h2 v-text="subtitle" />
+    </div>
+    <div
+      class="article_credit"
+      v-html="credit"
+    />
     <main class="article_main">
       <div
         :style="{ backgroundColor: category.color || '#bcbcbc' }"
         class="brief fb-quotable"
       >
-        <div v-for="(p, i) in briefArr" :key="`brief-${i}`">
-          <div v-if="p.type === 'unstyled'" v-html="paragraphComposer(p)"></div>
+        <div
+          v-for="(p, i) in briefArr"
+          :key="`brief-${i}`"
+        >
+          <div
+            v-if="p.type === 'unstyled'"
+            v-html="paragraphComposer(p)"
+          />
         </div>
       </div>
-      <div v-if="viewport <= 768" class="dfp-at--mobile">
-        <slot name="dfpad-AR1-MB"></slot>
+      <div
+        v-if="viewport <= 768"
+        class="dfp-at--mobile"
+      >
+        <slot name="dfpad-AR1-MB" />
       </div>
-      <div class="split-line"></div>
+      <div class="split-line" />
       <article class="content">
-        <div v-for="(p, index) in contArr">
-          <div v-if="p.type === 'video'" is="article-video"
-            :video="getValue(p, [ 'content', 0], {})" :class="`video ${getValue(p, [ 'alignment' ], '')}`"></div>
-          <div v-else-if="p.type === 'audio'" is="audio-box"
-            :audio="getValue(p, [ 'content', 0], {})"></div>
+        <div
+          v-for="(p, index) in contArr"
+          :key="`content-${index}`"
+        >
+          <div
+            is="article-video"
+            v-if="p.type === 'video'"
+            :video="getValue(p, [ 'content', 0], {})"
+            :class="`video ${getValue(p, [ 'alignment' ], '')}`"
+          />
+          <div
+            is="audio-box"
+            v-else-if="p.type === 'audio'"
+            :audio="getValue(p, [ 'content', 0], {})"
+          />
           <Slider
             v-else-if="p.type === 'slideshow'"
             :autoplay="false"
-            :showSwiperPagination="false"
+            :show-swiper-pagination="false"
             class="swiper-container--article"
           >
             <div
@@ -46,38 +86,63 @@
                   ${getValue(o, 'tablet.url', '')} 1200w,
                   ${getValue(o, 'desktop.url', '')} 2000w`"
               >
-              <div class="swiper-slide__caption" v-text="getValue(o, 'description', '')" />
+              <div
+                class="swiper-slide__caption"
+                v-text="getValue(o, 'description', '')"
+              />
             </div>
           </Slider>
           <div v-else-if="p.type === 'annotation'">
-            <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
+            <annotation :annotation-str="getValue(p, [ 'content' ])" />
           </div>
-          <div v-else v-html="paragraphComposer(p)"></div>
-          <slot v-if="index === lastUnstyledParagraph - 1" name="relatedListInContent"></slot>
+          <div
+            v-else
+            v-html="paragraphComposer(p)"
+          />
+          <slot
+            v-if="index === lastUnstyledParagraph - 1"
+            name="relatedListInContent"
+          />
         </div>
-        <p v-if="articleData.updatedAt !== articleData.publishedDate" class="updated-time">更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span></p>
+        <p
+          v-if="articleData.updatedAt !== articleData.publishedDate"
+          class="updated-time"
+        >
+          更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span>
+        </p>
       </article>
-      <div v-if="viewport <= 768" class="dfp-at--mobile">
-        <slot name="dfpad-AR2-MB"></slot>
+      <div
+        v-if="viewport <= 768"
+        class="dfp-at--mobile"
+      >
+        <slot name="dfpad-AR2-MB" />
       </div>
       <div class="article_main_related_bottom">
-        <slot name="relatedlistBottom"></slot>
+        <slot name="relatedlistBottom" />
       </div>
-      <div class="split-line"></div>
+      <div class="split-line" />
       <div class="herbsapi">
-        <div id="herbsapi" hb-width="100" hb-height="auto" hb-icon="https://mediafarmers.org/api/images/icon_2.png"></div>
+        <div
+          id="herbsapi"
+          hb-width="100"
+          hb-height="auto"
+          hb-icon="https://mediafarmers.org/api/images/icon_2.png"
+        />
         <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
       </div>
-      <div class="dfpad-set" style="display: flex; justify-content: space-around;">
-        <slot name="dfpad-set"></slot>
+      <div
+        class="dfpad-set"
+        style="display: flex; justify-content: space-around;"
+      >
+        <slot name="dfpad-set" />
       </div>
-      <slot name="recommendList"></slot>
+      <slot name="recommendList" />
       <div class="article_main_pop">
-        <slot name="poplist"></slot>
+        <slot name="poplist" />
       </div>
-      <slot name="slot_fb_comment"></slot>
+      <slot name="slot_fb_comment" />
     </main>
-    <slot name="aside"></slot>
+    <slot name="aside" />
   </div>
 </template>
 <script>
@@ -87,17 +152,29 @@ import { getValue } from '../../util/comm'
 import Annotation from './Annotation.vue'
 import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
-import ProjectList from './ProjectList.vue'
 import Slider from '../Slider.vue'
 import moment from 'moment'
 
 export default {
+  name: 'ArticleBody',
   components: {
     'audio-box': AudioBox,
-    'proj-list': ProjectList,
     Annotation,
     ArticleVideo,
     Slider
+  },
+  props: {
+    articleData: {
+      default: () => { return {} }
+    },
+    viewport: {
+      default: () => { return undefined }
+    }
+  },
+  data () {
+    return {
+      renderingStartTime: undefined
+    }
   },
   computed: {
     articleStyle () {
@@ -192,10 +269,11 @@ export default {
       return last
     }
   },
-  data () {
-    return {
-      renderingStartTime: undefined
-    }
+  mounted () {
+    this.setUpLightbox()
+  },
+  updated () {
+    this.setUpLightbox()
   },
   methods: {
     getValue,
@@ -323,21 +401,6 @@ export default {
       const sourceClass = source.getAttribute('class')
       const ifPlay = sourceClass.indexOf(' play') > -1
       source.setAttribute('class', ifPlay ? `${sourceClass.replace(' play', '')} pause` : `${sourceClass.replace(' pause', '')} play`)
-    }
-  },
-  mounted () {
-    this.setUpLightbox()
-  },
-  updated () {
-    this.setUpLightbox()
-  },
-  name: 'article-body',
-  props: {
-    articleData: {
-      default: () => { return {} }
-    },
-    viewport: {
-      default: () => { return undefined }
     }
   }
 }

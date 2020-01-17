@@ -1,73 +1,146 @@
 <template>
   <section class="latestArticle-foodtravel">
-
-  <div class="topicsArticle-foodtravel-container mobile-only" v-if="!this.showLatestOnly">
-    <!--<vue-dfp :is="props.vueDfp" pos="LMBSL1" extClass="desktop-hide" :config="props.config" />-->
-    <div class="topicsArticle-full-posts">
-    <template v-for="(article, index) in topics">
-      <div class="topicsArticle-full-post">
-      <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" target="_blank" class="topicsArticle-full-post__img" >
-        <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
-      </a>
-      <div class="topicsArticle-full-post__content">
-        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-title'" target="_blank">
-          <h2 v-text="article.name"></h2>
-        </a>
-        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-brief'" target="_blank">
-          <p v-html="getTruncatedVal(article.ogDescription, 45)"></p>
-        </a>
+    <div
+      v-if="!this.showLatestOnly"
+      class="topicsArticle-foodtravel-container mobile-only"
+    >
+      <!--<vue-dfp :is="props.vueDfp" pos="LMBSL1" extClass="desktop-hide" :config="props.config" />-->
+      <div class="topicsArticle-full-posts">
+        <template v-for="(article, index) in topics">
+          <div
+            :key="`topicsArticle-${index}`"
+            class="topicsArticle-full-post"
+          >
+            <a
+              :id="'topics-' + article.id + '-image'"
+              :href="'/topic/' + article.id"
+              target="_blank"
+              class="topicsArticle-full-post__img"
+            >
+              <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }" />
+            </a>
+            <div class="topicsArticle-full-post__content">
+              <a
+                :id="'topics-' + article.id + '-title'"
+                :href="'/topic/' + article.id"
+                target="_blank"
+              >
+                <h2 v-text="article.name" />
+              </a>
+              <a
+                :id="'topics-' + article.id + '-brief'"
+                :href="'/topic/' + article.id"
+                target="_blank"
+              >
+                <p v-html="getTruncatedVal(article.ogDescription, 45)" />
+              </a>
+            </div>
+          </div>
+        </template>
       </div>
-      </div>
-    </template>
     </div>
-  </div>
 
-  <div class="latestArticle-foodtravel-container">
-    <items-title-rect class="header-rect" v-if="!this.showLatestOnly">最新文章</items-title-rect>
-    <div class="latestArticle-full-posts">
-    <template v-for="(article, index) in latestArticle">
-      <div :class="'latestArticle-full-post-' + (index % 2)">
-      <a :href="getHref(article)" target="_blank" class="latestArticle-full-post__img" @click="sendGaClickEvent('article', 'latest')">
-        <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
-      </a>
-      <div class="latestArticle-full-post__content">
-        <a :href="getHref(article)" target="_blank" @click="sendGaClickEvent('article', 'latest')">
-          <h2 v-text="getTruncatedVal(article.title, 20)"></h2>
-        </a>
-        <a :href="getHref(article)" target="_blank" @click="sendGaClickEvent('article', 'latest')">
-          <p v-html="getBrief(article, 55)"></p>
-        </a>
-        <div class="latestArticle-full-post__meta">
-          <span class="latestArticle-full-post__meta--author" v-if="getAuthor(article, 'writers', '／')" v-html="getAuthor(article, 'writers', '／')"></span>
-        </div>
+    <div class="latestArticle-foodtravel-container">
+      <items-title-rect
+        v-if="!this.showLatestOnly"
+        class="header-rect"
+      >
+        最新文章
+      </items-title-rect>
+      <div class="latestArticle-full-posts">
+        <template v-for="(article, index) in latestArticle">
+          <div
+            :key="`latestArticle-full-post--${index}`"
+            :class="'latestArticle-full-post-' + (index % 2)"
+          >
+            <a
+              :href="getHref(article)"
+              target="_blank"
+              class="latestArticle-full-post__img"
+              @click="sendGaClickEvent('article', 'latest')"
+            >
+              <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }" />
+            </a>
+            <div class="latestArticle-full-post__content">
+              <a
+                :href="getHref(article)"
+                target="_blank"
+                @click="sendGaClickEvent('article', 'latest')"
+              >
+                <h2 v-text="getTruncatedVal(article.title, 20)" />
+              </a>
+              <a
+                :href="getHref(article)"
+                target="_blank"
+                @click="sendGaClickEvent('article', 'latest')"
+              >
+                <p v-html="getBrief(article, 55)" />
+              </a>
+              <div class="latestArticle-full-post__meta">
+                <span
+                  v-if="getAuthor(article, 'writers', '／')"
+                  class="latestArticle-full-post__meta--author"
+                  v-html="getAuthor(article, 'writers', '／')"
+                />
+              </div>
+            </div>
+          </div>
+          <vue-dfp
+            :is="props.vueDfp"
+            v-if="index === 2"
+            :key="`food-dfp-${index}`"
+            pos="LMBSL1"
+            ext-class="mobile-only"
+            :config="props.config"
+          />
+        </template>
       </div>
-      </div>
-      <vue-dfp v-if="index === 2" :is="props.vueDfp" pos="LMBSL1" extClass="mobile-only" :config="props.config" />
-    </template>
     </div>
-  </div>
 
-  <div class="topicsArticle-foodtravel-container desktop-only" v-if="!this.showLatestOnly">
-    <vue-dfp :is="props.vueDfp" pos="LPCSR1" extClass="mobile-hide" :config="props.config" />
-    <div class="topicsArticle-full-posts">
-    <template v-for="(article, index) in topics">
-      <div class="topicsArticle-full-post">
-      <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-image'" target="_blank" class="topicsArticle-full-post__img" >
-        <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }"></figure>
-      </a>
-      <div class="topicsArticle-full-post__content">
-        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-title'" target="_blank">
-          <h2 v-text="article.name"></h2>
-        </a>
-        <a :href="'/topic/' + article.id" :id="'topics-' + article.id + '-brief'" target="_blank">
-          <p v-html="getTruncatedVal(article.ogDescription, 45)"></p>
-        </a>
+    <div
+      v-if="!this.showLatestOnly"
+      class="topicsArticle-foodtravel-container desktop-only"
+    >
+      <vue-dfp
+        :is="props.vueDfp"
+        pos="LPCSR1"
+        ext-class="mobile-hide"
+        :config="props.config"
+      />
+      <div class="topicsArticle-full-posts">
+        <template v-for="(article, index) in topics">
+          <div
+            :key="`topicsArticle-full-post-${index}`"
+            class="topicsArticle-full-post"
+          >
+            <a
+              :id="'topics-' + article.id + '-image'"
+              :href="'/topic/' + article.id"
+              target="_blank"
+              class="topicsArticle-full-post__img"
+            >
+              <figure :style="{ backgroundImage: 'url(' + getImage(article, 'mobile') + ')' }" />
+            </a>
+            <div class="topicsArticle-full-post__content">
+              <a
+                :id="'topics-' + article.id + '-title'"
+                :href="'/topic/' + article.id"
+                target="_blank"
+              >
+                <h2 v-text="article.name" />
+              </a>
+              <a
+                :id="'topics-' + article.id + '-brief'"
+                :href="'/topic/' + article.id"
+                target="_blank"
+              >
+                <p v-html="getTruncatedVal(article.ogDescription, 45)" />
+              </a>
+            </div>
+          </div>
+        </template>
       </div>
-      </div>
-    </template>
     </div>
-  </div>
-
   </section>
 </template>
 
@@ -84,20 +157,11 @@ import {
 } from '../util/comm'
 import moment from 'moment'
 export default {
-  name: 'latestArticle-foodtravel',
-  props: ['articles', 'props', 'commonData', 'showLatestOnly'],
+  name: 'LatestArticleFoodtravel',
   components: {
     'items-title-rect': ItemsTitleRect
   },
-  methods: {
-    getAuthor,
-    getBrief,
-    getHref,
-    getImage,
-    getTruncatedVal,
-    moment,
-    sendGaClickEvent
-  },
+  props: ['articles', 'props', 'commonData', 'showLatestOnly'],
   computed: {
     latestArticle () {
       return this.articles
@@ -107,6 +171,15 @@ export default {
         if (Object.prototype.hasOwnProperty.call(o, 'sections')) return o.sections[0] === SECTION_FOODTRAVEL_ID // foodtravel
       })
     }
+  },
+  methods: {
+    getAuthor,
+    getBrief,
+    getHref,
+    getImage,
+    getTruncatedVal,
+    moment,
+    sendGaClickEvent
   }
 }
 </script>

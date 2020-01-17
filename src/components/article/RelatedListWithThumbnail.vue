@@ -1,15 +1,20 @@
 <template>
-  <div class="related-container" v-if="(relatedList.length > 0)">
-    <div class="related_title"><h3></h3></div>
+  <div
+    v-if="(relatedList.length > 0)"
+    class="related-container"
+  >
+    <div class="related_title">
+      <h3 />
+    </div>
     <div class="related_list">
       <template v-if="isApp">
         <div
-          class="related_item"
           v-for="(o, i) in relatedList"
           :key="i"
+          class="related_item"
         >
           <div>
-            <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" >
+            <a :href="`/app/${getValue(o, [ 'slug' ], '')}`">
               <div
                 class="related_item_img"
                 :alt="getValue(o, [ 'title' ])"
@@ -18,18 +23,21 @@
             </a>
           </div>
           <div class="related_item_title">
-            <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" v-text="getTruncatedVal(o.title, 22)"></a>
+            <a
+              :href="`/app/${getValue(o, [ 'slug' ], '')}`"
+              v-text="getTruncatedVal(o.title, 22)"
+            />
           </div>
         </div>
       </template>
       <template v-else>
         <div
-          class="related_item"
           v-for="(o, i) in relatedList"
           :key="i"
+          class="related_item"
         >
           <div>
-            <a :href="getHref(o)" >
+            <a :href="getHref(o)">
               <div
                 class="related_item_img"
                 :alt="getValue(o, [ 'title' ])"
@@ -38,7 +46,10 @@
             </a>
           </div>
           <div class="related_item_title">
-            <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)"></a>
+            <a
+              :href="getHref(o)"
+              v-text="getTruncatedVal(o.title, 22)"
+            />
           </div>
         </div>
       </template>
@@ -51,7 +62,15 @@ import { mapState } from 'vuex'
 import { find } from 'lodash'
 
 export default {
-  name: 'related-list-thumbnail',
+  name: 'RelatedListThumbnail',
+  props: {
+    isApp: {
+      default: () => false
+    },
+    relatedList: {
+      default: () => { return [] }
+    }
+  },
   methods: {
     getHref,
     getTruncatedVal,
@@ -60,14 +79,6 @@ export default {
       const imageData = find(this.imagesById, ['id', id])
       const imageUrl = getValue(imageData, ['image', 'resizedTargets', 'mobile', 'url'], '')
       return `url(${imageUrl})`
-    }
-  },
-  props: {
-    isApp: {
-      default: () => false
-    },
-    relatedList: {
-      default: () => { return [] }
     }
   },
   computed: {

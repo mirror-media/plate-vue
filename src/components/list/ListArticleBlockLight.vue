@@ -1,13 +1,37 @@
 <template>
   <div class="listArticleBlockLight">
-    <figure v-if="image" class="listArticleBlockLight__figure">
-      <a :href="`/external/${getValue(article, [ 'name' ])}`" target="_blank">
-        <img v-lazy="image" :alt="getValue(article, [ 'title' ])" />
+    <figure
+      v-if="image"
+      class="listArticleBlockLight__figure"
+    >
+      <a
+        :href="`/external/${getValue(article, [ 'name' ])}`"
+        target="_blank"
+      >
+        <img
+          v-lazy="image"
+          :alt="getValue(article, [ 'title' ])"
+        >
       </a>
     </figure>
-    <div class="listArticleBlockLight__text" :class="{ noImg: !image }">
-      <h2><a :href="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="getValue(article, [ 'title' ])"></a></h2>
-      <p><a :href="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="$_listArticleLight_getBrief(article)"></a></p>
+    <div
+      class="listArticleBlockLight__text"
+      :class="{ noImg: !image }"
+    >
+      <h2>
+        <a
+          :href="`/external/${getValue(article, [ 'name' ])}`"
+          target="_blank"
+          v-text="getValue(article, [ 'title' ])"
+        />
+      </h2>
+      <p>
+        <a
+          :href="`/external/${getValue(article, [ 'name' ])}`"
+          target="_blank"
+          v-text="$_listArticleLight_getBrief(article)"
+        />
+      </p>
     </div>
   </div>
 </template>
@@ -31,9 +55,7 @@ export default {
   computed: {
     image () {
       const link = _.get(this.article, ['thumb'])
-      if (link) {
-        return link
-      }
+      return link
     }
   },
   methods: {

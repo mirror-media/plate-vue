@@ -1,11 +1,27 @@
 <template>
   <section class="editorChoiceFood">
-    <h2 class="editorChoiceFood__title">編輯精選</h2>
-    <div class="editorChoiceFoodBlock" v-for="(item, index) in sectionfeatured">
-      <a :href="getHref(item)" class="editorChoiceFoodBlock__img" target="_blank"><figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure></a>
+    <h2 class="editorChoiceFood__title">
+      編輯精選
+    </h2>
+    <div
+      v-for="(item, index) in sectionfeatured"
+      :key="`editorChoiceFoodBlock-${index}`"
+      class="editorChoiceFoodBlock"
+    >
+      <a
+        :href="getHref(item)"
+        class="editorChoiceFoodBlock__img"
+        target="_blank"
+      ><figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" /></a>
       <div class="editorChoiceFoodBlock__content">
-        <a :href="getHref(item)" target="_blank"><h2 v-text="calcTitle(getValue(item, [ 'title' ]))"></h2></a>
-        <a :href="getHref(item)" target="_blank"><p v-text="calcBrief(item, index)"></p></a>
+        <a
+          :href="getHref(item)"
+          target="_blank"
+        ><h2 v-text="calcTitle(getValue(item, [ 'title' ]))" /></a>
+        <a
+          :href="getHref(item)"
+          target="_blank"
+        ><p v-text="calcBrief(item, index)" /></a>
       </div>
     </div>
   </section>
@@ -15,11 +31,11 @@
 import { getBrief, getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
 
 export default {
-  name: 'editorChoice-foodTravel',
+  name: 'EditorChoiceFoodTravel',
   props: {
     sectionfeatured: {
       type: Array,
-      default: []
+      default: () => []
     },
     viewport: {
       type: Number,

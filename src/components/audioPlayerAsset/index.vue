@@ -18,15 +18,15 @@ import composition from './composition.vue'
 import pure from './pure.vue'
 
 export default {
+  components: {
+    composition,
+    pure
+  },
   props: {
     audio: {
       type: Object,
       required: true
     }
-  },
-  components: {
-    composition,
-    pure
   },
   data () {
     return {

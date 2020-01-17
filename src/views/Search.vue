@@ -1,26 +1,53 @@
 <template>
-  <vue-dfp-provider :dfpUnits="dfpUnits" :dfpid="dfpid" :section="`other`" :options="dfpOptions" :mode="dfpMode">
-    <template slot-scope="props" slot="dfpPos">
+  <vue-dfp-provider
+    :dfp-units="dfpUnits"
+    :dfpid="dfpid"
+    :section="`other`"
+    :options="dfpOptions"
+    :mode="dfpMode"
+  >
+    <template
+      slot="dfpPos"
+      slot-scope="props"
+    >
       <div class="search-view">
         <section style="width: 100%;">
-          <Header :dfpHeaderLogoLoaded="dfpHeaderLogoLoaded" :props="props" :showDfpHeaderLogo="showDfpHeaderLogo" />
+          <Header
+            :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+            :props="props"
+            :show-dfp-header-logo="showDfpHeaderLogo"
+          />
         </section>
         <div class="search-title container">
-          <span class="search-title__text" v-text="title"></span>
-          <div class="search-title__colorBlock"></div>
+          <span
+            class="search-title__text"
+            v-text="title"
+          />
+          <div class="search-title__colorBlock" />
         </div>
-        <article-list :articles='articles' />
+        <article-list :articles="articles" />
         <loading :show="loading" />
         <section class="container">
-          <more v-if="hasMore" v-on:loadMore="loadMore" />
+          <more
+            v-if="hasMore"
+            @loadMore="loadMore"
+          />
         </section>
         <section class="footer container">
           <app-footer />
         </section>
       </div>
-      <LazyItemWrapper :loadAfterPageLoaded="true" v-if="(viewport < 550)">
+      <LazyItemWrapper
+        v-if="(viewport < 550)"
+        :load-after-page-loaded="true"
+      >
         <DfpST :props="props">
-          <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
+          <vue-dfp
+            :is="props.vueDfp"
+            slot="dfpST"
+            :config="props.config"
+            pos="MBST"
+          />
         </DfpST>
       </LazyItemWrapper>
     </template>
@@ -97,7 +124,7 @@ const fetchPartners = (store) => {
 }
 
 export default {
-  name: 'search-view',
+  name: 'SearchView',
   components: {
     'app-footer': Footer,
     'article-list': ArticleList,
@@ -194,6 +221,34 @@ export default {
       })
     }
   },
+  watch: {
+    title: function () {
+      if (process.env.VUE_ENV === 'client') {
+        window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
+        this.$forceUpdate()
+      }
+    }
+  },
+  beforeMount () {
+    fetchEvent(this.$store, 'logo')
+  },
+  mounted () {
+    this.checkIfLockJS()
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
+    this.updateSysStage()
+    // this.abIndicator = this.getMmid()
+    window.ga('set', 'contentGroup1', '')
+    window.ga('set', 'contentGroup2', '')
+    window.ga('set', 'contentGroup3', '')
+    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
+    window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
+  },
+  updated () {
+    this.updateSysStage()
+  },
   methods: {
     checkIfLockJS () {
       unLockJS()
@@ -234,34 +289,6 @@ export default {
     },
     updateSysStage () {
       this.dfpMode = currEnv()
-    }
-  },
-  beforeMount () {
-    fetchEvent(this.$store, 'logo')
-  },
-  mounted () {
-    this.checkIfLockJS()
-    this.updateViewport()
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
-    this.updateSysStage()
-    // this.abIndicator = this.getMmid()
-    window.ga('set', 'contentGroup1', '')
-    window.ga('set', 'contentGroup2', '')
-    window.ga('set', 'contentGroup3', '')
-    // window.ga('set', 'contentGroup3', `list${this.abIndicator}`)
-    window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
-  },
-  updated () {
-    this.updateSysStage()
-  },
-  watch: {
-    title: function () {
-      if (process.env.VUE_ENV === 'client') {
-        window.ga('send', 'pageview', { title: `${this.title} - ${SITE_TITLE}`, location: document.location.href })
-        this.$forceUpdate()
-      }
     }
   }
 }

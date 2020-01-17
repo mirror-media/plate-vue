@@ -1,24 +1,53 @@
 <template>
   <div class="notFound-view">
     <figure class="notFound__img">
-      <img class="notFound__img--mobile" src="/assets/mirrormedia/404-mobile.png" alt="404 Not Found">
-      <img class="notFound__img--desktop" src="/assets/mirrormedia/404-desktop.png" alt="404 Not Found">
+      <img
+        class="notFound__img--mobile"
+        src="/assets/mirrormedia/404-mobile.png"
+        alt="404 Not Found"
+      >
+      <img
+        class="notFound__img--desktop"
+        src="/assets/mirrormedia/404-desktop.png"
+        alt="404 Not Found"
+      >
       <div class="notFound__img--textBox">
         <h1>404</h1>
         <h2>抱歉！<br>找不到這個網址</h2>
-        <a id="notfound-backHome" href="/">| 回首頁 |</a>
+        <a
+          id="notfound-backHome"
+          href="/"
+        >| 回首頁 |</a>
       </div>
     </figure>
     <div class="notFound__popList">
       <h2>熱門文章</h2>
       <div class="notFound-popListContainer">
-        <div class="notFound-popListContainer__post" v-for="(item, index) in popArticles">
+        <div
+          v-for="(item, index) in popArticles"
+          :key="`notFound-${index}-${item.slug}`"
+          class="notFound-popListContainer__post"
+        >
           <figure class="notFound-popListContainer__post--img">
-            <a :id="`notfound-${index}-img`" :href="getValue(item, [ 'slug' ])"><img :src="getValue(item, [ 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])" :alt="getValue(item, [ 'title' ])"/></a>
-            <div class="notFound-popListContainer__post--category" :style="getSectionStyle(item)" v-text="getValue(item, [ 'sections', '0', 'title' ])" />
+            <a
+              :id="`notfound-${index}-img`"
+              :href="getValue(item, [ 'slug' ])"
+            ><img
+              :src="getValue(item, [ 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])"
+              :alt="getValue(item, [ 'title' ])"
+            ></a>
+            <div
+              class="notFound-popListContainer__post--category"
+              :style="getSectionStyle(item)"
+              v-text="getValue(item, [ 'sections', '0', 'title' ])"
+            />
           </figure>
           <div class="notFound-popListContainer__post--title">
-            <a :id="`notfound-${index}-title`" :href="getValue(item, [ 'slug' ])" v-text="getValue(item, [ 'title' ])"></a>
+            <a
+              :id="`notfound-${index}-title`"
+              :href="getValue(item, [ 'slug' ])"
+              v-text="getValue(item, [ 'title' ])"
+            />
           </div>
         </div>
       </div>
@@ -37,7 +66,7 @@ const fetchPop = (store) => {
 }
 
 export default {
-  name: 'notFound-view',
+  name: 'NotFoundView',
   metaInfo: {
     titleTemplate: null
   },
@@ -59,6 +88,18 @@ export default {
         return 'desktop'
       }
     }
+  },
+  beforeMount () {
+    fetchPop(this.$store)
+  },
+  mounted () {
+    this.insertGoogleFonts()
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
+
+    window.ga('send', 'pageview', { title: '404 - Page Not Found', location: document.location.href })
   },
   methods: {
     getValue,
@@ -85,18 +126,6 @@ export default {
       }
     }
     next()
-  },
-  beforeMount () {
-    fetchPop(this.$store)
-  },
-  mounted () {
-    this.insertGoogleFonts()
-    this.updateViewport()
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
-
-    window.ga('send', 'pageview', { title: '404 - Page Not Found', location: document.location.href })
   }
 }
 

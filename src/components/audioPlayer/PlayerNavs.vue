@@ -1,9 +1,9 @@
 <template>
   <nav class="navs">
     <img
-      class="navs__play"
-      v-lazy="`/assets/mirrormedia/icon/audio_player_icon_${isPlaying ? 'pause' : 'play'}.png`"
       :key="isPlaying ? 'pause' : 'play'"
+      v-lazy="`/assets/mirrormedia/icon/audio_player_icon_${isPlaying ? 'pause' : 'play'}.png`"
+      class="navs__play"
       alt=""
       @click="$emit(isPlaying ? 'pause' : 'play')"
     >

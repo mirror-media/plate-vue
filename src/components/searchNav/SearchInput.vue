@@ -1,10 +1,10 @@
 <template>
   <div class="wrapper">
     <input
+      v-model="input"
       class="wrapper__input"
       type="text"
       :placeholder="placeholder"
-      v-model="input"
       @keydown.enter="onEnter"
     >
   </div>

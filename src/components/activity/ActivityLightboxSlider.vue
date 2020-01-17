@@ -1,11 +1,20 @@
 <template>
   <section class="ActivityLightboxSlider">
     <template v-if="contentStyle === 'image'">
-        <img :src="contentImageUrl" />
+      <img :src="contentImageUrl">
     </template>
     <template v-if="contentStyle === 'video'">
-      <video :poster="contentVideoCover" controls="true" controlsList="nodownload" preload="metadata" playsinline>
-        <source :src="contentVideoUrl" :type="contentVideoType">
+      <video
+        :poster="contentVideoCover"
+        controls="true"
+        controlsList="nodownload"
+        preload="metadata"
+        playsinline
+      >
+        <source
+          :src="contentVideoUrl"
+          :type="contentVideoType"
+        >
       </video>
     </template>
   </section>

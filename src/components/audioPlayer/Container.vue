@@ -4,8 +4,8 @@
     :post="post"
   >
     <Player
-      slot-scope="{ sound, showPlayer }"
       v-if="showPlayer"
+      slot-scope="{ sound, showPlayer }"
       class="player-wrapper__player"
       :sound="sound"
       :volume="playerVolume"
@@ -21,6 +21,10 @@ import HOC from './HOC.vue'
 import Player from './Player.vue'
 
 export default {
+  components: {
+    HOC,
+    Player
+  },
   props: {
     post: {
       type: Object,
@@ -28,10 +32,6 @@ export default {
         return {}
       }
     }
-  },
-  components: {
-    HOC,
-    Player
   },
   data () {
     return {

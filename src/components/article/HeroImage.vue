@@ -1,14 +1,18 @@
 <template>
   <div class="hero-image">
-    <figure v-if="heroImage" >
-      <img v-show="loading" :src="get(heroImage, 'image.resizedTargets.tiny.url', '/assets/mirrormedia/icon/loading.gif')">
+    <figure v-if="heroImage">
+      <img
+        v-show="loading"
+        :src="get(heroImage, 'image.resizedTargets.tiny.url', '/assets/mirrormedia/icon/loading.gif')"
+      >
       <img
         v-show="!loading"
         id="hero-image"
         :src="images.mobile || heroImage.image.url"
         :srcset="`${images.mobile} 800w, ${images.tablet} 1200w`"
-        :alt="heroCaption">
-      <figcaption v-text="heroCaption"></figcaption>
+        :alt="heroCaption"
+      >
+      <figcaption v-text="heroCaption" />
     </figure>
   </div>
 </template>
@@ -34,9 +38,6 @@ export default {
       loading: false
     }
   },
-  methods: {
-    get
-  },
   watch: {
     '$route.fullPath' () {
       this.loading = true
@@ -54,6 +55,9 @@ export default {
   },
   created () {
     this.images = constructImages(this.heroImage)
+  },
+  methods: {
+    get
   }
 }
 </script>
