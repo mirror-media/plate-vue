@@ -31,7 +31,7 @@ export default {
   name: 'articleList-full',
   components: {
   },
-  props: [ 'articles' ],
+  props: ['articles'],
   methods: {
     getAuthor,
     getBrief,
@@ -76,7 +76,7 @@ export default {
   &-post
     display flex
     flex-direction column
-    margin 0 0 30px 
+    margin 0 0 30px
     &__img
       position relative
       left -32px
@@ -89,7 +89,7 @@ export default {
         background-repeat no-repeat
         background-size cover
     &__content
-      h2 
+      h2
         margin 13px 0 0
         font-size 26px
         line-height 35px

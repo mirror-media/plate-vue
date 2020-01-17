@@ -87,4 +87,3 @@ export default {
     & + &
       border-top solid 2px #d7d7d7
 </style>
-

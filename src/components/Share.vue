@@ -46,10 +46,10 @@ export default {
   },
   computed: {
     isTimeline () {
-      return _.get(this.$store.state, [ 'route', 'params', 'topicId' ]) === TOPIC_PROTEST_ID
+      return _.get(this.$store.state, ['route', 'params', 'topicId']) === TOPIC_PROTEST_ID
     },
     link () {
-      return _.get(this, [ 'sharePath' ], this.$store.state.route.path)
+      return _.get(this, ['sharePath'], this.$store.state.route.path)
     }
   },
   methods: {
@@ -112,19 +112,19 @@ export default {
     background-color #00c300
     &.open
       transition-duration .19s
-      
+
   &--fb
     z-index 400
     background-color #3b5998
     &.open
       transition-duration .19s
-      
+
   &--google
     z-index 400
     background-color #dd4b39
     &.open
       transition-duration .19s
-      
+
     > img
       width 20px
       height auto
@@ -153,7 +153,7 @@ export default {
         transform translate3d(50px,0,0)
     .share--google
       &.open
-        transform translate3d(50px,0,0)      
+        transform translate3d(50px,0,0)
   &.bottom
     .share--line
       &.open

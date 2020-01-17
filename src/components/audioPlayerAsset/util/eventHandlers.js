@@ -1,4 +1,4 @@
-export default function(player) {
+export default function (player) {
   const { audio } = player
 
   audio.addEventListener('play', onAudioPlay.bind(player))
@@ -17,19 +17,19 @@ export default function(player) {
   audio.addEventListener('error', onAudioError.bind(player))
 }
 
-function onAudioPlay() {
+function onAudioPlay () {
   this.isPlaying = true
 }
-function onAudioPause() {
+function onAudioPause () {
   this.isPlaying = false
 }
-function onAudioWaiting() {
+function onAudioWaiting () {
   this.isLoading = true
 }
-function onAudioCanplay() {
+function onAudioCanplay () {
   this.isLoading = false
 }
-function onAudioProgress() {
+function onAudioProgress () {
   if (this.audio.buffered.length) {
     this.playStatLoadedTime = this.audio.buffered.end(
       this.audio.buffered.length - 1
@@ -38,18 +38,18 @@ function onAudioProgress() {
     this.playStatLoadedTime = 0
   }
 }
-function onAudioDurationChange() {
+function onAudioDurationChange () {
   if (this.audio.duration !== 1) {
     this.playStatDuration = this.audio.duration
   }
 }
-function onAudioSeeking() {
+function onAudioSeeking () {
   this.playStatPlayedTime = this.audio.currentTime
 }
-function onAudioSeeked() {
+function onAudioSeeked () {
   this.playStatPlayedTime = this.audio.currentTime
 }
-function onAudioTimeUpdate() {
+function onAudioTimeUpdate () {
   this.playStatPlayedTime = this.audio.currentTime
   if (this.audio.buffered.length) {
     this.playStatLoadedTime = this.audio.buffered.end(
@@ -59,14 +59,14 @@ function onAudioTimeUpdate() {
     this.playStatLoadedTime = 0
   }
 }
-function onAudioVolumeChange() {
+function onAudioVolumeChange () {
   this.audioVolume = this.audio.volume
   this.isAudioMuted = this.audio.muted
 }
-function onAudioEnded() {
+function onAudioEnded () {
   this.playIndex += 1
 }
-function onAudioLoadedMetadata() {
+function onAudioLoadedMetadata () {
   if (this.audio.buffered.length) {
     this.playStatLoadedTime = this.audio.buffered.end(
       this.audio.buffered.length - 1
@@ -75,7 +75,7 @@ function onAudioLoadedMetadata() {
     this.playStatLoadedTime = 0
   }
 }
-function onAudioError() {
+function onAudioError () {
   this.isPlaying = false
   this.isLoading = false
   this.playStatDuration = 0

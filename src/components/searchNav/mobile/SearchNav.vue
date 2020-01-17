@@ -53,7 +53,7 @@ export default {
     'click-outside': {
       bind (el, binding, vnode) {
         el.clickOutsideEvent = function (event) {
-          if (!(el == event.target || el.contains(event.target))) {
+          if (!(el === event.target || el.contains(event.target))) {
             vnode.context[binding.expression](event)
           }
         }
@@ -67,7 +67,7 @@ export default {
   props: {
     sections: {
       type: Array,
-      default() {
+      default () {
         return []
       },
       required: true
@@ -80,9 +80,9 @@ export default {
   },
   components: {
     SearchInput,
-    SearchSelect,
+    SearchSelect
   },
-  data() {
+  data () {
     return {
       // Value synced by child components
       input: '',
@@ -92,10 +92,10 @@ export default {
     }
   },
   methods: {
-    onSearchInputEnter() {
+    onSearchInputEnter () {
       this.search()
     },
-    search() {
+    search () {
       if (this.input !== '') {
         const keyword = this.input.replace(/\s+/g, ',')
         const scope = get(this.currentOption, 'scope', '')
@@ -106,10 +106,10 @@ export default {
       }
     },
 
-    toggleNav() {
+    toggleNav () {
       this.isNavShow = !this.isNavShow
     },
-    hideNav() {
+    hideNav () {
       this.isNavShow = false
     }
   }
@@ -128,7 +128,7 @@ export default {
       position fixed
       top 50px
       right 0
-    
+
 .button
   border none
   background-color transparent

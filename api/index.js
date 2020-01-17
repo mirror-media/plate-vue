@@ -1,5 +1,5 @@
 const { get, map, toNumber, concat, compact } = require('lodash')
-const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/ioredisHandler') 
+const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/ioredisHandler')
 const { handlerError } = require('./comm')
 const config = require('./config')
 const bodyParser = require('body-parser')
@@ -20,15 +20,15 @@ const loggingClient = new Logging({
 const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API_PORT
 
 const UrlForRedisStoreOneMonth = [
-    '/combo?endpoint=sections&endpoint=topics',
-    '/combo?endpoint=sectionfeatured&endpoint=sections&endpoint=topics',
-    '/combo?endpoint=sections',
-    '/combo?endpoint=projects'
-  ]
+  '/combo?endpoint=sections&endpoint=topics',
+  '/combo?endpoint=sectionfeatured&endpoint=sections&endpoint=topics',
+  '/combo?endpoint=sections',
+  '/combo?endpoint=projects'
+]
 
 router.all('/', (req, res, next) => {
   next()
-});
+})
 
 const fetchStaticJson = (req, res, fileName) => {
   debug(`Abt to fetch ${fileName} json file.`)
@@ -39,33 +39,33 @@ const fetchStaticJson = (req, res, fileName) => {
       res.json(JSON.parse(data))
     } else {
       superagent
-      .get(url)
-      .timeout(
-        {
-          response: 1000, //config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
-        }
-      )
-      .then(response => {
-        debug('Fetch static json file from api.', url)
-        if (response) {
-          redisWriting(url, response.text)
-          res.header('Cache-Control', 'public, max-age=600')
-          res.json(JSON.parse(response.text))
-        } else {
-          res.header('Cache-Control', 'no-cache')
-          res.status(500).send(response)
-        }
-      })
-      .catch(error => {
-        const errWrapped = handlerError(error)
-        res.header('Cache-Control', 'no-cache')
-        res.status(errWrapped.status).send({
-          status: errWrapped.status,
-          text: errWrapped.text
+        .get(url)
+        .timeout(
+          {
+            response: 1000, // config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
+            deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000 // but allow 1 minute for the file to finish loading.
+          }
+        )
+        .then(response => {
+          debug('Fetch static json file from api.', url)
+          if (response) {
+            redisWriting(url, response.text)
+            res.header('Cache-Control', 'public, max-age=600')
+            res.json(JSON.parse(response.text))
+          } else {
+            res.header('Cache-Control', 'no-cache')
+            res.status(500).send(response)
+          }
         })
-        console.error(`error during fetch data from ${fileName} : ${url}\n${error}`)
-      })
+        .catch(error => {
+          const errWrapped = handlerError(error)
+          res.header('Cache-Control', 'no-cache')
+          res.status(errWrapped.status).send({
+            status: errWrapped.status,
+            text: errWrapped.text
+          })
+          console.error(`error during fetch data from ${fileName} : ${url}\n${error}`)
+        })
     }
   })
 }
@@ -84,23 +84,26 @@ router.get('/latestNews', (req, res) => {
 })
 
 router.get('/newsletter/:userEmail', async (req, res) => {
-  const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user/${req.params.userEmail}`
   try {
     if (!regex.test(String(req.params.userEmail).toLowerCase())) {
-      throw { status: 400, response: { text: "{\"_error\": {\"code\": 400, \"message\": \"email format error.\"}}" }}
+      const error = new Error('Bad request.')
+      error.status = 400
+      error.response = { text: '{"_error": {"code": 400, "message": "email format error."}}' }
+      throw error
     }
     const response = await superagent
       .get(url)
       .timeout(
         {
-          response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+          response: config.API_TIMEOUT, // Wait 5 seconds for the server to start sending,
+          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000 // but allow 1 minute for the file to finish loading.
         }
       )
     res.json(JSON.parse(response.text))
   } catch (error) {
-    console.error(`[ERROR] GET newsletter api.`, url, `${error}`)
+    console.error('[ERROR] GET newsletter api.', url, `${error}`)
     const status = get(error, 'status') || 500
     const info = JSON.parse(get(error, 'response.text')) || error
     res.header('Cache-Control', 'no-cache')
@@ -109,28 +112,34 @@ router.get('/newsletter/:userEmail', async (req, res) => {
 })
 
 router.post('/newsletter', jsonParser, async (req, res) => {
-  const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
   const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user`
   try {
     if (req && req.body && req.body.user && req.body.item) {
       if (!regex.test(req.body.user)) {
-        throw { status: 400, response: { text: "{\"_error\": {\"code\": 400, \"message\": \"Bad request.\"}}" }}
+        const error = new Error('Bad request.')
+        error.status = 400
+        error.response = { text: '{"_error": {"code": 400, "message": "Bad request."}}' }
+        throw error
       }
       const response = await superagent
         .post(url)
         .send({ user: req.body.user, item: req.body.item })
         .timeout(
           {
-            response: config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-            deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+            response: config.API_TIMEOUT, // Wait 5 seconds for the server to start sending,
+            deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000 // but allow 1 minute for the file to finish loading.
           }
         )
       res.status(200).json({ user: response.body.user, item: response.body.result })
     } else {
-      throw { status: 400, response: { text: "{\"_error\": {\"code\": 400, \"message\": \"Bad request.\"}}" }}
+      const error = new Error('Bad request.')
+      error.status = 400
+      error.response = { text: '{"_error": {"code": 400, "message": "Bad request."}}' }
+      throw error
     }
   } catch (error) {
-    console.error(`[ERROR] POST newsletter api.`, url, { user: req.body.user, item: req.body.item }, `${error}`)
+    console.error('[ERROR] POST newsletter api.', url, { user: req.body.user, item: req.body.item }, `${error}`)
     const status = get(error, 'status') || 500
     const info = JSON.parse(get(error, 'response.text')) || error
     res.header('Cache-Control', 'no-cache')
@@ -158,7 +167,7 @@ router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
       let message = get(error, 'response.text')
       message = message ? get(JSON.parse(message), 'failureCause.message') : error
       res.status(status).send(message)
-      console.error(`[ERROR] GET oath api.`, url, `${error}`)
+      console.error('[ERROR] GET oath api.', url, `${error}`)
     }
   }
 }, insertIntoRedis)
@@ -185,7 +194,7 @@ router.get('/video/playlist/:playlistId', fetchFromRedisForAPI, async (req, res,
       let message = get(error, 'response.text')
       message = message ? get(JSON.parse(message), 'failureCause.message') : error
       res.status(status).send(message)
-      console.error(`\n[ERROR] GET oath api.`, url, `\n${error}\n`)
+      console.error('\n[ERROR] GET oath api.', url, `\n${error}\n`)
     }
   }
 }, insertIntoRedis)
@@ -211,13 +220,13 @@ router.get('/playlistng/:ids', fetchFromRedisForAPI, async (req, res, next) => {
       let message = get(error, 'response.text')
       message = message ? get(JSON.parse(message), 'failureCause.message') : error
       res.status(status).send(message)
-      console.error(`\n[ERROR] GET oath api.`, url, `${error}`)
+      console.error('\n[ERROR] GET oath api.', url, `${error}`)
     }
   }
 }, insertIntoRedis)
 
 router.use('/search', (req, res) => {
-  const esSearch_url = `${config.SEARCH_PROTOCOL}://${config.SEARCH_HOST}:${config.SEARCH_PORT || 9200}${config.SEARCH_ENDPOINT}`
+  const esSearchUrl = `${config.SEARCH_PROTOCOL}://${config.SEARCH_HOST}:${config.SEARCH_PORT || 9200}${config.SEARCH_ENDPOINT}`
   redisFetching(`/search${req.url}`, ({ err, data }) => {
     if (!err && data) {
       res.json(JSON.parse(data))
@@ -225,10 +234,10 @@ router.use('/search', (req, res) => {
       console.warn(`\n[WARN] Fetch data from Redis in fail ${err}.`, `/search${req.url}`)
       const keywords = get(req, 'query.keyword', '').split(',')
       const mustKeywords = map(keywords, k => ({
-        'multi_match' : {
-          'query': k,
-          'type': 'phrase',
-          'fields': [ 'title^2', 'brief', 'content', 'writers.name' ]
+        multi_match: {
+          query: k,
+          type: 'phrase',
+          fields: ['title^2', 'brief', 'content', 'writers.name']
         }
       }))
 
@@ -240,41 +249,41 @@ router.use('/search', (req, res) => {
       }
       const section = get(where, 'section', '')
       const category = get(where, 'category', '')
-      const mustScopeSection = section !== '' && { 'match' : { 'sections._id': section } }
-      const mustScopeCategory = category !== '' && { 'match' : { 'categories._id': category } }
-      const mustScope = compact([ mustScopeSection, mustScopeCategory ])
+      const mustScopeSection = section !== '' && { match: { 'sections._id': section } }
+      const mustScopeCategory = category !== '' && { match: { 'categories._id': category } }
+      const mustScope = compact([mustScopeSection, mustScopeCategory])
       const must = mustScope.length !== 0 ? concat(mustKeywords, mustScope) : mustKeywords
       const test = {
-        'from': (toNumber(get(req, 'query.page', 1)) - 1) * toNumber(get(req, 'query.max_results', 12)),
-        'size': toNumber(get(req, 'query.max_results', 12)),
-        'query': {
-          'bool': {
-            'must': must
+        from: (toNumber(get(req, 'query.page', 1)) - 1) * toNumber(get(req, 'query.max_results', 12)),
+        size: toNumber(get(req, 'query.max_results', 12)),
+        query: {
+          bool: {
+            must: must
           }
         },
-        'sort' : {
-          'publishedDate': { 'order': 'desc' }
+        sort: {
+          publishedDate: { order: 'desc' }
         }
       }
 
       console.log(`Perform esSearc \n${must}`)
       superagent
-      .post(esSearch_url)
-      .timeout({ response: config.SEARCH_TIMEOUT, deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, })
-      .set('Content-Type', 'application/json')
-      .send(test)
-      .then(response => {
-        redisWriting(`/search${req.url}`, JSON.stringify(response.body))
-        res.json(response.body)
-      })
-      .catch(error => {
-        const errWrapped = handlerError(error)
-        res.status(errWrapped.status).send({
-          status: errWrapped.status,
-          text: errWrapped.text
+        .post(esSearchUrl)
+        .timeout({ response: config.SEARCH_TIMEOUT, deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000 })
+        .set('Content-Type', 'application/json')
+        .send(test)
+        .then(response => {
+          redisWriting(`/search${req.url}`, JSON.stringify(response.body))
+          res.json(response.body)
         })
-        console.error(`[ERROR] POST elastic search api: ${error}`, esSearch_url)
-      })
+        .catch(error => {
+          const errWrapped = handlerError(error)
+          res.status(errWrapped.status).send({
+            status: errWrapped.status,
+            text: errWrapped.text
+          })
+          console.error(`[ERROR] POST elastic search api: ${error}`, esSearchUrl)
+        })
     }
   })
 })
@@ -285,7 +294,7 @@ router.use('/tracking', (req, res) => {
     const query = req.query
     const log = loggingClient.log(config.GCP_STACKDRIVER_LOG_NAME)
     const metadata = { resource: { type: 'global' } }
-    query['ip'] = req.clientIp
+    query.ip = req.clientIp
     const entry = log.entry(metadata, query)
     log.write(entry)
   } catch (error) {
@@ -296,7 +305,7 @@ router.use('/tracking', (req, res) => {
 router.use('/related_news', (req, res) => {
   const query = req.query
   debug('/related_news', req.url)
-  redisFetchingRecommendNews( get(query, 'id', '').split(',').map( id => 'related-news-v2-' + id ), ({ err, data }) => {
+  redisFetchingRecommendNews(get(query, 'id', '').split(',').map(id => 'related-news-v2-' + id), ({ err, data }) => {
     if (!err && data) {
       let parsed
       try {
@@ -318,8 +327,8 @@ router.get('*', (req, res, next) => {
   req.startTime = Date.now()
   const maxResults = req.query.max_results
   const maxResultsLimit = config.MAX_RESULTS_LIMIT || 25
-  res.header("Access-Control-Allow-Origin", "*")
-  res.header("Access-Control-Allow-Headers", "X-Requested-With")
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With')
   if (maxResults && maxResults > maxResultsLimit) {
     return res.status(403).send()
   }
@@ -330,13 +339,13 @@ router.get('*', (req, res, next) => {
       .get(apiHost + req.url)
       .timeout(
         {
-          response: 1000, //config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000, // but allow 1 minute for the file to finish loading.
+          response: 1000, // config.API_TIMEOUT,  // Wait 5 seconds for the server to start sending,
+          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000 // but allow 1 minute for the file to finish loading.
         }
       )
     const data = JSON.parse(response.text)
     const dataAmount = get(data, '_meta.total')
-    let timePeriod = Date.now() - req.startTime
+    const timePeriod = Date.now() - req.startTime
     if (timePeriod < 1000) {
       console.log(`[LOG] Fetch data from Api ${decodeURIComponent(req.url)}. Time: ${timePeriod}ms. Amount: ${dataAmount}`)
     } else {
@@ -348,12 +357,10 @@ router.get('*', (req, res, next) => {
       /**
        * If req target is post, have the redis ttl be 7 days.
        */
-      const exp_post_query = /^\/getposts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*/
-      dataAmount > 0 && exp_post_query.test(req.url) && (res.redisTTL = 60 * 60 * 24 * 7)
+      const expPostQuery = /^\/getposts\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|[\]/\\]*/
+      dataAmount > 0 && expPostQuery.test(req.url) && (res.redisTTL = 60 * 60 * 24 * 7)
       // redis ttl be 30 days.
-      req.headers.host.match(/www.mirrormedia.mg/g)
-      ? UrlForRedisStoreOneMonth.filter(url => url === req.url).length > 0 && (res.redisTTL = 60 * 60 * 24 * 30)
-      : ''
+      req.headers.host.match(/www.mirrormedia.mg/g) && UrlForRedisStoreOneMonth.filter(url => url === req.url).length > 0 && (res.redisTTL = 60 * 60 * 24 * 30)
       next()
     }
     res.header('Cache-Control', 'public, max-age=600')
@@ -361,9 +368,9 @@ router.get('*', (req, res, next) => {
   } catch (error) {
     const errWrapped = handlerError(error)
     if (errWrapped.status !== 404) {
-      console.error(`[ERROR] Fetch data from from api.`, req.url, `${errWrapped.text}`)
+      console.error('[ERROR] Fetch data from from api.', req.url, `${errWrapped.text}`)
     } else {
-      console.error(`[ERROR] Not Found.`, req.url)
+      console.error('[ERROR] Not Found.', req.url)
     }
 
     res.header('Cache-Control', 'no-cache')

@@ -16,7 +16,7 @@ const config = merge(base, {
     // extract webpack runtime & manifest to avoid vendor chunk hash changing
     // on every build.
     runtimeChunk: {
-      name: 'manifest',
+      name: 'manifest'
     },
     // extract vendor chunks for better caching
     splitChunks: {
@@ -26,7 +26,7 @@ const config = merge(base, {
       cacheGroups: {
         vendor: {
           name: 'vendor',
-          test(module) {
+          test (module) {
             // a module is extracted into the vendor chunk if...
             return (
               // it's inside node_modules
@@ -37,7 +37,7 @@ const config = merge(base, {
           },
           chunks: 'all',
           minChunks: 2,
-          maxInitialRequests: 5,
+          maxInitialRequests: 5
           // minSize: 0,
         }
       }
@@ -63,11 +63,11 @@ if (process.env.NODE_ENV === 'production') {
       staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/],
       runtimeCaching: [
         {
-          urlPattern: /(localhost:8080|mirrormedia.mg)\/(app|author|category|external|project-list|story|section|tag|topic|video)\/[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+$/,
+          urlPattern: /(localhost:8080|mirrormedia.mg)\/(app|author|category|external|project-list|story|section|tag|topic|video)\/[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|[\]/\\]+$/,
           handler: 'networkFirst'
         },
         {
-          urlPattern: /(localhost:8080|mirrormedia.com.tw|mirrormedia.mg|storage.googleapis.com\/mirrormedia-files)\/assets\/(?!audios\/)[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+.[\s\S]+$/,
+          urlPattern: /(localhost:8080|mirrormedia.com.tw|mirrormedia.mg|storage.googleapis.com\/mirrormedia-files)\/assets\/(?!audios\/)[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|[\]/\\]+.[\s\S]+$/,
           handler: 'networkFirst'
         },
         {
@@ -75,11 +75,11 @@ if (process.env.NODE_ENV === 'production') {
           handler: 'networkFirst'
         },
         {
-          urlPattern: /(localhost:8080|mirrormedia.mg)\/dist\/[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+.[\s\S]+$/,
+          urlPattern: /(localhost:8080|mirrormedia.mg)\/dist\/[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|[\]/\\]+.[\s\S]+$/,
           handler: 'networkFirst'
         },
         {
-          urlPattern: /(localhost:8080|mirrormedia.mg)\/api\/(?!tracking)[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]+$/,
+          urlPattern: /(localhost:8080|mirrormedia.mg)\/api\/(?!tracking)[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|[\]/\\]+$/,
           handler: 'networkFirst'
         }
       ]

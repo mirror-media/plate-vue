@@ -87,7 +87,7 @@ import _ from 'lodash'
 
 export default {
   name: 'header-full',
-  props: [ 'commonData', 'sectionName', 'sections', 'showLogo' ],
+  props: ['commonData', 'sectionName', 'sections', 'showLogo'],
   data () {
     return {
       isChanged: false,
@@ -101,10 +101,10 @@ export default {
   },
   computed: {
     menuItem () {
-      return _.get(_.find(_.get(this.sections, [ 'items' ]), { name: this.sectionName }), [ 'categories' ])
+      return _.get(_.find(_.get(this.sections, ['items']), { name: this.sectionName }), ['categories'])
     },
     sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
+      return _.get(_.find(_.get(this.commonData, ['sections', 'items']), { name: this.sectionName }), ['image'], null)
     },
     socialLink () {
       return SOCIAL_LINK
@@ -122,11 +122,11 @@ export default {
       this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
     },
     getSectionLogoUrl () {
-      if (_.get(this.$route, [ 'params', 'topicId' ]) === TOPIC_WATCH_ID) {
-        const section = _.find(_.get(this.sections, [ 'items' ]), { id: SECTION_WATCH_ID })
-        return _.get(section, [ 'image', 'image', 'resizedTargets', 'desktop', 'url' ])
+      if (_.get(this.$route, ['params', 'topicId']) === TOPIC_WATCH_ID) {
+        const section = _.find(_.get(this.sections, ['items']), { id: SECTION_WATCH_ID })
+        return _.get(section, ['image', 'image', 'resizedTargets', 'desktop', 'url'])
       } else {
-        return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+        return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/asset/logo.png'
       }
     },
     openSearchBar () {
@@ -144,7 +144,7 @@ export default {
       }
     },
     searchValueChange () {
-      const currentKeyword = _.get(this.$route, [ 'params', 'keyword' ])
+      const currentKeyword = _.get(this.$route, ['params', 'keyword'])
       if (this.searchVal !== currentKeyword && this.searchVal !== '') {
         this.isChanged = true
       } else {
@@ -182,11 +182,11 @@ header
   height 85px
   padding 20px 30px 0 25px
   background linear-gradient(#000,transparent)
-  
+
   a
     display block
     line-height 1
-  
+
   > div
     font-size 0
 
@@ -195,14 +195,14 @@ header
     top 22px
     left 50%
     transform translateX(-50%)
-    
+
   &__link
     display flex
     justify-content space-between
     width 250px
     &--icon
       height 20px
-      
+
   &--black
     align-items center
     height 55px
@@ -294,7 +294,7 @@ header
       box-shadow none
     > a
       font-size 0
-      
+
   &-curtain
     position fixed
     top 0

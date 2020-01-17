@@ -63,68 +63,67 @@
 </template>
 
 <script>
-  import { SOCIAL_LINK } from '../../constants'
-  import _ from 'lodash'
-  import Newsletter from '../../components/Newsletter.vue'
-  import moment from 'moment'
+import { SOCIAL_LINK } from '../../constants'
+import _ from 'lodash'
+import Newsletter from '../../components/Newsletter.vue'
+import moment from 'moment'
 
-  export default {
-    name: 'ArticleBodyExternal',
-    components: {
-      'newsletter': Newsletter
+export default {
+  name: 'ArticleBodyExternal',
+  components: {
+    newsletter: Newsletter
+  },
+  props: {
+    articleData: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    brief () {
+      return _.get(this.articleData, ['brief'])
     },
-    props: {
-      articleData: {
-        type: Object,
-        required: true
+    content () {
+      const orig = _.get(this.articleData, 'content')
+      if (this.contentWithHtmlTag) {
+        return orig
+      }
+      return _.split(orig, '\r\n\r\n')
+    },
+    contentWithHtmlTag () {
+      const orig = _.get(this.articleData, 'content') || []
+      return orig.includes('<p>')
+    },
+    credit () {
+      const author = _.uniq(_.split(_.get(this.articleData, ['extendByline']), ','))
+      return _.map(author, a => a).join('、')
+    },
+    date () {
+      const { publishedDate = '' } = this.articleData
+      const normalizedDt = new Date(publishedDate)
+      const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
+      return datetime
+    },
+    heroImage () {
+      const link = _.get(this.articleData, ['thumb'])
+      if (link) {
+        return link
       }
     },
-    computed: {
-      brief () {
-        return _.get(this.articleData, [ 'brief' ])
-      },
-      content () {
-        const orig = _.get(this.articleData, 'content')
-        if (this.contentWithHtmlTag) {
-          return orig
-        }
-        return _.split(orig, `\r\n\r\n`)
-      },
-      contentWithHtmlTag () {
-        const orig = _.get(this.articleData, 'content') || []
-        return orig.includes('<p>')
-      },
-      credit () {
-        const author = _.uniq(_.split(_.get(this.articleData, [ 'extendByline' ]), ','))
-        return _.map(author, a => a).join('、')
-      },
-      date () {
-        const { publishedDate = '' } = this.articleData
-        const normalizedDt = new Date(publishedDate)
-        const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
-        return datetime
-      },
-      heroImage () {
-        const link = _.get(this.articleData, [ 'thumb' ])
-        if (link) {
-          return link
-        }
-        return
-      },
-      partner () {
-        return _.get(this.articleData, [ 'partner', 'display' ])
-      },
-      socialLink () {
-        return SOCIAL_LINK
-      },
-      source () {
-        return _.get(this.articleData, [ 'source' ])
-      },
-      title () {
-        return _.get(this.articleData, [ 'title' ])
-      }
+    partner () {
+      return _.get(this.articleData, ['partner', 'display'])
     },
+    socialLink () {
+      return SOCIAL_LINK
+    },
+    source () {
+      return _.get(this.articleData, ['source'])
+    },
+    title () {
+      return _.get(this.articleData, ['title'])
+    }
   }
+}
 </script>
 
 <style lang="stylus">
@@ -140,7 +139,7 @@
   &__heroImage
     width 100%
     font-size 0
-    img 
+    img
       width 100%
   .article
     max-width 100%
@@ -191,7 +190,7 @@
           font-size 18px
           line-height 36px
           text-align justify
-        img 
+        img
           width 100%
         .picture-box
           p
@@ -232,10 +231,10 @@
           padding 0
           font-size 0
           border none
-      
+
       .fbComment
         margin 1.5em 0
-      
+
       h3
         font-size 26px
 
@@ -299,6 +298,5 @@
         display none
       .footer
         width 100%
-    
 
 </style>

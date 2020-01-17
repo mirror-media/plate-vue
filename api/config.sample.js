@@ -27,14 +27,14 @@ module.exports = {
   SERVER_PROTOCOL: 'https',
   SERVER_HOST: 'www.mirrormedia.mg',
   TWITTER_API: {
-      consumer_key: '',
-      consumer_secret: '',
-      access_token_key: '',
-      access_token_secret: ''
+    consumer_key: '',
+    consumer_secret: '',
+    access_token_key: '',
+    access_token_secret: ''
   },
   YOUTUBE_PROTOCOL: 'https',
   YOUTUBE_HOST: 'www.googleapis.com/youtube/v3/playlistItems',
   YOUTUBE_PLAYLIST_ID: '',
   YOUTUBE_API_KEY: '',
-  YOUTUBE_API_TIMEOUT: 2000,
+  YOUTUBE_API_TIMEOUT: 2000
 }

@@ -30,11 +30,10 @@ export default {
   },
   computed: {
     image () {
-      const link = _.get(this.article, [ 'thumb' ])
+      const link = _.get(this.article, ['thumb'])
       if (link) {
         return link
       }
-      return
     }
   },
   methods: {
@@ -124,7 +123,6 @@ figure
     &__figure
       a
         padding-top 66.66%
-    
 
 @media (min-width: 1200px)
   .listArticleBlockLight

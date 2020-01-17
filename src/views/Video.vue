@@ -47,7 +47,7 @@
         <DfpST :props="props">
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
-      </LazyItemWrapper>      
+      </LazyItemWrapper>
       <DfpCover v-if="mounted && showDfpCoverAdFlag && viewportWidth < 1199">
         <vue-dfp :is="props.vueDfp" pos="LMBCVR" v-if="(viewportWidth < 550)" :config="props.config" slot="ad-cover" />
       </DfpCover>
@@ -75,17 +75,16 @@ import VideoLeading from '../components/video/VideoLeading.vue'
 import VideoList from '../components/video/VideoList.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 // import moment from 'moment'
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST } from '../constants'
-import { SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, OATH_ALL_VIDEO_PLAYLIST_ID, OATH_PLAYLIST, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
 import { adtracker } from 'src/util/adtracking'
 import { currEnv, sendAdCoverGA, updateCookie } from '../util/comm'
-import { get, truncate, } from 'lodash'
+import { get, truncate } from 'lodash'
 import { getRole } from '../util/mmABRoleAssign'
 
 const debug = require('debug')('CLIENT:VIEWS:video')
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sectionfeatured', 'sections', 'topics' ] })
+  return store.dispatch('FETCH_COMMONDATA', { endpoints: ['sectionfeatured', 'sections', 'topics'] })
     .catch(err => {
       if (err.status === 404) {
         const e = new Error()
@@ -115,24 +114,24 @@ const fetchPlaylist = (store, { id, params }) => {
     id,
     params
   })
-  .catch(() => {
-    const e = new Error()
-    e.massage = 'Page Not Found'
-    e.code = '404'
-    throw e
-  })
+    .catch(() => {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    })
 }
 
 const fetchVideo = (store, { id }) => {
   return store.dispatch('FETCH_OATH_VIDEO', {
-    id,
+    id
   })
-  .catch(() => {
-    const e = new Error()
-    e.massage = 'Page Not Found'
-    e.code = '404'
-    throw e
-  })
+    .catch(() => {
+      const e = new Error()
+      e.massage = 'Page Not Found'
+      e.code = '404'
+      throw e
+    })
 }
 
 const fetchVideoByPlaylist = (store, { id, params = {} }) => {
@@ -161,7 +160,7 @@ const fetchFullPlaylist = (store, jobs = []) => {
     jobs.push(fetchVideoByPlaylist(store, { id: playlistId }))
   })
   return jobs
-} 
+}
 
 export default {
   name: 'AppVideo',
@@ -177,12 +176,12 @@ export default {
     ShareLight,
     VideoLeading,
     VideoList,
-    VueDfpProvider,
+    VueDfpProvider
   },
   asyncData ({ store, route }) {
     const jobs = [
       fetchCommonData(store),
-      fetchPartners(store),
+      fetchPartners(store)
     ]
 
     if (route.fullPath.match(/\/section\//)) {
@@ -201,7 +200,7 @@ export default {
       jobs.push(fetchVideoByPlaylist(store, { id: playlistId, params: { max_results: 12 } }))
     } else if (route.fullPath.match(/\/video\//)) {
       jobs.push(fetchVideo(store, { id: route.fullPath.split('/')[2] }))
-      jobs.push(fetchVideoByPlaylist(store, { id: OATH_ALL_VIDEO_PLAYLIST_ID, params: { max_results: 8 }}))
+      jobs.push(fetchVideoByPlaylist(store, { id: OATH_ALL_VIDEO_PLAYLIST_ID, params: { max_results: 8 } }))
     }
     return Promise.all(jobs)
   },
@@ -250,7 +249,7 @@ export default {
         { vmid: 'twitter:title', name: 'twitter:title', content: title },
         { vmid: 'twitter:description', name: 'twitter:description', content: description },
         { vmid: 'twitter:image', name: 'twitter:image', content: image },
-        { name: 'section-name', content: 'videohub' },
+        { name: 'section-name', content: 'videohub' }
       ],
       link: [
         { rel: 'alternate', href: relUrl }
@@ -269,7 +268,7 @@ export default {
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
-      showDfpHeaderLogo: false,
+      showDfpHeaderLogo: false
     }
   },
   computed: {
@@ -321,12 +320,12 @@ export default {
               }
               break
             case 'LMBCVR3':
-                debug('adInnity loaded')
-                sendAdCoverGA('innity')
-                if (adDisplayStatus === 'none') {
-                  debug('dfp response no innity')
-                }
-                break                   
+              debug('adInnity loaded')
+              sendAdCoverGA('innity')
+              if (adDisplayStatus === 'none') {
+                debug('dfp response no innity')
+              }
+              break
             case 'LOGO':
               if (adDisplayStatus !== 'none') {
                 currentInstance.showDfpHeaderLogo = true
@@ -340,7 +339,7 @@ export default {
             position,
             isAdEmpty: adDisplayStatus === 'none',
             sessionId: elSessionId
-          }) 
+          })
         },
         setCentering: true,
         sizeMapping: DFP_SIZE_MAPPING
@@ -396,7 +395,6 @@ export default {
         const id = this.$route.fullPath.split('/')[2]
         return this.$store.state.videos[id]
       }
-      return 
     },
     videos () {
       const videos = []
@@ -431,29 +429,31 @@ export default {
     get,
     getMmid () {
       const mmid = Cookie.get('mmid')
-      let assisgnedRole = get(this.$route, [ 'query', 'ab' ])
+      let assisgnedRole = get(this.$route, ['query', 'ab'])
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
-      const role = getRole({ mmid, distribution: [
-        { id: 'A', weight: 50 },
-        { id: 'B', weight: 50 } ]
+      const role = getRole({
+        mmid,
+        distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 }]
       })
       return assisgnedRole || role
     },
     handleLoadmore ({ id, offset }) {
-      fetchVideoByPlaylist(this.$store, { id: id, params: { max_results: 12, offset: offset }})
+      fetchVideoByPlaylist(this.$store, { id: id, params: { max_results: 12, offset: offset } })
     },
     sendGA () {
       const categoryLabel = this.$route.fullPath.match(/category/)
         ? Object.entries(OATH_PLAYLIST).find(item => item[0] === this.playlist[0].id)[1].categoryName
-        : ``
+        : ''
       window.ga('set', 'contentGroup1', this.section.name)
       window.ga('set', 'contentGroup2', categoryLabel)
-      window.ga('set', 'contentGroup3', `list`)
+      window.ga('set', 'contentGroup3', 'list')
       window.ga('send', 'pageview', { title: this.title, location: document.location.href })
     }
-  },
+  }
 }
 </script>
 <style lang="stylus" scoped>

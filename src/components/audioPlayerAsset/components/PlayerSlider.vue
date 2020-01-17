@@ -30,15 +30,15 @@ export default {
     direction: {
       type: String,
       required: true,
-      validator(value) {
-        return [ 'horizontal', 'vertical' ].includes(value)
+      validator (value) {
+        return ['horizontal', 'vertical'].includes(value)
       }
     },
     buffered: {
       type: Number,
       default: 0,
       require: true,
-      validator(value) {
+      validator (value) {
         return value >= 0 && value <= 1
       }
     },
@@ -46,12 +46,12 @@ export default {
       type: Number,
       default: 0,
       require: true,
-      validator(value) {
+      validator (value) {
         return value >= 0 && value <= 1
       }
     }
   },
-  data() {
+  data () {
     return {
       internalValue: this.value,
       options: {
@@ -70,7 +70,7 @@ export default {
     }
   },
   computed: {
-    bgStyleBackground() {
+    bgStyleBackground () {
       const buffered = this.buffered * 100
       return `linear-gradient(90deg, #7d7d7d ${buffered}%, black ${
         buffered
@@ -78,7 +78,7 @@ export default {
     }
   },
   watch: {
-    value() {
+    value () {
       this.internalValue = this.value
     }
   }

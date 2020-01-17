@@ -11,16 +11,16 @@
 import _ from 'lodash'
 
 export default {
-  props: [ 'initialTimeline' ],
+  props: ['initialTimeline'],
   computed: {
     timeline () {
       return this.initialTimeline
     },
     topic () {
-      return _.get(this.timeline, [ 'topic' ])
+      return _.get(this.timeline, ['topic'])
     },
     topicImage () {
-      return _.get(this.topic, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], '')
+      return _.get(this.topic, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'], '')
     }
   }
 }

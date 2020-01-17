@@ -36,10 +36,9 @@ export default {
       const articleAside = document.querySelector('.article_aside') || document.querySelector('.article__aside')
       const articleAsideHeight = articleAside.offsetHeight
       const currPos = currentYPosition()
-      let fixedPos
       let fixedPosBtm
       const shouldFixAfter = '.readr-embedded-promotions'
-      fixedPos = document.querySelector(`.article_aside ${shouldFixAfter}`) || document.querySelector(`.article_aside ${shouldFixAfter}`)
+      const fixedPos = document.querySelector(`.article_aside ${shouldFixAfter}`) || document.querySelector(`.article_aside ${shouldFixAfter}`)
       if (fixedPos) {
         fixedPosBtm = elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight || elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight
         if (articleMain.offsetHeight > articleAsideHeight) {
@@ -47,16 +46,16 @@ export default {
             articleAsideFixed.classList.remove('fixed')
             articleAsideFixed.classList.add('fixed-top')
             articleAsideFixed.style.top = 0
-            articleAsideFixed.style.bottom = `auto`
+            articleAsideFixed.style.bottom = 'auto'
           } else if (articleMainPosBtm - currPos - 20 <= articleAsideFixed.clientHeight) {
             articleAsideFixed.classList.remove('fixed-top')
             articleAsideFixed.classList.add('fixed')
-            articleAsideFixed.style.bottom = `20px`
+            articleAsideFixed.style.bottom = '20px'
           } else {
             articleAsideFixed.classList.remove('fixed-top')
             articleAsideFixed.classList.remove('fixed')
-            articleAsideFixed.style.top = `auto`
-            articleAsideFixed.style.bottom = `auto`
+            articleAsideFixed.style.top = 'auto'
+            articleAsideFixed.style.bottom = 'auto'
           }
         }
       }

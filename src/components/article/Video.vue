@@ -9,100 +9,100 @@
   </div>
 </template>
 <script>
-  import { get, map } from 'lodash'
-  import { getClientOS } from '../../util/comm.js'
+import { get, map } from 'lodash'
+import { getClientOS } from '../../util/comm.js'
 
-  export default {
-    name: 'article-video',
-    computed: {
-      playPauseStyle () {
-        return this.playingFlag ? {
-          opacity: this.opacity
-        } : {}
-      },
-      poster () {
-        const poster = get(this.video, [ 'poster' ])
-        return !poster ? poster : '/assets/mirrormedia/transperent.png'
-      },
-      posterStyle () {
-        return !this.played ? {
-          backgroundImage: `url(${get(this.video, 'poster', '/assets/mirrormedia/notImage.png')})`,
-        } : {
-          backgroundColor: '#000'
-        }
-      },
-      videoClass () {
-        return {
-          hover: this.hoverFlag,
-          play: !this.playingFlag,
-          pause: this.playingFlag
-        }
+export default {
+  name: 'article-video',
+  computed: {
+    playPauseStyle () {
+      return this.playingFlag ? {
+        opacity: this.opacity
+      } : {}
+    },
+    poster () {
+      const poster = get(this.video, ['poster'])
+      return !poster ? poster : '/assets/mirrormedia/transperent.png'
+    },
+    posterStyle () {
+      return !this.played ? {
+        backgroundImage: `url(${get(this.video, 'poster', '/assets/mirrormedia/notImage.png')})`
+      } : {
+        backgroundColor: '#000'
       }
     },
-    data () {
+    videoClass () {
       return {
-        hoverFlag: false,
-        played: false,
-        playingFlag: false,
-        opacity: 1,
-        videoId: `video-${get(this.video, [ 'id' ])}-${Math.floor(Math.random() * (10000000000 - 100000) + 100000)}`
+        hover: this.hoverFlag,
+        play: !this.playingFlag,
+        pause: this.playingFlag
+      }
+    }
+  },
+  data () {
+    return {
+      hoverFlag: false,
+      played: false,
+      playingFlag: false,
+      opacity: 1,
+      videoId: `video-${get(this.video, ['id'])}-${Math.floor(Math.random() * (10000000000 - 100000) + 100000)}`
+    }
+  },
+  methods: {
+    fadeOutPauseBtn () {
+      this.opacity = 1
+      const opacityDecreasing = (i) => {
+        setTimeout(() => {
+          this.opacity -= 0.1
+        }, 1000 + 50 * i)
+      }
+      for (let i = 0; i < 10; i++) {
+        opacityDecreasing(i)
       }
     },
-    methods: {
-      fadeOutPauseBtn () {
+    getClientOS,
+    getValue (o = {}, p = [], d = '') {
+      return get(o, p, d)
+    },
+    mouseoverHandler (e) {
+      const target = e.target
+      const clientOS = this.getClientOS()
+      if (target.getAttribute('class') && target.getAttribute('class').indexOf('playpause') > -1 && !(clientOS === 'iOS' || clientOS === 'Android')) {
         this.opacity = 1
-        const opacityDecreasing = (i) => {
-          setTimeout(() => {
-            this.opacity -= 0.1
-          }, 1000 + 50 * i)
-        }
-        for (let i = 0; i < 10; i++) {
-          opacityDecreasing(i)
-        }
-      },
-      getClientOS,
-      getValue (o = {}, p = [], d = '') {
-        return get(o, p, d)
-      },
-      mouseoverHandler (e) {
-        const target = e.target
-        const clientOS = this.getClientOS()
-        if (target.getAttribute('class') && target.getAttribute('class').indexOf('playpause') > -1 && !(clientOS === 'iOS' || clientOS === 'Android')) {
-          this.opacity = 1
-          this.hoverFlag = true
-        } else {
-          this.hoverFlag = false
-          this.fadeOutPauseBtn()
-        }
-      },
-      videoPlay () {
-        this.played = true
-        if (!this.playingFlag) {
-          this.$refs[this.videoId].play()
-        } else {
-          this.$refs[this.videoId].pause()
-        }
+        this.hoverFlag = true
+      } else {
+        this.hoverFlag = false
+        this.fadeOutPauseBtn()
       }
     },
-    mounted () {
-      this.$refs[this.videoId].addEventListener('play', () => {
-        const videosThisPAge = document.querySelectorAll('video')
-        map(videosThisPAge, (v) => {
-          if (v.getAttribute('id') !== this.videoId) {
-            v.pause()
-          }
-        })
-        this.playingFlag = true
-        this.pausingFlag = false
-        this.fadeOutPauseBtn()
+    videoPlay () {
+      this.played = true
+      if (!this.playingFlag) {
+        this.$refs[this.videoId].play()
+      } else {
+        this.$refs[this.videoId].pause()
+      }
+    }
+  },
+  mounted () {
+    this.$refs[this.videoId].addEventListener('play', () => {
+      const videosThisPAge = document.querySelectorAll('video')
+      map(videosThisPAge, (v) => {
+        if (v.getAttribute('id') !== this.videoId) {
+          v.pause()
+        }
       })
-      this.$refs[this.videoId].addEventListener('pause', () => {
-        this.playingFlag = false
-        this.pausingFlag = true
-      })
-    },
-    props: [ 'video' ]
-  }
+      this.playingFlag = true
+      this.pausingFlag = false
+      this.fadeOutPauseBtn()
+    })
+    this.$refs[this.videoId].addEventListener('pause', () => {
+      this.playingFlag = false
+      this.pausingFlag = true
+    })
+  },
+  props: ['video']
+}
 </script>
 <style lang="stylus" scoped>
   .video-container
@@ -138,7 +138,7 @@
         display flex !important
         font-size 12px
       &::-webkit-media-controls-volume-slider
-        display none        
+        display none
       &::-webkit-media-controls-start-playback-button
         display none!important
         -webkit-appearance none
@@ -164,7 +164,7 @@
       &.play
         background-image url('/assets/mirrormedia/icon/play-btn@2x.png')
         opacity 1
-        
+
       &.pause
         background-image url('/assets/mirrormedia/icon/pause-btn@2x.png')
         // animation fade-out 0.5s

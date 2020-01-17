@@ -6,7 +6,7 @@
         :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" :key="getValue(item, [ 'id' ], Date.now())"/>
       <slot :name="`microAd${getMicroAdName(index)}`" v-if="(index === 1 || index === 2 || index === 5) && hasDFP"></slot>
     </template>
-    
+
   </section>
 </template>
 
@@ -25,7 +25,7 @@ export default {
   components: {
     'listArticle-block': ListArticleBlock
   },
-  props: [ 'articles', 'hasDFP', 'currEnv' ],
+  props: ['articles', 'hasDFP', 'currEnv'],
   data () {
     return {
       togglePause: undefined
@@ -43,24 +43,24 @@ export default {
       if (this.isAdCoverCalledYet) { return }
       const currentTop = currentYPosition()
       const eleTop = elmYPosition('#list-item-2')
-      const device_height = verge.viewportH()
-      if (currentTop + device_height > eleTop) {
+      const deviceHeight = verge.viewportH()
+      if (currentTop + deviceHeight > eleTop) {
         debugDFP('SHOW ADCOVER!')
         showAdCover(this.$store)
         this.isAdCoverCalledYet = true
         window.removeEventListener('scroll', this.scrollEventHandlerForAd)
       }
-    },      
+    }
   },
   mounted () {
     /**
      *  Have ad-cover be rendered as soon as #list-item-${index} gets visible.
      */
-    /** 
+    /**
      *  Dont show ad cover on listing page for now.
-     *  window.addEventListener('scroll', this.scrollEventHandlerForAd) 
+     *  window.addEventListener('scroll', this.scrollEventHandlerForAd)
      */
-     
+
   }
 }
 </script>
@@ -94,7 +94,7 @@ export default {
       flex-direction row
       justify-content flex-start
       width calc(100% - 30px)
-    
+
   .nativeDFP
     width calc( (100% - 40px) / 2 )
     margin 0 10px 40px
@@ -108,6 +108,5 @@ export default {
       width 1044px
   .nativeDFP
     width calc( (100% - 60px) / 3 )
-  
 
 </style>

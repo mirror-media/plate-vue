@@ -101,7 +101,7 @@
 <script>
 
 import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
-import { get, } from 'lodash'
+import { get } from 'lodash'
 import { sendGaClickEvent } from '../../util/comm'
 
 export default {
@@ -145,14 +145,14 @@ export default {
   methods: {
     closeSidebar () {
       this.$emit('closeSidebar')
-      sendGaClickEvent('header', `menu close`)
+      sendGaClickEvent('header', 'menu close')
     },
     filterSectionCategories (section) {
       const categories = section.categories || []
       return categories.filter(category => category.id && category.title)
     },
     getColor (section) {
-      return get(SECTION_MAP, [ section.id, 'bgcolor' ]) 
+      return get(SECTION_MAP, [section.id, 'bgcolor'])
     },
     sendGaClickEvent
   }

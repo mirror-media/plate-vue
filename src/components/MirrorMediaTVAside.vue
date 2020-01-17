@@ -6,45 +6,45 @@
   </div>
 </template>
 <script>
-  import _ from 'lodash'
-  export default {
-    computed: {
-      containerClass () {
-        return {
-          lightbox: this.showAsLightbox
-        }
-      },
-      mediaDataEmbed () {
-        return _.get(this.mediaData, [ 'embed' ])
-      }
-    },
-    data () {
+import _ from 'lodash'
+export default {
+  computed: {
+    containerClass () {
       return {
-        isGaEventSentYet: false,
-        showAsLightbox: false,
+        lightbox: this.showAsLightbox
       }
     },
-    name: 'mmtv-aside',
-    methods: {
-      toggleLightbox () {
-        this.showAsLightbox = !this.showAsLightbox
-        !this.isGaEventSentYet && window.ga && window.ga('send', 'event', 'homemod', 'click', 'fix play', {
-          location: document.location.href,
-          nonInteraction: false
-        })
-        this.isGaEventSentYet = true
-      }
+    mediaDataEmbed () {
+      return _.get(this.mediaData, ['embed'])
+    }
+  },
+  data () {
+    return {
+      isGaEventSentYet: false,
+      showAsLightbox: false
+    }
+  },
+  name: 'mmtv-aside',
+  methods: {
+    toggleLightbox () {
+      this.showAsLightbox = !this.showAsLightbox
+      !this.isGaEventSentYet && window.ga && window.ga('send', 'event', 'homemod', 'click', 'fix play', {
+        location: document.location.href,
+        nonInteraction: false
+      })
+      this.isGaEventSentYet = true
+    }
+  },
+  mounted () {},
+  props: {
+    mediaData: {
+      default: () => ({})
     },
-    mounted () {},
-    props: {
-      mediaData: {
-        default: () => ({})
-      },
-      showTitle: {
-        default: () => true
-      },
+    showTitle: {
+      default: () => true
     }
   }
+}
 </script>
 <style lang="stylus">
   .mmtv-aside

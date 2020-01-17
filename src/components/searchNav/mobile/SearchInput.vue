@@ -18,18 +18,18 @@ export default {
       default: ''
     }
   },
-  data() {
+  data () {
     return {
       input: ''
     }
   },
   watch: {
-    input() {
+    input () {
       this.$emit('update:input', this.input)
     }
   },
   methods: {
-    onEnter(e) {
+    onEnter (e) {
       // Check IME composing
       const { isComposing = false } = e
       if (!isComposing) {

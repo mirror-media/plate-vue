@@ -4,7 +4,7 @@
       <div class="timelineMenu-line__colorLine" />
       <div class="timelineMenu-line__bottomLine" />
     </div>
-    <div class="timelineMenu-activityBox" v-for="(item, index) in highlightNodes" 
+    <div class="timelineMenu-activityBox" v-for="(item, index) in highlightNodes"
       :class="[index%2 === 0 ? 'right' : 'left']" :style="[windowViewport > 600 ? { top: `calc(${index* 112}px + 1em)` } : {} ]">
       <h2 v-html="item.subtitle"></h2>
       <a :href="`/activity/${item.activity.id}/${topicId}`" class="timelineMenu-activityBox__imgBox">
@@ -20,16 +20,16 @@
 import _ from 'lodash'
 
 export default {
-  props: [ 'initialHighlightNodes', 'viewport' ],
+  props: ['initialHighlightNodes', 'viewport'],
   computed: {
     highlightNodes () {
       return this.initialHighlightNodes
     },
     topicId () {
-      return _.get(this.$route.params, [ 'topicId' ])
+      return _.get(this.$route.params, ['topicId'])
     },
     nodesAmount () {
-      return _.get(this.highlightNodes, [ 'length' ])
+      return _.get(this.highlightNodes, ['length'])
     },
     windowViewport () {
       return this.viewport
@@ -45,7 +45,7 @@ export default {
       } else {
         viewportTarget = 'desktop'
       }
-      return _.get(node, [ 'activity', 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])
+      return _.get(node, ['activity', 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url'])
     }
   }
 }
@@ -185,7 +185,7 @@ export default {
       width 295.5px
       h2
         width 295.5px
-      
+
       .timelineMenu-activityBox__imgBox
         width 295.5px
         height 197px

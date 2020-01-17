@@ -24,8 +24,8 @@ export default {
     },
     videoId: {
       type: String,
-      default: ``
-    },
+      default: ''
+    }
   },
   beforeMount () {
     this.embedScript()
@@ -33,19 +33,21 @@ export default {
   methods: {
     embedPlayer () { // dynamic player
       const container = document.querySelector('.vdb_player')
-      container ? container.innerHTML = '' : ''
-      /*global vidible:true*/
+      if (container) {
+        container.innerHTML = ''
+      }
+      /* global vidible:true */
       vidible.player('vdbPlayer').setup({
         bcid: `${OATH_COPMANY_ID}`,
         pid: `${this.playerId}`,
-        videos: [ `${this.videoId}` ]
+        videos: [`${this.videoId}`]
       }).load()
     },
     embedScript () {
       const container = document.querySelector('.vdb_player')
       container.innerHTML = ''
       container.classList.add(`vdb_${this.combinedId}`)
-      const script = document.createElement("script")
+      const script = document.createElement('script')
       script.setAttribute('type', 'text/javascript')
       script.setAttribute('src', this.scriptSrc)
       container.appendChild(script)

@@ -28,15 +28,15 @@ export default {
     }
   },
   computed: {
-    title() {
+    title () {
       return get(this.sound, 'title', '')
     },
-    slug() {
+    slug () {
       return get(this.sound, 'slug', '')
     }
   },
   methods: {
-    secondsToMs(d) {
+    secondsToMs (d) {
       d = Number(d)
       const m = Math.floor((d % 3600) / 60)
       const s = Math.floor((d % 3600) % 60)

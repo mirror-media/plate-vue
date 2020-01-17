@@ -66,7 +66,7 @@ export default {
         }
         this.isAutoSlide = true
         this.autoSlideToNextNews()
-      }, 3000);
+      }, 3000)
     },
     handleTransitionEnd () {
       this.isTransition = false

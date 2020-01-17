@@ -85,7 +85,7 @@ import {
 import moment from 'moment'
 export default {
   name: 'latestArticle-foodtravel',
-  props: [ 'articles', 'props', 'commonData', 'showLatestOnly' ],
+  props: ['articles', 'props', 'commonData', 'showLatestOnly'],
   components: {
     'items-title-rect': ItemsTitleRect
   },
@@ -126,7 +126,7 @@ export default {
       .topicsArticle-full-post
         img_width = 100%
         content_width = 90%
-        
+
         display flex
         flex-direction column
         justify-content flex-start
@@ -164,7 +164,7 @@ export default {
             margin 0
             background-repeat no-repeat
             background-size cover
-            background-position center   
+            background-position center
 
   .latestArticle-foodtravel-container
     .header-rect
@@ -176,8 +176,7 @@ export default {
         img_width = 100%
         content_width = 90%
         border_style = 1px solid #4d4d4d
-        
-        
+
         // In mobile, there is no different between two classes below
         &-0, &-1
           display flex
@@ -219,8 +218,7 @@ export default {
             margin 0
             background-repeat no-repeat
             background-size cover
-            background-position center  
-
+            background-position center
 
 // Tablet, or landscape of mobile
 @media (min-width: 600px), (min-aspect-ratio: 13/9)
@@ -232,7 +230,7 @@ export default {
         .topicsArticle-full-post
           img_width = 80%
           content_width = 90%
-          
+
           flex-direction row
           margin-top 50px
 
@@ -264,7 +262,7 @@ export default {
               width content_width
               height 350px
               padding 0 2% 0 12%
-          
+
           // Img at right side, content at left side
           &-1
             flex-direction row-reverse
@@ -280,14 +278,14 @@ export default {
           &__img
             z-index 1
             width img_width
-            height 300px 
+            height 300px
 
 // PC
 @media (min-width: 1200px)
   .latestArticle-foodtravel
     flex-direction row
     align-items flex-start
-         
+
     .latestArticle-foodtravel-container
       margin-left 8.3%
       margin-right 4.3%
@@ -316,7 +314,7 @@ export default {
               height auto
               height 38vh
               padding 0 2% 10px 2%
-          
+
           // Img at right side, content at left side
           &-1
             width 60vw

@@ -39,7 +39,7 @@ export default {
     'click-outside': {
       bind (el, binding, vnode) {
         el.clickOutsideEvent = function (event) {
-          if (!(el == event.target || el.contains(event.target))) {
+          if (!(el === event.target || el.contains(event.target))) {
             vnode.context[binding.expression](event)
           }
         }
@@ -53,24 +53,24 @@ export default {
   props: {
     sections: {
       type: Array,
-      default() {
+      default () {
         return []
       },
       required: true
     }
   },
-  data() {
+  data () {
     const defaultOption = { scope: '', id: '', name: 'all', title: '全部類別' }
     return {
       showOptionList: false,
       defaultOption,
-      filterOutSections: [ 'videohub' ],
+      filterOutSections: ['videohub'],
       filterOutCategories: [],
       currentOption: defaultOption
     }
   },
   computed: {
-    options() {
+    options () {
       const sections =
         this.sections
           .map(section => this.mapItems(section))
@@ -84,37 +84,37 @@ export default {
   },
   watch: {
     currentOption: {
-      handler() {
+      handler () {
         this.$emit('update:currentOption', this.currentOption)
       },
       immediate: true
     }
   },
   methods: {
-    toggleOptionList() {
+    toggleOptionList () {
       this.showOptionList = !this.showOptionList
     },
-    hideOptionList() {
+    hideOptionList () {
       this.showOptionList = false
     },
 
-    mapItems({ id = '', name = '', title = '' }, scope = 'section') {
+    mapItems ({ id = '', name = '', title = '' }, scope = 'section') {
       return { scope, id, name, title }
     },
 
-    getOptionTitle(option) {
+    getOptionTitle (option) {
       return get(option, 'title', '')
     },
-    getOptionId(option) {
+    getOptionId (option) {
       return get(option, 'id', '')
     },
 
-    clickOption(option) {
+    clickOption (option) {
       this.$set(this, 'currentOption', option)
       this.hideOptionList()
     },
 
-    isOptionCurrent(option) {
+    isOptionCurrent (option) {
       return this.getOptionId(option) === this.getOptionId(this.currentOption)
     }
   }

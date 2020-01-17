@@ -31,7 +31,7 @@ export default {
   props: {
     sections: {
       type: Array,
-      default() {
+      default () {
         return []
       },
       required: true
@@ -42,7 +42,7 @@ export default {
     SearchSelect,
     SearchButtonSubmit
   },
-  data() {
+  data () {
     return {
       // Value synced by child components
       input: '',
@@ -50,14 +50,14 @@ export default {
     }
   },
   methods: {
-    onSearchInputEnter() {
+    onSearchInputEnter () {
       this.search()
     },
-    onSearchButtonSubmit() {
+    onSearchButtonSubmit () {
       sendGaClickEvent('header', 'search')
       this.search()
     },
-    search() {
+    search () {
       if (this.input !== '') {
         const keyword = this.input.replace(/\s+/g, ',')
         const scope = get(this.currentOption, 'scope', '')

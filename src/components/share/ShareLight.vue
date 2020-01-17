@@ -27,7 +27,7 @@ export default {
         title: document.querySelector('meta[property="og:title"]').getAttribute('content')
       })
       sendGaClickEvent(this.gtmCategory, 'share line')
-    },
+    }
   }
 }
 </script>

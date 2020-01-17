@@ -1,6 +1,6 @@
 const path = require('path')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { PUBLIC_PATH } = require('../api/config')
 const { VueLoaderPlugin } = require('vue-loader')
 
@@ -19,9 +19,9 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'assets': path.resolve(__dirname, '../assets'),
-      'src': path.resolve(__dirname, '../src'),
-      'components': path.resolve(__dirname, '../src/components')
+      assets: path.resolve(__dirname, '../assets'),
+      src: path.resolve(__dirname, '../src'),
+      components: path.resolve(__dirname, '../src/components')
     }
   },
   module: {
@@ -89,13 +89,13 @@ module.exports = {
   },
   plugins: isProd
     ? [
-        new VueLoaderPlugin(),
-        new MiniCssExtractPlugin({
-          filename: 'common.[chunkhash].css'
-        })
-      ]
+      new VueLoaderPlugin(),
+      new MiniCssExtractPlugin({
+        filename: 'common.[chunkhash].css'
+      })
+    ]
     : [
-        new VueLoaderPlugin(),
-        new FriendlyErrorsWebpackPlugin()
-      ]
+      new VueLoaderPlugin(),
+      new FriendlyErrorsWebpackPlugin()
+    ]
 }

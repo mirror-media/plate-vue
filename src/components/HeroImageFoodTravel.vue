@@ -15,19 +15,19 @@ import _ from 'lodash'
 export default {
   computed: {
     leadingImg () {
-      return _.get(this.commonData.sections.items.find((o) => o.name === 'foodtravel'), [ 'heroImage' ])
+      return _.get(this.commonData.sections.items.find((o) => o.name === 'foodtravel'), ['heroImage'])
     },
     sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
+      return _.get(_.find(_.get(this.commonData, ['sections', 'items']), { name: this.sectionName }), ['image'], null)
     }
   },
   methods: {
     getValue,
     getSectionLogoUrl () {
-      return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+      return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/asset/logo.png'
     }
   },
-  props: [ 'commonData', 'sectionName' ]
+  props: ['commonData', 'sectionName']
 }
 </script>
 

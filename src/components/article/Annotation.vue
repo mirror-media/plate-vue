@@ -16,7 +16,7 @@ import { getClientOS } from '../../util/comm'
 
 export default {
   name: 'annotation',
-  props: [ 'annotationStr' ],
+  props: ['annotationStr'],
   computed: {
     annotationPart1 () {
       return this.annotationComposer.annotationPart1
@@ -42,7 +42,7 @@ export default {
       const annotationContentObj = JSON.parse(annotationContent)
 
       let paragraph = this.annotationStr.toString()
-      if (_.get(annotationContentObj, [ 'text' ])) {
+      if (_.get(annotationContentObj, ['text'])) {
         paragraph = paragraph.replace(`--><!--${annotationContentObj.text}-->`, '')
       }
 
@@ -50,7 +50,7 @@ export default {
         annotationPart1: this.annotationStr.toString().substring(0, annotationContentStart),
         annotationPart2: annotationContentObj.text,
         annotationPart3: paragraph.substring(annotationContentEnd),
-        annotationText: _.get(annotationContentObj, [ 'pureAnnotationText' ], '')
+        annotationText: _.get(annotationContentObj, ['pureAnnotationText'], '')
       }
     },
     isActive () {
@@ -130,7 +130,7 @@ export default {
       line-height 1.6rem
       font-size 1rem
       word-break break-word
-    
+
     &.active
       -webkit-touch-callout none
       -webkit-user-select none

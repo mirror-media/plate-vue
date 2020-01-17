@@ -39,7 +39,7 @@ export default {
       current: 0,
       timer: undefined,
       touchEndX: 0,
-      touchStartX: 0,
+      touchStartX: 0
     }
   },
   computed: {

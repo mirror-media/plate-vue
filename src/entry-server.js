@@ -16,7 +16,9 @@ export default context => {
     const { fullPath } = router.resolve(url).route
 
     if (fullPath !== url) {
-      return reject({ url: fullPath })
+      const error = new Error('fullPath and url not match')
+      error.url = fullPath
+      return reject(error)
     }
 
     router.push(url)
@@ -26,7 +28,10 @@ export default context => {
       const matchedComponents = router.getMatchedComponents()
       // no matched routes
       if (!matchedComponents.length) {
-        return reject({ code: 404 })
+        const error = new Error('matchedComponents not found')
+        error.code = 404
+        // return reject({ code: 404 })
+        return reject(error)
       }
       // Call fetchData hooks on components matched by the route.
       // A preFetch hook dispatches a store action and returns a Promise,

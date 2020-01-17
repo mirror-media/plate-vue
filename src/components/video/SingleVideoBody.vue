@@ -32,7 +32,7 @@
         </a>
       </div>
     </template>
-    
+
     <slot name="PCFT"></slot>
     <slot name="MBFT"></slot>
   </section>
@@ -41,8 +41,8 @@
 
 import OathPlayer from './OathPlayer.vue'
 import moment from 'moment'
-import { OATH_COPMANY_ID, OATH_PLAYER_LIST } from '../../constants'
-import { SITE_URL } from '../../constants'
+import { OATH_COPMANY_ID, OATH_PLAYER_LIST, SITE_URL } from '../../constants'
+
 import { sendGaClickEvent } from '../../util/comm'
 
 export default {
@@ -52,7 +52,7 @@ export default {
       type: Object
     },
     videos: {
-      type: Array,
+      type: Array
     }
   },
   components: {
@@ -158,7 +158,7 @@ export default {
     width 90%
     margin 40px auto 0
     >>> iframe
-      width 100% !important 
+      width 100% !important
 
 @media (min-width: 768px)
   .single-video

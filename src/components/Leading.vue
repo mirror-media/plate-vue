@@ -82,16 +82,16 @@ export default {
       }
     },
     slideshowImgs () {
-      return _.get(this.mediaData, [ 'images', 'items' ], [])
+      return _.get(this.mediaData, ['images', 'items'], [])
     },
     leadingImg () {
-      return _.get(this.mediaData, [ 'heroImage' ])
+      return _.get(this.mediaData, ['heroImage'])
     },
     leadingVideo () {
-      return _.get(this.mediaData, [ 'heroVideo' ])
+      return _.get(this.mediaData, ['heroVideo'])
     },
     leadingEmedded () {
-      return _.get(this.mediaData, [ 'embed' ])
+      return _.get(this.mediaData, ['embed'])
     }
   },
   methods: {
@@ -156,7 +156,7 @@ export default {
         top 0
         left 0
         width 100%
-        height 100% 
+        height 100%
 
         img
           width 100%
@@ -168,7 +168,7 @@ export default {
         top 0
         left 0
         width 100%
-        height 100%   
+        height 100%
 
         video
           width 100%
@@ -181,7 +181,7 @@ export default {
           top 0
           left 0
           width 100%
-          height 100% 
+          height 100%
           display flex
           justify-content center
           align-items center

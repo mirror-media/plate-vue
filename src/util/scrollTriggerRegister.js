@@ -11,23 +11,27 @@ export class ScrollTriggerRegister {
     this.register = this.register.bind(this)
     this.shouldBeTrigger = this.shouldBeTrigger.bind(this)
   }
+
   init () {
     Promise.all([
       this._destroy().then(() => this._init())
     ])
   }
+
   _init () {
     return new Promise((resolve) => {
       window.addEventListener('scroll', this.register)
       resolve()
     })
   }
+
   _destroy () {
     return new Promise((resolve) => {
       window.removeEventListener('scroll', this.register)
       resolve()
     })
   }
+
   register () {
     const currTopY = currentYPosition()
     const winHeight = verge.viewportH()
@@ -42,6 +46,7 @@ export class ScrollTriggerRegister {
       }
     })
   }
+
   shouldBeTrigger (targ, currBtmY, offset) {
     return new Promise((resolve) => {
       const targPosY = elmYPosition(targ, () => {

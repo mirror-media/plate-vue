@@ -88,11 +88,11 @@ export default {
     getSectionStyle (sect) {
       const sectionId = get(sect, 'id')
       const style = {
-        backgroundColor: get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
+        backgroundColor: get(SECTION_MAP, [sectionId, 'bgcolor'], '#bcbcbc')
       }
       return style
     },
-    sendGaClickEvent,
+    sendGaClickEvent
   }
 }
 </script>
@@ -158,7 +158,7 @@ export default {
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
-      
+
   &__menu
     display none
   &--mobile
@@ -183,10 +183,10 @@ export default {
         position absolute
         height 35px
         background-color #000
-        display flex 
+        display flex
         justify-content center
-        align-items center 
-        font-size 1.2rem       
+        align-items center
+        font-size 1.2rem
         top auto
         bottom 0
         left 0
@@ -201,7 +201,7 @@ export default {
         font-weight normal
       > div
         display none
-    
+
   &__eyebrow
     width 100%
     margin-bottom 10px
@@ -274,7 +274,7 @@ export default {
         width calc( (100% - 30px)/2 )
       .editorChoice__block--title
         height 65px
-    
+
 @media (min-width: 1200px)
   .editorChoice
     display block

@@ -25,7 +25,7 @@
         <a :href="socialLink.WEIBO" target="_blank" @click="sendGaClickEvent('footer', 'footer weibo')"><img class="weibo" src="/assets/mirrormedia/icon/weibo_white.png" alt="微博"></a>
       </div>
     </div>
-    
+
   </footer>
 </template>
 <script>
@@ -51,28 +51,28 @@ export default {
       menuItem.category = []
       _.forEach(this.commonData.sections.items, (s) => {
         s.href = '/section/' + s.name
-        s.isFeatured ? menuItem.section.push(s) : ''
+        s.isFeatured && menuItem.section.push(s)
         _.forEach(s.categories, (c) => {
           c.href = '/category/' + c.name
           c.section = s.name
-          c.isFeatured ? menuItem.category.push(c) : ''
+          c.isFeatured && menuItem.category.push(c)
         })
       })
       return menuItem
     },
     sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
+      return _.get(_.find(_.get(this.commonData, ['sections', 'items']), { name: this.sectionName }), ['image'], null)
     }
   },
   methods: {
     getSectionLogoUrl () {
-      return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+      return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/asset/logo.png'
     },
     getSectionLogoWidth () {
-      return _.get(this.sectionLogo, [ 'image', 'width' ])
+      return _.get(this.sectionLogo, ['image', 'width'])
     },
     getSectionLogoHeight () {
-      return _.get(this.sectionLogo, [ 'image', 'height' ])
+      return _.get(this.sectionLogo, ['image', 'height'])
     },
     sendGaClickEvent
   }
@@ -154,9 +154,9 @@ export default {
 
       .facebook, .line, .weibo
         height 22px
-      .line, .weibo  
+      .line, .weibo
         margin-left 10px
-      
+
 @media (min-width 600px)
   .footer-foodtravel
     &__menu

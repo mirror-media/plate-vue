@@ -36,8 +36,8 @@
                 :srcset="`${getValue(heroImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
                           ${getValue(heroImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
                           ${getValue(heroImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
-        </div> 
-      </div>  
+        </div>
+      </div>
     </div>
     <div class="article_body">
       <div class="pic-wrapper" :class="[ picContainerActive ? 'active' : '' ]">
@@ -52,7 +52,7 @@
               <img :src="getValue(o, [ 'content', 0, 'url' ])" :class="landscapeClass"
                     :srcset="`${getValue(o, [ 'content', 0, 'mobile', 'url' ])} 800w,
                               ${getValue(o, [ 'content', 0, 'tablet', 'url' ])} 1200w,
-                              ${getValue(o, [ 'content', 0, 'desktop', 'url' ])} 2000w`" />      
+                              ${getValue(o, [ 'content', 0, 'desktop', 'url' ])} 2000w`" />
             </div>
           </section>
         </div>
@@ -62,390 +62,390 @@
       <div class="credit" v-html="credit"></div>
       <related-list-thumbnail :relatedList="relatedList" :isApp="isApp" />
       <!--slot name="slot_dfpFT"></slot-->
-      <slot name="slot_fb_comment"></slot>      
+      <slot name="slot_fb_comment"></slot>
     </div>
   </div>
 </template>
 <script>
-  import { OnePageScroller } from '../../../libs/kc-scroll/lib'
-  import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
-  import { getClientOS, getValue, addClass, removeClass } from '../../util/comm'
-  import { shareLine, shareFacebook } from '../../util/comm'
-  import _ from 'lodash'
-  import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
-  import verge from 'verge'
+import { OnePageScroller } from '../../../libs/kc-scroll/lib'
+import { currentYPosition, elmYPosition, smoothScroll } from 'kc-scroll'
+import { getClientOS, getValue, addClass, removeClass, shareLine, shareFacebook } from '../../util/comm'
 
-  export default {
-    components: {
-      'related-list-thumbnail': RelatedListWithThumbnail
+import _ from 'lodash'
+import RelatedListWithThumbnail from './RelatedListWithThumbnail.vue'
+import verge from 'verge'
+
+export default {
+  components: {
+    'related-list-thumbnail': RelatedListWithThumbnail
+  },
+  computed: {
+    brief () {
+      return _.get(this.articleData, 'brief.apiData') || []
     },
-    computed: {
-      brief () {
-        return _.get(this.articleData, 'brief.apiData') || []
-      },
-      captionStyle () {
-        return {
-          show: (this.descSwitch || (this.viewport < 768 && !this.isLandscape)),
-          hide: !this.descSwitch
-        }
-      },
-      contentArr () {
-        const { apiData } = _.get(this.articleData, [ 'content' ], [])
-        return apiData
-      },
-      credit () {
-        const { cameraMan = [], designers = [], engineers = [], extendByline = '', photographers = [], writers = [] } = this.articleData
-        const creditWriterStr = (writers.length > 0) ? '文｜' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class=\"white\" href=\"/author/${o.id}\">${o.name}</a>`)).join('&nbsp;') : ''
-        const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
-        return [ creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse ].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
-      },
-      creditCommentClass () {
-        return {
-          show: this.creditCommentShow,
-          active: this.creditCommentFixed
-        }
-      },
-      goNextPageClass () {
-        return {
-          center: (this.viewport < 768 && !this.isLandscape),
-          hidden: this.goNextPageHide
-        }
-      },
-      heroCaption () {
-        const { heroCaption } = this.articleData
-        return heroCaption || ''
-      },
-      heroImg () {
-        const { heroImage } = this.articleData
-        return heroImage
-      },
-      ifRenderProgressSidebar () {
-        return (this.viewport > 1200)
-      },
-      landscapeClass () {
-        return {
-          landscape: this.isLandscape
-        }
-      },
-      imgArr () {
-        return _.filter(this.contentArr, { type: 'image' })
-      },
-      relatedList () {
-        const { relateds } = this.articleData
-        return relateds
-      },
-      switchStatus () {
-        return {
-          on: this.descSwitch,
-          off: !this.descSwitch,
-          hide: !this.isLandscape || this.descHide
-        }
-      },
-      title () {
-        const { title } = this.articleData
-        return title
-      }
-    },
-    data () {
+    captionStyle () {
       return {
-        touchLock: false,
-        currIndex: 1,
-        currOS: '',
-        creditCommentShow: false,
-        creditCommentFixed: false,
-        descHide: false,
-        descSwitch: _.get(this.articleData, [ 'isAdvertised' ], false),
-        lastAnimation: 0,
-        leadingWrapperHide: false,
-        isLandscape: false,
-        goNextPageHide: false,
-        onePageScroll: (new OnePageScroller()),
-        picContainerActive: false,
-        quietPeriod: 700,
-        scrollingFlag: false,
-        stickflag: [],
-        touchDelta: 0,
-        touchStartY: 0
+        show: (this.descSwitch || (this.viewport < 768 && !this.isLandscape)),
+        hide: !this.descSwitch
       }
     },
-    methods: {
-      currentYPosition,
-      elmYPosition,
-      getValue,
-      goNextPage () {
-        const nextPage = this.currIndex <= this.imgArr.length ? this.currIndex + 1 : this.currIndex
-        if (this.currIndex < this.imgArr.length) {
-          this.onePageScroll.moveTo(nextPage)
-        } else {
-          this.smoothScroll('.credit-comment')
-          this.onePageScroll.pauseToggle()
+    contentArr () {
+      const { apiData } = _.get(this.articleData, ['content'], [])
+      return apiData
+    },
+    credit () {
+      const { cameraMan = [], designers = [], engineers = [], extendByline = '', photographers = [], writers = [] } = this.articleData
+      const creditWriterStr = (writers.length > 0) ? '文｜' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="white" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditPhotoStr = (photographers.length > 0) ? '攝影｜' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="white" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditDesignStr = (designers.length > 0) ? '設計｜' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="white" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditEnginStr = (engineers.length > 0) ? '工程｜' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="white" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditCamStr = (cameraMan.length > 0) ? '影音｜' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a class="white" href="/author/${o.id}">${o.name}</a>`)).join('&nbsp;') : ''
+      const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
+      return [creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
+    },
+    creditCommentClass () {
+      return {
+        show: this.creditCommentShow,
+        active: this.creditCommentFixed
+      }
+    },
+    goNextPageClass () {
+      return {
+        center: (this.viewport < 768 && !this.isLandscape),
+        hidden: this.goNextPageHide
+      }
+    },
+    heroCaption () {
+      const { heroCaption } = this.articleData
+      return heroCaption || ''
+    },
+    heroImg () {
+      const { heroImage } = this.articleData
+      return heroImage
+    },
+    ifRenderProgressSidebar () {
+      return (this.viewport > 1200)
+    },
+    landscapeClass () {
+      return {
+        landscape: this.isLandscape
+      }
+    },
+    imgArr () {
+      return _.filter(this.contentArr, { type: 'image' })
+    },
+    relatedList () {
+      const { relateds } = this.articleData
+      return relateds
+    },
+    switchStatus () {
+      return {
+        on: this.descSwitch,
+        off: !this.descSwitch,
+        hide: !this.isLandscape || this.descHide
+      }
+    },
+    title () {
+      const { title } = this.articleData
+      return title
+    }
+  },
+  data () {
+    return {
+      touchLock: false,
+      currIndex: 1,
+      currOS: '',
+      creditCommentShow: false,
+      creditCommentFixed: false,
+      descHide: false,
+      descSwitch: _.get(this.articleData, ['isAdvertised'], false),
+      lastAnimation: 0,
+      leadingWrapperHide: false,
+      isLandscape: false,
+      goNextPageHide: false,
+      onePageScroll: (new OnePageScroller()),
+      picContainerActive: false,
+      quietPeriod: 700,
+      scrollingFlag: false,
+      stickflag: [],
+      touchDelta: 0,
+      touchStartY: 0
+    }
+  },
+  methods: {
+    currentYPosition,
+    elmYPosition,
+    getValue,
+    goNextPage () {
+      const nextPage = this.currIndex <= this.imgArr.length ? this.currIndex + 1 : this.currIndex
+      if (this.currIndex < this.imgArr.length) {
+        this.onePageScroll.moveTo(nextPage)
+      } else {
+        this.smoothScroll('.credit-comment')
+        this.onePageScroll.pauseToggle()
+      }
+    },
+    goHome () {
+      window.location.href = '/'
+    },
+    goPage (e) {
+      const targIndex = Number(e.target.getAttribute('index')) + 1
+      let loopCount = this.currIndex
+      this.onePageScroll.moveTo(targIndex)
+      this.onePageScroll.cancelPause()
+      while (loopCount !== targIndex) {
+        if (this.currIndex < targIndex) {
+          this.sideProgressHandler('pass', loopCount)
+          loopCount++
+        } else if (this.currIndex > targIndex) {
+          this.sideProgressHandler('back', loopCount)
+          loopCount--
         }
-      },
-      goHome () {
-        window.location.href = '/'
-      },
-      goPage (e) {
-        const targIndex = Number(e.target.getAttribute('index')) + 1
-        let loopCount = this.currIndex
-        this.onePageScroll.moveTo(targIndex)
-        this.onePageScroll.cancelPause()
-        while (loopCount !== targIndex) {
-          if (this.currIndex < targIndex) {
-            this.sideProgressHandler('pass', loopCount)
-            loopCount++
-          } else if (this.currIndex > targIndex) {
-            this.sideProgressHandler('back', loopCount)
-            loopCount--
-          }
-        }
-      },
-      initOnepage () {
-        this.onePageScroll.init('.pic-wrapper', {
-          afterMove: (index) => {
-            this.currIndex = parseInt(index)
-            this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
-            if (this.currIndex === this.imgArr.length) {
-              this.creditCommentShow = true
-            } else {
-              this.creditCommentShow = false
-            }
-          },
-          animationTime: 500,
-          beforeMove: (index) => {
-            this.smoothScroll('.article_body')
-            if (parseInt(index) > this.currIndex) {
-              this.sideProgressHandler('pass', parseInt(index) - 1)
-            } else {
-              this.sideProgressHandler('back', parseInt(index))
-            }
-          },
-          defaultInitialPage: 1,
-          easing: 'ease',
-          pageContainer: '.pic-section',
-          quietPeriod: 550
-        })
-      },
-      mouseWheelHandlerN (evt) {
-        const delta = evt.wheelDelta || -evt.detail
-        if (delta < 0) {
+      }
+    },
+    initOnepage () {
+      this.onePageScroll.init('.pic-wrapper', {
+        afterMove: (index) => {
+          this.currIndex = parseInt(index)
+          this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
           if (this.currIndex === this.imgArr.length) {
-            this.picContainerActive = false
-            this.onePageScroll.doPause()
-          }
-        } else if (delta > 0) {
-          if (this.currIndex === 1) {
-            this.picContainerActive = false
-            this.onePageScroll.doPause()
-            this.leadingWrapperHide = false
+            this.creditCommentShow = true
           } else {
-            this.leadingWrapperHide = true
+            this.creditCommentShow = false
           }
-        }
-      },
-      scrollHandler () {
-        const deviceHeight = verge.viewportH()
-        const currTop = this.currentYPosition()
-        const currBtm = currTop + deviceHeight
-        const articleBodyTopY = this.elmYPosition('.article_body')
-        const articleBodyBtmY = articleBodyTopY + deviceHeight
-
-        if ((articleBodyTopY <= currTop && this.currIndex === 1) || (articleBodyBtmY >= currBtm && this.currIndex === this.imgArr.length)) {
-          this.picContainerActive = true
-          this.touchLock = true
-          if (this.onePageScroll.pauseFlag) {
-            setTimeout(() => {
-              this.onePageScroll.cancelPause()
-            }, 1000)
+        },
+        animationTime: 500,
+        beforeMove: (index) => {
+          this.smoothScroll('.article_body')
+          if (parseInt(index) > this.currIndex) {
+            this.sideProgressHandler('pass', parseInt(index) - 1)
+          } else {
+            this.sideProgressHandler('back', parseInt(index))
           }
-        } else {
-          this.touchLock = false
+        },
+        defaultInitialPage: 1,
+        easing: 'ease',
+        pageContainer: '.pic-section',
+        quietPeriod: 550
+      })
+    },
+    mouseWheelHandlerN (evt) {
+      const delta = evt.wheelDelta || -evt.detail
+      if (delta < 0) {
+        if (this.currIndex === this.imgArr.length) {
           this.picContainerActive = false
+          this.onePageScroll.doPause()
         }
-      },
-      setUpHtmlHeight () {
-        return new Promise((resolve) => {
-          if (process.env.VUE_ENV === 'client') {
-            addClass(document.body, 'limited-height')
-            addClass(document.documentElement, 'limited-height')
-          }
-          resolve()
-        })
-      },
-      setUpScrollHandler () {
-        return new Promise((resolve) => {
-          window.removeEventListener('scroll', this.scrollHandler)
-          window.addEventListener('scroll', this.scrollHandler)
-          resolve()
-        })
-      },
-      setUpSelectorPreventor () {
-        return new Promise(() => {
-          this.$refs[ 'photos' ].ondragstart = function () { return false }
-          this.$refs[ 'photos' ].onselectstart = function () { return false }
-        })
-      },
-      setUpResizeHandler () {
-        return new Promise((resolve) => {
-          window.removeEventListener('resize', this.updateIsLandscape)
-          window.addEventListener('resize', this.updateIsLandscape)
-          resolve()
-        })
-      },
-      smoothScroll,
-      shareLine () {
-        shareLine({
-          route: this.$route.path,
-          title: document.querySelector('meta[property="og:title"]').getAttribute('content')
-        })
-      },
-      shareFacebook () {
-        shareFacebook({ route: this.$route.path })
-      },
-      sideProgressHandler (action, index) {
-        return new Promise(() => {
-          const _targContainer = document.querySelector('.stick-container')
-          if (!_targContainer) { return }
-          const _targElement = _targContainer.querySelector(`.stick:nth-child(${index})`)
-          if (!_targElement) { return }
-          switch (action) {
-            case 'pass':
-              _targElement.setAttribute('style', `bottom: ${(_targContainer.offsetHeight - (index * 7))}px;`)
-              break
-            case 'back':
-              _targElement.setAttribute('style', `bottom: ${((this.imgArr.length - index + 1) * 7)}px;`)
-              break
-          }
-        })
-      },
-      stickBottom (index) {
-        return {
-          bottom: `${((this.imgArr.length - index) * 7)}px`
+      } else if (delta > 0) {
+        if (this.currIndex === 1) {
+          this.picContainerActive = false
+          this.onePageScroll.doPause()
+          this.leadingWrapperHide = false
+        } else {
+          this.leadingWrapperHide = true
         }
-      },
-      toggleDesc () {
-        this.descSwitch = !this.descSwitch
-        this.descShowDefault = false
-      },
-      touchEndHandlerN (event) {
-        const deltaY = event.pageY - this.touchStartY
-        document.removeEventListener('touchmove', this.touchMoveHandlerN)
-        if (deltaY >= 50) {
-          if (this.currIndex === 1) {
-            this.picContainerActive = false
-            this.onePageScroll.doPause()
-            this.touchLock = false
-            this.leadingWrapperHide = false
-          } else {
-            this.leadingWrapperHide = true
-          }
-        } else if (deltaY <= -50) {
-          if (this.currIndex === this.imgArr.length) {
-            this.picContainerActive = false
-            this.onePageScroll.doPause()
-            this.touchLock = false
-            this.leadingWrapperHide = true
-          }
+      }
+    },
+    scrollHandler () {
+      const deviceHeight = verge.viewportH()
+      const currTop = this.currentYPosition()
+      const currBtm = currTop + deviceHeight
+      const articleBodyTopY = this.elmYPosition('.article_body')
+      const articleBodyBtmY = articleBodyTopY + deviceHeight
+
+      if ((articleBodyTopY <= currTop && this.currIndex === 1) || (articleBodyBtmY >= currBtm && this.currIndex === this.imgArr.length)) {
+        this.picContainerActive = true
+        this.touchLock = true
+        if (this.onePageScroll.pauseFlag) {
+          setTimeout(() => {
+            this.onePageScroll.cancelPause()
+          }, 1000)
         }
-      },
-      touchStartHandlerN (event) {
-        const target = event.target
-        const touches = event.touches
-        if (touches && touches.length) {
-          this.touchStartY = touches[0].pageY
-          document.addEventListener('touchmove', this.touchMoveHandlerN)
-          if (this.touchLock) {
-            const targClass = target.getAttribute('class') || ''
-            if (targClass.indexOf('go-next-page') === -1 &&
+      } else {
+        this.touchLock = false
+        this.picContainerActive = false
+      }
+    },
+    setUpHtmlHeight () {
+      return new Promise((resolve) => {
+        if (process.env.VUE_ENV === 'client') {
+          addClass(document.body, 'limited-height')
+          addClass(document.documentElement, 'limited-height')
+        }
+        resolve()
+      })
+    },
+    setUpScrollHandler () {
+      return new Promise((resolve) => {
+        window.removeEventListener('scroll', this.scrollHandler)
+        window.addEventListener('scroll', this.scrollHandler)
+        resolve()
+      })
+    },
+    setUpSelectorPreventor () {
+      return new Promise(() => {
+        this.$refs.photos.ondragstart = function () { return false }
+        this.$refs.photos.onselectstart = function () { return false }
+      })
+    },
+    setUpResizeHandler () {
+      return new Promise((resolve) => {
+        window.removeEventListener('resize', this.updateIsLandscape)
+        window.addEventListener('resize', this.updateIsLandscape)
+        resolve()
+      })
+    },
+    smoothScroll,
+    shareLine () {
+      shareLine({
+        route: this.$route.path,
+        title: document.querySelector('meta[property="og:title"]').getAttribute('content')
+      })
+    },
+    shareFacebook () {
+      shareFacebook({ route: this.$route.path })
+    },
+    sideProgressHandler (action, index) {
+      return new Promise(() => {
+        const _targContainer = document.querySelector('.stick-container')
+        if (!_targContainer) { return }
+        const _targElement = _targContainer.querySelector(`.stick:nth-child(${index})`)
+        if (!_targElement) { return }
+        switch (action) {
+          case 'pass':
+            _targElement.setAttribute('style', `bottom: ${(_targContainer.offsetHeight - (index * 7))}px;`)
+            break
+          case 'back':
+            _targElement.setAttribute('style', `bottom: ${((this.imgArr.length - index + 1) * 7)}px;`)
+            break
+        }
+      })
+    },
+    stickBottom (index) {
+      return {
+        bottom: `${((this.imgArr.length - index) * 7)}px`
+      }
+    },
+    toggleDesc () {
+      this.descSwitch = !this.descSwitch
+      this.descShowDefault = false
+    },
+    touchEndHandlerN (event) {
+      const deltaY = event.pageY - this.touchStartY
+      document.removeEventListener('touchmove', this.touchMoveHandlerN)
+      if (deltaY >= 50) {
+        if (this.currIndex === 1) {
+          this.picContainerActive = false
+          this.onePageScroll.doPause()
+          this.touchLock = false
+          this.leadingWrapperHide = false
+        } else {
+          this.leadingWrapperHide = true
+        }
+      } else if (deltaY <= -50) {
+        if (this.currIndex === this.imgArr.length) {
+          this.picContainerActive = false
+          this.onePageScroll.doPause()
+          this.touchLock = false
+          this.leadingWrapperHide = true
+        }
+      }
+    },
+    touchStartHandlerN (event) {
+      const target = event.target
+      const touches = event.touches
+      if (touches && touches.length) {
+        this.touchStartY = touches[0].pageY
+        document.addEventListener('touchmove', this.touchMoveHandlerN)
+        if (this.touchLock) {
+          const targClass = target.getAttribute('class') || ''
+          if (targClass.indexOf('go-next-page') === -1 &&
                 targClass.indexOf('mm-icon') === -1 &&
                 targClass.indexOf('icon line') === -1 &&
                 targClass.indexOf('icon facebook') === -1 &&
                 targClass.indexOf('icon g-plus') === -1 &&
                 targClass.indexOf('btn-toggle-description') === -1) {
-              return event.preventDefault()
-            }
+            return event.preventDefault()
           }
         }
-      },
-      touchMoveHandlerN (event) {
-        return event.preventDefault()
-      },
-      updateProgressbar (percentage) {
-        return new Promise(() => {
-          const _progressBar = document.querySelector('.progress-bar')
-          _progressBar.setAttribute('style', `left: ${percentage}%;`)
-        })
-      },
-      updateIsLandscape () {
-        const browser = typeof window !== 'undefined'
-        this.isLandscape = browser && window.innerHeight < window.innerWidth
       }
     },
-    mounted () {
-      this.updateIsLandscape()
-      this.smoothScroll(null, 0)
-      this.currOS = getClientOS()
+    touchMoveHandlerN (event) {
+      return event.preventDefault()
+    },
+    updateProgressbar (percentage) {
+      return new Promise(() => {
+        const _progressBar = document.querySelector('.progress-bar')
+        _progressBar.setAttribute('style', `left: ${percentage}%;`)
+      })
+    },
+    updateIsLandscape () {
+      const browser = typeof window !== 'undefined'
+      this.isLandscape = browser && window.innerHeight < window.innerWidth
+    }
+  },
+  mounted () {
+    this.updateIsLandscape()
+    this.smoothScroll(null, 0)
+    this.currOS = getClientOS()
 
-      Promise.all([
-        this.setUpHtmlHeight(),
-        this.setUpResizeHandler(),
-        this.setUpScrollHandler(),
-        this.setUpSelectorPreventor()
-      ])
+    Promise.all([
+      this.setUpHtmlHeight(),
+      this.setUpResizeHandler(),
+      this.setUpScrollHandler(),
+      this.setUpSelectorPreventor()
+    ])
 
-      if (window === undefined) {
-        window.addEventListener('load', () => {
-          this.initOnepage()
-          this.onePageScroll.doPause()
-          if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('mousewheel', this.mouseWheelHandlerN) }
-          if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('DOMMouseScroll', this.mouseWheelHandlerN) }
-          if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchstart', this.touchStartHandlerN) }
-          if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchend', this.touchEndHandlerN) }
-        })
-      } else {
+    if (window === undefined) {
+      window.addEventListener('load', () => {
         this.initOnepage()
         this.onePageScroll.doPause()
         if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('mousewheel', this.mouseWheelHandlerN) }
         if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('DOMMouseScroll', this.mouseWheelHandlerN) }
         if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchstart', this.touchStartHandlerN) }
         if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchend', this.touchEndHandlerN) }
+      })
+    } else {
+      this.initOnepage()
+      this.onePageScroll.doPause()
+      if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('mousewheel', this.mouseWheelHandlerN) }
+      if (this.currOS !== 'iOS' && this.currOS !== 'Android') { document.addEventListener('DOMMouseScroll', this.mouseWheelHandlerN) }
+      if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchstart', this.touchStartHandlerN) }
+      if (this.currOS === 'iOS' || this.currOS === 'Android') { document.addEventListener('touchend', this.touchEndHandlerN) }
+    }
+  },
+  beforeRouteLeave (to, from, next) {
+    if (process.env.VUE_ENV === 'client') {
+      this.creditCommentShow = false
+      document.removeEventListener('mousewheel', this.mouseWheelHandler)
+      document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
+      removeClass(document.body, 'limited-height')
+      removeClass(document.documentElement, 'limited-height')
+    }
+    next()
+  },
+  name: 'ariticle-body-photo',
+  props: {
+    articleData: {
+      default: () => { return {} }
+    },
+    viewport: {
+      default: () => { return {} }
+    },
+    initFBComment: {
+      default: () => {
+        return () => {
+          console.log('init fb comment')
+        }
       }
     },
-    beforeRouteLeave (to, from, next) {
-      if (process.env.VUE_ENV === 'client') {
-        this.creditCommentShow = false
-        document.removeEventListener('mousewheel', this.mouseWheelHandler)
-        document.removeEventListener('DOMMouseScroll', this.mouseWheelHandler)
-        removeClass(document.body, 'limited-height')
-        removeClass(document.documentElement, 'limited-height')
-      }
-      next()
-    },
-    name: 'ariticle-body-photo',
-    props: {
-      articleData: {
-        default: () => { return {} }
-      },
-      viewport: {
-        default: () => { return {} }
-      },
-      initFBComment: {
-        default: () => {
-          return () => {
-            console.log('init fb comment')
-          }
-        }
-      },
-      isApp: {
-        default: () => {
-          return false
-        }
+    isApp: {
+      default: () => {
+        return false
       }
     }
   }
+}
 </script>
 <style lang="stylus" scoped>
   .photos
@@ -493,7 +493,7 @@
           align-items center
           flex-direction column
           background-image linear-gradient(180deg,transparent,rgba(0,0,0,0.7))
-          bottom 0   
+          bottom 0
 
           div
             margin-bottom 20px
@@ -558,30 +558,30 @@
               margin-left 0
               background-image url(/assets/mirrormedia/icon/share-white.png)
               background-size 50%
-            
+
             &.facebook
               background-image url(/assets/mirrormedia/icon/facebook_white.png)
               background-size 35%
               -webkit-transition-delay 50ms
               transition-delay 20ms
-              
+
             &.line
               background-image url(/assets/mirrormedia/icon/line_white.png)
               background-size 70%
-              background-color #20b22c   
+              background-color #20b22c
               -webkit-transition-delay 75ms
               transition-delay 40ms
 
             &.g-plus
               background-image url(/assets/mirrormedia/icon/google-plus.png)
               background-size 70%
-              background-color #c00   
+              background-color #c00
               -webkit-transition-delay 75ms
               transition-delay 40ms
 
             &:active, &:focus, &:hover
               box-shadow inset 0 0 4px rgba(0,0,0,.7), 0 4px 8px rgba(0,0,0,.7)
-              
+
             &:not(:first-child)
               width 48px
               height 48px
@@ -590,14 +590,14 @@
               -webkit-transform translateX(0)
                   -ms-transform translateX(0)
                       transform translateX(0)
-        &:hover 
+        &:hover
           .icon:not(:first-child)
             opacity 1
             -webkit-transform none
                 -ms-transform none
                     transform none
             margin-left 10px
-  
+
   .btn-toggle-description
     align-items center
     background-position center center
@@ -630,10 +630,10 @@
     &.on
       background-image url(/assets/mirrormedia/icon/caption-on.png)
       opacity 0.65
-      
+
     &.off
       background-image url(/assets/mirrormedia/icon/caption-off.png)
-      
+
     &.hide
       display none
 
@@ -643,24 +643,24 @@
 
       .hint
         display block
-  .progress 
+  .progress
     width 100%
     height 10px
 
-  .progress-wrap 
+  .progress-wrap
     position fixed
     top 0
     left 0
     background #5b7d9e
     overflow hidden
     z-index 100
-    .progress-bar 
+    .progress-bar
       background rgba(0, 0, 0, 0.7)
       left 0
       position absolute
       top 0
       transition left 1s
-  
+
   .progress-sidebar
     position fixed
     right 10px
@@ -707,11 +707,11 @@
       justify-content flex-start
       a, a:hover, a:link, a:visited
         color #fff
-    
+
     .related-container
       width 900px
       margin 40px auto
-    
+
     .article_fb_comment
       margin 40px auto
       width 900px
@@ -770,7 +770,7 @@
           height 100vh
           overflow hidden
           position relative
-          background-color #000        
+          background-color #000
           .img
             img
               object-fit contain
@@ -791,7 +791,7 @@
         align-items center
         flex-direction column
         background-image linear-gradient(180deg,transparent,rgba(0,0,0,0.7))
-        bottom 0   
+        bottom 0
 
         div
           margin-bottom 20px
@@ -815,7 +815,7 @@
           display none
 
         &.show
-          display flex    
+          display flex
   @media (min-width 768px)
     .mobile-only
       display none !important
@@ -840,7 +840,7 @@
         .title
           span
             text-align center
-            padding 80px 20px 0          
+            padding 80px 20px 0
             margin-bottom 0!important
             position relative
             height auto
@@ -858,7 +858,7 @@
             object-fit cover
             object-position center center
             background-color #696969
-        
+
         .brief
           position relative
           & > div
@@ -872,7 +872,7 @@
     .go-next-page
       &.center
         left 50%
-        margin-left -20px 
+        margin-left -20px
         height 40px
         width 40px
     .credit-comment
@@ -880,7 +880,7 @@
         padding 0 20px
         width 100%
         display block
-      
+
       .related-container
         width 100%
         margin 0
@@ -898,10 +898,9 @@
                 object-fit contain
                 object-position 0 20%
                 background-color #696969
-            
+
             .brief
               & > div
                 height 40vh
-
 
 </style>

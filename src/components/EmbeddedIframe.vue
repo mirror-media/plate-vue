@@ -26,7 +26,7 @@ export default {
   },
   computed: {
     mediaDataEmbed () {
-      return _get(this.mediaData, [ 'embed' ], '')
+      return _get(this.mediaData, ['embed'], '')
     }
   },
   methods: {
@@ -36,7 +36,7 @@ export default {
 
       if (top <= height) {
         this.$el.innerHTML = this.mediaDataEmbed
-        window.removeEventListener('scroll', this.loadIframe)        
+        window.removeEventListener('scroll', this.loadIframe)
       }
     }
   }

@@ -31,10 +31,10 @@ export function getRole ({ mmid, distribution = DEFAULT_DISTRIBUTION }) {
 function getBigInt (mmid) {
   let bigint
   try {
-    bigint = bigInt(mmid.replace(/\-/g, ''), 128).toString()
+    bigint = bigInt(mmid.replace(/-/g, ''), 128).toString()
   } catch (e) {
     const uuid = setMmCookie()
-    bigint = bigInt(uuid.replace(/\-/g, ''), 128).toString()
+    bigint = bigInt(uuid.replace(/-/g, ''), 128).toString()
   }
   return bigint
 }

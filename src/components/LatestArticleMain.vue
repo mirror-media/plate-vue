@@ -32,26 +32,26 @@
           </div>
         </div>
         <micro-ad
-          :currEnv="currEnv" :currUrl="currUrl" 
+          :currEnv="currEnv" :currUrl="currUrl"
           :id="`${getValue(microAds, [ 'homepage', index, 'pcId' ])}`"
           v-if="index < 3 && viewport > 1199"
           :key="`pc-microAd-${index}`"
           class="latest-list_item nativeDFP margin-top-0"
         />
         <micro-ad
-          :currEnv="currEnv" :currUrl="currUrl" 
+          :currEnv="currEnv" :currUrl="currUrl"
           :id="`${getValue(microAds, [ 'homepage', index, 'mobileId' ])}`"
           v-if="index < 3 && viewport < 600"
           :key="`mb-microAd-${index}`"
           class="latest-list_item nativeDFP margin-top-0"
-        /> 
+        />
       </template>
     </div>
   </div>
 </template>
 <script>
 import _ from 'lodash'
-import { SECTION_MAP, MARKETING_CATGORY_ID, } from '../constants'
+import { SECTION_MAP, MARKETING_CATGORY_ID } from '../constants'
 import { currEnv, getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../util/comm'
 import { microAds } from '../constants/microAds'
 import LatestAriticleImg from 'src/components/LatestAriticleImg.vue'
@@ -77,7 +77,7 @@ export default {
       return _.slice(this.latestList, 6)
     },
     latestArticleArr () {
-      return [ this.latestListBeforeDFPNA3, this.latestListBeforeDFPNA5, this.latestListBeforeDFPNA9, this.latestListAfterDFPNA9 ]
+      return [this.latestListBeforeDFPNA3, this.latestListBeforeDFPNA5, this.latestListBeforeDFPNA9, this.latestListAfterDFPNA9]
     }
   },
   components: {
@@ -98,22 +98,22 @@ export default {
     getTruncatedVal,
     getValue,
     getSectionStyle (sect) {
-      const sectionId = _.get(sect, [ 'id' ]) || sect
+      const sectionId = _.get(sect, ['id']) || sect
       const style = {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
+        backgroundColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], '#bcbcbc')
       }
       return style
     },
     getLabel (article) {
       const section = _.get(article, 'sections.0.title', '')
       const categoriesLen = _.get(article, 'categories.length', 0)
-      const categoryFirst =  _.get(article, 'categories.0.id')
+      const categoryFirst = _.get(article, 'categories.0.id')
 
       return (section.length > 0)
         ? section
         : categoryFirst === MARKETING_CATGORY_ID && categoriesLen > 1
-        ? _.get(article, 'categories.1.title')
-        : _.get(article, 'categories.0.title')
+          ? _.get(article, 'categories.1.title')
+          : _.get(article, 'categories.0.title')
     },
     updateSysStage () {
       this.currEnv = currEnv()
@@ -122,7 +122,7 @@ export default {
     sendGaClickEvent,
     shouldShowItem (article) {
       return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
-    },
+    }
   },
   mounted () {
     this.updateSysStage()
@@ -183,15 +183,15 @@ export default {
         vertical-align top
         margin-bottom 15px
 
-        display flex 
+        display flex
         border-bottom 1px solid rgba(0, 0, 0, 0.28)
-        padding-bottom 15px 
+        padding-bottom 15px
         width 100%
 
         a
           position relative
-          display block 
-          flex 1 
+          display block
+          flex 1
 
           .latest-list_item_img
             background-repeat no-repeat
@@ -208,7 +208,7 @@ export default {
             top -25px
             color #fff
             font-size 0.9rem
-            display flex 
+            display flex
             justify-content center
             align-items center
 
@@ -221,20 +221,20 @@ export default {
           justify-content center
           align-items flex-start
           min-height 60px
-          padding-top 0 
+          padding-top 0
 
           flex 1
-          flex-direction column 
-          padding-left 20px 
+          flex-direction column
+          padding-left 20px
 
           a
             width 100%
             max-height 100%
 
             h3
-              font-size 1.2rem 
-              font-weight 300 
-              line-height 1.7rem 
+              font-size 1.2rem
+              font-weight 300
+              line-height 1.7rem
 
             &:hover, &:link, &:visited
               color #8c8c8c
@@ -248,7 +248,7 @@ export default {
             background-color #000
             color #fff
             font-size 1.2rem
-            display flex 
+            display flex
             justify-content center
             align-items center
 
@@ -270,7 +270,7 @@ export default {
             .latest-list_item_label
               width 60px
               white-space normal
-  @media (min-width: 600px)  
+  @media (min-width: 600px)
     .tablet-only
       display block !important
 
@@ -289,7 +289,6 @@ export default {
         > h3
           margin .5em 0
 
-      
       .latest-list
         flex-direction column
         width 100%
@@ -398,5 +397,5 @@ export default {
                   margin 0
     .tablet-only
       display none
-    
+
 </style>

@@ -15,7 +15,7 @@
             v-if="isMobile"
             :config="props.config"
             :size="get($store, 'getters.adSize')"
-            pos="LMBHD" 
+            pos="LMBHD"
           />
           <vue-dfp
             :is="props.vueDfp"
@@ -130,8 +130,8 @@
 </template>
 
 <script>
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, CATEGORY_POLITICAL_ID, CATEGORY_CITY_NEWS_ID, CATEGORY_BUSINESS_ID, CATEGORY_LATESTNEWS_ID } from 'src/constants'
-import { SITE_MOBILE_URL, SITE_TITLE } from 'src/constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, CATEGORY_POLITICAL_ID, CATEGORY_CITY_NEWS_ID, CATEGORY_BUSINESS_ID, CATEGORY_LATESTNEWS_ID, SITE_MOBILE_URL, SITE_TITLE } from 'src/constants'
+
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
@@ -160,14 +160,14 @@ const PAGE = 1
 // const debugDFP = require('debug')('CLIENT:DFP')
 const debug = require('debug')('CLIENT:Home')
 
-const fetchSSRData = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections' ] })
+const fetchSSRData = store => store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections'] })
   .then(() => Promise.all([
     fetchCommonData(store),
     fetchArticlesGroupedList(store),
     fetchPartners(store)
   ]))
 
-const fetchCommonData = store => store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'posts-vue', 'projects', 'topics' ] })
+const fetchCommonData = store => store.dispatch('FETCH_COMMONDATA', { endpoints: ['posts-vue', 'projects', 'topics'] })
 
 const fetchEvent = (store, eventType = 'embedded') => store.dispatch('FETCH_EVENT', {
   params: {
@@ -179,7 +179,7 @@ const fetchEvent = (store, eventType = 'embedded') => store.dispatch('FETCH_EVEN
   }
 })
 
-const fetchArticlesGroupedList = store => store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {}})
+const fetchArticlesGroupedList = store => store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {} })
 
 const fetchPartners = store => {
   const page = (get(store.state, 'partners.meta.page') || 0) + 1
@@ -210,8 +210,8 @@ const fetchLatestArticle = (store, page) => store.dispatch('FETCH_LATESTARTICLES
 const fetchFlashNews = (store) => {
   store.dispatch('FETCH_FLASH_NEWS', {
     params: {
-      where: { 
-        categories: { $in: [ CATEGORY_POLITICAL_ID, CATEGORY_CITY_NEWS_ID, CATEGORY_BUSINESS_ID, CATEGORY_LATESTNEWS_ID ] },
+      where: {
+        categories: { $in: [CATEGORY_POLITICAL_ID, CATEGORY_CITY_NEWS_ID, CATEGORY_BUSINESS_ID, CATEGORY_LATESTNEWS_ID] },
         isAudioSiteOnly: false
       },
       clean: 'content',
@@ -259,7 +259,7 @@ export default {
       dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       hasScrollLoadMore: get(this.$store, 'state.latestArticles.meta.page', PAGE) > 1,
-      // isAdCoverCalledYet: false, 
+      // isAdCoverCalledYet: false,
       loading: false,
       page: get(this.$store, 'state.latestArticles.meta.page', PAGE),
       showDfpCoverAdFlag: false,
@@ -338,7 +338,7 @@ export default {
             position,
             isAdEmpty: adDisplayStatus === 'none',
             sessionId: elSessionId
-          })         
+          })
         },
         setCentering: true,
         sizeMapping: DFP_SIZE_MAPPING
@@ -370,10 +370,10 @@ export default {
     },
     hasEventMod () {
       const _now = moment()
-      const _eventStartTime = moment(new Date(get(this.eventMod, [ 'startDate' ])))
-      let _eventEndTime = moment(new Date(get(this.eventMod, [ 'endDate' ])))
+      const _eventStartTime = moment(new Date(get(this.eventMod, ['startDate'])))
+      let _eventEndTime = moment(new Date(get(this.eventMod, ['endDate'])))
       if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(get(this.eventMod, [ 'endDate' ]))).add(12, 'h')
+        _eventEndTime = moment(new Date(get(this.eventMod, ['endDate']))).add(12, 'h')
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
@@ -392,13 +392,13 @@ export default {
       const groupedRelateds = flatten(map(get(articlesGroupedList, 'grouped'), o => o.relateds))
       const grouped = union(groupedTitle, groupedRelateds)
       const choicesAndGrouped = unionBy(choices, grouped, 'slug')
-      const choicesAndGrouped_slugs = choicesAndGrouped.map(o => o.slug)
+      const choicesAndGroupedSlugs = choicesAndGrouped.map(o => o.slug)
       const latest = uniqBy(
         concat(latestFirstPage, latestAfterFirstPage),
         'slug'
       )
       const notFirstPageNow = (get(this.$store, 'state.latestArticles.meta.page') || 1) !== 1
-      remove(latest, o => includes(choicesAndGrouped_slugs, o.slug))
+      remove(latest, o => includes(choicesAndGroupedSlugs, o.slug))
       return notFirstPageNow ? latest : latestFirstPage
     },
     isMobile () {
@@ -439,9 +439,11 @@ export default {
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
-      const role = getRole({ mmid, distribution: [
-        { id: 'A', weight: 50 },
-        { id: 'B', weight: 50 } ]
+      const role = getRole({
+        mmid,
+        distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 }]
       })
       return assisgnedRole || role
     },
@@ -473,7 +475,7 @@ export default {
           this.loadMore()
         }
       }
-    },
+    }
     // scrollEventHandlerForAd () {
     //   if (this.isAdCoverCalledYet) { return }
     //   const currentTop = currentYPosition()
@@ -491,7 +493,7 @@ export default {
     const jobs = [
       fetchEvent(this.$store, 'embedded'),
       fetchEvent(this.$store, 'logo'),
-      fetchEvent(this.$store, 'mod'),
+      fetchEvent(this.$store, 'mod')
     ]
     Promise.all(jobs)
   },
@@ -501,14 +503,14 @@ export default {
     this.updateSysStage()
 
     fetchFlashNews(this.$store)
-    
+
     window.addEventListener('scroll', this.detectFixProject)
 
     /**
      * Have ad-cover be rendered as soon as #homepage-focus-news gets visible.
      */
-    /** 
-     *  Dont show ad cover on listing page for now.     
+    /**
+     *  Dont show ad cover on listing page for now.
      *  window.addEventListener('scroll', this.scrollEventHandlerForAd)
      */
 
@@ -525,7 +527,7 @@ export default {
   },
   destroyed () {
     window.removeEventListener('scroll', this.detectFixProject)
-  },
+  }
   // watch: {
   //   abIndicator: function () {
   //     this.$forceUpdate()
@@ -545,9 +547,9 @@ export default {
 .home-view
   width 100%
   box-sizing border-box
-  padding-bottom 50px 
+  padding-bottom 50px
 
-  h2 
+  h2
     margin: 0;
     font-family Noto Sans TC,sans-serif
     font-size 18px
@@ -575,7 +577,7 @@ export default {
         margin-right -100%
         margin-left 10px
         border-top 5px solid #356d9c
-    
+
 .list
   &.container
     width 100%
@@ -641,7 +643,7 @@ export default {
         margin-right -100%
         margin-left 10px
         border-top 5px solid #356d9c
-  
+
 section.footer
   width 100%
 
@@ -746,7 +748,7 @@ section.footer
       display none
     .footer
       width 1024px
-      margin 70px auto 0 
+      margin 70px auto 0
   .list
     &.container
       width 1024px
@@ -800,15 +802,15 @@ section.footer
           line-height 1.15
           &::after
             display none
-            
+
     .latest-main-container
       margin-top 25px
 
   section.footer
     width 1024px
-  
+
   .focusNewsContainer
     &__latest-mobile-b
       display none
-    
+
 </style>

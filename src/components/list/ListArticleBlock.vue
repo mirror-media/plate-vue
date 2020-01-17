@@ -76,14 +76,14 @@
 
 <script>
 
-import { SECTION_MAP, MARKETING_CATGORY_ID, } from '../../constants'
+import { SECTION_MAP, MARKETING_CATGORY_ID } from '../../constants'
 import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
 import _ from 'lodash'
 import LazyImage from 'src/components/common/LazyImage.vue'
 import moment from 'moment'
 
 export default {
-  props: [ 'index', 'initialArticle', 'initialTogglePause' ],
+  props: ['index', 'initialArticle', 'initialTogglePause'],
   data () {
     return {
       audioCurrent: 0,
@@ -94,14 +94,14 @@ export default {
     }
   },
   components: {
-    LazyImage,
+    LazyImage
   },
   computed: {
     article () {
       return this.initialArticle
     },
     articleType () {
-      if (_.get(this.$route, [ 'params', 'title' ]) === 'topic') {
+      if (_.get(this.$route, ['params', 'title']) === 'topic') {
         return 'topic'
       }
       if (this.initialArticle.kind) {
@@ -110,30 +110,30 @@ export default {
       if (this.initialArticle.audio && this.initialArticle.audio.url) {
         return 'audio'
       }
-      return _.get(this.initialArticle, [ 'style' ], 'article')
+      return _.get(this.initialArticle, ['style'], 'article')
     },
     colorBlockTitle () {
-      if (this.initialArticle.sections && _.get(this.initialArticle, [ 'sections', 'length' ], 0) > 0) {
-        return _.get(this.initialArticle, [ 'sections', '0', 'title' ])
+      if (this.initialArticle.sections && _.get(this.initialArticle, ['sections', 'length'], 0) > 0) {
+        return _.get(this.initialArticle, ['sections', '0', 'title'])
       } else {
         const categoriesLen = _.get(this.initialArticle, 'categories.length', 0)
-        const categoryFirst =  _.get(this.initialArticle, 'categories.0.id')
+        const categoryFirst = _.get(this.initialArticle, 'categories.0.id')
         return categoryFirst === MARKETING_CATGORY_ID && categoriesLen > 1
-          ?  _.get(this.initialArticle, 'categories.1.title')
-          :  _.get(this.initialArticle, 'categories.0.title')
+          ? _.get(this.initialArticle, 'categories.1.title')
+          : _.get(this.initialArticle, 'categories.0.title')
       }
     },
     duration () {
-      return _.get(this.$refs, [ 'audio', 'duration' ])
+      return _.get(this.$refs, ['audio', 'duration'])
     },
     togglePause () {
       return this.initialTogglePause
     },
     removeHoverEffect () {
-      return _.get(this.$route, [ 'params', 'title' ]) === 'audio'
+      return _.get(this.$route, ['params', 'title']) === 'audio'
     },
     sectionColor () {
-      return _.get(SECTION_MAP, [ _.get(this.article, [ 'sections', '0', 'id' ]), 'bgcolor' ], '#bcbcbc')
+      return _.get(SECTION_MAP, [_.get(this.article, ['sections', '0', 'id']), 'bgcolor'], '#bcbcbc')
     }
   },
   methods: {
@@ -302,5 +302,5 @@ export default {
 @media (min-width: 1200px)
   .listArticleBlock
     width calc( (100% - 60px) / 3 )
-    
+
 </style>

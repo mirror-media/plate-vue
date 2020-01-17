@@ -26,7 +26,7 @@
         <img v-lazy="`/assets/mirrormedia/icon/facebook_white.png`" />
       </figure>
     </div>
-    <activity-lightboxMenu :currentNodeContents="currentNodeContents" :initialActivity="activity" :viewport="viewport" 
+    <activity-lightboxMenu :currentNodeContents="currentNodeContents" :initialActivity="activity" :viewport="viewport"
       v-on:goToContentIndex="goToContentIndex" v-show="isLightboxMenuOpen" v-if="nodeContentMoreThanOne" />
   </section>
 </template>
@@ -43,7 +43,7 @@ export default {
     'activity-lightboxMenu': ActivityLightboxMenu,
     'activity-lightboxSlider': ActivityLightboxSlider
   },
-  props: [ 'initialActivity', 'initialNodes', 'lightboxIndex', 'viewport' ],
+  props: ['initialActivity', 'initialNodes', 'lightboxIndex', 'viewport'],
   data () {
     return {
       activity: this.initialActivity,
@@ -54,28 +54,28 @@ export default {
   },
   computed: {
     currentContent () {
-      return _.get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0' ])
+      return _.get(this.currentNodeContents, [this.currentContentIndex, 'content', '0'])
     },
     currentContentCredit () {
       if (this.currentContentStyle === 'image') {
-        return _.get(this.currentContent, [ 'description' ])
+        return _.get(this.currentContent, ['description'])
       } else {
-        return _.get(this.currentContent, [ 'title' ])
+        return _.get(this.currentContent, ['title'])
       }
     },
     currentContentStyle () {
-      return _.get(this.currentNodeContents, [ '0', 'type' ], 'text')
+      return _.get(this.currentNodeContents, ['0', 'type'], 'text')
     },
     currentNodeIndex () {
       return this.lightboxIndex
     },
     currentNodeContents () {
-      return _.filter(_.slice(_.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData' ]), 1, _.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', 'length' ])), function (o) {
+      return _.filter(_.slice(_.get(this.nodes, [this.currentNodeIndex, 'content', 'apiData']), 1, _.get(this.nodes, [this.currentNodeIndex, 'content', 'apiData', 'length'])), function (o) {
         return o.type !== 'unstyled'
       })
     },
     nodeContentMoreThanOne () {
-      return _.get(this.currentNodeContents, [ 'length' ]) > 1
+      return _.get(this.currentNodeContents, ['length']) > 1
     },
     nodes () {
       return this.initialNodes
@@ -86,7 +86,7 @@ export default {
   },
   methods: {
     closeLightbox () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[this.currentContentIndex]
       if (currentVideo && currentVideo.querySelector('video')) {
         currentVideo.querySelector('video').pause()
       }
@@ -98,31 +98,31 @@ export default {
       this.isLightboxMenuOpen = false
     },
     goToNext () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[this.currentContentIndex]
       if (currentVideo && currentVideo.querySelector('video')) {
         currentVideo.querySelector('video').pause()
       }
       const nextContentIndex = this.currentContentIndex + 1
-      if (nextContentIndex > _.get(this.currentNodeContents, [ 'length' ]) - 1) {
+      if (nextContentIndex > _.get(this.currentNodeContents, ['length']) - 1) {
         this.currentContentIndex = 0
       } else {
         this.currentContentIndex = nextContentIndex
       }
     },
     goToPrev () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[this.currentContentIndex]
       if (currentVideo && currentVideo.querySelector('video')) {
         currentVideo.querySelector('video').pause()
       }
       const prevContentIndex = this.currentContentIndex - 1
       if (prevContentIndex < 0) {
-        this.currentContentIndex = _.get(this.currentNodeContents, [ 'length' ]) - 1
+        this.currentContentIndex = _.get(this.currentNodeContents, ['length']) - 1
       } else {
         this.currentContentIndex = prevContentIndex
       }
     },
     openLightboxMenu () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[this.currentContentIndex]
       if (currentVideo && currentVideo.querySelector('video')) {
         currentVideo.querySelector('video').pause()
       }
@@ -131,17 +131,17 @@ export default {
     share () {
       let imageUrl
       if (this.currentContentStyle === 'video') {
-        imageUrl = _.get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0', 'coverPhoto', 'mobile', 'url' ])
+        imageUrl = _.get(this.currentNodeContents, [this.currentContentIndex, 'content', '0', 'coverPhoto', 'mobile', 'url'])
       } else if (this.currentContentStyle === 'image') {
-        imageUrl = _.get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0', 'mobile', 'url' ])
+        imageUrl = _.get(this.currentNodeContents, [this.currentContentIndex, 'content', '0', 'mobile', 'url'])
       } else {
-        imageUrl = _.get(this.activity, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ])
+        imageUrl = _.get(this.activity, ['heroImage', 'image', 'resizedTargets', 'mobile', 'url'])
       }
-      const description = `${_.get(this.nodes, [ this.currentNodeIndex, 'subtitle' ])} ${_.get(this.nodes, [ this.currentNodeIndex, 'name' ])}： ${_.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])}`
+      const description = `${_.get(this.nodes, [this.currentNodeIndex, 'subtitle'])} ${_.get(this.nodes, [this.currentNodeIndex, 'name'])}： ${_.get(this.nodes, [this.currentNodeIndex, 'content', 'apiData', '0', 'content', '0'])}`
       window.FB.ui(
         {
           method: 'feed',
-          link: `https://www.mirrormedia.mg/activity/${_.get(this.$route, [ 'params', 'activityId' ])}/`,
+          link: `https://www.mirrormedia.mg/activity/${_.get(this.$route, ['params', 'activityId'])}/`,
           picture: imageUrl,
           description
         }, function () {})
@@ -329,5 +329,5 @@ export default {
     &__slideshowInfo
       padding 0
       margin-top 10px
-  
+
 </style>

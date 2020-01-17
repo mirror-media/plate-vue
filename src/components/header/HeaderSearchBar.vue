@@ -19,7 +19,7 @@ export default {
   methods: {
     closeSearchBar () {
       this.$emit('closeSearchBar')
-      sendGaClickEvent('header', `search close`)
+      sendGaClickEvent('header', 'search close')
     },
     search () {
       this.$emit('search', this.keyword)

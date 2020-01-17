@@ -30,43 +30,43 @@
   </div>
 </template>
 <script>
-  import { filter, get, includes  } from 'lodash'
-  import { getHrefFull, getImage, getTruncatedVal, sendGaClickEvent } from '../../util/comm'
-  import Slider from '../Slider.vue'
-  import sanitizeHtml from 'sanitize-html'
+import { filter, get, includes } from 'lodash'
+import { getHrefFull, getImage, getTruncatedVal, sendGaClickEvent } from '../../util/comm'
+import Slider from '../Slider.vue'
+import sanitizeHtml from 'sanitize-html'
 
-  export default {
-    components: {
-      Slider
+export default {
+  components: {
+    Slider
+  },
+  computed: {
+    filteredProjects () {
+      return filter(this.projects, (o) => {
+        return !includes(this.excludingProjects, o.slug)
+      })
+    }
+  },
+  methods: {
+    get,
+    getHrefFull,
+    getImage,
+    getTruncatedVal,
+    sanitizeHtml,
+    sendGaClickEvent
+  },
+  name: 'project-list',
+  props: {
+    excludingProjects: {
+      default: () => { return [] }
     },
-    computed: {
-      filteredProjects () {
-        return filter(this.projects, (o) => {
-          return !includes(this.excludingProjects, o.slug)
-        })
-      }
+    projects: {
+      default: () => { return [] }
     },
-    methods: {
-      get,
-      getHrefFull,
-      getImage,
-      getTruncatedVal,
-      sanitizeHtml,
-      sendGaClickEvent
-    },
-    name: 'project-list',
-    props: {
-      excludingProjects: {
-        default: () => { return [] }
-      },
-      projects: {
-        default: () => { return [] }
-      },
-      target: {
-        default: () => ('_self')
-      }
+    target: {
+      default: () => ('_self')
     }
   }
+}
 </script>
 <style lang="stylus" scoped>
 
@@ -105,7 +105,7 @@
           position absolute
           top 0
           left 0
-    .proj_item_img 
+    .proj_item_img
       width 100%
       height 100%
       background-repeat no-repeat

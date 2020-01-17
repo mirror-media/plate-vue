@@ -76,21 +76,21 @@ export default {
     getTruncatedVal,
     getValue,
     getSectionStyle (sect) {
-      const sectionId = _.get(sect, [ 'id' ])
+      const sectionId = _.get(sect, ['id'])
       const style = (this.viewport > 1199) ? {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);')
+        backgroundColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18);')
       } : {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);')
+        backgroundColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18);')
       }
       return style
     },
     getSectionStyleBorderTop (sect) {
-      const sectionId = _.get(sect, [ 'id' ])
+      const sectionId = _.get(sect, ['id'])
       const style = (this.viewport > 1199) ? {
-        borderTopColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18)'),
+        borderTopColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
         borderTopWidth: '5px'
       } : {
-        borderTopColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18)'),
+        borderTopColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
         borderTopWidth: '10px'
       }
       return style
@@ -171,10 +171,10 @@ export default {
     isLast: null
   },
   mounted () {
-    this.needStick ? this.setUpEventHandler() : ''
+    this.needStick && this.setUpEventHandler()
   },
   updated () {
-    this.needStick ? this.setUpEventHandler() : ''
+    this.needStick && this.setUpEventHandler()
   }
 }
 </script>
@@ -192,10 +192,10 @@ export default {
     top 30px
     right auto
     width calc(1024px * 0.25 - 30px)
-    
+
   .latest-list
     .latest-list_item
-    
+
       &:last-child
         .latest-list_item_title
           &::after
@@ -221,14 +221,14 @@ export default {
           padding 0 20px
           color #fff
           font-size 1.2rem
-          display flex 
+          display flex
           justify-content center
           align-items center
 
           bottom 0
           left 10%
           z-index 10
-      
+
       &_title
         color rgba(0, 0, 0, 0.65)
         display flex
@@ -276,7 +276,7 @@ export default {
             bottom 0
             left 0
             font-size 1.2rem
-        
+
         &_title
           font-size 1.5rem
           padding 20px 0
@@ -286,11 +286,11 @@ export default {
           border-left none
           border-right none
           box-shadow none
-          
+
           &::after
             display none
 
-@media (min-width: 1200px)  
+@media (min-width: 1200px)
   .latest-aside-container
     width 100%
 
@@ -304,14 +304,14 @@ export default {
             top auto
             bottom 0
             left 0
-        
+
         &_title
           color rgba(0, 0, 0, 0.35)
           font-size 1rem
           padding 10px 0
           line-height 1.4rem
           font-weight 400
-          
+
           > a
             color rgba(0, 0, 0, 0.35)
 </style>

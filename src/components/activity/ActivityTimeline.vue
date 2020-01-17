@@ -36,7 +36,7 @@ import { getTruncatedVal, getValue } from '../../util/comm'
 import _ from 'lodash'
 
 export default {
-  props: [ 'initialNodeIndex', 'initialNodes', 'viewport' ],
+  props: ['initialNodeIndex', 'initialNodes', 'viewport'],
   data () {
     return {
       currentNodeIndex: this.initialNodeIndex,
@@ -57,7 +57,7 @@ export default {
       }
     },
     nodeAmount () {
-      return _.get(this.nodes, [ 'length' ])
+      return _.get(this.nodes, ['length'])
     },
     nodes () {
       return this.initialNodes
@@ -82,18 +82,18 @@ export default {
   },
   methods: {
     getNodeImage (item) {
-      const nodeContents = _.filter(_.slice(_.get(item, [ 'content', 'apiData' ]), 1, _.get(item, [ 'content', 'apiData', 'length' ])), function (o) {
+      const nodeContents = _.filter(_.slice(_.get(item, ['content', 'apiData']), 1, _.get(item, ['content', 'apiData', 'length'])), function (o) {
         return o.type !== 'unstyled'
       })
-      const nodeContentStyle = _.get(nodeContents, [ '0', 'type' ])
+      const nodeContentStyle = _.get(nodeContents, ['0', 'type'])
       if (nodeContentStyle === 'image') {
-        return _.get(nodeContents, [ '0', 'content', '0', 'desktop', 'url' ])
+        return _.get(nodeContents, ['0', 'content', '0', 'desktop', 'url'])
       } else {
-        return _.get(nodeContents, [ '0', 'content', '0', 'coverPhoto', 'desktop', 'url' ])
+        return _.get(nodeContents, ['0', 'content', '0', 'coverPhoto', 'desktop', 'url'])
       }
     },
     getNodeStyle (item) {
-      return _.get(item, [ 'content', 'apiData', '1', 'type' ], 'text')
+      return _.get(item, ['content', 'apiData', '1', 'type'], 'text')
     },
     getTruncatedVal,
     getValue,
@@ -218,7 +218,7 @@ export default {
     display flex
     height calc(30vh + 44px)
     transition .3s ease-in-out
-    
+
   &__imageBlock
     position relative
     display flex
@@ -284,7 +284,7 @@ export default {
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
-    
+
     &.text
       .activityTimeline__imageBlock--textIcon
         background-image url("/assets/mirrormedia/icon/timelineText@2x.png")

@@ -103,7 +103,7 @@
 <script>
 import LazyImage from 'src/components/common/LazyImage.vue'
 import { SECTION_MAP } from '../../constants'
-import { get, } from 'lodash'
+import { get } from 'lodash'
 import { sendGaClickEvent } from '../../util/comm'
 
 export default {
@@ -129,7 +129,7 @@ export default {
     }
   },
   components: {
-    LazyImage,
+    LazyImage
   },
   computed: {
     activePartners () {
@@ -148,7 +148,7 @@ export default {
       return categories.filter(category => category.id && category.title)
     },
     getColor (section) {
-      return get(SECTION_MAP, [ section.id, 'bgcolor' ]) 
+      return get(SECTION_MAP, [section.id, 'bgcolor'])
     },
     sendGaClickEvent
   }
@@ -312,5 +312,5 @@ $color-external = #ee5a24
         .dropdown
           > a:hover
             background-color $color-external
-          
+
 </style>

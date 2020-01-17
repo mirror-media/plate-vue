@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import { alexa, autoAdsAsyncSrc, autoAdsScript, dableScript, fb_sdk, gtm_mirrormedia, gtm_likr, scorecardresearch } from '../constants/thirdPartyScripts'
+import { alexa, autoAdsAsyncSrc, autoAdsScript, dableScript, fbSdk, gtmMirrormedia, gtmLikr, scorecardresearch } from '../constants/thirdPartyScripts'
 
 const debug = require('debug')('CLIENT:mixinTitleMeta')
 let isScriptLoaded = false
@@ -106,8 +106,8 @@ process.env.VUE_ENV === 'client' && !isWindowLoadedHandlerSetup && window.addEve
       }
     }
     const jobs = [
-      insertCodes({ codes: gtm_mirrormedia }).then(() => insertCodes({ codes: gtm_likr })),
-      insertCodes({ codes: fb_sdk }),
+      insertCodes({ codes: gtmMirrormedia }).then(() => insertCodes({ codes: gtmLikr })),
+      insertCodes({ codes: fbSdk }),
       insertCodes({ codes: scorecardresearch }).then(() => insertCodes({ codes: alexa })),
       insertCodes({ codes: dableScript, position: 'body' }),
     ]

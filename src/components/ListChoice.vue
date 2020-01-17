@@ -25,7 +25,7 @@ import _ from 'lodash'
 
 export default {
   name: 'listChoice',
-  props: [ 'initialSection', 'initialSectionfeatured', 'viewport' ],
+  props: ['initialSection', 'initialSectionfeatured', 'viewport'],
   computed: {
     section () {
       return this.initialSection
@@ -34,7 +34,7 @@ export default {
       return this.initialSectionfeatured
     },
     sectionColor () {
-      return _.get(SECTION_MAP, [ _.get(this.section, [ 'id' ]), 'bgcolor' ], '#bcbcbc')
+      return _.get(SECTION_MAP, [_.get(this.section, ['id']), 'bgcolor'], '#bcbcbc')
     },
     viewportTarget () {
       if (this.viewport < 600) {

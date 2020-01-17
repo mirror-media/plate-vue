@@ -22,7 +22,7 @@
         <DfpST :props="props">
           <vue-dfp :is="props.vueDfp" :config="props.config" pos="MBST" slot="dfpST" />
         </DfpST>
-      </LazyItemWrapper>      
+      </LazyItemWrapper>
     </template>
   </vue-dfp-provider>
 </template>
@@ -30,8 +30,8 @@
 <script>
 
 import _ from 'lodash'
-import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING } from '../constants'
-import { SITE_MOBILE_URL, SITE_TITLE, SITE_URL } from '../constants'
+import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, SITE_MOBILE_URL, SITE_TITLE, SITE_URL } from '../constants'
+
 import { adtracker } from 'src/util/adtracking'
 import { currEnv, unLockJS } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
@@ -49,10 +49,10 @@ const MAXRESULT = 12
 const PAGE = 1
 
 const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'sections', 'topics' ] })
+  return store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections', 'topics'] })
 }
 
-const fetchSearch = (store, params) => store.dispatch('FETCH_SEARCH', { params, })
+const fetchSearch = (store, params) => store.dispatch('FETCH_SEARCH', { params })
 
 const fetchData = (store, route) => {
   return Promise.all([
@@ -73,8 +73,8 @@ const fetchData = (store, route) => {
 const fetchEvent = (store, eventType = 'embedded') => {
   return store.dispatch('FETCH_EVENT', {
     params: {
-      'max_results': 1,
-      'where': {
+      max_results: 1,
+      where: {
         isFeatured: true,
         eventType: eventType
       }
@@ -83,14 +83,14 @@ const fetchEvent = (store, eventType = 'embedded') => {
 }
 
 const fetchPartners = (store) => {
-  const page = _.get(store.state, [ 'partners', 'meta', 'page' ], 0) + 1
+  const page = _.get(store.state, ['partners', 'meta', 'page'], 0) + 1
   return store.dispatch('FETCH_PARTNERS', {
     params: {
       max_results: 25,
       page: page
     }
   }).then(() => {
-    if (_.get(store.state, [ 'partners', 'items', 'length' ]) < _.get(store.state, [ 'partners', 'meta', 'total' ])) {
+    if (_.get(store.state, ['partners', 'items', 'length']) < _.get(store.state, ['partners', 'meta', 'total'])) {
       fetchPartners(store)
     }
   })
@@ -101,8 +101,8 @@ export default {
   components: {
     'app-footer': Footer,
     'article-list': ArticleList,
-    'loading': Loading,
-    'more': More,
+    loading: Loading,
+    more: More,
     'vue-dfp-provider': VueDfpProvider,
     DfpST,
     Header,
@@ -119,7 +119,7 @@ export default {
         { name: 'robots', content: 'index' },
         { vmid: 'og:title', property: 'og:title', content: ogTitle },
         { vmid: 'og:url', property: 'og:url', content: `${SITE_URL}${this.$route.path}` },
-        { vmid: 'twitter:title', name: 'twitter:title', content: ogTitle },
+        { vmid: 'twitter:title', name: 'twitter:title', content: ogTitle }
       ],
       link: [
         { rel: 'alternate', href: `${SITE_MOBILE_URL}${this.$route.path}` }
@@ -187,7 +187,7 @@ export default {
             position,
             isAdEmpty: adDisplayStatus === 'none',
             sessionId: elSessionId
-          })   
+          })
         },
         setCentering: true,
         sizeMapping: DFP_SIZE_MAPPING
@@ -200,13 +200,15 @@ export default {
     },
     getMmid () {
       const mmid = Cookie.get('mmid')
-      let assisgnedRole = _.get(this.$route, [ 'query', 'ab' ])
+      let assisgnedRole = _.get(this.$route, ['query', 'ab'])
       if (assisgnedRole) {
         assisgnedRole = assisgnedRole.toUpperCase()
       }
-      const role = getRole({ mmid, distribution: [
-        { id: 'A', weight: 50 },
-        { id: 'B', weight: 50 } ]
+      const role = getRole({
+        mmid,
+        distribution: [
+          { id: 'A', weight: 50 },
+          { id: 'B', weight: 50 }]
       })
       return assisgnedRole || role
     },
@@ -235,7 +237,7 @@ export default {
     }
   },
   beforeMount () {
-    fetchEvent(this.$store, 'logo') 
+    fetchEvent(this.$store, 'logo')
   },
   mounted () {
     this.checkIfLockJS()
