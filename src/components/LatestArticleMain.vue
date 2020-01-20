@@ -119,13 +119,16 @@ export default {
   },
   props: {
     latestList: {
-      default: () => { return [] }
+      type: Array,
+      default: () => []
     },
     target: {
-      default: () => ('_self')
+      type: String,
+      default: '_self'
     },
     viewport: {
-      default: () => { return undefined }
+      type: Number,
+      default: undefined
     }
   },
   data () {

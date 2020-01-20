@@ -94,7 +94,8 @@ export default {
       default: () => { return this.editorChoice }
     },
     target: {
-      default: () => ('_self')
+      type: String,
+      default: '_self'
     }
   },
   computed: {

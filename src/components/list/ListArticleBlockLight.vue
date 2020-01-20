@@ -49,6 +49,7 @@ export default {
       required: true
     },
     viewport: {
+      type: Number,
       required: true
     }
   },

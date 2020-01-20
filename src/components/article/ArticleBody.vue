@@ -92,7 +92,6 @@
         >
           <ArticleImg
             v-if="p.type === 'image'"
-            :viewport="viewport"
             :image="getValue(p, [ 'content', 0 ])"
             :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"
           />
@@ -268,13 +267,16 @@ export default {
   },
   props: {
     articleData: {
-      default: () => { return {} }
+      type: Object,
+      default: () => ({})
     },
     viewport: {
-      default: () => { return undefined }
+      type: Number,
+      default: undefined
     },
     isAd: {
-      default: () => false
+      type: Boolean,
+      default: false
     }
   },
   data () {

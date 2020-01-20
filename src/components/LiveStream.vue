@@ -40,10 +40,12 @@ export default {
   name: 'LiveStream',
   props: {
     mediaData: {
+      type: Object,
       required: true
     },
     type: {
-      default: () => ('live')
+      type: String,
+      default: 'live'
     }
   },
   data () {

@@ -14,11 +14,6 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 
 export default {
   name: 'ArticleAsideFixed',
-  props: {
-    projects: {
-      type: Array
-    }
-  },
   mounted () {
     if (document.querySelector('.article__main')) {
       this.$refs.articleAsideFixed.classList.add('external')

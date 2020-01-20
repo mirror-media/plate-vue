@@ -229,7 +229,20 @@ export default {
   components: {
     LazyImage
   },
-  props: ['index', 'initialArticle', 'initialTogglePause'],
+  props: {
+    index: {
+      type: Number,
+      required: true
+    },
+    initialArticle: {
+      type: Object,
+      required: true
+    },
+    initialTogglePause: {
+      type: Number,
+      default: undefined
+    }
+  },
   data () {
     return {
       audioCurrent: 0,

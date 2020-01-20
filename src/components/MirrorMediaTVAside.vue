@@ -25,9 +25,11 @@ export default {
   name: 'MmtvAside',
   props: {
     mediaData: {
+      type: Object,
       default: () => ({})
     },
     showTitle: {
+      type: Boolean,
       default: () => true
     }
   },

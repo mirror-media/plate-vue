@@ -165,10 +165,12 @@ export default {
   },
   props: {
     articleData: {
-      default: () => { return {} }
+      type: Object,
+      default: () => ({})
     },
     viewport: {
-      default: () => { return undefined }
+      type: Number,
+      default: undefined
     }
   },
   data () {

@@ -79,12 +79,15 @@ export default {
       default: false
     },
     recommends: {
+      type: Array,
       default: () => []
     },
     relateds: {
+      type: Array,
       default: () => []
     },
     sectionId: {
+      type: String,
       default: ''
     }
   },

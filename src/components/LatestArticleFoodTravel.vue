@@ -1,7 +1,7 @@
 <template>
   <section class="latestArticle-foodtravel">
     <div
-      v-if="!this.showLatestOnly"
+      v-if="!showLatestOnly"
       class="topicsArticle-foodtravel-container mobile-only"
     >
       <!--<vue-dfp :is="props.vueDfp" pos="LMBSL1" extClass="desktop-hide" :config="props.config" />-->
@@ -42,7 +42,7 @@
 
     <div class="latestArticle-foodtravel-container">
       <items-title-rect
-        v-if="!this.showLatestOnly"
+        v-if="!showLatestOnly"
         class="header-rect"
       >
         最新文章
@@ -98,7 +98,7 @@
     </div>
 
     <div
-      v-if="!this.showLatestOnly"
+      v-if="!showLatestOnly"
       class="topicsArticle-foodtravel-container desktop-only"
     >
       <vue-dfp

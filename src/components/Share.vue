@@ -45,22 +45,28 @@ export default {
       default: 'top'
     },
     top: {
+      type: String,
       default: 'auto'
     },
     right: {
+      type: String,
       default: 'auto'
     },
     bottom: {
+      type: String,
       default: 'auto'
     },
     left: {
+      type: String,
       default: 'auto'
     },
     color: {
+      type: String,
       default: '#356d9c'
     },
     sharePath: {
-      type: String
+      type: String,
+      default: undefined
     }
   },
   data () {

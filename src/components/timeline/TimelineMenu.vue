@@ -38,7 +38,16 @@
 import _ from 'lodash'
 
 export default {
-  props: ['initialHighlightNodes', 'viewport'],
+  props: {
+    initialHighlightNodes: {
+      type: Array,
+      default: () => []
+    },
+    viewport: {
+      type: Number,
+      required: true
+    }
+  },
   computed: {
     highlightNodes () {
       return this.initialHighlightNodes

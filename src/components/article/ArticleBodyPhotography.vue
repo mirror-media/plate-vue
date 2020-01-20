@@ -144,10 +144,12 @@ export default {
   },
   props: {
     articleData: {
-      default: () => { return {} }
+      type: Object,
+      default: () => ({})
     },
     viewport: {
-      default: () => { return {} }
+      type: Object,
+      default: () => ({})
     },
     initFBComment: {
       default: () => {
@@ -157,9 +159,8 @@ export default {
       }
     },
     isApp: {
-      default: () => {
-        return false
-      }
+      type: Boolean,
+      default: false
     }
   },
   data () {
