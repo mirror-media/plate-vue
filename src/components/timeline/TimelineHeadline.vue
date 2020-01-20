@@ -14,7 +14,12 @@
 import _ from 'lodash'
 
 export default {
-  props: ['initialTimeline'],
+  props: {
+    initialTimeline: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     timeline () {
       return this.initialTimeline

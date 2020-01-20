@@ -65,11 +65,18 @@ export default {
   name: 'RelatedListThumbnail',
   props: {
     isApp: {
+      type: Boolean,
       default: () => false
     },
     relatedList: {
-      default: () => { return [] }
+      type: Array,
+      default: () => []
     }
+  },
+  computed: {
+    ...mapState({
+      imagesById: state => state.imagesById
+    })
   },
   methods: {
     getHref,
@@ -80,11 +87,6 @@ export default {
       const imageUrl = getValue(imageData, ['image', 'resizedTargets', 'mobile', 'url'], '')
       return `url(${imageUrl})`
     }
-  },
-  computed: {
-    ...mapState({
-      imagesById: state => state.imagesById
-    })
   }
 }
 </script>

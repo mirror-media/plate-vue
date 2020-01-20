@@ -22,7 +22,20 @@ export default {
   components: {
     'timeline-menu': TimelineMenu
   },
-  props: ['initialTimeline', 'initialHighlightNodes', 'viewport'],
+  props: {
+    initialTimeline: {
+      type: Object,
+      required: true
+    },
+    initialHighlightNodes: {
+      type: Array,
+      default: () => []
+    },
+    viewport: {
+      type: Number,
+      required: true
+    }
+  },
   computed: {
     timeline () {
       return this.initialTimeline

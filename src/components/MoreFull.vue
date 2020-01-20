@@ -15,7 +15,8 @@ export default {
   name: 'MoreFull',
   props: {
     className: {
-      default: () => { return 'moreFull' }
+      type: String,
+      default: () => 'moreFull'
     }
   },
   methods: {

@@ -102,10 +102,12 @@ export default {
   },
   props: {
     mediaData: {
-      default: () => { return {} }
+      type: Object,
+      default: () => ({})
     },
     type: {
-      default: () => { return {} }
+      type: Object,
+      default: () => ({})
     }
   },
   computed: {

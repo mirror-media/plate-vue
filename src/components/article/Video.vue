@@ -36,7 +36,12 @@ import { getClientOS } from '../../util/comm.js'
 
 export default {
   name: 'ArticleVideo',
-  props: ['video'],
+  props: {
+    video: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
       hoverFlag: false,

@@ -110,7 +110,7 @@
               >
                 <READrEmbeddedPromotions class="readr-embedded-promotions" />
               </LazyItemWrapper>
-              <ArticleAsideFixed :projects="projectlist">
+              <ArticleAsideFixed>
                 <LazyItemWrapper
                   v-if="!hiddenAdvertised"
                   slot="dfpR2"

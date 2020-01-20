@@ -48,11 +48,9 @@ const debug = require('debug')('CLIENT:ArticleImg')
 export default {
   name: 'ArticleImg',
   props: {
-    viewport: {
-      type: Number
-    },
     image: {
-      type: Object
+      type: Object,
+      required: true
     }
   },
   data () {

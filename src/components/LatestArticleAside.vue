@@ -79,21 +79,25 @@ export default {
   name: 'LatestListAside',
   props: {
     groupedArticle: {
-      default: () => { return undefined }
+      type: Object,
+      default: undefined
     },
     index: {
-      default: () => { return 0 }
+      type: Number,
+      default: 0
     },
     needStick: {
-      default: () => { return true }
+      type: Boolean,
+      default: true
     },
     target: {
-      default: () => ('_self')
+      type: String,
+      default: '_self'
     },
     viewport: {
-      default: () => { return undefined }
-    },
-    isLast: null
+      type: Number,
+      default: undefined
+    }
   },
   data () {
     return {

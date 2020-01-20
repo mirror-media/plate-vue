@@ -219,7 +219,8 @@ export default {
   },
   props: {
     activeSection: {
-      type: String
+      type: String,
+      required: true
     },
     dfpHeaderLogoLoaded: {
       type: Boolean

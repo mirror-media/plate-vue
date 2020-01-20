@@ -63,13 +63,16 @@ export default {
   },
   props: {
     excludingProjects: {
-      default: () => { return [] }
+      type: Array,
+      default: () => []
     },
     projects: {
-      default: () => { return [] }
+      type: Array,
+      default: () => []
     },
     target: {
-      default: () => ('_self')
+      type: String,
+      default: '_self'
     }
   },
   computed: {

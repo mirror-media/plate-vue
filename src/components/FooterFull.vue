@@ -80,9 +80,11 @@ export default {
   name: 'FooterFull',
   props: {
     commonData: {
-      default: () => { return {} }
+      type: Object,
+      default: () => ({})
     },
     sectionName: {
+      type: String,
       default: ''
     }
   },
