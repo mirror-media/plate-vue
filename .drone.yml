@@ -39,7 +39,7 @@ pipeline:
   builds:
     image: plugins/gcr
     repo: mirrormedia-1470651750304/${DRONE_REPO_NAME}
-    tag: ${DRONE_COMMIT_AUTHOR}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_NUMBER}
+    tag: ${DRONE_BRANCH}_${DRONE_COMMIT_AUTHOR}_${DRONE_BUILD_NUMBER}
     environment:
       - DOCKER_LAUNCH_DEBUG=true
     secrets: [google_credentials]
@@ -59,7 +59,7 @@ pipeline:
       - source: google_credentials
         target: token
     vars:
-      image: gcr.io/mirrormedia-1470651750304/${DRONE_REPO_NAME}:${DRONE_COMMIT_AUTHOR}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_NUMBER}
+      image: gcr.io/mirrormedia-1470651750304/${DRONE_REPO_NAME}:${DRONE_BRANCH}_${DRONE_COMMIT_AUTHOR}_${DRONE_BUILD_NUMBER}
       app: plate-vue
       tier: frontend
       serviceName: vue-service
@@ -67,7 +67,19 @@ pipeline:
     when:
       event: [push]
       branch: [dev, speedup]
-  
+
+  upload-dist:
+    image: plugins/gcs
+    source: dist
+    target: mirrormedia-files/dist
+    acl: allUsers:READER
+    secrets:
+      - source: google_credentials
+        target: token
+    when:
+      event: push
+      branch: master
+
   rebuild-cache:
     image: drillster/drone-volume-cache
     rebuild: true
@@ -90,7 +102,7 @@ pipeline:
       branch: [master, dev, speedup]
     template: >
       {{#success build.status}}
-        Build<${DRONE_BUILD_LINK}|#{{build.number}}> *success* ${DRONE_REPO_NAME}:${DRONE_COMMIT_AUTHOR}_${DRONE_COMMIT_BRANCH}_${DRONE_BUILD_NUMBER} was well served.
+        Build<${DRONE_BUILD_LINK}|#{{build.number}}> *success* ${DRONE_REPO_NAME}:${DRONE_BRANCH}_${DRONE_COMMIT_AUTHOR}_${DRONE_BUILD_NUMBER} was well served.
         Check out our new <http://dev.mirrormedia.mg|plate-vue>
       {{else}}
         Houston, we have a problem. Build <${DRONE_BUILD_LINK}|#{{build.number}}> failed. Fix me please, {{build.author}}
