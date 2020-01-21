@@ -74,9 +74,8 @@
           <div
             slot="slot_fb_comment"
             class="topicTimeline__fbComment"
-          >
-            {{ fbCommentDiv }}
-          </div>
+            v-html="fbCommentDiv"
+          />
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">

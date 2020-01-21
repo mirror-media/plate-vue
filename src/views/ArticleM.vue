@@ -134,9 +134,8 @@
               slot="slot_fb_comment"
               class="article_fb_comment"
               style="margin: 1.5em 0;"
-            >
-              {{ fbCommentDiv }}
-            </div>
+              v-html="fbCommentDiv"
+            />
             <template slot="recommendList">
               <div
                 id="dablewidget_GlYwenoy"
@@ -166,9 +165,8 @@
           <div
             slot="slot_fb_comment"
             class="article_fb_comment"
-          >
-            {{ fbCommentDiv }}
-          </div>
+            v-html="fbCommentDiv"
+          />
           <div slot="slot_dfpFT">
             <vue-dfp
               :is="props.vueDfp"
