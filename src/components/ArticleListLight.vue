@@ -70,6 +70,8 @@ export default {
   .listContainer
     width calc(100% - 360px)
     margin-top 20px
+  .latest-list
+    width 300px
 
 @media (min-width: 1200px)
   .articleListLight

@@ -36,7 +36,7 @@
         :href="get(logoFromEvent, 'link', '/')"
         class="logo event"
         target="_blank"
-        @click.native="sendGaClickEvent('header', 'logo event')"
+        @click="sendGaClickEvent('header', 'logo event')"
       >
         <LazyImage :src="get(logoFromEvent, 'image.image.resizedTargets.mobile.url')" />
       </a>
@@ -149,7 +149,7 @@
             :key="`section-layer-${section.id}`"
             :class="{ active: activeSection === section.name }"
             :href="`/section/${section.name}`"
-            @click.native="sendGaClickEvent('header', `section ${section.name} out`)"
+            @click="sendGaClickEvent('header', `section ${section.name} out`)"
             v-text="section.title"
           />
         </template>
@@ -220,7 +220,7 @@ export default {
   props: {
     activeSection: {
       type: String,
-      required: true
+      default: ''
     },
     dfpHeaderLogoLoaded: {
       type: Boolean
