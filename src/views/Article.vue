@@ -262,9 +262,8 @@
               slot="slot_fb_comment"
               class="article_fb_comment"
               style="margin: 1.5em 0;"
-            >
-              {{ fbCommentDiv }}
-            </div>
+              v-html="fbCommentDiv"
+            />
             <!-- dable -->
             <template
               v-if="!hiddenAdvertised"
@@ -324,9 +323,8 @@
           <div
             slot="slot_fb_comment"
             class="article_fb_comment"
-          >
-            {{ fbCommentDiv }}
-          </div>
+            v-html="fbCommentDiv"
+          />
           <ClientOnly>
             <div
               v-if="!hiddenAdvertised"
