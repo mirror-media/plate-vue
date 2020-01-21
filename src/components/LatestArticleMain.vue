@@ -10,7 +10,7 @@
       <template v-for="(articles, index) in latestArticleArr">
         <div
           v-for="(o, i) in latestArticleArr[ index ]"
-          :key="`latest-list_item-${i}`"
+          :key="`latest-list_item-${index}-${i}`"
           class="latest-list_item"
         >
           <a

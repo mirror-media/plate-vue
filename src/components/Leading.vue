@@ -106,8 +106,8 @@ export default {
       default: () => ({})
     },
     type: {
-      type: Object,
-      default: () => ({})
+      type: String,
+      required: true
     }
   },
   computed: {
