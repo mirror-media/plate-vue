@@ -957,16 +957,16 @@ export default {
       return cats.some(cat => cat.name === 'wine')
     },
     popularlist () {
-      return _get(this.$store, 'state.articlesPopList.report') || []
+      return _get(this.$store, 'state.articlesPopList.report', [])
     },
     projectlist () {
-      return _get(this.$store, 'state.commonData.projects.items') || []
+      return _get(this.$store, 'state.commonData.projects.items', [])
     },
     recommendlist () {
-      return _get(this.$store, 'state.articlesRecommendList.relatedNews') || []
+      return _get(this.$store, 'state.articlesRecommendList.relatedNews', [])
     },
     relateds () {
-      return (_get(this.articleData, 'relateds') || []).filter(item => item)
+      return _get(this.articleData, 'relateds', []).filter(item => item)
     },
     sectionName () {
       return _get(this.articleData, 'sections.0.name')
@@ -979,7 +979,7 @@ export default {
       return this.viewportWidth < 321 ? 'ad-fit' : ''
     },
     viewportWidth () {
-      return _get(this.$store, 'state.viewport.width') || 0
+      return _get(this.$store, 'state.viewport.width', 0)
     }
   },
   watch: {

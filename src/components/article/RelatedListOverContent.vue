@@ -7,7 +7,7 @@
     >
       <div>
         <a
-          :href="`/story/${_get(articles[ 0 ], 'slug', '')}`"
+          :href="`/story/${articlesSlug[ 0 ] || '' }`"
           class="related"
           @click="sendGaClickEvent('article', 'related news left')"
         >
@@ -15,19 +15,19 @@
           <div class="related__txt">
             <div class="related__category">{{ relatedCategory }}</div>
             <div class="related__title">
-              <p>{{ _get(articles[ 0 ], 'title', '') }}</p>
+              <p>{{ articlesTitle[ 0 ] || '' }}</p>
             </div>
           </div>
         </a>
         <a
-          :href="`/story/${_get(articles[ 1 ], 'slug', '')}`"
+          :href="`/story/${articlesSlug[ 1 ] || '' }`"
           class="related"
           @click="sendGaClickEvent('article', 'related news right')"
         >
           <div class="related__txt">
             <div class="related__category">{{ relatedCategory }}</div>
             <div class="related__title">
-              <p>{{ _get(articles[ 1 ], 'title', '') }}</p>
+              <p>{{ articlesTitle[ 1 ] || '' }}</p>
             </div>
           </div>
           <div class="related__arrow" />
@@ -38,12 +38,20 @@
 </template>
 
 <script>
-import { get as _get } from 'lodash'
 import { sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'RelatedListOverContent',
-  props: ['articles', 'relatedCategory'],
+  props: {
+    articles: {
+      type: Array,
+      default: () => []
+    },
+    relatedCategory: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {
       showContent: false,
@@ -56,6 +64,14 @@ export default {
   computed: {
     isLapW () {
       return this.ww >= 1200
+    },
+    articlesSlug () {
+      const articles = this.articles.slice(0, 2)
+      return articles.filter((article) => article.slug).map((article) => article.slug)
+    },
+    articlesTitle () {
+      const articles = this.articles.slice(0, 2)
+      return articles.filter((article) => article.title).map((article) => article.title)
     }
   },
   mounted () {
@@ -66,11 +82,10 @@ export default {
     this.wEl.addEventListener('scroll', this.locateContent)
   },
   methods: {
-    _get,
     sendGaClickEvent,
     displayContent () {
       const currentScrollY = this.wEl.pageYOffset
-      this.showContent = (this.articles.length && (currentScrollY < this.scrollY))
+      this.showContent = (this.articlesSlug.length === 2 && this.articlesTitle.length === 2 && (currentScrollY < this.scrollY))
       this.scrollY = currentScrollY
     },
     locateContent () {
