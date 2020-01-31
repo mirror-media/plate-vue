@@ -27,14 +27,15 @@ const getSectionColorModifier = (sectionId) => {
   return get(SECTION_MAP, [sectionId, 'sectionName'], '')
 }
 
-const getCredit = ({ cameraMan = [], designers = [], engineers = [], extendByline = '', photographers = [], writers = [] }) => {
-  const creditWriterStr = (writers.length > 0) ? '文/' + writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
+const getCredit = ({ camera_man: cameraMan = [], designers = [], engineers = [], extend_byline: extendByline = '', photographers = [], writers = [] }) => {
+  const writerStr = (writers.length > 0) ? writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
+  const writerElseStr = (extendByline.length > 0) ? extendByline : ''
+  const creditWriterStr = (writerStr || writerElseStr) ? `文/${writerStr}${(writerStr && writerElseStr) ? '&nbsp;' : ''}${writerElseStr}` : ''
   const creditPhotoStr = (photographers.length > 0) ? '攝影/' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
   const creditDesignStr = (designers.length > 0) ? '設計/' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
   const creditEnginStr = (engineers.length > 0) ? '工程/' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
   const creditCamStr = (cameraMan.length > 0) ? '影音/' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
-  const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
-  return [creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
+  return [creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
 }
 
 const getStoryHeroImageSrc = (heroImage) => {
