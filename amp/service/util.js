@@ -28,14 +28,14 @@ const getSectionColorModifier = (sectionId) => {
 }
 
 const getCredit = ({ camera_man: cameraMan = [], designers = [], engineers = [], extend_byline: extendByline = '', photographers = [], writers = [] }) => {
-  const writerStr = (writers.length > 0) ? writers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
-  const writerElseStr = (extendByline.length > 0) ? extendByline : ''
-  const creditWriterStr = (writerStr || writerElseStr) ? `文/${writerStr}${(writerStr && writerElseStr) ? '&nbsp;' : ''}${writerElseStr}` : ''
-  const creditPhotoStr = (photographers.length > 0) ? '攝影/' + photographers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
-  const creditDesignStr = (designers.length > 0) ? '設計/' + designers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
-  const creditEnginStr = (engineers.length > 0) ? '工程/' + engineers.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
-  const creditCamStr = (cameraMan.length > 0) ? '影音/' + cameraMan.filter((o) => (o !== null && o !== undefined)).map((o) => (`<a href="/author/${o._id}">${o.name}</a>`)).join('&nbsp;') : ''
-  return [creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
+  const getCreditStr = (peopleRole) => peopleRole.filter((person) => person).map((person) => `<a href="/author/${person._id}">${person.name}</a>`).join('&nbsp;')
+  const writerStr = (writers.length > 0) ? getCreditStr(writers) : ''
+  const creditWriterStr = (writerStr || extendByline) ? `文/${writerStr}${(writerStr && extendByline) ? '&nbsp;' : ''}${extendByline}` : ''
+  const creditPhotoStr = (photographers.length > 0) ? `攝影/${getCreditStr(photographers)}` : ''
+  const creditDesignStr = (designers.length > 0) ? `設計/${getCreditStr(designers)}` : ''
+  const creditEnginStr = (engineers.length > 0) ? `工程/${getCreditStr(engineers)}` : ''
+  const creditCamStr = (cameraMan.length > 0) ? `影音/${getCreditStr(cameraMan)}` : ''
+  return [creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr].filter((o) => o).join('&nbsp;&nbsp;&nbsp;&nbsp;')
 }
 
 const getStoryHeroImageSrc = (heroImage) => {
