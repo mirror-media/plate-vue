@@ -165,9 +165,13 @@ router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
     } catch (error) {
       const status = error.status || error.statusCode || 500
       let message = get(error, 'response.text')
-      message = message ? get(JSON.parse(message), 'failureCause.message') : error
+      try {
+        message = message ? get(JSON.parse(message), 'failureCause.message') : error
+      } catch (parseError) {
+        message = message || error
+      }
       res.status(status).send(message)
-      console.error('[ERROR] GET oath api.', url, `${error}`)
+      console.error(`[ERROR] GET oath api. url: ${url}`, error)
     }
   }
 }, insertIntoRedis)
@@ -192,9 +196,13 @@ router.get('/video/playlist/:playlistId', fetchFromRedisForAPI, async (req, res,
     } catch (error) {
       const status = error.status || error.statusCode || 500
       let message = get(error, 'response.text')
-      message = message ? get(JSON.parse(message), 'failureCause.message') : error
+      try {
+        message = message ? get(JSON.parse(message), 'failureCause.message') : error
+      } catch (parseError) {
+        message = message || error
+      }
       res.status(status).send(message)
-      console.error('\n[ERROR] GET oath api.', url, `\n${error}\n`)
+      console.error(`[ERROR] GET oath api. url: ${url}`, error)
     }
   }
 }, insertIntoRedis)
