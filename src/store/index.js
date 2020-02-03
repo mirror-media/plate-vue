@@ -275,8 +275,9 @@ export function createStore () {
       },
 
       FETCH_OATH_PLAYLIST: ({ commit, state }, { id, params }) => {
-        const playlistAmount = Object.keys(OATH_PLAYLIST).length || 0
-        return fetchOathPlaylist({ id, params }).then(playlist => commit('SET_OATH_PLAYLIST', { id: id, playlist: playlist.data[0] }))
+        return fetchOathPlaylist({ id, params }).then(playlist => {
+          commit('SET_OATH_PLAYLIST', { id: id, playlist: playlist.data[0] })
+        })
       },
 
       FETCH_OATH_VIDEO: ({ commit, state }, { id }) => {
