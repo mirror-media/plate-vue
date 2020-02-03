@@ -1,45 +1,66 @@
 <template>
   <div class="mmtv-aside">
-    <div class="mmtv-aside--title"><h2 v-text="mmtvTitle"></h2></div>
-    <div class="mmtv-aside--curtain" @click="toggleLightbox"></div>
-    <div class="mmtv-aside--container" :class="containerClass" v-html="mediaDataEmbed" ref="embed-code" @click="toggleLightbox"></div>
+    <div
+      v-if="showTitle"
+      class="mmtv-aside--title"
+    >
+      <h2 v-text="$t('mmtv')" />
+    </div>
+    <div
+      class="mmtv-aside--curtain"
+      @click="toggleLightbox"
+    />
+    <div
+      ref="embed-code"
+      class="mmtv-aside--container"
+      :class="containerClass"
+      @click="toggleLightbox"
+      v-html="mediaDataEmbed"
+    />
   </div>
 </template>
 <script>
-  import _ from 'lodash'
-  import { MM_TV_CH } from '../constants/'
-  export default {
-    computed: {
-      containerClass () {
-        return {
-          lightbox: this.showAsLightbox
-        }
-      },
-      mediaDataEmbed () {
-        return _.get(this.mediaData, [ 'embed' ])
-      }
+import _ from 'lodash'
+export default {
+  name: 'MmtvAside',
+  props: {
+    mediaData: {
+      type: Object,
+      default: () => ({})
     },
-    data () {
+    showTitle: {
+      type: Boolean,
+      default: () => true
+    }
+  },
+  data () {
+    return {
+      isGaEventSentYet: false,
+      showAsLightbox: false
+    }
+  },
+  computed: {
+    containerClass () {
       return {
-        isGaEventSentYet: false,
-        showAsLightbox: false,
-        mmtvTitle: MM_TV_CH
+        lightbox: this.showAsLightbox
       }
     },
-    name: 'mmtv-aside',
-    methods: {
-      toggleLightbox () {
-        this.showAsLightbox = !this.showAsLightbox
-        !this.isGaEventSentYet && window.ga && window.ga('send', 'event', 'homemod', 'click', 'fix play', {
-          location: document.location.href,
-          nonInteraction: false
-        })
-        this.isGaEventSentYet = true
-      }
-    },
-    mounted () {},
-    props: [ 'mediaData' ]
+    mediaDataEmbed () {
+      return _.get(this.mediaData, ['embed'])
+    }
+  },
+  mounted () {},
+  methods: {
+    toggleLightbox () {
+      this.showAsLightbox = !this.showAsLightbox
+      !this.isGaEventSentYet && window.ga && window.ga('send', 'event', 'homemod', 'click', 'fix play', {
+        location: document.location.href,
+        nonInteraction: false
+      })
+      this.isGaEventSentYet = true
+    }
   }
+}
 </script>
 <style lang="stylus">
   .mmtv-aside

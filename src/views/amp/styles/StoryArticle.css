@@ -1,0 +1,242 @@
+.story-article-section {
+  font-size: 19px;
+  font-weight: normal;
+  font-style: normal;
+  font-stretch: normal;
+  line-height: 1.76;
+  letter-spacing: normal;
+  text-align: justify;
+  color: #2f2f2f;
+  padding: 0 15px;
+}
+.story-article-section > * {
+  margin: 30px 0;
+}
+.story-article-section > .story-body-quoteby {
+  margin: calc(30px + 45px) 0 30px 0;
+}
+
+.story-article-brief {
+  color: #224f73;
+}
+
+
+.story-body-blockquote {
+  display: flex;
+  align-items: center;
+}
+.story-body-blockquote__content {
+  margin: 0 0 0 20px;
+  color: #3a759e;
+  font-size: 19px
+}
+
+.story-body-ol {
+  list-style: none;
+}
+.story-body-ol__container {
+  display: flex;
+}
+.story-body-ol__index {
+  margin: 0 10px 0 0;
+  color: #2d5b7b;
+}
+
+.story-body-ul {
+  list-style: none;
+}
+.story-body-ul__container {
+  display: flex;
+}
+.story-body-ul__index {
+  margin: 0 10px 0 0;
+  color: #2d5b7b;
+}
+
+.story-body-image__image-container {
+  position: relative;
+  width: 100%;
+  height: 465px;
+}
+.story-body-image__image img {
+  object-fit: contain;
+}
+
+.story-body-h2 {
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.story-body-audio__title {
+  margin: 0 0 5px 0;
+}
+
+.story-body-quoteby__content {
+  border-top: 3px solid #255577;
+  padding-top: 20px;
+  padding-left: 30px;
+  border-left: 3px solid #255577;
+  font-size: 24px;
+  color: #3a759e;
+}
+.story-body-quoteby__triangle {
+  position: relative;
+}
+.story-body-quoteby__triangle:before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 50px 0 0 70px;
+  position: absolute;
+  top: -70px;
+  left: 30px;
+  display: block;
+  border-color: transparent transparent transparent #255577;
+}
+.story-body-quoteby__triangle:after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 45px 0 0 65px;
+  position: absolute;
+  top: -64px;
+  left: 33px;
+  display: block;
+  border-color: transparent transparent transparent #ffffff;
+}
+.story-body-quoteby__quote-by {
+  text-align: right;
+}
+.story-body-quoteby__quote-by:before {
+  content: "";
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
+  width: 36px;
+  margin-right: 5px;
+  border-top: 1px solid #3a759e;
+}
+
+.story-body-carousel__figure {
+  width: inherit;
+  height: inherit;
+}
+.story-body-carousel__image-container {
+  position: relative;
+  height: 80%;
+}
+
+.story-body-carousel__figcaption {
+  padding: .2em 0;
+  color: rgba(59, 55, 55, 0.498);
+  font-size: 14px;
+}
+
+.story-body-infobox__icon {
+  position: relative;
+  top: 34px;
+  left: 0;
+}
+.story-body-infobox__icon:before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 12px 18px;
+  position: relative;
+  left: 0;
+  top: 30px;
+  display: block;
+  border-color: #255577;
+}
+.story-body-infobox__icon:after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 0 0 18px;
+  position: relative;
+  left: 0;
+  top: 30px;
+  display: block;
+  border-color: #7b7b7b transparent transparent;
+}
+.story-body-infobox__content {
+  box-shadow: 0 0 14px hsla(0,0%,57%,.52);
+  padding: 30px 24px;
+  margin: 0 18px 0 18px;
+}
+.story-body-infobox__title {
+  line-height: 1;
+  font-size: 22.4px;
+  color: #3a6888;
+  margin: 0 0 15px 0;
+}
+.story-body-infobox__body > p {
+  font-size: 16px;
+  color: rgba(0,0,0,.64);
+  text-align: justify;
+}
+
+.story-body-embeddedcode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 25px;
+  padding-bottom: 56.25%; /* 16:9 */
+}
+.story-body-embeddedcode__iframe {
+  max-width: 100%;
+}
+.story-body-embeddedcode-twitter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 300px;
+}
+.story-body-embeddedcode-twitter__iframe {
+  max-width: 100%;
+}
+
+.story-body-annotation > .story-body-annotation {
+  display: inline;
+}
+.story-body-annotation__content {
+  display: none;
+}
+.story-body-annotation__hint {
+  border-bottom: 2px dotted #000;
+}
+.story-body-annotation__hint-text {
+  display: inline-block;
+}
+.story-body-annotation__hint-icon {
+  display: inline-block;
+}
+.story-body-annotation__hint:hover + .story-body-annotation__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  background-color: #000;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.updated-time {
+  color: #064f77;
+  font-size: 16px;
+}
+
+.updated-time span {
+  color: #61a4cd;
+  font-size: 16px;
+}

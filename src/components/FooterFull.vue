@@ -1,24 +1,71 @@
 <template>
   <footer class="footerFull">
     <div class="footerFull__logo">
-      <router-link :to="'/section/' + this.sectionName" :style="{ height: getSectionLogoHeight() + 'px' }">
-        <img :src="getSectionLogoUrl()" :style="{ width: getSectionLogoWidth() + 'px', height: getSectionLogoHeight() + 'px' }">
+      <router-link
+        :to="'/section/' + this.sectionName"
+        :style="{ height: getSectionLogoHeight() + 'px' }"
+      >
+        <img
+          :src="getSectionLogoUrl()"
+          :style="{ width: getSectionLogoWidth() + 'px', height: getSectionLogoHeight() + 'px' }"
+        >
       </router-link>
     </div>
     <div class="footerFull__menu">
-      <router-link :to="item.href" v-for="(item, i) in menuItem.section" v-text="item.title" :key="`${i}-${Date.now()}`"></router-link>
-      <router-link :to="item.href" v-for="(item, i) in menuItem.category" v-text="item.title" :key="`${i}-${Date.now()}`"></router-link>
+      <router-link
+        v-for="(item, i) in menuItem.section"
+        :key="`${i}-${Date.now()}`"
+        :to="item.href"
+        v-text="item.title"
+      />
+      <router-link
+        v-for="(item, i) in menuItem.category"
+        :key="`${i}-${Date.now()}`"
+        :to="item.href"
+        v-text="item.title"
+      />
     </div>
-    <div class="footerFull__vertDivider"></div>
+    <div class="footerFull__vertDivider" />
     <div class="footerFull__link">
       <div class="footerFull__link--subscribe">
-        <a :href="socialLink.SUBSCRIBE" id="footer-full-subscribe" target="_blank">訂閱鏡週刊</a> - <a :href="socialLink.AD" id="footer-full-ad" >廣告合作</a>
+        <a
+          :href="socialLink.SUBSCRIBE"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer subscribe')"
+        >訂閱鏡週刊</a> - <a
+          :href="socialLink.AD"
+          @click="sendGaClickEvent('footer', 'footer ad')"
+        >廣告合作</a>
       </div>
-      <div class="footerFull__link--horizDivider"></div>
+      <div class="footerFull__link--horizDivider" />
       <div class="footerFull__link--socialMedia">
-        <a :href="socialLink.FACEBOOK" id="footer-full-fb" target="_blank"><img class="facebook" src="/public/icon/facebook_white.png" alt="Facebook"></a>
-        <a :href="socialLink.LINE" id="footer-full-line" target="_blank"><img class="line" src="/public/icon/line_white.png" alt="Line"></a>
-        <a :href="socialLink.WEIBO" id="footer-full-weibo" target="_blank"><img class="weibo" src="/public/icon/weibo_white.png" alt="微博"></a>
+        <a
+          :href="socialLink.FACEBOOK"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer fb')"
+        ><img
+          class="facebook"
+          src="/assets/mirrormedia/icon/facebook_white.png"
+          alt="Facebook"
+        ></a>
+        <a
+          :href="socialLink.LINE"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer line')"
+        ><img
+          class="line"
+          src="/assets/mirrormedia/icon/line_white.png"
+          alt="Line"
+        ></a>
+        <a
+          :href="socialLink.WEIBO"
+          target="_blank"
+          @click="sendGaClickEvent('footer', 'footer weibo')"
+        ><img
+          class="weibo"
+          src="/assets/mirrormedia/icon/weibo_white.png"
+          alt="微博"
+        ></a>
       </div>
     </div>
   </footer>
@@ -26,15 +73,20 @@
 <script>
 
 import { SOCIAL_LINK } from '../constants/index'
+import { sendGaClickEvent } from '../util/comm'
 import _ from 'lodash'
 
 export default {
-  name: 'footer-full',
+  name: 'FooterFull',
   props: {
     commonData: {
-      default: () => { return {} }
+      type: Object,
+      default: () => ({})
     },
-    sectionName: ''
+    sectionName: {
+      type: String,
+      default: ''
+    }
   },
   data () {
     return {
@@ -51,29 +103,30 @@ export default {
       }
       _.forEach(this.commonData.sections.items, (s) => {
         s.href = '/section/' + s.name
-        s.isFeatured ? menuItem.section.push(s) : ''
+        s.isFeatured && menuItem.section.push(s)
         _.forEach(s.categories, (c) => {
           c.href = '/category/' + c.name
           c.section = s.name
-          c.isFeatured ? menuItem.category.push(c) : ''
+          c.isFeatured && menuItem.category.push(c)
         })
       })
       return menuItem
     },
     sectionLogo () {
-      return _.get(_.find(_.get(this.commonData, [ 'sections', 'items' ]), { name: this.sectionName }), [ 'image' ], null)
+      return _.get(_.find(_.get(this.commonData, ['sections', 'items']), { name: this.sectionName }), ['image'], null)
     }
   },
   methods: {
     getSectionLogoUrl () {
-      return _.get(this.sectionLogo, [ 'image', 'url' ]) ? _.get(this.sectionLogo, [ 'image', 'url' ]) : '/asset/logo.png'
+      return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/asset/logo.png'
     },
     getSectionLogoWidth () {
-      return _.get(this.sectionLogo, [ 'image', 'width' ])
+      return _.get(this.sectionLogo, ['image', 'width'])
     },
     getSectionLogoHeight () {
-      return _.get(this.sectionLogo, [ 'image', 'height' ])
-    }
+      return _.get(this.sectionLogo, ['image', 'height'])
+    },
+    sendGaClickEvent
   }
 }
 </script>
@@ -141,7 +194,6 @@ export default {
 
       .facebook, .line, .weibo
         height 22px
-      
 
 @media (min-width 1200px)
   .footerFull

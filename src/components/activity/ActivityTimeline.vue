@@ -1,31 +1,67 @@
 <template>
-  <section class="activityTimeline" v-on:touchstart="touchstart" v-on:touchend="touchend">
-    <div class="activityTimeline__time" :style="{ width: timeWidth, transform: `translate3d(${timeTransform}px,0,0)` }">
-      <div class="activityTimeline__timeBlock" v-show="windowViewport < 900" />
-      <div class="activityTimeline__timeBlock" v-for="(item, index) in nodes">
+  <section
+    class="activityTimeline"
+    @touchstart="touchstart"
+    @touchend="touchend"
+  >
+    <div
+      class="activityTimeline__time"
+      :style="{ width: timeWidth, transform: `translate3d(${timeTransform}px,0,0)` }"
+    >
+      <div
+        v-show="windowViewport < 900"
+        class="activityTimeline__timeBlock"
+      />
+      <div
+        v-for="(item, index) in nodes"
+        :key="`timeBlock-${index}`"
+        class="activityTimeline__timeBlock"
+      >
         <div class="activityTimeline__timeBlock--vertLine" />
-        <p v-text="getValue(item, [ 'subtitle' ])"/>
+        <p v-text="getValue(item, [ 'subtitle' ])" />
       </div>
-      <div class="activityTimeline__timeBlock" v-show="windowViewport < 900" />
+      <div
+        v-show="windowViewport < 900"
+        class="activityTimeline__timeBlock"
+      />
     </div>
-    <div class="activityTimeline__images" :style="{ width: imagesWidth, transform: `translate3d(${imagesTransform}px,0,0)` }">
+    <div
+      class="activityTimeline__images"
+      :style="{ width: imagesWidth, transform: `translate3d(${imagesTransform}px,0,0)` }"
+    >
       <template v-for="(item, index) in nodes">
-        <div class="activityTimeline__imageBlock" :class="[ index % 2 === 0 ? '' : 'deeper', getNodeStyle(item) ]" @click="openLightbox(index)" :id="`activity-${item.id}`" >
+        <div
+          :key="`imageBlock-${index}`"
+          class="activityTimeline__imageBlock"
+          :class="[ index % 2 === 0 ? '' : 'deeper', getNodeStyle(item) ]"
+          @click="openLightbox(index)"
+        >
           <figure>
-            <img v-lazy="getNodeImage(item)" v-show="getNodeImage(item)" />
+            <img
+              v-show="getNodeImage(item)"
+              v-lazy="getNodeImage(item)"
+            >
           </figure>
-          <div class="activityTimeline__imageBlock--text" >
+          <div class="activityTimeline__imageBlock--text">
             <h2 v-text="getTruncatedVal(getValue(item, [ 'name' ]), 16)" />
             <div class="activityTimeline__imageBlock--textIcon" />
           </div>
         </div>
       </template>
     </div>
-    <div class="activityTimeline__arrow left" @click="goToPrev()" v-show="hasPrev">
-      <img src="/public/icon/arrow-left_white.png" />
+    <div
+      v-show="hasPrev"
+      class="activityTimeline__arrow left"
+      @click="goToPrev()"
+    >
+      <img src="/assets/mirrormedia/icon/arrow-left_white.png">
     </div>
-    <div class="activityTimeline__arrow right" @click="goToNext()" v-show="hasNext">
-      <img src="/public/icon/arrow-right_white.png" />
+    <div
+      v-show="hasNext"
+      class="activityTimeline__arrow right"
+      @click="goToNext()"
+    >
+      <img src="/assets/mirrormedia/icon/arrow-right_white.png">
     </div>
   </section>
 </template>
@@ -36,7 +72,7 @@ import { getTruncatedVal, getValue } from '../../util/comm'
 import _ from 'lodash'
 
 export default {
-  props: [ 'initialNodeIndex', 'initialNodes', 'viewport' ],
+  props: ['initialNodeIndex', 'initialNodes', 'viewport'],
   data () {
     return {
       currentNodeIndex: this.initialNodeIndex,
@@ -57,7 +93,7 @@ export default {
       }
     },
     nodeAmount () {
-      return _.get(this.nodes, [ 'length' ])
+      return _.get(this.nodes, ['length'])
     },
     nodes () {
       return this.initialNodes
@@ -80,20 +116,26 @@ export default {
       }
     }
   },
+  mounted () {
+    this.initialTransformValue()
+    window.addEventListener('resize', () => {
+      this.initialTransformValue()
+    })
+  },
   methods: {
     getNodeImage (item) {
-      const nodeContents = _.filter(_.slice(_.get(item, [ 'content', 'apiData' ]), 1, _.get(item, [ 'content', 'apiData', 'length' ])), function (o) {
+      const nodeContents = _.filter(_.slice(_.get(item, ['content', 'apiData']), 1, _.get(item, ['content', 'apiData', 'length'])), function (o) {
         return o.type !== 'unstyled'
       })
-      const nodeContentStyle = _.get(nodeContents, [ '0', 'type' ])
+      const nodeContentStyle = _.get(nodeContents, ['0', 'type'])
       if (nodeContentStyle === 'image') {
-        return _.get(nodeContents, [ '0', 'content', '0', 'desktop', 'url' ])
+        return _.get(nodeContents, ['0', 'content', '0', 'desktop', 'url'])
       } else {
-        return _.get(nodeContents, [ '0', 'content', '0', 'coverPhoto', 'desktop', 'url' ])
+        return _.get(nodeContents, ['0', 'content', '0', 'coverPhoto', 'desktop', 'url'])
       }
     },
     getNodeStyle (item) {
-      return _.get(item, [ 'content', 'apiData', '1', 'type' ], 'text')
+      return _.get(item, ['content', 'apiData', '1', 'type'], 'text')
     },
     getTruncatedVal,
     getValue,
@@ -133,7 +175,7 @@ export default {
       }
     },
     initialTransformValue () {
-      const wWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
+      const wWidth = Math.min(window.innerWidth, document.documentElement.clientWidth)
       if (wWidth < 900) {
         this.imagesTransform = 0
         this.timeTransform = -(0.175 * wWidth)
@@ -158,12 +200,6 @@ export default {
     openLightbox (index) {
       this.$emit('openLightbox', index)
     }
-  },
-  mounted () {
-    this.initialTransformValue()
-    window.addEventListener('resize', () => {
-      this.initialTransformValue()
-    })
   }
 }
 
@@ -218,7 +254,7 @@ export default {
     display flex
     height calc(30vh + 44px)
     transition .3s ease-in-out
-    
+
   &__imageBlock
     position relative
     display flex
@@ -284,22 +320,22 @@ export default {
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
-    
+
     &.text
       .activityTimeline__imageBlock--textIcon
-        background-image url("/public/icon/timelineText@2x.png")
+        background-image url("/assets/mirrormedia/icon/timelineText@2x.png")
       &:hover
         h2
           color #fff
     &.image
       .activityTimeline__imageBlock--textIcon
-        background-image url("/public/icon/camera@2x.png")
+        background-image url("/assets/mirrormedia/icon/camera@2x.png")
       &:hover
         .activityTimeline__imageBlock--text
           display none
     &.video
       .activityTimeline__imageBlock--textIcon
-        background-image url("/public/icon/video_gray@2x.png")
+        background-image url("/assets/mirrormedia/icon/video_gray@2x.png")
       &:hover
         .activityTimeline__imageBlock--text
           display none

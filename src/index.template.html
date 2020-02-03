@@ -16,52 +16,49 @@
     '" type="text/javascript" charset="utf-8"><\/sc'+'ript>')})();
   </script>-->
   <!-- End of Google Analytics Content Experiment code -->
-  <!-- Facebook SDK code -->
-  <script>
-    window.fbAsyncInit = function() {
-        FB.init({
-        appId            : '175313259598308',
-        autoLogAppEvents : true,
-        xfbml            : true,
-        version          : 'v2.9'
-        });
-        FB.AppEvents.logPageView();
-    };
-
-    (function(d, s, id){
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) {return;}
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/zh_TW/sdk.js";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-    </script>
-  <!-- End of Facebook SDK code -->
+  {{{ meta.inject().title.text() }}}
   <meta charset="utf-8" fixed='true'>
   <meta name="keywords" content="827dd55a5e613a43faad" fixed='true'>
-  <title>{{ title }}</title>
-  {{{ meta }}}
-  {{{ link }}}
-  <!--meta name="description" content=""-->
+  {{{ meta.inject().meta.text() }}}
+  {{{ meta.inject().link.text() }}}
   <meta name="mobile-web-app-capable" content="yes" fixed='true'>
+  <meta name=”apple-mobile-web-app-capable” content=”yes”>
   <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui" fixed='true'>
   <meta name="msvalidate.01" content="B035299087E538EBEC13FDDFEA238C8C" fixed='true'>
-  <link rel="icon" sizes="32x32" type="image/png" href="/public/favicon-32x32.png">
-  <link rel="icon" sizes="16x16" type="image/png" href="/public/favicon-16x16.png">
-  <link rel="icon" sizes="192x192" href="/public/favicon-192x192.png">
-  <link rel="shortcut icon" sizes="48x48" href="/public/favicon-48x48.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="/public/apple-favicon-180x180.png">
+  <link rel="icon" sizes="32x32" type="image/png" href="/assets/mirrormedia/favicon-32x32.png">
+  <link rel="icon" sizes="16x16" type="image/png" href="/assets/mirrormedia/favicon-16x16.png">
+  <link rel="icon" sizes="192x192" href="/assets/mirrormedia/favicon-192x192.png">
+  <link rel="shortcut icon" sizes="48x48" href="/assets/mirrormedia/favicon-48x48.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/assets/mirrormedia/apple-favicon-180x180.png">
+  <link
+    rel='apple-touch-startup-image'
+    href='/assets/mirrormedia/apple-favicon-180x180.png'
+    media='(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)'
+  />
   <meta name="theme-color" content="#f60" fixed='true'>
   <meta property="article:author" content="https://www.facebook.com/mirrormediamg/" fixed='true'>
   <meta property="article:publisher" content="https://www.facebook.com/mirrormediamg/" fixed='true'>
   <link rel="manifest" href="/manifest.json">
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-NCH86SP');</script>
-  <!-- End Google Tag Manager -->
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+  <!-- GDPR -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+  <script>
+    window.addEventListener("load", function(){
+    window.cookieconsent.initialise({
+      "palette": {
+        "popup": { "background": "#252e39" },
+        "button": { "background": "#14a7d0" }
+      },
+      "theme": "edgeless",
+      "content": {
+        "message": "「本網站使用 cookie 及相關技術分析來改善使用者體驗。」",
+        "dismiss": "我知道了！",
+        "link": "了解更多",
+        "href": "https://www.mirrormedia.mg/story/privacy/"
+      }
+    })});
+  </script>
+  <!-- End GDPR -->
   <!-- Google Analytics -->
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -71,22 +68,11 @@
   </script>
   <!-- End Google Analytics -->
   <!-- Begin comScore Tag -->
-  <script>
-    var _comscore = _comscore || [];
-    _comscore.push({ c1: "2", c2: "24318560" });
-    (function() {
-    var s = document.createElement("script"), el =
-    document.getElementsByTagName("script")[0]; s.async = true;
-    s.src = (document.location.protocol == "https:" ? "https://sb"
-    : "http://b") + ".scorecardresearch.com/beacon.js";
-    el.parentNode.insertBefore(s, el);
-    })();
-  </script>
-  <noscript>
-    <img src="http://b.scorecardresearch.com/p?
-    c1=2&c2=24318560&cv=2.0&cj=1" />
-  </noscript>
+  <noscript><img src="http://b.scorecardresearch.com/p?c1=2&c2=24318560&cv=2.0&cj=1" /></noscript>
   <!-- End comScore Tag -->
+  <!-- Start Alexa Certify Javascript -->
+  <noscript><img src="https://certify.alexametrics.com/atrk.gif?account=JEZvr1zDGU20kU" style="display:none" height="1" width="1" alt="" /></noscript>
+  <!-- End Alexa Certify Javascript -->
   <style>
     .activity__curtain { 
         display: flex;
@@ -103,6 +89,7 @@
         background-color: #000;
     }
   </style>
+  {{{ meta.inject().script.text() }}}
 </head>
 
 <body>
@@ -112,6 +99,10 @@
   <!-- End Google Tag Manager (noscript) -->
   <!--vue-ssr-outlet-->
   <!-- APP -->
+  <!--{{{ resstack }}}-->
+  <!-- Dable idle widget -->
+  <div id="dablewidget_1oVMvjXP" data-widget_id="1oVMvjXP"></div>
+  <!-- End Dable idle widget -->
 </body>
 
 </html>

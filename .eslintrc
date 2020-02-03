@@ -1,21 +1,32 @@
 {
-    "extends": [ "plugin:vue/base" ],
+    "extends": [
+      "standard",
+      "plugin:vue/recommended"
+    ],
+    // If you want to use custom parsers such as babel-eslint or @typescript-eslint/parser,
+    // you have to use parserOptions.parser option instead of parser option. 
+    // https://eslint.vuejs.org/user-guide/#usage
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "plugins": [
-        "import"
-    ],
-    "rules": { 
-      "array-bracket-spacing": [ 2, "always" ],
-      "camelcase": [ 0, "" ],
-      "yoda": [ 0, "never" ]
-    },
-    "globals": {
-      "location": true,
-      "source": true
-    },
+    "plugins": ["jest"],
+    // "rules": { 
+    //   "array-bracket-spacing": [ 2, "always" ],
+    //   "camelcase": [ 0, "" ],
+    //   "no-case-declarations": 1,
+    //   "no-console": 1,
+    //   "no-useless-escape": 1,
+    //   "yoda": [ 0, "never" ],
+    //   "no-mixed-spaces-and-tabs": "error",
+    //   "no-unused-vars": [ "error", { "argsIgnorePattern": "next|req|res|d" } ]
+    // },
+    // "globals": {
+    //   "location": true,
+    //   "source": true,
+    //   "DocumentTouch": true
+    // },
     "env": {
-      "jasmine": true
+      "node": true,
+      "jest/globals": true
     }
 }

@@ -1,0 +1,11 @@
+<figure class="story-body-embeddedcode-twitter">
+  <amp-twitter
+    class="story-body-embeddedcode-twitter__iframe"
+    data-tweetid="<%= getTweetIdFromEmbeddedCode(_.get(item, [ 'content', 0, 'embeddedCode' ], '')) %>"
+    width="200"
+    height="300"
+    layout="fixed"
+  >
+  </amp-twitter>
+  <figcaption><%- _.get(item, [ 'content', 0, 'caption' ], '') %></figcaption>
+</figure>

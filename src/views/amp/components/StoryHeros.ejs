@@ -1,0 +1,25 @@
+<figure class="story-hero-figure">
+  <% if (storyHeroVideo.src !== '') { %>
+    <amp-video
+      controls
+      width="1.48"
+      height="1"
+      layout="responsive"
+      src="<%= storyHeroVideo.src %>"
+      poster="<%= _.get(storyHeroImage, [ 'src', 'mobile' ], '') %>"
+    >
+      <div fallback>
+        <p>This browser does not support the video element.</p>
+      </div>
+    </amp-video>
+  <% } else { %>
+    <amp-img
+      src="<%= _.get(storyHeroImage, [ 'src', 'mobile' ], '') %>"
+      width="1.47"
+      height="1"
+      layout="responsive"
+    >
+    </amp-img>
+  <% } %>
+  <figcaption class="story-hero-figure__figcaption"><%= storyHeroImage.caption %></figcaption>
+</figure>

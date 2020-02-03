@@ -1,13 +1,37 @@
 <template>
   <div class="listArticleBlockLight">
-    <figure v-if="image" class="listArticleBlockLight__figure">
-      <router-link :to="`/external/${getValue(article, [ 'name' ])}`" target="_blank">
-        <img v-lazy="image" :alt="getValue(article, [ 'title' ])" />
-      </router-link>
+    <figure
+      v-if="image"
+      class="listArticleBlockLight__figure"
+    >
+      <a
+        :href="`/external/${getValue(article, [ 'name' ])}`"
+        target="_blank"
+      >
+        <img
+          v-lazy="image"
+          :alt="getValue(article, [ 'title' ])"
+        >
+      </a>
     </figure>
-    <div class="listArticleBlockLight__text" :class="{ noImg: !image }">
-      <h2><router-link :to="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="getValue(article, [ 'title' ])"></router-link></h2>
-      <p><router-link :to="`/external/${getValue(article, [ 'name' ])}`" target="_blank" v-text="$_listArticleLight_getBrief(article)"></router-link></p>
+    <div
+      class="listArticleBlockLight__text"
+      :class="{ noImg: !image }"
+    >
+      <h2>
+        <a
+          :href="`/external/${getValue(article, [ 'name' ])}`"
+          target="_blank"
+          v-text="getValue(article, [ 'title' ])"
+        />
+      </h2>
+      <p>
+        <a
+          :href="`/external/${getValue(article, [ 'name' ])}`"
+          target="_blank"
+          v-text="$_listArticleLight_getBrief(article)"
+        />
+      </p>
     </div>
   </div>
 </template>
@@ -25,16 +49,14 @@ export default {
       required: true
     },
     viewport: {
+      type: Number,
       required: true
     }
   },
   computed: {
     image () {
-      const link = _.get(this.article, [ 'thumb' ])
-      if (link) {
-        return link
-      }
-      return
+      const link = _.get(this.article, ['thumb'])
+      return link
     }
   },
   methods: {
@@ -124,7 +146,6 @@ figure
     &__figure
       a
         padding-top 66.66%
-    
 
 @media (min-width: 1200px)
   .listArticleBlockLight

@@ -1,8 +1,14 @@
 <template>
   <section class="timelineBody">
     <article>
-      <div v-html="getBrief()" class="timelineBody__brief" />
-      <timeline-menu :initialHighlightNodes="highlightNodes" :viewport="windowViewport" />
+      <div
+        class="timelineBody__brief"
+        v-html="getBrief()"
+      />
+      <timeline-menu
+        :initial-highlight-nodes="highlightNodes"
+        :viewport="windowViewport"
+      />
     </article>
   </section>
 </template>
@@ -16,7 +22,20 @@ export default {
   components: {
     'timeline-menu': TimelineMenu
   },
-  props: [ 'initialTimeline', 'initialHighlightNodes', 'viewport' ],
+  props: {
+    initialTimeline: {
+      type: Object,
+      required: true
+    },
+    initialHighlightNodes: {
+      type: Array,
+      default: () => []
+    },
+    viewport: {
+      type: Number,
+      required: true
+    }
+  },
   computed: {
     timeline () {
       return this.initialTimeline
@@ -30,7 +49,7 @@ export default {
   },
   methods: {
     getBrief () {
-      return _.get(this.timeline, [ 'topic', 'brief', 'html' ])
+      return _.get(this.timeline, ['topic', 'brief', 'html'])
     }
   }
 }

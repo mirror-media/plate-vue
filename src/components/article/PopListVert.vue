@@ -1,52 +1,89 @@
 <template>
   <section class="popListVert">
-    <div class="popListVert__title">熱門文章</div>
+    <div class="popListVert__title">
+      熱門文章
+    </div>
     <div class="popListVert-list">
       <template v-for="(o, i) in popArticles">
-        <div class="popListVert-list__item" :key="`popListVert${i}`">
-          <router-link :to="o.slug" :id="`popular-${i}-popVertImg`" class="popListVert-list__item--img"><img v-lazy="getImage(o, 'mobile')" :alt="getValue(o, [ 'title' ])"></router-link>
+        <div
+          :key="`popListVert${i}`"
+          class="popListVert-list__item"
+        >
+          <a
+            :href="o.slug"
+            class="popListVert-list__item--img"
+            target="_blank"
+            @click="sendGaClickEvent('article', 'popular')"
+          >
+            <LazyImage
+              :src="getImage(o, 'tiny')"
+              :alt="get(o, 'title')"
+            />
+          </a>
           <div class="popListVert-list__item--text">
-            <div :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))" v-text="getValue(o, [ 'sections', '0', 'title' ])"></div>
-            <h2><router-link :to="o.slug" :id="`popular-${i}-popVertTitle`" v-text="getTruncatedVal(o.title, 12)"></router-link></h2>
+            <div
+              :style="getSectionStyle(get(o, 'sections.0', ''))"
+              v-text="get(o, 'sections.0.title')"
+            />
+            <h2>
+              <a
+                :href="o.slug"
+                target="_blank"
+                @click="sendGaClickEvent('article', 'popular')"
+                v-text="o.title"
+              />
+            </h2>
           </div>
         </div>
-        <slot name="microAdNA3" v-if="i === 1"></slot>
-        <slot name="microAdNA5" v-if="i === 2"></slot>
-        <slot name="microAdNA9" v-if="i === 5"></slot>
+        <slot
+          v-if="i === 1"
+          name="microAdNA3"
+        />
+        <slot
+          v-if="i === 2"
+          name="microAdNA5"
+        />
+        <slot
+          v-if="i === 5"
+          name="microAdNA9"
+        />
       </template>
     </div>
   </section>
 </template>
 
 <script>
-
+import LazyImage from 'src/components/common/LazyImage.vue'
 import { SECTION_MAP } from '../../constants'
-import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
-import _ from 'lodash'
+import { getImage, getTruncatedVal, sendGaClickEvent } from '../../util/comm'
+import { get, take } from 'lodash'
 
 export default {
-  name: 'popListVert',
+  name: 'PopListVert',
+  components: {
+    LazyImage
+  },
   props: {
     pop: {
       type: Array,
-      default: []
+      default: () => []
     }
   },
   computed: {
     popArticles () {
-      return _.take(this.pop, 6)
+      return take(this.pop, 9)
     }
   },
   methods: {
-    getHref,
     getImage,
     getTruncatedVal,
-    getValue,
+    get,
     getSectionStyle (sect) {
-      const sectionId = _.get(sect, [ 'id' ])
-      const style = { backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc') }
+      const sectionId = get(sect, 'id')
+      const style = { backgroundColor: get(SECTION_MAP, `${sectionId}.bgcolor`, '#bcbcbc') }
       return style
-    }
+    },
+    sendGaClickEvent
   }
 }
 </script>
@@ -100,5 +137,11 @@ export default {
           margin .8em 0 0
           font-size 1rem
           font-weight 700
-        
+          a
+            display -webkit-box
+            -webkit-line-clamp 3
+            -webkit-box-orient vertical
+            height calc(1em * 1.15 * 3)
+            overflow hidden
+
 </style>

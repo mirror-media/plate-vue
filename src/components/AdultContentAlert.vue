@@ -1,21 +1,34 @@
 <template>
- <div class="adultContentAlert" v-show="showAlert">
-  <div class="adultContentAlertContainer">
-    <h2>您即將進入之內容需滿十八歲方可瀏覽</h2>
-	  <p>根據「電腦網路內容分級處理辦法」第六條第三款規定，本網站已於各限制級網頁依照台灣網站分級推廣基金會之規定標示。若您尚未年滿十八歲，請點選離開。若您已滿十八歲，亦不可將本區之內容派發、傳閱、出售、出租、交給或借予年齡未滿18歲的人士瀏覽，或將本網站內容向該人士出示、播放或放映。</p>
-    <div class="adultContentAlert__button">
-      <img src="/public/logo.svg" />
-		  <button class="adultContentAlert__button--over" @click="closeAlert()">是，我已年滿十八歲</button>
-		  <button class="adultContentAlert__button--less" @click="backToHome()">離開</button>
+  <div
+    v-show="showAlert"
+    class="adultContentAlert"
+  >
+    <div class="adultContentAlertContainer">
+      <h2>您即將進入之內容需滿十八歲方可瀏覽</h2>
+      <p>根據「電腦網路內容分級處理辦法」第六條第三款規定，本網站已於各限制級網頁依照台灣網站分級推廣基金會之規定標示。若您尚未年滿十八歲，請點選離開。若您已滿十八歲，亦不可將本區之內容派發、傳閱、出售、出租、交給或借予年齡未滿18歲的人士瀏覽，或將本網站內容向該人士出示、播放或放映。</p>
+      <div class="adultContentAlert__button">
+        <img src="/assets/mirrormedia/logo.svg">
+        <button
+          class="adultContentAlert__button--over"
+          @click="closeAlert()"
+        >
+          是，我已年滿十八歲
+        </button>
+        <button
+          class="adultContentAlert__button--less"
+          @click="backToHome()"
+        >
+          離開
+        </button>
+      </div>
     </div>
   </div>
- </div>
 </template>
 
 <script>
 
 export default {
-  name: 'adultContentAlert',
+  name: 'AdultContentAlert',
   data () {
     return {
       showAlert: true

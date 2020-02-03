@@ -1,39 +1,79 @@
 <template>
-  <section class="ActivityLightbox" :style="[ isLightboxMenuOpen ? { overflow: 'hidden' } : {} ]">
+  <section
+    class="ActivityLightbox"
+    :style="[ isLightboxMenuOpen ? { overflow: 'hidden' } : {} ]"
+  >
     <h1 v-text="getValue(activity, [ 'name' ])" />
-    <figure class="ActivityLightbox__close" @click="closeLightbox()">
-      <img v-lazy="`/public/icon/timelineClose@2x.png`" />
+    <figure
+      class="ActivityLightbox__close"
+      @click="closeLightbox()"
+    >
+      <img v-lazy="`/assets/mirrormedia/icon/timelineClose@2x.png`">
     </figure>
-    <div class="ActivityLightbox__slider" v-if="currentContentStyle !== 'text'" v-on:touchstart="touchstart" v-on:touchend="touchend">
-      <div class="ActivityLightbox__slider--arrow left" v-show="nodeContentMoreThanOne" @click="goToPrev()" />
+    <div
+      v-if="currentContentStyle !== 'text'"
+      class="ActivityLightbox__slider"
+      @touchstart="touchstart"
+      @touchend="touchend"
+    >
+      <div
+        v-show="nodeContentMoreThanOne"
+        class="ActivityLightbox__slider--arrow left"
+        @click="goToPrev()"
+      />
       <template v-for="(item, index) in currentNodeContents">
-        <activity-lightboxSlider :initialContent="item" :class="[ index === currentContentIndex ? 'active' : 'unactive' ]" :viewport="viewport" />
+        <activity-lightboxSlider
+          :key="`lightboxSlider-${index}`"
+          :initial-content="item"
+          :class="[ index === currentContentIndex ? 'active' : 'unactive' ]"
+          :viewport="viewport"
+        />
       </template>
-      <div class="ActivityLightbox__slider--arrow right" v-show="nodeContentMoreThanOne" @click="goToNext()" />
+      <div
+        v-show="nodeContentMoreThanOne"
+        class="ActivityLightbox__slider--arrow right"
+        @click="goToNext()"
+      />
     </div>
-    <div class="ActivityLightbox__slideshowInfo" v-if="currentContentStyle !== 'text'">
+    <div
+      v-if="currentContentStyle !== 'text'"
+      class="ActivityLightbox__slideshowInfo"
+    >
       <p v-text="currentContentCredit" />
       <div class="ActivityLightbox__slideshowInfoAmountBox">
         <span>{{ currentContentIndex + 1 }} | {{ getValue(currentNodeContents, [ 'length' ]) }}</span>
-        <img v-lazy="`/public/icon/square_gray@2x.png`" v-show="nodeContentMoreThanOne" @click="openLightboxMenu()" />
+        <img
+          v-show="nodeContentMoreThanOne"
+          v-lazy="`/assets/mirrormedia/icon/square_gray@2x.png`"
+          @click="openLightboxMenu()"
+        >
       </div>
     </div>
-    <div class="ActivityLightbox__content" :class="currentContentStyle">
+    <div
+      class="ActivityLightbox__content"
+      :class="currentContentStyle"
+    >
       <h3 v-text="getValue(nodes, [ currentNodeIndex, 'subtitle' ])" />
       <h2 v-text="getValue(nodes, [ currentNodeIndex, 'name' ])" />
       <p v-text="getValue(nodes, [ currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])" />
-      <figure @click="share()" id="activity-share">
-        <img v-lazy="`/public/icon/facebook_white.png`" />
+      <figure @click="share()">
+        <img v-lazy="`/assets/mirrormedia/icon/facebook_white.png`">
       </figure>
     </div>
-    <activity-lightboxMenu :currentNodeContents="currentNodeContents" :initialActivity="activity" :viewport="viewport" 
-      v-on:goToContentIndex="goToContentIndex" v-show="isLightboxMenuOpen" v-if="nodeContentMoreThanOne" />
+    <activity-lightboxMenu
+      v-show="isLightboxMenuOpen"
+      v-if="nodeContentMoreThanOne"
+      :current-node-contents="currentNodeContents"
+      :initial-activity="activity"
+      :viewport="viewport"
+      @goToContentIndex="goToContentIndex"
+    />
   </section>
 </template>
 
 <script>
 
-import { getValue } from '../../util/comm'
+import { getValue, sendGaClickEvent } from '../../util/comm'
 import _ from 'lodash'
 import ActivityLightboxMenu from './ActivityLightboxMenu.vue'
 import ActivityLightboxSlider from './ActivityLightboxSlider.vue'
@@ -43,7 +83,7 @@ export default {
     'activity-lightboxMenu': ActivityLightboxMenu,
     'activity-lightboxSlider': ActivityLightboxSlider
   },
-  props: [ 'initialActivity', 'initialNodes', 'lightboxIndex', 'viewport' ],
+  props: ['initialActivity', 'initialNodes', 'lightboxIndex', 'viewport'],
   data () {
     return {
       activity: this.initialActivity,
@@ -54,28 +94,28 @@ export default {
   },
   computed: {
     currentContent () {
-      return _.get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0' ])
+      return _.get(this.currentNodeContents, [this.currentContentIndex, 'content', '0'])
     },
     currentContentCredit () {
       if (this.currentContentStyle === 'image') {
-        return _.get(this.currentContent, [ 'description' ])
+        return _.get(this.currentContent, ['description'])
       } else {
-        return _.get(this.currentContent, [ 'title' ])
+        return _.get(this.currentContent, ['title'])
       }
     },
     currentContentStyle () {
-      return _.get(this.currentNodeContents, [ '0', 'type' ], 'text')
+      return _.get(this.currentNodeContents, ['0', 'type'], 'text')
     },
     currentNodeIndex () {
       return this.lightboxIndex
     },
     currentNodeContents () {
-      return _.filter(_.slice(_.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData' ]), 1, _.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', 'length' ])), function (o) {
+      return _.filter(_.slice(_.get(this.nodes, [this.currentNodeIndex, 'content', 'apiData']), 1, _.get(this.nodes, [this.currentNodeIndex, 'content', 'apiData', 'length'])), function (o) {
         return o.type !== 'unstyled'
       })
     },
     nodeContentMoreThanOne () {
-      return _.get(this.currentNodeContents, [ 'length' ]) > 1
+      return _.get(this.currentNodeContents, ['length']) > 1
     },
     nodes () {
       return this.initialNodes
@@ -84,9 +124,14 @@ export default {
       return this.viewport
     }
   },
+  watch: {
+    currentNodeIndex: function () {
+      this.currentContentIndex = 0
+    }
+  },
   methods: {
     closeLightbox () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[this.currentContentIndex]
       if (currentVideo && currentVideo.querySelector('video')) {
         currentVideo.querySelector('video').pause()
       }
@@ -98,31 +143,31 @@ export default {
       this.isLightboxMenuOpen = false
     },
     goToNext () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[this.currentContentIndex]
       if (currentVideo && currentVideo.querySelector('video')) {
         currentVideo.querySelector('video').pause()
       }
       const nextContentIndex = this.currentContentIndex + 1
-      if (nextContentIndex > _.get(this.currentNodeContents, [ 'length' ]) - 1) {
+      if (nextContentIndex > _.get(this.currentNodeContents, ['length']) - 1) {
         this.currentContentIndex = 0
       } else {
         this.currentContentIndex = nextContentIndex
       }
     },
     goToPrev () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[this.currentContentIndex]
       if (currentVideo && currentVideo.querySelector('video')) {
         currentVideo.querySelector('video').pause()
       }
       const prevContentIndex = this.currentContentIndex - 1
       if (prevContentIndex < 0) {
-        this.currentContentIndex = _.get(this.currentNodeContents, [ 'length' ]) - 1
+        this.currentContentIndex = _.get(this.currentNodeContents, ['length']) - 1
       } else {
         this.currentContentIndex = prevContentIndex
       }
     },
     openLightboxMenu () {
-      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[ this.currentContentIndex ]
+      const currentVideo = this.$el.querySelectorAll('.ActivityLightboxSlider')[this.currentContentIndex]
       if (currentVideo && currentVideo.querySelector('video')) {
         currentVideo.querySelector('video').pause()
       }
@@ -131,21 +176,21 @@ export default {
     share () {
       let imageUrl
       if (this.currentContentStyle === 'video') {
-        imageUrl = _.get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0', 'coverPhoto', 'mobile', 'url' ])
+        imageUrl = _.get(this.currentNodeContents, [this.currentContentIndex, 'content', '0', 'coverPhoto', 'mobile', 'url'])
       } else if (this.currentContentStyle === 'image') {
-        imageUrl = _.get(this.currentNodeContents, [ this.currentContentIndex, 'content', '0', 'mobile', 'url' ])
+        imageUrl = _.get(this.currentNodeContents, [this.currentContentIndex, 'content', '0', 'mobile', 'url'])
       } else {
-        imageUrl = _.get(this.activity, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ])
+        imageUrl = _.get(this.activity, ['heroImage', 'image', 'resizedTargets', 'mobile', 'url'])
       }
-      const description = `${_.get(this.nodes, [ this.currentNodeIndex, 'subtitle' ])} ${_.get(this.nodes, [ this.currentNodeIndex, 'name' ])}： ${_.get(this.nodes, [ this.currentNodeIndex, 'content', 'apiData', '0', 'content', '0' ])}`
+      const description = `${_.get(this.nodes, [this.currentNodeIndex, 'subtitle'])} ${_.get(this.nodes, [this.currentNodeIndex, 'name'])}： ${_.get(this.nodes, [this.currentNodeIndex, 'content', 'apiData', '0', 'content', '0'])}`
       window.FB.ui(
         {
           method: 'feed',
-          link: `https://www.mirrormedia.mg/activity/${_.get(this.$route, [ 'params', 'activityId' ])}/`,
+          link: `https://www.mirrormedia.mg/activity/${_.get(this.$route, ['params', 'activityId'])}/`,
           picture: imageUrl,
           description
-        }, function (response) {})
-      window.ga('send', 'event', 'activity', 'click', 'share-node')
+        }, function () {})
+      sendGaClickEvent('activity', 'share')
     },
     touchend (e) {
       const deltaX = e.changedTouches[0].pageX - this.touchStartValueX
@@ -159,11 +204,6 @@ export default {
     },
     touchstart (e) {
       this.touchStartValueX = e.touches[0].pageX
-    }
-  },
-  watch: {
-    currentNodeIndex: function () {
-      this.currentContentIndex = 0
     }
   }
 }
@@ -329,5 +369,5 @@ export default {
     &__slideshowInfo
       padding 0
       margin-top 10px
-  
+
 </style>

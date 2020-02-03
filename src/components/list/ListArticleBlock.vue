@@ -1,73 +1,217 @@
 <template>
-  <div class="listArticleBlock" :class="{ noHoverEffect: removeHoverEffect }" >
+  <div
+    class="listArticleBlock"
+    :class="{ noHoverEffect: removeHoverEffect }"
+  >
     <template v-if="articleType === 'campaign' || articleType === 'projects' || articleType === 'readr'">
       <figure class="listArticleBlock__figure">
-        <a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
+        <a
+          :href="getHrefFull(article)"
+          target="_blank"
+          @click="sendGaClickEvent('listing', 'latest')"
+        >
+          <LazyImage
+            :src="getImage(article, 'mobile')"
+            :caption="getValue(article, [ 'title' ])"
+          />
         </a>
-        <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
+        <div
+          class="listArticleBlock__figure--colorBlock"
+          :style="{ backgroundColor: sectionColor }"
+          v-text="colorBlockTitle"
+        />
       </figure>
       <div class="listArticleBlock__content">
-        <h2><a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></a></h2>
-        <p><a :href="getHrefFull(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></a></p>
+        <h2>
+          <a
+            :href="getHrefFull(article)"
+            target="_blank"
+            @click="sendGaClickEvent('listing', 'latest')"
+            v-text="getValue(article, [ 'title' ])"
+          />
+        </h2>
+        <p>
+          <a
+            :href="getHrefFull(article)"
+            target="_blank"
+            @click="sendGaClickEvent('listing', 'latest')"
+            v-text="getBrief(article, 45)"
+          />
+        </p>
       </div>
     </template>
     <template v-else-if="articleType === 'video'">
       <figure class="listArticleBlock__figure">
-        <a :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`" :id="`latest-${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}-img`" target="_blank">
-          <img v-lazy="getValue(article, [ 'snippet', 'thumbnails', 'high', 'url' ])" :alt="getValue(article, [ 'snippet', 'title' ])" />
+        <a
+          :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`"
+          target="_blank"
+          @click="sendGaClickEvent('listing', 'latest')"
+        >
+          <img
+            v-lazy="getValue(article, [ 'snippet', 'thumbnails', 'high', 'url' ])"
+            :alt="getValue(article, [ 'snippet', 'title' ])"
+          >
         </a>
-        <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }">Video</div>
+        <div
+          class="listArticleBlock__figure--colorBlock"
+          :style="{ backgroundColor: sectionColor }"
+        >
+          Video
+        </div>
       </figure>
       <div class="listArticleBlock__content">
-        <h2><a :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`" :id="`latest-${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}-title`" v-text="getValue(article, [ 'snippet', 'title' ])" target="_blank" /></h2>
-        <p><a :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`" :id="`latest-${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}-descr`" v-text="getTruncatedVal(getValue(article, [ 'snippet', 'description' ]), 45)" target="_blank" /></p>
+        <h2>
+          <a
+            :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`"
+            target="_blank"
+            @click="sendGaClickEvent('listing', 'latest')"
+            v-text="getValue(article, [ 'snippet', 'title' ])"
+          />
+        </h2>
+        <p>
+          <a
+            :href="`https://youtu.be/${getValue(article, [ 'snippet', 'resourceId', 'videoId' ])}`"
+            target="_blank"
+            @click="sendGaClickEvent('listing', 'latest')"
+            v-text="getTruncatedVal(getValue(article, [ 'snippet', 'description' ]), 45)"
+          />
+        </p>
       </div>
     </template>
     <template v-else-if="articleType === 'audio'">
       <figure class="listArticleBlock__figure">
-        <img v-lazy="getValue(article, [ 'coverPhoto', 'image', 'resizedTargets', 'mobile', 'url' ], '/public/notImage.png')" :alt="getValue(article, [ 'title' ])" />
+        <img
+          v-lazy="getValue(article, [ 'coverPhoto', 'image', 'resizedTargets', 'mobile', 'url' ], '/assets/mirrormedia/notImage.png')"
+          :alt="getValue(article, [ 'title' ])"
+        >
         <div class="listArticleBlock__figure--audioControl">
-          <img v-lazy="`/public/icon/play-btn@2x.png`" @click="audioPlay()" v-show="!isPlaying && !isEnded" />
-          <img v-lazy="`/public/icon/pause-btn@2x.png`" @click="audioPause()" v-show="isPlaying && !isEnded" />
-          <img v-lazy="`/public/icon/replay-btn@2x.png`" @click="audioReplay()" v-show="isEnded" />
+          <img
+            v-show="!isPlaying && !isEnded"
+            v-lazy="`/assets/mirrormedia/icon/play-btn@2x.png`"
+            @click="audioPlay()"
+          >
+          <img
+            v-show="isPlaying && !isEnded"
+            v-lazy="`/assets/mirrormedia/icon/pause-btn@2x.png`"
+            @click="audioPause()"
+          >
+          <img
+            v-show="isEnded"
+            v-lazy="`/assets/mirrormedia/icon/replay-btn@2x.png`"
+            @click="audioReplay()"
+          >
         </div>
-        <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }">Audio</div>
+        <div
+          class="listArticleBlock__figure--colorBlock"
+          :style="{ backgroundColor: sectionColor }"
+        >
+          Audio
+        </div>
       </figure>
       <div class="listArticleBlock__content">
         <h2 v-text="getValue(article, [ 'title' ])" />
         <div class="listArticleBlock__audio">
-          <audio ref="audio" preload="none" @ended="audioEnded" @timeupdate="getAudioCurrent" @loadedmetadata="getAudioDuration">
-            <source :src="getValue(article, [ 'audio', 'url' ])" :type="getValue(article, [ 'audio', 'filetype' ])">
+          <audio
+            ref="audio"
+            preload="none"
+            @ended="audioEnded"
+            @timeupdate="getAudioCurrent"
+            @loadedmetadata="getAudioDuration"
+          >
+            <source
+              :src="getValue(article, [ 'audio', 'url' ])"
+              :type="getValue(article, [ 'audio', 'filetype' ])"
+            >
           </audio>
-          <div ref="audioProgress" class="listArticleBlock__audio--progress" v-on:click="changeProgress" v-show="audioDuration !== 0">
-            <div class="listArticleBlock__audio--progressCurrent" :style="{ width: `${progress}%` }" />
+          <div
+            v-show="audioDuration !== 0"
+            ref="audioProgress"
+            class="listArticleBlock__audio--progress"
+            @click="changeProgress"
+          >
+            <div
+              class="listArticleBlock__audio--progressCurrent"
+              :style="{ width: `${progress}%` }"
+            />
           </div>
-          <p v-show="audioDuration !== 0">{{ getAudioTime(audioCurrent) }} / {{ getAudioTime(audioDuration) }}</p>
+          <p v-show="audioDuration !== 0">
+            {{ getAudioTime(audioCurrent) }} / {{ getAudioTime(audioDuration) }}
+          </p>
         </div>
       </div>
     </template>
     <template v-else-if="articleType === 'topic'">
       <figure class="listArticleBlock__figure">
-        <router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-img`" target="_blank">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'name' ])" />
-        </router-link>
+        <a
+          :href="`/topic/${getValue(article, [ 'id' ])}`"
+          target="_blank"
+          @click="sendGaClickEvent('listing', 'latest')"
+        >
+          <LazyImage
+            :src="getImage(article, 'mobile')"
+            :caption="getValue(article, [ 'name' ])"
+          />
+        </a>
       </figure>
       <div class="listArticleBlock__content">
-        <h2><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-title`" target="_blank" v-text="getValue(article, [ 'name' ])"></router-link></h2>
-        <p><router-link :to="`/topic/${getValue(article, [ 'id' ])}`" :id="`latest-${getValue(article, [ 'id' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
+        <h2>
+          <a
+            :href="`/topic/${getValue(article, [ 'id' ])}`"
+            target="_blank"
+            @click="sendGaClickEvent('listing', 'latest')"
+            v-text="getValue(article, [ 'name' ])"
+          />
+        </h2>
+        <p>
+          <a
+            :href="`/topic/${getValue(article, [ 'id' ])}`"
+            target="_blank"
+            @click="sendGaClickEvent('listing', 'latest')"
+            v-text="getBrief(article, 45)"
+          />
+        </p>
       </div>
     </template>
     <template v-else>
       <figure class="listArticleBlock__figure">
-        <router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-img`" target="_blank">
-          <img v-lazy="getImage(article)" :alt="getValue(article, [ 'title' ])" />
-        </router-link>
-        <div class="listArticleBlock__figure--colorBlock" :style="{ backgroundColor: sectionColor }" v-text="colorBlockTitle" />
+        <a
+          :href="getHref(article)"
+          target="_blank"
+          @click="sendGaClickEvent('listing', 'latest')"
+        >
+          <LazyImage
+            :src="getImage(article, 'mobile')"
+            :caption="getValue(article, [ 'title' ])"
+          />
+        </a>
+        <div
+          class="listArticleBlock__figure--colorBlock"
+          :style="{ backgroundColor: sectionColor }"
+          v-text="colorBlockTitle"
+        />
       </figure>
       <div class="listArticleBlock__content">
-        <h2><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-title`" target="_blank" v-text="getValue(article, [ 'title' ])"></router-link></h2>
-        <p><router-link :to="getHref(article)" :id="`latest-${getValue(article, [ 'slug' ])}-descr`" target="_blank" v-text="getBrief(article, 45)"></router-link></p>
+        <div
+          class="listArticleBlock__content--colorBlock"
+          :style="{ backgroundColor: sectionColor }"
+          v-text="colorBlockTitle"
+        />
+        <h2>
+          <a
+            :href="getHref(article)"
+            target="_blank"
+            @click="sendGaClickEvent('listing', 'latest')"
+            v-text="getValue(article, [ 'title' ])"
+          />
+        </h2>
+        <p>
+          <a
+            :href="getHref(article)"
+            target="_blank"
+            @click="sendGaClickEvent('listing', 'latest')"
+            v-text="getBrief(article, 45)"
+          />
+        </p>
       </div>
     </template>
   </div>
@@ -75,13 +219,30 @@
 
 <script>
 
-import { SECTION_MAP } from '../../constants'
-import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue } from '../../util/comm'
+import { SECTION_MAP, MARKETING_CATGORY_ID } from '../../constants'
+import { getBrief, getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../../util/comm'
 import _ from 'lodash'
+import LazyImage from 'src/components/common/LazyImage.vue'
 import moment from 'moment'
 
 export default {
-  props: [ 'index', 'initialArticle', 'initialTogglePause' ],
+  components: {
+    LazyImage
+  },
+  props: {
+    index: {
+      type: Number,
+      required: true
+    },
+    initialArticle: {
+      type: Object,
+      required: true
+    },
+    initialTogglePause: {
+      type: Number,
+      default: undefined
+    }
+  },
   data () {
     return {
       audioCurrent: 0,
@@ -96,7 +257,7 @@ export default {
       return this.initialArticle
     },
     articleType () {
-      if (_.get(this.$route, [ 'params', 'title' ]) === 'topic') {
+      if (_.get(this.$route, ['params', 'title']) === 'topic') {
         return 'topic'
       }
       if (this.initialArticle.kind) {
@@ -105,26 +266,39 @@ export default {
       if (this.initialArticle.audio && this.initialArticle.audio.url) {
         return 'audio'
       }
-      return _.get(this.initialArticle, [ 'style' ], 'article')
+      return _.get(this.initialArticle, ['style'], 'article')
     },
     colorBlockTitle () {
-      if (this.initialArticle.sections && _.get(this.initialArticle, [ 'sections', 'length' ], 0) > 0) {
-        return _.get(this.initialArticle, [ 'sections', '0', 'title' ])
+      if (this.initialArticle.sections && _.get(this.initialArticle, ['sections', 'length'], 0) > 0) {
+        return _.get(this.initialArticle, ['sections', '0', 'title'])
       } else {
-        return _.get(this.initialArticle, [ 'categories', '0', 'title' ])
+        const categoriesLen = _.get(this.initialArticle, 'categories.length', 0)
+        const categoryFirst = _.get(this.initialArticle, 'categories.0.id')
+        return categoryFirst === MARKETING_CATGORY_ID && categoriesLen > 1
+          ? _.get(this.initialArticle, 'categories.1.title')
+          : _.get(this.initialArticle, 'categories.0.title')
       }
     },
     duration () {
-      return _.get(this.$refs, [ 'audio', 'duration' ])
+      return _.get(this.$refs, ['audio', 'duration'])
     },
     togglePause () {
       return this.initialTogglePause
     },
     removeHoverEffect () {
-      return _.get(this.$route, [ 'params', 'title' ]) === 'audio'
+      return _.get(this.$route, ['params', 'title']) === 'audio'
     },
     sectionColor () {
-      return _.get(SECTION_MAP, [ _.get(this.article, [ 'sections', '0', 'id' ]), 'bgcolor' ], '#bcbcbc')
+      return _.get(SECTION_MAP, [_.get(this.article, ['sections', '0', 'id']), 'bgcolor'], '#bcbcbc')
+    }
+  },
+  watch: {
+    togglePause: function () {
+      const audioEle = this.$refs.audio
+      if (audioEle && !audioEle.paused && this.index !== this.togglePause) {
+        this.isPlaying = false
+        audioEle.pause()
+      }
     }
   },
   methods: {
@@ -178,16 +352,8 @@ export default {
       return moment.utc(duration * 1000).format('HH:mm:ss')
     },
     getTruncatedVal,
-    getValue
-  },
-  watch: {
-    togglePause: function () {
-      const audioEle = this.$refs.audio
-      if (audioEle && !audioEle.paused && this.index !== this.togglePause) {
-        this.isPlaying = false
-        audioEle.pause()
-      }
-    }
+    getValue,
+    sendGaClickEvent
   }
 }
 
@@ -196,11 +362,11 @@ export default {
 
 .listArticleBlock
   width 100%
-  margin-bottom 40px
   background-color #fff
   box-shadow 5px 5px 5px #bcbcbc
   transition all .3s ease-in-out
-  
+  & + .listArticleBlock
+    margin-top 40px
   &__figure
     position relative
     width 100%
@@ -258,6 +424,8 @@ export default {
       line-height 1.5
       a
         color #999
+    &--colorBlock
+      display none
   &__audio
     p
       text-align right
@@ -274,6 +442,8 @@ export default {
   .listArticleBlock
     width calc( (100% - 40px) / 2 )
     margin 0 10px 40px
+    & + .listArticleBlock
+      margin-top 0
     &:hover
       transform translateY(-20px)
       box-shadow 5px 15px 5px #bcbcbc

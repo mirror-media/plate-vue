@@ -1,24 +1,53 @@
 <template>
   <div class="notFound-view">
     <figure class="notFound__img">
-      <img class="notFound__img--mobile" src="/public/404-mobile.png" alt="404 Not Found">
-      <img class="notFound__img--desktop" src="/public/404-desktop.png" alt="404 Not Found">
+      <img
+        class="notFound__img--mobile"
+        src="/assets/mirrormedia/404-mobile.png"
+        alt="404 Not Found"
+      >
+      <img
+        class="notFound__img--desktop"
+        src="/assets/mirrormedia/404-desktop.png"
+        alt="404 Not Found"
+      >
       <div class="notFound__img--textBox">
         <h1>404</h1>
         <h2>抱歉！<br>找不到這個網址</h2>
-        <a id="notfound-backHome" href="/">| 回首頁 |</a>
+        <a
+          id="notfound-backHome"
+          href="/"
+        >| 回首頁 |</a>
       </div>
     </figure>
     <div class="notFound__popList">
       <h2>熱門文章</h2>
       <div class="notFound-popListContainer">
-        <div class="notFound-popListContainer__post" v-for="(item, index) in popArticles">
+        <div
+          v-for="(item, index) in popArticles"
+          :key="`notFound-${index}-${item.slug}`"
+          class="notFound-popListContainer__post"
+        >
           <figure class="notFound-popListContainer__post--img">
-            <a :id="`notfound-${index}-img`" :href="getValue(item, [ 'slug' ])"><img :src="getValue(item, [ 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])" :alt="getValue(item, [ 'title' ])"/></a>
-            <div class="notFound-popListContainer__post--category" :style="getSectionStyle(item)" v-text="getValue(item, [ 'sections', '0', 'title' ])" />
+            <a
+              :id="`notfound-${index}-img`"
+              :href="getValue(item, [ 'slug' ])"
+            ><img
+              :src="getValue(item, [ 'heroImage', 'image', 'resizedTargets', viewportTarget, 'url' ])"
+              :alt="getValue(item, [ 'title' ])"
+            ></a>
+            <div
+              class="notFound-popListContainer__post--category"
+              :style="getSectionStyle(item)"
+              v-text="getValue(item, [ 'sections', '0', 'title' ])"
+            />
           </figure>
           <div class="notFound-popListContainer__post--title">
-            <a :id="`notfound-${index}-title`" :href="getValue(item, [ 'slug' ])" v-text="getValue(item, [ 'title' ])"></a>
+            <a
+              :id="`notfound-${index}-title`"
+              :href="getValue(item, [ 'slug' ])"
+              v-text="getValue(item, [ 'title' ])"
+            />
           </div>
         </div>
       </div>
@@ -28,7 +57,7 @@
 
 <script>
 
-import { SECTION_MAP, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, SITE_TITLE, SITE_URL } from '../constants'
+import { SECTION_MAP } from '../constants'
 import { getValue } from '../util/comm'
 import _ from 'lodash'
 
@@ -37,7 +66,10 @@ const fetchPop = (store) => {
 }
 
 export default {
-  name: 'notFound-view',
+  name: 'NotFoundView',
+  metaInfo: {
+    titleTemplate: null
+  },
   data () {
     return {
       viewport: 0
@@ -45,7 +77,7 @@ export default {
   },
   computed: {
     popArticles () {
-      return _.take(_.get(this.$store.state, [ 'articlesPopList', 'report' ]), 3)
+      return _.take(_.get(this.$store.state, ['articlesPopList', 'report']), 3)
     },
     viewportTarget () {
       if (this.viewport < 600) {
@@ -57,10 +89,22 @@ export default {
       }
     }
   },
+  beforeMount () {
+    fetchPop(this.$store)
+  },
+  mounted () {
+    this.insertGoogleFonts()
+    this.updateViewport()
+    window.addEventListener('resize', () => {
+      this.updateViewport()
+    })
+
+    window.ga('send', 'pageview', { title: '404 - Page Not Found', location: document.location.href })
+  },
   methods: {
     getValue,
     getSectionStyle (item) {
-      return { backgroundColor: _.get(SECTION_MAP, [ _.get(item, [ 'sections', '0', 'id' ]), 'bgcolor' ], '#bcbcbc') }
+      return { backgroundColor: _.get(SECTION_MAP, [_.get(item, ['sections', '0', 'id']), 'bgcolor'], '#bcbcbc') }
     },
     insertGoogleFonts () {
       const googleFonts = document.createElement('link')
@@ -81,41 +125,7 @@ export default {
         document.querySelector('head').removeChild(googleFonts)
       }
     }
-  },
-  beforeMount () {
-    fetchPop(this.$store)
-  },
-  mounted () {
-    this.insertGoogleFonts()
-    this.updateViewport()
-    window.addEventListener('resize', () => {
-      this.updateViewport()
-    })
-
-    window.ga('send', 'pageview', { title: '404 - Page Not Found', location: document.location.href })
-  },
-  metaInfo () {
-    const title = SITE_TITLE
-    const description = SITE_DESCRIPTION
-    console.log('404 vue')
-    return {
-      title,
-      meta: [
-          { name: 'keywords', content: SITE_KEYWORDS },
-          { name: 'description', content: description },
-          { name: 'twitter:card', content: 'summary_large_image' },
-          { name: 'twitter:title', content: title },
-          { name: 'twitter:description', content: description },
-          { name: 'twitter:image', content: SITE_OGIMAGE },
-          { property: 'og:site_name', content: SITE_TITLE },
-          { property: 'og:locale', content: 'zh_TW' },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:title', content: title },
-          { property: 'og:description', content: description },
-          { property: 'og:url', content: SITE_URL },
-          { property: 'og:image', content: SITE_OGIMAGE }
-      ]
-    }
+    next()
   }
 }
 

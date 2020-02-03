@@ -1,113 +1,125 @@
 <template>
-  <div class="latest-list-container">
-    <div class="title"><h4>最新文章</h4></div>
-    <div class="list">
-      <div class="item" v-for="(o, i) in pureLatest" v-if="i < 6">
-        <div class="thumbnail"
-              v-lazy:background-image="getImage(o, 'tiny')"
-              :title="getValue(o, [ 'title' ])">
-          <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style !== 'projects'"></router-link>
-          <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" :style="{ width: '100%', height: '100%', display: 'block' }" v-if="o.style === 'projects'"></a>
-        </div>
-        <div class="content">
-          <div class="content_category">
-            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</router-link>
-            <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ getValue(o, [ 'categories', 0, 'title' ], '新聞') }}</a>
-          </div>
-          <div class="content_title">
-            <router-link :to="{ path: getHref(o) }" :id="'latest-' + o.name" v-if="o.style !== 'projects'">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</router-link>
-            <a :href="`${site_url}${getHref(o)}`" :id="'latest-' + o.name" v-if="o.style === 'projects'">{{ getTruncatedVal(getValue(o, [ 'title' ], ''), 27) }}</a>
-          </div>
-        </div>
+  <div class="latest-list">
+    <div
+      class="latest-list__heading"
+      v-text="$t('article.latest')"
+    />
+    <div class="latest-list__items">
+      <div
+        v-for="item in items"
+        :key="`latest-${item.slug}`"
+        class="latest"
+      >
+        <a
+          class="latest__thumbnail"
+          :href="getHref(item, isAppPage)"
+          target="_blank"
+          @click="sendGaClickEvent('article', 'latest')"
+        >
+          <LazyImage
+            :src="getImage(item, 'tiny')"
+            :alt="get(item, 'title')"
+          />
+        </a>
+        <a
+          class="latest__content"
+          :href="getHref(item, isAppPage)"
+          target="_blank"
+          @click="sendGaClickEvent('article', 'latest')"
+        >
+          <div
+            class="latest__content-category"
+            v-text="get(item, 'categories.0.title', '新聞')"
+          />
+          <p
+            class="latest__content-title"
+            v-text="item.title"
+          />
+        </a>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import { SITE_URL } from '../../constants'
-  import { getHref, getImage, getTruncatedVal, getValue } from '../../util/comm'
-  import _ from 'lodash'
+import LazyImage from 'src/components/common/LazyImage.vue'
+import { get } from 'lodash'
+import { getHref, getImage, sendGaClickEvent } from '../../util/comm'
 
-  export default {
-    computed: {
-      site_url () {
-        return SITE_URL
-      },
-      pureLatest () {
-        return _.filter(this.latest, (o) => { return _.get(o, [ 'slug' ], '') !== this.currArticleSlug })
-      }
+export default {
+  name: 'LatestList',
+  components: {
+    LazyImage
+  },
+  props: {
+    latests: {
+      type: Array,
+      default: () => []
     },
-    methods: {
-      getHref,
-      getImage,
-      getTruncatedVal,
-      getValue
-    },
-    name: 'latest-list',
-    props: {
-      latest: {
-        default: []
-      },
-      currArticleSlug: {
-        default: ''
-      }
+    isAppPage: {
+      type: Boolean,
+      default: false
     }
+  },
+  computed: {
+    items () {
+      return this.latests.slice(0, 6) || []
+    }
+  },
+  methods: {
+    get,
+    getHref,
+    getImage,
+    sendGaClickEvent
   }
+}
 </script>
 <style lang="stylus" scoped>
-.latest-list-container 
-  margin-top 20px
-  width 300px
-  margin 20px auto 0
-  .title 
-    font-size 20px
-    color #fff
-    background #0a6182
-    border 1px solid #0a6182
-    padding 5px 20px
+
+.latest-list
+  p
+    margin 0
+  &__heading
     height 36px
-    display flex
-    align-items center
-    justify-content flex-start
-    h4 
-      margin 0
-    
-  
-  .list 
-    width 100%
+    padding-left 25px
+    color #fff
+    font-size 1.25rem
+    font-weight bold
+    line-height 36px
+    background #0a6182
+  &__items
+    padding 20px
     border 1px solid #dedede
-    .item 
-      margin 25px 0
-      display flex
-      padding 0 20px
-      .thumbnail 
-        width 100px
-        height 100px
-        min-width 100px
-        min-height 100px
-        background-size cover
-        background-repeat no-repeat
-        background-position center center
-      
-      .content 
-        padding 0 0 0 12px
-        .content_category 
-          border-bottom 1px solid #d4d4d4
-          padding-bottom 5px
-          font-weight bold
-        
-        .content_title 
-          padding-top 5px
-          line-height 20px
-          a:hover, a:link, a:visited 
-            color #6f6f6f
-          
-        
-      
-      &:last-child
-        padding-bottom 0
-      
-    
-  
+    border-top none
+
+.latest
+  display flex
+  a
+    display inline-block
+  & + .latest
+    margin-top 25px
+  &__thumbnail
+    width 100px
+    height 100px
+    img
+      width 100%
+      height 100%
+      object-fit cover
+      object-position center center
+  &__content
+    flex 1
+    margin-left 15px
+    &-category
+      padding-bottom 5px
+      font-weight bold
+      border-bottom 1px solid #d4d4d4
+    &-title
+      display -webkit-box
+      padding-top 5px
+      color #6f6f6f
+      line-height 1.4
+      -webkit-line-clamp 3
+      -webkit-box-orient vertical
+      height calc(1em * 1.4 * 3)
+      overflow hidden
 
 </style>

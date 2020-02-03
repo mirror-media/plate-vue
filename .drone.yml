@@ -1,0 +1,109 @@
+workspace:
+  base: /js
+  path: github.com/plate-vue
+pipeline:
+  start_slack:
+    image: plugins/slack
+    channel: jenkins
+    secrets: [slack_webhook]
+    username: plate-vue
+    icon_url: https://vuejs.org/images/logo.png
+    template: >
+      *start* building *{{repo.name}}* <${DRONE_BUILD_LINK}|#{{build.number}}>.
+      *{{build.author}}* give *{{build.branch}}* a little push.
+    when:
+      event: [push]
+      branch: [master, dev, speedup]
+  
+  restore-cache:
+    image: drillster/drone-volume-cache
+    restore: true
+    mount:
+      - ./node_modules
+    volumes:
+      - /tmp/cache:/cache
+    when:
+      branch: [dev]
+
+  get_config:
+    image: gcr.io/mirrormedia-1470651750304/drone-cloud-sdk:latest
+    secrets: [google_credentials]
+    commands:
+    - gcloud source repos clone default ../default
+    - cp ../default/plate-vue/config.js ./api/config.js
+    - cp ../default/keystone/gcskeyfile.json ./gcskeyfile.json
+    when:
+      event: [push]
+      branch: [master, dev, speedup]
+  
+  builds:
+    image: plugins/gcr
+    repo: mirrormedia-1470651750304/${DRONE_REPO_NAME}
+    tag: ${DRONE_BRANCH}_${DRONE_COMMIT_AUTHOR}_${DRONE_BUILD_NUMBER}
+    environment:
+      - DOCKER_LAUNCH_DEBUG=true
+    secrets: [google_credentials]
+    when:
+      event: [push]
+      branch: [master, dev, speedup]
+
+  deploy_dev:
+    image: nytimes/drone-gke
+    zone: asia-east1-a
+    cluster: dev
+    namespace: default
+    # For debugging
+    dry_run: false
+    verbose: true
+    secrets:
+      - source: google_credentials
+        target: token
+    vars:
+      image: gcr.io/mirrormedia-1470651750304/${DRONE_REPO_NAME}:${DRONE_BRANCH}_${DRONE_COMMIT_AUTHOR}_${DRONE_BUILD_NUMBER}
+      app: plate-vue
+      tier: frontend
+      serviceName: vue-service
+      deployName: vue-deployment
+    when:
+      event: [push]
+      branch: [dev, speedup]
+
+  upload-dist:
+    image: plugins/gcs
+    source: dist
+    target: mirrormedia-files/dist
+    acl: allUsers:READER
+    secrets:
+      - source: google_credentials
+        target: token
+    when:
+      event: push
+      branch: master
+
+  rebuild-cache:
+    image: drillster/drone-volume-cache
+    rebuild: true
+    mount:
+      - ./node_modules
+    volumes:
+      - /tmp/cache:/cache
+    when:
+      branch: [dev, speedup]
+
+  finish_slack:
+    image: plugins/slack
+    channel: jenkins
+    secrets: [slack_webhook]
+    username: plate-vue
+    icon_url: https://vuejs.org/images/logo.png
+    when:
+      status: [success, failure]
+      event: [push]
+      branch: [master, dev, speedup]
+    template: >
+      {{#success build.status}}
+        Build<${DRONE_BUILD_LINK}|#{{build.number}}> *success* ${DRONE_REPO_NAME}:${DRONE_BRANCH}_${DRONE_COMMIT_AUTHOR}_${DRONE_BUILD_NUMBER} was well served.
+        Check out our new <http://dev.mirrormedia.mg|plate-vue>
+      {{else}}
+        Houston, we have a problem. Build <${DRONE_BUILD_LINK}|#{{build.number}}> failed. Fix me please, {{build.author}}
+      {{/success}}

@@ -1,21 +1,51 @@
-import { SITE_DOMAIN, SITE_URL, SITE_PROJ_URL, VPON_CONFIG } from '../constants'
+import { SITE_DOMAIN, SITE_URL, SITE_PROJ_URL } from '../constants'
 import _ from 'lodash'
-import Browser from 'bowser'
+import Bowser from 'bowser'
 import Cookie from 'vue-cookie'
 import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 import uuidv4 from 'uuid/v4'
 
+const debug = require('debug')('CLIENT:comm')
+
+export function getArticleReadTime (paragraphs = []) { // deprecated
+  const REGEX_ONLY_CHINESE = /[\u4E00-\u9FFF]+/g
+  const REGEX_NOT_EN_AND_NUMBER = /([^A-Za-z0-9])/g
+
+  const WPM_ENGLISH = 265
+  const WPM_CHINESE = 250
+
+  const textContents = Array.isArray(paragraphs) ? paragraphs : []
+  const textContentsFiltered = textContents
+    .filter(paragraph => paragraph.type === 'unstyled')
+    .filter(paragraph => paragraph.content[0].trim())
+    .map(paragraph => paragraph.content[0])
+
+  let min = 0
+  if (textContentsFiltered.length > 0) {
+    const combined = textContentsFiltered.join(' ')
+    const countChinese = combined.match(REGEX_ONLY_CHINESE).join('').length
+    const countEnglishAndNumber = combined
+      .replace(REGEX_ONLY_CHINESE, ' ')
+      .replace(REGEX_NOT_EN_AND_NUMBER, ' ')
+      .split(' ')
+      .filter(word => word).length
+    const readTime = Math.round((countChinese / WPM_CHINESE) + (countEnglishAndNumber / WPM_ENGLISH))
+    min = readTime > 0 ? readTime : 1
+  }
+  return min
+}
+
 export function getAuthor (article, option = '', delimiter = '｜') {
-  const writers = (_.get(article, [ 'writers', 'length' ], 0) > 0)
-    ? `文${delimiter}` + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, [ 'name' ], null) + '</a>' }).join('、') : ''
-  const photographers = (_.get(article, [ 'photographers', 'length' ], 0) > 0)
-    ? `<br>攝影${delimiter}` + _.map(article.photographers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
-  const designers = (_.get(article, [ 'designers', 'length' ], 0) > 0)
-    ? `<br>設計${delimiter}` + _.map(article.designers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
-  const engineers = (_.get(article, [ 'engineers', 'length' ], 0) > 0)
-    ? `<br>工程${delimiter}` + _.map(article.engineers, (n) => { return _.get(n, [ 'name' ], null) }).join('、') : ''
+  const writers = (_.get(article, ['writers', 'length'], 0) > 0)
+    ? `文${delimiter}` + _.map(article.writers, (n) => { return '<a href="' + getAuthorHref(n) + '" id="author-' + n.id + '">' + _.get(n, ['name'], null) + '</a>' }).join('、') : ''
+  const photographers = (_.get(article, ['photographers', 'length'], 0) > 0)
+    ? `<br>攝影${delimiter}` + _.map(article.photographers, (n) => { return _.get(n, ['name'], null) }).join('、') : ''
+  const designers = (_.get(article, ['designers', 'length'], 0) > 0)
+    ? `<br>設計${delimiter}` + _.map(article.designers, (n) => { return _.get(n, ['name'], null) }).join('、') : ''
+  const engineers = (_.get(article, ['engineers', 'length'], 0) > 0)
+    ? `<br>工程${delimiter}` + _.map(article.engineers, (n) => { return _.get(n, ['name'], null) }).join('、') : ''
   const external = '<br>' + _.get(article, 'extendByline', '')
   switch (option) {
     case 'writers':
@@ -29,34 +59,32 @@ export function getAuthorHref (author = {}) {
   return '/author/' + author.id
 }
 
-export function getBrief (article, count = 30, allowed_tags = '') {
-  let brief
-  if (_.split(_.get(article, [ 'href' ]), '/')[1] === 'topic') {
-    brief = _.get(article, [ 'ogDescription' ])
-  } else {
-    brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], _.get(article, [ 'brief' ])), { allowedTags: [ allowed_tags ] })
-  }
+export function getBrief (article, count = 30, allowedTags = []) {
+  const metaBrief = _.get(article, 'brief')
+  let brief = _.isString(metaBrief) ? metaBrief : (_.get(article, 'brief.html') || _.get(article, ['ogDescription']) || '')
+  brief = sanitizeHtml(brief, { allowedTags: allowedTags })
   return truncate(brief, count)
 }
 
-export function getHref (relAritlcle = {}) {
-  const { href, style = '', slug } = relAritlcle
+export function getHref (relAritlcle = {}, isAppPage = false) {
+  const { style = '', slug } = relAritlcle
+
   switch (style) {
     case 'campaign':
       return `/campaigns/${slug}`
     case 'projects':
       return `/projects/${slug}`
     default:
-      if (_.split(href, '/')[1] === 'topic') {
-        return href
-      } else {
-        return `/story/${slug}/`
-      }
+      // if (_.split(href, '/')[1] === 'topic') {
+      //   return href
+      // } else {
+      return isAppPage ? `/app/${slug}/` : `/story/${slug}/`
+      // }
   }
 }
 
-export function getHrefFull (relAritlcle = {}) {
-  const { href, style = '', slug } = relAritlcle
+export function getHrefFull (relAritlcle = {}, isAppPage = false) {
+  const { style = '', slug } = relAritlcle
   switch (style) {
     case 'campaign':
       return `${SITE_URL}/campaigns/${slug}`
@@ -65,60 +93,44 @@ export function getHrefFull (relAritlcle = {}) {
     case 'readr':
       return `${SITE_PROJ_URL}/project/${slug}`
     default:
-      if (_.split(href, '/')[1] === 'topic') {
-        return href
-      } else {
-        return `${SITE_URL}/story/${slug}/`
-      }
+      // if (_.split(href, '/')[1] === 'topic') {
+      //   return href
+      // } else {
+      return isAppPage ? `${SITE_URL}/app/${slug}/` : `${SITE_URL}/story/${slug}/`
+      // }
   }
 }
 
 export function getImage (article, size) {
   let image
-  if (article.heroVideo && article.heroVideo.coverPhoto && article.heroVideo.coverPhoto.image) {
-    image = _.get(article, [ 'heroVideo', 'coverPhoto', 'image', 'resizedTargets' ])
-  } else if (article.heroImage && article.heroImage.image) {
-    image = _.get(article, [ 'heroImage', 'image', 'resizedTargets' ])
+  if (article.heroImage) {
+    debug('get heroimage')
+    image = article.heroImage.image ? _.get(article, ['heroImage', 'image', 'resizedTargets']) : _.get(article, 'heroImage')
   } else if (article.ogImage) {
-    image = _.get(article, [ 'ogImage', 'image', 'resizedTargets' ])
+    debug('get ogImage')
+    image = _.get(article, ['ogImage', 'image', 'resizedTargets'])
+  } else if (article.heroVideo && article.heroVideo.coverPhoto && article.heroVideo.coverPhoto.image) {
+    debug('get heroVideo img')
+    image = _.get(article, ['heroVideo', 'coverPhoto', 'image', 'resizedTargets'])
   }
   switch (size) {
     case 'desktop':
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, ['desktop', 'url'], '/assets/mirrormedia/notImage.png')
     case 'mobile':
-      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
+      return _.get(image, ['mobile', 'url'], '/assets/mirrormedia/notImage.png')
     case 'tablet':
-      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
+      return _.get(image, ['tablet', 'url'], '/assets/mirrormedia/notImage.png')
     case 'tiny':
-      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
+      return _.get(image, ['tiny', 'url'], '/assets/mirrormedia/notImage.png')
     default:
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
+      return _.get(image, ['desktop', 'url'], '/assets/mirrormedia/notImage.png')
   }
-}
-
-export function getImageCertain (image, size) {
-  switch (size) {
-    case 'desktop':
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
-    case 'mobile':
-      return _.get(image, [ 'mobile', 'url' ], '/public/notImage.png')
-    case 'tablet':
-      return _.get(image, [ 'tablet', 'url' ], '/public/notImage.png')
-    case 'tiny':
-      return _.get(image, [ 'tiny', 'url' ], '/public/notImage.png')
-    default:
-      return _.get(image, [ 'desktop', 'url' ], '/public/notImage.png')
-  }
-}
-
-export function getName (article) {
-  return _.get(article, [ 'name' ])
 }
 
 export function getSection (article) {
-  switch (_.get(article, [ 'style' ])) {
+  switch (_.get(article, ['style'])) {
     case 'article':
-      return _.get(article, 'sections[0].name') ? _.get(article, 'sections[0].name') : ''
+      return _.get(article, 'sections[0].name') || ''
     case 'projects':
       return 'projects'
     default:
@@ -126,14 +138,8 @@ export function getSection (article) {
   }
 }
 
-export function shareGooglePlus ({ route, shared }) {
-  window.open(`https://plus.google.com/share?url=${SITE_URL}${route}`)
-  shared && shared()
-}
-
-export function shareLine ({ title, route, shared }) {
+export function shareLine ({ title, route }) {
   window.open(`https://line.naver.jp/R/msg/text/?${encodeURIComponent(title)}%0D%0A${encodeURIComponent(SITE_URL + route)}`)
-  shared && shared()
 }
 
 export function shareFacebook ({ route, shared }) {
@@ -141,15 +147,11 @@ export function shareFacebook ({ route, shared }) {
   shared && shared()
 }
 
-export function getTitle (article, count = 30) {
-  return truncate(_.get(article, [ 'title' ]), count)
-}
-
-export function getTruncatedVal (oVal, count) {
+export function getTruncatedVal (oVal, count) { // considered deprecated
   return truncate(oVal, count)
 }
 
-export function getValue (o = {}, p = [], d = '') {
+export function getValue (o = {}, p = [], d = '') { // considered deprecated
   return _.get(o, p, d)
 }
 
@@ -190,7 +192,7 @@ export function consoleLogOnDev ({ msg }) {
 
 export function currEnv () {
   if (process.env.VUE_ENV === 'client') {
-    if (location.host.indexOf(SITE_DOMAIN) === 0 || location.host.indexOf(`www.${SITE_DOMAIN}`) === 0) {
+    if (location.host.indexOf(SITE_DOMAIN) === 0 || location.host.indexOf(`www.${SITE_DOMAIN}`) === 0 || location.host.indexOf(`m.${SITE_DOMAIN}`) === 0) {
       return 'prod'
     } else {
       return 'dev'
@@ -226,9 +228,9 @@ function preventDefault (e) {
 export function getClientOS () {
   const userAgent = window.navigator.userAgent
   const platform = window.navigator.platform
-  const macosPlatforms = [ 'Macintosh', 'MacIntel', 'MacPPC', 'Mac68K' ]
-  const windowsPlatforms = [ 'Win32', 'Win64', 'Windows', 'WinCE' ]
-  const iosPlatforms = [ 'iPhone', 'iPad', 'iPod' ]
+  const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K']
+  const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE']
+  const iosPlatforms = ['iPhone', 'iPad', 'iPod']
   let os = null
 
   if (macosPlatforms.indexOf(platform) !== -1) {
@@ -245,11 +247,41 @@ export function getClientOS () {
   return os
 }
 
-export function mmLog ({ category, eventType, target, description }) {
-  return _normalizeLog({ category, eventType, target, description })
+export function mmLog ({ category, eventType, target, description, referrer, ...rest }) {
+  return _normalizeLog({ category, eventType, target, description, referrer, ...rest })
 }
 
-export function isDescendant (child, { classname = 'none' }) {
+export function sendGaClickEvent (eventCategory, eventLabel) {
+  window.ga && window.ga('send', 'event', eventCategory, 'click', eventLabel)
+}
+
+export function isEleFixed (ele) {
+  let node = ele
+
+  while (node !== null && node !== undefined && node !== document) {
+    const position = node.currentStyle ? node.currentStyle.position : window.getComputedStyle(node, null).position
+    if (position === 'fixed') {
+      return true
+    }
+    node = node.parentNode
+  }
+  return false
+}
+
+export function isEleShown (ele) {
+  let node = ele
+
+  while (node !== null && node !== undefined && node !== document) {
+    const display = node.currentStyle ? node.currentStyle.display : window.getComputedStyle(node, null).display
+    if (display === 'none') {
+      return false
+    }
+    node = node.parentNode
+  }
+  return true
+}
+
+export function isDescendant (child, { classname = 'none' }) { // deprecated
   let node = child.parentNode
   while (node !== null && node !== undefined) {
     if (node.className && node.className.indexOf(classname) > -1) {
@@ -271,31 +303,38 @@ function _isAlinkDescendant (child) {
   return { isAlink: false, href: '' }
 }
 
-function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer }) {
+function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer, ...rest }) {
   return new Promise((resolve) => {
     const cookieId = Cookie.get('mmid')
     const targ = target
 
     const clientOs = getClientOS()
-    const innerText = targ.innerText ? sanitizeHtml(targ.innerText, { allowedTags: [ '' ] }) : ''
+    const innerText = targ.innerText ? sanitizeHtml(targ.innerText, { allowedTags: [''] }) : ''
     const isAlinkCheck = targ.tagName === 'A' ? { isAlink: true, href: targ.href } : _isAlinkDescendant(targ)
 
+    const expRelated = /^related/g
+    const expRecoommend = /^recommend/g
+
+    const browser = Bowser.parse(window.navigator.userAgent)
+
     const log = {
-      'browser': {
-        name: Browser.name,
-        version: Browser.version
+      browser: {
+        name: browser.browser.name,
+        version: browser.browser.version
       },
-      'category': category,
+      category: category,
       'client-id': '',
       'client-os': {
         name: clientOs,
-        version: Browser.osversion
+        version: browser.os.osversion
       },
       'curr-url': window.location.href,
-      'datetime': moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),
-      'description': description,
+      datetime: moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),
+      description: description,
       'event-type': eventType,
-      'redirect-to': isAlinkCheck.href,
+      'redirect-to': isAlinkCheck.isAlink ? isAlinkCheck.href : undefined,
+      referrer: referrer || (isAlinkCheck.isAlink ? location.href : undefined),
+      rref: isAlinkCheck.isAlink ? expRelated.test(target.id) ? 'related' : expRecoommend.test(target.id) ? 'recommend' : undefined : undefined,
       'target-tag-name': targ.tagName,
       'target-tag-class': targ.className,
       'target-tag-id': targ.id,
@@ -303,7 +342,8 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       'target-window-size': {
         width: document.documentElement.clientWidth || document.body.clientWidth,
         height: document.documentElement.clientWidth || document.body.clientWidth
-      }
+      },
+      ...rest
     }
     if (!cookieId) {
       const dt = Date.now()
@@ -311,14 +351,12 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       log['client-id'] = thisId
       log['current-runtime-id'] = thisId
       log['current-runtime-start'] = moment(dt).format('YYYY.MM.DD HH:mm:ss')
-      log['referrer'] = document.referrer
       window.mmThisRuntimeClientId = thisId
       window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
       resolve(log)
     } else {
       const dt = Date.now()
       log['client-id'] = cookieId
-      log['referrer'] = referrer
       if (!window.mmThisRuntimeClientId) {
         window.mmThisRuntimeClientId = uuidv4()
         window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
@@ -336,31 +374,50 @@ export function setMmCookie () {
   return uuid
 }
 
-export function insertMicroAd ({ adId, currEnv, microAdLoded = false }) {
-  if (process.env.VUE_ENV === 'client' && microAdLoded === false) {
-    const _lgy_lw = document.createElement('script')
-    _lgy_lw.type = 'text/javascript'
-    _lgy_lw.charset = 'UTF-8'
-    _lgy_lw.async = true
-    _lgy_lw.src = ((document.location.protocol === 'https:') ? 'https://' : 'http://') + `nt.compass-fit.jp/lift_widget.js?adspot_id=${adId}`
-    const _lgy_lw_0 = document.getElementsByTagName('script')[0]
-    _lgy_lw_0.parentNode.insertBefore(_lgy_lw, _lgy_lw_0)
-    if (currEnv === 'dev') { console.log('microad', adId, 'loaded') }
+export async function insertMicroAd ({ adId, currEnv, vm }) {
+  if (process.env.VUE_ENV === 'client' && !vm.microAdLoded) {
+    const _lgyLw = document.createElement('script')
+    _lgyLw.onload = () => {
+      currEnv === 'dev' && console.log('microad', adId, 'loaded')
+      vm.microAdLoded = true
+    }
+    _lgyLw.type = 'text/javascript'
+    _lgyLw.charset = 'UTF-8'
+    _lgyLw.async = true
+    _lgyLw.src = ((document.location.protocol === 'https:') ? 'https://' : 'http://') + `nt.compass-fit.jp/lift_widget.js?adspot_id=${adId}`
+    const _lgyLw0 = document.getElementsByTagName('script')[0]
+    _lgyLw0.parentNode.insertBefore(_lgyLw, _lgyLw0)
   }
-  return true
 }
 
-export function insertVponAdSDK ({ currEnv = 'dev', isVponSDKLoaded = false }) {
-  if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
-    const script = document.createElement('script')
-    script.type = 'text/javascript'
-    script.src = '//m.vpon.com/sdk/vpadn-sdk.js'
-    document.body.appendChild(script)
+export function insertPopInAdScript () {
+  if (process.env.VUE_ENV === 'client') {
+    const hasScript = document.querySelector('#js-pop-in')
+    if (!hasScript) {
+      const pa = document.createElement('script')
+      pa.id = 'js-pop-in'
+      pa.type = 'text/javascript'
+      pa.charset = 'utf-8'
+      pa.async = true
+      pa.src = window.location.protocol + '//api.popin.cc/searchbox/mirrormedia_tw.js'
+      const s = document.getElementsByTagName('script')[0]
+      s.parentNode.insertBefore(pa, s)
+    }
   }
-  return true
 }
 
-export function trim (str) {
+// Vpon ad is abandoned 20180810 BY KC
+// export function insertVponAdSDK ({ isVponSDKLoaded = false }) {
+//   if (process.env.VUE_ENV === 'client' && isVponSDKLoaded === false) {
+//     const script = document.createElement('script')
+//     script.type = 'text/javascript'
+//     script.src = '//m.vpon.com/sdk/vpadn-sdk.js'
+//     document.body.appendChild(script)
+//   }
+//   return true
+// }
+
+export function trim (str) { // considered deprecated
   return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
 }
 
@@ -387,20 +444,20 @@ export function removeClass (ele, cls) {
   }
   ele.className = trim(ele.className)
 }
-
-export function vponHtml () {
-  const mode = _.get(VPON_CONFIG, [ 'vpon_ad_test' ], '1')
-  const key = _.get(VPON_CONFIG, [ 'vpon_ad_licensy_key' ], '')
-  const format = _.get(VPON_CONFIG, [ 'vpon_ad_format' ], 'mi')
-  const debug = _.get(VPON_CONFIG, [ 'debug' ], true)
-  return `<vpon vpon_ad_test="${mode}" vpon_ad_licensy_key="${key}" vpon_ad_format="${format}" debug="${debug}"></vpon>`
-}
+// Vpon ad is abandoned 20180810 BY KC
+// export function vponHtml () {
+//   const mode = _.get(VPON_CONFIG, [ 'vpon_ad_test' ], '1')
+//   const key = _.get(VPON_CONFIG, [ 'vpon_ad_licensy_key' ], '')
+//   const format = _.get(VPON_CONFIG, [ 'vpon_ad_format' ], 'mi')
+//   const debug = _.get(VPON_CONFIG, [ 'debug' ], true)
+//   return `<vpon vpon_ad_test="${mode}" vpon_ad_licensy_key="${key}" vpon_ad_format="${format}" debug="${debug}"></vpon>`
+// }
 
 export function updateCookie ({ currEnv }) {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const cookie = Cookie.get('visited')
     if (currEnv === 'prod' && !cookie) {
-      Cookie.set('visited', 'true', { expires: '3m' })
+      // Cookie.set('visited', 'true', { expires: '3m' })
     }
     resolve(cookie === 'true')
   })
@@ -413,12 +470,43 @@ export function sendAdCoverGA (label) {
   })
 }
 
-export function extractSlugFromreferrer (referrer = '') {
-  const filteredReferrer = referrer.replace(/^https?:\/\//, '').replace(/\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|\[\]\/\\]*$/, '')
+export function extractSlugFromReferrer (referrer = '') {
+  const filteredReferrer = referrer.replace(/^https?:\/\//, '').replace(/\?[A-Za-z0-9.*+?^=!:${}()#%~&_@\-`|[\]/\\]*$/, '')
   const referrerArr = filteredReferrer.split('/')
-  if ((referrerArr[ 0 ].indexOf(SITE_DOMAIN) > -1 || referrerArr[ 0 ].indexOf('localhost') > -1) && referrerArr[ 1 ] === 'story') {
-    return referrerArr[ 2 ]
+  if ((referrerArr[0].indexOf(SITE_DOMAIN) > -1 || referrerArr[0].indexOf('localhost') > -1) && referrerArr[1] === 'story') {
+    return referrerArr[2]
   } else {
     return 'N/A'
   }
+}
+
+export function checkMob () {
+  let check = false
+  if (typeof navigator !== 'undefined') {
+    (function (a) {
+      if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw-(n|u)|c55\/|capi|ccwa|cdm-|cell|chtm|cldc|cmd-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc-s|devi|dica|dmob|do(c|p)o|ds(12|-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(-|_)|g1 u|g560|gene|gf-5|g-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd-(m|p|t)|hei-|hi(pt|ta)|hp( i|ip)|hs-c|ht(c(-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i-(20|go|ma)|i230|iac( |-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|-[a-w])|libw|lynx|m1-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|-([1-8]|c))|phil|pire|pl(ay|uc)|pn-2|po(ck|rt|se)|prox|psio|pt-g|qa-a|qc(07|12|21|32|60|-[2-7]|i-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h-|oo|p-)|sdk\/|se(c(-|0|1)|47|mc|nd|ri)|sgh-|shar|sie(-|m)|sk-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h-|v-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl-|tdg-|tel(i|m)|tim-|t-mo|to(pl|sh)|ts(70|m-|m3|m5)|tx-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas-|your|zeto|zte-/i.test(a.substr(0, 4))) check = true
+    })(navigator.userAgent || navigator.vendor || window.opera)
+  }
+  return check
+}
+
+export function debounce (fn, wait) {
+  let timer
+  return () => {
+    clearTimeout(timer)
+    timer = setTimeout(fn, wait)
+  }
+}
+
+export function isTouchDevice () {
+  if (typeof window === 'undefined') return false
+  const prefixes = ' -webkit- -moz- -o- -ms- '.split(' ')
+  const mq = function (query) {
+    return window.matchMedia(query).matches
+  }
+  if (('ontouchstart' in window) || window.DocumentTouch) { // && document instanceof DocumentTouch
+    return true
+  }
+  const query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('')
+  return mq(query)
 }

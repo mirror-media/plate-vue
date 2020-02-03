@@ -1,29 +1,52 @@
 <template>
   <section class="articleList container">
-
     <template v-for="(item, index) in articles">
-      <listArticle-block :index="index" :initialArticle="item" :initialTogglePause="togglePause" v-on:pauseAllAudio="pauseAllAudio" :key="getValue(item, [ 'id' ], Date.now())"/>
-      <slot :name="`microAd${getMicroAdName(index)}`" v-if="(index === 1 || index === 2 || index === 5) && hasDFP"></slot>
+      <listArticle-block
+        :id="`list-item-${index}`"
+        :key="getValue(item, [ 'id' ], Date.now())"
+        :index="index"
+        :initial-article="item"
+        :initial-toggle-pause="togglePause"
+        @pauseAllAudio="pauseAllAudio"
+      />
+      <slot
+        v-if="(index === 1 || index === 2 || index === 5) && hasDFP"
+        :name="`microAd${getMicroAdName(index)}`"
+      />
     </template>
-    
   </section>
 </template>
 
 <script>
 
+import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { getValue } from '../util/comm'
 import ListArticleBlock from './list/ListArticleBlock.vue'
+import verge from 'verge'
+
+const showAdCover = store => store.dispatch('SHOW_AD_COVER')
+const debugDFP = require('debug')('CLIENT:DFP')
 
 export default {
-  name: 'articleList',
+  name: 'ArticleList',
   components: {
     'listArticle-block': ListArticleBlock
   },
-  props: [ 'articles', 'hasDFP', 'currEnv' ],
+  props: ['articles', 'hasDFP', 'currEnv'],
   data () {
     return {
       togglePause: undefined
     }
+  },
+  mounted () {
+    /**
+     *  Have ad-cover be rendered as soon as #list-item-${index} gets visible.
+     */
+    /**
+     *  Dont show ad cover on listing page for now.
+     *  window.addEventListener('scroll', this.scrollEventHandlerForAd)
+     */
+
   },
   methods: {
     getMicroAdName (index) {
@@ -32,6 +55,18 @@ export default {
     getValue,
     pauseAllAudio (index) {
       this.togglePause = index
+    },
+    scrollEventHandlerForAd () {
+      if (this.isAdCoverCalledYet) { return }
+      const currentTop = currentYPosition()
+      const eleTop = elmYPosition('#list-item-2')
+      const deviceHeight = verge.viewportH()
+      if (currentTop + deviceHeight > eleTop) {
+        debugDFP('SHOW ADCOVER!')
+        showAdCover(this.$store)
+        this.isAdCoverCalledYet = true
+        window.removeEventListener('scroll', this.scrollEventHandlerForAd)
+      }
     }
   }
 }
@@ -42,7 +77,7 @@ export default {
   &.container
     flex-direction column
     flex-wrap wrap
-    margin-top .5em
+    margin-top 20px
 
   &__dfp
     &--l1
@@ -56,13 +91,17 @@ export default {
   box-shadow 5px 5px 5px #bcbcbc
   transition all .3s ease-in-out
 
+#articleListAutoScroll
+  .listArticleBlock:last-child
+    margin-bottom 40px
+
 @media (min-width: 600px)
   .articleList
     &.container
       flex-direction row
       justify-content flex-start
       width calc(100% - 30px)
-    
+
   .nativeDFP
     width calc( (100% - 40px) / 2 )
     margin 0 10px 40px
@@ -76,6 +115,5 @@ export default {
       width 1044px
   .nativeDFP
     width calc( (100% - 60px) / 3 )
-  
 
 </style>

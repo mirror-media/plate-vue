@@ -1,5 +1,11 @@
 <template>
-  <ProjectList :projects="projects" :viewport="viewport" :class="projectClass" target="_blank" :excludingProjects="excludingProjects" />
+  <ProjectList
+    :projects="projects"
+    :viewport="viewport"
+    :class="projectClass"
+    target="_blank"
+    :excluding-projects="excludingProjects"
+  />
 </template>
 
 <script>
@@ -8,41 +14,34 @@ import _ from 'lodash'
 import ProjectList from '../components/article/ProjectList.vue'
 
 const fetchProjects = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { 'endpoints': [ 'projects' ] })
+  return store.dispatch('FETCH_COMMONDATA', { endpoints: ['projects'] })
 }
 
 export default {
-  name: 'project-list',
+  name: 'ProjectList',
   components: {
     ProjectList
+  },
+  asyncData ({ store }) {
+    return fetchProjects(store)
   },
   data () {
     return {
       viewport: undefined
     }
   },
-  asyncData ({ store }) {
-    return fetchProjects(store)
-  },
   computed: {
     excludingProjects () {
-      return _.get(this.$store, [ 'state', 'route', 'query', 'excluding' ], '').split(',')
+      return _.get(this.$store, ['state', 'route', 'query', 'excluding'], '').split(',')
     },
     projects () {
-      return _.get(this.$store.state, [ 'commonData', 'projects', 'items' ])
+      return _.get(this.$store.state, ['commonData', 'projects', 'items'])
     },
     projectClass () {
-      const isStyleLight = _.get(this.$store, [ 'state', 'route', 'params', 'style' ], 'light') !== 'dark'
+      const isStyleLight = _.get(this.$store, ['state', 'route', 'params', 'style'], 'light') !== 'dark'
       return {
         light: isStyleLight,
         dark: !isStyleLight
-      }
-    }
-  },
-  methods: {
-    updateViewport () {
-      if (process.env.VUE_ENV === 'client') {
-        this.viewport = document.documentElement.clientWidth || document.body.clientWidth
       }
     }
   },
@@ -51,6 +50,13 @@ export default {
     window.addEventListener('resize', () => {
       this.updateViewport()
     })
+  },
+  methods: {
+    updateViewport () {
+      if (process.env.VUE_ENV === 'client') {
+        this.viewport = document.documentElement.clientWidth || document.body.clientWidth
+      }
+    }
   }
 }
 
@@ -79,14 +85,12 @@ body
                 > a
                   color rgba(255, 255, 255, 0.8)
     > .slide-nav-btn
-      opacity 0.75    
+      opacity 0.75
       &.prev
-        background-image url(/public/icon/B-left-white.png)
+        background-image url(/assets/mirrormedia/icon/B-left-white.png)
       &.next
-        background-image url(/public/icon/B-right-white.png)
+        background-image url(/assets/mirrormedia/icon/B-right-white.png)
       &:hover
         opacity 1
-
-
 
 </style>

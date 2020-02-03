@@ -1,32 +1,55 @@
 <template>
-  <div class="related-container" v-if="(relatedList.length > 0)">
-    <div class="related_title"><h3></h3></div>
+  <div
+    v-if="(relatedList.length > 0)"
+    class="related-container"
+  >
+    <div class="related_title">
+      <h3 />
+    </div>
     <div class="related_list">
       <template v-if="isApp">
-        <div class="related_item" v-for="(o, i) in relatedList">
+        <div
+          v-for="(o, i) in relatedList"
+          :key="i"
+          class="related_item"
+        >
           <div>
-            <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" >
-              <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
-                    :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
-              </div>
+            <a :href="`/app/${getValue(o, [ 'slug' ], '')}`">
+              <div
+                class="related_item_img"
+                :alt="getValue(o, [ 'title' ])"
+                :style="{ backgroundImage: getBackgroundImage(getValue(o, [ 'heroImage' ])) }"
+              />
             </a>
           </div>
           <div class="related_item_title">
-            <a :href="`/app/${getValue(o, [ 'slug' ], '')}`" v-text="getTruncatedVal(o.title, 22)"></a>
+            <a
+              :href="`/app/${getValue(o, [ 'slug' ], '')}`"
+              v-text="getTruncatedVal(o.title, 22)"
+            />
           </div>
         </div>
       </template>
       <template v-else>
-        <div class="related_item" v-for="(o, i) in relatedList">
+        <div
+          v-for="(o, i) in relatedList"
+          :key="i"
+          class="related_item"
+        >
           <div>
-            <a :href="getHref(o)" >
-              <div class="related_item_img" :alt="getValue(o, [ 'title' ])"
-                    :style="{ backgroundImage: 'url(' + getValue(o, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '') + ')' }">
-              </div>
+            <a :href="getHref(o)">
+              <div
+                class="related_item_img"
+                :alt="getValue(o, [ 'title' ])"
+                :style="{ backgroundImage: getBackgroundImage(getValue(o, [ 'heroImage' ])) }"
+              />
             </a>
           </div>
           <div class="related_item_title">
-            <a :href="getHref(o)" v-text="getTruncatedVal(o.title, 22)"></a>
+            <a
+              :href="getHref(o)"
+              v-text="getTruncatedVal(o.title, 22)"
+            />
           </div>
         </div>
       </template>
@@ -34,23 +57,38 @@
   </div>
 </template>
 <script>
-  import { getHref, getTruncatedVal, getValue } from '../../util/comm'
-  export default {
-    name: 'related-list-thumbnail',
-    methods: {
-      getHref,
-      getTruncatedVal,
-      getValue
+import { getHref, getTruncatedVal, getValue } from '../../util/comm'
+import { mapState } from 'vuex'
+import { find } from 'lodash'
+
+export default {
+  name: 'RelatedListThumbnail',
+  props: {
+    isApp: {
+      type: Boolean,
+      default: () => false
     },
-    props: {
-      isApp: {
-        default: () => false
-      },
-      relatedList: {
-        default: () => { return [] }
-      }
+    relatedList: {
+      type: Array,
+      default: () => []
+    }
+  },
+  computed: {
+    ...mapState({
+      imagesById: state => state.imagesById
+    })
+  },
+  methods: {
+    getHref,
+    getTruncatedVal,
+    getValue,
+    getBackgroundImage (id) {
+      const imageData = find(this.imagesById, ['id', id])
+      const imageUrl = getValue(imageData, ['image', 'resizedTargets', 'mobile', 'url'], '')
+      return `url(${imageUrl})`
     }
   }
+}
 </script>
 <style lang="stylus">
   .related-container
@@ -60,6 +98,7 @@
     .related_list
       margin-top 10px
       display flex
+      flex-direction row !important
       align-content flex-start
       flex-wrap wrap
 
@@ -74,7 +113,6 @@
           background-size cover
           background-position center center
           padding-top: 75%;
-
 
         .related_item_title
           background-color #fff
@@ -95,11 +133,11 @@
               font-weight normal
               border none
 
-  @media (max-width 767px) and (min-width 0px)            
+  @media (max-width 767px) and (min-width 0px)
     .related-container
       width 100%
       margin 0
-      
+
       .related_list
         flex-direction column
         width 100%
@@ -111,10 +149,10 @@
           .related_item_title
             font-size 1rem
 
-  @media (max-width 320px) and (min-width 0px)            
+  @media (max-width 320px) and (min-width 0px)
     .related-container
       .related_list
         .related_item
           width 280px
-  
+
 </style>

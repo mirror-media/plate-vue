@@ -1,35 +1,58 @@
 <template>
-  <div class="ad-cover" v-if="switcher">
+  <div
+    v-if="switcher"
+    class="ad-cover"
+    :class="{ transparent: !showDefaultSet, }"
+  >
     <div class="ad-cover--wrapper">
-      <slot name="ad-cover">
-      </slot>
-      <div class="ad-cover--wrapper_close" @click="closeCover" v-if="displayBtnClose">
-        <div class="icon"></div>
+      <slot name="ad-cover" />
+      <div
+        v-if="displayBtnClose"
+        class="ad-cover--wrapper_close"
+        @click="closeCover"
+      >
+        <div class="icon" />
       </div>
     </div>
   </div>
 </template>
 <script>
-  export default {
-    computed: {
-      displayBtnClose () {
-        return this.showCloseBtn !== undefined ? this.showCloseBtn : true
-      }
+const debug = require('debug')('CLIENT:DfpCover')
+export default {
+  name: 'DfpCover',
+  props: ['showCloseBtn'],
+  data () {
+    return {
+      showDefaultSet: true,
+      switcher: true
+    }
+  },
+  computed: {
+    displayBtnClose () {
+      return this.showCloseBtn !== undefined ? this.showCloseBtn : true
+    }
+  },
+  mounted () {
+    this.setupCloseEventListener()
+  },
+  methods: {
+    closeCover () {
+      this.switcher = false
     },
-    data () {
-      return {
-        switcher: true
+    setupCloseEventListener () {
+      const handler = () => {
+        debug('GOT EVENT!!!')
+        this.showDefaultSet = false
       }
-    },
-    name: 'dfp-ad-cover',
-    methods: {
-      closeCover () {
-        this.switcher = false
-      }
-    },
-    mounted () {},
-    props: [ 'showCloseBtn' ]
+      return new Promise(resolve => {
+        debug('SETUP setupCloseEventListener!!!')
+        window.addEventListener('hidedefaultset', handler)
+        window.parent.addEventListener('hidedefaultset', handler)
+        resolve()
+      })
+    }
   }
+}
 </script>
 <style lang="stylus" scoped>
   .ad-cover
@@ -44,6 +67,11 @@
       display flex
       justify-content center
       align-items center
+
+      &.transparent
+        background-color transparent
+        .ad-cover--wrapper_close
+          display none
 
       .ad-cover--wrapper
         position relative
@@ -60,11 +88,11 @@
           > .icon
             width 32px
             height 32px
-            background-image url(/public/icon/close_white.png)
+            background-image url(/assets/mirrormedia/icon/close_white.png)
             background-repeat no-repeat
             background-size contain
             background-position center center
-            cursor pointer   
+            cursor pointer
             border 2px solid rgba(255, 255, 255, 0.7)
             background-color rgba(0, 0, 0, 0.3)
             box-shadow 0 0 10px rgba(0, 0, 0, 0.4)

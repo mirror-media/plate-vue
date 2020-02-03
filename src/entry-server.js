@@ -9,14 +9,16 @@ const isDev = process.env.NODE_ENV !== 'production'
 // return a Promise that resolves to the app instance.
 export default context => {
   return new Promise((resolve, reject) => {
-    const s = isDev && Date.now()
-    const { app, router, store } = createApp()
+    const s = Date.now()
+    const { app, router, store, meta } = createApp()
 
     const { url } = context
     const { fullPath } = router.resolve(url).route
 
     if (fullPath !== url) {
-      return reject({ url: fullPath })
+      const error = new Error('fullPath and url not match')
+      error.url = fullPath
+      return reject(error)
     }
 
     router.push(url)
@@ -26,7 +28,10 @@ export default context => {
       const matchedComponents = router.getMatchedComponents()
       // no matched routes
       if (!matchedComponents.length) {
-        return reject({ code: 404 })
+        const error = new Error('matchedComponents not found')
+        error.code = 404
+        // return reject({ code: 404 })
+        return reject(error)
       }
       // Call fetchData hooks on components matched by the route.
       // A preFetch hook dispatches a store action and returns a Promise,
@@ -37,6 +42,7 @@ export default context => {
         route: router.currentRoute
       }))).then(() => {
         isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
+        store.state.resStack += `data pre-fetch: ${Date.now() - s}ms\n`
         // After all preFetch hooks are resolved, our store is now
         // filled with the state needed to render the app.
         // Expose the state on the render context, and let the request handler
@@ -44,6 +50,8 @@ export default context => {
         // store to pick-up the server-side state without having to duplicate
         // the initial data fetching on the client.
         context.state = store.state
+        context.meta = meta
+        context.resstack = store.state.resStack
         resolve(app)
       }).catch(reject)
     })

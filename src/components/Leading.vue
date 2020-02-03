@@ -1,45 +1,90 @@
 <template>
   <div class="leading">
     <div class="leading-container">
-      <div class="leading-slideshow" v-if="type === 'slideshow' && slideshowImgs.length > 0">
-        <app-slider :option="sliderOption">
-          <template slot-scope="props">
-            <swiper-slide :is="props.slide" v-for="(o, i) in slideshowImgs" :key="`${i}-${Date.now()}`">
-              <template v-if="$_leading_detectImgHref(o)">
-                <a :href="$_leading_getHref(o)" target="_blank">
-                  <img  :src="getValue(o, [ 'image', 'url' ])"
-                        :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
-                </a>
-              </template>
-              <template v-else>
-                <img  :src="getValue(o, [ 'image', 'url' ])"
-                        :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                                    ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
-              </template>
-            </swiper-slide>
+      <div
+        v-if="type === 'slideshow' && slideshowImgs.length > 0"
+        class="leading-slideshow"
+      >
+        <Slider>
+          <template v-for="(o, i) in slideshowImgs">
+            <a
+              v-if="$_leading_detectImgHref(o)"
+              :key="`${i}-${Date.now()}`"
+              :href="$_leading_getHref(o)"
+              class="swiper-slide"
+              target="_blank"
+            >
+              <img
+                :src="getValue(o, [ 'image', 'url' ])"
+                :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 400w,
+                  ${getValue(o, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 800w`"
+                sizes="(max-width: 499px) 100vw,
+                  (min-width 500px) and (max-width 599px) 90vw,
+                  (min-width 600px) and (max-width 767px) 80vw,
+                  (min-width 768px) and (max-width 830px) 70vw,
+                  (min-width 831px) and (max-width 1023px) 60vw,
+                  55vw"
+              >
+            </a>
+            <img
+              v-else
+              :key="`${i}-${Date.now()}`"
+              :src="getValue(o, [ 'image', 'url' ])"
+              :srcset="`${getValue(o, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 600w,
+                ${getValue(o, [ 'image', 'url' ])}`"
+              sizes="(max-width: 499px) 100vw,
+                  (min-width 500px) and (max-width 599px) 90vw,
+                  (min-width 600px) and (max-width 767px) 80vw,
+                  (min-width 768px) and (max-width 830px) 70vw,
+                  (min-width 831px) and (max-width 1023px) 60vw,
+                  55vw"
+              class="swiper-slide"
+            >
           </template>
-        </app-slider>
+        </Slider>
       </div>
-      <div class="leading-image" v-else-if="type === 'image' && leadingImg">
+      <div
+        v-else-if="type === 'image' && leadingImg"
+        class="leading-image"
+      >
         <div class="img">
-          <img :src="getValue(leadingImg, [ 'image', 'url' ])"
-                :srcset="`${getValue(leadingImg, [ 'image', 'resizedTargets', 'mobile', 'url' ])} 800w,
-                          ${getValue(leadingImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 1200w,
-                          ${getValue(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 2000w`" />
+          <img
+            :src="getValue(leadingImg, [ 'image', 'url' ])"
+            :srcset="`${getValue(leadingImg, [ 'image', 'resizedTargets', 'tablet', 'url' ])} 400w,
+              ${getValue(leadingImg, [ 'image', 'resizedTargets', 'desktop', 'url' ])} 800w`"
+            sizes="(max-width: 499px) 100vw,
+              (min-width 500px) and (max-width 599px) 90vw,
+              (min-width 600px) and (max-width 767px) 80vw,
+              (min-width 768px) and (max-width 830px) 70vw,
+              (min-width 831px) and (max-width 1023px) 60vw,
+              55vw"
+          >
         </div>
       </div>
-      <div class="leading-video" v-else-if="type === 'video' && leadingVideo">
+      <div
+        v-else-if="type === 'video' && leadingVideo"
+        class="leading-video"
+      >
         <div class="video">
-          <video controls ref="video">
-            <source :src="getValue(leadingVideo, [ 'video', 'url' ])" :type="getValue(leadingVideo, [ 'video', 'filetype' ])" />
+          <video
+            ref="video"
+            controls
+          >
+            <source
+              :src="getValue(leadingVideo, [ 'video', 'url' ])"
+              :type="getValue(leadingVideo, [ 'video', 'filetype' ])"
+            >
           </video>
         </div>
       </div>
-      <div class="leading-embedded" v-else-if="type === 'embedded' && leadingEmedded">
-        <div class="embedded" v-html="leadingEmedded"></div>
+      <div
+        v-else-if="type === 'embedded' && leadingEmedded"
+        class="leading-embedded"
+      >
+        <div
+          class="embedded"
+          v-html="leadingEmedded"
+        />
       </div>
     </div>
   </div>
@@ -51,8 +96,19 @@ import _ from 'lodash'
 import Slider from './Slider.vue'
 
 export default {
+  name: 'Leading',
   components: {
-    'app-slider': Slider
+    Slider
+  },
+  props: {
+    mediaData: {
+      type: Object,
+      default: () => ({})
+    },
+    type: {
+      type: String,
+      required: true
+    }
   },
   computed: {
     sliderOption () {
@@ -65,16 +121,16 @@ export default {
       }
     },
     slideshowImgs () {
-      return _.get(this.mediaData, [ 'images', 'items' ], [])
+      return _.get(this.mediaData, ['images', 'items'], [])
     },
     leadingImg () {
-      return _.get(this.mediaData, [ 'heroImage' ])
+      return _.get(this.mediaData, ['heroImage'])
     },
     leadingVideo () {
-      return _.get(this.mediaData, [ 'heroVideo' ])
+      return _.get(this.mediaData, ['heroVideo'])
     },
     leadingEmedded () {
-      return _.get(this.mediaData, [ 'embed' ])
+      return _.get(this.mediaData, ['embed'])
     }
   },
   methods: {
@@ -85,15 +141,6 @@ export default {
       return _.split(item.keywords, '@-')[1]
     },
     getValue
-  },
-  name: 'leading',
-  props: {
-    mediaData: {
-      default: () => { return {} }
-    },
-    type: {
-      default: () => { return {} }
-    }
   }
 }
 
@@ -114,23 +161,32 @@ export default {
         top 0
         left 0
         width 100%
-        height 100%        
-        .swiper-container
+        height 100%
+        >>> .swiper-container
           height 100%
-          .swiper-wrapper
-            height 100%
-            .swiper-slide
-              img
-                width 100%
-                object-fit contain
-                max-height 100%
-
+        >>> .swiper-slide
+          object-fit contain
+        >>> .swiper-button-prev, >>> .swiper-button-next
+          width 30px
+          height 40px
+          margin-top -20px
+          background-color rgba(245, 245, 245, .25)
+          background-size 15px auto
+          background-position 45% 50%
+          background-repeat no-repeat
+          border-radius 4px
+          background-image url(/assets/mirrormedia/icon/arrow-slideshow-blue-left.png)
+        >>> .swiper-button-prev
+          left 5px
+        >>> .swiper-button-next
+          right 5px
+          transform rotate(180deg)
       .img
         position absolute
         top 0
         left 0
         width 100%
-        height 100% 
+        height 100%
 
         img
           width 100%
@@ -142,7 +198,7 @@ export default {
         top 0
         left 0
         width 100%
-        height 100%   
+        height 100%
 
         video
           width 100%
@@ -155,7 +211,7 @@ export default {
           top 0
           left 0
           width 100%
-          height 100% 
+          height 100%
           display flex
           justify-content center
           align-items center

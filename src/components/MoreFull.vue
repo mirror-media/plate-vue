@@ -1,21 +1,27 @@
 <template>
- <div :class="className">
-   <button @click="loadMore()" id="loadmore"><span>更多文章</span></button>
- </div>
+  <div :class="className">
+    <button
+      id="loadmore"
+      @click="loadMore()"
+    >
+      <span>更多文章</span>
+    </button>
+  </div>
 </template>
 
 <script>
 
 export default {
-  name: 'moreFull',
+  name: 'MoreFull',
+  props: {
+    className: {
+      type: String,
+      default: () => 'moreFull'
+    }
+  },
   methods: {
     loadMore () {
       this.$emit('loadMore')
-    }
-  },
-  props: {
-    className: {
-      default: () => { return 'moreFull' }
     }
   }
 }

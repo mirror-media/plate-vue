@@ -1,0 +1,11 @@
+figcaption {
+  font-size: 16px;
+  line-height: 1.31;
+  text-align: justify;
+  color: #6d6d6d;
+  padding: 11px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+

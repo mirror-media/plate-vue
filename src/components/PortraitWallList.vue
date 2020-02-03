@@ -1,13 +1,39 @@
 <template>
   <section class="portraitWallList">
-    <div class="portraitWallList__imageGroup" :class="[ index%2 === 0 ? 'color' : '' ]" v-for="(item, index) in images">
-      <div class="portraitWallList__block" :class="[ getOrder(image) %2 === 0 ? '' : 'color' ]" v-for="(image, index) in item">
-        <router-link :to="getHref(image)" target="_blank" class="portraitWallList__block--image" :style="{ backgroundImage: 'url(' + getImage(image) + ')' }">
-          <p v-text="getTitle(image, false)"></p>
-        </router-link>
+    <div
+      v-for="(item, index) in images"
+      :key="`imageGroup-${index}`"
+      class="portraitWallList__imageGroup"
+      :class="[ index%2 === 0 ? 'color' : '' ]"
+    >
+      <div
+        v-for="(image, index) in item"
+        :key="`block-${index}`"
+        class="portraitWallList__block"
+        :class="[ getOrder(image) %2 === 0 ? '' : 'color' ]"
+      >
+        <a
+          :href="getHref(image)"
+          target="_blank"
+          class="portraitWallList__block--image"
+          :style="{ backgroundImage: 'url(' + getImage(image) + ')' }"
+        >
+          <p v-text="getTitle(image, false)" />
+        </a>
         <div class="portraitWallList__block--content">
-          <h2><router-link :to="getHref(image)" target="_blank" v-text="getValue(image, [ 'description' ])"></router-link></h2>
-          <p><a target="_blank" v-text="getTitle(image, true)"></a></p>
+          <h2>
+            <a
+              :href="getHref(image)"
+              target="_blank"
+              v-text="getValue(image, [ 'description' ])"
+            />
+          </h2>
+          <p>
+            <a
+              target="_blank"
+              v-text="getTitle(image, true)"
+            />
+          </p>
         </div>
       </div>
     </div>
@@ -20,31 +46,31 @@ import { getTruncatedVal, getValue } from '../util/comm'
 import _ from 'lodash'
 
 export default {
-  name: 'portraitWallList',
-  props: [ 'articles', 'initialMediaData' ],
+  name: 'PortraitWallList',
+  props: ['articles', 'initialMediaData'],
   computed: {
     images () {
-      return _.chunk(_.sortBy(this.initialMediaData, [ function (o) {
+      return _.chunk(_.sortBy(this.initialMediaData, [function (o) {
         return _.toNumber(_.split(o.keywords, '-')[0])
-      } ]), 5)
+      }]), 5)
     }
   },
   methods: {
     getHref (item) {
-      return `/story/${_.split(_.get(item, [ 'keywords' ]), '-')[1]}`
+      return `/story/${_.split(_.get(item, ['keywords']), '-')[1]}`
     },
     getImage (item) {
-      return _.get(item, [ 'image', 'resizedTargets', 'desktop', 'url' ])
+      return _.get(item, ['image', 'resizedTargets', 'desktop', 'url'])
     },
     getOrder (item) {
-      return _.split(_.get(item, [ 'keywords' ]), '-')[0]
+      return _.split(_.get(item, ['keywords']), '-')[0]
     },
     getTitle (item, needComplete) {
-      const slug = _.split(_.get(item, [ 'keywords' ]), '-')[1]
+      const slug = _.split(_.get(item, ['keywords']), '-')[1]
       if (needComplete) {
-        return _.get(_.find(this.articles, { 'slug': slug }), [ 'title' ])
+        return _.get(_.find(this.articles, { slug: slug }), ['title'])
       }
-      return getTruncatedVal(_.get(_.find(this.articles, { 'slug': slug }), [ 'title' ]), 19)
+      return getTruncatedVal(_.get(_.find(this.articles, { slug: slug }), ['title']), 19)
     },
     getValue
   }
@@ -63,7 +89,7 @@ export default {
       order 2
     .portraitWallList__block--content
       order 1
-      
+
     &.color
       .portraitWallList__block--image
         order 1
@@ -86,7 +112,7 @@ export default {
         padding-top 100%
       img
         width 100%
-        height auto        
+        height auto
       p
         display none
     &--content
@@ -121,9 +147,9 @@ export default {
         order 1
       .portraitWallList__block--content
         order 1
-      &.color 
-        a 
-          color #fff !important 
+      &.color
+        a
+          color #fff !important
     &__block
       flex-direction column
       width 18%

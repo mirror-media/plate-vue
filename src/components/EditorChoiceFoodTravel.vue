@@ -1,11 +1,27 @@
 <template>
   <section class="editorChoiceFood">
-    <h2 class="editorChoiceFood__title">編輯精選</h2>
-    <div class="editorChoiceFoodBlock" v-for="(item, index) in sectionfeatured">
-      <router-link :to="getHref(item)" class="editorChoiceFoodBlock__img" target="_blank"><figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }"></figure></router-link>
+    <h2 class="editorChoiceFood__title">
+      編輯精選
+    </h2>
+    <div
+      v-for="(item, index) in sectionfeatured"
+      :key="`editorChoiceFoodBlock-${index}`"
+      class="editorChoiceFoodBlock"
+    >
+      <a
+        :href="getHref(item)"
+        class="editorChoiceFoodBlock__img"
+        target="_blank"
+      ><figure :style="{ backgroundImage: 'url(' + getImage(item, 'mobile') + ')' }" /></a>
       <div class="editorChoiceFoodBlock__content">
-        <router-link :to="getHref(item)" target="_blank"><h2 v-text="calcTitle(getValue(item, [ 'title' ]))"></h2></router-link>
-        <router-link :to="getHref(item)" target="_blank"><p v-text="calcBrief(item, index)"></p></router-link>
+        <a
+          :href="getHref(item)"
+          target="_blank"
+        ><h2 v-text="calcTitle(getValue(item, [ 'title' ]))" /></a>
+        <a
+          :href="getHref(item)"
+          target="_blank"
+        ><p v-text="calcBrief(item, index)" /></a>
       </div>
     </div>
   </section>
@@ -15,11 +31,11 @@
 import { getBrief, getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
 
 export default {
-  name: 'editorChoice-foodTravel',
+  name: 'EditorChoiceFoodTravel',
   props: {
     sectionfeatured: {
       type: Array,
-      default: []
+      default: () => []
     },
     viewport: {
       type: Number,
@@ -50,17 +66,16 @@ export default {
       if (this.viewport < 587) {
         return title
       } else if (this.viewport < 900) {
-        return this.getTruncatedVal(title, 19)
+        return getTruncatedVal(title, 19)
       } else if (this.viewport < 1300) {
-        return this.getTruncatedVal(title, 14)
+        return getTruncatedVal(title, 14)
       } else {
-        return this.getTruncatedVal(title, 19)
+        return getTruncatedVal(title, 19)
       }
     },
     getBrief,
     getHref,
     getImage,
-    getTruncatedVal,
     getValue
   }
 }
@@ -81,7 +96,7 @@ export default {
     letter-spacing 1px
     line-height 26px
     background-color #4d4d4d
-    
+
 .editorChoiceFoodBlock
   display flex
   flex-direction column
@@ -121,7 +136,7 @@ export default {
     &__img
       position relative
       width 48%
-      
+
     &__content
       display flex
       flex-direction column

@@ -5,13 +5,38 @@
       :key="tag.id"
       class="groupListBlockContainer"
       :class="`tag-${tag.id}`"
-      :style="[ getPostAmountByTag(tag.id) < 3 ? { 'justify-content': 'center' } : {} ]">
-      <div class="groupListBlockContainer__title"><h1 v-text="tag.name"></h1></div>
-      <div v-for="post in getPostByTag(tag.id)" :key="post.id" class="groupListBlock">
-        <figure class="groupListBlock__img"><a :href="getHref(post)" target="_blank" :style="{ backgroundImage: 'url(' + getImage(post, 'mobile') + ')' }"></a></figure>
+      :style="[ getPostAmountByTag(tag.id) < 3 ? { 'justify-content': 'center' } : {} ]"
+    >
+      <div class="groupListBlockContainer__title">
+        <h1 v-text="tag.name" />
+      </div>
+      <div
+        v-for="post in getPostByTag(tag.id)"
+        :key="post.id"
+        class="groupListBlock"
+      >
+        <figure class="groupListBlock__img">
+          <a
+            :href="getHref(post)"
+            target="_blank"
+            :style="{ backgroundImage: 'url(' + getImage(post, 'mobile') + ')' }"
+          />
+        </figure>
         <div class="groupListBlock__content">
-          <h2><a :href="getHref(post)" target="_blank" v-text="viewport < 600 ? getTruncatedVal(post.title, 19) : post.title"></a></h2>
-          <p><a :href="getHref(post)" target="_blank" v-text="getBrief(post, 45)"></a></p>
+          <h2>
+            <a
+              :href="getHref(post)"
+              target="_blank"
+              v-text="viewport < 600 ? getTruncatedVal(post.title, 19) : post.title"
+            />
+          </h2>
+          <p>
+            <a
+              :href="getHref(post)"
+              target="_blank"
+              v-text="getBrief(post, 45)"
+            />
+          </p>
         </div>
       </div>
     </div>
@@ -25,15 +50,15 @@ import _ from 'lodash'
 import sanitizeHtml from 'sanitize-html'
 
 export default {
-  name: 'groupList',
+  name: 'GroupList',
   props: {
     articles: {
       type: Array,
-      default: []
+      default: () => []
     },
     tags: {
       type: Array,
-      default: []
+      default: () => []
     },
     viewport: {
       type: Number,
@@ -42,20 +67,20 @@ export default {
   },
   methods: {
     getBrief (article, count) {
-      const brief = sanitizeHtml(_.get(article, [ 'brief', 'html' ], _.get(article, [ 'brief' ])), { allowedTags: [ '' ] })
+      const brief = sanitizeHtml(_.get(article, ['brief', 'html'], _.get(article, ['brief'])), { allowedTags: [''] })
       return this.getTruncatedVal(brief, count)
     },
     getHref,
     getImage,
     getPostAmountByTag (tagId) {
       const posts = _.filter(this.articles, (a) => {
-        return _.find(_.get(a, [ 'tags' ]), { 'id': tagId })
+        return _.find(_.get(a, ['tags']), { id: tagId })
       })
       return _.get(posts, 'length', 0)
     },
     getPostByTag (tagId) {
       return _.filter(this.articles, (a) => {
-        return _.find(_.get(a, [ 'tags' ]), { 'id': tagId })
+        return _.find(_.get(a, ['tags']), { id: tagId })
       })
     },
     getTruncatedVal
@@ -69,7 +94,7 @@ export default {
   display flex
   flex-direction column
   padding 1em 0
-  
+
 .groupListBlockContainer
   width 90%
   margin 0 auto
@@ -121,7 +146,7 @@ export default {
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
-      
+
   &__content
     display flex
     flex-direction column
@@ -184,10 +209,10 @@ export default {
         width 20px
     > div:nth-of-type(2)
       margin-top 2.2em
-    
+
     &__title
       margin-bottom 1em
-    
+
   .groupListBlock
     width calc(33.33% - 30px)
     margin-top 2.2em

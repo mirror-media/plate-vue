@@ -1,0 +1,54 @@
+<!-- Start Google Analytics -->
+<amp-analytics type="googleanalytics">
+  <script type="application/json">
+  {
+    "vars": {
+      "account": "<%= GA_ID %>"
+    },
+    "triggers": {
+      "trackPageview": {
+        "on": "visible",
+        "request": "pageview"
+      },
+      "trackClickOnHeader" : {
+        "on": "click",
+        "selector": ".story-relateds__story-title",
+        "request": "event",
+        "vars": {
+          "eventCategory": "amp-related",
+          "eventAction": "click"
+        }
+      }
+    }
+  }
+  </script>
+</amp-analytics>
+<!-- End Google Analytics -->
+
+<!-- Start Comscore -->
+<amp-analytics type="comscore">
+  <script type="application/json">
+  {
+    "vars": {
+      "c2": "<%= COMSCORE_C2_ID %>"
+    },
+    "extraUrlParams": {
+      "comscorekw": "amp"
+    }
+  }
+  </script>
+</amp-analytics>
+<!-- End Comscore -->
+
+<!-- Start Alexa AMP Certify Javascript -->
+<amp-analytics type="alexametrics">
+  <script type="application/json">
+  {
+    "vars": { 
+      "atrk_acct": "<%= ALEXA_ATRK_ACCT %>",
+      "domain": "<%= SITE_DOMAIN %>"
+    }
+  }
+  </script>
+</amp-analytics>
+<!-- End Alexa AMP Certify Javascript -->    

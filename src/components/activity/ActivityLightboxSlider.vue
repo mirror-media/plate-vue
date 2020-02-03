@@ -1,11 +1,20 @@
 <template>
   <section class="ActivityLightboxSlider">
     <template v-if="contentStyle === 'image'">
-        <img :src="contentImageUrl" />
+      <img :src="contentImageUrl">
     </template>
     <template v-if="contentStyle === 'video'">
-      <video :poster="contentVideoCover" controls="true" controlsList="nodownload" preload="metadata" playsinline>
-        <source :src="contentVideoUrl" :type="contentVideoType">
+      <video
+        :poster="contentVideoCover"
+        controls="true"
+        controlsList="nodownload"
+        preload="metadata"
+        playsinline
+      >
+        <source
+          :src="contentVideoUrl"
+          :type="contentVideoType"
+        >
       </video>
     </template>
   </section>
@@ -16,29 +25,29 @@
 import _ from 'lodash'
 
 export default {
-  props: [ 'initialContent', 'viewport' ],
+  props: ['initialContent', 'viewport'],
   computed: {
     content () {
       return this.initialContent
     },
     contentStyle () {
-      return _.get(this.content, [ 'type' ])
+      return _.get(this.content, ['type'])
     },
     contentImageUrl () {
       if (this.windowViewport < 600) {
-        return _.get(this.content, [ 'content', '0', 'mobile', 'url' ])
+        return _.get(this.content, ['content', '0', 'mobile', 'url'])
       } else {
-        return _.get(this.content, [ 'content', '0', 'desktop', 'url' ])
+        return _.get(this.content, ['content', '0', 'desktop', 'url'])
       }
     },
     contentVideoCover () {
-      return _.get(this.content, [ 'content', '0', 'coverPhoto', 'desktop', 'url' ])
+      return _.get(this.content, ['content', '0', 'coverPhoto', 'desktop', 'url'])
     },
     contentVideoType () {
-      return _.get(this.content, [ 'content', '0', 'filetype' ])
+      return _.get(this.content, ['content', '0', 'filetype'])
     },
     contentVideoUrl () {
-      return _.get(this.content, [ 'content', '0', 'url' ])
+      return _.get(this.content, ['content', '0', 'url'])
     },
     windowViewport () {
       return this.viewport

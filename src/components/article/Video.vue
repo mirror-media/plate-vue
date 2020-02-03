@@ -1,99 +1,135 @@
 <template>
-  <div class="video-container" @mouseover="mouseoverHandler" @click="videoPlay" >
-    <video width="100%" height="100%" controls controlsList="nodownload" preload="metadata" playsinline :ref="videoId" :id="videoId"
-          :poster="poster" :style="{ backgroundImage: `url(${getValue(video, ['poster'], '/public/notImage.png')})` }">
-            <source :src="getValue(video, [ 'url' ])" :type="getValue(video, [ 'filetype' ])">
-            Your browser does not support the video tag.
+  <div
+    class="video-container"
+    @mouseover="mouseoverHandler"
+    @click="videoPlay"
+  >
+    <video
+      :id="videoId"
+      :ref="videoId"
+      width="100%"
+      height="100%"
+      controls
+      controlsList="nodownload"
+      preload="metadata"
+      playsinline
+      :poster="poster"
+      :style="posterStyle"
+    >
+      <source
+        :src="getValue(video, [ 'url' ])"
+        :type="getValue(video, [ 'filetype' ])"
+      >
+      Your browser does not support the video tag.
     </video>
-    <div class="playpause" :class="videoClass" :target-video="videoId" :style="playPauseStyle" ></div>
+    <div
+      class="playpause"
+      :class="videoClass"
+      :target-video="videoId"
+      :style="playPauseStyle"
+    />
   </div>
 </template>
 <script>
-  import _ from 'lodash'
-  import { getClientOS } from '../../util/comm.js'
+import { get, map } from 'lodash'
+import { getClientOS } from '../../util/comm.js'
 
-  export default {
-    name: 'article-video',
-    computed: {
-      playPauseStyle () {
-        return this.playingFlag ? {
-          opacity: this.opacity
-        } : {}
-      },
-      poster () {
-        const poster = _.get(this.video, [ 'poster' ])
-        return !poster ? poster : '/public/transperent.png'
-      },
-      videoClass () {
-        return {
-          hover: this.hoverFlag,
-          play: !this.playingFlag,
-          pause: this.playingFlag
-        }
+export default {
+  name: 'ArticleVideo',
+  props: {
+    video: {
+      type: Object,
+      required: true
+    }
+  },
+  data () {
+    return {
+      hoverFlag: false,
+      played: false,
+      playingFlag: false,
+      opacity: 1,
+      videoId: `video-${get(this.video, ['id'])}-${Math.floor(Math.random() * (10000000000 - 100000) + 100000)}`
+    }
+  },
+  computed: {
+    playPauseStyle () {
+      return this.playingFlag ? {
+        opacity: this.opacity
+      } : {}
+    },
+    poster () {
+      const poster = get(this.video, ['poster'])
+      return !poster ? poster : '/assets/mirrormedia/transperent.png'
+    },
+    posterStyle () {
+      return !this.played ? {
+        backgroundImage: `url(${get(this.video, 'poster', '/assets/mirrormedia/notImage.png')})`
+      } : {
+        backgroundColor: '#000'
       }
     },
-    data () {
+    videoClass () {
       return {
-        hoverFlag: false,
-        playingFlag: false,
-        opacity: 1,
-        videoId: `video-${_.get(this.video, [ 'id' ])}-${Math.floor(Math.random() * (10000000000 - 100000) + 100000)}`
+        hover: this.hoverFlag,
+        play: !this.playingFlag,
+        pause: this.playingFlag
+      }
+    }
+  },
+  mounted () {
+    this.$refs[this.videoId].addEventListener('play', () => {
+      const videosThisPAge = document.querySelectorAll('video')
+      map(videosThisPAge, (v) => {
+        if (v.getAttribute('id') !== this.videoId) {
+          v.pause()
+        }
+      })
+      this.playingFlag = true
+      this.pausingFlag = false
+      this.fadeOutPauseBtn()
+    })
+    this.$refs[this.videoId].addEventListener('pause', () => {
+      this.playingFlag = false
+      this.pausingFlag = true
+    })
+  },
+  methods: {
+    fadeOutPauseBtn () {
+      this.opacity = 1
+      const opacityDecreasing = (i) => {
+        setTimeout(() => {
+          this.opacity -= 0.1
+        }, 1000 + 50 * i)
+      }
+      for (let i = 0; i < 10; i++) {
+        opacityDecreasing(i)
       }
     },
-    methods: {
-      fadeOutPauseBtn () {
+    getClientOS,
+    getValue (o = {}, p = [], d = '') {
+      return get(o, p, d)
+    },
+    mouseoverHandler (e) {
+      const target = e.target
+      const clientOS = this.getClientOS()
+      if (target.getAttribute('class') && target.getAttribute('class').indexOf('playpause') > -1 && !(clientOS === 'iOS' || clientOS === 'Android')) {
         this.opacity = 1
-        const opacityDecreasing = (i) => {
-          setTimeout(() => {
-            this.opacity -= 0.1
-          }, 1000 + 50 * i)
-        }
-        for (let i = 0; i < 10; i++) {
-          opacityDecreasing(i)
-        }
-      },
-      getClientOS,
-      getValue (o = {}, p = [], d = '') {
-        return _.get(o, p, d)
-      },
-      mouseoverHandler (e) {
-        const target = e.target
-        const clientOS = this.getClientOS()
-        if (target.getAttribute('class') && target.getAttribute('class').indexOf('playpause') > -1 && !(clientOS === 'iOS' || clientOS === 'Android')) {
-          this.opacity = 1
-          this.hoverFlag = true
-        } else {
-          this.hoverFlag = false
-          this.fadeOutPauseBtn()
-        }
-      },
-      videoPlay (e) {
-        if (!this.playingFlag) {
-          this.$refs[this.videoId].play()
-        } else {
-          this.$refs[this.videoId].pause()
-        }
+        this.hoverFlag = true
+      } else {
+        this.hoverFlag = false
+        this.fadeOutPauseBtn()
       }
     },
-    mounted () {
-      this.$refs[this.videoId].addEventListener('play', () => {
-        const videosThisPAge = document.querySelectorAll('video')
-        _.map(videosThisPAge, (v) => {
-          if (v.getAttribute('id') !== this.videoId) {
-            v.pause()
-          }
-        })
-        this.playingFlag = true
-        this.pausingFlag = false
-        this.fadeOutPauseBtn()
-      })
-      this.$refs[this.videoId].addEventListener('pause', () => {
-        this.playingFlag = false
-        this.pausingFlag = true
-      })
-    },
-    props: [ 'video' ]
+    videoPlay () {
+      this.played = true
+      if (!this.playingFlag) {
+        this.$refs[this.videoId].play()
+      } else {
+        this.$refs[this.videoId].pause()
+      }
+    }
   }
+}
 </script>
 <style lang="stylus" scoped>
   .video-container
@@ -129,7 +165,7 @@
         display flex !important
         font-size 12px
       &::-webkit-media-controls-volume-slider
-        display none        
+        display none
       &::-webkit-media-controls-start-playback-button
         display none!important
         -webkit-appearance none
@@ -153,11 +189,11 @@
       border-radius 50%
 
       &.play
-        background-image url('/public/icon/play-btn@2x.png')
+        background-image url('/assets/mirrormedia/icon/play-btn@2x.png')
         opacity 1
-        
+
       &.pause
-        background-image url('/public/icon/pause-btn@2x.png')
+        background-image url('/assets/mirrormedia/icon/pause-btn@2x.png')
         // animation fade-out 0.5s
         opacity 0
 

@@ -1,43 +1,72 @@
 <template>
-  <div class="share" :class="direction"
-    :style="[isTimeline ? { display: 'block' } : {}, { top: `${top}`, right: `${right}`, bottom: `${bottom}`, left: `${left}` } ]">
-    <a class="share__icon share--toggle" @click="toggleShare()" :style="{ backgroundColor: `${color}` }" ><img :src="isOpen ? '/public/icon/close_white.png' : '/public/icon/share-white.png'" :alt="isOpen ? '關閉' : '開啟'"></a>
-    <a id="share-line" class="share__icon share__icon--list share--line" :class="[isOpen ? 'open' : '']" @click="shareLine"><img src="/public/icon/line_white_v2.png" alt="Line"></a>
-    <a id="share-fb" class="share__icon share__icon--list share--fb" :class="[isOpen ? 'open' : '']" @click="shareFacebook"><img src="/public/icon/facebook_white.png" alt="Facebook"></a>
-    <a id="share-google" class="share__icon share__icon--list share--google" :class="[isOpen ? 'open' : '']" @click="shareGooglePlus"><img src="/public/icon/google-plus.png" alt="Google Plus"></a>
+  <div
+    class="share"
+    :class="direction"
+    :style="[isTimeline ? { display: 'block' } : {}, { top: `${top}`, right: `${right}`, bottom: `${bottom}`, left: `${left}` } ]"
+  >
+    <a
+      class="share__icon share--toggle"
+      :style="{ backgroundColor: `${color}` }"
+      @click="toggleShare()"
+    ><img
+      :src="isOpen ? '/assets/mirrormedia/icon/close_white.png' : '/assets/mirrormedia/icon/share-white.png'"
+      :alt="isOpen ? '關閉' : '開啟'"
+    ></a>
+    <a
+      class="share__icon share__icon--list share--line"
+      :class="[isOpen ? 'open' : '']"
+      @click="shareLine"
+    ><img
+      src="/assets/mirrormedia/icon/line_white_v2.png"
+      alt="Line"
+    ></a>
+    <a
+      class="share__icon share__icon--list share--fb"
+      :class="[isOpen ? 'open' : '']"
+      @click="shareFacebook"
+    ><img
+      src="/assets/mirrormedia/icon/facebook_white.png"
+      alt="Facebook"
+    ></a>
   </div>
 </template>
 
 <script>
 
 import { TOPIC_PROTEST_ID } from '../constants/index'
-import { shareGooglePlus, shareLine, shareFacebook } from '../util/comm'
+import { sendGaClickEvent, shareLine, shareFacebook } from '../util/comm'
 import _ from 'lodash'
 
 export default {
-  name: 'share',
+  name: 'Share',
   props: {
     direction: {
       type: String,
       default: 'top'
     },
     top: {
+      type: String,
       default: 'auto'
     },
     right: {
+      type: String,
       default: 'auto'
     },
     bottom: {
+      type: String,
       default: 'auto'
     },
     left: {
+      type: String,
       default: 'auto'
     },
     color: {
+      type: String,
       default: '#356d9c'
     },
     sharePath: {
-      type: String
+      type: String,
+      default: undefined
     }
   },
   data () {
@@ -47,24 +76,24 @@ export default {
   },
   computed: {
     isTimeline () {
-      return _.get(this.$store.state, [ 'route', 'params', 'topicId' ]) === TOPIC_PROTEST_ID
+      return _.get(this.$store.state, ['route', 'params', 'topicId']) === TOPIC_PROTEST_ID
     },
     link () {
-      return _.get(this, [ 'sharePath' ], this.$store.state.route.path)
+      return _.get(this, ['sharePath'], this.$store.state.route.path)
     }
   },
   methods: {
-    shareGooglePlus () {
-      shareGooglePlus({ route: this.link })
-    },
+    sendGaClickEvent,
     shareLine () {
       shareLine({
         route: this.link,
         title: document.querySelector('meta[property="og:title"]').getAttribute('content')
       })
+      sendGaClickEvent('listing', 'share line')
     },
     shareFacebook () {
       shareFacebook({ route: this.link })
+      sendGaClickEvent('listing', 'share fb')
     },
     toggleShare () {
       this.isOpen = !this.isOpen
@@ -113,19 +142,19 @@ export default {
     background-color #00c300
     &.open
       transition-duration .19s
-      
+
   &--fb
     z-index 400
     background-color #3b5998
     &.open
       transition-duration .19s
-      
+
   &--google
     z-index 400
     background-color #dd4b39
     &.open
       transition-duration .19s
-      
+
     > img
       width 20px
       height auto
@@ -138,40 +167,40 @@ export default {
   &.top
     .share--line
       &.open
-        transform translate3d(0,-150px,0)
+        transform translate3d(0,-100px,0)
     .share--fb
       &.open
-        transform translate3d(0,-100px,0)
+        transform translate3d(0,-50px,0)
     .share--google
       &.open
         transform translate3d(0,-50px,0)
   &.right
     .share--line
       &.open
-        transform translate3d(150px,0,0)
+        transform translate3d(100px,0,0)
     .share--fb
       &.open
-        transform translate3d(100px,0,0)
+        transform translate3d(50px,0,0)
     .share--google
       &.open
-        transform translate3d(50px,0,0)      
+        transform translate3d(50px,0,0)
   &.bottom
     .share--line
       &.open
-        transform translate3d(0,150px,0)
+        transform translate3d(0,100px,0)
     .share--fb
       &.open
-        transform translate3d(0,100px,0)
+        transform translate3d(0,50px,0)
     .share--google
       &.open
         transform translate3d(0,50px,0)
   &.left
     .share--line
       &.open
-        transform translate3d(-150px,0,0)
+        transform translate3d(-100px,0,0)
     .share--fb
       &.open
-        transform translate3d(-100px,0,0)
+        transform translate3d(-50px,0,0)
     .share--google
       &.open
         transform translate3d(-50px,0,0)

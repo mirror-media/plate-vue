@@ -1,52 +1,72 @@
 <template>
-  <section id="editorChoice" class="editorChoice">
-    <h2>編輯精選</h2>
-    <app-slider class="editorChoice__slides" slideId="editorChoiceSlider" :option="sliderOption" v-if="viewport > 1199">
-      <template slot-scope="props">
-        <swiper-slide :is="props.slide" v-for="(item, index) in editorChoice"  :key="`${index}-${Date.now()}`">
-          <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
-              </div>
-            </router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target">
-              <div :id="'slide-' + index" class="editorChoice__slides--img" :style="{ backgroundImage: 'url(' + getImage(item, 'desktop') + ')' }" :title="item.title">
-              </div>
-            </a>
-          </template>
-        </swiper-slide>
+  <section
+    id="editorChoice"
+    class="editorChoice"
+  >
+    <Slider v-if="!isMobile">
+      <template v-slot:swiper-out-of-wrapper>
+        <h2>編輯精選</h2>
       </template>
-    </app-slider>
-    <div class="editorChoice__menu">
-      <template v-for="(item, index) in editorChoice">
-        <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
-          @click="jumpToSlideForParent" v-if="item.style !== 'projects'" :target="target">
-          <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
-        </router-link>
-        <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__menu--item" :class="(index === 0) ? 'active' : ''"
-          @click="jumpToSlideForParent" v-if="item.style === 'projects'" :target="target">
-          <span v-text="getTitle(item, 18)" @click="jumpToSlide" :index="index" :section="getValue(item, [ 'sections', 0, 'id' ])"></span>
+      <a
+        v-for="item in editorChoice"
+        :key="`swiper-slide-${item.slug}`"
+        :href="getLinkHref(item)"
+        :style="{ backgroundImage: `url(${item.heroImage.image.resizedTargets.tablet.url})` }"
+        class="swiper-slide"
+        target="_blank"
+        @click="sendGaClickEvent('home', 'choice')"
+      >
+        <div class="swiper-slide__curtain" />
+        <p
+          class="swiper-slide__title"
+          v-text="item.title"
+        />
+      </a>
+    </Slider>
+    <div
+      v-if="isMobile"
+      class="editorChoice--mobile"
+    >
+      <div class="editorChoice__eyebrow">
+        <h2>編輯精選</h2>
+      </div>
+      <div
+        v-for="item in editorChoice"
+        :key="item.slug"
+        class="editorChoice__block"
+      >
+        <a
+          :href="getLinkHref(item)"
+          :target="target"
+          class="editorChoice__block--img"
+          @click="sendGaClickEvent('home', 'choice')"
+        >
+          <LatestAriticleImg
+            :id="get(item, 'heroImage.id', Date.now())"
+            :key="get(item, 'heroImage.id', Date.now())"
+            class="figure"
+            :src="getImage(item, 'mobile')"
+          />
+          <div
+            :style="getSectionStyle(get(item, 'sections.0', ''))"
+            v-text="get(item, 'sections.0.title', '')"
+          />
         </a>
-      </template>
-    </div>
-    <div class="editorChoice--mobile">
-      <div class="editorChoice__eyebrow"><h2>編輯精選</h2></div>
-      <div v-for="(item, index) in editorChoice" :href="getHref(item)" class="editorChoice__block">
-        <template>
-          <router-link :to="getHref(item)" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style !== 'projects'" :target="target">
-            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
-            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
-          </router-link>
-          <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" class="editorChoice__block--img" v-if="item.style === 'projects'" :target="target">
-            <figure v-lazy:background-image="getImage(item, 'mobile')" :title="item.title"></figure>
-            <div :style="getSectionStyle(getValue(item, [ 'sections', 0 ], ''))" v-text="getValue(item, [ 'sections', 0, 'title' ], '')"></div>
+        <div
+          class="editorChoice__block--title"
+          :class="getSection(item)"
+        >
+          <div
+            :style="getSectionStyle(get(item, 'sections.0', ''))"
+            v-text="get(item, 'sections.0.title', '')"
+          />
+          <a
+            :href="getLinkHref(item)"
+            :target="target"
+            @click="sendGaClickEvent('home', 'choice')"
+          >
+            <h2 v-text="getTitle(item)" />
           </a>
-        </template>
-        <div class="editorChoice__block--title" :class="getSection(item)">
-          <template>
-            <router-link :to="getHref(item)" :id="'choices-' + item.name" v-if="item.style !== 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></router-link>
-            <a :href="`https://www.mirrormedia.mg${getHref(item)}`" :id="'choices-' + item.name" v-if="item.style === 'projects'" :target="target"><h2 v-text="getTitle(item, 24)"></h2></a>
-          </template>
         </div>
       </div>
     </div>
@@ -54,117 +74,107 @@
 </template>
 <script>
 
-import { SECTION_MAP } from '../constants'
-import { getHref, getImage, getSection, getTitle, getTruncatedVal, getValue } from '../util/comm'
-import Slider from './Slider.vue'
-import _ from 'lodash'
+import { SECTION_MAP } from 'src/constants'
+import { getHref, getImage, getSection, sendGaClickEvent } from 'src/util/comm'
+import LatestAriticleImg from 'src/components/LatestAriticleImg.vue'
+import Slider from 'src/components/Slider.vue'
+import truncate from 'truncate'
+import { get } from 'lodash'
+
+const GA_TRACE_QUERY = '?utm_source=mmweb&utm_medium=editorchoice'
 
 export default {
-  name: 'editorChoice',
+  name: 'EditorChoice',
   components: {
-    'app-slider': Slider
+    LatestAriticleImg,
+    Slider
   },
   props: {
     editorChoice: {
       default: () => { return this.editorChoice }
     },
     target: {
-      default: () => ('_self')
-    },
-    viewport: {
-      default: () => { return undefined }
+      type: String,
+      default: '_self'
     }
   },
   computed: {
-    sliderOption () {
-      return {
-        setNavBtn: false,
-        grabCursor: false,
-        autoplay: 5000,
-        autoplayDisableOnInteraction: false,
-        onSlideChangeStart: (swiper) => {
-          this.updateNavStatus(swiper.activeIndex)
-        }
-      }
+    isMobile () {
+      return get(this.$store, 'state.viewport.width') < 1200
     }
   },
   methods: {
-    jumpToSlide (e, pTarget) {
-      if (!e && !pTarget) { return }
-      const targ = pTarget || e.target
-      const targOld = targ.parentNode.getAttribute('class')
-      // const targSect = targ.getAttribute('section')
-      const i = Number(targ.getAttribute('index'))
-      window.refs[ 'editorChoiceSlider' ].slideTo((i + 1), 1000, false)
-      const lastTarg = document.querySelector(`.${targOld}.active`)
-      if (lastTarg) {
-        lastTarg.setAttribute('class', `${targOld}`)
-        lastTarg.removeAttribute('style')
-      }
-      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
-      targ.parentNode.setAttribute('class', `${targOld} active`)
-    },
-    jumpToSlideForParent (e) {
-      this.jumpToSlide(null, e.target.children[0])
-    },
-    getHref,
-    getSrcSet (img) {
-      return `${img.resizedTargets.mobile.url} 600w, ${img.resizedTargets.tablet.url} 900w, ${img.resizedTargets.desktop.url} 1200w`
-    },
+    get,
     getImage,
+    getLinkHref (article) {
+      return article.style === 'projects'
+        ? `https://www.mirrormedia.mg${getHref(article)}`
+        : `${getHref(article)}${GA_TRACE_QUERY}`
+    },
     getSection,
-    getTitle,
-    getTruncatedVal,
-    getValue,
+    getTitle (article) {
+      return truncate(get(article, 'title'), 24)
+    },
     getSectionStyle (sect) {
-      const sectionId = _.get(sect, [ 'id' ])
+      const sectionId = get(sect, 'id')
       const style = {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], '#bcbcbc')
+        backgroundColor: get(SECTION_MAP, [sectionId, 'bgcolor'], '#bcbcbc')
       }
       return style
     },
-    setHoverEvent () {
-      const _targ = document.querySelectorAll('.editorChoice__menu--item')
-      const _targChilde = document.querySelectorAll('.editorChoice__menu--item > span')
-      _.map(_targ, (o) => {
-        o.onmouseover = (e) => {
-          this.jumpToSlide(null, e.target.children[0])
-        }
-      })
-      _.map(_targChilde, (o) => {
-        o.onmouseover = (e) => {
-          this.jumpToSlide(e)
-        }
-      })
-    },
-    styleFor1stitem (sect) {
-      return {
-        borderLeft: SECTION_MAP[ sect ][ 'borderLeft' ]
-      }
-    },
-    updateNavStatus (ind) {
-      const index = (ind !== 6) ? (ind % 6) : 1
-      const targ = document.querySelector(`.editorChoice__menu--item span[index="${(index - 1)}"]`)
-      const targOld = targ.parentNode.getAttribute('class')
-      // const targSect = targ.getAttribute('section')
-      const lastTarg = document.querySelector(`.${targOld}.active`)
-      if (lastTarg) {
-        lastTarg.setAttribute('class', `${targOld}`)
-        lastTarg.removeAttribute('style')
-      }
-      // targ.parentNode.setAttribute('style', `border-left: ${SECTION_MAP[ targSect ][ 'borderLeft' ]};`)
-      targ.parentNode.setAttribute('class', `${targOld} active`)
-    }
-  },
-  mounted () {
-    this.setHoverEvent()
-  },
-  updated () {
-    this.setHoverEvent()
+    sendGaClickEvent
   }
 }
 </script>
 <style lang="stylus" scoped>
+
+.editorChoice
+  .swiper-container
+    h2
+      position absolute
+      top 20px
+      left 20px
+      z-index 10
+      margin 0
+      color #fff
+      font-size 1rem
+      font-weight 500
+      user-select none
+      text-shadow #000 .1em .1em .5em
+  .swiper-slide
+    padding-top 56.25%
+    background-size cover
+    background-position center center
+    background-repeat no-repeat
+    &__title
+      position absolute
+      left 10%
+      bottom 45px
+      width 80%
+      color #fff
+      text-align justify
+      font-size 2rem
+      font-weight 500
+      line-height 1.5
+    &__curtain
+      position absolute
+      left 0
+      right 0
+      bottom 0
+      height 60%
+      background-image linear-gradient(transparent, rgba(0,0,0,1))
+
+  >>> .swiper-button-prev, >>> .swiper-button-next
+    width 30px
+    height 57px
+    margin-top -29px
+    background-image url(/assets/mirrormedia/icon/arrow1-2017.png)
+    background-size contain
+  >>> .swiper-button-prev
+    left 15px
+  >>> .swiper-button-next
+    right 15px
+    transform rotate(180deg)
 
 .editorChoice
   > h2
@@ -178,7 +188,7 @@ export default {
       background-position 50% 50%
       background-repeat no-repeat
       background-size cover
-      
+
   &__menu
     display none
   &--mobile
@@ -192,21 +202,21 @@ export default {
       position relative
       color #fff
       display block
-      figure
+      .figure
         width 100%
         padding-top 66.66%
         margin 0
         background-position 50% 50%
         background-repeat no-repeat
         background-size cover
-      > div
+      > div:not(.figure)
         position absolute
         height 35px
         background-color #000
-        display flex 
+        display flex
         justify-content center
-        align-items center 
-        font-size 1.2rem       
+        align-items center
+        font-size 1.2rem
         top auto
         bottom 0
         left 0
@@ -219,7 +229,9 @@ export default {
         font-size 1.25rem
         line-height 1.6rem
         font-weight normal
-    
+      > div
+        display none
+
   &__eyebrow
     width 100%
     margin-bottom 10px
@@ -236,6 +248,48 @@ export default {
         margin-right -100%
         margin-left 10px
         border-top 5px solid #356d9c
+
+@media (max-width: 599px)
+  .editorChoice--mobile
+    width 100%
+    > div
+      &:not(:last-child):not(:first-child)
+        margin 0
+        border-bottom 1px solid #fff
+    .editorChoice__eyebrow
+      width 90%
+      margin 0 auto 10px
+      h2
+        &::after
+          content none
+    .editorChoice__block
+      position relative
+    .editorChoice__block--img
+      > div
+        &:not(.figure)
+          display none
+      .figure
+        padding-top 56.25%
+    .editorChoice__block--title
+      position absolute
+      bottom 0
+      padding-top 0
+      padding-bottom 0
+      width 100%
+      > div
+        display inline-flex
+        justify-content center
+        align-items center
+        height 30px
+        padding 0 .5em
+        color #fff
+        font-size 1rem
+        white-space nowrap
+      h2
+        color #fff
+        text-shadow 1.4px 1.4px 1.9px rgba(0, 0, 0, 0.2)
+        background-color rgba(0, 0, 0, 0.7)
+        padding 10px
 
 @media (min-width: 600px)
   .editorChoice
@@ -267,7 +321,7 @@ export default {
     .editorChoice__slides
       display block
       width 100%
-      height 500px
+      height 576px
     .editorChoice__menu
       display flex
       position absolute
@@ -277,6 +331,7 @@ export default {
       z-index 10
       width 100%
       background-color rgba(246,246,246,.8)
+      min-height 76px
       a:not(:last-child)
         border-right 1px solid rgba(204, 204, 204, 0.75)
       &--item

@@ -1,23 +1,70 @@
 <template>
-  <div class="latest-aside-container" v-if="groupedArticle">
+  <div
+    v-if="groupedArticle"
+    class="latest-aside-container"
+  >
     <div class="latest-list">
       <div class="latest-list_item">
-        <router-link :to="getHref(groupedArticle)" :id="`group${isLast}-latest-${index}-${getValue(groupedArticle, [ 'slug' ], Date.now())}-img`"  v-if="groupedArticle.style !== 'projects' && groupedArticle.style !== 'campaign' && groupedArticle.style !== 'readr'" :target="target">
-          <div class="latest-list_item_img" v-lazy:background-image="getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
-        </router-link>
-        <a :href="getHrefFull(groupedArticle)" :id="`group${isLast}--${index}latest-${getValue(groupedArticle, [ 'slug' ], Date.now())}-img`"  v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'" :target="target">
-          <div class="latest-list_item_img" v-lazy:background-image="getValue(groupedArticle, [ 'heroImage', 'image', 'resizedTargets', 'mobile', 'url' ], '')"></div>
+        <a
+          v-if="groupedArticle.style !== 'projects' && groupedArticle.style !== 'campaign' && groupedArticle.style !== 'readr'"
+          :href="getHref(groupedArticle)"
+          :target="target"
+          @click="sendGaClickEvent('home', 'group')"
+        >
+          <div
+            v-lazy:background-image="getImage(groupedArticle, 'mobile')"
+            class="latest-list_item_img"
+          />
+        </a>
+        <a
+          v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'"
+          :href="getHrefFull(groupedArticle)"
+          :target="target"
+          @click="sendGaClickEvent('home', 'group')"
+        >
+          <div
+            v-lazy:background-image="getImage(groupedArticle, 'mobile')"
+            class="latest-list_item_img"
+          />
         </a>
         <div class="latest-list_item_title">
-          <router-link :to="getHref(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(groupedArticle, [ 'slug' ], Date.now())}`" v-if="groupedArticle.style !== 'projects' && groupedArticle !== 'campaign' && groupedArticle !== 'readr'" :target="target"></router-link>
-          <a :href="getHrefFull(groupedArticle)" v-text="getTruncatedVal(groupedArticle.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(groupedArticle, [ 'slug' ], Date.now())}`" v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'" :target="target"></a>
+          <a
+            v-if="groupedArticle.style !== 'projects' && groupedArticle !== 'campaign' && groupedArticle !== 'readr'"
+            :href="getHref(groupedArticle)"
+            :target="target"
+            @click="sendGaClickEvent('home', 'group')"
+            v-text="getTruncatedVal(groupedArticle.title, 22)"
+          />
+          <a
+            v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'"
+            :href="getHrefFull(groupedArticle)"
+            :target="target"
+            @click="sendGaClickEvent('home', 'group')"
+            v-text="getTruncatedVal(groupedArticle.title, 22)"
+          />
         </div>
       </div>
 
-      <div class="latest-list_item" v-for="(o, i) in getValue(groupedArticle, [ 'relateds' ])" v-if="i < 3">
+      <div
+        v-for="(o, i) in (getValue(groupedArticle, [ 'relateds' ]) || []).slice(0, 2)"
+        :key="`latest-list_item-${i}`"
+        class="latest-list_item"
+      >
         <div class="latest-list_item_title">
-          <router-link :to="getHref(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(o, [ 'slug' ], Date.now())}`" v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'" :target="target"></router-link>
-          <a :href="getHrefFull(o)" v-text="getTruncatedVal(o.title, 22)" :id="`group${isLast}-latest-${index}-${getValue(o, [ 'slug' ], Date.now())}`" v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'" :target="target"></a>
+          <a
+            v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'"
+            :href="getHref(o)"
+            :target="target"
+            @click="sendGaClickEvent('home', 'group')"
+            v-text="getTruncatedVal(o.title, 22)"
+          />
+          <a
+            v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'"
+            :href="getHrefFull(o)"
+            :target="target"
+            @click="sendGaClickEvent('home', 'group')"
+            v-text="getTruncatedVal(o.title, 22)"
+          />
         </div>
       </div>
     </div>
@@ -26,10 +73,32 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP } from '../constants'
-import { getHref, getHrefFull, getTruncatedVal, getValue } from '../util/comm'
+import { getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../util/comm'
 
 export default {
-  name: 'latest-list-aside',
+  name: 'LatestListAside',
+  props: {
+    groupedArticle: {
+      type: Object,
+      default: undefined
+    },
+    index: {
+      type: Number,
+      default: 0
+    },
+    needStick: {
+      type: Boolean,
+      default: true
+    },
+    target: {
+      type: String,
+      default: '_self'
+    },
+    viewport: {
+      type: Number,
+      default: undefined
+    }
+  },
   data () {
     return {
       nodeTopStatic: 0,
@@ -37,27 +106,34 @@ export default {
       nodeWidthStatic: 0
     }
   },
+  mounted () {
+    this.needStick && this.setUpEventHandler()
+  },
+  updated () {
+    this.needStick && this.setUpEventHandler()
+  },
   methods: {
     getHref,
     getHrefFull,
+    getImage,
     getTruncatedVal,
     getValue,
     getSectionStyle (sect) {
-      const sectionId = _.get(sect, [ 'id' ])
+      const sectionId = _.get(sect, ['id'])
       const style = (this.viewport > 1199) ? {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);')
+        backgroundColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18);')
       } : {
-        backgroundColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18);')
+        backgroundColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18);')
       }
       return style
     },
     getSectionStyleBorderTop (sect) {
-      const sectionId = _.get(sect, [ 'id' ])
+      const sectionId = _.get(sect, ['id'])
       const style = (this.viewport > 1199) ? {
-        borderTopColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18)'),
+        borderTopColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
         borderTopWidth: '5px'
       } : {
-        borderTopColor: _.get(SECTION_MAP, [ sectionId, 'bgcolor' ], 'rgba(140, 140, 140, 0.18)'),
+        borderTopColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
         borderTopWidth: '10px'
       }
       return style
@@ -68,6 +144,7 @@ export default {
       this.nodeLeftStatic = node.offsetLeft
       this.nodeWidthStatic = node.clientWidth
     },
+    sendGaClickEvent,
     sticky () {
       const { nodeTopStatic, nodeLeftStatic, nodeWidthStatic } = this
       const node = this.$el
@@ -117,30 +194,6 @@ export default {
         }
       }
     }
-  },
-  props: {
-    groupedArticle: {
-      default: () => { return undefined }
-    },
-    index: {
-      default: () => { return 0 }
-    },
-    needStick: {
-      default: () => { return true }
-    },
-    target: {
-      default: () => ('_self')
-    },
-    viewport: {
-      default: () => { return undefined }
-    },
-    isLast: null
-  },
-  mounted () {
-    this.needStick ? this.setUpEventHandler() : ''
-  },
-  updated () {
-    this.needStick ? this.setUpEventHandler() : ''
   }
 }
 </script>
@@ -158,10 +211,10 @@ export default {
     top 30px
     right auto
     width calc(1024px * 0.25 - 30px)
-    
+
   .latest-list
     .latest-list_item
-    
+
       &:last-child
         .latest-list_item_title
           &::after
@@ -187,14 +240,14 @@ export default {
           padding 0 20px
           color #fff
           font-size 1.2rem
-          display flex 
+          display flex
           justify-content center
           align-items center
 
           bottom 0
           left 10%
           z-index 10
-      
+
       &_title
         color rgba(0, 0, 0, 0.65)
         display flex
@@ -242,7 +295,7 @@ export default {
             bottom 0
             left 0
             font-size 1.2rem
-        
+
         &_title
           font-size 1.5rem
           padding 20px 0
@@ -252,11 +305,11 @@ export default {
           border-left none
           border-right none
           box-shadow none
-          
+
           &::after
             display none
 
-@media (min-width: 1200px)  
+@media (min-width: 1200px)
   .latest-aside-container
     width 100%
 
@@ -270,14 +323,14 @@ export default {
             top auto
             bottom 0
             left 0
-        
+
         &_title
           color rgba(0, 0, 0, 0.35)
           font-size 1rem
           padding 10px 0
           line-height 1.4rem
           font-weight 400
-          
+
           > a
             color rgba(0, 0, 0, 0.35)
 </style>

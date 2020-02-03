@@ -1,7 +1,10 @@
 <template>
   <section class="timelineHeadline">
-    <div class="timelineHeadline__heroImage" :style="{ backgroundImage: `url(${topicImage})` }">
-      <div class="timelineHeadline__heroImage--title"></div>
+    <div
+      class="timelineHeadline__heroImage"
+      :style="{ backgroundImage: `url(${topicImage})` }"
+    >
+      <div class="timelineHeadline__heroImage--title" />
     </div>
   </section>
 </template>
@@ -11,16 +14,21 @@
 import _ from 'lodash'
 
 export default {
-  props: [ 'initialTimeline' ],
+  props: {
+    initialTimeline: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     timeline () {
       return this.initialTimeline
     },
     topic () {
-      return _.get(this.timeline, [ 'topic' ])
+      return _.get(this.timeline, ['topic'])
     },
     topicImage () {
-      return _.get(this.topic, [ 'heroImage', 'image', 'resizedTargets', 'desktop', 'url' ], '')
+      return _.get(this.topic, ['heroImage', 'image', 'resizedTargets', 'desktop', 'url'], '')
     }
   }
 }

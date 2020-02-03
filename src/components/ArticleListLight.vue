@@ -2,10 +2,17 @@
   <section class="articleListLight">
     <div class="listContainer">
       <template v-for="item in articles">
-        <list-article-block-light :key="item.id" :article="item" :viewport="viewport"></list-article-block-light>
+        <list-article-block-light
+          :key="item.id"
+          :article="item"
+          :viewport="viewport"
+        />
       </template>
     </div>
-    <latest-list :latest="latest" v-if="showLatestList"/>
+    <latest-list
+      v-if="showLatestList"
+      :latests="latest"
+    />
   </section>
 </template>
 
@@ -34,6 +41,7 @@ export default {
       default: false
     },
     viewport: {
+      type: Number,
       required: true
     }
   },
@@ -62,6 +70,8 @@ export default {
   .listContainer
     width calc(100% - 360px)
     margin-top 20px
+  .latest-list
+    width 300px
 
 @media (min-width: 1200px)
   .articleListLight

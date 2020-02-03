@@ -1,7 +1,6 @@
-import Vue from 'vue'
-import 'es6-promise/auto'
-import { createApp } from './app'
 import ProgressBar from './components/ProgressBar.vue'
+import Vue from 'vue'
+import { createApp } from './app'
 
 // global progress bar
 const bar = Vue.prototype.$bar = new Vue(ProgressBar).$mount()
@@ -52,11 +51,11 @@ router.onReady(() => {
 
     bar.start()
     Promise.all(asyncDataHooks.map(hook => hook({ store, route: to })))
-    .then(() => {
-      bar.finish()
-      next()
-    })
-    .catch(next)
+      .then(() => {
+        bar.finish()
+        next()
+      })
+      .catch(next)
   })
 
   // actually mount to DOM
@@ -64,6 +63,14 @@ router.onReady(() => {
 })
 
 // service worker
-if ('https:' === location.protocol && navigator.serviceWorker) {
+const debugSW = require('debug')('CLIENT:SERVICE-WORKER')
+if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js')
+    .then(() => {
+      debugSW('REGISTERING SW SUCCESSFULLY.')
+    })
+    .catch(() => {
+      debugSW('REGISTERING SW IN FAIL.')
+    })
+  navigator.serviceWorker.addEventListener('message', event => debugSW('Got Msg from dervice-worker!' + event.data))
 }

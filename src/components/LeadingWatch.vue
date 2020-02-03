@@ -1,32 +1,83 @@
 <template>
   <section class="leadingWatch">
-    <div class="leadingWatchImg" :style="{ backgroundImage: 'url(' + getImageURL() + ')' }">
+    <div
+      class="leadingWatchImg"
+      :style="{ backgroundImage: 'url(' + getImageURL() + ')' }"
+    >
       <div class="leadingWatchImg-headline">
-        <h1 class="leadingWatchImg-headline__enName"></h1>
-        <h3 class="leadingWatchImg-headline__zhName"></h3>
+        <h1 class="leadingWatchImg-headline__enName" />
+        <h3 class="leadingWatchImg-headline__zhName" />
         <div class="leadingWatchImg-intro">
-          <span class="leadingWatchImg-intro__title"></span>
-          <img src="/public/icon/tag-arrow.png"/>
+          <span class="leadingWatchImg-intro__title" />
+          <img src="/assets/mirrormedia/icon/tag-arrow.png">
         </div>
       </div>
     </div>
     <div class="leadingWatchTag">
-      <router-link to="/tag/57fe7bfa5eb4360e00e6116d" id="leadingWatchTag__first--link" class="sihh"><div class="leadingWatchTag__tag">
-        <span id="leadingWatchTag__first--desktopTitle" class="leadingWatchTag__tag--desktop">日內瓦國際高級鐘錶沙龍</span>
-        <span id="leadingWatchTag__first--mobileTitle" class="leadingWatchTag__tag--mobile">SIHH</span>
-      </div></router-link>
-      <router-link to="/tag/587496583c1f950d00ce359a" id="leadingWatchTag__second--link" class="baselworld"><div class="leadingWatchTag__tag">
-        <span id="leadingWatchTag__second--desktopTitle" class="leadingWatchTag__tag--desktop">巴塞爾世界鐘錶珠寶大展</span>
-        <span id="leadingWatchTag__second--mobileTitle" class="leadingWatchTag__tag--mobile">BASELWORLD</span>
-      </div></router-link>
-      <router-link to="/tag/587496cf3c1f950d00ce359b" id="leadingWatchTag__third--link" class="wphh"><div class="leadingWatchTag__tag">
-        <span id="leadingWatchTag__third--desktopTitle" class="leadingWatchTag__tag--desktop">WPHH世界高級鐘錶展</span>
-        <span id="leadingWatchTag__third--mobileTitle" class="leadingWatchTag__tag--mobile">WPHH</span>
-      </div></router-link>
-      <router-link to="/tag/5874971a3c1f950d00ce359c" id="leadingWatchTag__fourth--link" class="indie"><div class="leadingWatchTag__tag">
-        <span id="leadingWatchTag__fourth--desktopTitle" class="leadingWatchTag__tag--desktop">獨立製錶師專區</span>
-        <span id="leadingWatchTag__fourth--mobileTitle" class="leadingWatchTag__tag--mobile">INDIE</span>
-      </div></router-link>
+      <router-link
+        id="leadingWatchTag__first--link"
+        to="/tag/57fe7bfa5eb4360e00e6116d"
+        class="sihh"
+      >
+        <div class="leadingWatchTag__tag">
+          <span
+            id="leadingWatchTag__first--desktopTitle"
+            class="leadingWatchTag__tag--desktop"
+          >日內瓦國際高級鐘錶沙龍</span>
+          <span
+            id="leadingWatchTag__first--mobileTitle"
+            class="leadingWatchTag__tag--mobile"
+          >SIHH</span>
+        </div>
+      </router-link>
+      <router-link
+        id="leadingWatchTag__second--link"
+        to="/tag/587496583c1f950d00ce359a"
+        class="baselworld"
+      >
+        <div class="leadingWatchTag__tag">
+          <span
+            id="leadingWatchTag__second--desktopTitle"
+            class="leadingWatchTag__tag--desktop"
+          >巴塞爾世界鐘錶珠寶大展</span>
+          <span
+            id="leadingWatchTag__second--mobileTitle"
+            class="leadingWatchTag__tag--mobile"
+          >BASELWORLD</span>
+        </div>
+      </router-link>
+      <router-link
+        id="leadingWatchTag__third--link"
+        to="/tag/587496cf3c1f950d00ce359b"
+        class="wphh"
+      >
+        <div class="leadingWatchTag__tag">
+          <span
+            id="leadingWatchTag__third--desktopTitle"
+            class="leadingWatchTag__tag--desktop"
+          >WPHH世界高級鐘錶展</span>
+          <span
+            id="leadingWatchTag__third--mobileTitle"
+            class="leadingWatchTag__tag--mobile"
+          >WPHH</span>
+        </div>
+      </router-link>
+      <router-link
+        id="leadingWatchTag__fourth--link"
+        to="/tag/5874971a3c1f950d00ce359c"
+        class="indie"
+      >
+        <div class="leadingWatchTag__tag">
+          <span
+            id="leadingWatchTag__fourth--desktopTitle"
+            class="leadingWatchTag__tag--desktop"
+          >獨立製錶師專區</span>
+          <span
+            id="leadingWatchTag__fourth--mobileTitle"
+            class="leadingWatchTag__tag--mobile"
+          >INDIE</span>
+        </div>
+      </router-link>
     </div>
   </section>
 </template>
@@ -35,8 +86,8 @@
 import { getImage } from '../util/comm'
 
 export default {
-  name: 'leadingWatch',
-  props: [ 'tag', 'topic', 'type' ],
+  name: 'LeadingWatch',
+  props: ['tag', 'topic', 'type'],
   methods: {
     getImageURL () {
       if (this.type === 'TOPIC') {
@@ -104,7 +155,7 @@ export default {
       display none
     &--mobile
       display block
-        
+
   > a
     border-left 1px solid #fff
   > a:first-child

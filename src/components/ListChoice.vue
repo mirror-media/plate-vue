@@ -1,17 +1,45 @@
 <template>
   <section class="listChoice container">
-    <h1 :style="{ color: sectionColor }">編輯精選</h1>
-    <div class="listChoice__block" v-for="(item, index) in sectionfeatured" :class="[ index%2 !== 0 ? 'right' : '' ]">
+    <h1 :style="{ color: sectionColor }">
+      編輯精選
+    </h1>
+    <div
+      v-for="(item, index) in sectionfeatured"
+      :key="`listChoice__block-${index}`"
+      class="listChoice__block"
+      :class="[ index%2 !== 0 ? 'right' : '' ]"
+    >
       <figure>
         <template>
-          <router-link :to="getHref(item)" :id="`listing_choice-${item.name}-img`" target="_blank">
-            <img :src="getImage(item, viewportTarget)" />
+          <router-link
+            :to="getHref(item)"
+            target="_blank"
+            @click.native="sendGaClickEvent('listing', 'choice')"
+          >
+            <img :src="getImage(item, viewportTarget)">
           </router-link>
         </template>
       </figure>
-      <div class="listChoice__block--content" :style="{ borderColor: sectionColor }">
-        <h2><router-link :to="getHref(item)" :id="`listing_choice-${item.name}-title`" target="_blank" v-text="getTruncatedVal(getValue(item, [ 'title' ]), 30)"></router-link></h2>
-        <p><router-link :to="getHref(item)" :id="`listing_choice-${item.name}-descr`" target="_blank" v-text="getBrief(item, 45)"></router-link></p>
+      <div
+        class="listChoice__block--content"
+        :style="{ borderColor: sectionColor }"
+      >
+        <h2>
+          <router-link
+            :to="getHref(item)"
+            target="_blank"
+            @click.native="sendGaClickEvent('listing', 'choice')"
+            v-text="getTruncatedVal(getValue(item, [ 'title' ]), 30)"
+          />
+        </h2>
+        <p>
+          <router-link
+            :to="getHref(item)"
+            target="_blank"
+            @click.native="sendGaClickEvent('listing', 'choice')"
+            v-text="getBrief(item, 45)"
+          />
+        </p>
       </div>
     </div>
   </section>
@@ -20,12 +48,12 @@
 <script>
 
 import { SECTION_MAP } from '../constants'
-import { getBrief, getHref, getImage, getTruncatedVal, getValue } from '../util/comm'
+import { getBrief, getHref, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../util/comm'
 import _ from 'lodash'
 
 export default {
-  name: 'listChoice',
-  props: [ 'initialSection', 'initialSectionfeatured', 'viewport' ],
+  name: 'ListChoice',
+  props: ['initialSection', 'initialSectionfeatured', 'viewport'],
   computed: {
     section () {
       return this.initialSection
@@ -34,7 +62,7 @@ export default {
       return this.initialSectionfeatured
     },
     sectionColor () {
-      return _.get(SECTION_MAP, [ _.get(this.section, [ 'id' ]), 'bgcolor' ], '#bcbcbc')
+      return _.get(SECTION_MAP, [_.get(this.section, ['id']), 'bgcolor'], '#bcbcbc')
     },
     viewportTarget () {
       if (this.viewport < 600) {
@@ -49,7 +77,8 @@ export default {
     getImage,
     getTruncatedVal,
     getHref,
-    getValue
+    getValue,
+    sendGaClickEvent
   }
 }
 </script>

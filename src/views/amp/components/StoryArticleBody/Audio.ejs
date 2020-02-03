@@ -1,0 +1,12 @@
+<div class="story-body-audio">
+  <p class="story-body-audio__title"><%= _.get(item, [ 'content', 0, 'title' ], '') %></p>
+  <amp-audio 
+    width="auto"
+    height="50"
+    src="<%= _.get(item, [ 'content', 0, 'url' ], '') %>"
+    controlsList="nodownload">
+    <div fallback>
+      <p>Your browser doesn’t support HTML5 audio</p>
+    </div>
+  </amp-audio>
+</div>
