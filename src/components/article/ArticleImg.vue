@@ -42,6 +42,7 @@ import verge from 'verge'
 import preventScroll from 'prevent-scroll'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { get } from 'lodash'
+import { sendGaClickEvent } from '../../util/comm'
 
 const debug = require('debug')('CLIENT:ArticleImg')
 // const debugLazy = require('debug')('CLIENT:LAZYIMAGE')
@@ -144,6 +145,7 @@ export default {
     },
     openLightBox () {
       this.isLightboxActive = true
+      sendGaClickEvent('article', 'image')
     }
   }
 }
