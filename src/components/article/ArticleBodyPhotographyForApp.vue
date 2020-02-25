@@ -117,13 +117,6 @@ export default {
     viewport: {
       type: Object,
       default: () => ({})
-    },
-    initFBComment: {
-      default: () => {
-        return () => {
-          console.log('init fb comment')
-        }
-      }
     }
   },
   data () {
@@ -269,7 +262,6 @@ export default {
           this.updateProgressbar(((this.currIndex - 1) * 100) / this.imgArr.length)
           if (this.currIndex === this.imgArr.length + 1) {
             this.creditCommentShow = true
-            this.initFBComment()
             removeClass(document.body, 'limited-height')
             removeClass(document.documentElement, 'limited-height')
             setTimeout(() => {

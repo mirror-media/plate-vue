@@ -126,12 +126,6 @@
           :viewport="viewport"
         />
         <div
-          slot="fbComment"
-          class="fbComment"
-        >
-          {{ fbCommentHtml }}
-        </div>
-        <div
           slot="footer"
           class="footer"
         >
@@ -262,7 +256,6 @@
 <script>
 import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_OGIMAGE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
 
-import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
 import { adtracker } from 'src/util/adtracking'
 import { consoleLogOnDev, currEnv, getValue, sendAdCoverGA, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
@@ -534,9 +527,6 @@ export default {
     fbAppId () {
       return _.get(this.$store, ['state', 'fbAppId'])
     },
-    fbCommentHtml () {
-      return `<div class="fb-comments" data-href="${SITE_URL}/external/${this.currArticleSlug}/" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
-    },
     // hasEventEmbedded () {
     //   const _now = moment()
     //   const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
@@ -598,10 +588,6 @@ export default {
       this.$_external_sendGA(this.articleData)
       this.hasSentFirstEnterGA = true
     }
-    const scrollTriggerRegister = new ScrollTriggerRegister([
-      { target: '.dable-widget', offset: 400, cb: this.$_external_initializeFBComments }
-    ])
-    scrollTriggerRegister.init()
 
     window.addEventListener('resize', () => {
       this.$_external_updateViewport()
@@ -633,16 +619,6 @@ export default {
           { id: 'B', weight: 50 }]
       })
       return assisgnedRole || role
-    },
-    $_external_initializeFBComments () {
-      if (window.FB) {
-        window.FB && window.FB.init({
-          appId: this.fbAppId,
-          xfbml: true,
-          version: 'v2.0'
-        })
-        window.FB && window.FB.XFBML.parse()
-      }
     },
     $_external_insertMediafarmersScript () {
       const mediafarmersScript = document.createElement('script')
@@ -679,11 +655,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
-.fbComment
-  >>> iframe
-    min-width 100%
-
 .dfp
   margin 20px auto
   text-align center
