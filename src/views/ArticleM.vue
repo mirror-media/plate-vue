@@ -130,12 +130,6 @@
               :recommends="recommendlist"
               :excluding-article="routeUpateReferrerSlug"
             />
-            <div
-              slot="slot_fb_comment"
-              class="article_fb_comment"
-              style="margin: 1.5em 0;"
-              v-html="fbCommentDiv"
-            />
             <template slot="recommendList">
               <div
                 id="dablewidget_GlYwenoy"
@@ -159,14 +153,8 @@
         <article-body-photography
           :article-data="articleData"
           :viewport="viewport"
-          :init-f-b-comment="initializeFBComments"
           :is-app="true"
         >
-          <div
-            slot="slot_fb_comment"
-            class="article_fb_comment"
-            v-html="fbCommentDiv"
-          />
           <div slot="slot_dfpFT">
             <vue-dfp
               :is="props.vueDfp"
@@ -246,7 +234,6 @@ import {
 } from 'lodash'
 import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SECTION_MAP, SECTION_WATCH_ID, SITE_OGIMAGE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
 
-import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
 import { currEnv, lockJS, unLockJS, insertMicroAd, sendAdCoverGA, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { microAds } from '../constants/microAds'
@@ -583,9 +570,6 @@ export default {
     fbAppId () {
       return _get(this.$store, ['state', 'fbAppId'])
     },
-    fbCommentDiv () {
-      return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
-    },
     hasDfpFixed () {
       return this.sectionId === SECTION_WATCH_ID
     },
@@ -707,7 +691,6 @@ export default {
     fetchEvent(this.$store, 'logo')
   },
   mounted () {
-    this.initializeFBComments()
     this.insertMediafarmersScript()
     this.updateViewport()
     this.clientSideFlag = process.env.VUE_ENV === 'client'
@@ -718,11 +701,6 @@ export default {
     this.updateSysStage()
     // this.abIndicator = this.getMmid()
     this.sendGA(this.articleData)
-
-    const scrollTriggerRegister = new ScrollTriggerRegister([
-      { target: '.dable-widget', offset: 400, cb: this.initializeFBComments }
-    ])
-    scrollTriggerRegister.init()
   },
   updated () {
     this.updateSysStage()
@@ -750,16 +728,6 @@ export default {
     },
     getValue (o = {}, p = [], d = '') {
       return _get(o, p, d)
-    },
-    initializeFBComments () {
-      if (window.FB) {
-        window.FB && window.FB.init({
-          appId: this.fbAppId,
-          xfbml: true,
-          version: 'v2.0'
-        })
-        window.FB && window.FB.XFBML.parse()
-      }
     },
     insertMediafarmersScript () {
       const mediafarmersScript = document.createElement('script')

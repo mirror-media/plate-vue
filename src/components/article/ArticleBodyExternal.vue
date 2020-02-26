@@ -110,7 +110,6 @@
             <slot name="recommendList" />
             <slot name="popularList" />
             <slot name="projectList" />
-            <slot name="fbComment" />
           </section>
           <section class="article__aside">
             <slot name="dfp-PCR1" />
@@ -291,9 +290,6 @@ export default {
           padding 0
           font-size 0
           border none
-
-      .fbComment
-        margin 1.5em 0
 
       h3
         font-size 26px

@@ -151,13 +151,6 @@ export default {
       type: Object,
       default: () => ({})
     },
-    initFBComment: {
-      default: () => {
-        return () => {
-          console.log('init fb comment')
-        }
-      }
-    },
     isApp: {
       type: Boolean,
       default: false

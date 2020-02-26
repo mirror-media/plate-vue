@@ -71,11 +71,6 @@
               :viewport="viewport"
             />
           </div>
-          <div
-            slot="slot_fb_comment"
-            class="topicTimeline__fbComment"
-            v-html="fbCommentDiv"
-          />
         </template>
 
         <template v-else-if="topicType === 'portraitWall'">
@@ -596,9 +591,6 @@ export default {
     eventLogo () {
       return _.get(this.$store.state.eventLogo, ['items', '0'])
     },
-    fbCommentDiv () {
-      return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
-    },
     fbAppId () {
       return _.get(this.$store, ['state', 'fbAppId'])
     },
@@ -1002,10 +994,6 @@ export default {
       color #fff
       text-align center
       font-weight 200
-  &__fbComment
-    width 100%
-    padding 0 5%
-    background-color #fff
 
 @media (min-width: 600px)
   .topic-view.wide
