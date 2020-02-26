@@ -2,7 +2,6 @@
   <div
     class="content-image"
     :class="`img-${id}`"
-    @click="openLightBox"
   >
     <span
       v-show="!isVirtualImgLoaded"
@@ -23,16 +22,17 @@
     <div
       v-show="isLightboxActive"
       class="lightbox"
+      @click="closeLightBox"
     >
       <div
         class="lightbox-close"
-        @click="closeLightBox"
       />
       <img
         ref="lightboxImg"
         class="lightbox-img"
         :class="{ loading: !isLightboxImgLoaded }"
         src="/assets/mirrormedia/icon/loading.gif"
+        @click.stop
       >
     </div>
   </div>
@@ -108,9 +108,8 @@ export default {
     preventScroll.off()
   },
   methods: {
-    closeLightBox (e) {
+    closeLightBox () {
       this.isLightboxActive = false
-      e.stopPropagation()
     },
     constructImages () {
       return {
@@ -134,6 +133,7 @@ export default {
           get(this.images, 'tablet') + ' 1200w'
       )
       lazyImg.setAttribute('src', get(this.images, 'tablet'))
+      lazyImg.addEventListener('click', this.openLightBox)
     },
     lazyLoadLightboxImg () {
       const img = new Image()
@@ -165,6 +165,7 @@ export default {
     display flex
     justify-content center
     align-items center
+    cursor pointer
 
     &-img
       max-height 90vh
@@ -172,6 +173,7 @@ export default {
       z-index 100002
       object-fit contain
       object-position center
+      cursor default
       &.loading
         height 20%
         width 20%
