@@ -143,7 +143,6 @@ export default {
       border-top-right-radius 4px
       border-bottom-right-radius 4px
     &__arrow
-      // background-color #ae4182
       width 26px
       flex 0 0 auto
       position relative
@@ -175,7 +174,6 @@ export default {
     &__category
       display none
       color #fff
-      // background-color #ae4182
       align-self flex-start
       padding 2px 7px
       flex 0 0 auto
@@ -197,7 +195,6 @@ export default {
         height calc(1em * 1.5 * 2)
     &:hover, :active
       & .related__txt
-        // outline 2px solid #ae4182
         outline-style solid
         outline-width 2px
         outline-offset -2px
