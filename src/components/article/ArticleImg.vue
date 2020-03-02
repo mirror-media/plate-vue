@@ -171,8 +171,6 @@ export default {
       max-height 90vh
       max-width 90vw
       z-index 100002
-      object-fit contain
-      object-position center
       cursor default
       &.loading
         height 20%
@@ -195,7 +193,7 @@ export default {
     clear both
     margin 1.5em 0
 
-    & >>> img
+    & >>> img:not(.lightbox-img)
       width 100%
 
     .thumbnail
