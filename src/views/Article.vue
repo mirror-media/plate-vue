@@ -24,6 +24,7 @@
 
       <RelatedListOverContent
         v-if="!isArticlePhotography"
+        :section-id="sectionId"
         :articles="relateds"
         :related-category="relatedCategory"
       />

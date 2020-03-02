@@ -28,6 +28,8 @@ export const SECTION_MAP = {
   external: { sectionName: 'external', bgcolor: '#ee5a24' }
 }
 
+export const DEFAULT_SECTION_BGCOLOR = '#bcbcbc'
+
 export const OATH_PLAYLIST = {
   '5c4151124d981a0001477e0e': { order: 1, name: '鏡封面', categoryName: 'video_coverstory', id: '5c4151124d981a0001477e0e' },
   '5c41528dbd70380001962364': { order: 2, name: '鏡娛樂', categoryName: 'video_ent_headline', id: '5c41528dbd70380001962364' },

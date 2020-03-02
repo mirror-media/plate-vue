@@ -11,9 +11,9 @@
           class="related"
           @click="sendGaClickEvent('article', 'related news left')"
         >
-          <div class="related__arrow" />
-          <div class="related__txt">
-            <div class="related__category">{{ relatedCategory }}</div>
+          <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
+          <div class="related__txt" :style="{ outlineColor: sectionColor }">
+            <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
             <div class="related__title">
               <p>{{ _get(articles[ 0 ], 'title', '') }}</p>
             </div>
@@ -24,13 +24,13 @@
           class="related"
           @click="sendGaClickEvent('article', 'related news right')"
         >
-          <div class="related__txt">
-            <div class="related__category">{{ relatedCategory }}</div>
+          <div class="related__txt" :style="{ outlineColor: sectionColor }">
+            <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
             <div class="related__title">
               <p>{{ _get(articles[ 1 ], 'title', '') }}</p>
             </div>
           </div>
-          <div class="related__arrow" />
+          <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
         </a>
       </div>
     </div>
@@ -39,11 +39,25 @@
 
 <script>
 import { get as _get } from 'lodash'
+import { SECTION_MAP, DEFAULT_SECTION_BGCOLOR } from '../../constants'
 import { sendGaClickEvent } from '../../util/comm'
 
 export default {
   name: 'RelatedListOverContent',
-  props: ['articles', 'relatedCategory'],
+  props: {
+    sectionId: {
+      type: String,
+      required: true
+    },
+    articles: {
+      type: Array,
+      required: true
+    },
+    relatedCategory: {
+      type: String,
+      required: true
+    }
+  },
   data () {
     return {
       showContent: false,
@@ -56,6 +70,9 @@ export default {
   computed: {
     isLapW () {
       return this.ww >= 1200
+    },
+    sectionColor () {
+      return _get(SECTION_MAP, `${this.sectionId}.bgcolor`, DEFAULT_SECTION_BGCOLOR)
     }
   },
   mounted () {
@@ -126,7 +143,7 @@ export default {
       border-top-right-radius 4px
       border-bottom-right-radius 4px
     &__arrow
-      background-color #ae4182
+      // background-color #ae4182
       width 26px
       flex 0 0 auto
       position relative
@@ -158,7 +175,7 @@ export default {
     &__category
       display none
       color #fff
-      background-color #ae4182
+      // background-color #ae4182
       align-self flex-start
       padding 2px 7px
       flex 0 0 auto
@@ -180,7 +197,9 @@ export default {
         height calc(1em * 1.5 * 2)
     &:hover, :active
       & .related__txt
-        outline 2px solid #ae4182
+        // outline 2px solid #ae4182
+        outline-style solid
+        outline-width 2px
         outline-offset -2px
 .fade
   &-enter-active, &-leave-active
