@@ -78,7 +78,6 @@
           :common-data="commonData"
           :section-name="sectionName"
         />
-        <!-- <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
       </div>
 
       <div
@@ -224,7 +223,6 @@
         <section class="footer container">
           <Footer />
         </section>
-        <!-- <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
         <Share
           :right="`20px`"
           :bottom="`20px`"
@@ -338,7 +336,6 @@
         <section class="footer container">
           <Footer />
         </section>
-        <!-- <lLiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
         <Share
           :right="`20px`"
           :bottom="`20px`"
@@ -430,14 +427,12 @@ import HeroImageFoodTravel from 'src/components/HeroImageFoodTravel.vue'
 import LatestArticleFoodTravel from 'src/components/LatestArticleFoodTravel.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import ListSlider from 'src/components/list/ListSlider.vue'
-import LiveStream from 'src/components/LiveStream.vue'
 import Loading from 'src/components/Loading.vue'
 import MicroAd from 'src/components/MicroAd.vue'
 import MoreFull from 'src/components/MoreFull.vue'
 import Share from 'src/components/Share.vue'
 import WineWarning from 'src/components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-// import moment from 'moment'
 import verge from 'verge'
 
 const MAXRESULT = 12
@@ -733,7 +728,6 @@ export default {
     LazyItemWrapper,
     LatestArticleFoodTravel,
     ListSlider,
-    LiveStream,
     Loading,
     MicroAd,
     MoreFull,
@@ -936,9 +930,6 @@ export default {
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
-    // eventEmbedded () {
-    //   return get(this.$store, 'state.eventEmbedded.items.0')
-    // },
     hasAutoScroll () {
       switch (this.type) {
         case AUTHOR:
@@ -958,15 +949,6 @@ export default {
     hasDFP () {
       return !(this.$route.params.title === 'interview' || this.$route.params.title === 'oralreading' || this.$route.params.title === 'topic')
     },
-    // hasEventEmbedded () {
-    //   const _now = moment()
-    //   const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
-    //   let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
-    //   if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-    //     _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
-    //   }
-    //   return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
-    // },
     hasMore () {
       switch (this.$route.params.title) {
         case 'interview':
@@ -1171,7 +1153,6 @@ export default {
   beforeMount () {
     // only fetch at first time after preFetch
     fetchListData(this.$store, this.type, this.pageStyle, this.uuid, false, false)
-    // fetchEvent(this.$store, 'embedded')
     fetchEvent(this.$store, 'logo')
     // this.abIndicator = this.getMmid()
   },

@@ -21,13 +21,6 @@
           />
         </section>
         <FlashNews :articles="flashNewsArticle" />
-
-        <EmbeddedIframe
-          v-if="hasEventEmbedded"
-          class="embedded-iframe--home"
-          :media-data="eventEmbedded"
-        />
-
         <LazyItemWrapper :load-after-page-loaded="true">
           <vue-dfp
             :is="props.vueDfp"
@@ -138,13 +131,7 @@
           :position="verge.viewportH()"
           :strict="true"
         >
-          <!-- <LiveStream v-if="hasEventEmbedded" :mediaData="eventEmbedded" /> -->
-          <!-- <LiveStream v-else-if="hasEventMod" :mediaData="eventMod" type="mod" /> -->
-          <LiveStream
-            v-if="hasEventMod"
-            :media-data="eventMod"
-            type="mod"
-          />
+          <HomeEvents />
         </LazyItemWrapper>
         <template v-if="isMobile">
           <DfpCover v-show="showDfpCoverAdFlag">
@@ -197,13 +184,12 @@ import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import FlashNews from 'src/components/FlashNews.vue'
 import EditorChoice from 'src/components/EditorChoice.vue'
-import EmbeddedIframe from 'src/components/EmbeddedIframe.vue'
 import Header from 'src/components/Header.vue'
+import HomeEvents from 'src/components/HomeEvents.vue'
 import LatestArticleAside from 'src/components/LatestArticleAside.vue'
 import LatestArticleFocus from 'src/components/list/LatestArticleFocus.vue'
 import LatestArticleMain from 'src/components/LatestArticleMain.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
-import LiveStream from 'src/components/LiveStream.vue'
 import Loading from 'src/components/Loading.vue'
 import MirrorMediaTVAside from 'src/components/MirrorMediaTVAside.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -283,10 +269,9 @@ export default {
   components: {
     FlashNews,
     EditorChoice,
-    EmbeddedIframe,
-    LiveStream,
     Loading,
     DfpCover,
+    HomeEvents,
     LatestArticleAside,
     LatestArticleFocus,
     LatestArticleMain,
@@ -403,9 +388,6 @@ export default {
     editorChoice () {
       return get(this.articlesGroupedList, 'choices')
     },
-    eventEmbedded () {
-      return get(this.$store, 'state.eventEmbedded.items.0')
-    },
     eventMod () {
       return get(this.$store, 'state.eventMod.items.0')
     },
@@ -414,15 +396,6 @@ export default {
     },
     groupedArticle () {
       return slice(get(this.articlesGroupedList, 'grouped'))
-    },
-    hasEventEmbedded () {
-      const _now = moment()
-      const _eventStartTime = moment(new Date(get(this.eventEmbedded, 'startDate')))
-      let _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate')))
-      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(get(this.eventEmbedded, 'endDate'))).add(12, 'h')
-      }
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     hasEventMod () {
       const _now = moment()
@@ -725,10 +698,6 @@ section.footer
     border solid 2px #224f73
 
 @media (min-width: 600px)
-  .embedded-iframe--home
-    padding-right 2rem
-    padding-left 2rem
-
   .list
     &.container
       width 100%
@@ -784,14 +753,6 @@ section.footer
     padding 0 2rem
 
 @media (min-width: 1200px)
-  .embedded-iframe--home
-    padding-top 10px
-    padding-right 0
-    padding-left 0
-    max-width 1024px
-    margin-right auto
-    margin-left auto
-
   .home-view
     h2
       &.project-title--desktop
