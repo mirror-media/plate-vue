@@ -178,7 +178,6 @@
       <div class="dfp-at--mobile">
         <slot name="dfpad-AR3-MB" />
       </div>
-      <newsletter />
       <div>
         更多內容，歡迎<a
           :href="socialLink.SUBSCRIBE"
@@ -243,7 +242,6 @@ import AudioBox from 'src/components/audioPlayerAsset/index.vue'
 import ArticleImg from 'src/components/article/ArticleImg.vue'
 import FbSocialPlugins from 'src/components/FbSocialPlugins.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
-import Newsletter from '../../components/Newsletter.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
 import Slider from '../Slider.vue'
 import AudioPlayer from 'src/components/audioPlayer/Container.vue'
@@ -254,7 +252,6 @@ export default {
   name: 'ArticleBody',
   components: {
     'audio-box': AudioBox,
-    newsletter: Newsletter,
     Annotation,
     ArticleBodyLayout,
     ArticleVideo,

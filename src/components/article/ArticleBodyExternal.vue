@@ -72,7 +72,6 @@
                 target="_blank"
               >看原文</a>】
             </p>
-            <newsletter />
             <p>
               更多內容，歡迎<a
                 :href="socialLink.SUBSCRIBE"
@@ -126,14 +125,10 @@
 <script>
 import { SOCIAL_LINK } from '../../constants'
 import _ from 'lodash'
-import Newsletter from '../../components/Newsletter.vue'
 import moment from 'moment'
 
 export default {
   name: 'ArticleBodyExternal',
-  components: {
-    newsletter: Newsletter
-  },
   props: {
     articleData: {
       type: Object,

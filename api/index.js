@@ -2,14 +2,11 @@ const { get, map, toNumber, concat, compact } = require('lodash')
 const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/ioredisHandler')
 const { handlerError } = require('./comm')
 const config = require('./config')
-const bodyParser = require('body-parser')
 const debug = require('debug')('PLATEVUE:api')
 const express = require('express')
 // const isProd = process.env.NODE_ENV === 'production'
 const router = express.Router()
 const superagent = require('./agent')
-
-const jsonParser = bodyParser.json()
 
 const { Logging } = require('@google-cloud/logging')
 const loggingClient = new Logging({
@@ -81,70 +78,6 @@ router.use('/poplist', (req, res) => {
 // deprecated
 router.get('/latestNews', (req, res) => {
   fetchStaticJson(req, res, 'latest_news')
-})
-
-router.get('/newsletter/:userEmail', async (req, res) => {
-  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user/${req.params.userEmail}`
-  try {
-    if (!regex.test(String(req.params.userEmail).toLowerCase())) {
-      const error = new Error('Bad request.')
-      error.status = 400
-      error.response = { text: '{"_error": {"code": 400, "message": "email format error."}}' }
-      throw error
-    }
-    const response = await superagent
-      .get(url)
-      .timeout(
-        {
-          response: config.API_TIMEOUT, // Wait 5 seconds for the server to start sending,
-          deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000 // but allow 1 minute for the file to finish loading.
-        }
-      )
-    res.json(JSON.parse(response.text))
-  } catch (error) {
-    console.error('[ERROR] GET newsletter api.', url, `${error}`)
-    const status = get(error, 'status') || 500
-    const info = JSON.parse(get(error, 'response.text')) || error
-    res.header('Cache-Control', 'no-cache')
-    res.status(status).send(info)
-  }
-})
-
-router.post('/newsletter', jsonParser, async (req, res) => {
-  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  const url = `${config.NEWSLETTER_PROTOCOL}://${config.NEWSLETTER_HOST}:${config.NEWSLETTER_PORT}/user`
-  try {
-    if (req && req.body && req.body.user && req.body.item) {
-      if (!regex.test(req.body.user)) {
-        const error = new Error('Bad request.')
-        error.status = 400
-        error.response = { text: '{"_error": {"code": 400, "message": "Bad request."}}' }
-        throw error
-      }
-      const response = await superagent
-        .post(url)
-        .send({ user: req.body.user, item: req.body.item })
-        .timeout(
-          {
-            response: config.API_TIMEOUT, // Wait 5 seconds for the server to start sending,
-            deadline: config.API_DEADLINE ? config.API_DEADLINE : 60000 // but allow 1 minute for the file to finish loading.
-          }
-        )
-      res.status(200).json({ user: response.body.user, item: response.body.result })
-    } else {
-      const error = new Error('Bad request.')
-      error.status = 400
-      error.response = { text: '{"_error": {"code": 400, "message": "Bad request."}}' }
-      throw error
-    }
-  } catch (error) {
-    console.error('[ERROR] POST newsletter api.', url, { user: req.body.user, item: req.body.item }, `${error}`)
-    const status = get(error, 'status') || 500
-    const info = JSON.parse(get(error, 'response.text')) || error
-    res.header('Cache-Control', 'no-cache')
-    res.status(status).send(info)
-  }
 })
 
 router.get('/video/:id', fetchFromRedisForAPI, async (req, res, next) => {
