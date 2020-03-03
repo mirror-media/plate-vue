@@ -174,14 +174,14 @@ router.use('/search', (req, res) => {
     } else {
       console.warn(`\n[WARN] Fetch data from Redis in fail ${err}.`, `/search${req.url}`)
       const keywords = get(req, 'query.keyword', '').split(',')
-      const mustKeywords = map(keywords, k => ({
+      let mustKeywords = map(keywords, k => ({
         multi_match: {
           query: k,
           type: 'phrase',
           fields: ['title^2', 'brief', 'content', 'writers.name']
         }
       }))
-
+      mustKeywords = concat(mustKeywords, [{ match: { isAudioSiteOnly: false } }])
       let where = {}
       try {
         where = JSON.parse(get(req, 'query.where', '{}'))
