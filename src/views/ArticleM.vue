@@ -10,17 +10,10 @@
       slot="dfpPos"
       slot-scope="props"
     >
-      <!-- <EmbeddedIframe v-if="hasEventEmbedded" :mediaData="eventEmbedded" /> -->
-
       <div
         v-if="(articleStyle !== 'photography')"
         class="article-container"
       >
-        <EmbeddedIframe
-          v-if="hasEventEmbedded"
-          class="embedded-iframe--article-m"
-          :media-data="eventEmbedded"
-        />
         <vue-dfp
           :is="props.vueDfp"
           pos="APPHD"
@@ -245,7 +238,6 @@ import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import DfpFixed from '../components/DfpFixed.vue'
 import DfpST from '../components/DfpST.vue'
-import EmbeddedIframe from 'src/components/EmbeddedIframe.vue'
 import LatestList from '../components/article/LatestList.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import PopList from '../components/article/PopList.vue'
@@ -253,7 +245,6 @@ import RelatedListInContent from '../components/article/RelatedListInContent.vue
 import RecommendList from '../components/article/RecommendList.vue'
 import WineWarning from '../components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 
@@ -328,7 +319,6 @@ export default {
     WineWarning,
     DfpCover,
     DfpST,
-    EmbeddedIframe,
     LazyItemWrapper,
     PopList,
     RelatedListInContent,
@@ -561,9 +551,6 @@ export default {
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
-    eventEmbedded () {
-      return _get(this.$store.state.eventEmbedded, ['items', '0'])
-    },
     eventLogo () {
       return _get(this.$store.state.eventLogo, ['items', '0'])
     },
@@ -572,15 +559,6 @@ export default {
     },
     hasDfpFixed () {
       return this.sectionId === SECTION_WATCH_ID
-    },
-    hasEventEmbedded () {
-      const _now = moment()
-      const _eventStartTime = moment(new Date(_get(this.eventEmbedded, ['startDate'])))
-      let _eventEndTime = moment(new Date(_get(this.eventEmbedded, ['endDate'])))
-      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(_get(this.eventEmbedded, ['endDate']))).add(12, 'h')
-      }
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     heroCaption () {
       return _get(this.articleData, ['heroCaption'], '')
@@ -687,7 +665,6 @@ export default {
     })
     fetchPop(this.$store)
     fetchCommonData(this.$store)
-    fetchEvent(this.$store, 'embedded')
     fetchEvent(this.$store, 'logo')
   },
   mounted () {
@@ -772,11 +749,6 @@ export default {
 
 </script>
 <style lang="stylus" scoped>
-  .embedded-iframe--article-m
-    max-width 1160px
-    background-color #fff
-    margin-right auto
-    margin-left auto
   .article-container
     width 100%
     background-color #414141

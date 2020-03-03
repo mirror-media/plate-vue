@@ -33,11 +33,6 @@
         v-if="!isArticlePhotography"
         class="article-container"
       >
-        <EmbeddedIframe
-          v-if="hasEventEmbedded"
-          class="embedded-iframe--article"
-          :media-data="eventEmbedded"
-        />
         <ClientOnly>
           <LazyItemWrapper :load-after-page-loaded="true">
             <vue-dfp
@@ -337,7 +332,6 @@
           </ClientOnly>
         </ArticleBodyPhotography>
       </div>
-      <!-- <LiveStream :mediaData="eventEmbedded" v-if="hasEventEmbedded" /> -->
       <WineWarning v-if="needWineWarning" />
       <!-- DFP MB ST, Cover -->
       <ClientOnly>
@@ -433,7 +427,6 @@ import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import DfpFixed from '../components/DfpFixed.vue'
 import DfpST from '../components/DfpST.vue'
-import EmbeddedIframe from 'src/components/EmbeddedIframe.vue'
 import FbSocialPlugins from 'src/components/FbSocialPlugins.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
@@ -441,7 +434,6 @@ import HeroImage from '../components/article/HeroImage.vue'
 import HeroVideo from '../components/article/HeroVideo.vue'
 import LatestList from '../components/article/LatestList.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
-import LiveStream from '../components/LiveStream.vue'
 import MicroAd from '../components/MicroAd.vue'
 import PopInAd from '../components/PopInAd.vue'
 import PopList from '../components/article/PopList.vue'
@@ -452,7 +444,6 @@ import RecommendList from '../components/article/RecommendList.vue'
 import ShareTools from '../components/article/ShareTools.vue'
 import WineWarning from '../components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import moment from 'moment'
 import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 import verge from 'verge'
@@ -561,7 +552,6 @@ export default {
     DfpCover,
     DfpFixed,
     DfpST,
-    EmbeddedIframe,
     FbSocialPlugins,
     Footer,
     Header,
@@ -569,7 +559,6 @@ export default {
     HeroVideo,
     LatestList,
     LazyItemWrapper,
-    LiveStream,
     MicroAd,
     PopInAd,
     PopList,
@@ -881,20 +870,8 @@ export default {
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
-    eventEmbedded () {
-      return _get(this.$store, 'state.eventEmbedded.items.0')
-    },
     hasDfpFixed () {
       return this.sectionId === SECTION_WATCH_ID
-    },
-    hasEventEmbedded () {
-      const _now = moment()
-      const _eventStartTime = moment(new Date(_get(this.eventEmbedded, 'startDate')))
-      let _eventEndTime = moment(new Date(_get(this.eventEmbedded, 'endDate')))
-      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(_get(this.eventEmbedded, 'endDate'))).add(12, 'h')
-      }
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
     },
     heroCaption () {
       return _get(this.articleData, ['heroCaption'], '')
@@ -993,7 +970,6 @@ export default {
     }
   },
   beforeMount () {
-    fetchEvent(this.$store, 'embedded')
     fetchRecommendList(this.$store, this.currArticleId)
   },
   mounted () {
@@ -1033,7 +1009,6 @@ export default {
       }
       Promise.all([
         fetchPop(this.$store),
-        // fetchEvent(this.$store, 'embedded'),
         fetchEvent(this.$store, 'logo')
       ]).then(() => {
         window.removeEventListener('scroll', lowPriorityDataLoader)
@@ -1110,14 +1085,6 @@ export default {
 
 </script>
 <style lang="stylus" scoped>
-  .embedded-iframe--article
-    max-width 1160px
-    margin-right auto
-    margin-left auto
-    padding-top 20px
-    padding-left 50px
-    padding-right 50px
-    background-color #fff
   .article-container
     width 100%
     background-color #414141
