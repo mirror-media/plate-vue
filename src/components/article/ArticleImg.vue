@@ -2,7 +2,6 @@
   <div
     class="content-image"
     :class="`img-${id}`"
-    @click="openLightBox"
   >
     <span
       v-show="!isVirtualImgLoaded"
@@ -23,16 +22,17 @@
     <div
       v-show="isLightboxActive"
       class="lightbox"
+      @click="closeLightBox"
     >
       <div
         class="lightbox-close"
-        @click="closeLightBox"
       />
       <img
         ref="lightboxImg"
         class="lightbox-img"
         :class="{ loading: !isLightboxImgLoaded }"
         src="/assets/mirrormedia/icon/loading.gif"
+        @click.stop
       >
     </div>
   </div>
@@ -42,6 +42,7 @@ import verge from 'verge'
 import preventScroll from 'prevent-scroll'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { get } from 'lodash'
+import { sendGaClickEvent } from '../../util/comm'
 
 const debug = require('debug')('CLIENT:ArticleImg')
 // const debugLazy = require('debug')('CLIENT:LAZYIMAGE')
@@ -107,9 +108,8 @@ export default {
     preventScroll.off()
   },
   methods: {
-    closeLightBox (e) {
+    closeLightBox () {
       this.isLightboxActive = false
-      e.stopPropagation()
     },
     constructImages () {
       return {
@@ -133,6 +133,7 @@ export default {
           get(this.images, 'tablet') + ' 1200w'
       )
       lazyImg.setAttribute('src', get(this.images, 'tablet'))
+      lazyImg.addEventListener('click', this.openLightBox)
     },
     lazyLoadLightboxImg () {
       const img = new Image()
@@ -144,6 +145,7 @@ export default {
     },
     openLightBox () {
       this.isLightboxActive = true
+      sendGaClickEvent('article', 'image')
     }
   }
 }
@@ -163,13 +165,13 @@ export default {
     display flex
     justify-content center
     align-items center
+    cursor pointer
 
     &-img
       max-height 90vh
       max-width 90vw
       z-index 100002
-      object-fit contain
-      object-position center
+      cursor default
       &.loading
         height 20%
         width 20%
@@ -191,7 +193,7 @@ export default {
     clear both
     margin 1.5em 0
 
-    & >>> img
+    & >>> img:not(.lightbox-img)
       width 100%
 
     .thumbnail

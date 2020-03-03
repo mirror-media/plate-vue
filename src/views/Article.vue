@@ -24,6 +24,7 @@
 
       <RelatedListOverContent
         v-if="!isArticlePhotography"
+        :section-id="sectionId"
         :articles="relateds"
         :related-category="relatedCategory"
       />
@@ -258,12 +259,6 @@
               :recommends="recommendlist"
               :excluding-article="routeUpateReferrerSlug"
             />
-            <div
-              slot="slot_fb_comment"
-              class="article_fb_comment"
-              style="margin: 1.5em 0;"
-              v-html="fbCommentDiv"
-            />
             <!-- dable -->
             <template
               v-if="!hiddenAdvertised"
@@ -318,13 +313,7 @@
         <ArticleBodyPhotography
           :article-data="articleData"
           :viewport="viewportWidth"
-          :init-f-b-comment="initializeFBComments"
         >
-          <div
-            slot="slot_fb_comment"
-            class="article_fb_comment"
-            v-html="fbCommentDiv"
-          />
           <ClientOnly>
             <div
               v-if="!hiddenAdvertised"
@@ -431,7 +420,6 @@ import {
 } from 'lodash'
 import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SECTION_WATCH_ID, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
 
-import { ScrollTriggerRegister } from '../util/scrollTriggerRegister'
 import { adtracker } from 'src/util/adtracking'
 import { currEnv, getImage, lockJS, sendAdCoverGA, sendGaClickEvent, unLockJS, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
@@ -896,12 +884,6 @@ export default {
     eventEmbedded () {
       return _get(this.$store, 'state.eventEmbedded.items.0')
     },
-    fbAppId () {
-      return _get(this.$store, 'state.fbAppId')
-    },
-    fbCommentDiv () {
-      return `<div class="fb-comments" data-href="${this.articleUrl}" data-numposts="5" data-width="100%" data-order-by="reverse_time"></div>`
-    },
     hasDfpFixed () {
       return this.sectionId === SECTION_WATCH_ID
     },
@@ -984,7 +966,6 @@ export default {
   },
   watch: {
     '$route.fullPath': function () {
-      this.initializeFBComments()
       this.updateMediafarmersScript()
       this.checkLockJS()
       this.sendGA(this.articleData)
@@ -1020,10 +1001,6 @@ export default {
     this.checkLockJS()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
-    const scrollTriggerRegister = new ScrollTriggerRegister([
-      { target: '.dable-widget', offset: 400, cb: this.initializeFBComments }
-    ])
-    scrollTriggerRegister.init()
 
     if (!_isEmpty(this.articleData)) {
       this.sendGA(this.articleData)
@@ -1097,16 +1074,6 @@ export default {
           sort: '-publishedDate',
           where: { sections: this.sectionId }
         })
-      }
-    },
-    initializeFBComments () {
-      if (window.FB) {
-        window.FB.init({
-          appId: this.fbAppId,
-          xfbml: true,
-          version: 'v2.0'
-        })
-        window.FB.XFBML.parse()
       }
     },
     insertMediafarmersScript () {

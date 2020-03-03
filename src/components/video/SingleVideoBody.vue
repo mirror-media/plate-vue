@@ -18,15 +18,6 @@
         <slot name="share" />
       </div>
       <p v-text="video.description" />
-      <div class="single-video__comments">
-        <div
-          v-if="mounted"
-          :href="`${SITE_URL}/video/${video.id}`"
-          class="fb-comments"
-          data-numposts="5"
-          data-width="100%"
-        />
-      </div>
     </div>
     <template v-if="latest.length > 0">
       <div class="single-video__latest">
@@ -175,11 +166,6 @@ export default {
         font-size .875rem
         text-align justify
         line-height 1.43
-  &__comments
-    width 90%
-    margin 40px auto 0
-    >>> iframe
-      width 100% !important
 
 @media (min-width: 768px)
   .single-video
@@ -188,7 +174,7 @@ export default {
         width 60%
       h1
         font-size 1.375rem
-    &__video-info, &__latest, &__comments
+    &__video-info, &__latest
       width 60%
     &__latest
       h3
@@ -234,6 +220,4 @@ export default {
           font-size .875rem
           &:hover
             color #064f77
-    &__comments
-      width 100%
 </style>
