@@ -60,7 +60,6 @@
     "lodash": "^4.17.15",
     "lru-cache": "^5.1.1",
     "moment": "^2.24.0",
-    "node-memwatch": "^1.0.1",
     "plate-vue-dfp": "^1.3.65",
     "prevent-scroll": "^2.0.0",
     "qs": "^6.9.1",
