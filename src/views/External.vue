@@ -120,10 +120,9 @@
             class="pop_item margin-top-0"
           />
         </pop-list>
-        <proj-list
+        <ProjectSliderContainer
           slot="projectList"
           :projects="projectList"
-          :viewport="viewport"
         />
         <div
           slot="footer"
@@ -271,7 +270,7 @@ import LatestList from '../components/article/LatestList.vue'
 import MicroAd from '../components/MicroAd.vue'
 import PopList from '../components/article/PopList.vue'
 import PopListVert from '../components/article/PopListVert.vue'
-import ProjectList from '../components/article/ProjectList.vue'
+import ProjectSliderContainer from 'src/components/project/ProjectSliderContainer.vue'
 import ShareTools from '../components/article/ShareTools.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
@@ -350,12 +349,12 @@ export default {
     'micro-ad': MicroAd,
     'pop-list': PopList,
     'pop-list-vert': PopListVert,
-    'proj-list': ProjectList,
     'share-tools': ShareTools,
     'vue-dfp-provider': VueDfpProvider,
     DfpCover,
     DfpST,
-    Header
+    Header,
+    ProjectSliderContainer
   },
   asyncData ({ store, route: { params: { name } } }) {
     return fetchData(store, name)
