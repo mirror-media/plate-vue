@@ -66,10 +66,7 @@
           />
           <div class="topicTimeline__projects">
             <h1>更多專題文章</h1>
-            <ProjectList
-              :projects="projects"
-              :viewport="viewport"
-            />
+            <ProjectSliderContainer :projects="filteredProjects" />
           </div>
         </template>
 
@@ -274,7 +271,7 @@ import LeadingWatch from '../components/LeadingWatch.vue'
 import Loading from '../components/Loading.vue'
 import MoreFull from '../components/MoreFull.vue'
 import PortraitWallList from '../components/PortraitWallList.vue'
-import ProjectList from '../components/article/ProjectList.vue'
+import ProjectSliderContainer from 'src/components/project/ProjectSliderContainer.vue'
 import PresidentElectionProgress from '../components/PresidentElectionProgress.vue'
 import PresidentElectionList from '../components/PresidentElectionList.vue'
 import Share from '../components/Share.vue'
@@ -427,7 +424,7 @@ export default {
     'timeline-headline': TimelineHeadline,
     'vue-dfp-provider': VueDfpProvider,
     WineWarning,
-    ProjectList,
+    ProjectSliderContainer,
     PresidentElectionProgress,
     PresidentElectionList,
     Header

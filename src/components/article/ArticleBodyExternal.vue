@@ -218,13 +218,15 @@ export default {
         font-weight normal
     &__main
       margin-top 30px
-      line-height 36px
       a, a:hover, a:link, a:visited
-        padding-bottom 5px
-        color #3195b3
-        text-decoration none
-        border-bottom 1px solid #3195b3
         cursor pointer
+      > p
+        line-height 36px
+        a, a:hover, a:link, a:visited
+          padding-bottom 5px
+          color #3195b3
+          text-decoration none
+          border-bottom 1px solid #3195b3
       &--brief
         color #08639e
         text-align justify
@@ -244,6 +246,11 @@ export default {
           font-size 18px
           line-height 36px
           text-align justify
+        a
+          padding-bottom 5px
+          color #3195b3
+          text-decoration none
+          border-bottom 1px solid #3195b3
         img
           width 100%
         .picture-box

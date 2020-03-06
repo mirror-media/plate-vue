@@ -7,7 +7,6 @@ const favicon = require('serve-favicon')
 const fs = require('fs')
 const http = require('http')
 const maxMemUsageLimit = 1000 * 1024 * 1024
-const memwatch = require('node-memwatch')
 const moment = require('moment')
 // const microcache = require('route-cache')
 const path = require('path')
@@ -17,10 +16,6 @@ const resolve = file => path.resolve(__dirname, file)
 const { VALID_PREVIEW_IP_ADD } = require('./api/config')
 const { createBundleRenderer } = require('vue-server-renderer')
 const { fetchFromRedis, redisWriting } = require('./api/middle/ioredisHandler')
-
-const formatMem = (bytes) => {
-  return (bytes / 1024 / 1024).toFixed(2) + ' Mb'
-}
 
 const isProd = process.env.NODE_ENV === 'production'
 // const useMicroCache = process.env.MICRO_CACHE !== 'false'
@@ -135,7 +130,6 @@ function render (req, res, next) {
 
   const checkoutMem = () => {
     const mem = process.memoryUsage()
-    // console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
     if (mem.heapUsed > maxMemUsageLimit) {
       for (let i = 0; i < 10; i += 1) {
         console.error('MEMORY WAS RUNNING OUT')
@@ -305,43 +299,3 @@ module.exports = {
     server.close()
   }
 }
-
-memwatch.on('leak', function (info) {
-  const growth = formatMem(info.growth)
-  // const mem = process.memoryUsage()
-  console.error('GETING MEMORY LEAK:', ['growth ' + growth, 'reason ' + info.reason].join(', '))
-  // console.error('MEMORY STAT(heapUsed):', formatMem(mem.heapUsed), `${moment().format('YYYY-MM-DD HH:mm:SS')}`)
-})
-memwatch.on('stats', function (stats) {
-  const estBase = formatMem(stats.estimated_base)
-  const currBase = formatMem(stats.current_base)
-  const min = formatMem(stats.min)
-  const max = formatMem(stats.max)
-
-  console.info('=======================================\n',
-    `GC STATs(${moment().format('YYYY-MM-DD HH:mm:SS')}):\n`, [
-      'num_full_gc ' + stats.num_full_gc,
-      'num_inc_gc ' + stats.num_inc_gc,
-      'heap_compactions ' + stats.heap_compactions,
-      'usage_trend ' + stats.usage_trend,
-      'estimated_base ' + estBase,
-      'current_base ' + currBase,
-      'min ' + min,
-      'max ' + max
-    ].join(', '), '\n=======================================')
-
-  if (stats.current_base > maxMemUsageLimit) {
-    // for (let i = 0; i < 10; i += 1) {
-    console.error('MEMORY WAS RUNNING OUT')
-    // }
-    /**
-     * kill this process gracefully
-     */
-    const killTimer = setTimeout(() => {
-      process.exit(1)
-    }, 1000)
-    killTimer.unref()
-    server.close()
-    console.error(`GOING TO KILL PROCESS IN 1 SECOND(At ${moment().format('YYYY-MM-DD HH:mm:SS')})`)
-  }
-})

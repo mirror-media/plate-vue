@@ -120,10 +120,9 @@
             class="pop_item margin-top-0"
           />
         </pop-list>
-        <proj-list
+        <ProjectSliderContainer
           slot="projectList"
           :projects="projectList"
-          :viewport="viewport"
         />
         <div
           slot="footer"
@@ -197,7 +196,6 @@
         </article-aside-fixed>
       </article-body-external>
       <share-tools v-if="viewport > 1200" />
-      <!-- <live-stream :mediaData="eventEmbedded" v-if="hasEventEmbedded"></live-stream> -->
       <LazyItemWrapper
         v-if="(viewport < 550)"
         :load-after-page-loaded="true"
@@ -269,14 +267,12 @@ import DfpST from '../components/DfpST.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import LatestList from '../components/article/LatestList.vue'
-import LiveStream from '../components/LiveStream.vue'
 import MicroAd from '../components/MicroAd.vue'
 import PopList from '../components/article/PopList.vue'
 import PopListVert from '../components/article/PopListVert.vue'
-import ProjectList from '../components/article/ProjectList.vue'
+import ProjectSliderContainer from 'src/components/project/ProjectSliderContainer.vue'
 import ShareTools from '../components/article/ShareTools.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-// import moment from 'moment'
 import truncate from 'truncate'
 
 const fetchCommonData = (store) => {
@@ -350,16 +346,15 @@ export default {
     'article-aside-fixed': ArticleAsideFixed,
     'article-body-external': ArticleBodyExternal,
     'latest-list': LatestList,
-    'live-stream': LiveStream,
     'micro-ad': MicroAd,
     'pop-list': PopList,
     'pop-list-vert': PopListVert,
-    'proj-list': ProjectList,
     'share-tools': ShareTools,
     'vue-dfp-provider': VueDfpProvider,
     DfpCover,
     DfpST,
-    Header
+    Header,
+    ProjectSliderContainer
   },
   asyncData ({ store, route: { params: { name } } }) {
     return fetchData(store, name)
@@ -518,24 +513,12 @@ export default {
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
-    // eventEmbedded () {
-    //   return _.get(this.$store.state.eventEmbedded, [ 'items', '0' ])
-    // },
     eventLogo () {
       return _.get(this.$store.state.eventLogo, ['items', '0'])
     },
     fbAppId () {
       return _.get(this.$store, ['state', 'fbAppId'])
     },
-    // hasEventEmbedded () {
-    //   const _now = moment()
-    //   const _eventStartTime = moment(new Date(_.get(this.eventEmbedded, [ 'startDate' ])))
-    //   let _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ])))
-    //   if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-    //     _eventEndTime = moment(new Date(_.get(this.eventEmbedded, [ 'endDate' ]))).add(12, 'h')
-    //   }
-    //   return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
-    // },
     isTimeToShowAdCover () {
       return _.get(this.$store, 'state.isTimeToShowAdCover', false)
     },
@@ -574,7 +557,6 @@ export default {
     fetchCommonData(this.$store)
     fetchPop(this.$store)
     fetchLatestArticle(this.$store)
-    // fetchEvent(this.$store, 'embedded')
     fetchEvent(this.$store, 'logo')
   },
   mounted () {
