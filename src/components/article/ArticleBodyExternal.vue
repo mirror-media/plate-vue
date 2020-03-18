@@ -112,7 +112,6 @@
           </section>
           <section class="article__aside">
             <slot name="dfp-PCR1" />
-            <slot name="latestList" />
             <slot name="articleAsideFixed" />
           </section>
         </main>

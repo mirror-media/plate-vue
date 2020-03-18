@@ -94,13 +94,6 @@
                 />
               </LazyItemWrapper>
               <LazyItemWrapper
-                v-if="abIndicator !== 'B' && latests.length > 0"
-                :position="verge.viewportH() / 2"
-                :strict="true"
-              >
-                <LatestList :latests="latests" />
-              </LazyItemWrapper>
-              <LazyItemWrapper
                 :load-after-page-loaded="true"
                 :style="{ minHeight: '300px' }"
               >
@@ -432,7 +425,6 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import HeroImage from '../components/article/HeroImage.vue'
 import HeroVideo from '../components/article/HeroVideo.vue'
-import LatestList from '../components/article/LatestList.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import MicroAd from '../components/MicroAd.vue'
 import PopInAd from '../components/PopInAd.vue'
@@ -532,7 +524,6 @@ const fetchData = store => Promise.all([
   fetchCommonData(store)
 ])
 
-const fetchLatestArticle = (store, params) => store.dispatch('FETCH_LATESTARTICLE', { params: params })
 const fetchImages = (store, { ids = [], maxResults = 10 }) => store.dispatch('FETCH_IMAGES_BY_ID', {
   ids,
   maxResults
@@ -557,7 +548,6 @@ export default {
     Header,
     HeroImage,
     HeroVideo,
-    LatestList,
     LazyItemWrapper,
     MicroAd,
     PopInAd,
@@ -901,10 +891,6 @@ export default {
     isMobile () {
       return this.viewportWidth < 1200
     },
-    latests () {
-      return _get(this.$store, 'state.latestArticle.items', [])
-        .filter((latest) => _get(latest, 'slug', '') !== this.currArticleSlug)
-    },
     needWineWarning () {
       const cats = this.articleData.categories || []
       return cats.some(cat => cat.name === 'wine')
@@ -953,14 +939,6 @@ export default {
     },
     isLockJS () {
       this.checkLockJS()
-    },
-    sectionId: function () {
-      !this.isMobile && fetchLatestArticle(this.$store, {
-        sort: '-publishedDate',
-        where: {
-          sections: this.sectionId
-        }
-      })
     }
   },
   beforeMount () {
@@ -976,19 +954,6 @@ export default {
       this.sendGA(this.articleData)
       this.hasSentFirstEnterGA = true
     }
-
-    /**
-     * Fetch latests after window.onload.
-     */
-    window.addEventListener('load', () => {
-      !this.isMobile && fetchLatestArticle(this.$store, {
-        sort: '-publishedDate',
-        where: { sections: this.sectionId }
-      })
-    })
-
-    window.addEventListener('resize', this.handleWWChange)
-    window.addEventListener('orientationChange', this.handleWWChange)
 
     /**
      * Data's supposed to be loaded later.
@@ -1013,10 +978,6 @@ export default {
   updated () {
     this.updateSysStage()
   },
-  beforeDestroy () {
-    window.removeEventListener('resize', this.handleWWChange)
-    window.removeEventListener('orientationChange', this.handleWWChange)
-  },
   methods: {
     checkLockJS () {
       this.isLockJS ? lockJS() : unLockJS()
@@ -1035,15 +996,6 @@ export default {
           { id: 'B', weight: 50 }]
       })
       return assisgnedRole || role
-    },
-    handleWWChange () {
-      const isLapW = window.innerWidth >= 1200
-      if (isLapW && !this.latests.length) {
-        fetchLatestArticle(this.$store, {
-          sort: '-publishedDate',
-          where: { sections: this.sectionId }
-        })
-      }
     },
     insertMediafarmersScript () {
       const mediafarmersScript = document.createElement('script')

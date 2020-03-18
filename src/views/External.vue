@@ -94,10 +94,6 @@
           class="dfp--desktop"
           :config="props.config"
         />
-        <latest-list
-          slot="latestList"
-          :latests="latestArticle"
-        />
         <vue-dfp
           :is="props.vueDfp"
           slot="dfp-PCR2"
@@ -266,7 +262,6 @@ import DfpCover from '../components/DfpCover.vue'
 import DfpST from '../components/DfpST.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
-import LatestList from '../components/article/LatestList.vue'
 import MicroAd from '../components/MicroAd.vue'
 import PopList from '../components/article/PopList.vue'
 import PopListVert from '../components/article/PopListVert.vue'
@@ -309,14 +304,6 @@ const fetchExternal = (store, slug) => {
   })
 }
 
-const fetchLatestArticle = (store) => {
-  return store.dispatch('FETCH_LATESTARTICLE', {
-    params: {
-      sort: '-publishedDate'
-    }
-  })
-}
-
 const fetchPartners = (store) => {
   const page = _.get(store.state, ['partners', 'meta', 'page'], 0) + 1
   return store.dispatch('FETCH_PARTNERS', {
@@ -345,7 +332,6 @@ export default {
     'app-footer': Footer,
     'article-aside-fixed': ArticleAsideFixed,
     'article-body-external': ArticleBodyExternal,
-    'latest-list': LatestList,
     'micro-ad': MicroAd,
     'pop-list': PopList,
     'pop-list-vert': PopListVert,
@@ -522,9 +508,6 @@ export default {
     isTimeToShowAdCover () {
       return _.get(this.$store, 'state.isTimeToShowAdCover', false)
     },
-    latestArticle () {
-      return _.get(this.$store.state.latestArticle, ['items'], [])
-    },
     popularList () {
       return _.get(this.$store, ['state', 'articlesPopList', 'report'], [])
     },
@@ -556,7 +539,6 @@ export default {
   beforeMount () {
     fetchCommonData(this.$store)
     fetchPop(this.$store)
-    fetchLatestArticle(this.$store)
     fetchEvent(this.$store, 'logo')
   },
   mounted () {
