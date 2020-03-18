@@ -710,26 +710,20 @@ export default {
               {
                 '@type': 'ListItem',
                 position: 1,
-                item: {
-                  '@id': SITE_URL,
-                  name: SITE_TITLE
-                }
+                name: SITE_TITLE,
+                item: SITE_URL
               },
               {
                 '@type': 'ListItem',
                 position: 2,
-                item: {
-                  '@id': `${SITE_URL}/section/${_get(this.articleData, 'sections.0.name')}`,
-                  name: sectionTitle
-                }
+                name: sectionTitle,
+                item: `${SITE_URL}/section/${_get(this.articleData, 'sections.0.name')}`
               },
               {
                 '@type': 'ListItem',
                 position: 3,
-                item: {
-                  '@id': ogUrl,
-                  name: title
-                }
+                name: title,
+                item: ogUrl
               }
             ]
           }
