@@ -57,6 +57,7 @@
           class="article"
         >
           <ArticleBody
+            :ab-indicator="abIndicator"
             :article-data="articleData"
             :is-ad="isAd"
             :viewport="viewportWidth"
@@ -224,6 +225,7 @@
             />
             <RelatedListInContent
               slot="relatedListInContent"
+              :ab-indicator="abIndicator"
               :relateds="relateds"
             >
               <MicroAd
