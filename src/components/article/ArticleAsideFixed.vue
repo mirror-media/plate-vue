@@ -3,9 +3,9 @@
     ref="articleAsideFixed"
     class="articleAsideFixed"
   >
-    <slot name="fbPage-External" />
-    <slot name="dfpR2" />
     <slot name="fbPage" />
+    <slot name="dfpR2" />
+    <slot name="readrEmbedded" />
     <slot name="popListVert" />
   </section>
 </template>
@@ -36,7 +36,7 @@ export default {
       const articleAsideHeight = articleAside.offsetHeight
       const currPos = currentYPosition()
       let fixedPosBtm
-      const shouldFixAfter = '.readr-embedded-promotions'
+      const shouldFixAfter = '.aside-fixed-trigger'
       const fixedPos = document.querySelector(`.article_aside ${shouldFixAfter}`) || document.querySelector(`.article_aside ${shouldFixAfter}`)
       if (fixedPos) {
         fixedPosBtm = elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight || elmYPosition(`.article_aside ${shouldFixAfter}`) + fixedPos.offsetHeight
