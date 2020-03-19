@@ -78,23 +78,7 @@
                 target="_blank"
               >訂閱鏡週刊</a>
             </p>
-            <div class="article__main--fbPage">
-              <div
-                class="fb-page"
-                data-href="https://www.facebook.com/mirrormediamg/"
-                data-adapt-container-width="true"
-                data-small-header="true"
-                data-hide-cover="true"
-                data-show-facepile="false"
-              >
-                <blockquote
-                  cite="https://www.facebook.com/mirrormediamg/"
-                  class="fb-xfbml-parse-ignore"
-                >
-                  <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-                </blockquote>
-              </div>
-            </div>
+            <slot name="fbPage-External" />
             <div class="herbsapi">
               <div
                 id="herbsapi"
@@ -108,7 +92,6 @@
             <slot name="dfp-PCE1E2" />
             <slot name="recommendList" />
             <slot name="popularList" />
-            <slot name="projectList" />
           </section>
           <section class="article__aside">
             <slot name="dfp-PCR1" />
@@ -233,8 +216,6 @@ export default {
         font-size 1.2rem
         line-height 36px
       &--content
-        p
-          font-weight 400
         h2
           margin-top 40px
           color #000
@@ -243,11 +224,13 @@ export default {
           margin 1.5em 0
           color #171717
           font-size 18px
+          font-weight 400
           line-height 36px
           text-align justify
         a
           padding-bottom 5px
           color #3195b3
+          line-height 2
           text-decoration none
           border-bottom 1px solid #3195b3
         img
@@ -269,9 +252,6 @@ export default {
           margin-left .8em
           color #171717
           border none
-      &--fbPage
-        width 100%
-        margin-top 15px
 
       .herbsapi
         display flex
@@ -338,19 +318,13 @@ export default {
         margin-top 30px
         > p:first-of-type
           margin-top 0
-        &--fbPage
-          display none
       &__aside
         display block
         margin-top 10px
-        .latest-list
-          width 300px
-        &--fbPage
-          width 300px
-          margin 20px auto 15px
-          overflow hidden
-          .fb-page
-            width 100%
+        .popListVert
+          margin-top 20px
+        .dfp--desktop
+          margin-bottom 20px
       .popularList
         display none
       .footer
