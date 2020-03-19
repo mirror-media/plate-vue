@@ -87,6 +87,7 @@
               <LazyItemWrapper
                 v-if="!hiddenAdvertised"
                 :load-after-page-loaded="true"
+                class="aside-fixed-trigger"
               >
                 <vue-dfp
                   :is="props.vueDfp"
@@ -94,13 +95,13 @@
                   :config="props.config"
                 />
               </LazyItemWrapper>
-              <LazyItemWrapper
-                :load-after-page-loaded="true"
-                :style="{ minHeight: '300px' }"
-              >
-                <READrEmbeddedPromotions class="readr-embedded-promotions" />
-              </LazyItemWrapper>
               <ArticleAsideFixed>
+                <LazyItemWrapper
+                  slot="fbPage"
+                  :load-after-page-loaded="true"
+                >
+                  <FbSocialPlugins />
+                </LazyItemWrapper>
                 <LazyItemWrapper
                   v-if="!hiddenAdvertised"
                   slot="dfpR2"
@@ -115,11 +116,11 @@
                   />
                 </LazyItemWrapper>
                 <LazyItemWrapper
-                  slot="fbPage"
-                  :position="verge.viewportH()"
-                  :strict="true"
+                  slot="readrEmbedded"
+                  :load-after-page-loaded="true"
+                  :style="{ minHeight: '300px' }"
                 >
-                  <FbSocialPlugins />
+                  <READrEmbeddedPromotions class="readr-embedded-promotions" />
                 </LazyItemWrapper>
                 <LazyItemWrapper
                   slot="popListVert"

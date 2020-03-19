@@ -78,7 +78,7 @@
                 target="_blank"
               >訂閱鏡週刊</a>
             </p>
-            <slot name="fbPage-External" />
+            <slot name="fbPage" />
             <div class="herbsapi">
               <div
                 id="herbsapi"

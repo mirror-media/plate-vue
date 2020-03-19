@@ -135,13 +135,13 @@
         </template>
         <FbSocialPlugins
           v-if="viewport < 1199"
-          slot="fbPage-External"
+          slot="fbPage"
         />
         <article-aside-fixed
           v-if="viewport > 1200"
           slot="articleAsideFixed"
         >
-          <FbSocialPlugins slot="fbPage-External" />
+          <FbSocialPlugins slot="fbPage" />
           <vue-dfp
             :is="props.vueDfp"
             slot="dfpR2"
