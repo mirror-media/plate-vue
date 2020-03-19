@@ -105,20 +105,6 @@
           slot="popularList"
           class="popularList"
           :pop="popularList"
-        >
-          <micro-ad
-            v-for="(a, i) in getValue(microAds, [ 'article' ])"
-            :id="`${getValue(a, [ 'pcId' ])}`"
-            :key="`${getValue(a, [ 'pcId' ])}`"
-            :slot="`microAd${i}`"
-            :curr-env="dfpMode"
-            :curr-url="articleUrl"
-            class="pop_item margin-top-0"
-          />
-        </pop-list>
-        <ProjectSliderContainer
-          slot="projectList"
-          :projects="projectList"
         />
         <div
           slot="footer"
@@ -147,7 +133,15 @@
             data-widget_id="GlYwenoy"
           />
         </template>
-        <article-aside-fixed slot="articleAsideFixed">
+        <FbSocialPlugins
+          v-if="viewport < 1199"
+          slot="fbPage-External"
+        />
+        <article-aside-fixed
+          v-if="viewport > 1200"
+          slot="articleAsideFixed"
+        >
+          <FbSocialPlugins slot="fbPage-External" />
           <vue-dfp
             :is="props.vueDfp"
             slot="dfpR2"
@@ -155,40 +149,10 @@
             class="dfp--desktop"
             :config="props.config"
           />
-          <div
-            slot="fbPage"
-            class="article__aside--fbPage"
-          >
-            <div
-              class="fb-page"
-              data-href="https://www.facebook.com/mirrormediamg/"
-              data-adapt-container-width="true"
-              data-small-header="true"
-              data-hide-cover="true"
-              data-show-facepile="false"
-            >
-              <blockquote
-                cite="https://www.facebook.com/mirrormediamg/"
-                class="fb-xfbml-parse-ignore"
-              >
-                <a href="https://www.facebook.com/mirrormediamg/">鏡週刊</a>
-              </blockquote>
-            </div>
-          </div>
           <pop-list-vert
             slot="popListVert"
             :pop="popularList"
-          >
-            <micro-ad
-              v-for="a in getValue(microAds, [ 'articleFixed' ])"
-              :id="`${getValue(a, [ 'pcId' ])}`"
-              :key="`${getValue(a, [ 'pcId' ])}`"
-              :slot="`microAd${getValue(a, [ 'pos' ])}`"
-              :curr-env="dfpMode"
-              :curr-url="articleUrl"
-              class="popListVert-list__item"
-            />
-          </pop-list-vert>
+          />
         </article-aside-fixed>
       </article-body-external>
       <share-tools v-if="viewport > 1200" />
@@ -253,26 +217,21 @@ import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SITE_MOBILE_URL, SITE
 import { adtracker } from 'src/util/adtracking'
 import { consoleLogOnDev, currEnv, getValue, sendAdCoverGA, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
-import { microAds } from '../constants/microAds'
 import _ from 'lodash'
 import ArticleAsideFixed from '../components/article/ArticleAsideFixed.vue'
 import ArticleBodyExternal from '../components/article/ArticleBodyExternal.vue'
 import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import DfpST from '../components/DfpST.vue'
+import FbSocialPlugins from 'src/components/FbSocialPlugins.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
-import MicroAd from '../components/MicroAd.vue'
+import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import PopList from '../components/article/PopList.vue'
 import PopListVert from '../components/article/PopListVert.vue'
-import ProjectSliderContainer from 'src/components/project/ProjectSliderContainer.vue'
 import ShareTools from '../components/article/ShareTools.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import truncate from 'truncate'
-
-const fetchCommonData = (store) => {
-  return store.dispatch('FETCH_COMMONDATA', { endpoints: ['projects'] })
-}
 
 const fetchData = (store, slug) => {
   return Promise.all([fetchSSRData(store), fetchPartners(store), fetchExternal(store, slug)])
@@ -332,15 +291,15 @@ export default {
     'app-footer': Footer,
     'article-aside-fixed': ArticleAsideFixed,
     'article-body-external': ArticleBodyExternal,
-    'micro-ad': MicroAd,
     'pop-list': PopList,
     'pop-list-vert': PopListVert,
     'share-tools': ShareTools,
     'vue-dfp-provider': VueDfpProvider,
     DfpCover,
     DfpST,
+    FbSocialPlugins,
     Header,
-    ProjectSliderContainer
+    LazyItemWrapper
   },
   asyncData ({ store, route: { params: { name } } }) {
     return fetchData(store, name)
@@ -403,7 +362,6 @@ export default {
       dfpUnits: DFP_UNITS,
       hasSentFirstEnterGA: false,
       isVponSDKLoaded: false,
-      microAds,
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
@@ -511,9 +469,6 @@ export default {
     popularList () {
       return _.get(this.$store, ['state', 'articlesPopList', 'report'], [])
     },
-    projectList () {
-      return _.get(this.$store.state, ['commonData', 'projects', 'items'])
-    },
     styleDfpAd () {
       return (this.viewport < 321) ? 'ad-fit' : ''
     }
@@ -537,7 +492,6 @@ export default {
     }
   },
   beforeMount () {
-    fetchCommonData(this.$store)
     fetchPop(this.$store)
     fetchEvent(this.$store, 'logo')
   },

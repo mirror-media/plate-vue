@@ -3,6 +3,7 @@
     ref="articleAsideFixed"
     class="articleAsideFixed"
   >
+    <slot name="fbPage-External" />
     <slot name="dfpR2" />
     <slot name="fbPage" />
     <slot name="popListVert" />
