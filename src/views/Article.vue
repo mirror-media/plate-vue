@@ -585,6 +585,7 @@ export default {
       ogImage = {},
       ogTitle = '',
       publishedDate = '',
+      updatedAt = '',
       sections = [],
       slug = '',
       tags = [],
@@ -600,6 +601,7 @@ export default {
     const robotsValue = isAdult ? 'noindex' : 'index'
     const ogImageUrl = _get(ogImage, 'image.resizedTargets.mobile.url', '')
     const publishedTime = publishedDate ? new Date(publishedDate).toISOString() : ''
+    const updatedTime = updatedAt ? new Date(updatedAt).toISOString() : publishedTime
     const pureBrief = truncate(sanitizeHtml(_map(_get(brief, 'apiData', []), o => _map(_get(o, 'content', []), str => str)).join(''), { allowedTags: [] }), 197)
     const pureTags = _map(tags, t => _get(t, 'name', ''))
     const keywords = _get(categories, '0.title') + ',' + pureTags.toString()
@@ -643,25 +645,16 @@ export default {
         {
           type: 'application/ld+json',
           json: {
-            '@context': 'http://schema.org',
-            '@type': 'NewsArticle',
-            headline: title,
-            url: ogUrl,
-            thumbnailUrl: metaImage,
-            articleSection: sectionTitle,
-            keywords: keywords,
+            '@context': 'https://schema.org',
+            '@type': 'Article',
             mainEntityOfPage: {
               '@type': 'WebPage',
               '@id': ogUrl
             },
-            image: {
-              '@type': 'ImageObject',
-              url: metaImage,
-              height: _get(this.heroImage, 'image.resizedTargets.desktop.height'),
-              width: _get(this.heroImage, 'image.resizedTargets.desktop.width')
-            },
+            headline: title,
+            image: metaImage,
             datePublished: publishedTime,
-            dateModified: _get(this.articleData, 'updatedAt'),
+            dateModified: updatedTime,
             author: {
               '@type': 'Person',
               name: author
@@ -674,7 +667,11 @@ export default {
                 url: 'https://www.mirrormedia.mg/assets/images/logo.png'
               }
             },
-            description: metaDescription
+            description: metaDescription,
+            url: ogUrl,
+            thumbnailUrl: metaImage,
+            articleSection: sectionTitle,
+            keywords: keywords
           }
         },
         {
