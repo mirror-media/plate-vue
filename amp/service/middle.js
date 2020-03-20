@@ -6,7 +6,7 @@ const superagent = require('superagent')
 const { redisFetching } = require('../../api/middle/ioredisHandler')
 const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph, getTweetIdFromEmbeddedCode } = require('./util')
 const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../api/config')
-const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT, ALEXA_ATRK_ACCT, SITE_DOMAIN } = require('../../src/constants')
+const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT, ALEXA_ATRK_ACCT, SITE_DOMAIN, SITE_TITLE } = require('../../src/constants')
 
 const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
@@ -137,7 +137,7 @@ const sendArticleData = (req, res, next) => {
     const _storyContentsAnnotation = _.get(_.find(_storyContent, ['type', 'annotation']), ['content'], '')
     const _storyAdTrace = _.get(articleData, 'adTrace', '')
     const _storyRelateds = _.get(articleData, ['relateds'], [])
-
+    const _storyFirstAuthor = _.get(articleData, 'writers.0.name', '')
     return {
       storyInfo: {
         sectionName: _sectionTitle || _sectionTitleCategories,
@@ -148,7 +148,8 @@ const sendArticleData = (req, res, next) => {
         storySlug: _storySlug,
         storyURL: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/${_storySlug}`,
         storyURLAMP: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/amp/${_storySlug}`,
-        storyCredits: getCredit(articleData)
+        storyCredits: getCredit(articleData),
+        storyFirstAuthor: _storyFirstAuthor
       },
       storyHeroVideo: {
         src: _storyHeroVideoSrc
@@ -174,7 +175,8 @@ const sendArticleData = (req, res, next) => {
       MATCHED_CONTENT_AD_CLIENT,
       MATCHED_CONTENT_AD_SLOT,
       ALEXA_ATRK_ACCT,
-      SITE_DOMAIN
+      SITE_DOMAIN,
+      SITE_TITLE
     }
   }
 
