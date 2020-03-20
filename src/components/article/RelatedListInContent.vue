@@ -1,6 +1,8 @@
 <template>
   <section class="relateds-in-content">
-    <h3>文章未完 往下繼續閱讀</h3>
+    <h3 v-if="abIndicator !== 'B'">
+      文章未完 往下繼續閱讀
+    </h3>
     <div
       v-for="related in relateds"
       :key="related.id"
@@ -41,6 +43,10 @@ export default {
     LazyImage
   },
   props: {
+    abIndicator: {
+      type: String,
+      required: true
+    },
     isAppPage: {
       type: Boolean,
       default: false

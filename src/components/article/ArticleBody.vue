@@ -161,7 +161,7 @@
             <slot name="dfpad-AR2-MB" />
           </div>
           <slot
-            v-if="index === lastUnstyledParagraph - 1"
+            v-if="abIndicator === 'A' && index === lastUnstyledParagraph - 1"
             name="relatedListInContent"
           />
         </div>
@@ -172,6 +172,10 @@
           更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span>
         </p>
       </article>
+      <slot
+        v-if="abIndicator === 'B'"
+        name="relatedListInContent"
+      />
       <div class="article_main_related_bottom">
         <slot name="relatedlistBottom" />
       </div>
@@ -263,6 +267,10 @@ export default {
     AudioPlayer
   },
   props: {
+    abIndicator: {
+      type: String,
+      required: true
+    },
     articleData: {
       type: Object,
       default: () => ({})

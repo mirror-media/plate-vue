@@ -67,13 +67,7 @@
               v-if="!ifSingleCol"
               slot="aside"
               class="article_aside mobile-hidden"
-            >
-              <latest-list
-                v-if="ifRenderAside"
-                :latests="latests"
-                :is-app-page="true"
-              />
-            </aside>
+            />
             <vue-dfp
               :is="props.vueDfp"
               slot="dfpad-set"
@@ -238,7 +232,6 @@ import Cookie from 'vue-cookie'
 import DfpCover from '../components/DfpCover.vue'
 import DfpFixed from '../components/DfpFixed.vue'
 import DfpST from '../components/DfpST.vue'
-import LatestList from '../components/article/LatestList.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import PopList from '../components/article/PopList.vue'
 import RelatedListInContent from '../components/article/RelatedListInContent.vue'
@@ -282,10 +275,6 @@ const fetchRecommendList = (store, id) => {
   })
 }
 
-const fetchLatestArticle = (store, params) => {
-  return store.dispatch('FETCH_LATESTARTICLE', { params: params })
-}
-
 const fetchSSRData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections', 'topics'] })
 }
@@ -314,7 +303,6 @@ export default {
     'article-body': ArticleBody,
     'article-body-photography': ArticleBodyPhotography,
     'dfp-fixed': DfpFixed,
-    'latest-list': LatestList,
     'vue-dfp-provider': VueDfpProvider,
     WineWarning,
     DfpCover,
@@ -403,14 +391,6 @@ export default {
         if (!_targetArticle) {
           Promise.all([
             fetchArticles(vm.$store, to.params.slug).then(() => {
-              const { sections } = _get(vm.$store, ['state', 'articles', 'items', 0], {})
-              return fetchLatestArticle(vm.$store, {
-                sort: '-publishedDate',
-                where: {
-                  sections: _get(sections, [0, 'id'])
-                }
-              })
-            }).then(() => {
               const id = _get(_find(_get(vm.$store, ['state', 'articles', 'items']), { slug: vm.$store.state.route.params.slug }), ['id'], '')
               return fetchRecommendList(vm.$store, id)
             }),
@@ -424,15 +404,7 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     fetchArticles(this.$store, to.params.slug).then(() => {
-      const sections = _get(_find(_get(this.$store, ['state', 'articles', 'items']), { slug: to.params.slug }), ['sections'])
-      return fetchLatestArticle(this.$store, {
-        sort: '-publishedDate',
-        where: {
-          sections: _get(sections, [0, 'id'])
-        }
-      }).then(() => {
-        next()
-      })
+      next()
     }).then(() => {
       const id = _get(_find(_get(this.$store, ['state', 'articles', 'items']), { slug: this.$store.state.route.params.slug }), ['id'], '')
       this.routeUpateReferrerSlug = _get(from, ['params', 'slug'], 'N/A')
@@ -609,10 +581,6 @@ export default {
     isTimeToShowAdCover () {
       return _get(this.$store, 'state.isTimeToShowAdCover', false)
     },
-    latests () {
-      return _get(this.$store, 'state.latestArticle.items', [])
-        .filter((latest) => _get(latest, 'slug', '') !== this.currArticleSlug)
-    },
     needWineWarning () {
       const cats = this.articleData.categories || []
       return cats.some((cat) => cat.name === 'wine')
@@ -656,13 +624,6 @@ export default {
     }
   },
   beforeMount () {
-    const { sections } = _get(this.$store, ['state', 'articles', 'items', 0], {})
-    fetchLatestArticle(this.$store, {
-      sort: '-publishedDate',
-      where: {
-        sections: _get(sections, [0, 'id'])
-      }
-    })
     fetchPop(this.$store)
     fetchCommonData(this.$store)
     fetchEvent(this.$store, 'logo')
@@ -778,9 +739,6 @@ export default {
         padding-top 10px
         width 310px
         margin-top -30px
-        .latest-list
-          width 300px
-          margin 20px auto 0
 
       .article_footer
         text-align center
