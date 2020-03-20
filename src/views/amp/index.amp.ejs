@@ -14,37 +14,37 @@
     <script async custom-element="amp-twitter" src="https://cdn.ampproject.org/v0/amp-twitter-0.1.js"></script>
     <title><%= storyInfo.storyTitle %></title>
     <link rel="canonical" href="<%= storyInfo.storyURL %>">
-    <meta property="og:title" content="<%= storyInfo.storyTitle %> - 鏡週刊" >
+    <meta property="og:title" content="<%= storyInfo.storyTitle %>" >
     <meta property="og:url" content="<%= storyInfo.storyURLAMP %>">
     <meta property="og:image" content="<%= _.get(storyHeroImage, [ 'src', 'desktop' ], '') %>">
     <meta property="og:type" content="website">
     <script type="application/ld+json">
       {
-        "@context": "http://schema.org",
-        "@type": "NewsArticle",
-        "mainEntityOfPage": "<%= storyInfo.storyURLAMP %>",
-        "headline": "<%= storyInfo.storyTitle %> - 鏡週刊",
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "<%= storyInfo.storyURL %>"
+        },
+        "headline": "<%= storyInfo.storyTitle %>",
         "datePublished": "<%= storyInfo.storyDatePublished.dateISO %>",
         "dateModified": "<%= storyInfo.storyDateUpdated.dateISO %>",
         "author": {
-          "@type": "Organization",
-          "name": "MirrorMedia"
+          "@type": "Person",
+          "name": "<%= storyInfo.storyFirstAuthor %>"
         },
         "publisher": {
           "@type": "Organization",
-          "name": "MirrorMedia",
+          "name": "<%= SITE_TITLE %>",
           "logo": {
             "@type": "ImageObject",
-            "url": "https://www.mirrormedia.mg/assets/mirrormedia/logo.png",
-            "width": 102,
-            "height": 49
+            "url": "https://www.mirrormedia.mg/assets/images/logo.png",
+            "width": 228
+            "height": 100
           }
         },
-        "image": {
-          "@type": "ImageObject",
-          "url": "<%= _.get(storyHeroImage, [ 'src', 'desktop' ], '') %>",
-          "width": 1200
-        }
+        "image": "<%= _.get(storyHeroImage, [ 'src', 'mobile' ], '') %>",
+        "description": "<%= _.get(storyBriefs, '0.content.0') %>"
       }
     </script>
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
