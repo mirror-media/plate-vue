@@ -534,6 +534,37 @@ const fetchImages = (store, { ids = [], maxResults = 10 }) => store.dispatch('FE
 
 const traceResponse = (store, log) => (process.env.VUE_ENV === 'server' ? store.dispatch('TRACE_RES_STACK', log) : Promise.resolve())
 
+const getBreadcrumbList = (articleData) => {
+  const { sections, slug, title } = articleData
+  const sectionTitle = _get(sections, '0.title', '')
+  const sectionName = _get(sections, '0.name', '')
+  const ogUrl = `${SITE_URL}/story/${slug}/`
+  const items = [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: SITE_TITLE,
+      item: SITE_URL
+    }
+  ]
+
+  if (sectionTitle) {
+    items.push({
+      '@type': 'ListItem',
+      position: items.length + 1,
+      name: sectionTitle,
+      item: `${SITE_URL}/section/${sectionName}`
+    })
+  }
+  items.push({
+    '@type': 'ListItem',
+    position: items.length + 1,
+    name: title,
+    item: ogUrl
+  })
+  return items
+}
+
 export default {
   name: 'AppArticle',
   preFetch: fetchData,
@@ -696,26 +727,7 @@ export default {
           json: {
             '@context': 'http://schema.org',
             '@type': 'BreadcrumbList',
-            itemListElement: [
-              {
-                '@type': 'ListItem',
-                position: 1,
-                name: SITE_TITLE,
-                item: SITE_URL
-              },
-              {
-                '@type': 'ListItem',
-                position: 2,
-                name: sectionTitle,
-                item: `${SITE_URL}/section/${_get(this.articleData, 'sections.0.name')}`
-              },
-              {
-                '@type': 'ListItem',
-                position: 3,
-                name: title,
-                item: ogUrl
-              }
-            ]
+            itemListElement: getBreadcrumbList(this.articleData)
           }
         }
       ]
