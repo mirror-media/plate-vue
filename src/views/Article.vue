@@ -549,10 +549,6 @@ const getJSONLD = (articleData, metaData) => {
       image: metaData.ogImageUrl,
       datePublished: metaData.publishedTime,
       dateModified: metaData.updatedTime || metaData.publishedTime,
-      author: {
-        '@type': 'Person',
-        name: metaData.author
-      },
       publisher: {
         '@type': 'Organization',
         name: SITE_TITLE,
@@ -564,7 +560,6 @@ const getJSONLD = (articleData, metaData) => {
       description: metaData.metaDescription,
       url: metaData.ogUrl,
       thumbnailUrl: metaData.ogImageUrl,
-      articleSection: metaData.sectionTitle,
       keywords: metaData.keywords
     }
   }
@@ -577,8 +572,15 @@ const getJSONLD = (articleData, metaData) => {
       itemListElement: getBreadcrumbList(articleData)
     }
   }
-  const scripts = [jsonLDArticle, jsonLDBreadcrumbList]
+  const scripts = []
+  if (metaData.sectionTitle) {
+    jsonLDArticle.json.articleSection = metaData.sectionTitle
+  }
   if (metaData.author) {
+    jsonLDArticle.json.author = {
+      '@type': 'Person',
+      name: metaData.author
+    }
     scripts.push({
       type: 'application/ld+json',
       json: {
@@ -597,6 +599,8 @@ const getJSONLD = (articleData, metaData) => {
       }
     })
   }
+  scripts.push(jsonLDArticle)
+  scripts.push(jsonLDBreadcrumbList)
   return scripts
 }
 
