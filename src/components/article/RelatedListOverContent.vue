@@ -22,6 +22,7 @@
         <a
           :href="`/story/${_get(articles[ 1 ], 'slug', '')}`"
           class="related"
+          :class="{ 'vidibility-h': !articles[ 1 ] }"
           @click="sendGaClickEvent('article', 'related news right')"
         >
           <div class="related__txt" :style="{ outlineColor: sectionColor }">
@@ -198,6 +199,8 @@ export default {
         outline-style solid
         outline-width 2px
         outline-offset -2px
+.vidibility-h
+  visibility hidden
 .fade
   &-enter-active, &-leave-active
     transition all 0.2s ease-in-out

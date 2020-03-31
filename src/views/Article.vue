@@ -534,6 +534,71 @@ const fetchImages = (store, { ids = [], maxResults = 10 }) => store.dispatch('FE
 
 const traceResponse = (store, log) => (process.env.VUE_ENV === 'server' ? store.dispatch('TRACE_RES_STACK', log) : Promise.resolve())
 
+const getJSONLD = (articleData, metaData) => {
+  const jsonLDArticle = {
+    type: 'application/ld+json',
+    json: {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': metaData.ogUrl
+      },
+      headline: articleData.title,
+      image: metaData.ogImageUrl,
+      datePublished: metaData.publishedTime,
+      dateModified: metaData.updatedTime || metaData.publishedTime,
+      author: {
+        '@type': 'Person',
+        name: metaData.author
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_TITLE,
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://www.mirrormedia.mg/assets/images/logo.png'
+        }
+      },
+      description: metaData.metaDescription,
+      url: metaData.ogUrl,
+      thumbnailUrl: metaData.ogImageUrl,
+      articleSection: metaData.sectionTitle,
+      keywords: metaData.keywords
+    }
+  }
+
+  const jsonLDBreadcrumbList = {
+    type: 'application/ld+json',
+    json: {
+      '@context': 'http://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: getBreadcrumbList(articleData)
+    }
+  }
+  const scripts = [jsonLDArticle, jsonLDBreadcrumbList]
+  if (metaData.author) {
+    scripts.push({
+      type: 'application/ld+json',
+      json: {
+        '@context': 'http://schema.org',
+        '@type': 'Person',
+        name: metaData.author,
+        url: `${SITE_URL}/author/${_get(articleData, 'writers.0.id')}`,
+        brand: {
+          '@type': 'Brand',
+          name: SITE_TITLE,
+          url: SITE_URL,
+          image: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
+          logo: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
+          description: SITE_DESCRIPTION
+        }
+      }
+    })
+  }
+  return scripts
+}
+
 const getBreadcrumbList = (articleData) => {
   const { sections, slug, title } = articleData
   const sectionTitle = _get(sections, '0.title', '')
@@ -625,112 +690,64 @@ export default {
       writers = []
     } = this.articleData
 
-    const author = _get(writers, '0.name', '')
-    const categorieName = _get(categories, '0.name', '')
-    const categorieTitle = _get(categories, '0.title', '')
     const imageUrl = _get(heroImage, 'image.resizedTargets.mobile.url', '')
-    const robotsValue = isAdult ? 'noindex' : 'index'
     const ogImageUrl = _get(ogImage, 'image.resizedTargets.mobile.url', '')
-    const publishedTime = publishedDate ? new Date(publishedDate).toISOString() : ''
-    const updatedTime = updatedAt ? new Date(updatedAt).toISOString() : publishedTime
-    const pureBrief = truncate(sanitizeHtml(_map(_get(brief, 'apiData', []), o => _map(_get(o, 'content', []), str => str)).join(''), { allowedTags: [] }), 197)
-    const pureTags = _map(tags, t => _get(t, 'name', ''))
-    const keywords = _get(categories, '0.title') + ',' + pureTags.toString()
-    const sectionName = _get(sections, '0.name', '')
-    const sectionTitle = _get(sections, '0.title', '')
-    const topicId = _get(topics, '_id', '')
-    const ogUrl = `${SITE_URL}/story/${slug}/`
+    const pureBrief = truncate(
+      sanitizeHtml(
+        _map(_get(brief, 'apiData', []), o =>
+          _map(_get(o, 'content', []), str => str)
+        ).join(''), { allowedTags: [] }
+      ), 197
+    )
 
-    const metaTitle = ogTitle.length > 0 ? ogTitle : title
-    const metaDescription = ogDescription.length > 0 ? truncate(ogDescription, 197) : pureBrief
-    const metaImage = ogImageUrl.length > 0 ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)
+    const metaData = {
+      robotsValue: isAdult ? 'noindex' : 'index',
+      ogUrl: `${SITE_URL}/story/${slug}/`,
+      title: ogTitle.length > 0 ? ogTitle : title,
+      pureBrief,
+      publishedTime: publishedDate ? new Date(publishedDate).toISOString() : '',
+      updatedTime: updatedAt ? new Date(updatedAt).toISOString() : '',
+      sectionName: _get(sections, '0.name', ''),
+      sectionTitle: _get(sections, '0.title', ''),
+      categorieName: _get(categories, '0.name', ''),
+      categorieTitle: _get(categories, '0.title', ''),
+      author: _get(writers, '0.name', ''),
+      pureTags: _map(tags, t => _get(t, 'name', '')),
+      topicId: _get(topics, '_id', '')
+    }
+    metaData.ogImageUrl = ogImageUrl.length > 0 ? ogImageUrl : ((imageUrl.length > 0) ? imageUrl : SITE_OGIMAGE)
+    metaData.keywords = _get(categories, '0.title') + ',' + metaData.pureTags.toString()
+    metaData.metaDescription = ogDescription.length > 0 ? truncate(ogDescription, 197) : metaData.pureBrief
 
     return {
       title,
       titleTemplate: null,
       meta: [
-        { name: 'robots', content: robotsValue },
-        { vmid: 'keywords', name: 'keywords', content: keywords },
-        { vmid: 'description', name: 'description', content: pureBrief },
-        { vmid: 'og:title', property: 'og:title', content: metaTitle },
-        { vmid: 'og:description', property: 'og:description', content: metaDescription },
-        { vmid: 'og:url', property: 'og:url', content: ogUrl },
-        { vmid: 'og:image', property: 'og:image', content: metaImage },
-        { name: 'section-name', content: sectionName },
-        { name: 'category-name', content: categorieName },
-        { name: 'topic-id', content: topicId },
-        { vmid: 'twitter:title', name: 'twitter:title', content: metaTitle },
-        { vmid: 'twitter:description', name: 'twitter:description', content: metaDescription },
-        { vmid: 'twitter:image', name: 'twitter:image', content: metaImage },
+        { name: 'robots', content: metaData.robotsValue },
+        { vmid: 'keywords', name: 'keywords', content: metaData.keywords },
+        { vmid: 'description', name: 'description', content: metaData.pureBrief },
+        { vmid: 'og:title', property: 'og:title', content: metaData.title },
+        { vmid: 'og:description', property: 'og:description', content: metaData.metaDescription },
+        { vmid: 'og:url', property: 'og:url', content: metaData.ogUrl },
+        { vmid: 'og:image', property: 'og:image', content: metaData.ogImageUrl },
+        { name: 'section-name', content: metaData.sectionName },
+        { name: 'category-name', content: metaData.categorieName },
+        { name: 'topic-id', content: metaData.topicId },
+        { vmid: 'twitter:title', name: 'twitter:title', content: metaData.title },
+        { vmid: 'twitter:description', name: 'twitter:description', content: metaData.metaDescription },
+        { vmid: 'twitter:image', name: 'twitter:image', content: metaData.ogImageUrl },
         { property: 'dable:item_id', content: slug },
-        { property: 'dable:author', content: author },
-        { property: 'article:section', content: sectionTitle },
-        { property: 'article:section2', content: categorieTitle },
-        { property: 'article:published_time', content: publishedTime }
+        { property: 'dable:author', content: metaData.author },
+        { property: 'article:section', content: metaData.sectionTitle },
+        { property: 'article:section2', content: metaData.categorieTitle },
+        { property: 'article:published_time', content: metaData.publishedTime }
       ],
       link: [
+        { rel: 'canonical', href: `${SITE_URL}/story/${slug}/` },
         { rel: 'alternate', href: `${SITE_MOBILE_URL}/story/${slug}/` },
         { rel: 'amphtml', href: `${SITE_URL}/story/amp/${slug}/` }
       ],
-      script: [
-        {
-          type: 'application/ld+json',
-          json: {
-            '@context': 'https://schema.org',
-            '@type': 'Article',
-            mainEntityOfPage: {
-              '@type': 'WebPage',
-              '@id': ogUrl
-            },
-            headline: title,
-            image: metaImage,
-            datePublished: publishedTime,
-            dateModified: updatedTime,
-            author: {
-              '@type': 'Person',
-              name: author
-            },
-            publisher: {
-              '@type': 'Organization',
-              name: SITE_TITLE,
-              logo: {
-                '@type': 'ImageObject',
-                url: 'https://www.mirrormedia.mg/assets/images/logo.png'
-              }
-            },
-            description: metaDescription,
-            url: ogUrl,
-            thumbnailUrl: metaImage,
-            articleSection: sectionTitle,
-            keywords: keywords
-          }
-        },
-        {
-          type: 'application/ld+json',
-          json: {
-            '@context': 'http://schema.org',
-            '@type': 'Person',
-            name: author,
-            url: `${SITE_URL}/author/${_get(this.articleData, 'writers.0.id')}`,
-            brand: {
-              '@type': 'Brand',
-              name: SITE_TITLE,
-              url: SITE_URL,
-              image: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
-              logo: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
-              description: SITE_DESCRIPTION
-            }
-          }
-        },
-        {
-          type: 'application/ld+json',
-          json: {
-            '@context': 'http://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: getBreadcrumbList(this.articleData)
-          }
-        }
-      ]
+      script: [...getJSONLD(this.articleData, metaData)]
     }
   },
   beforeRouteUpdate (to, from, next) {
