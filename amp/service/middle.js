@@ -146,7 +146,7 @@ const sendArticleData = (req, res, next) => {
         storyDateUpdated: getDate(_storyUpdatedAt, 8),
         storyTitle: _storyTitle,
         storySlug: _storySlug,
-        storyURL: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/${_storySlug}`,
+        storyURL: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/${_storySlug}/`,
         storyURLAMP: `${SERVER_PROTOCOL}://${SERVER_HOST}/story/amp/${_storySlug}`,
         storyCredits: getCredit(articleData),
         storyFirstAuthor: _storyFirstAuthor

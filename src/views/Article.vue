@@ -694,8 +694,8 @@ export default {
     const ogImageUrl = _get(ogImage, 'image.resizedTargets.mobile.url', '')
     const pureBrief = truncate(
       sanitizeHtml(
-        _map(
-          _get(brief, 'apiData', []), o => _map(_get(o, 'content', []), str => str)
+        _map(_get(brief, 'apiData', []), o =>
+          _map(_get(o, 'content', []), str => str)
         ).join(''), { allowedTags: [] }
       ), 197
     )
@@ -743,6 +743,7 @@ export default {
         { property: 'article:published_time', content: metaData.publishedTime }
       ],
       link: [
+        { rel: 'canonical', href: `${SITE_URL}/story/${slug}/` },
         { rel: 'alternate', href: `${SITE_MOBILE_URL}/story/${slug}/` },
         { rel: 'amphtml', href: `${SITE_URL}/story/amp/${slug}/` }
       ],
