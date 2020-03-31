@@ -17,6 +17,7 @@
         <Header
           :active-section="sectionName"
           :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+          :hidden-advertised="hiddenAdvertised"
           :props="props"
           :show-dfp-header-logo="showDfpHeaderLogo"
         />
@@ -880,7 +881,8 @@ export default {
           })
         },
         setCentering: true,
-        sizeMapping: DFP_SIZE_MAPPING
+        sizeMapping: DFP_SIZE_MAPPING,
+        enableSingleRequest: !this.hiddenAdvertised
       })
     },
     hasDfpFixed () {

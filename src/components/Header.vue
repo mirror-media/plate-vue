@@ -40,23 +40,25 @@
       >
         <LazyImage :src="get(logoFromEvent, 'image.image.resizedTargets.mobile.url')" />
       </a>
-      <LazyItemWrapper
-        :load-after-page-loaded="true"
-        class="logo dfp"
-      >
-        <vue-dfp
-          :is="props.vueDfp"
-          v-if="props"
-          v-show="!isScrolled"
-          ref="logoDfp"
-          :config="props.config"
-          :dfp-id="props.dfpId"
-          :dfp-units="props.dfpUnits"
-          :section="props.section"
-          pos="LOGO"
-          @click.native="sendGaClickEvent('header', 'logo dfp')"
-        />
-      </LazyItemWrapper>
+      <template v-if="!hiddenAdvertised">
+        <LazyItemWrapper
+          :load-after-page-loaded="true"
+          class="logo dfp"
+        >
+          <vue-dfp
+            :is="props.vueDfp"
+            v-if="props"
+            v-show="!isScrolled"
+            ref="logoDfp"
+            :config="props.config"
+            :dfp-id="props.dfpId"
+            :dfp-units="props.dfpUnits"
+            :section="props.section"
+            pos="LOGO"
+            @click.native="sendGaClickEvent('header', 'logo dfp')"
+          />
+        </LazyItemWrapper>
+      </template>
       <!-- search and more -->
       <div
         v-click-outside="handleClickMoreOutside"
@@ -224,6 +226,10 @@ export default {
     },
     dfpHeaderLogoLoaded: {
       type: Boolean
+    },
+    hiddenAdvertised: {
+      type: Boolean,
+      default: false
     },
     props: {
       type: Object
