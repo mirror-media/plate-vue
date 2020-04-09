@@ -160,7 +160,7 @@ export const SOCIAL_LINK = {
   INSTAGRAM: 'https://www.instagram.com/mirror_media/',
   LINE: 'https://line.me/R/ti/p/%40cuk1273e',
   MAGAZINE: 'https://mybook.taiwanmobile.com/contentGroup/MIR0100100001',
-  SUBSCRIBE: 'https://goo.gl/forms/g2ny8HzAXTAfwH6I2',
+  SUBSCRIBE: 'https://docs.google.com/forms/d/1es1wqWfhwJn2sxDLc-6NRVokGn_fU0_M2YffhKMlcyM/viewform',
   WECHAT: '#',
   WEIBO: 'http://www.weibo.com/u/6030041924?is_all=1'
 }
