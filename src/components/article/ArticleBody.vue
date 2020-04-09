@@ -160,10 +160,6 @@
           >
             <slot name="dfpad-AR2-MB" />
           </div>
-          <slot
-            v-if="abIndicator === 'A' && index === lastUnstyledParagraph - 1"
-            name="relatedListInContent"
-          />
         </div>
         <p
           v-if="articleData.updatedAt !== articleData.publishedDate"
@@ -173,7 +169,6 @@
         </p>
       </article>
       <slot
-        v-if="abIndicator === 'B'"
         name="relatedListInContent"
       />
       <div class="article_main_related_bottom">
@@ -267,10 +262,10 @@ export default {
     AudioPlayer
   },
   props: {
-    abIndicator: {
-      type: String,
-      required: true
-    },
+    // abIndicator: {
+    //   type: String,
+    //   required: true
+    // },
     articleData: {
       type: Object,
       default: () => ({})
