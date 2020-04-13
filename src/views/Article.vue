@@ -534,6 +534,11 @@ const fetchImages = (store, { ids = [], maxResults = 10 }) => store.dispatch('FE
 const traceResponse = (store, log) => (process.env.VUE_ENV === 'server' ? store.dispatch('TRACE_RES_STACK', log) : Promise.resolve())
 
 const getJSONLD = (articleData, metaData) => {
+  const author = metaData.author || '鏡週刊'
+  const authorUrl = metaData.author
+    ? `${SITE_URL}/author/${_get(articleData, 'writers.0.id')}`
+    : `${SITE_URL}/author/58d4f336a599620e0070879e`
+
   const jsonLDArticle = {
     type: 'application/ld+json',
     json: {
@@ -547,6 +552,10 @@ const getJSONLD = (articleData, metaData) => {
       image: metaData.ogImageUrl,
       datePublished: metaData.publishedTime,
       dateModified: metaData.updatedTime || metaData.publishedTime,
+      author: {
+        '@type': 'Person',
+        name: author
+      },
       publisher: {
         '@type': 'Organization',
         name: SITE_TITLE,
@@ -561,7 +570,23 @@ const getJSONLD = (articleData, metaData) => {
       keywords: metaData.keywords
     }
   }
-
+  const jsonLDPerson = {
+    type: 'application/ld+json',
+    json: {
+      '@context': 'http://schema.org',
+      '@type': 'Person',
+      name: author,
+      url: authorUrl,
+      brand: {
+        '@type': 'Brand',
+        name: SITE_TITLE,
+        url: SITE_URL,
+        image: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
+        logo: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
+        description: SITE_DESCRIPTION
+      }
+    }
+  }
   const jsonLDBreadcrumbList = {
     type: 'application/ld+json',
     json: {
@@ -574,30 +599,8 @@ const getJSONLD = (articleData, metaData) => {
   if (metaData.sectionTitle) {
     jsonLDArticle.json.articleSection = metaData.sectionTitle
   }
-  if (metaData.author) {
-    jsonLDArticle.json.author = {
-      '@type': 'Person',
-      name: metaData.author
-    }
-    scripts.push({
-      type: 'application/ld+json',
-      json: {
-        '@context': 'http://schema.org',
-        '@type': 'Person',
-        name: metaData.author,
-        url: `${SITE_URL}/author/${_get(articleData, 'writers.0.id')}`,
-        brand: {
-          '@type': 'Brand',
-          name: SITE_TITLE,
-          url: SITE_URL,
-          image: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
-          logo: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg',
-          description: SITE_DESCRIPTION
-        }
-      }
-    })
-  }
   scripts.push(jsonLDArticle)
+  scripts.push(jsonLDPerson)
   scripts.push(jsonLDBreadcrumbList)
   return scripts
 }
@@ -616,7 +619,7 @@ const getBreadcrumbList = (articleData) => {
     }
   ]
 
-  if (sectionTitle) {
+  if (sectionTitle && sectionName) {
     items.push({
       '@type': 'ListItem',
       position: items.length + 1,
