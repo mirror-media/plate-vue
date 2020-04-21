@@ -97,10 +97,14 @@
               </LazyItemWrapper>
               <ArticleAsideFixed>
                 <LazyItemWrapper
-                  slot="fbPage"
-                  :load-after-page-loaded="true"
+                  slot="popListVert"
+                  :position="verge.viewportH()"
+                  :strict="true"
                 >
-                  <FbSocialPlugins />
+                  <PopListVert
+                    :pop="popularlist"
+                    class="article_aside_popList"
+                  />
                 </LazyItemWrapper>
                 <LazyItemWrapper
                   v-if="!hiddenAdvertised"
@@ -116,6 +120,12 @@
                   />
                 </LazyItemWrapper>
                 <LazyItemWrapper
+                  slot="fbPage"
+                  :load-after-page-loaded="true"
+                >
+                  <FbSocialPlugins />
+                </LazyItemWrapper>
+                <LazyItemWrapper
                   slot="readrEmbedded"
                   :load-after-page-loaded="true"
                   :style="{ minHeight: '300px' }"
@@ -123,16 +133,6 @@
                   <READrEmbeddedPromotions
                     class="readr-embedded-promotions"
                     :promotions="promotions"
-                  />
-                </LazyItemWrapper>
-                <LazyItemWrapper
-                  slot="popListVert"
-                  :position="verge.viewportH()"
-                  :strict="true"
-                >
-                  <PopListVert
-                    :pop="popularlist"
-                    class="article_aside_popList"
                   />
                 </LazyItemWrapper>
               </ArticleAsideFixed>
