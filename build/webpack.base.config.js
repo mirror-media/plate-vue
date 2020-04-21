@@ -40,7 +40,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /(node_modules|deprecated)/
+        exclude: /(node_modules|deprecated)\/(?!(@readr-ui)\/).*/
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
