@@ -3,10 +3,10 @@
     ref="articleAsideFixed"
     class="articleAsideFixed"
   >
-    <slot name="fbPage" />
-    <slot name="dfpR2" />
-    <slot name="readrEmbedded" />
     <slot name="popListVert" />
+    <slot name="dfpR2" />
+    <slot name="fbPage" />
+    <slot name="readrEmbedded" />
   </section>
 </template>
 

@@ -97,10 +97,14 @@
               </LazyItemWrapper>
               <ArticleAsideFixed>
                 <LazyItemWrapper
-                  slot="fbPage"
-                  :load-after-page-loaded="true"
+                  slot="popListVert"
+                  :position="verge.viewportH()"
+                  :strict="true"
                 >
-                  <FbSocialPlugins />
+                  <PopListVert
+                    :pop="popularlist"
+                    class="article_aside_popList"
+                  />
                 </LazyItemWrapper>
                 <LazyItemWrapper
                   v-if="!hiddenAdvertised"
@@ -116,20 +120,19 @@
                   />
                 </LazyItemWrapper>
                 <LazyItemWrapper
+                  slot="fbPage"
+                  :load-after-page-loaded="true"
+                >
+                  <FbSocialPlugins />
+                </LazyItemWrapper>
+                <LazyItemWrapper
                   slot="readrEmbedded"
                   :load-after-page-loaded="true"
                   :style="{ minHeight: '300px' }"
                 >
-                  <READrEmbeddedPromotions class="readr-embedded-promotions" />
-                </LazyItemWrapper>
-                <LazyItemWrapper
-                  slot="popListVert"
-                  :position="verge.viewportH()"
-                  :strict="true"
-                >
-                  <PopListVert
-                    :pop="popularlist"
-                    class="article_aside_popList"
+                  <READrEmbeddedPromotions
+                    class="readr-embedded-promotions"
+                    :promotions="promotions"
                   />
                 </LazyItemWrapper>
               </ArticleAsideFixed>
@@ -442,10 +445,27 @@ import sanitizeHtml from 'sanitize-html'
 import truncate from 'truncate'
 import verge from 'verge'
 
-// This is a workaround
-let READrEmbeddedPromotions = {}
-if (process.env.VUE_ENV === 'client') {
-  READrEmbeddedPromotions = require('@readr-ui/embedded-promotions')
+import axios from 'axios'
+import READrEmbeddedPromotions from '@readr-ui/embedded-promotions/src/readr-ui-embedded-promotions.vue'
+const READrEmbeddedPromotionsMixin = {
+  data () {
+    return {
+      promotions: []
+    }
+  },
+  async beforeMount () {
+    const url = 'https://www.readr.tw/api/public/projects'
+    const params = {
+      max_result: 2,
+      page: 1,
+      sort: 'project_order,-published_at',
+      status: '{"$in":[2,1]}', // done, wip
+      publish_status: '{"$in":[2]}' // published
+    }
+
+    const res = await axios.get(url, { params })
+    this.promotions = '_items' in res.data && res.data._items
+  }
 }
 
 const debug = require('debug')('CLIENT:VIEWS:article')
@@ -638,7 +658,6 @@ const getBreadcrumbList = (articleData) => {
 
 export default {
   name: 'AppArticle',
-  preFetch: fetchData,
   components: {
     AdultContentAlert,
     ArticleAsideFixed,
@@ -666,6 +685,8 @@ export default {
     VueDfpProvider,
     WineWarning
   },
+  mixins: [READrEmbeddedPromotionsMixin],
+  preFetch: fetchData,
   asyncData ({ store }) { // asyncData ({ store, route: { params: { id }}})
     debug('RUN asyncData')
     return !process.browser ? fetchData(store) : Promise.resolve()

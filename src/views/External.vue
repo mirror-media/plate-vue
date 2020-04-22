@@ -141,7 +141,10 @@
           v-if="viewport > 1200"
           slot="articleAsideFixed"
         >
-          <FbSocialPlugins slot="fbPage" />
+          <pop-list-vert
+            slot="popListVert"
+            :pop="popularList"
+          />
           <vue-dfp
             :is="props.vueDfp"
             slot="dfpR2"
@@ -149,10 +152,7 @@
             class="dfp--desktop"
             :config="props.config"
           />
-          <pop-list-vert
-            slot="popListVert"
-            :pop="popularList"
-          />
+          <FbSocialPlugins slot="fbPage" />
         </article-aside-fixed>
       </article-body-external>
       <share-tools v-if="viewport > 1200" />
