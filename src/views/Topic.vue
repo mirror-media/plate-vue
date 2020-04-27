@@ -446,7 +446,7 @@ export default {
 
     const metaTitle = ogTitle || name
     const metaDescription = ogDescription ? getTruncatedVal(ogDescription, 50) : SITE_DESCRIPTION
-    const metaImage = ogImage ? _.get(ogImage, 'image.resizedTargets.mobile.url') : _.get(heroImage, 'image.resizedTargets.mobile.url', SITE_OGIMAGE)
+    const metaImage = ogImage ? _.get(ogImage, 'image.resizedTargets.desktop.url') : _.get(heroImage, 'image.resizedTargets.desktop.url', SITE_OGIMAGE)
     const ogUrl = `${SITE_URL}${this.$route.path}`
     const relUrl = `${SITE_MOBILE_URL}${this.$route.path}`
 
