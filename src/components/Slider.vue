@@ -132,6 +132,11 @@ export default {
   justify-content center
   align-items center
   height auto
+  > img
+    width 100%
+    height 100%
+    object-fit contain
+    object-position center center
 .swiper-pagination
   >>> .swiper-pagination-bullet
     display inline-block
