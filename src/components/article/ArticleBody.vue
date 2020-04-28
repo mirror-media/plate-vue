@@ -73,7 +73,7 @@
             <annotation :annotationStr="getValue(p, [ 'content' ])"></annotation>
           </div> -->
           <div
-            v-if="p.type === 'unstyled'"
+            v-if="p && p.type === 'unstyled'"
             v-html="paragraphComposer(p)"
           />
         </div>
@@ -91,23 +91,23 @@
           :key="`${articleData.slug}-content-${index}`"
         >
           <ArticleImg
-            v-if="p.type === 'image'"
+            v-if="p && p.type === 'image'"
             :image="getValue(p, [ 'content', 0 ])"
             :class="`innerImg ${getValue(p.content, [ 0, 'alignment' ], '')}`"
           />
           <div
             is="article-video"
-            v-else-if="p.type === 'video'"
+            v-else-if="p && p.type === 'video'"
             :video="getValue(p, [ 'content', 0], {})"
             :class="`video ${getValue(p, [ 'alignment' ], '')}`"
           />
           <div
             is="audio-box"
-            v-else-if="p.type === 'audio'"
+            v-else-if="p && p.type === 'audio'"
             :audio="getValue(p, [ 'content', 0], {})"
           />
           <Slider
-            v-else-if="p.type === 'slideshow'"
+            v-else-if="p && p.type === 'slideshow'"
             :autoplay="false"
             :show-swiper-pagination="false"
             class="swiper-container--article"
@@ -131,13 +131,13 @@
             </div>
           </Slider>
           <div
-            v-else-if="p.type === 'annotation'"
+            v-else-if="p && p.type === 'annotation'"
             class="content--annotation"
           >
             <annotation :annotation-str="getValue(p, [ 'content' ])" />
           </div>
           <div
-            v-else
+            v-else-if="p"
             v-html="paragraphComposer(p)"
           />
           <slot
@@ -391,6 +391,7 @@ export default {
       const contents = _.get(this.articleData, 'content.apiData') || []
       return contents
         // Preserve original index
+        .filter(obj => _.isObject(obj))
         .map((d, i) => ({ index: i, type: d.type, content: d.content || [] }))
         .filter(obj => isContentParagraph(obj))
         .map(d => d.index)
@@ -411,17 +412,19 @@ export default {
   methods: {
     blockWrapper (p, index) {
       // workaround: LazyItemWrapper 導致 swiper navigation 異常
-      if (p.type === 'slideshow') {
-        return 'div'
-      } else {
-        switch (index) {
-          case this.firstTwoUnstyledParagraph[0]:
-          case this.firstTwoUnstyledParagraph[1]:
-          case this.nonEmptyParagraphsIndexs[0]:
-          case this.nonEmptyParagraphsIndexs[4]:
-            return 'div'
-          default:
-            return LazyItemWrapper
+      if (_.isObject(p)) {
+        if (p.type === 'slideshow') {
+          return 'div'
+        } else {
+          switch (index) {
+            case this.firstTwoUnstyledParagraph[0]:
+            case this.firstTwoUnstyledParagraph[1]:
+            case this.nonEmptyParagraphsIndexs[0]:
+            case this.nonEmptyParagraphsIndexs[4]:
+              return 'div'
+            default:
+              return LazyItemWrapper
+          }
         }
       }
     },
