@@ -220,7 +220,7 @@ import {
   flatten as _flatten
 } from 'lodash'
 import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SECTION_MAP, SECTION_WATCH_ID, SITE_OGIMAGE, SITE_TITLE_SHORT, SITE_URL } from '../constants'
-
+import { autoAdsAsyncSrc, autoAdsScript } from 'src/constants/thirdPartyScripts'
 import { currEnv, lockJS, unLockJS, insertMicroAd, sendAdCoverGA, updateCookie } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { microAds } from '../constants/microAds'
@@ -639,6 +639,10 @@ export default {
     this.updateSysStage()
     // this.abIndicator = this.getMmid()
     this.sendGA(this.articleData)
+
+    if (!this.hiddenAdvertised) {
+      this.insertAutoAdsScript()
+    }
   },
   updated () {
     this.updateSysStage()
@@ -674,6 +678,15 @@ export default {
       if (!document.getElementById('mediafarmersJS')) {
         document.querySelector('body').appendChild(mediafarmersScript)
       }
+    },
+    insertAutoAdsScript () {
+      const autoAdsSDK = document.createElement('script')
+      autoAdsSDK.setAttribute('async', true)
+      autoAdsSDK.setAttribute('src', autoAdsAsyncSrc)
+      document.head.appendChild(autoAdsSDK)
+      const autoAds = document.createElement('script')
+      autoAds.innerHTML = autoAdsScript
+      document.head.appendChild(autoAds)
     },
     runMicroAd (adId) {
       this.microAdLoded[adId] = insertMicroAd({ adId, currEnv: this.dfpMode, microAdLoded: this.microAdLoded[adId] })
