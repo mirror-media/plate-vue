@@ -413,7 +413,7 @@ export default {
     blockWrapper (p, index) {
       // workaround: LazyItemWrapper 導致 swiper navigation 異常
       if (_.isObject(p)) {
-        if (p && p.type === 'slideshow') {
+        if (p.type === 'slideshow') {
           return 'div'
         } else {
           switch (index) {
