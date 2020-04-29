@@ -230,6 +230,73 @@
       </div>
 
       <div
+        v-else-if="$route.path === '/category/watchsingle'"
+      >
+        <!-- header -->
+        <Header
+          :active-section="sectionName"
+          :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+          :props="props"
+          :show-dfp-header-logo="showDfpHeaderLogo"
+        />
+
+        <!-- HD AD -->
+        <ClientOnly>
+          <LazyItemWrapper
+            :load-after-page-loaded="true"
+          >
+            <div v-if="hasDFP && isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                pos="LMBHD"
+              />
+            </div>
+            <div v-if="hasDFP && !isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                pos="LPCHD"
+              />
+            </div>
+          </LazyItemWrapper>
+        </ClientOnly>
+
+        <!-- listing -->
+        <ListWatch />
+
+        <!-- FT AD -->
+        <ClientOnly>
+          <LazyItemWrapper
+            :position="verge.viewportH()"
+            :strict="true"
+          >
+            <div v-if="title !== 'Topic' && !isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                pos="LPCFT"
+              />
+            </div>
+            <div v-if="title !== 'Topic' && isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                pos="LMBFT"
+              />
+            </div>
+          </LazyItemWrapper>
+        </ClientOnly>
+
+        <!-- footer -->
+        <section class="footer container">
+          <Footer />
+        </section>
+      </div>
+
+      <div
         v-else
         class="list-view"
       >
@@ -408,7 +475,7 @@ import {
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, getTruncatedVal, unLockJS, sendAdCoverGA, updateCookie } from 'src/util/comm'
+import { currEnv, getTruncatedVal, unLockJS, sendAdCoverGA, updateCookie, getHost } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { microAds } from 'src/constants/microAds'
 import { find, get, pick, slice, split, take, toUpper, uniqBy, xorBy } from 'lodash'
@@ -434,6 +501,8 @@ import Share from 'src/components/Share.vue'
 import WineWarning from 'src/components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import verge from 'verge'
+import ListWatch from 'src/components/listWatch/ContainerListing.vue'
+import axios from 'axios'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -733,10 +802,22 @@ export default {
     MoreFull,
     Share,
     VueDfpProvider,
-    WineWarning
+    WineWarning,
+    ListWatch
   },
   asyncData ({ store, route }) {
-    return fetchCommonData(store, route)
+    const promises = [fetchCommonData(store, route)]
+    if (route.path === '/category/watchsingle') {
+      const host = getHost()
+      const url = `http://${host}/api/watches?max_results=8&page=1&sort=-publishedDate`
+      const fetchWatches = axios.get(url).then(res => res).catch(error => { throw error })
+      promises.push(fetchWatches)
+    }
+    return Promise.all(promises).then(values => {
+      const watches = values.filter(data => get(data, ['config', 'url'], '').includes('watches'))
+      const data = get(watches, [0, 'data'], {})
+      store.commit('watches/SET_DATA', data)
+    })
   },
   metaInfo () {
     const type = this.type
