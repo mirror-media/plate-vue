@@ -105,7 +105,7 @@ export default {
       margin 16px 0 0 0
     &__bottom-wrapper
       margin 16px 0 0 0
-  
+
   .bottom-wrapper
     &:before
       width 30px
