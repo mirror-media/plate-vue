@@ -12,7 +12,7 @@
       >
         <a
           class="list-item__link"
-          href="http://"
+          :href="getWatchHref(item)"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -58,6 +58,10 @@ export default {
         brand: _.get(listItem, ['brand', 'name'], ''),
         price: parseInt(_.get(listItem, 'price', '0'))
       }
+    },
+    getWatchHref (listItem) {
+      const slug = _.get(listItem, 'name', '')
+      return `/watch/${slug}`
     }
   }
 }
