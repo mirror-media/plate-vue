@@ -95,6 +95,8 @@
           </section>
           <section class="article__aside">
             <slot name="dfp-PCR1" />
+            <slot name="latestList" />
+            <slot name="dfp-PCR2" />
             <slot name="articleAsideFixed" />
           </section>
         </main>
@@ -321,6 +323,8 @@ export default {
       &__aside
         display block
         margin-top 10px
+        > *
+          width 300px
         .popListVert
           margin-top 20px
         .dfp--desktop
