@@ -230,7 +230,7 @@
       </div>
 
       <div
-        v-else-if="currUrl === '/category/watchsingle'"
+        v-else-if="$route.path === '/category/watchsingle'"
       >
         <Header
           :active-section="sectionName"
