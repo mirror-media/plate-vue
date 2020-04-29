@@ -94,12 +94,9 @@
           class="dfp--desktop"
           :config="props.config"
         />
-        <vue-dfp
-          :is="props.vueDfp"
-          slot="dfp-PCR2"
-          pos="PCR2"
-          class="dfp--desktop"
-          :config="props.config"
+        <latest-list
+          slot="latestList"
+          :latests="latestArticle"
         />
         <pop-list
           slot="popularList"
@@ -147,7 +144,7 @@
           />
           <vue-dfp
             :is="props.vueDfp"
-            slot="dfpR2"
+            slot="dfp-PCR2"
             pos="PCR2"
             class="dfp--desktop"
             :config="props.config"
@@ -226,6 +223,7 @@ import DfpST from '../components/DfpST.vue'
 import FbSocialPlugins from 'src/components/FbSocialPlugins.vue'
 import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
+import LatestList from '../components/article/LatestList.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import PopList from '../components/article/PopList.vue'
 import PopListVert from '../components/article/PopListVert.vue'
@@ -259,6 +257,14 @@ const fetchExternal = (store, slug) => {
           ]
         }
       }
+    }
+  })
+}
+
+const fetchLatestArticle = (store) => {
+  return store.dispatch('FETCH_LATESTARTICLE', {
+    params: {
+      sort: '-publishedDate'
     }
   })
 }
@@ -299,6 +305,7 @@ export default {
     DfpST,
     FbSocialPlugins,
     Header,
+    LatestList,
     LazyItemWrapper
   },
   asyncData ({ store, route: { params: { name } } }) {
@@ -466,6 +473,9 @@ export default {
     isTimeToShowAdCover () {
       return _.get(this.$store, 'state.isTimeToShowAdCover', false)
     },
+    latestArticle () {
+      return _.get(this.$store, 'state.latestArticle.items', [])
+    },
     popularList () {
       return _.get(this.$store, ['state', 'articlesPopList', 'report'], [])
     },
@@ -493,6 +503,7 @@ export default {
   },
   beforeMount () {
     fetchPop(this.$store)
+    fetchLatestArticle(this.$store)
     fetchEvent(this.$store, 'logo')
   },
   mounted () {

@@ -3,8 +3,8 @@
     ref="articleAsideFixed"
     class="articleAsideFixed"
   >
-    <slot name="popListVert" />
     <slot name="dfpR2" />
+    <slot name="popListVert" />
     <slot name="fbPage" />
     <slot name="readrEmbedded" />
   </section>
