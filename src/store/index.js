@@ -36,12 +36,17 @@ import {
 } from './api'
 import { OATH_PLAYLIST } from '../constants'
 
+import watches from './modules/watches'
+
 Vue.use(Vuex)
 
 const { DFPID, FB_APP_ID, FB_PAGES_ID } = config
 
 export function createStore () {
   return new Vuex.Store({
+    modules: {
+      watches
+    },
     state: {
       activities: {},
       articles: {},

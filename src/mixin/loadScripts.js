@@ -1,7 +1,5 @@
 import {
   alexa,
-  autoAdsAsyncSrc,
-  autoAdsScript,
   dableScript,
   fbSdk,
   gtmMirrormedia,
@@ -32,7 +30,6 @@ export default {
   mounted () {
     let isScriptLoaded = false
 
-    const isAppPage = location.pathname.match(/\/app\//g)
     const jobs = [
       insertScript({ codes: gtmMirrormedia }).then(() => insertScript({ codes: gtmLikr })),
       insertScript({ codes: fbSdk }),
@@ -40,11 +37,6 @@ export default {
       insertScript({ codes: scorecardresearch }).then(() => insertScript({ codes: alexa })),
       insertScript({ codes: dableScript, position: 'body' })
     ]
-
-    if (isAppPage && !document.querySelector('#autoAdsAsyncSrc')) {
-      jobs.push(insertScript({ async: true, id: 'autoAdsAsyncSrc', src: autoAdsAsyncSrc }))
-      jobs.push(insertScript({ codes: autoAdsScript, id: 'autoAdsScript' }))
-    }
 
     if (window && !isScriptLoaded) {
       window.addEventListener('load', () => {

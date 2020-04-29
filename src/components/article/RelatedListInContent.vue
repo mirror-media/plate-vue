@@ -1,5 +1,8 @@
 <template>
-  <section class="relateds-in-content">
+  <section
+    class="relateds-in-content"
+    :class="{ test: abIndicator === 'B' }"
+  >
     <div
       v-for="related in relateds"
       :key="related.id"
@@ -29,6 +32,7 @@
     <slot />
   </section>
 </template>
+
 <script>
 import LazyImage from 'src/components/common/LazyImage.vue'
 import { get } from 'lodash'
@@ -40,10 +44,10 @@ export default {
     LazyImage
   },
   props: {
-    // abIndicator: {
-    //   type: String,
-    //   required: true
-    // },
+    abIndicator: {
+      type: String,
+      required: true
+    },
     isAppPage: {
       type: Boolean,
       default: false
@@ -66,10 +70,13 @@ export default {
   }
 }
 </script>
+
 <style lang="stylus" scoped>
 .relateds-in-content
   margin-bottom 20px
   clear both
+  @media (min-width 900px)
+    margin-bottom 0
   > h3
     margin 0 0 .6em
     color #000
@@ -95,6 +102,8 @@ export default {
       display flex
       align-items center
       padding 1em
+      @media (min-width 768px)
+        padding 1em 2em
       a
         display inline-block
         display -webkit-box
@@ -113,6 +122,10 @@ export default {
       width 33%
       padding 0 !important
       border-bottom none !important
+      @media (min-width 768px)
+        width 25%
+      @media (min-width 900px)
+        width 20%
       &::after
         content ''
         display block
@@ -140,6 +153,10 @@ export default {
         position relative
         width 33%
         margin 0
+        @media (min-width 768px)
+          width 25%
+        @media (min-width 900px)
+          width 20%
         a
           display block
           width 100%
@@ -162,8 +179,11 @@ export default {
         align-items center
         padding 1em
         background-color #eee !important
+        @media (min-width 768px)
+          padding 1em 2em
         a
           display inline-block
+          display -webkit-box
           padding 0
           color #808080
           font-size 1.125rem
@@ -174,27 +194,74 @@ export default {
           text-overflow ellipsis
           border none
           overflow hidden
-
-@media (min-width 767px)
-  .relateds-in-content
+  &.test
+    padding-left 20px
+    padding-right 20px
+    @media (min-width 321px)
+      padding-left 0
+      padding-right 0
+    @media (min-width 768px)
+      display flex
+      flex-wrap wrap
+      justify-content space-between
+      position relative
+      &::before
+        content ''
+        display block
+        width 2px
+        height 100%
+        position absolute
+        top 0
+        left 50%
+        transform translateX(-50%)
+        background-color #d8d8d8
     .related
+      background-color rgba(216, 216, 216, 0.2)
+      height 76px
+      padding-left 0
+      + .related
+        margin-top 10px
+      @media (min-width 768px)
+        width calc(50% - 21px)
+        &:nth-child(2)
+          margin-top 0
+      &::before
+        content none
       &__title
-        padding 1em 2em
+        padding 0 14px
+        a
+          color rgba(#000, 0.87)
+          font-size 15px
+          line-height 1.4
+          // 15 * 1.4 * 2
+          max-height 42px
+          @media (min-width 1200px)
+            -webkit-line-clamp 3
+            // 15 * 1.4 * 3
+            max-height 63px
       &__img
-        width 25%
+        width 116px
       >>> #compass-fit-widget-content
+        height 100%
         figure
-          width 25%
+          width 116px
+          a
+            height 100%
+            padding 0 !important
+            border-bottom none !important
         .pop_item_title
-          padding 1em 2em
-
-@media (min-width 900px)
-  .relateds-in-content
-    margin-bottom 0
-    .related
-      &__img
-        width 20%
-      >>> #compass-fit-widget-content
-        figure
-          width 20%
+          padding 0 14px
+          background-color transparent !important
+          a
+            color rgba(#000, 0.87)
+            font-size 15px
+            line-height 1.4
+            // 15 * 1.4 * 2
+            max-height 42px
+            @media (min-width 1200px)
+              -webkit-line-clamp 3
+              // 15 * 1.4 * 3
+              max-height 63px
+        .pop_item--colorBlock
+          display none
 </style>

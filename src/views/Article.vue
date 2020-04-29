@@ -5,6 +5,7 @@
     :section="sectionId"
     :options="dfpOptions"
     :mode="dfpMode"
+    :disableDfpProvider="hiddenAdvertised"
   >
     <template
       slot="dfpPos"
@@ -87,7 +88,6 @@
               <LazyItemWrapper
                 v-if="!hiddenAdvertised"
                 :load-after-page-loaded="true"
-                class="aside-fixed-trigger"
               >
                 <vue-dfp
                   :is="props.vueDfp"
@@ -95,17 +95,15 @@
                   :config="props.config"
                 />
               </LazyItemWrapper>
+              <LazyItemWrapper
+                v-if="latests.length > 0"
+                :position="verge.viewportH() / 2"
+                :strict="true"
+                class="aside-fixed-trigger"
+              >
+                <LatestList :latests="latests" />
+              </LazyItemWrapper>
               <ArticleAsideFixed>
-                <LazyItemWrapper
-                  slot="popListVert"
-                  :position="verge.viewportH()"
-                  :strict="true"
-                >
-                  <PopListVert
-                    :pop="popularlist"
-                    class="article_aside_popList"
-                  />
-                </LazyItemWrapper>
                 <LazyItemWrapper
                   v-if="!hiddenAdvertised"
                   slot="dfpR2"
@@ -117,6 +115,16 @@
                     :config="props.config"
                     ext-class="dfp-r2"
                     pos="PCR2"
+                  />
+                </LazyItemWrapper>
+                <LazyItemWrapper
+                  slot="popListVert"
+                  :position="verge.viewportH()"
+                  :strict="true"
+                >
+                  <PopListVert
+                    :pop="popularlist"
+                    class="article_aside_popList"
                   />
                 </LazyItemWrapper>
                 <LazyItemWrapper
@@ -230,6 +238,7 @@
             <RelatedListInContent
               slot="relatedListInContent"
               :relateds="relateds"
+              :ab-indicator="abIndicator"
             >
               <MicroAd
                 v-for="ad in _get(microAds, 'article')"
@@ -240,7 +249,7 @@
                 class="related"
               />
               <PopInAd>
-                <div id="_popIn_recommend" />
+                <div :id="`_popIn_recommend${abIndicator === 'A' ? '' : '_newAd'}`" />
               </PopInAd>
             </RelatedListInContent>
             <RecommendList
@@ -430,6 +439,7 @@ import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import HeroImage from '../components/article/HeroImage.vue'
 import HeroVideo from '../components/article/HeroVideo.vue'
+import LatestList from '../components/article/LatestList.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import MicroAd from '../components/MicroAd.vue'
 import PopInAd from '../components/PopInAd.vue'
@@ -545,7 +555,7 @@ const fetchData = store => Promise.all([
   fetchPartners(store),
   fetchCommonData(store)
 ])
-
+const fetchLatestArticle = (store, params) => store.dispatch('FETCH_LATESTARTICLE', { params: params })
 const fetchImages = (store, { ids = [], maxResults = 10 }) => store.dispatch('FETCH_IMAGES_BY_ID', {
   ids,
   maxResults
@@ -672,6 +682,7 @@ export default {
     Header,
     HeroImage,
     HeroVideo,
+    LatestList,
     LazyItemWrapper,
     MicroAd,
     PopInAd,
@@ -803,7 +814,7 @@ export default {
     return {
       DFP_ID,
       DFP_UNITS,
-      // abIndicator: '',
+      abIndicator: '',
       dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       hasSentFirstEnterGA: false,
@@ -948,6 +959,10 @@ export default {
     isMobile () {
       return this.viewportWidth < 1200
     },
+    latests () {
+      return _get(this.$store, 'state.latestArticle.items', [])
+        .filter((latest) => _get(latest, 'slug', '') !== this.currArticleSlug)
+    },
     needWineWarning () {
       const cats = this.articleData.categories || []
       return cats.some(cat => cat.name === 'wine')
@@ -996,6 +1011,14 @@ export default {
     },
     isLockJS () {
       this.checkLockJS()
+    },
+    sectionId: function () {
+      !this.isMobile && fetchLatestArticle(this.$store, {
+        sort: '-publishedDate',
+        where: {
+          sections: this.sectionId
+        }
+      })
     }
   },
   beforeMount () {
@@ -1005,12 +1028,24 @@ export default {
     this.insertMediafarmersScript()
     this.checkLockJS()
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
+    this.abIndicator = this.getMmid()
 
     if (!_isEmpty(this.articleData)) {
       this.sendGA(this.articleData)
       this.hasSentFirstEnterGA = true
     }
+
+    /**
+     * Fetch latests after window.onload.
+     */
+    window.addEventListener('load', () => {
+      !this.isMobile && fetchLatestArticle(this.$store, {
+        sort: '-publishedDate',
+        where: { sections: this.sectionId }
+      })
+    })
+    window.addEventListener('resize', this.handleWWChange)
+    window.addEventListener('orientationChange', this.handleWWChange)
 
     /**
      * Data's supposed to be loaded later.
@@ -1035,6 +1070,10 @@ export default {
   updated () {
     this.updateSysStage()
   },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.handleWWChange)
+    window.removeEventListener('orientationChange', this.handleWWChange)
+  },
   methods: {
     checkLockJS () {
       this.isLockJS ? lockJS() : unLockJS()
@@ -1054,6 +1093,15 @@ export default {
       })
       return assisgnedRole || role
     },
+    handleWWChange () {
+      const isLapW = window.innerWidth >= 1200
+      if (isLapW && !this.latests.length) {
+        fetchLatestArticle(this.$store, {
+          sort: '-publishedDate',
+          where: { sections: this.sectionId }
+        })
+      }
+    },
     insertMediafarmersScript () {
       const mediafarmersScript = document.createElement('script')
       mediafarmersScript.setAttribute('id', 'mediafarmersJS')
@@ -1070,8 +1118,8 @@ export default {
         window.ga('set', 'contentGroup1', `${_get(articleData, 'sections.0.name')}`)
         window.ga('set', 'contentGroup2', `${_get(articleData, 'categories.0.name')}`)
       }
-      window.ga('set', 'contentGroup3', '')
-      // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+      // window.ga('set', 'contentGroup3', '')
+      window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
       window.ga('send', 'pageview', { title: `${_get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
     },
     sendGaClickEvent,
