@@ -242,7 +242,7 @@
                 class="related"
               />
               <PopInAd>
-                <div id="_popIn_recommend" />
+                <div :id="`_popIn_recommend${abIndicator === 'A' ? '' : '_newAd'}`" />
               </PopInAd>
             </RelatedListInContent>
             <RecommendList
