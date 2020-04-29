@@ -230,6 +230,21 @@
       </div>
 
       <div
+        v-else-if="currUrl === '/category/watchsingle'"
+      >
+        <Header
+          :active-section="sectionName"
+          :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
+          :props="props"
+          :show-dfp-header-logo="showDfpHeaderLogo"
+        />
+        <ListWatch />
+        <section class="footer container">
+          <Footer />
+        </section>
+      </div>
+
+      <div
         v-else
         class="list-view"
       >
@@ -434,6 +449,7 @@ import Share from 'src/components/Share.vue'
 import WineWarning from 'src/components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import verge from 'verge'
+import ListWatch from 'src/components/listWatch/ContainerListing.vue'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -733,7 +749,8 @@ export default {
     MoreFull,
     Share,
     VueDfpProvider,
-    WineWarning
+    WineWarning,
+    ListWatch
   },
   asyncData ({ store, route }) {
     return fetchCommonData(store, route)
