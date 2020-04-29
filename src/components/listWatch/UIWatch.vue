@@ -61,7 +61,8 @@ export default {
   text-align center
   &__image
     width 100%
-    object-fit cover
+    height 194px
+    object-fit contain
   &__name
     font-size 16px
     font-weight 600
@@ -93,6 +94,9 @@ export default {
 @media (min-width: 1200px)
   .watch
     width 200px
+    &__image
+      width 100%
+      height 267px
     &__name
       font-size 18px
       line-height 1.44
