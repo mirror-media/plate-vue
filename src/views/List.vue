@@ -423,7 +423,7 @@ import {
 import { adtracker } from 'src/util/adtracking'
 import { camelize } from 'humps'
 import { currentYPosition, elmYPosition } from 'kc-scroll'
-import { currEnv, getTruncatedVal, unLockJS, sendAdCoverGA, updateCookie } from 'src/util/comm'
+import { currEnv, getTruncatedVal, unLockJS, sendAdCoverGA, updateCookie, getHost } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { microAds } from 'src/constants/microAds'
 import { find, get, pick, slice, split, take, toUpper, uniqBy, xorBy } from 'lodash'
@@ -450,6 +450,7 @@ import WineWarning from 'src/components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import verge from 'verge'
 import ListWatch from 'src/components/listWatch/ContainerListing.vue'
+import axios from 'axios'
 
 const MAXRESULT = 12
 const PAGE = 1
@@ -753,7 +754,18 @@ export default {
     ListWatch
   },
   asyncData ({ store, route }) {
-    return fetchCommonData(store, route)
+    const promises = [fetchCommonData(store, route)]
+    if (route.path === '/category/watchsingle') {
+      const host = getHost()
+      const url = `http://${host}/api/watches?max_results=8&page=1&sort=-publishedDate`
+      const fetchWatches = axios.get(url).then(res => res).catch(error => { throw error })
+      promises.push(fetchWatches)
+    }
+    return Promise.all(promises).then(values => {
+      const watches = values.filter(data => get(data, ['config', 'url'], '').includes('watches'))
+      const data = get(watches, [0, 'data'], {})
+      store.commit('watches/SET_DATA', data)
+    })
   },
   metaInfo () {
     const type = this.type
