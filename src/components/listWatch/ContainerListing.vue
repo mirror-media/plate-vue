@@ -2,7 +2,11 @@
   <section class="section">
     <h1 v-text="title" />
     <ol class="list">
-      <li class="list__list-item list-item">
+      <li
+        v-for="item in listItems"
+        :key="getListItem(item)._id"
+        class="list__list-item list-item"
+      >
         <a
           class="list-item__link"
           href="http://"
@@ -10,10 +14,10 @@
           rel="noopener noreferrer"
         >
           <UIWatch
-            :imgSrc="'https://storage.googleapis.com/mirrormedia-files/assets/images/20171129173717-e2fe0fe2e3a5ac9536a2e99ad8acb6d2-tablet.jpg'"
-            :name="'Marine Équation Marchante 5887'"
-            :brand="'BREGUET 寶璣'"
-            :price="87878787"
+            :imgSrc="getListItem(item).imgSrc"
+            :name="getListItem(item).name"
+            :brand="getListItem(item).brand"
+            :price="getListItem(item).price"
           />
         </a>
       </li>
@@ -23,6 +27,7 @@
 
 <script>
 import UIWatch from './UIWatch.vue'
+import _ from 'lodash'
 
 export default {
   components: {
@@ -31,6 +36,22 @@ export default {
   data () {
     return {
       title: '鐘錶列表'
+    }
+  },
+  computed: {
+    listItems () {
+      return this.$store.getters['watches/items']
+    }
+  },
+  methods: {
+    getListItem (listItem) {
+      return {
+        _id: _.get(listItem, '_id', ''),
+        imgSrc: _.get(listItem, ['watchImage', 'image', 'resizedTargets', 'mobile', 'url'], ''),
+        name: _.get(listItem, 'type', ''),
+        brand: _.get(listItem, ['brand', 'name'], ''),
+        price: parseInt(_.get(listItem, 'price', '0'))
+      }
     }
   }
 }
