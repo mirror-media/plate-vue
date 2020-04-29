@@ -5,6 +5,7 @@
     :section="sectionId"
     :options="dfpOptions"
     :mode="dfpMode"
+    :disableDfpProvider="hiddenAdvertised"
   >
     <template
       slot="dfpPos"
