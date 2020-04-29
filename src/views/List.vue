@@ -232,13 +232,65 @@
       <div
         v-else-if="$route.path === '/category/watchsingle'"
       >
+        <!-- header -->
         <Header
           :active-section="sectionName"
           :dfp-header-logo-loaded="dfpHeaderLogoLoaded"
           :props="props"
           :show-dfp-header-logo="showDfpHeaderLogo"
         />
+
+        <!-- HD AD -->
+        <ClientOnly>
+          <LazyItemWrapper
+            :load-after-page-loaded="true"
+          >
+            <div v-if="hasDFP && isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                pos="LMBHD"
+              />
+            </div>
+            <div v-if="hasDFP && !isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                pos="LPCHD"
+              />
+            </div>
+          </LazyItemWrapper>
+        </ClientOnly>
+
+        <!-- listing -->
         <ListWatch />
+
+        <!-- FT AD -->
+        <ClientOnly>
+          <LazyItemWrapper
+            :position="verge.viewportH()"
+            :strict="true"
+          >
+            <div v-if="title !== 'Topic' && !isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                pos="LPCFT"
+              />
+            </div>
+            <div v-if="title !== 'Topic' && isMobile">
+              <vue-dfp
+                :is="props.vueDfp"
+                :config="props.config"
+                :size="get($store, 'getters.adSize')"
+                pos="LMBFT"
+              />
+            </div>
+          </LazyItemWrapper>
+        </ClientOnly>
+
+        <!-- footer -->
         <section class="footer container">
           <Footer />
         </section>
