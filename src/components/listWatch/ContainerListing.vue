@@ -1,6 +1,9 @@
 <template>
   <section class="section">
-    <h1 v-text="title" />
+    <h1
+      class="title"
+      v-text="title"
+    />
     <ol class="list">
       <li
         v-for="item in listItems"
@@ -39,6 +42,9 @@ export default {
     }
   },
   computed: {
+    title () {
+      return _.get(this.$store.state, ['commonData', 'categories', 'watchsingle', 'title'], '')
+    },
     listItems () {
       return this.$store.getters['watches/items']
     }
