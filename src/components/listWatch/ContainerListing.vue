@@ -1,5 +1,9 @@
 <template>
-  <section class="section">
+  <section
+    v-infinite-scroll="loadmore"
+    infinite-scroll-disabled="shouldDisableLoadmore"
+    class="section"
+  >
     <h1
       class="title"
       v-text="title"
@@ -31,10 +35,25 @@
 <script>
 import UIWatch from './UIWatch.vue'
 import _ from 'lodash'
+import axios from 'axios'
+import { getHost } from 'src/util/comm'
+
+import Vue from 'vue'
+if (process.browser) {
+  const infiniteScroll = require('vue-infinite-scroll')
+  Vue.use(infiniteScroll)
+}
 
 export default {
   components: {
     UIWatch
+  },
+  data () {
+    return {
+      currentPage: 1,
+      itemsPerPage: 8,
+      shouldDisableLoadmore: false
+    }
   },
   computed: {
     title () {
@@ -46,17 +65,36 @@ export default {
   },
   methods: {
     getListItem (listItem) {
+      const price = parseInt(_.get(listItem, 'price', '0'))
       return {
         _id: _.get(listItem, '_id', ''),
         imgSrc: _.get(listItem, ['watchImage', 'image', 'resizedTargets', 'mobile', 'url'], ''),
         name: _.get(listItem, 'type', ''),
         brand: _.get(listItem, ['brand', 'name'], ''),
-        price: parseInt(_.get(listItem, 'price', '0'))
+        price: Number.isNaN(price) ? 0 : price
       }
     },
     getWatchHref (listItem) {
       const slug = _.get(listItem, 'name', '')
       return `/watch/${slug}`
+    },
+    fetchWatches (page = 1) {
+      const host = getHost()
+      const url = `http://${host}/api/watches?max_results=${this.itemsPerPage}&page=${page}&sort=-publishedDate`
+      const fetchWatches = axios.get(url).then(res => res).catch(error => { throw error })
+      return fetchWatches
+    },
+    loadmore () {
+      this.shouldDisableLoadmore = true
+      this.fetchWatches(this.currentPage + 1).then(res => {
+        const items = _.get(res, ['data', '_items'], [])
+        this.$store.commit('watches/PUSH_ITEMS', items)
+
+        this.currentPage += 1
+
+        const total = _.get(res, ['data', '_meta', 'total'], 0)
+        this.shouldDisableLoadmore = this.itemsPerPage * this.currentPage >= total
+      }).catch(error => { throw error })
     }
   }
 }
@@ -119,7 +157,7 @@ export default {
       display flex
       align-items center
       margin 52px 0 0 0
-      &:not(:first-child):not(:nth-child(5n))
+      &:not(:first-child):not(:nth-child(4n+1))
         &:before
           content ''
           display block
