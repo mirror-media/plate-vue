@@ -155,7 +155,6 @@ export default {
     margin 20px 0 72px 0
     &__list-item
       display flex
-      align-items center
       margin 52px 0 0 0
       &:not(:first-child):not(:nth-child(4n+1))
         &:before
@@ -164,7 +163,7 @@ export default {
           width 2px
           height 274px
           background-color rgba(0, 0, 0, 0.1)
-          margin 0 30px 0 0
+          margin auto 30px auto 0
 
   .list-item
     padding 0 30px 0 0
