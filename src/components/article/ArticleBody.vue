@@ -19,7 +19,10 @@
           v-text="date"
         />
       </div>
-      <h1 v-text="title" />
+      <h1
+        ref="title"
+        v-text="title"
+      />
       <h2
         v-if="subtitle.length > 0"
         v-text="subtitle"
@@ -163,6 +166,7 @@
         </div>
         <p
           v-if="articleData.updatedAt !== articleData.publishedDate"
+          ref="updatedTime"
           class="updated-time"
         >
           更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span>
@@ -407,6 +411,7 @@ export default {
     window.addEventListener('load', () => {
       window.twttr && twttr.widgets.load()
     })
+    window.addEventListener('scroll', this.detectScrollToUpdatedTimeBottom)
   },
   methods: {
     blockWrapper (p, index) {
@@ -500,7 +505,14 @@ export default {
         default:
       }
     },
-    sendGaClickEvent
+    sendGaClickEvent,
+    detectScrollToUpdatedTimeBottom () {
+      const { bottom } = this.$refs.updatedTime.getBoundingClientRect()
+      if (bottom <= 0) {
+        this.$emit('loadNextArticle')
+        window.removeEventListener('scroll', this.detectScrollToUpdatedTimeBottom)
+      }
+    }
   }
 }
 </script>
