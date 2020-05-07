@@ -21,7 +21,7 @@
           rel="noopener noreferrer"
         >
           <UIWatch
-            :imgSrc="getListItem(item).imgSrc"
+            :img-src="getListItem(item).imgSrc"
             :name="getListItem(item).name"
             :brand="getListItem(item).brand"
             :price="getListItem(item).price"
@@ -69,8 +69,8 @@ export default {
       return {
         _id: _.get(listItem, '_id', ''),
         imgSrc: _.get(listItem, ['watchImage', 'image', 'resizedTargets', 'mobile', 'url'], ''),
-        name: _.get(listItem, 'type', ''),
-        brand: _.get(listItem, ['brand', 'name'], ''),
+        name: _.get(listItem, ['brand', 'name'], ''),
+        brand: _.get(listItem, 'series', ''),
         price: Number.isNaN(price) ? 0 : price
       }
     },
