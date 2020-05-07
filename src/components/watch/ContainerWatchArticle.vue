@@ -22,6 +22,7 @@ export default {
         mobile: _.get(data, 'watchImage.image.resizedTargets.mobile.url')
       }
       data.watchfunction = [...data.watchfunction].map(feature => feature.name)
+      data.embedYoutube = data.youtube ? data.youtube.replace('watch?v=', 'embed/') : data.youtube
       return data
     }
   }

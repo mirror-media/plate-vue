@@ -1,6 +1,6 @@
 <template>
   <a
-    :href="`/story/${slug}`"
+    :href="`/story/${post.slug}`"
     class="watch-related"
     target="_blank"
   >
@@ -12,7 +12,7 @@
     <div class="watch-related__info">
       <p
         class="watch-related__title"
-        v-text="title"
+        v-text="post.title"
       />
       <p
         class="watch-related__date"
@@ -22,24 +22,19 @@
   </a>
 </template>
 <script>
+import moment from 'moment'
+
 export default {
   name: 'UIWatchRelated',
   props: {
-    // images: {
-    //   type: Object,
-    //   required: true
-    // },
-    publishedDate: {
-      type: String,
+    post: {
+      type: Object,
       required: true
-    },
-    slug: {
-      type: String,
-      required: true
-    },
-    title: {
-      type: String,
-      required: true
+    }
+  },
+  computed: {
+    publishedDate () {
+      return moment(new Date(this.post.publishedDate)).format('YYYY/MM/DD')
     }
   }
 }

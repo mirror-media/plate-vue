@@ -13,6 +13,7 @@
         <img
           :src="watchImage.mobile"
           :alt="watch.style"
+          loading="lazy"
         >
       </picture>
       <div class="watch-article__info">
@@ -36,10 +37,14 @@
             <th>基本資料</th>
           </template>
           <template v-slot:collapsible-row>
-            <!-- <tr>
+            <tr v-if="specSize">
               <td>錶殼尺寸</td>
-              <td></td>
-            </tr> -->
+              <td v-text="specSize" />
+            </tr>
+            <tr v-if="specColor">
+              <td>面盤顏色</td>
+              <td v-text="specColor" />
+            </tr>
             <tr v-if="specMaterial">
               <td>材質</td>
               <td v-text="specMaterial" />
@@ -89,6 +94,11 @@
         </UIWatchCollapse>
       </div>
     </div>
+    <ContainerWatchIframe
+      v-if="embedYoutube"
+      :iframe-src="embedYoutube"
+      class="watch-article__iframe"
+    />
     <article
       class="watch-article__content"
       v-html="watch.content"
@@ -98,7 +108,7 @@
         相關文章
       </p>
       <div class="watch-article__related-list">
-        <ContainerWatchRelated
+        <UIWatchRelated
           v-for="post in watch.relateds"
           :key="post.slug"
           :post="post"
@@ -110,8 +120,9 @@
 </template>
 <script>
 
-import ContainerWatchRelated from './ContainerWatchRelated.vue'
+import ContainerWatchIframe from './ContainerWatchIframe.vue'
 import UIWatchCollapse from './UIWatchCollapse.vue'
+import UIWatchRelated from './UIWatchRelated.vue'
 import _ from 'lodash'
 
 export default {
@@ -122,8 +133,9 @@ export default {
     }
   },
   components: {
-    ContainerWatchRelated,
-    UIWatchCollapse
+    ContainerWatchIframe,
+    UIWatchCollapse,
+    UIWatchRelated
   },
   props: {
     watch: {
@@ -132,8 +144,15 @@ export default {
     }
   },
   computed: {
+    embedYoutube () {
+      return this.watch.embedYoutube
+    },
     hasFunction () {
       return this.watch.watchfunction.length > 0
+    },
+    // 面盤顏色
+    specColor () {
+      return this.watch.color
     },
     // 發表年份
     specGa () {
@@ -159,6 +178,10 @@ export default {
     specPower () {
       return this.watch.power
     },
+    // 錶殼尺寸
+    specSize () {
+      return this.watch.size
+    },
     // 防水/防水性能
     specWaterproof () {
       return this.watch.waterproof
@@ -167,7 +190,6 @@ export default {
       return _.get(this.watch, 'watchImage', {})
     }
   }
-
 }
 </script>
 <style lang="stylus" scoped>
@@ -200,6 +222,8 @@ export default {
     margin-top 30px
     & + .watch-article__collapse
       margin-top 0
+  &__iframe
+    margin-top 31px
   &__content
     margin 30px 0 0
     padding 10px
@@ -285,6 +309,8 @@ export default {
       font-size 36px
     &__subheading, &__price
       font-size 24px
+    &__iframe, &__content
+      margin-top 80px
     &__related
       padding 0 0 94px
       &-list
