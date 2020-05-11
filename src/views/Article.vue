@@ -27,7 +27,7 @@
       <RelatedListOverContent
         v-if="!isArticlePhotography"
         :section-id="sectionId"
-        :articles="relateds"
+        :articles="relateds(articles[currArticleIdx])"
         :related-category="relatedCategory"
       />
 
@@ -35,281 +35,300 @@
         v-if="!isArticlePhotography"
         class="article-container"
       >
-        <ClientOnly>
-          <LazyItemWrapper :load-after-page-loaded="true">
-            <vue-dfp
-              :is="props.vueDfp"
-              v-if="isMobile && !hiddenAdvertised"
-              pos="MBHD"
-              ext-class="full"
-              :config="props.config"
-              :size="_get($store, 'getters.adSize')"
-            />
-            <vue-dfp
-              :is="props.vueDfp"
-              v-if="!isMobile && !hiddenAdvertised"
-              pos="PCHD"
-              ext-class="full"
-              :config="props.config"
-            />
-          </LazyItemWrapper>
-        </ClientOnly>
         <div
-          v-if="articleData"
-          class="article"
+          v-for="article in articles"
+          :key="article.key"
         >
-          <ArticleBody
-            :article-data="articleData"
-            :is-ad="isAd"
-            :viewport="viewportWidth"
-          >
-            <template slot="hero">
-              <div
-                v-if="heroVideo"
-                class="article-heromedia"
-              >
-                <HeroVideo
-                  :hero-caption="heroCaption"
-                  :video="heroVideo"
-                />
-              </div>
-              <HeroImage
-                v-else
-                :hero-caption="heroCaption"
-                :hero-image="heroImage"
-              />
-            </template>
-            <!-- Aside: viewport width > 1200px -->
-            <aside
-              v-if="!isMobile && !ifSingleCol"
-              slot="aside"
-              class="article_aside"
+          <ClientOnly>
+            <LazyItemWrapper
+              v-if="isFirstArticle(article)"
+              :load-after-page-loaded="true"
             >
-              <LazyItemWrapper
-                v-if="!hiddenAdvertised"
-                :load-after-page-loaded="true"
-              >
-                <vue-dfp
-                  :is="props.vueDfp"
-                  pos="PCR1"
-                  :config="props.config"
+              <vue-dfp
+                :is="props.vueDfp"
+                v-if="isMobile && !hiddenAdvertised"
+                pos="MBHD"
+                ext-class="full"
+                :config="props.config"
+                :size="_get($store, 'getters.adSize')"
+              />
+              <vue-dfp
+                :is="props.vueDfp"
+                v-if="!isMobile && !hiddenAdvertised"
+                pos="PCHD"
+                ext-class="full"
+                :config="props.config"
+              />
+            </LazyItemWrapper>
+          </ClientOnly>
+          <div
+            v-if="article.data"
+            class="article"
+          >
+            <ArticleBody
+              :ref="`articleBody${article.key}`"
+              :article-data="article.data"
+              :article-key="article.key"
+              :is-ad="article.isAd"
+              :viewport="viewport"
+              :ab-indicator="abIndicator"
+              @loadNextArticle="loadNextArticle"
+            >
+              <template slot="hero">
+                <div
+                  v-if="article.heroVideo"
+                  class="article-heromedia"
+                >
+                  <HeroVideo
+                    :hero-caption="article.heroCaption"
+                    :video="article.heroVideo"
+                  />
+                </div>
+                <HeroImage
+                  v-else
+                  :hero-caption="article.heroCaption"
+                  :hero-image="article.heroImage"
                 />
-              </LazyItemWrapper>
-              <LazyItemWrapper
-                v-if="latests.length > 0"
-                :position="verge.viewportH() / 2"
-                :strict="true"
-                class="aside-fixed-trigger"
+              </template>
+              <!-- Aside: viewport width > 1200px -->
+              <aside
+                v-if="!isMobile && !ifSingleCol"
+                slot="aside"
+                class="article_aside"
               >
-                <LatestList :latests="latests" />
-              </LazyItemWrapper>
-              <ArticleAsideFixed>
                 <LazyItemWrapper
-                  v-if="!hiddenAdvertised"
-                  slot="dfpR2"
-                  :position="verge.viewportH()"
-                  :strict="true"
+                  v-if="!hiddenAdvertised && isFirstArticle(article)"
+                  :load-after-page-loaded="true"
                 >
                   <vue-dfp
                     :is="props.vueDfp"
+                    pos="PCR1"
                     :config="props.config"
-                    ext-class="dfp-r2"
-                    pos="PCR2"
                   />
                 </LazyItemWrapper>
                 <LazyItemWrapper
-                  slot="popListVert"
-                  :position="verge.viewportH()"
+                  v-if="latests.length > 0"
+                  :position="verge.viewportH() / 2"
                   :strict="true"
+                  class="aside-fixed-trigger"
                 >
-                  <PopListVert
-                    :pop="popularlist"
-                    class="article_aside_popList"
+                  <LatestList :latests="latests" />
+                </LazyItemWrapper>
+                <ArticleAsideFixed>
+                  <LazyItemWrapper
+                    v-if="!hiddenAdvertised && isFirstArticle(article)"
+                    slot="dfpR2"
+                    :position="verge.viewportH()"
+                    :strict="true"
+                  >
+                    <vue-dfp
+                      :is="props.vueDfp"
+                      :config="props.config"
+                      ext-class="dfp-r2"
+                      pos="PCR2"
+                    />
+                  </LazyItemWrapper>
+                  <LazyItemWrapper
+                    slot="popListVert"
+                    :position="verge.viewportH()"
+                    :strict="true"
+                  >
+                    <PopListVert
+                      :pop="popularlist"
+                      class="article_aside_popList"
+                    />
+                  </LazyItemWrapper>
+                  <LazyItemWrapper
+                    v-if="isFirstArticle(article)"
+                    slot="fbPage"
+                    :load-after-page-loaded="true"
+                  >
+                    <FbSocialPlugins />
+                  </LazyItemWrapper>
+                  <LazyItemWrapper
+                    slot="readrEmbedded"
+                    :load-after-page-loaded="true"
+                    :style="{ minHeight: '300px' }"
+                  >
+                    <READrEmbeddedPromotions
+                      class="readr-embedded-promotions"
+                      :promotions="promotions"
+                    />
+                  </LazyItemWrapper>
+                </ArticleAsideFixed>
+              </aside>
+              <!-- DFP E1 E2 -->
+              <LazyItemWrapper
+                v-if="isFirstArticle(article)"
+                slot="dfpad-set"
+                :position="verge.viewportH()"
+                :strict="true"
+                :style="{ width: '100%' }"
+              >
+                <div :style="{ display: 'flex', justifyContent: 'space-around' }">
+                  <vue-dfp
+                    :is="props.vueDfp"
+                    v-if="isMobile && !hiddenAdvertised"
+                    :config="props.config"
+                    :size="_get($store, 'getters.adSize')"
+                    pos="MBE1"
                   />
-                </LazyItemWrapper>
-                <LazyItemWrapper
-                  slot="fbPage"
-                  :load-after-page-loaded="true"
-                >
-                  <FbSocialPlugins />
-                </LazyItemWrapper>
-                <LazyItemWrapper
-                  slot="readrEmbedded"
-                  :load-after-page-loaded="true"
-                  :style="{ minHeight: '300px' }"
-                >
-                  <READrEmbeddedPromotions
-                    class="readr-embedded-promotions"
-                    :promotions="promotions"
+                  <vue-dfp
+                    :is="props.vueDfp"
+                    v-if="!isMobile && !hiddenAdvertised"
+                    :config="props.config"
+                    pos="PCE1"
                   />
-                </LazyItemWrapper>
-              </ArticleAsideFixed>
-            </aside>
-            <!-- DFP E1 E2 -->
-            <LazyItemWrapper
-              slot="dfpad-set"
-              :position="verge.viewportH()"
-              :strict="true"
-              :style="{ width: '100%' }"
-            >
-              <div :style="{ display: 'flex', justifyContent: 'space-around' }">
+                  <vue-dfp
+                    :is="props.vueDfp"
+                    v-if="!isMobile && !hiddenAdvertised"
+                    :config="props.config"
+                    :style="{ marginLeft: '10px' }"
+                    pos="PCE2"
+                  />
+                </div>
+              </LazyItemWrapper>
+              <!-- DFP MB AT 1 -->
+              <template
+                v-if="isMobile && isFirstArticle(article)"
+                slot="dfpad-AR1-MB"
+              >
+                <span id="innity-custom-adnetwork-span-63518" />
+                <span id="innity-custom-premium-span-12738" />
                 <vue-dfp
                   :is="props.vueDfp"
-                  v-if="isMobile && !hiddenAdvertised"
+                  v-if="!hiddenAdvertised"
                   :config="props.config"
                   :size="_get($store, 'getters.adSize')"
-                  pos="MBE1"
+                  pos="MBAR1"
                 />
+              </template>
+              <!-- DFP PC AT 1 -->
+              <template
+                v-if="!isMobile && isFirstArticle(article)"
+                slot="dfpad-AR1-PC"
+              >
+                <span id="innity-custom-adnetwork-span-63518" />
+                <span id="innity-custom-premium-span-12738" />
                 <vue-dfp
                   :is="props.vueDfp"
-                  v-if="!isMobile && !hiddenAdvertised"
+                  v-if="!hiddenAdvertised"
+                  pos="PCAR"
                   :config="props.config"
-                  pos="PCE1"
                 />
+              </template>
+              <!-- DFP MB AT 2 -->
+              <template
+                v-if="isMobile && isFirstArticle(article)"
+                slot="dfpad-AR2-MB"
+              >
+                <span id="innity-custom-adnetwork-span-68557" />
+                <span id="innity-custom-premium-span-12739" />
                 <vue-dfp
                   :is="props.vueDfp"
-                  v-if="!isMobile && !hiddenAdvertised"
+                  v-if="!hiddenAdvertised"
                   :config="props.config"
-                  :style="{ marginLeft: '10px' }"
-                  pos="PCE2"
+                  :size="_get($store, 'getters.adSize')"
+                  pos="MBAR2"
                 />
-              </div>
-            </LazyItemWrapper>
-            <!-- DFP MB AT 1 -->
-            <template
-              v-if="isMobile"
-              slot="dfpad-AR1-MB"
-            >
-              <span id="innity-custom-adnetwork-span-63518" />
-              <span id="innity-custom-premium-span-12738" />
-              <vue-dfp
-                :is="props.vueDfp"
-                v-if="!hiddenAdvertised"
-                :config="props.config"
-                :size="_get($store, 'getters.adSize')"
-                pos="MBAR1"
-              />
-            </template>
-            <!-- DFP PC AT 1 -->
-            <template
-              v-if="!isMobile"
-              slot="dfpad-AR1-PC"
-            >
-              <span id="innity-custom-adnetwork-span-63518" />
-              <span id="innity-custom-premium-span-12738" />
-              <vue-dfp
-                :is="props.vueDfp"
-                v-if="!hiddenAdvertised"
-                pos="PCAR"
-                :config="props.config"
-              />
-            </template>
-            <!-- DFP MB AT 2 -->
-            <template
-              v-if="isMobile"
-              slot="dfpad-AR2-MB"
-            >
-              <span id="innity-custom-adnetwork-span-68557" />
-              <span id="innity-custom-premium-span-12739" />
-              <vue-dfp
-                :is="props.vueDfp"
-                v-if="!hiddenAdvertised"
-                :config="props.config"
-                :size="_get($store, 'getters.adSize')"
-                pos="MBAR2"
-              />
-            </template>
-            <!-- DFP MB AT 3 -->
-            <template v-if="isMobile && !hiddenAdvertised">
-              <vue-dfp
-                :is="props.vueDfp"
-                slot="dfpad-AR3-MB"
-                :config="props.config"
-                :size="_get($store, 'getters.adSize')"
-                pos="MBAR3"
-              />
-            </template>
-            <PopList
-              v-if="isMobile"
-              slot="poplist"
-              :pop="popularlist"
-              :curr-env="dfpMode"
-            />
-            <RelatedListInContent
-              slot="relatedListInContent"
-              :relateds="relateds"
-              :ab-indicator="abIndicator"
-            >
-              <MicroAd
-                v-for="ad in _get(microAds, 'article')"
-                :id="`${_get(ad, 'pcId')}`"
-                :key="`${_get(ad, 'pcId')}`"
+              </template>
+              <!-- DFP MB AT 3 -->
+              <template v-if="isMobile && !hiddenAdvertised && isFirstArticle(article)">
+                <vue-dfp
+                  :is="props.vueDfp"
+                  slot="dfpad-AR3-MB"
+                  :config="props.config"
+                  :size="_get($store, 'getters.adSize')"
+                  pos="MBAR3"
+                />
+              </template>
+              <PopList
+                v-if="isMobile"
+                slot="poplist"
+                :pop="popularlist"
                 :curr-env="dfpMode"
-                :curr-url="articleUrl"
-                class="related"
               />
-              <PopInAd>
-                <div :id="`_popIn_recommend${abIndicator === 'A' ? '' : '_newAd'}`" />
-              </PopInAd>
-            </RelatedListInContent>
-            <RecommendList
-              v-if="!isAd"
-              slot="relatedlistBottom"
-              :section-id="sectionId"
-              :relateds="relateds"
-              :curr-article-id="currArticleId"
-              :recommends="recommendlist"
-              :excluding-article="routeUpateReferrerSlug"
-            />
-            <!-- dable -->
-            <template
-              v-if="!hiddenAdvertised"
-              slot="recommendList"
+              <RelatedListInContent
+                slot="relatedListInContent"
+                :relateds="article.relateds"
+                :ab-indicator="abIndicator"
+              >
+                <template v-if="isFirstArticle(article)">
+                  <MicroAd
+                    v-for="ad in _get(microAds, 'article')"
+                    :id="`${_get(ad, 'pcId')}`"
+                    :key="`${_get(ad, 'pcId')}`"
+                    :curr-env="dfpMode"
+                    :curr-url="articleUrl"
+                    class="related"
+                  />
+                </template>
+                <PopInAd v-if="isFirstArticle(article)">
+                  <div :id="`_popIn_recommend${abIndicator === 'A' ? '' : '_newAd'}`" />
+                </PopInAd>
+              </RelatedListInContent>
+              <RecommendList
+                v-if="!article.isAd"
+                slot="relatedlistBottom"
+                :section-id="sectionId"
+                :relateds="article.relateds"
+                :curr-article-id="currArticleId"
+                :recommends="recommendlist"
+                :excluding-article="routeUpateReferrerSlug"
+              />
+              <!-- dable -->
+              <template
+                v-if="!hiddenAdvertised && isFirstArticle(article)"
+                slot="recommendList"
+              >
+                <div
+                  v-if="isMobile"
+                  id="dablewidget_6XgaOJ7N"
+                  class="dable-widget"
+                  data-widget_id="6XgaOJ7N"
+                />
+                <div
+                  v-else
+                  id="dablewidget_GlYwenoy"
+                  class="dable-widget"
+                  data-widget_id="GlYwenoy"
+                />
+              </template>
+            </ArticleBody>
+            <div
+              class="article_footer"
+              :style="needWineWarning ? { paddingBottom: '10px' } : ''"
             >
-              <div
-                v-if="isMobile"
-                id="dablewidget_6XgaOJ7N"
-                class="dable-widget"
-                data-widget_id="6XgaOJ7N"
-              />
-              <div
-                v-else
-                id="dablewidget_GlYwenoy"
-                class="dable-widget"
-                data-widget_id="GlYwenoy"
-              />
-            </template>
-          </ArticleBody>
-          <div
-            class="article_footer"
-            :style="needWineWarning ? { paddingBottom: '10px' } : ''"
-          >
-            <LazyItemWrapper
-              v-if="!hiddenAdvertised"
-              :position="verge.viewportH()"
-              :strict="true"
-            >
-              <vue-dfp
-                :is="props.vueDfp"
-                v-if="isMobile"
-                pos="MBFT"
-                :ext-class="`full ${styleDfpAd}`"
-                :config="props.config"
-                :size="_get($store, 'getters.adSize')"
-              />
-              <vue-dfp
-                :is="props.vueDfp"
-                v-else
-                :config="props.config"
-                pos="PCFT"
-              />
-            </LazyItemWrapper>
-            <div style="width: 100%; height: 100%;">
-              <Footer />
+              <LazyItemWrapper
+                v-if="!hiddenAdvertised && isFirstArticle(article)"
+                :position="verge.viewportH()"
+                :strict="true"
+              >
+                <vue-dfp
+                  :is="props.vueDfp"
+                  v-if="isMobile"
+                  pos="MBFT"
+                  :ext-class="`full ${styleDfpAd}`"
+                  :config="props.config"
+                  :size="_get($store, 'getters.adSize')"
+                />
+                <vue-dfp
+                  :is="props.vueDfp"
+                  v-else
+                  :config="props.config"
+                  pos="PCFT"
+                />
+              </LazyItemWrapper>
             </div>
           </div>
         </div>
-        <ShareTools v-if="viewportWidth > 767" />
+        <div class="footer-container">
+          <Footer />
+        </div>
+        <ShareTools
+          v-if="viewportWidth > 767"
+          :ab-indicator="abIndicator"
+        />
       </div>
       <div v-else-if="isArticlePhotography">
         <ArticleBodyPhotography
@@ -422,7 +441,7 @@ import {
 import { DFP_ID, DFP_SIZE_MAPPING, DFP_UNITS, DFP_OPTIONS, SECTION_WATCH_ID, SITE_MOBILE_URL, SITE_DESCRIPTION, SITE_TITLE, SITE_TITLE_SHORT, SITE_URL, SITE_OGIMAGE } from '../constants'
 
 import { adtracker } from 'src/util/adtracking'
-import { currEnv, getImage, lockJS, sendAdCoverGA, sendGaClickEvent, unLockJS, updateCookie } from '../util/comm'
+import { currEnv, getImage, lockJS, sendAdCoverGA, sendGaClickEvent, unLockJS, updateCookie, scrollDirection, requestTick } from '../util/comm'
 import { getRole } from '../util/mmABRoleAssign'
 import { microAds } from '../constants/microAds'
 import ArticleBody from '../components/article/ArticleBody.vue'
@@ -827,7 +846,12 @@ export default {
       showDfpFixedBtn: false,
       showDfpHeaderLogo: false,
       state: {},
-      verge
+      verge,
+      articleIdx: 0,
+      currArticleIdx: 0,
+      articles: [],
+      articleSlugs: [],
+      pvSent: []
     }
   },
   computed: {
@@ -925,25 +949,25 @@ export default {
     hasDfpFixed () {
       return this.sectionId === SECTION_WATCH_ID
     },
-    heroCaption () {
-      return _get(this.articleData, ['heroCaption'], '')
-    },
-    heroImage () {
-      return _get(this.articleData, 'heroImage') || { image: {} }
-    },
-    heroVideo () {
-      const { heroVideo } = this.articleData
-      const poster = getImage(this.articleData)
-      return (heroVideo && heroVideo.video)
-        ? Object.assign(_get(heroVideo, 'video', {}), { id: _get(heroVideo, 'id', '') }, { poster })
-        : heroVideo
-    },
+    // heroCaption () {
+    //   return _get(this.articleData, ['heroCaption'], '')
+    // },
+    // heroImage () {
+    //   return _get(this.articleData, 'heroImage') || { image: {} }
+    // },
+    // heroVideo () {
+    //   const { heroVideo } = this.articleData
+    //   const poster = getImage(this.articleData)
+    //   return (heroVideo && heroVideo.video)
+    //     ? Object.assign(_get(heroVideo, 'video', {}), { id: _get(heroVideo, 'id', '') }, { poster })
+    //     : heroVideo
+    // },
     hiddenAdvertised () {
       return _get(this.articleData, 'hiddenAdvertised')
     },
-    isAd () {
-      return _get(this.articleData, ['isAdvertised'], false)
-    },
+    // isAd () {
+    //   return _get(this.articleData, ['isAdvertised'], false)
+    // },
     isAdultContent () {
       return _get(this.articleData, 'isAdult')
     },
@@ -976,9 +1000,9 @@ export default {
     recommendlist () {
       return _get(this.$store, 'state.articlesRecommendList.relatedNews') || []
     },
-    relateds () {
-      return (_get(this.articleData, 'relateds') || []).filter(item => item)
-    },
+    // relateds () {
+    //   return (_get(this.articleData, 'relateds') || []).filter(item => item)
+    // },
     sectionName () {
       return _get(this.articleData, 'sections.0.name')
     },
@@ -991,6 +1015,9 @@ export default {
     },
     viewportWidth () {
       return _get(this.$store, 'state.viewport.width') || 0
+    },
+    viewport () {
+      return _get(this.$store, 'state.viewport', {})
     }
   },
   watch: {
@@ -1025,10 +1052,20 @@ export default {
     fetchRecommendList(this.$store, this.currArticleId)
   },
   mounted () {
+    this.articles.push({
+      key: this.articleIdx,
+      ...this.createArticle(this.articleData)
+    })
+    this.articleSlugs.push(this.articleData.slug)
+
     this.insertMediafarmersScript()
     this.checkLockJS()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
+
+    if (this.abIndicator === 'B') {
+      window.addEventListener('scroll', this.changeURL)
+    }
 
     if (!_isEmpty(this.articleData)) {
       this.sendGA(this.articleData)
@@ -1073,8 +1110,43 @@ export default {
   beforeDestroy () {
     window.removeEventListener('resize', this.handleWWChange)
     window.removeEventListener('orientationChange', this.handleWWChange)
+    window.removeEventListener('scroll', this.changeURL)
   },
   methods: {
+    createArticle (data) {
+      return {
+        data,
+        relateds: this.relateds(data),
+        heroCaption: this.heroCaption(data),
+        heroImage: this.heroImage(data),
+        heroVideo: this.heroVideo(data),
+        isAd: this.isAd(data)
+      }
+    },
+    relateds (data) {
+      return (_get(data, 'relateds') || []).filter(item => item)
+    },
+    heroCaption (data) {
+      return _get(data, ['heroCaption'], '')
+    },
+    heroImage (data) {
+      return _get(data, 'heroImage') || { image: {} }
+    },
+    heroVideo (data) {
+      const { heroVideo } = data
+      const poster = getImage(data)
+      return (heroVideo && heroVideo.video)
+        ? Object.assign(_get(heroVideo, 'video', {}), { id: _get(heroVideo, 'id', '') }, { poster })
+        : heroVideo
+    },
+    isAd (data) {
+      return _get(data, ['isAdvertised'], false)
+    },
+
+    isFirstArticle (article) {
+      return article.key === 0
+    },
+
     checkLockJS () {
       this.isLockJS ? lockJS() : unLockJS()
     },
@@ -1088,8 +1160,8 @@ export default {
       const role = getRole({
         mmid,
         distribution: [
-          { id: 'A', weight: 50 },
-          { id: 'B', weight: 50 }]
+          { id: 'A', weight: 80 },
+          { id: 'B', weight: 20 }]
       })
       return assisgnedRole || role
     },
@@ -1130,6 +1202,74 @@ export default {
     },
     updateSysStage () {
       this.dfpMode = currEnv()
+    },
+    loadNextArticle () {
+      const currRelateds = _get(
+        this.articles[this.articleIdx],
+        'data.relateds',
+        []
+      ).filter((item) => item)
+      const nextSlug = _get(
+        currRelateds.filter((related) => !this.articleSlugs.includes(related.slug)),
+        '0.slug',
+        ''
+      )
+      if (nextSlug === '') {
+        return
+      }
+      this.articleSlugs.push(nextSlug)
+
+      this.articleIdx += 1
+      fetchArticles(this.$store, nextSlug).then((articles) => {
+        const data = _find(
+          _get(articles, 'items'),
+          { slug: nextSlug }
+        )
+
+        this.articles.push({
+          key: this.articleIdx,
+          ...this.createArticle(data)
+        })
+      })
+    },
+    changeURL () {
+      requestTick(() => {
+        const isScrollDown = scrollDirection() === 'down'
+        const watchedIdx = isScrollDown ? this.currArticleIdx + 1 : this.currArticleIdx
+        if (watchedIdx === 0) {
+          return
+        }
+
+        const ref = this.$refs[`articleBody${watchedIdx}`]
+        if (!ref) {
+          return
+        }
+
+        const { top } = ref[0].$refs.title.getBoundingClientRect()
+        if (top < 0) {
+          if (isScrollDown) {
+            this.currArticleIdx += 1
+            const slug = this.articleSlugs[watchedIdx]
+            window.history.replaceState(null, '', `/story/${slug}`)
+
+            this.sendPV(watchedIdx)
+          }
+        } else {
+          if (!isScrollDown) {
+            this.currArticleIdx -= 1
+            const slug = this.articleSlugs[watchedIdx - 1]
+            window.history.replaceState(null, '', `/story/${slug}`)
+          }
+        }
+      })
+    },
+    sendPV (articleIdx) {
+      if (this.pvSent.includes(articleIdx)) {
+        return
+      }
+
+      this.pvSent.push(articleIdx)
+      window.ga('send', 'pageview', { title: `${_get(this.articles[articleIdx].data, 'title', '')} - ${SITE_TITLE_SHORT}`, location: window.location.href })
     }
   }
 }
@@ -1188,6 +1328,20 @@ export default {
           margin 30px -100% 30px 0
           border-top 1px solid #c5c5c5
 
+    .footer-container
+      font-family "Noto Sans TC", STHeitiTC-Light, "Microsoft JhengHei", sans-serif
+      max-width 1160px
+      width 100%
+      height 100%
+      margin-left auto
+      margin-right auto
+      background-color #fff
+      padding-top 20px
+      padding-left 50px
+      padding-right 50px
+      footer
+        margin-top 0
+
     .ad-container.full
       max-width 1160px
       background-color #fff
@@ -1209,15 +1363,21 @@ export default {
     .article-container
       .article
         padding 0
+      .footer-container
+        padding-left 0
+        padding-right 0
 
   @media (min-width 321px) and (max-width 499px)
     .article-container
       .article
         padding 0 25px
+      .footer-container
+        padding-left 25px
+        padding-right 25px
 
   @media (min-width 0px) and (max-width 767px)
     .article-container
-      .article-heromedia, .article
+      .article-heromedia, .article, .footer-container
          max-width 100%
 
   @media (max-width 999px)
@@ -1235,6 +1395,13 @@ export default {
         .article_footer
           width 645px
           margin 0 auto
+      .footer-container
+        padding-left 0
+        padding-right 0
+        & footer
+          width 645px
+          margin-left auto
+          margin-right auto
 
 @keyframes fade-in
   0%
