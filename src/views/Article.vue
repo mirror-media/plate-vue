@@ -850,7 +850,7 @@ export default {
       currArticleIdx: 0,
       articles: [],
       articleSlugs: [],
-      pvSent: []
+      gaSent: []
     }
   },
   computed: {
@@ -1245,13 +1245,13 @@ export default {
         }
 
         const { top } = ref[0].$refs.title.getBoundingClientRect()
-        if (top < 0) {
+        if (top - this.viewport.height < 0) {
           if (isScrollDown) {
             this.currArticleIdx += 1
             const slug = this.articleSlugs[watchedIdx]
             window.history.replaceState(null, '', `/story/${slug}`)
 
-            this.sendPV(watchedIdx)
+            this.sendGAClick(watchedIdx)
           }
         } else {
           if (!isScrollDown) {
@@ -1262,13 +1262,13 @@ export default {
         }
       })
     },
-    sendPV (articleIdx) {
-      if (this.pvSent.includes(articleIdx)) {
+    sendGAClick (articleIdx) {
+      if (this.gaSent.includes(articleIdx)) {
         return
       }
 
-      this.pvSent.push(articleIdx)
-      window.ga('send', 'pageview', { title: `${_get(this.articles[articleIdx].data, 'title', '')} - ${SITE_TITLE_SHORT}`, location: window.location.href })
+      this.gaSent.push(articleIdx)
+      sendGaClickEvent('article', 'scroll to next article')
     }
   }
 }
@@ -1313,6 +1313,7 @@ export default {
       .article_footer
         text-align center
         clear both
+        min-height 20px
 
       .split-line
         overflow hidden
