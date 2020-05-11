@@ -13,7 +13,10 @@
       class="watch__brand"
       v-text="brand"
     />
-    <div class="watch__bottom-wrapper bottom-wrapper">
+    <div
+      v-if="showBottomWrapper"
+      class="watch__bottom-wrapper bottom-wrapper"
+    >
       <p
         class="bottom-wrapper__price"
       >
@@ -49,6 +52,11 @@ export default {
       validator (value) {
         return value >= 0
       }
+    }
+  },
+  computed: {
+    showBottomWrapper () {
+      return this.price > 0
     }
   }
 }

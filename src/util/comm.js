@@ -510,3 +510,29 @@ export function isTouchDevice () {
   const query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('')
   return mq(query)
 }
+
+let prevScrollY = 0
+export function scrollDirection () {
+  const currScrollY = window.pageYOffset
+  const direction = currScrollY >= prevScrollY ? 'down' : 'up'
+  prevScrollY = currScrollY
+  return direction
+}
+
+export function requestTick (fn) {
+  let ticking = false
+  const wEl = window
+
+  return (function IIFE () {
+    if (ticking) {
+      return
+    }
+
+    ticking = true
+
+    wEl.requestAnimationFrame(function () {
+      fn()
+      ticking = false
+    })
+  })()
+}
