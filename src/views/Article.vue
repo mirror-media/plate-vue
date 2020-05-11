@@ -251,7 +251,6 @@
               <RelatedListInContent
                 slot="relatedListInContent"
                 :relateds="article.relateds"
-                :ab-indicator="abIndicator"
               >
                 <template v-if="isFirstArticle(article)">
                   <MicroAd
@@ -264,7 +263,7 @@
                   />
                 </template>
                 <PopInAd v-if="isFirstArticle(article)">
-                  <div :id="`_popIn_recommend${abIndicator === 'A' ? '' : '_newAd'}`" />
+                  <div id="_popIn_recommend" />
                 </PopInAd>
               </RelatedListInContent>
               <RecommendList
