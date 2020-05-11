@@ -227,10 +227,7 @@
         <slot name="dfpad-set" />
       </div>
       <slot name="recommendList" />
-      <div
-        class="article_main_pop"
-        :style="{ paddingBottom: articleKey !== 0 ? '20px' : '' }"
-      >
+      <div class="article_main_pop">
         <slot name="poplist" />
       </div>
       <slot name="slot_fb_comment" />
