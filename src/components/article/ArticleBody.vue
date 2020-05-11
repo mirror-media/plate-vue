@@ -144,11 +144,11 @@
             v-html="paragraphComposer(p)"
           />
           <slot
-            v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 0 ]"
+            v-if="viewport.width > 768 && index === firstTwoUnstyledParagraph[ 0 ]"
             name="dfpad-AR1-PC"
           />
           <slot
-            v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 1 ]"
+            v-if="viewport.width > 768 && index === firstTwoUnstyledParagraph[ 1 ]"
             name="dfpad-AR2-PC"
           />
           <div
@@ -207,8 +207,11 @@
         </div>
       </div>
       <div class="split-line" />
-      <FbSocialPlugins v-if="viewport < 768" />
-      <div class="herbsapi">
+      <FbSocialPlugins v-if="viewport.width < 768" />
+      <div
+        v-if="articleKey === 0"
+        class="herbsapi"
+      >
         <div
           id="herbsapi"
           hb-width="100"
@@ -219,12 +222,15 @@
       </div>
       <div
         class="dfpad-set"
-        :class="{ mobile: viewport < 1000 }"
+        :class="{ mobile: viewport.width < 1000 }"
       >
         <slot name="dfpad-set" />
       </div>
       <slot name="recommendList" />
-      <div class="article_main_pop">
+      <div
+        class="article_main_pop"
+        :style="{ paddingBottom: articleKey !== 0 ? '20px' : '' }"
+      >
         <slot name="poplist" />
       </div>
       <slot name="slot_fb_comment" />
@@ -274,9 +280,13 @@ export default {
       type: Object,
       default: () => ({})
     },
-    viewport: {
+    articleKey: {
       type: Number,
-      default: undefined
+      required: true
+    },
+    viewport: {
+      type: Object,
+      required: true
     },
     isAd: {
       type: Boolean,
@@ -332,7 +342,7 @@ export default {
       switch (this.articleStyle) {
         case 'wide':
           return {
-            'single-col': (this.viewport > 1199)
+            'single-col': (this.viewport.width > 1199)
           }
         default:
           return {
@@ -508,7 +518,7 @@ export default {
     sendGaClickEvent,
     detectScrollToUpdatedTimeBottom () {
       const { bottom } = this.$refs.updatedTime.getBoundingClientRect()
-      if (bottom <= 0) {
+      if (bottom - this.viewport.height <= 0) {
         this.$emit('loadNextArticle')
         window.removeEventListener('scroll', this.detectScrollToUpdatedTimeBottom)
       }

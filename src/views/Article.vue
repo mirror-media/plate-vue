@@ -27,7 +27,7 @@
       <RelatedListOverContent
         v-if="!isArticlePhotography"
         :section-id="sectionId"
-        :articles="relateds"
+        :articles="relateds(articles[currArticleIdx])"
         :related-category="relatedCategory"
       />
 
@@ -40,7 +40,10 @@
           :key="article.key"
         >
           <ClientOnly>
-            <LazyItemWrapper :load-after-page-loaded="true">
+            <LazyItemWrapper
+              v-if="isFirstArticle(article)"
+              :load-after-page-loaded="true"
+            >
               <vue-dfp
                 :is="props.vueDfp"
                 v-if="isMobile && !hiddenAdvertised"
@@ -59,30 +62,31 @@
             </LazyItemWrapper>
           </ClientOnly>
           <div
-            v-if="articleData"
+            v-if="article.data"
             class="article"
           >
             <ArticleBody
               :ref="`articleBody${article.key}`"
               :article-data="article.data"
-              :is-ad="isAd"
-              :viewport="viewportWidth"
+              :article-key="article.key"
+              :is-ad="article.isAd"
+              :viewport="viewport"
               @loadNextArticle="loadNextArticle"
             >
               <template slot="hero">
                 <div
-                  v-if="heroVideo"
+                  v-if="article.heroVideo"
                   class="article-heromedia"
                 >
                   <HeroVideo
-                    :hero-caption="heroCaption"
-                    :video="heroVideo"
+                    :hero-caption="article.heroCaption"
+                    :video="article.heroVideo"
                   />
                 </div>
                 <HeroImage
                   v-else
-                  :hero-caption="heroCaption"
-                  :hero-image="heroImage"
+                  :hero-caption="article.heroCaption"
+                  :hero-image="article.heroImage"
                 />
               </template>
               <!-- Aside: viewport width > 1200px -->
@@ -92,7 +96,7 @@
                 class="article_aside"
               >
                 <LazyItemWrapper
-                  v-if="!hiddenAdvertised"
+                  v-if="!hiddenAdvertised && isFirstArticle(article)"
                   :load-after-page-loaded="true"
                 >
                   <vue-dfp
@@ -111,7 +115,7 @@
                 </LazyItemWrapper>
                 <ArticleAsideFixed>
                   <LazyItemWrapper
-                    v-if="!hiddenAdvertised"
+                    v-if="!hiddenAdvertised && isFirstArticle(article)"
                     slot="dfpR2"
                     :position="verge.viewportH()"
                     :strict="true"
@@ -134,6 +138,7 @@
                     />
                   </LazyItemWrapper>
                   <LazyItemWrapper
+                    v-if="isFirstArticle(article)"
                     slot="fbPage"
                     :load-after-page-loaded="true"
                   >
@@ -153,6 +158,7 @@
               </aside>
               <!-- DFP E1 E2 -->
               <LazyItemWrapper
+                v-if="isFirstArticle(article)"
                 slot="dfpad-set"
                 :position="verge.viewportH()"
                 :strict="true"
@@ -183,7 +189,7 @@
               </LazyItemWrapper>
               <!-- DFP MB AT 1 -->
               <template
-                v-if="isMobile"
+                v-if="isMobile && isFirstArticle(article)"
                 slot="dfpad-AR1-MB"
               >
                 <span id="innity-custom-adnetwork-span-63518" />
@@ -198,7 +204,7 @@
               </template>
               <!-- DFP PC AT 1 -->
               <template
-                v-if="!isMobile"
+                v-if="!isMobile && isFirstArticle(article)"
                 slot="dfpad-AR1-PC"
               >
                 <span id="innity-custom-adnetwork-span-63518" />
@@ -212,7 +218,7 @@
               </template>
               <!-- DFP MB AT 2 -->
               <template
-                v-if="isMobile"
+                v-if="isMobile && isFirstArticle(article)"
                 slot="dfpad-AR2-MB"
               >
                 <span id="innity-custom-adnetwork-span-68557" />
@@ -226,7 +232,7 @@
                 />
               </template>
               <!-- DFP MB AT 3 -->
-              <template v-if="isMobile && !hiddenAdvertised">
+              <template v-if="isMobile && !hiddenAdvertised && isFirstArticle(article)">
                 <vue-dfp
                   :is="props.vueDfp"
                   slot="dfpad-AR3-MB"
@@ -243,33 +249,35 @@
               />
               <RelatedListInContent
                 slot="relatedListInContent"
-                :relateds="relateds"
+                :relateds="article.relateds"
                 :ab-indicator="abIndicator"
               >
-                <MicroAd
-                  v-for="ad in _get(microAds, 'article')"
-                  :id="`${_get(ad, 'pcId')}`"
-                  :key="`${_get(ad, 'pcId')}`"
-                  :curr-env="dfpMode"
-                  :curr-url="articleUrl"
-                  class="related"
-                />
-                <PopInAd>
+                <template v-if="isFirstArticle(article)">
+                  <MicroAd
+                    v-for="ad in _get(microAds, 'article')"
+                    :id="`${_get(ad, 'pcId')}`"
+                    :key="`${_get(ad, 'pcId')}`"
+                    :curr-env="dfpMode"
+                    :curr-url="articleUrl"
+                    class="related"
+                  />
+                </template>
+                <PopInAd v-if="isFirstArticle(article)">
                   <div :id="`_popIn_recommend${abIndicator === 'A' ? '' : '_newAd'}`" />
                 </PopInAd>
               </RelatedListInContent>
               <RecommendList
-                v-if="!isAd"
+                v-if="!article.isAd"
                 slot="relatedlistBottom"
                 :section-id="sectionId"
-                :relateds="relateds"
+                :relateds="article.relateds"
                 :curr-article-id="currArticleId"
                 :recommends="recommendlist"
                 :excluding-article="routeUpateReferrerSlug"
               />
               <!-- dable -->
               <template
-                v-if="!hiddenAdvertised"
+                v-if="!hiddenAdvertised && isFirstArticle(article)"
                 slot="recommendList"
               >
                 <div
@@ -291,7 +299,7 @@
               :style="needWineWarning ? { paddingBottom: '10px' } : ''"
             >
               <LazyItemWrapper
-                v-if="!hiddenAdvertised"
+                v-if="!hiddenAdvertised && isFirstArticle(article)"
                 :position="verge.viewportH()"
                 :strict="true"
               >
@@ -936,25 +944,25 @@ export default {
     hasDfpFixed () {
       return this.sectionId === SECTION_WATCH_ID
     },
-    heroCaption () {
-      return _get(this.articleData, ['heroCaption'], '')
-    },
-    heroImage () {
-      return _get(this.articleData, 'heroImage') || { image: {} }
-    },
-    heroVideo () {
-      const { heroVideo } = this.articleData
-      const poster = getImage(this.articleData)
-      return (heroVideo && heroVideo.video)
-        ? Object.assign(_get(heroVideo, 'video', {}), { id: _get(heroVideo, 'id', '') }, { poster })
-        : heroVideo
-    },
+    // heroCaption () {
+    //   return _get(this.articleData, ['heroCaption'], '')
+    // },
+    // heroImage () {
+    //   return _get(this.articleData, 'heroImage') || { image: {} }
+    // },
+    // heroVideo () {
+    //   const { heroVideo } = this.articleData
+    //   const poster = getImage(this.articleData)
+    //   return (heroVideo && heroVideo.video)
+    //     ? Object.assign(_get(heroVideo, 'video', {}), { id: _get(heroVideo, 'id', '') }, { poster })
+    //     : heroVideo
+    // },
     hiddenAdvertised () {
       return _get(this.articleData, 'hiddenAdvertised')
     },
-    isAd () {
-      return _get(this.articleData, ['isAdvertised'], false)
-    },
+    // isAd () {
+    //   return _get(this.articleData, ['isAdvertised'], false)
+    // },
     isAdultContent () {
       return _get(this.articleData, 'isAdult')
     },
@@ -987,9 +995,9 @@ export default {
     recommendlist () {
       return _get(this.$store, 'state.articlesRecommendList.relatedNews') || []
     },
-    relateds () {
-      return (_get(this.articleData, 'relateds') || []).filter(item => item)
-    },
+    // relateds () {
+    //   return (_get(this.articleData, 'relateds') || []).filter(item => item)
+    // },
     sectionName () {
       return _get(this.articleData, 'sections.0.name')
     },
@@ -1002,6 +1010,9 @@ export default {
     },
     viewportWidth () {
       return _get(this.$store, 'state.viewport.width') || 0
+    },
+    viewport () {
+      return _get(this.$store, 'state.viewport', {})
     }
   },
   watch: {
@@ -1038,7 +1049,7 @@ export default {
   mounted () {
     this.articles.push({
       key: this.articleIdx,
-      data: this.articleData
+      ...this.createArticle(this.articleData)
     })
     this.articleSlugs.push(this.articleData.slug)
     window.addEventListener('scroll', this.changeURL)
@@ -1091,8 +1102,43 @@ export default {
   beforeDestroy () {
     window.removeEventListener('resize', this.handleWWChange)
     window.removeEventListener('orientationChange', this.handleWWChange)
+    window.removeEventListener('scroll', this.changeURL)
   },
   methods: {
+    createArticle (data) {
+      return {
+        data,
+        relateds: this.relateds(data),
+        heroCaption: this.heroCaption(data),
+        heroImage: this.heroImage(data),
+        heroVideo: this.heroVideo(data),
+        isAd: this.isAd(data)
+      }
+    },
+    relateds (data) {
+      return (_get(data, 'relateds') || []).filter(item => item)
+    },
+    heroCaption (data) {
+      return _get(data, ['heroCaption'], '')
+    },
+    heroImage (data) {
+      return _get(data, 'heroImage') || { image: {} }
+    },
+    heroVideo (data) {
+      const { heroVideo } = data
+      const poster = getImage(data)
+      return (heroVideo && heroVideo.video)
+        ? Object.assign(_get(heroVideo, 'video', {}), { id: _get(heroVideo, 'id', '') }, { poster })
+        : heroVideo
+    },
+    isAd (data) {
+      return _get(data, ['isAdvertised'], false)
+    },
+
+    isFirstArticle (article) {
+      return article.key === 0
+    },
+
     checkLockJS () {
       this.isLockJS ? lockJS() : unLockJS()
     },
@@ -1160,6 +1206,9 @@ export default {
         '0.slug',
         ''
       )
+      if (nextSlug === '') {
+        return
+      }
       this.articleSlugs.push(nextSlug)
 
       this.articleIdx += 1
@@ -1171,7 +1220,7 @@ export default {
 
         this.articles.push({
           key: this.articleIdx,
-          data
+          ...this.createArticle(data)
         })
       })
     },
