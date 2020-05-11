@@ -71,6 +71,7 @@
               :article-key="article.key"
               :is-ad="article.isAd"
               :viewport="viewport"
+              :ab-indicator="abIndicator"
               @loadNextArticle="loadNextArticle"
             >
               <template slot="hero">
@@ -324,7 +325,10 @@
         <div class="footer-container">
           <Footer />
         </div>
-        <ShareTools v-if="viewportWidth > 767" />
+        <ShareTools
+          v-if="viewportWidth > 767"
+          :ab-indicator="abIndicator"
+        />
       </div>
       <div v-else-if="isArticlePhotography">
         <ArticleBodyPhotography
@@ -846,7 +850,8 @@ export default {
       articleIdx: 0,
       currArticleIdx: 0,
       articles: [],
-      articleSlugs: []
+      articleSlugs: [],
+      pvSent: []
     }
   },
   computed: {
@@ -1052,12 +1057,15 @@ export default {
       ...this.createArticle(this.articleData)
     })
     this.articleSlugs.push(this.articleData.slug)
-    window.addEventListener('scroll', this.changeURL)
 
     this.insertMediafarmersScript()
     this.checkLockJS()
     this.updateSysStage()
     this.abIndicator = this.getMmid()
+
+    if (this.abIndicator === 'B') {
+      window.addEventListener('scroll', this.changeURL)
+    }
 
     if (!_isEmpty(this.articleData)) {
       this.sendGA(this.articleData)
@@ -1152,8 +1160,8 @@ export default {
       const role = getRole({
         mmid,
         distribution: [
-          { id: 'A', weight: 50 },
-          { id: 'B', weight: 50 }]
+          { id: 'A', weight: 80 },
+          { id: 'B', weight: 20 }]
       })
       return assisgnedRole || role
     },
@@ -1243,6 +1251,8 @@ export default {
             this.currArticleIdx += 1
             const slug = this.articleSlugs[watchedIdx]
             window.history.replaceState(null, '', `/story/${slug}`)
+
+            this.sendPV(watchedIdx)
           }
         } else {
           if (!isScrollDown) {
@@ -1252,6 +1262,14 @@ export default {
           }
         }
       })
+    },
+    sendPV (articleIdx) {
+      if (this.pvSent.includes(articleIdx)) {
+        return
+      }
+
+      this.pvSent.push(articleIdx)
+      window.ga('send', 'pageview', { title: `${_get(this.articles[articleIdx].data, 'title', '')} - ${SITE_TITLE_SHORT}`, location: window.location.href })
     }
   }
 }

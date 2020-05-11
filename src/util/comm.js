@@ -519,16 +519,20 @@ export function scrollDirection () {
   return direction
 }
 
-let ticking = false
 export function requestTick (fn) {
-  if (ticking) {
-    return
-  }
+  let ticking = false
+  const wEl = window
 
-  ticking = true
+  return (function IIFE () {
+    if (ticking) {
+      return
+    }
 
-  window.requestAnimationFrame(function () {
-    fn()
-    ticking = false
-  })
+    ticking = true
+
+    wEl.requestAnimationFrame(function () {
+      fn()
+      ticking = false
+    })
+  })()
 }

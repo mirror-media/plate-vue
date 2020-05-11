@@ -241,7 +241,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
-import { getValue, sendGaClickEvent } from '../../util/comm'
+import { getValue, sendGaClickEvent, requestTick } from '../../util/comm'
 // import { getRole } from '../../util/mmABRoleAssign'
 import ArticleBodyLayout from 'src/components/article/ArticleBodyLayout.vue'
 import Annotation from './Annotation.vue'
@@ -272,10 +272,10 @@ export default {
     AudioPlayer
   },
   props: {
-    // abIndicator: {
-    //   type: String,
-    //   required: true
-    // },
+    abIndicator: {
+      type: String,
+      required: true
+    },
     articleData: {
       type: Object,
       default: () => ({})
@@ -421,7 +421,9 @@ export default {
     window.addEventListener('load', () => {
       window.twttr && twttr.widgets.load()
     })
-    window.addEventListener('scroll', this.detectScrollToUpdatedTimeBottom)
+    if (this.abIndicator === 'B') {
+      window.addEventListener('scroll', this.detectScrollToUpdatedTimeBottom)
+    }
   },
   methods: {
     blockWrapper (p, index) {
@@ -517,11 +519,13 @@ export default {
     },
     sendGaClickEvent,
     detectScrollToUpdatedTimeBottom () {
-      const { bottom } = this.$refs.updatedTime.getBoundingClientRect()
-      if (bottom - this.viewport.height <= 0) {
-        this.$emit('loadNextArticle')
-        window.removeEventListener('scroll', this.detectScrollToUpdatedTimeBottom)
-      }
+      requestTick(() => {
+        const { bottom } = this.$refs.updatedTime.getBoundingClientRect()
+        if (bottom - this.viewport.height <= 0) {
+          this.$emit('loadNextArticle')
+          window.removeEventListener('scroll', this.detectScrollToUpdatedTimeBottom)
+        }
+      })
     }
   }
 }
