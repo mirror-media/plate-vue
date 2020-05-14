@@ -3,7 +3,7 @@ import _ from 'lodash'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import config from '../../api/config'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import {
   fetchActivities,
   fetchArticles,
@@ -111,11 +111,18 @@ export function createStore () {
       FETCH_ARTICLES: ({ commit, state }, { params, preview }) => {
         const orig = _.values(state.articles.items)
         return fetchArticles(params, preview).then(articles => {
-          articles.items = _.concat(orig, _.get(articles, ['items']))
-          commit('SET_ARTICLES', { articles })
-          commit('SET_AUTHORS', articles)
-          commit('SET_TAGS', articles)
-          return articles
+          const data = _.cloneDeep(articles)
+          const articlesItem = _.get(articles, 'items')
+          data.items = articlesItem.map(article => {
+            article.publishedDate = moment.tz(article.publishedDate, 'Asia/Taipei').format('YYYY.MM.DD HH:mm:ss')
+            article.updatedAt = moment.tz(article.updatedAt, 'Asia/Taipei').format('YYYY.MM.DD HH:mm:ss')
+            return article
+          })
+          data.items = _.concat(orig, data.items)
+          commit('SET_ARTICLES', { articles: data })
+          commit('SET_AUTHORS', data)
+          commit('SET_TAGS', data)
+          return data
         })
       },
       FETCH_ARTICLES_BY_UUID: ({ commit, state }, { uuid, type, params }) => {
