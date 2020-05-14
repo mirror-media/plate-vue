@@ -14,7 +14,7 @@
       </div>
       <div
         class="date"
-        v-text="date"
+        v-text="publishedDate"
       />
     </div>
     <div class="article_title">
@@ -105,10 +105,10 @@
           />
         </div>
         <p
-          v-if="articleData.updatedAt !== articleData.publishedDate"
+          v-if="updatedAt !== publishedDate"
           class="updated-time"
         >
-          更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span>
+          更新時間｜<span>{{ updatedAt }}</span>
         </p>
       </article>
       <div
@@ -153,7 +153,6 @@ import Annotation from './Annotation.vue'
 import ArticleVideo from './Video.vue'
 import AudioBox from '../../components/AudioBox.vue'
 import Slider from '../Slider.vue'
-import moment from 'moment'
 
 export default {
   name: 'ArticleBody',
@@ -208,11 +207,9 @@ export default {
       const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
       return [creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
     },
-    date () {
-      const { publishedDate = '' } = this.articleData
-      const normalizedDt = new Date(publishedDate)
-      const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
-      return datetime
+    publishedDate () {
+      const datetime = this.articleData.publishedDate
+      return datetime.slice(0, datetime.length - 3)
     },
     styleForCurrArticle () {
       switch (this.articleStyle) {
@@ -243,6 +240,10 @@ export default {
     title () {
       const { title } = this.articleData
       return title
+    },
+    updatedAt () {
+      const datetime = this.articleData.updatedAt
+      return datetime.slice(0, datetime.length - 3)
     },
     firstTwoUnstyledParagraph () {
       const { content } = this.articleData
@@ -282,7 +283,6 @@ export default {
     isArticleEmpay () {
       return _.isEmpty(this.articleData)
     },
-    moment,
     paragraphComposer (item) {
       switch (item.type) {
         case 'blockquote':
