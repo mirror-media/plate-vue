@@ -16,7 +16,7 @@
         </div>
         <div
           class="date"
-          v-text="date"
+          v-text="publishedDate"
         />
       </div>
       <h1
@@ -165,11 +165,11 @@
           </div>
         </div>
         <p
-          v-if="articleData.updatedAt !== articleData.publishedDate"
+          v-if="updatedAt !== publishedDate"
           ref="updatedTime"
           class="updated-time"
         >
-          更新時間｜<span>{{ moment(articleData.updatedAt).format('YYYY.MM.DD HH:mm') }}</span>
+          更新時間｜<span>{{ updatedAt }}</span>
         </p>
       </article>
       <slot
@@ -251,7 +251,6 @@ import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import ShareLight from 'src/components/share/ShareLight.vue'
 import Slider from '../Slider.vue'
 import AudioPlayer from 'src/components/audioPlayer/Container.vue'
-import moment from 'moment'
 
 // const debug = require('debug')('CLIENT:ArticleBody')
 export default {
@@ -329,11 +328,9 @@ export default {
       const creditElse = (extendByline.length > 0) ? extendByline + '&nbsp;' : ''
       return [creditWriterStr, creditPhotoStr, creditDesignStr, creditEnginStr, creditCamStr, creditElse].filter((o) => (o.length > 0)).join('&nbsp;&nbsp;&nbsp;&nbsp;')
     },
-    date () {
-      const { publishedDate = '' } = this.articleData
-      const normalizedDt = new Date(publishedDate)
-      const datetime = moment(normalizedDt).format('YYYY.MM.DD HH:mm')
-      return datetime
+    publishedDate () {
+      const datetime = this.articleData.publishedDate
+      return datetime.slice(0, datetime.length - 3)
     },
     styleForCurrArticle () {
       switch (this.articleStyle) {
@@ -370,6 +367,10 @@ export default {
     },
     tags () {
       return this.articleData.tags || []
+    },
+    updatedAt () {
+      const datetime = this.articleData.updatedAt
+      return datetime.slice(0, datetime.length - 3)
     },
     firstTwoUnstyledParagraph () {
       const { content } = this.articleData
@@ -446,7 +447,6 @@ export default {
     isArticleEmpty () {
       return _.isEmpty(this.articleData)
     },
-    moment,
     paragraphComposer (item) {
       switch (item.type) {
         case 'blockquote':
