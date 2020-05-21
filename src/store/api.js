@@ -275,7 +275,7 @@ function loadYoutubePlaylist (limit = 12, pageToken = '') {
 }
 
 function loadWatch (name) {
-  const query = _buildQuery({ where: { name }, max_results: 1 })
+  const query = _buildQuery({ where: { name }, max_results: 1, related: 'full' })
   return _doFetch(`${_host}/api/watches?${query}`)
 }
 
