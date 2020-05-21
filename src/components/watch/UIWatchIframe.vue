@@ -47,4 +47,7 @@ export default {
   .watch-iframe
     padding-top calc(56.25% * 0.79)
 
+@media (min-width: 1200px)
+  .watch-iframe
+    padding-top calc(1024px * 0.5625)
 </style>

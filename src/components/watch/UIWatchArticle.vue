@@ -301,6 +301,8 @@ export default {
       width 100%
 @media (min-width: 1200px)
   .watch-article
+    > *
+      width 1024px
     &__info
       flex none
       width 410px
