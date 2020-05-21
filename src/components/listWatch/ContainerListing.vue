@@ -19,6 +19,7 @@
           :href="getWatchHref(item)"
           target="_blank"
           rel="noopener noreferrer"
+          @click="handleClickListItemLink"
         >
           <UIWatch
             :img-src="getListItem(item).imgSrc"
@@ -95,6 +96,9 @@ export default {
         const total = _.get(res, ['data', '_meta', 'total'], 0)
         this.shouldDisableLoadmore = this.itemsPerPage * this.currentPage >= total
       }).catch(error => { throw error })
+    },
+    handleClickListItemLink () {
+      window.ga('send', 'event', 'listing', 'click', 'watch_list')
     }
   }
 }

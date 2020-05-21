@@ -207,6 +207,7 @@ router.use('/search', (req, res) => {
         }
       }
 
+      console.log(JSON.stringify(test))
       console.log(`Perform esSearc \n${must}`)
       superagent
         .post(esSearchUrl)
