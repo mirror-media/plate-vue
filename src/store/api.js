@@ -274,6 +274,11 @@ function loadYoutubePlaylist (limit = 12, pageToken = '') {
   return _doFetch(url)
 }
 
+function loadWatch (name) {
+  const query = _buildQuery({ where: { name }, max_results: 1, related: 'full' })
+  return _doFetch(`${_host}/api/watches?${query}`)
+}
+
 export function logClient (params = {}) {
   return _logClient(params)
 }
@@ -402,4 +407,8 @@ export function fetchTopic (params = {}) {
 
 export function fetchYoutubePlaylist (limit = {}, pageToken = '') {
   return loadYoutubePlaylist(limit, pageToken)
+}
+
+export function fetchWatch (name) {
+  return loadWatch(name)
 }
