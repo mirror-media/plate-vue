@@ -103,7 +103,36 @@
       class="watch-article__content"
       v-html="watch.content"
     />
-    <div class="watch-article__related">
+    <div
+      v-if="hasSimilar"
+      class="watch-article__block related-watch"
+    >
+      <p class="watch-article__block-heading">
+        相似錶款
+      </p>
+      <div class="watch-article__related-watch">
+        <a
+          v-for="item in watch.relatedwatch"
+          :key="item.name"
+          :href="`/watch/${item.name}`"
+          class="watch-article__watch"
+          target="_blank"
+          rel="noopener noreferrer"
+          @click="$emit('sendGa', 'related_watch')"
+        >
+          <UIWatch
+            :img-src="item.imgSrc"
+            :name="item.name"
+            :brand="item.brand"
+            :price="item.price"
+          />
+        </a>
+      </div>
+    </div>
+    <div
+      v-if="hasRelated"
+      class="watch-article__block"
+    >
       <p class="watch-article__block-heading">
         相關文章
       </p>
@@ -113,6 +142,7 @@
           :key="post.slug"
           :post="post"
           class="watch-article__related-item"
+          @click="$emit('sendGa', 'latest_watch_article')"
         />
       </div>
     </div>
@@ -121,6 +151,7 @@
 <script>
 
 import ContainerWatchIframe from './ContainerWatchIframe.vue'
+import UIWatch from '../listWatch/UIWatch.vue'
 import UIWatchCollapse from './UIWatchCollapse.vue'
 import UIWatchRelated from './UIWatchRelated.vue'
 import _ from 'lodash'
@@ -134,6 +165,7 @@ export default {
   },
   components: {
     ContainerWatchIframe,
+    UIWatch,
     UIWatchCollapse,
     UIWatchRelated
   },
@@ -149,6 +181,12 @@ export default {
     },
     hasFunction () {
       return this.watch.watchfunction.length > 0
+    },
+    hasRelated () {
+      return this.watch.relateds.length > 0
+    },
+    hasSimilar () {
+      return this.watch.relatedwatch.length > 0
     },
     // 面盤顏色
     specColor () {
@@ -194,6 +232,7 @@ export default {
 </script>
 <style lang="stylus" scoped>
 .watch-article
+  padding 0 0 18px
   &__image
     display block
     img
@@ -234,11 +273,21 @@ export default {
       margin 0
       & + *
         margin-top 2em
-  &__related
+  &__block
     margin-top 30px
-    padding 0 0 18px
+  &__related
+    &-watch
+      display flex
+      flex-wrap wrap
+      padding 0 6px
     &-list
       margin-top 20px
+  &__watch
+    display block
+    width calc((100% - 16px) / 2)
+    margin 33px 4px 0
+    .watch
+      width 100%
   &__block-heading
     display flex
     align-items center
@@ -283,10 +332,17 @@ export default {
       padding 77px 69px
       text-align center
       text-indent 2em
-    &__related
+    &__block
       display flex
       flex-wrap wrap
       margin-top 80px
+      &.related-watch
+        width calc(80% + 24px)
+        .watch-article__block-heading
+          padding-left 12px
+    &__related
+      &-watch
+        padding 0
       &-list
         display flex
         flex-wrap wrap
@@ -297,6 +353,9 @@ export default {
         margin 20px 20px 0
         & + .watch-article__related-item
           margin-top 20px
+    &__watch
+      width calc((100% - 72px) / 3)
+      margin 33px 12px 0
     &__block-heading
       width 100%
 @media (min-width: 1200px)
@@ -313,6 +372,12 @@ export default {
       font-size 24px
     &__iframe, &__content
       margin-top 80px
+    &__block
+      &.related-watch
+        width 1102px
+        max-width none
+        .watch-article__block-heading
+          padding-left 39px
     &__related
       padding 0 0 94px
       &-list
@@ -323,4 +388,17 @@ export default {
         margin 25px 25px 0
         & + .watch-article__related-item
           margin-top 25px
+    &__watch
+      position relative
+      width calc((100% - 312px) / 4)
+      margin 28px 39px 0
+      &:not(:nth-child(4n)):before
+        content ''
+        position absolute
+        top 50%
+        right -38px
+        transform translateY(-50%)
+        width 2px
+        height 274px
+        background-color rgba(0, 0, 0, 0.1)
 </style>

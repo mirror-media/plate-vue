@@ -3,6 +3,7 @@
     :href="`/story/${post.slug}`"
     class="watch-related"
     target="_blank"
+    @click="$emit('click')"
   >
     <picture class="watch-related__img">
       <img

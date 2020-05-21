@@ -1,7 +1,11 @@
 <template>
-  <UIWatchArticle :watch="watch" />
+  <UIWatchArticle
+    :watch="watch"
+    @sendGa="handleSendGa"
+  />
 </template>
 <script>
+import { sendGaClickEvent } from '../../util/comm'
 import UIWatchArticle from './UIWatchArticle.vue'
 import _ from 'lodash'
 
@@ -23,7 +27,18 @@ export default {
       }
       data.watchfunction = [...data.watchfunction].map(feature => feature.name)
       data.embedYoutube = data.youtube ? data.youtube.replace('watch?v=', 'embed/') : data.youtube
+      data.relatedwatch = data.relatedwatch.map(watch => ({
+        name: watch.name,
+        brand: _.get(watch, 'brand.name'),
+        imgSrc: _.get(watch, 'watchImage.image.resizedTargets.mobile.url'),
+        price: Number.isNaN(watch.price) ? watch.price : Number.parseInt(watch.price)
+      }))
       return data
+    }
+  },
+  methods: {
+    handleSendGa (label) {
+      sendGaClickEvent('watch', label)
     }
   }
 }
