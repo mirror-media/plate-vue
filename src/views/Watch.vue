@@ -17,6 +17,7 @@
         active-section="watch"
       />
       <ContainerWatchArticle />
+      <Footer class="watch__footer" />
     </template>
   </VueDfpProvider>
 </template>
@@ -24,6 +25,7 @@
 
 import { DFP_ID, DFP_UNITS, DFP_OPTIONS, DFP_SIZE_MAPPING, SECTION_WATCH_ID, SITE_URL } from 'src/constants'
 import ContainerWatchArticle from '../components/watch/ContainerWatchArticle.vue'
+import Footer from '../components/Footer.vue'
 import Header from '../components/Header.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import sanitizeHtml from 'sanitize-html'
@@ -47,6 +49,7 @@ export default {
   },
   components: {
     ContainerWatchArticle,
+    Footer,
     Header,
     VueDfpProvider
   },
@@ -125,3 +128,14 @@ export default {
   }
 }
 </script>
+<style lang="stylus" scoped>
+
+@media (min-width: 768px)
+  .watch
+    &__footer
+      width 80%
+      max-width: 1024px
+      margin-left auto
+      margin-right auto
+
+</style>
