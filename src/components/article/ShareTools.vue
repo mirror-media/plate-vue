@@ -19,12 +19,6 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { sendGaClickEvent, shareLine, shareFacebook } from '../../util/comm'
 export default {
   name: 'ShareTools',
-  props: {
-    abIndicator: {
-      type: String,
-      required: true
-    }
-  },
   data () {
     return {
       articleEle: undefined,
@@ -77,13 +71,13 @@ export default {
     },
     shareLine () {
       shareLine({
-        route: this.abIndicator === 'B' ? window.location.pathname : this.$route.path,
-        title: this.abIndicator === 'B' ? '' : document.querySelector('meta[property="og:title"]').getAttribute('content')
+        route: this.$route.path,
+        title: document.querySelector('meta[property="og:title"]').getAttribute('content')
       })
       sendGaClickEvent('article', 'share line side')
     },
     shareFacebook () {
-      shareFacebook({ route: this.abIndicator === 'B' ? window.location.pathname : this.$route.path})
+      shareFacebook({ route: this.$route.path })
       sendGaClickEvent('article', 'share facebook side')
     }
   }
