@@ -19,10 +19,7 @@
           v-text="publishedDate"
         />
       </div>
-      <h1
-        ref="title"
-        v-text="title"
-      />
+      <h1 v-text="title" />
       <h2
         v-if="subtitle.length > 0"
         v-text="subtitle"
@@ -144,11 +141,11 @@
             v-html="paragraphComposer(p)"
           />
           <slot
-            v-if="viewport.width > 768 && index === firstTwoUnstyledParagraph[ 0 ]"
+            v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 0 ]"
             name="dfpad-AR1-PC"
           />
           <slot
-            v-if="viewport.width > 768 && index === firstTwoUnstyledParagraph[ 1 ]"
+            v-if="viewport > 768 && index === firstTwoUnstyledParagraph[ 1 ]"
             name="dfpad-AR2-PC"
           />
           <div
@@ -166,7 +163,6 @@
         </div>
         <p
           v-if="updatedAt !== publishedDate"
-          ref="updatedTime"
           class="updated-time"
         >
           更新時間｜<span>{{ updatedAt }}</span>
@@ -207,11 +203,8 @@
         </div>
       </div>
       <div class="split-line" />
-      <FbSocialPlugins v-if="viewport.width < 768" />
-      <div
-        v-if="articleKey === 0"
-        class="herbsapi"
-      >
+      <FbSocialPlugins v-if="viewport < 768" />
+      <div class="herbsapi">
         <div
           id="herbsapi"
           hb-width="100"
@@ -222,7 +215,7 @@
       </div>
       <div
         class="dfpad-set"
-        :class="{ mobile: viewport.width < 1000 }"
+        :class="{ mobile: viewport < 1000 }"
       >
         <slot name="dfpad-set" />
       </div>
@@ -238,7 +231,7 @@
 <script>
 import _ from 'lodash'
 import { SECTION_MAP, SOCIAL_LINK } from '../../constants'
-import { getValue, sendGaClickEvent, requestTick } from '../../util/comm'
+import { getValue, sendGaClickEvent } from '../../util/comm'
 // import { getRole } from '../../util/mmABRoleAssign'
 import ArticleBodyLayout from 'src/components/article/ArticleBodyLayout.vue'
 import Annotation from './Annotation.vue'
@@ -268,21 +261,17 @@ export default {
     AudioPlayer
   },
   props: {
-    abIndicator: {
-      type: String,
-      required: true
-    },
+    // abIndicator: {
+    //   type: String,
+    //   required: true
+    // },
     articleData: {
       type: Object,
       default: () => ({})
     },
-    articleKey: {
-      type: Number,
-      required: true
-    },
     viewport: {
-      type: Object,
-      required: true
+      type: Number,
+      default: undefined
     },
     isAd: {
       type: Boolean,
@@ -336,7 +325,7 @@ export default {
       switch (this.articleStyle) {
         case 'wide':
           return {
-            'single-col': (this.viewport.width > 1199)
+            'single-col': (this.viewport > 1199)
           }
         default:
           return {
@@ -420,9 +409,6 @@ export default {
     window.addEventListener('load', () => {
       window.twttr && twttr.widgets.load()
     })
-    if (this.abIndicator === 'B') {
-      window.addEventListener('scroll', this.detectScrollToUpdatedTimeBottom)
-    }
   },
   methods: {
     blockWrapper (p, index) {
@@ -517,16 +503,7 @@ export default {
         default:
       }
     },
-    sendGaClickEvent,
-    detectScrollToUpdatedTimeBottom () {
-      requestTick(() => {
-        const { bottom } = this.$refs.updatedTime.getBoundingClientRect()
-        if (bottom - this.viewport.height <= 0) {
-          this.$emit('loadNextArticle')
-          window.removeEventListener('scroll', this.detectScrollToUpdatedTimeBottom)
-        }
-      })
-    }
+    sendGaClickEvent
   }
 }
 </script>

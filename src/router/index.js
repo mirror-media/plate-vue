@@ -26,6 +26,7 @@ const Project = () => import('../views/Project.vue')
 const Search = () => import('../views/Search.vue')
 const Topic = () => import('../views/Topic.vue')
 const Video = () => import('../views/Video.vue')
+const Watch = () => import('../views/Watch.vue')
 
 const oathCategories = Object.values(OATH_PLAYLIST).map(item => `/category/${item.categoryName}`)
 
@@ -62,6 +63,7 @@ export function createRouter () {
       { path: '/section/:title', component: List, alias: ['/category/:title', '/externals/:title'] },
       { path: '/tag/:tagId', component: List },
       { path: '/topic/:topicId', component: Topic },
+      { path: '/watch/:name', component: Watch },
       { path: '/404', component: NotFound },
       { path: '/', component: Home }
     ]
