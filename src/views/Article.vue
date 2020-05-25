@@ -1173,7 +1173,6 @@ export default {
       .article_footer
         text-align center
         clear both
-        min-height 20px
 
       .split-line
         overflow hidden
