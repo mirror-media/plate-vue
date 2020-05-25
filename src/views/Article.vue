@@ -25,7 +25,7 @@
       </section>
 
       <RelatedListOverContent
-        v-if="!isArticlePhotography"
+        v-if="!isArticlePhotography && !isAd"
         :section-id="sectionId"
         :articles="relateds"
         :related-category="relatedCategory"
