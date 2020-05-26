@@ -18,7 +18,6 @@ const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API
 
 const UrlForRedisStoreOneMonth = [
   '/combo?endpoint=sections&endpoint=topics',
-  '/combo?endpoint=sectionfeatured&endpoint=sections&endpoint=topics',
   '/combo?endpoint=sections',
   '/combo?endpoint=projects'
 ]
