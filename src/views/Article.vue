@@ -238,6 +238,7 @@
             <RelatedListInContent
               slot="relatedListInContent"
               :relateds="relateds"
+              :ab-indicator="abIndicator"
             >
               <MicroAd
                 v-for="ad in _get(microAds, 'article')"
@@ -813,7 +814,7 @@ export default {
     return {
       DFP_ID,
       DFP_UNITS,
-      // abIndicator: '',
+      abIndicator: '',
       dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       hasSentFirstEnterGA: false,
@@ -1027,7 +1028,7 @@ export default {
     this.insertMediafarmersScript()
     this.checkLockJS()
     this.updateSysStage()
-    // this.abIndicator = this.getMmid()
+    this.abIndicator = this.getMmid()
 
     if (!_isEmpty(this.articleData)) {
       this.sendGA(this.articleData)
@@ -1117,8 +1118,8 @@ export default {
         window.ga('set', 'contentGroup1', `${_get(articleData, 'sections.0.name')}`)
         window.ga('set', 'contentGroup2', `${_get(articleData, 'categories.0.name')}`)
       }
-      window.ga('set', 'contentGroup3', '')
-      // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+      // window.ga('set', 'contentGroup3', '')
+      window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
       window.ga('send', 'pageview', { title: `${_get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
     },
     sendGaClickEvent,
