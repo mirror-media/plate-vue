@@ -11,7 +11,7 @@
         v-for="item in editorChoice"
         :key="`swiper-slide-${item.slug}`"
         :href="getLinkHref(item)"
-        :style="{ backgroundImage: `url(${item.heroImage.image.resizedTargets.tablet.url})` }"
+        :style="{ backgroundImage: `url(${getImage(item, 'tablet')})` }"
         class="swiper-slide"
         target="_blank"
         @click="sendGaClickEvent('home', 'choice')"
