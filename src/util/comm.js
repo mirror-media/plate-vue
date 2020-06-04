@@ -103,6 +103,11 @@ export function getHrefFull (relAritlcle = {}, isAppPage = false) {
 
 export function getImage (article, size) {
   let image
+
+  if (!article) {
+    return '/assets/mirrormedia/notImage.png'
+  }
+
   if (article.heroImage) {
     debug('get heroimage')
     image = article.heroImage.image ? _.get(article, ['heroImage', 'image', 'resizedTargets']) : _.get(article, 'heroImage')
