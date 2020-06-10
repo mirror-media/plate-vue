@@ -169,6 +169,9 @@
         </p>
       </article>
       <slot
+        name="relatedListOverContent"
+      />
+      <slot
         name="relatedListInContent"
       />
       <div class="article_main_related_bottom">

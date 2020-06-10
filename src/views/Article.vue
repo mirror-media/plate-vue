@@ -24,12 +24,12 @@
         />
       </section>
 
-      <RelatedListOverContent
-        v-if="!isArticlePhotography && !isAd"
-        :section-id="sectionId"
-        :articles="relateds"
-        :related-category="relatedCategory"
-      />
+<!--      <RelatedListOverContent-->
+<!--        v-if="!isArticlePhotography && !isAd"-->
+<!--        :section-id="sectionId"-->
+<!--        :articles="relateds"-->
+<!--        :related-category="relatedCategory"-->
+<!--      />-->
 
       <div
         v-if="!isArticlePhotography"
@@ -234,6 +234,13 @@
               slot="poplist"
               :pop="popularlist"
               :curr-env="dfpMode"
+            />
+            <RelatedListOverContent
+              slot="relatedListOverContent"
+              v-if="!isArticlePhotography && !isAd"
+              :section-id="sectionId"
+              :articles="relateds"
+              :related-category="relatedCategory"
             />
             <RelatedListInContent
               slot="relatedListInContent"
