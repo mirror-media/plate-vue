@@ -1,8 +1,6 @@
 <template>
   <div
-    v-show="showContent"
     class="relateds-over-content"
-    :class="{ 'to-top': isToTop }"
   >
     <div>
       <a
@@ -57,42 +55,14 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      showContent: false,
-      wEl: null,
-      scrollY: 0,
-      isToTop: false,
-      ww: 0
-    }
-  },
   computed: {
-    isLapW () {
-      return this.ww >= 1200
-    },
     sectionColor () {
       return _get(SECTION_MAP, `${this.sectionId}.bgcolor`, DEFAULT_SECTION_BGCOLOR)
     }
   },
-  mounted () {
-    this.wEl = window
-    this.ww = Math.min(this.wEl.innerWidth, document.documentElement.clientWidth)
-    this.scrollY = this.wEl.pageYOffset
-    this.wEl.addEventListener('scroll', this.displayContent)
-    this.wEl.addEventListener('scroll', this.locateContent)
-  },
   methods: {
     _get,
-    sendGaClickEvent,
-    displayContent () {
-      const currentScrollY = this.wEl.pageYOffset
-      this.showContent = (this.articles.length && (currentScrollY < this.scrollY))
-      this.scrollY = currentScrollY
-    },
-    locateContent () {
-      const topOffset = (this.isLapW ? 160 : 118)
-      this.isToTop = (this.scrollY >= topOffset)
-    }
+    sendGaClickEvent
   }
 }
 </script>
