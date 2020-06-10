@@ -245,7 +245,6 @@
             <RelatedListInContent
               slot="relatedListInContent"
               :relateds="relateds"
-              :ab-indicator="abIndicator"
             >
               <MicroAd
                 v-for="ad in _get(microAds, 'article')"
@@ -256,7 +255,7 @@
                 class="related"
               />
               <PopInAd>
-                <div :id="`_popIn_recommend${abIndicator === 'B' ? '_related' : ''}`" />
+                <div id="_popIn_recommend" />
               </PopInAd>
             </RelatedListInContent>
             <RecommendList
