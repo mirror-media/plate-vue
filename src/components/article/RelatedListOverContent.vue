@@ -1,41 +1,39 @@
 <template>
-  <transition name="fade">
-    <div
-      v-show="showContent"
-      class="relateds-over-content"
-      :class="{ 'to-top': isToTop }"
-    >
-      <div>
-        <a
-          :href="`/story/${_get(articles[ 0 ], 'slug', '')}`"
-          class="related"
-          @click="sendGaClickEvent('article', 'related news left')"
-        >
-          <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
-          <div class="related__txt" :style="{ outlineColor: sectionColor }">
-            <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
-            <div class="related__title">
-              <p>{{ _get(articles[ 0 ], 'title', '') }}</p>
-            </div>
+  <div
+    v-show="showContent"
+    class="relateds-over-content"
+    :class="{ 'to-top': isToTop }"
+  >
+    <div>
+      <a
+        :href="`/story/${_get(articles[ 0 ], 'slug', '')}`"
+        class="related"
+        @click="sendGaClickEvent('article', 'related news left')"
+      >
+        <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
+        <div class="related__txt" :style="{ outlineColor: sectionColor }">
+          <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
+          <div class="related__title">
+            <p>{{ _get(articles[ 0 ], 'title', '') }}</p>
           </div>
-        </a>
-        <a
-          :href="`/story/${_get(articles[ 1 ], 'slug', '')}`"
-          class="related"
-          :class="{ 'vidibility-h': !articles[ 1 ] }"
-          @click="sendGaClickEvent('article', 'related news right')"
-        >
-          <div class="related__txt" :style="{ outlineColor: sectionColor }">
-            <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
-            <div class="related__title">
-              <p>{{ _get(articles[ 1 ], 'title', '') }}</p>
-            </div>
+        </div>
+      </a>
+      <a
+        :href="`/story/${_get(articles[ 1 ], 'slug', '')}`"
+        class="related"
+        :class="{ 'vidibility-h': !articles[ 1 ] }"
+        @click="sendGaClickEvent('article', 'related news right')"
+      >
+        <div class="related__txt" :style="{ outlineColor: sectionColor }">
+          <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
+          <div class="related__title">
+            <p>{{ _get(articles[ 1 ], 'title', '') }}</p>
           </div>
-          <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
-        </a>
-      </div>
+        </div>
+        <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
+      </a>
     </div>
-  </transition>
+  </div>
 </template>
 
 <script>
@@ -201,10 +199,4 @@ export default {
         outline-offset -2px
 .vidibility-h
   visibility hidden
-.fade
-  &-enter-active, &-leave-active
-    transition all 0.2s ease-in-out
-  &-enter, &-leave-to
-    opacity 0
-    transform translate(-50%, -16px)
 </style>
