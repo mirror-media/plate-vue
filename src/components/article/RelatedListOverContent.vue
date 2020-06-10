@@ -93,6 +93,8 @@ export default {
     flex 1 1 50%
     box-shadow 0 0 2px rgba(#000, 0.25)
     overflow hidden
+    padding-bottom 0 !important
+    border-bottom none !important
     &:first-child
       margin-right 1.5px
       border-top-left-radius 4px
