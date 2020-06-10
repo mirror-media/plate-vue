@@ -69,27 +69,17 @@ export default {
 
 <style lang="stylus" scoped>
 .relateds-over-content
-  position fixed
-  top 122px
   z-index 99
   padding-right 4px
   padding-left 4px
   max-width 1160px
   width 100%
-  left 50%
-  transform translateX(-50%)
   justify-content center
-  transition top 0.4s ease-out
   @media (min-width 731px)
     padding-right 0
     padding-left 0
   @media (min-width 1200px)
     justify-content flex-start
-    top 164px
-  &.to-top
-    top 82px
-    @media (min-width 1200px)
-      top 4px
   & > div
     display flex
     justify-content center
