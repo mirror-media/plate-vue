@@ -24,12 +24,12 @@
         />
       </section>
 
-<!--      <RelatedListOverContent-->
-<!--        v-if="!isArticlePhotography && !isAd"-->
-<!--        :section-id="sectionId"-->
-<!--        :articles="relateds"-->
-<!--        :related-category="relatedCategory"-->
-<!--      />-->
+      <RelatedListOverContent
+        v-if="!isArticlePhotography && !isAd"
+        :section-id="sectionId"
+        :articles="relateds"
+        :related-category="relatedCategory"
+      />
 
       <div
         v-if="!isArticlePhotography"
@@ -235,7 +235,7 @@
               :pop="popularlist"
               :curr-env="dfpMode"
             />
-            <RelatedListOverContent
+            <RelatedListOverContentB
               slot="relatedListOverContent"
               v-if="!isArticlePhotography && !isAd"
               :section-id="sectionId"
@@ -452,7 +452,8 @@ import PopInAd from '../components/PopInAd.vue'
 import PopList from '../components/article/PopList.vue'
 import PopListVert from '../components/article/PopListVert.vue'
 import RelatedListInContent from '../components/article/RelatedListInContent.vue'
-import RelatedListOverContent from '../components/article/RelatedListOverContentB.vue'
+import RelatedListOverContent from '../components/article/RelatedListOverContent.vue'
+import RelatedListOverContentB from '../components/article/RelatedListOverContentB.vue'
 import RecommendList from '../components/article/RecommendList.vue'
 import ShareTools from '../components/article/ShareTools.vue'
 import WineWarning from '../components/WineWarning.vue'
@@ -696,6 +697,7 @@ export default {
     PopListVert,
     RelatedListInContent,
     RelatedListOverContent,
+    RelatedListOverContentB,
     RecommendList,
     ShareTools,
     READrEmbeddedPromotions,
