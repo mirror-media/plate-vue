@@ -72,6 +72,7 @@ export default {
   z-index 99
   padding-right 4px
   padding-left 4px
+  margin-bottom 24px
   max-width 1160px
   width 100%
   justify-content center
