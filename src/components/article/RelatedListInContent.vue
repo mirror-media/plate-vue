@@ -1,7 +1,6 @@
 <template>
   <section
     class="relateds-in-content"
-    :class="{ test: abIndicator === 'B' }"
   >
     <div
       v-for="related in relateds"
@@ -53,10 +52,6 @@ export default {
       default () {
         return []
       }
-    },
-    abIndicator: {
-      type: String,
-      required: true
     }
   },
   methods: {
@@ -72,98 +67,6 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.relateds-in-content.test
-  padding-left 20px
-  padding-right 20px
-  @media (min-width 321px)
-    padding-left 0
-    padding-right 0
-  @media (min-width 900px)
-    position relative
-    padding-top 12px
-    border-top 1px solid #d8d8d8
-  .related
-    background-color transparent
-    flex-direction row-reverse
-    align-items center
-    border-bottom 1px solid #d8d8d8
-    padding-left 0
-    @media (min-width 900px)
-      margin-left auto
-      width 375px
-      &:nth-child(2)
-        padding-bottom 9px
-        .related
-          &__title
-            padding-top 0
-            padding-bottom 0
-            height 42px
-    & + .related
-      margin-top 0
-    &::before
-      content none
-    &:first-child
-      flex-direction column-reverse
-      height auto
-      align-items flex-start
-      @media (min-width 900px)
-        position absolute
-        width 300px
-      .related
-        &__img
-          margin-right 0
-          width 100%
-          height auto
-          img
-            position relative
-    &__img
-      width 42px
-      height 28px
-      margin-right 12px
-      flex 0 0 auto
-      &::after
-        content none
-    &__title
-      padding 9px 0
-      // 42 + 9 * 2
-      height 60px
-      flex 1 1 auto
-      width 100%
-      a
-        font-size 15px
-        color rgba(#000, 0.87)
-        line-height 1.4
-        // 15 * 1.4 * 2
-        max-height 42px
-        width 100%
-    >>> #compass-fit-widget-content
-      flex-direction row-reverse
-      align-items center
-      figure
-        width 42px
-        height 28px
-        margin-right 12px
-        a
-          width 42px
-          height 28px
-          padding-top 0
-          padding-bottom 0
-          border-bottom none
-        .pop_item--colorBlock
-          display none
-      .pop_item_title
-        background-color transparent !important
-        padding 9px 0
-        // 42 + 9 * 2
-        height 60px
-        a
-          font-size 15px
-          width 100%
-          color rgba(#000, 0.87)
-          line-height 1.4
-          // 15 * 1.4 * 2
-          max-height 42px
-
 .relateds-in-content
   margin-bottom 20px
   clear both

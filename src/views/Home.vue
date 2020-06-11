@@ -115,12 +115,7 @@
               <LatestArticleAside
                 v-for="(o, i) in groupedArticle"
                 :key="`${i}-groupedlist`"
-                target="_blank"
                 :grouped-article="o"
-                :index="i"
-                :need-stick="false"
-                :viewport="viewportWidth"
-                :is-last="(i === (groupedArticle.length - 1)) ? '-last' : ''"
                 :class="{ last: i === (groupedArticle.length - 1), secondLast: i === (groupedArticle.length - 2), first: i === 0 }"
               />
             </div>

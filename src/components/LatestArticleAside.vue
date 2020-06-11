@@ -8,7 +8,7 @@
         <a
           v-if="groupedArticle.style !== 'projects' && groupedArticle.style !== 'campaign' && groupedArticle.style !== 'readr'"
           :href="getHref(groupedArticle)"
-          :target="target"
+          target="_blank"
           @click="sendGaClickEvent('home', 'group')"
         >
           <div
@@ -19,7 +19,7 @@
         <a
           v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'"
           :href="getHrefFull(groupedArticle)"
-          :target="target"
+          target="_blank"
           @click="sendGaClickEvent('home', 'group')"
         >
           <div
@@ -31,14 +31,14 @@
           <a
             v-if="groupedArticle.style !== 'projects' && groupedArticle !== 'campaign' && groupedArticle !== 'readr'"
             :href="getHref(groupedArticle)"
-            :target="target"
+            target="_blank"
             @click="sendGaClickEvent('home', 'group')"
             v-text="getTruncatedVal(groupedArticle.title, 22)"
           />
           <a
             v-if="groupedArticle.style === 'projects' || groupedArticle.style === 'campaign' || groupedArticle.style === 'readr'"
             :href="getHrefFull(groupedArticle)"
-            :target="target"
+            target="_blank"
             @click="sendGaClickEvent('home', 'group')"
             v-text="getTruncatedVal(groupedArticle.title, 22)"
           />
@@ -54,14 +54,14 @@
           <a
             v-if="o.style !== 'projects' && o.style !== 'campaign' && o.style !== 'readr'"
             :href="getHref(o)"
-            :target="target"
+            target="_blank"
             @click="sendGaClickEvent('home', 'group')"
             v-text="getTruncatedVal(o.title, 22)"
           />
           <a
             v-if="o.style === 'projects' || o.style === 'campaign' || o.style === 'readr'"
             :href="getHrefFull(o)"
-            :target="target"
+            target="_blank"
             @click="sendGaClickEvent('home', 'group')"
             v-text="getTruncatedVal(o.title, 22)"
           />
@@ -71,8 +71,6 @@
   </div>
 </template>
 <script>
-import _ from 'lodash'
-import { SECTION_MAP } from '../constants'
 import { getHref, getHrefFull, getImage, getTruncatedVal, getValue, sendGaClickEvent } from '../util/comm'
 
 export default {
@@ -81,36 +79,7 @@ export default {
     groupedArticle: {
       type: Object,
       default: undefined
-    },
-    index: {
-      type: Number,
-      default: 0
-    },
-    needStick: {
-      type: Boolean,
-      default: true
-    },
-    target: {
-      type: String,
-      default: '_self'
-    },
-    viewport: {
-      type: Number,
-      default: undefined
     }
-  },
-  data () {
-    return {
-      nodeTopStatic: 0,
-      nodeLeftStatic: 0,
-      nodeWidthStatic: 0
-    }
-  },
-  mounted () {
-    this.needStick && this.setUpEventHandler()
-  },
-  updated () {
-    this.needStick && this.setUpEventHandler()
   },
   methods: {
     getHref,
@@ -118,82 +87,7 @@ export default {
     getImage,
     getTruncatedVal,
     getValue,
-    getSectionStyle (sect) {
-      const sectionId = _.get(sect, ['id'])
-      const style = (this.viewport > 1199) ? {
-        backgroundColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18);')
-      } : {
-        backgroundColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18);')
-      }
-      return style
-    },
-    getSectionStyleBorderTop (sect) {
-      const sectionId = _.get(sect, ['id'])
-      const style = (this.viewport > 1199) ? {
-        borderTopColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
-        borderTopWidth: '5px'
-      } : {
-        borderTopColor: _.get(SECTION_MAP, [sectionId, 'bgcolor'], 'rgba(140, 140, 140, 0.18)'),
-        borderTopWidth: '10px'
-      }
-      return style
-    },
-    fetchNodeStaticStyle (node) {
-      node.style.position = 'static'
-      this.nodeTopStatic = node.offsetTop
-      this.nodeLeftStatic = node.offsetLeft
-      this.nodeWidthStatic = node.clientWidth
-    },
-    sendGaClickEvent,
-    sticky () {
-      const { nodeTopStatic, nodeLeftStatic, nodeWidthStatic } = this
-      const node = this.$el
-      const currentScroll = document.body.scrollTop || document.documentElement.scrollTop
-      if (currentScroll >= nodeTopStatic - 30) {
-        node.style.position = 'fixed'
-        node.style.top = '0px'
-        node.style.left = nodeLeftStatic + 'px'
-        node.style.width = nodeWidthStatic + 'px'
-        node.style['margin-top'] = '30px'
-      } else {
-        node.style.position = 'static'
-        node.style['margin-top'] = '0px'
-      }
-    },
-    resize () {
-      // Recalculate node static style and determine stick to the top or not
-      this.fetchNodeStaticStyle(this.$el)
-      this.sticky()
-
-      // Remove and register scroll event again, prevent inconsistently position of node
-      window.removeEventListener('scroll', this.sticky, false)
-      window.addEventListener('scroll', this.sticky)
-    },
-    handleScroll () {
-      this.fetchNodeStaticStyle(this.$el)
-      this.sticky()
-      window.removeEventListener('scroll', this.sticky, false)
-      window.addEventListener('scroll', this.sticky)
-    },
-    handleResize () {
-      window.removeEventListener('resize', this.resize, false)
-      window.addEventListener('resize', this.resize)
-    },
-    setUpEventHandler () {
-      if (this.viewport > 1199) {
-        if (this.$el.className.includes('last')) {
-          // Wait for the ad container of LPCHD show up
-          // while(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id")) {
-          //   console.log(document.querySelector('div[pos=LPCHD]').hasAttribute("data-google-query-id"))
-          //   // this.handleScroll()
-          //   // this.handleResize()
-          //   break
-          // }
-          setTimeout(this.handleScroll, 3000)
-          setTimeout(this.handleResize, 3000)
-        }
-      }
-    }
+    sendGaClickEvent
   }
 }
 </script>
