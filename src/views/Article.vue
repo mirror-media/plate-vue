@@ -25,7 +25,7 @@
       </section>
 
       <RelatedListOverContent
-        v-if="!isArticlePhotography && !isAd"
+        v-if="abIndicator === 'A' && !isArticlePhotography && !isAd"
         :section-id="sectionId"
         :articles="relateds"
         :related-category="relatedCategory"
@@ -235,10 +235,16 @@
               :pop="popularlist"
               :curr-env="dfpMode"
             />
+            <RelatedListOverContentB
+              slot="relatedListOverContent"
+              v-if="abIndicator === 'B' && !isArticlePhotography && !isAd"
+              :section-id="sectionId"
+              :articles="relateds"
+              :related-category="relatedCategory"
+            />
             <RelatedListInContent
               slot="relatedListInContent"
               :relateds="relateds"
-              :ab-indicator="abIndicator"
             >
               <MicroAd
                 v-for="ad in _get(microAds, 'article')"
@@ -249,7 +255,7 @@
                 class="related"
               />
               <PopInAd>
-                <div :id="`_popIn_recommend${abIndicator === 'B' ? '_related' : ''}`" />
+                <div id="_popIn_recommend" />
               </PopInAd>
             </RelatedListInContent>
             <RecommendList
@@ -447,6 +453,7 @@ import PopList from '../components/article/PopList.vue'
 import PopListVert from '../components/article/PopListVert.vue'
 import RelatedListInContent from '../components/article/RelatedListInContent.vue'
 import RelatedListOverContent from '../components/article/RelatedListOverContent.vue'
+import RelatedListOverContentB from '../components/article/RelatedListOverContentB.vue'
 import RecommendList from '../components/article/RecommendList.vue'
 import ShareTools from '../components/article/ShareTools.vue'
 import WineWarning from '../components/WineWarning.vue'
@@ -690,6 +697,7 @@ export default {
     PopListVert,
     RelatedListInContent,
     RelatedListOverContent,
+    RelatedListOverContentB,
     RecommendList,
     ShareTools,
     READrEmbeddedPromotions,
