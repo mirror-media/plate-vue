@@ -502,7 +502,7 @@ export function createStore () {
       },
 
       SET_IMAGES_BY_ID: (state, { images }) => {
-        state.imagesById = images
+        Vue.set(state, 'imagesById', images)
       },
 
       SET_LATESTARTICLE: (state, { latestArticle }) => {
