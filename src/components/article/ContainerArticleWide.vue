@@ -136,6 +136,7 @@ export default {
     }, 300),
     handleScrollTo (id) {
       smoothScroll(`#header-${id}`)
+      this.openIndex = false
     },
     processItemsName (items = []) {
       return items.map((item) => item.name).join(' ')

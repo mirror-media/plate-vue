@@ -14,7 +14,7 @@
           rel="noopener noreferrer"
         >
           <img
-            :src="getImageUrl(item)"
+            v-lazy="getImageUrl(item)"
             :alt="item.title"
           >
         </a>
