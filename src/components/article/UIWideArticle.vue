@@ -22,7 +22,7 @@
         :key="item.id"
       >
         <img
-          :src="processImageData(item).url"
+          v-lazy="processImageData(item).url"
           :alt="processImageData(item).description"
         >
         <figcaption v-text="processImageData(item).description" />

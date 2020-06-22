@@ -7,9 +7,8 @@
         type="image/jpeg"
       >
       <img
-        :src="heroImageMobile"
+        v-lazy="heroImageMobile"
         :alt="titleWithoutBreakLine"
-        loading="lazy"
       >
     </picture>
     <div class="wide-intro__gradient" />

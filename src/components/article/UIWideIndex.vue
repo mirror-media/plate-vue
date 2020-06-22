@@ -7,7 +7,10 @@
       class="wide-index__btn"
       @click="$emit('openIndex')"
     >
-      <img src="https://www.mirrormedia.mg/assets/mirrormedia/icon/hamburger.svg" alt="開啟" loading="lazy">
+      <img
+        v-lazy="`https://www.mirrormedia.mg/assets/mirrormedia/icon/hamburger.svg`"
+        alt="開啟"
+      >
     </div>
     <div class="wide-index__index">
       <div class="index-container">
@@ -15,7 +18,10 @@
           class="index__close"
           @click="$emit('closeIndex')"
         >
-          <img src="https://www.mirrormedia.mg/assets/mirrormedia/icon/close.svg" alt="關閉" loading="lazy">
+          <img
+            v-lazy="`https://www.mirrormedia.mg/assets/mirrormedia/icon/close.svg`"
+            alt="關閉"
+          >
         </button>
         <div class="index">
           <ul>
@@ -40,9 +46,8 @@
             rel="noopener noreferrer"
           >
             <img
-              src="https://www.mirrormedia.mg/assets/mirrormedia/icon/facebook.svg"
+              v-lazy="`https://www.mirrormedia.mg/assets/mirrormedia/icon/facebook.svg`"
               alt="分享到 facebook"
-              loading="lazy"
             >
           </a>
           <a
@@ -51,9 +56,8 @@
             rel="noopener noreferrer"
           >
             <img
-              src="https://www.mirrormedia.mg/assets/mirrormedia/icon/line.svg"
+              v-lazy="`https://www.mirrormedia.mg/assets/mirrormedia/icon/line.svg`"
               alt="分享到 line"
-              loading="lazy"
             >
           </a>
         </div>
