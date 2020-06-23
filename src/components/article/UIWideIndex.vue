@@ -23,7 +23,10 @@
             alt="關閉"
           >
         </button>
-        <div class="index">
+        <div
+          v-if="hasItems"
+          class="index"
+        >
           <ul>
             <li
               v-for="(item, index) in items"
@@ -90,6 +93,9 @@ export default {
     }
   },
   computed: {
+    hasItems () {
+      return this.items.length > 0
+    },
     shareUrl () {
       return this.isMounted && location.href
     }
@@ -172,6 +178,9 @@ export default {
 
 .index {
   display: inline-block;
+  + * {
+    margin-top: 48px;
+  }
   &__close {
     position: absolute;
     top: 10px;
@@ -218,13 +227,15 @@ export default {
 .share {
   display: flex;
   align-items: center;
-  margin-top: 48px;
   font-size: 15px;
   p + a {
     margin-left: 18px;
   }
   a + a {
     margin-left: 17px;
+  }
+  img {
+    display: block;
   }
 }
 
