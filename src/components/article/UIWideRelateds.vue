@@ -86,7 +86,7 @@ export default {
   display: flex;
   @media (min-width: 768px) {
     display: block;
-    width: calc( (100% - 30px) / 3);
+    width: calc( (100% - 60px) / 3);
     margin: 20px 10px 0;
   }
   & + .related {

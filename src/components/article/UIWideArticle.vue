@@ -8,17 +8,17 @@
         v-html="item.content[0]"
       />
       <h3
-        v-if="item.type === 'header-two'"
+        v-else-if="item.type === 'header-two'"
         :key="item.id"
         v-html="item.content[0]"
       />
       <p
-        v-if="item.type === 'unstyled'"
+        v-else-if="item.type === 'unstyled'"
         :key="item.id"
         v-html="item.content[0]"
       />
       <figure
-        v-if="item.type === 'image'"
+        v-else-if="item.type === 'image'"
         :key="item.id"
       >
         <img
@@ -28,7 +28,7 @@
         <figcaption v-text="processImageData(item).description" />
       </figure>
       <UIWideAnnotation
-        v-if="item.type === 'annotation'"
+        v-else-if="item.type === 'annotation'"
         :key="item.id"
         :item="item"
       />
