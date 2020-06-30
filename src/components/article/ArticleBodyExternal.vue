@@ -15,7 +15,7 @@
       >
         <div class="article__info">
           <div class="article__info--section">
-            健康醫療
+            合作媒體
           </div>
           <div
             class="article__info--date"

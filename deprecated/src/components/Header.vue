@@ -40,7 +40,7 @@
           <router-link v-else :key="`menu-${item.name}`" :to="`/section/${item.name}`" class="header-menu__item" :class="item.name" v-text="item.title" :style="{ width: `calc( 100% / ${headerAmount + 1} )`, borderTopColor: $_header_getColor(item) }"></router-link>
         </template>
         <div class="header-menu__item dropdown external" :style="{ width: `calc( 100% / ${headerAmount + 1} )` }">
-          <a>健康醫療</a>
+          <a>合作媒體</a>
           <div class="dropdown-content external">
             <router-link v-for="p in partners" :id="`header-${p.id}-menu`" :key="`${p.id}-menu`" :to="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></router-link>
           </div>
@@ -81,7 +81,7 @@
           </div>
         </div>
         <div class="header-sidebar__section external">
-          <a>健康醫療</a>
+          <a>合作媒體</a>
           <div class="header-sidebar__categories">
             <a v-for="p in partners" :id="`header-${p.id}-sidebar`" :key="`${p.id}-sidebar`" :href="`/externals/${p.name}`" v-text="getValue(p, [ 'display' ])"></a>
           </div>

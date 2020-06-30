@@ -14,7 +14,7 @@ export default {
     CAMPAIGN: '活動專區',
     DOWNLOADAPP: '下載APP',
     EMAIL: 'Email',
-    EXTERNAL: '健康醫療',
+    EXTERNAL: '合作媒體',
     FACEBOOK: 'Facebook',
     INSTAGRAM: 'Instagram',
     LINE: 'Line',
