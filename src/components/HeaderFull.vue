@@ -257,7 +257,7 @@ export default {
         const section = _.find(_.get(this.sections, ['items']), { id: SECTION_WATCH_ID })
         return _.get(section, ['image', 'image', 'resizedTargets', 'desktop', 'url'])
       } else {
-        return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/asset/logo.png'
+        return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/assets/images/logo.png'
       }
     },
     openSearchBar () {
