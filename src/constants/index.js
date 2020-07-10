@@ -161,6 +161,7 @@ export const SOCIAL_LINK = {
   LINE: 'https://line.me/R/ti/p/%40cuk1273e',
   MAGAZINE: 'https://mybook.taiwanmobile.com/contentGroup/MIR0100100001',
   SUBSCRIBE: 'https://docs.google.com/forms/d/1es1wqWfhwJn2sxDLc-6NRVokGn_fU0_M2YffhKMlcyM/viewform',
+  DISCIPLINE: 'https://www.mirrormedia.mg/story/20200710edi030/',
   WECHAT: '#',
   WEIBO: 'http://www.weibo.com/u/6030041924?is_all=1'
 }
