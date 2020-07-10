@@ -174,7 +174,7 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, union, unionBy, uniqBy } from 'lodash'
+import { flatten, get, slice } from 'lodash'
 import { mapState } from 'vuex'
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
@@ -386,22 +386,17 @@ export default {
       return (currentTime >= startTimeEvent) && (currentTime < endTimeEvent)
     },
     latestArticle () {
-      const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
-      const latestFirstPage = dropRight(get(articlesGroupedList, 'latest'), 3)
-      const latestAfterFirstPage = drop(latestArticlesList, latestEndIndex)
-      const choices = get(articlesGroupedList, 'choices')
-      const groupedTitle = get(articlesGroupedList, 'grouped')
-      const groupedRelateds = flatten(map(get(articlesGroupedList, 'grouped'), o => o.relateds))
-      const grouped = union(groupedTitle, groupedRelateds)
-      const choicesAndGrouped = unionBy(choices, grouped, 'slug')
-      const choicesAndGroupedSlugs = choicesAndGrouped.map(o => o.slug)
-      const latest = uniqBy(
-        concat(latestFirstPage, latestAfterFirstPage),
-        'slug'
-      )
-      const notFirstPageNow = (get(this.$store, 'state.latestArticles.meta.page') || 1) !== 1
-      remove(latest, o => includes(choicesAndGroupedSlugs, o.slug))
-      return notFirstPageNow ? latest : latestFirstPage
+      const choicesAndGroupedSlugs = flatten([
+        ...this.editorChoice,
+        ...this.groupedArticle,
+        ...this.groupedArticle.map((item) => item.relateds)
+      ]).map((item) => item.slug)
+      const latestWithoutChoicesAndGrouped = this.latestArticlesList
+        .filter((item) => !choicesAndGroupedSlugs.includes(item.slug))
+      // 避免因為篩掉編輯精選和焦點新聞而造成最新文章的廣告會因此連續出現
+      return latestWithoutChoicesAndGrouped.length < 6
+        ? this.latestArticlesList
+        : latestWithoutChoicesAndGrouped
     },
     isMobile () {
       return this.viewportWidth < 1200
@@ -493,6 +488,7 @@ export default {
       this.dfpMode = currEnv()
     },
     loadMore () {
+      console.log('---- loadMore')
       window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
       this.page += 1
       this.loading = true
