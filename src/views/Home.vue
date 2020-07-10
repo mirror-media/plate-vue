@@ -197,14 +197,9 @@ const PAGE = 1
 // const debugDFP = require('debug')('CLIENT:DFP')
 const debug = require('debug')('CLIENT:Home')
 
-const fetchSSRData = store => store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections'] })
-  .then(() => Promise.all([
-    fetchCommonData(store),
-    fetchArticlesGroupedList(store),
-    fetchPartners(store)
-  ]))
-
 const fetchCommonData = store => store.dispatch('FETCH_COMMONDATA', { endpoints: ['posts-vue', 'projects', 'topics'] })
+
+const fetchCommonDataSections = (store) => store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections'] })
 
 const fetchEvent = (store, eventType = 'embedded') => store.dispatch('FETCH_EVENT', {
   params: {
@@ -218,22 +213,15 @@ const fetchEvent = (store, eventType = 'embedded') => store.dispatch('FETCH_EVEN
 
 const fetchArticlesGroupedList = store => store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {} })
 
-const fetchPartners = store => {
-  const page = (get(store.state, 'partners.meta.page') || 0) + 1
-  return store.dispatch('FETCH_PARTNERS', {
-    params: {
-      max_results: 25,
-      page: page
+const fetchPartners = (store) => store.dispatch('FETCH_PARTNERS', {
+  params: {
+    max_results: 25,
+    page: PAGE,
+    where: {
+      public: true
     }
-  }).then(() => {
-    const amount = get(store.state, 'partners.items.length')
-    const total = get(store.state, 'partners.meta.total')
-    if (amount < total) {
-      return fetchPartners(store)
-    }
-    return Promise.resolve()
-  })
-}
+  }
+})
 
 const fetchLatestArticle = (store, page) => store.dispatch('FETCH_LATESTARTICLES', {
   params: {
@@ -276,7 +264,12 @@ export default {
     Header
   },
   asyncData ({ store }) {
-    return fetchSSRData(store)
+    return Promise.all([
+      fetchCommonDataSections(store),
+      fetchCommonData(store),
+      fetchArticlesGroupedList(store),
+      fetchPartners(store)
+    ])
   },
   metaInfo: {
     titleTemplate: null,
