@@ -197,7 +197,7 @@ const PAGE = 1
 // const debugDFP = require('debug')('CLIENT:DFP')
 const debug = require('debug')('CLIENT:Home')
 
-const fetchCommonData = store => store.dispatch('FETCH_COMMONDATA', { endpoints: ['posts-vue', 'projects', 'topics'] })
+const fetchCommonData = (store) => store.dispatch('FETCH_COMMONDATA', { endpoints: ['posts-vue', 'projects', 'topics'] })
 
 const fetchCommonDataSections = (store) => store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections'] })
 
@@ -211,7 +211,7 @@ const fetchEvent = (store, eventType = 'embedded') => store.dispatch('FETCH_EVEN
   }
 })
 
-const fetchArticlesGroupedList = store => store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {} })
+const fetchArticlesGroupedList = (store) => store.dispatch('FETCH_ARTICLES_GROUPED_LIST', { params: {} })
 
 const fetchPartners = (store) => store.dispatch('FETCH_PARTNERS', {
   params: {
@@ -232,20 +232,18 @@ const fetchLatestArticle = (store, page) => store.dispatch('FETCH_LATESTARTICLES
   }
 })
 
-const fetchFlashNews = (store) => {
-  store.dispatch('FETCH_FLASH_NEWS', {
-    params: {
-      where: {
-        categories: { $in: [CATEGORY_POLITICAL_ID, CATEGORY_CITY_NEWS_ID, CATEGORY_BUSINESS_ID, CATEGORY_LATESTNEWS_ID] },
-        isAudioSiteOnly: false
-      },
-      clean: 'content',
-      max_results: 10,
-      page: 1,
-      sort: '-publishedDate'
-    }
-  })
-}
+const fetchFlashNews = (store) => store.dispatch('FETCH_FLASH_NEWS', {
+  params: {
+    where: {
+      categories: { $in: [CATEGORY_POLITICAL_ID, CATEGORY_CITY_NEWS_ID, CATEGORY_BUSINESS_ID, CATEGORY_LATESTNEWS_ID] },
+      isAudioSiteOnly: false
+    },
+    clean: 'content',
+    max_results: 10,
+    page: PAGE,
+    sort: '-publishedDate'
+  }
+})
 
 export default {
   name: 'AppHome',
