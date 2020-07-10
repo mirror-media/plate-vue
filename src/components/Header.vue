@@ -113,7 +113,7 @@
             v-text="$t('HEADER.DOWNLOADAPP')"
           />
           <a
-            href="SOCIAL_LINK.DISPILINE"
+            :href="SOCIAL_LINK.DISPILINE"
             target="_blank"
             @click="sendGaClickEvent('header', 'more dispiline')"
             v-text="$t('HEADER.DISPILINE')"
