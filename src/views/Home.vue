@@ -189,7 +189,6 @@ import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import Loading from 'src/components/Loading.vue'
 import MirrorMediaTVAside from 'src/components/MirrorMediaTVAside.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
-import moment from 'moment'
 import verge from 'verge'
 
 const MAX_RESULT = 20
@@ -376,13 +375,15 @@ export default {
       })
     },
     hasEventMod () {
-      const _now = moment()
-      const _eventStartTime = moment(new Date(get(this.eventMod, ['startDate'])))
-      let _eventEndTime = moment(new Date(get(this.eventMod, ['endDate'])))
-      if (_eventEndTime && (_eventEndTime < _eventStartTime)) {
-        _eventEndTime = moment(new Date(get(this.eventMod, ['endDate']))).add(12, 'h')
+      const currentTime = Date.now()
+      const startTimeEvent = new Date(get(this.eventMod, 'startDate')).getTime()
+      let endTimeEvent = new Date(get(this.eventMod, 'endDate')).getTime()
+
+      if (endTimeEvent && (endTimeEvent < startTimeEvent)) {
+        // add 12 hours
+        endTimeEvent = endTimeEvent + (12 * 60 * 60 * 1000)
       }
-      return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
+      return (currentTime >= startTimeEvent) && (currentTime < endTimeEvent)
     },
     latestArticle () {
       const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
