@@ -295,7 +295,6 @@ export default {
       dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       hasScrollLoadMore: get(this.$store, 'state.latestArticles.meta.page', PAGE) > 1,
-      // isAdCoverCalledYet: false,
       loading: false,
       page: get(this.$store, 'state.latestArticles.meta.page', PAGE),
       showDfpCoverAdFlag: false,
@@ -540,29 +539,12 @@ export default {
         }
       }
     }
-    // scrollEventHandlerForAd () {
-    //   if (this.isAdCoverCalledYet) { return }
-    //   const currentTop = currentYPosition()
-    //   const eleTop = elmYPosition('#homepage-focus-news')
-    //   const device_height = verge.viewportH()
-    //   if (currentTop + device_height > eleTop) {
-    //     debugDFP('SHOW ADCOVER!')
-    //     this.isAdCoverCalledYet = true
-    //     window.removeEventListener('scroll', this.scrollEventHandlerForAd)
-    //   }
-    // },
   }
-  // watch: {
-  //   abIndicator: function () {
-  //     this.$forceUpdate()
-  //   }
-  // }
 }
 
 </script>
 <style lang="stylus" scoped>
 .editorChoice
-  // margin-top 40px
   padding-top 10px
 
 .articleList-block
@@ -611,7 +593,6 @@ export default {
 
     aside
       .aside-title
-        // overflow hidden
         padding: 0 2rem
         margin-top 10px
 
@@ -791,7 +772,6 @@ section.footer
   .home-mainContent
     display flex
     width 1024px
-    // margin 40px auto 0
     margin 10px auto 0
     padding 0
 
