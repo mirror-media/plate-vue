@@ -103,7 +103,7 @@
           <aside>
             <div>
               <MirrorMediaTVAside
-                v-if="viewportWidth >= 1200 && hasEventMod"
+                v-if="!isMobile && hasEventMod"
                 :media-data="eventMod"
               />
               <div
@@ -402,21 +402,18 @@ export default {
       return this.viewportWidth < 1200
     }
   },
-  beforeMount () {
+  mounted () {
     // this.abIndicator = this.getMmid()
-    const jobs = [
+    Promise.all([
+      fetchFlashNews(this.$store),
       fetchEvent(this.$store, 'embedded'),
       fetchEvent(this.$store, 'logo'),
       fetchEvent(this.$store, 'mod')
-    ]
-    Promise.all(jobs)
-  },
-  mounted () {
+    ])
+
     unLockJS()
     this.handleScrollForLoadmore()
     this.updateSysStage()
-
-    fetchFlashNews(this.$store)
 
     window.addEventListener('scroll', this.detectFixProject)
 
@@ -488,7 +485,6 @@ export default {
       this.dfpMode = currEnv()
     },
     loadMore () {
-      console.log('---- loadMore')
       window.ga('send', 'event', 'home', 'scroll', 'loadmore' + this.page, { location: document.location.href })
       this.page += 1
       this.loading = true
