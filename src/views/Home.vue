@@ -175,6 +175,7 @@ import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
 import { concat, drop, dropRight, flatten, get, includes, map, remove, slice, union, unionBy, uniqBy } from 'lodash'
+import { mapState } from 'vuex'
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import FlashNews from 'src/components/FlashNews.vue'
@@ -296,9 +297,16 @@ export default {
     }
   },
   computed: {
-    articlesGroupedList () {
-      return this.$store.state.articlesGroupedList
-    },
+    ...mapState({
+      articlesGroupedList: (state) => state.articlesGroupedList,
+      editorChoice: (state) => get(state, 'articlesGroupedList.choices', []),
+      eventMod: (state) => get(state, 'eventMod.items.0'),
+      flashNewsArticle: (state) => get(state, 'flashNews.items', []),
+      groupedArticle: (state) => slice(get(state, 'articlesGroupedList.grouped', [])),
+      latestArticlesList: (state) => get(state, 'latestArticles.items', []),
+      latestEndIndex: (state) => get(state, 'articlesGroupedList.latestEndIndex'),
+      viewportWidth: (state) => get(state, 'viewport.width', 0)
+    }),
     commonData () {
       return this.$store.state.commonData
     },
@@ -370,18 +378,6 @@ export default {
         sizeMapping: DFP_SIZE_MAPPING
       })
     },
-    editorChoice () {
-      return get(this.articlesGroupedList, 'choices')
-    },
-    eventMod () {
-      return get(this.$store, 'state.eventMod.items.0')
-    },
-    flashNewsArticle () {
-      return this.$store.state.flashNews.items || []
-    },
-    groupedArticle () {
-      return slice(get(this.articlesGroupedList, 'grouped'))
-    },
     hasEventMod () {
       const _now = moment()
       const _eventStartTime = moment(new Date(get(this.eventMod, ['startDate'])))
@@ -390,12 +386,6 @@ export default {
         _eventEndTime = moment(new Date(get(this.eventMod, ['endDate']))).add(12, 'h')
       }
       return (_eventStartTime && _eventEndTime && (_now >= _eventStartTime) && (_now <= _eventEndTime))
-    },
-    latestArticlesList () {
-      return get(this.$store, 'state.latestArticles.items')
-    },
-    latestEndIndex () {
-      return get(this.$store, 'state.articlesGroupedList.latestEndIndex')
     },
     latestArticle () {
       const { articlesGroupedList, latestEndIndex, latestArticlesList } = this
@@ -417,9 +407,6 @@ export default {
     },
     isMobile () {
       return this.viewportWidth < 1200
-    },
-    viewportWidth () {
-      return get(this.$store, 'state.viewport.width') || 0
     }
   },
   beforeMount () {
