@@ -1,5 +1,5 @@
 <template>
-  <vue-dfp-provider
+  <VueDfpProvider
     :key="`homepage`"
     :dfp-units="DFP_UNITS"
     :dfpid="DFP_ID"
@@ -164,7 +164,7 @@
         </template>
       </div>
     </template>
-  </vue-dfp-provider>
+  </VueDfpProvider>
 </template>
 
 <script>
