@@ -26,7 +26,7 @@
             :is="props.vueDfp"
             v-if="isMobile"
             :config="props.config"
-            :size="get($store, 'getters.adSize')"
+            :size="adSize"
             pos="LMBHD"
           />
           <vue-dfp
@@ -48,7 +48,7 @@
                 :is="props.vueDfp"
                 v-if="isMobile"
                 :config="props.config"
-                :size="get($store, 'getters.adSize')"
+                :size="adSize"
                 pos="LMBL1"
               />
             </LazyItemWrapper>
@@ -83,7 +83,7 @@
                 :is="props.vueDfp"
                 v-if="isMobile"
                 :config="props.config"
-                :size="get($store, 'getters.adSize')"
+                :size="adSize"
                 pos="LMBL2"
               />
               <vue-dfp
@@ -174,8 +174,8 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import { flatten, get, slice } from 'lodash'
-import { mapState } from 'vuex'
+import { flatten, get } from 'lodash'
+import { mapGetters, mapState } from 'vuex'
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
 import FlashNews from 'src/components/FlashNews.vue'
@@ -301,11 +301,14 @@ export default {
       editorChoice: (state) => get(state, 'articlesGroupedList.choices', []),
       eventMod: (state) => get(state, 'eventMod.items.0'),
       flashNewsArticle: (state) => get(state, 'flashNews.items', []),
-      groupedArticle: (state) => slice(get(state, 'articlesGroupedList.grouped', [])),
+      groupedArticle: (state) => get(state, 'articlesGroupedList.grouped', []),
       latestArticlesList: (state) => get(state, 'latestArticles.items', []),
       latestEndIndex: (state) => get(state, 'articlesGroupedList.latestEndIndex'),
       viewportWidth: (state) => get(state, 'viewport.width', 0)
     }),
+    ...mapGetters([
+      'adSize'
+    ]),
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
@@ -410,7 +413,6 @@ export default {
       fetchEvent(this.$store, 'logo'),
       fetchEvent(this.$store, 'mod')
     ])
-
     unLockJS()
     this.handleScrollForLoadmore()
     this.updateSysStage()
@@ -463,7 +465,6 @@ export default {
         }
       }
     },
-    get,
     getMmid () {
       const mmid = Cookie.get('mmid')
       let assisgnedRole = get(this.$route, 'query.ab')
