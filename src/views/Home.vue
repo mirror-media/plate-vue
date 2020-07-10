@@ -307,9 +307,6 @@ export default {
       latestEndIndex: (state) => get(state, 'articlesGroupedList.latestEndIndex'),
       viewportWidth: (state) => get(state, 'viewport.width', 0)
     }),
-    commonData () {
-      return this.$store.state.commonData
-    },
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
