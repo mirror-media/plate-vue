@@ -25,7 +25,7 @@ export const SECTION_MAP = {
   // watch
   '57dfe3b0ee85930e00cad4d7': { sectionName: 'watch', bgcolor: '#003153', latestNewsOrder: 8 },
   // external
-  external: { sectionName: 'external', bgcolor: '#ee5a24' }
+  external: { sectionName: 'external', bgcolor: '#fb9d18' }
 }
 
 export const DEFAULT_SECTION_BGCOLOR = '#bcbcbc'

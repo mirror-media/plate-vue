@@ -189,7 +189,7 @@ export default {
       &--section
         padding-left 10px
         font-size 1.3rem
-        border-left 7px solid #ee5a24
+        border-left 7px solid #fb9d18
       &--date
         color #a1a1a1
         font-size 1rem

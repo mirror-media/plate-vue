@@ -14,8 +14,7 @@
           class="latest-list_item"
         >
           <a
-            v-if="shouldShowItem(o)"
-            :href="getHref(o)"
+            :href="isSpecificStory(o) ? getHrefFull(o) : getHref(o)"
             :target="target"
             @click="sendGaClickEvent('home', 'latest')"
           >
@@ -27,50 +26,22 @@
             />
             <div
               class="latest-list_item_label tablet-only desktop-hidden"
-              :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))"
-              v-text="getLabel(o)"
-            />
-          </a>
-          <a
-            v-if="!shouldShowItem(o)"
-            :href="getHrefFull(o)"
-            tid="ee"
-            :target="target"
-            @click="sendGaClickEvent('home', 'latest')"
-          >
-            <LatestAriticleImg
-              :id="getValue(o, [ 'heroImage', 'id' ], Date.now())"
-              :key="getValue(o, [ 'heroImage', 'id' ], Date.now())"
-              class="latest-list_item_img"
-              :src="getImage(o, 'mobile')"
-            />
-            <div
-              class="latest-list_item_label tablet-only desktop-hidden"
-              :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))"
+              :style="!isExternalStory(o)
+                ? getSectionStyle(getValue(o, [ 'sections', 0 ], ''))
+                : { backgroundColor: '#fb9d18' }"
               v-text="getLabel(o)"
             />
           </a>
           <div class="latest-list_item_title">
             <div
               class="latest-list_item_label tablet-hidden"
-              :style="getSectionStyle(getValue(o, [ 'sections', 0 ], ''))"
+              :style="!isExternalStory(o)
+                ? getSectionStyle(getValue(o, [ 'sections', 0 ], ''))
+                : { backgroundColor: '#fb9d18' }"
               v-text="getLabel(o)"
             />
             <a
-              v-if="shouldShowItem(o)"
-              :href="getHref(o)"
-              :target="target"
-              @click="sendGaClickEvent('home', 'latest')"
-            >
-              <h3 v-text="getTruncatedVal(o.title, 22)" />
-              <span
-                class="brief tablet-only desktop-hidden"
-                v-text="getTruncatedVal(sanitizeHtml( getValue(o, [ 'brief', 'html' ], ''), { allowedTags: [ ] }), 60)"
-              />
-            </a>
-            <a
-              v-if="!shouldShowItem(o)"
-              :href="getHrefFull(o)"
+              :href="isSpecificStory(o) ? getHrefFull(o) : getHref(o)"
               :target="target"
               @click="sendGaClickEvent('home', 'latest')"
             >
@@ -175,6 +146,10 @@ export default {
       return style
     },
     getLabel (article) {
+      if (article.partner) {
+        return '合作媒體'
+      }
+
       const section = _.get(article, 'sections.0.title', '')
       const categoriesLen = _.get(article, 'categories.length', 0)
       const categoryFirst = _.get(article, 'categories.0.id')
@@ -190,8 +165,12 @@ export default {
     },
     sanitizeHtml,
     sendGaClickEvent,
-    shouldShowItem (article) {
-      return article.style !== 'projects' && article.style !== 'campaign' && article.style !== 'readr'
+    isExternalStory (article) {
+      return article.partner
+    },
+    isSpecificStory (article) {
+      // article: projects, campaign, readr
+      return (article.style === 'projects') || (article.style === 'campaign') || (article.style === 'readr')
     }
   }
 }
