@@ -136,6 +136,6 @@
     }
   },
   "lint-staged": {
-    "*.{js,vue}": "eslint --color"
+    "*.{js,vue}": "eslint --ignore-pattern deprecated/ --color"
   }
 }
