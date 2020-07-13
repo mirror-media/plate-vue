@@ -28,13 +28,6 @@
           />
         </section>
 
-        <RelatedListOverContent
-          v-if="abIndicator === 'A' && !isArticlePhotography && !isAd"
-          :section-id="sectionId"
-          :articles="relateds"
-          :related-category="relatedCategory"
-        />
-
         <div
           v-if="!isArticlePhotography"
           class="article-container"
@@ -241,7 +234,7 @@
               />
               <RelatedListOverContentB
                 slot="relatedListOverContent"
-                v-if="abIndicator === 'B' && !isArticlePhotography && !isAd"
+                v-if="!isArticlePhotography && !isAd"
                 :section-id="sectionId"
                 :articles="relateds"
                 :related-category="relatedCategory"
@@ -458,7 +451,6 @@ import PopInAd from '../components/PopInAd.vue'
 import PopList from '../components/article/PopList.vue'
 import PopListVert from '../components/article/PopListVert.vue'
 import RelatedListInContent from '../components/article/RelatedListInContent.vue'
-import RelatedListOverContent from '../components/article/RelatedListOverContent.vue'
 import RelatedListOverContentB from '../components/article/RelatedListOverContentB.vue'
 import RecommendList from '../components/article/RecommendList.vue'
 import ShareTools from '../components/article/ShareTools.vue'
@@ -703,7 +695,6 @@ export default {
     PopList,
     PopListVert,
     RelatedListInContent,
-    RelatedListOverContent,
     RelatedListOverContentB,
     RecommendList,
     ShareTools,
@@ -1059,7 +1050,7 @@ export default {
       this.insertMediafarmersScript()
       this.checkLockJS()
       this.updateSysStage()
-      this.abIndicator = this.getMmid()
+      // this.abIndicator = this.getMmid()
 
       /**
        * Fetch latests after window.onload.
@@ -1142,8 +1133,8 @@ export default {
         window.ga('set', 'contentGroup1', `${_get(articleData, 'sections.0.name')}`)
         window.ga('set', 'contentGroup2', `${_get(articleData, 'categories.0.name')}`)
       }
-      // window.ga('set', 'contentGroup3', '')
-      window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
+      window.ga('set', 'contentGroup3', '')
+      // window.ga('set', 'contentGroup3', `article${this.abIndicator}`)
       window.ga('send', 'pageview', { title: `${_get(articleData, 'title', '')} - ${SITE_TITLE_SHORT}`, location: document.location.href })
     },
     sendGaClickEvent,
