@@ -262,8 +262,8 @@ export function createStore () {
       },
       // For Home Page
       FETCH_LATESTARTICLES: ({ commit, state }, { params }) => {
-        const orig = _.values(state.latestArticles.items)
-        return state.latestArticles.items && params.page < 2
+        const orig = _.values(_.get(state, 'latestArticles.items', []))
+        return orig.length > 0 && params.page < 2
           ? Promise.resolve(state.latestArticles)
           : fetchLatestArticle(params).then(latestArticles => {
             latestArticles.items = _.concat(orig, _.get(latestArticles, ['items']))

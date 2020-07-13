@@ -245,6 +245,14 @@ const fetchFlashNews = (store) => store.dispatch('FETCH_FLASH_NEWS', {
   }
 })
 
+function throwNotFoundError (log = '') {
+  console.error(`[HOME.VUE] ${log}`)
+  const e = new Error()
+  e.massage = 'Page Not Found'
+  e.code = '404'
+  throw e
+}
+
 export default {
   name: 'AppHome',
   components: {
@@ -262,12 +270,22 @@ export default {
     Header
   },
   asyncData ({ store }) {
-    return Promise.all([
+    return Promise.allSettled([
       fetchCommonDataSections(store),
       fetchCommonData(store),
       fetchArticlesGroupedList(store),
       fetchPartners(store)
     ])
+      .then((results) => {
+        if (results[2].status === 'rejected') {
+          throwNotFoundError('fetchArticlesGroupedList failed.')
+        }
+        if (results[1].status === 'rejected') {
+          return fetchLatestArticle(store, PAGE)
+        }
+        return Promise.resolve()
+      })
+      .catch(() => throwNotFoundError('fetchLatestArticle failed.'))
   },
   metaInfo: {
     titleTemplate: null,
