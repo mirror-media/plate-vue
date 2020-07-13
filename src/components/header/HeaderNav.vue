@@ -177,7 +177,7 @@ $color-foodtravel = #eac151
 $color-mafalda = #662d8e
 $color-culture = #009245
 $color-carandwatch = #003153
-$color-external = #ee5a24
+$color-external = #fb9d18
 
 .header-nav
   display none

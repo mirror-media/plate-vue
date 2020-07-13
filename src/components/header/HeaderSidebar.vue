@@ -314,7 +314,7 @@ export default {
     &:last-of-type
       border-bottom none
     &.external
-      border-left-color #ee5a24
+      border-left-color #fb9d18
     &.mirrorvoice
       border-left-color #FF521D
     &.mirrorfiction

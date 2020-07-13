@@ -174,7 +174,7 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import { flatten, get } from 'lodash'
+import { chunk, flatten, get, xor } from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
@@ -193,6 +193,7 @@ import verge from 'verge'
 
 const MAX_RESULT = 20
 const PAGE = 1
+const PARTNER_EBC_ID = '5ea7fd55a66f9e0f00a04e9a'
 
 // const debugDFP = require('debug')('CLIENT:DFP')
 const debug = require('debug')('CLIENT:Home')
@@ -242,6 +243,17 @@ const fetchFlashNews = (store) => store.dispatch('FETCH_FLASH_NEWS', {
     max_results: 10,
     page: PAGE,
     sort: '-publishedDate'
+  }
+})
+
+const fetchExternals = (store) => store.dispatch('FETCH_EXTERNALS', {
+  params: {
+    page: 1,
+    max_results: 6,
+    sort: '-publishedDate',
+    where: {
+      partner: PARTNER_EBC_ID
+    }
   }
 })
 
@@ -304,6 +316,8 @@ export default {
       dfpHeaderLogoLoaded: false,
       dfpMode: 'prod',
       hasScrollLoadMore: get(this.$store, 'state.latestArticles.meta.page', PAGE) > 1,
+      insertedExternals: false,
+      latestArticle: [],
       loading: false,
       page: get(this.$store, 'state.latestArticles.meta.page', PAGE),
       showDfpCoverAdFlag: false,
@@ -318,6 +332,7 @@ export default {
       articlesGroupedList: (state) => state.articlesGroupedList,
       editorChoice: (state) => get(state, 'articlesGroupedList.choices', []),
       eventMod: (state) => get(state, 'eventMod.items.0'),
+      externals: (state) => get(state, 'externals.items', []),
       flashNewsArticle: (state) => get(state, 'flashNews.items', []),
       groupedArticle: (state) => get(state, 'articlesGroupedList.grouped', []),
       latestArticlesList: (state) => get(state, 'latestArticles.items', []),
@@ -327,6 +342,13 @@ export default {
     ...mapGetters([
       'adSize'
     ]),
+    choicesAndGroupedSlugs () {
+      return flatten([
+        ...this.editorChoice,
+        ...this.groupedArticle,
+        ...this.groupedArticle.map((item) => item.relateds)
+      ]).map((item) => item.slug)
+    },
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
@@ -406,27 +428,41 @@ export default {
       }
       return (currentTime >= startTimeEvent) && (currentTime < endTimeEvent)
     },
-    latestArticle () {
-      const choicesAndGroupedSlugs = flatten([
-        ...this.editorChoice,
-        ...this.groupedArticle,
-        ...this.groupedArticle.map((item) => item.relateds)
-      ]).map((item) => item.slug)
-      const latestWithoutChoicesAndGrouped = this.latestArticlesList
-        .filter((item) => !choicesAndGroupedSlugs.includes(item.slug))
-      // 避免因為篩掉編輯精選和焦點新聞而造成最新文章的廣告會因此連續出現
-      return latestWithoutChoicesAndGrouped.length < 6
-        ? this.latestArticlesList
-        : latestWithoutChoicesAndGrouped
-    },
     isMobile () {
       return this.viewportWidth < 1200
+    }
+  },
+  watch: {
+    latestArticlesList: {
+      handler (newValue, oldVale) {
+        if (this.page === 1) {
+          const latestWithoutChoicesAndGrouped = this.latestArticlesList
+            .filter((item) => !this.choicesAndGroupedSlugs.includes(item.slug))
+          // 避免因為篩掉編輯精選和焦點新聞而造成最新文章的廣告會因此連續出現
+          this.latestArticle = latestWithoutChoicesAndGrouped.length < 6
+            ? this.latestArticlesList
+            : latestWithoutChoicesAndGrouped
+        } else {
+          const changeValue = xor(newValue, oldVale)
+          this.latestArticle = [...this.latestArticle, ...changeValue]
+        }
+
+        const hasExternals = this.externals.length > 0
+        const needInsertExternals = !this.insertedExternals && hasExternals && (this.latestArticle.length >= 9)
+        if (needInsertExternals) {
+          const chunked = chunk(this.latestArticle, 9)
+          this.latestArticle = [...chunked[0], ...this.externals, ...chunked[1]]
+          this.insertedExternals = true
+        }
+      },
+      immediate: true
     }
   },
   mounted () {
     // this.abIndicator = this.getMmid()
     Promise.all([
       fetchFlashNews(this.$store),
+      fetchExternals(this.$store),
       fetchEvent(this.$store, 'embedded'),
       fetchEvent(this.$store, 'logo'),
       fetchEvent(this.$store, 'mod')
