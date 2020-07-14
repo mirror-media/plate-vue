@@ -3,34 +3,34 @@
     <div class="articleBodyExternalContainer">
       <slot name="dfp-PCHD" />
       <slot name="dfp-MBHD" />
-      <div class="articleBodyExternal__heroImage">
-        <img
-          v-if="heroImage"
-          v-lazy="heroImage"
-        >
-      </div>
       <article
         class="article"
         itemprop="articleBody"
       >
-        <div class="article__info">
-          <div class="article__info--section">
-            合作媒體
-          </div>
-          <div
-            class="article__info--date"
-            v-text="date"
-          />
-        </div>
-        <h1 v-text="title" />
-        <div
-          v-if="credit"
-          class="article__credit"
-        >
-          文｜<span v-html="credit" />
-        </div>
         <main>
           <section class="article__main">
+            <div class="article__info">
+              <div class="article__info--section">
+                合作媒體
+              </div>
+              <div
+                class="article__info--date"
+                v-text="date"
+              />
+            </div>
+            <h1 v-text="title" />
+            <div
+              v-if="credit"
+              class="article__credit"
+            >
+              文｜<span v-html="credit" />
+            </div>
+            <div class="article__heroImage">
+              <img
+                v-if="heroImage"
+                v-lazy="heroImage"
+              >
+            </div>
             <p
               class="article__main--brief"
               v-text="brief"
@@ -174,14 +174,9 @@ export default {
   &Container
     width 100%
     background-color #fff
-  &__heroImage
-    width 100%
-    font-size 0
-    img
-      width 100%
   .article
     max-width 100%
-    padding 30px 25px 0
+    padding 0 25px
     h1
       margin 15px 0
       font-size 2.2rem
@@ -194,14 +189,23 @@ export default {
       &--section
         padding-left 10px
         font-size 1.3rem
-        border-left 7px solid #ee5a24
+        border-left 7px solid #fb9d18
       &--date
         color #a1a1a1
         font-size 1rem
         font-style italic
         font-weight normal
+    &__credit
+      + *
+        margin-top 30px
+    &__heroImage
+      width calc(100% + 50px)
+      margin-left -25px
+      margin-right -25px
+      font-size 0
+      img
+        width 100%
     &__main
-      margin-top 30px
       a, a:hover, a:link, a:visited
         cursor pointer
       > p
@@ -254,7 +258,8 @@ export default {
           margin-left .8em
           color #171717
           border none
-
+      .popularList
+        padding 0
       .herbsapi
         display flex
         align-items center
@@ -295,6 +300,10 @@ export default {
       width 645px
       padding 50px 0 0
       margin 0 auto
+      &__heroImage
+        width 100%
+        margin-left auto
+        margin-right auto
 
 @media (min-width 900px)
   .articleBodyExternal
@@ -317,15 +326,14 @@ export default {
         align-items flex-start
       &__main
         width 695px
-        margin-top 30px
-        > p:first-of-type
-          margin-top 0
+      &__heroImage
+        + *
+          margin-top 30px
       &__aside
         display block
-        margin-top 10px
         > *
           width 300px
-        .popListVert
+        .popListVert, .fb-social-plugins
           margin-top 20px
         .dfp--desktop
           margin-bottom 20px

@@ -231,5 +231,5 @@ export default {
     &.external
       h4
         &::before
-          border-left-color #ee5a24
+          border-left-color #fb9d18
 </style>

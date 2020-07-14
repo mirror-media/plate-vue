@@ -26,6 +26,7 @@ export default {
     RSS: 'RSS',
     SEARCH: '搜尋',
     SUBSCRIBE: '訂閱鏡週刊',
+    DISPILINE: '新聞自律綱要',
     WEIBO: '微博'
   }
 }

@@ -67,7 +67,11 @@ export function getBrief (article, count = 30, allowedTags = []) {
 }
 
 export function getHref (relAritlcle = {}, isAppPage = false) {
-  const { style = '', slug } = relAritlcle
+  const { name, partner, style = '', slug } = relAritlcle
+
+  if (partner) {
+    return `/external/${name}`
+  }
 
   switch (style) {
     case 'campaign':
@@ -102,6 +106,10 @@ export function getHrefFull (relAritlcle = {}, isAppPage = false) {
 }
 
 export function getImage (article, size) {
+  if (article.partner) {
+    return article.thumb
+  }
+
   let image
 
   if (!article) {

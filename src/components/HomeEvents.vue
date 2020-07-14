@@ -1,7 +1,13 @@
 <template>
   <div class="home-events">
-    <EventContainer :event-data="embedded" />
-    <EventContainer :event-data="mod" />
+    <EventContainer
+      v-if="embedded"
+      :event-data="embedded"
+    />
+    <EventContainer
+      v-if="mod"
+      :event-data="mod"
+    />
   </div>
 </template>
 <script>

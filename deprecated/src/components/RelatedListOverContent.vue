@@ -1,37 +1,41 @@
 <template>
-  <div
-    class="relateds-over-content"
-  >
-    <div>
-      <a
-        :href="`/story/${_get(articles[ 0 ], 'slug', '')}`"
-        class="related"
-        @click="sendGaClickEvent('article', 'related news left')"
-      >
-        <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
-        <div class="related__txt" :style="{ outlineColor: sectionColor }">
-          <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
-          <div class="related__title">
-            <p>{{ _get(articles[ 0 ], 'title', '') }}</p>
+  <transition name="fade">
+    <div
+      v-show="showContent"
+      class="relateds-over-content"
+      :class="{ 'to-top': isToTop }"
+    >
+      <div>
+        <a
+          :href="`/story/${_get(articles[ 0 ], 'slug', '')}`"
+          class="related"
+          @click="sendGaClickEvent('article', 'related news left')"
+        >
+          <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
+          <div class="related__txt" :style="{ outlineColor: sectionColor }">
+            <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
+            <div class="related__title">
+              <p>{{ _get(articles[ 0 ], 'title', '') }}</p>
+            </div>
           </div>
-        </div>
-      </a>
-      <a
-        :href="`/story/${_get(articles[ 1 ], 'slug', '')}`"
-        class="related"
-        :class="{ 'vidibility-h': !articles[ 1 ] }"
-        @click="sendGaClickEvent('article', 'related news right')"
-      >
-        <div class="related__txt" :style="{ outlineColor: sectionColor }">
-          <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
-          <div class="related__title">
-            <p>{{ _get(articles[ 1 ], 'title', '') }}</p>
+        </a>
+        <a
+          :href="`/story/${_get(articles[ 1 ], 'slug', '')}`"
+          class="related"
+          :class="{ 'vidibility-h': !articles[ 1 ] }"
+          @click="sendGaClickEvent('article', 'related news right')"
+        >
+          <div class="related__txt" :style="{ outlineColor: sectionColor }">
+            <div class="related__category" :style="{ backgroundColor: sectionColor }">{{ relatedCategory }}</div>
+            <div class="related__title">
+              <p>{{ _get(articles[ 1 ], 'title', '') }}</p>
+            </div>
           </div>
-        </div>
-        <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
-      </a>
+          <div class="related__arrow" :style="{ backgroundColor: sectionColor }" />
+        </a>
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -55,32 +59,69 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      showContent: false,
+      wEl: null,
+      scrollY: 0,
+      isToTop: false,
+      ww: 0
+    }
+  },
   computed: {
+    isLapW () {
+      return this.ww >= 1200
+    },
     sectionColor () {
       return _get(SECTION_MAP, `${this.sectionId}.bgcolor`, DEFAULT_SECTION_BGCOLOR)
     }
   },
+  mounted () {
+    this.wEl = window
+    this.ww = Math.min(this.wEl.innerWidth, document.documentElement.clientWidth)
+    this.scrollY = this.wEl.pageYOffset
+    this.wEl.addEventListener('scroll', this.displayContent)
+    this.wEl.addEventListener('scroll', this.locateContent)
+  },
   methods: {
     _get,
-    sendGaClickEvent
+    sendGaClickEvent,
+    displayContent () {
+      const currentScrollY = this.wEl.pageYOffset
+      this.showContent = (this.articles.length && (currentScrollY < this.scrollY))
+      this.scrollY = currentScrollY
+    },
+    locateContent () {
+      const topOffset = (this.isLapW ? 160 : 118)
+      this.isToTop = (this.scrollY >= topOffset)
+    }
   }
 }
 </script>
 
 <style lang="stylus" scoped>
 .relateds-over-content
+  position fixed
+  top 122px
   z-index 99
   padding-right 4px
   padding-left 4px
-  margin-bottom 24px
   max-width 1160px
   width 100%
+  left 50%
+  transform translateX(-50%)
   justify-content center
+  transition top 0.4s ease-out
   @media (min-width 731px)
     padding-right 0
     padding-left 0
   @media (min-width 1200px)
     justify-content flex-start
+    top 164px
+  &.to-top
+    top 82px
+    @media (min-width 1200px)
+      top 4px
   & > div
     display flex
     justify-content center
@@ -94,8 +135,6 @@ export default {
     flex 1 1 50%
     box-shadow 0 0 2px rgba(#000, 0.25)
     overflow hidden
-    padding-bottom 0 !important
-    border-bottom none !important
     &:first-child
       margin-right 1.5px
       border-top-left-radius 4px
@@ -162,4 +201,10 @@ export default {
         outline-offset -2px
 .vidibility-h
   visibility hidden
+.fade
+  &-enter-active, &-leave-active
+    transition all 0.2s ease-in-out
+  &-enter, &-leave-to
+    opacity 0
+    transform translate(-50%, -16px)
 </style>
