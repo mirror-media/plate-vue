@@ -290,7 +290,6 @@ export default {
     ])
       .then((results) => {
         if (results[2].status === 'rejected') {
-          console.log('---- 2', results[2])
           throwNotFoundError('fetchArticlesGroupedList failed.')
         }
         if (results[1].status === 'rejected') {
