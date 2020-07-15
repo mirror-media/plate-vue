@@ -596,7 +596,7 @@ const getJSONLD = (articleData, metaData) => {
         name: SITE_TITLE,
         logo: {
           '@type': 'ImageObject',
-          url: 'https://www.mirrormedia.mg/assets/images/logo.png'
+          url: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg'
         }
       },
       description: metaData.metaDescription,

@@ -23,7 +23,7 @@
         <router-link to="/">
           <img
             class="headerFull__link--icon desktop-only"
-            src="/assets/mirrormedia/icon/logo_black@3x.png"
+            src="/assets/mirrormedia/icon/logo_black@2x.png"
             alt="鏡週刊 Mirror Media"
           >
         </router-link>
@@ -89,7 +89,7 @@
         <router-link to="/">
           <img
             class="headerFull__link--icon desktop-only"
-            src="/assets/mirrormedia/icon/logo_black@3x.png"
+            src="/assets/mirrormedia/icon/logo_black@2x.png"
             alt="鏡週刊 Mirror Media"
           >
         </router-link>
@@ -257,7 +257,7 @@ export default {
         const section = _.find(_.get(this.sections, ['items']), { id: SECTION_WATCH_ID })
         return _.get(section, ['image', 'image', 'resizedTargets', 'desktop', 'url'])
       } else {
-        return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/assets/images/logo.png'
+        return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/assets/mirrormedia/logo.svg'
       }
     },
     openSearchBar () {
