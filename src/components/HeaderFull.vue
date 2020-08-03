@@ -23,7 +23,7 @@
         <router-link to="/">
           <img
             class="headerFull__link--icon desktop-only"
-            src="/assets/mirrormedia/icon/logo_black@2x.png"
+            src="/assets/mirrormedia/icon/logo@2x.png"
             alt="鏡週刊 Mirror Media"
           >
         </router-link>
@@ -89,7 +89,7 @@
         <router-link to="/">
           <img
             class="headerFull__link--icon desktop-only"
-            src="/assets/mirrormedia/icon/logo_black@2x.png"
+            src="/assets/mirrormedia/icon/logo@2x.png"
             alt="鏡週刊 Mirror Media"
           >
         </router-link>

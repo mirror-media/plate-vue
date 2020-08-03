@@ -8,7 +8,7 @@
         >
           <img
             class="headerFoodTravel__link--icon"
-            src="/assets/mirrormedia/icon/logo_foodtravel.png"
+            src="/assets/mirrormedia/icon/logo@2x.png"
             alt="鏡週刊 Mirror Media"
           >
         </a>
