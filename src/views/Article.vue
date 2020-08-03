@@ -245,8 +245,8 @@
               >
                 <MicroAd
                   v-for="ad in _get(microAds, 'article')"
-                  :id="`${_get(ad, 'pcId')}`"
-                  :key="`${_get(ad, 'pcId')}`"
+                  :id="isMobile ? `${_get(ad, 'mobileId')}` : `${_get(ad, 'pcId')}`"
+                  :key="isMobile ? `${_get(ad, 'mobileId')}` : `${_get(ad, 'pcId')}`"
                   :curr-env="dfpMode"
                   :curr-url="articleUrl"
                   class="related"
@@ -596,7 +596,7 @@ const getJSONLD = (articleData, metaData) => {
         name: SITE_TITLE,
         logo: {
           '@type': 'ImageObject',
-          url: 'https://www.mirrormedia.mg/assets/images/logo.png'
+          url: 'https://www.mirrormedia.mg/assets/mirrormedia/logo.svg'
         }
       },
       description: metaData.metaDescription,

@@ -6,8 +6,8 @@
       class="activity__logo"
     >
       <img
-        src="/assets/mirrormedia/icon/logo_black.png"
-        srcset="/assets/mirrormedia/icon/logo_black@2x.png 2x"
+        src="/assets/mirrormedia/icon/logo.png"
+        srcset="/assets/mirrormedia/icon/logo@2x.png 2x"
         alt="鏡週刊 Mirror Media"
       >
     </a>

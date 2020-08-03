@@ -526,25 +526,6 @@ export default {
   .kianGi
     margin-top 1em
 
-  .herbsapi
-    display flex
-    align-items center
-    padding 15px 0
-    margin 15px 0
-    border-top 1px solid rgba(2,2,2,0.5)
-    border-bottom 1px solid rgba(2,2,2,0.5)
-    br
-      display none
-
-  #herbsapi
-    height 40px
-    margin-right 20px
-    > a
-      display inline-block
-      padding 0
-      font-size 0
-      border none
-
   .article__basic-info
     display flex
     flex-direction column
@@ -735,10 +716,6 @@ export default {
         display block
       .article_basic-info
         margin-top 0
-
-    .herbsapi
-      br
-        display inline
 
   @media (min-width 768px)
     .article_body

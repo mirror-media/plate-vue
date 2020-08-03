@@ -47,24 +47,13 @@
           v-text="section.title"
         />
         <div class="categories">
-          <template v-if="section.name === 'videohub'">
-            <a
-              v-for="category in filterSectionCategories(section)"
-              :key="`sidebar-category-${category.id}`"
-              :href="`/category/${category.name}`"
-              @click="sendGaClickEvent('header', `category ${category.name}`)"
-              v-text="category.title"
-            />
-          </template>
-          <template v-else>
-            <a
-              v-for="category in filterSectionCategories(section)"
-              :key="`sidebar-category-${category.id}`"
-              :href="`/category/${category.name}`"
-              @click="sendGaClickEvent('header', `category ${category.name}`)"
-              v-text="category.title"
-            />
-          </template>
+          <a
+            v-for="category in filterSectionCategories(section)"
+            :key="`sidebar-category-${category.id}`"
+            :href="`/category/${category.name}`"
+            @click="sendGaClickEvent('header', `category ${category.name}`)"
+            v-text="category.title"
+          />
         </div>
       </div>
       <div class="section external">

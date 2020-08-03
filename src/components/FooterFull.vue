@@ -118,7 +118,7 @@ export default {
   },
   methods: {
     getSectionLogoUrl () {
-      return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/assets/images/logo.png'
+      return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/assets/mirrormedia/logo.svg'
     },
     getSectionLogoWidth () {
       return _.get(this.sectionLogo, ['image', 'width'])

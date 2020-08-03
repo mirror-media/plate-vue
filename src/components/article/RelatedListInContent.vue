@@ -138,6 +138,9 @@ export default {
         height 100%
         object-fit cover
         object-position center center
+    >>> #compass-fit-widget
+      @media (min-width 1200px)
+        margin 0 !important
 
     >>> #compass-fit-widget-content
       display flex
@@ -189,4 +192,44 @@ export default {
           text-overflow ellipsis
           border none
           overflow hidden
+      @media (min-width 1200px)
+        .popListVert-list__item
+          position relative
+          justify-content normal
+          width 100%
+          margin 0
+        .popListVert-list__item--img
+          order 1
+          width 20%
+          padding 0
+          border none
+          &::after
+            content ''
+            display block
+            top 0
+            width 100%
+            padding-top 75%
+          img
+            display block
+            height 100%
+        .popListVert-list__item--text
+          order 0
+          flex 1
+          display flex
+          align-items center
+          width auto
+          padding 1em 2em
+          > div
+            display none
+          > h2
+            margin 0
+            a
+              height auto
+              max-height 46.8px
+              padding 0
+              color grey
+              font-size 1.125rem
+              line-height 1.3
+              -webkit-line-clamp: 2;
+              border none
 </style>

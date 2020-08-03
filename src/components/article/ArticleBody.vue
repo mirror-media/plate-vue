@@ -207,15 +207,6 @@
       </div>
       <div class="split-line" />
       <FbSocialPlugins v-if="viewport < 768" />
-      <div class="herbsapi">
-        <div
-          id="herbsapi"
-          hb-width="100"
-          hb-height="auto"
-          hb-icon="https://mediafarmers.org/api/images/icon_2.png"
-        />
-        <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
-      </div>
       <div
         class="dfpad-set"
         :class="{ mobile: viewport < 1000 }"

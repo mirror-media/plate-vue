@@ -8,7 +8,7 @@
         >
           <img
             class="headerFoodTravel__link--icon"
-            src="/assets/mirrormedia/icon/logo_black@3x.png"
+            src="/assets/mirrormedia/icon/logo@2x.png"
             alt="鏡週刊 Mirror Media"
           >
         </a>
@@ -172,7 +172,7 @@ export default {
       this.headerDFPHeight = document.getElementById('dfp-HD').offsetHeight + 35
     },
     getSectionLogoUrl () {
-      return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/assets/images/logo.png'
+      return _.get(this.sectionLogo, ['image', 'url']) ? _.get(this.sectionLogo, ['image', 'url']) : '/assets/mirrormedia/logo.svg'
     },
     openSearchBar () {
       this.openSearch = true

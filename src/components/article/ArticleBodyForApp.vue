@@ -121,15 +121,6 @@
         <slot name="relatedlistBottom" />
       </div>
       <div class="split-line" />
-      <div class="herbsapi">
-        <div
-          id="herbsapi"
-          hb-width="100"
-          hb-height="auto"
-          hb-icon="https://mediafarmers.org/api/images/icon_2.png"
-        />
-        <div>喜歡這篇文章嗎？<br>歡迎灌溉支持喔！</div>
-      </div>
       <div
         class="dfpad-set"
         style="display: flex; justify-content: space-around;"
@@ -975,25 +966,6 @@ export default {
         text-align center
         line-height 1.4rem
 
-  .herbsapi
-    display flex
-    align-items center
-    padding 15px 0
-    margin 15px 0
-    border-top 1px solid rgba(2,2,2,0.5)
-    border-bottom 1px solid rgba(2,2,2,0.5)
-    br
-      display none
-
-  #herbsapi
-    height 40px
-    margin-right 20px
-    > a
-      display inline-block
-      padding 0
-      font-size 0
-      border none
-
   // @media (max-width 320px)
   //   .article_body
   //     .article_main
@@ -1152,9 +1124,6 @@ export default {
     .article_body
       .article_main, .article_credit, .article_subtitle
         display block
-    .herbsapi
-      br
-        display inline
 
   @media (min-width 768px)
     .article_body
