@@ -48,7 +48,7 @@
             class="topicTimeline__logo"
           >
             <img
-              src="/assets/mirrormedia/icon/logo_black@2x.png"
+              src="/assets/mirrormedia/icon/logo@2x.png"
               :alt="siteTitle"
             >
           </a>

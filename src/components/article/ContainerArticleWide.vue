@@ -7,7 +7,7 @@
       rel="noopener noreferrer"
     >
       <img
-        src="https://www.mirrormedia.mg/assets/mirrormedia/icon/logo_black.svg"
+        src="https://www.mirrormedia.mg/assets/mirrormedia/icon/logo@2x.png"
         alt="鏡週刊 Mirror Media"
       >
     </a>
