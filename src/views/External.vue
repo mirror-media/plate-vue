@@ -144,7 +144,7 @@
           />
           <vue-dfp
             :is="props.vueDfp"
-            slot="dfp-PCR2"
+            slot="dfpR2"
             pos="PCR2"
             class="dfp--desktop"
             :config="props.config"
