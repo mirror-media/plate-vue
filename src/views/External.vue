@@ -159,6 +159,7 @@
       >
         <DfpST :props="props">
           <vue-dfp
+            class="dfp--mbst"
             :is="props.vueDfp"
             slot="dfpST"
             :config="props.config"
@@ -594,6 +595,10 @@ export default {
   &--PCHD
     width 1160px
     margin 0 auto
+  &--mbst
+    & >>> iframe
+      display block
+      margin 0 auto
 
 @media (max-width 999px)
   .dfp
