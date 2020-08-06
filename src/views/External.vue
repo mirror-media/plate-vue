@@ -4,6 +4,7 @@
     :dfpid="dfpid"
     :mode="dfpMode"
     :section="'other'"
+    :options="dfpOptions"
   >
     <template
       slot="dfpPos"
@@ -59,6 +60,14 @@
           :config="props.config"
           :dfp-id="props.dfpId"
           pos="MBAR2"
+          class="dfp dfp--mobile"
+        />
+        <vue-dfp
+          :is="props.vueDfp"
+          slot="dfp-AT3"
+          :config="props.config"
+          :dfp-id="props.dfpId"
+          pos="MBAR3"
           class="dfp dfp--mobile"
         />
         <vue-dfp
@@ -144,7 +153,7 @@
           />
           <vue-dfp
             :is="props.vueDfp"
-            slot="dfp-PCR2"
+            slot="dfpR2"
             pos="PCR2"
             class="dfp--desktop"
             :config="props.config"
@@ -472,7 +481,7 @@ export default {
       return _.get(this.$store, ['state', 'fbAppId'])
     },
     isTimeToShowAdCover () {
-      return _.get(this.$store, 'state.isTimeToShowAdCover', false)
+      return true
     },
     latestArticle () {
       return _.get(this.$store, 'state.latestArticle.items', [])
