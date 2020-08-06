@@ -63,6 +63,14 @@
         />
         <vue-dfp
           :is="props.vueDfp"
+          slot="dfp-AT3"
+          :config="props.config"
+          :dfp-id="props.dfpId"
+          pos="MBAR3"
+          class="dfp dfp--mobile"
+        />
+        <vue-dfp
+          :is="props.vueDfp"
           slot="dfp-MBE1"
           pos="MBE1"
           :dfp-id="props.dfpId"
