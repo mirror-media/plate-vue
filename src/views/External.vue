@@ -4,6 +4,7 @@
     :dfpid="dfpid"
     :mode="dfpMode"
     :section="'other'"
+    :options="dfpOptions"
   >
     <template
       slot="dfpPos"
@@ -480,7 +481,7 @@ export default {
       return _.get(this.$store, ['state', 'fbAppId'])
     },
     isTimeToShowAdCover () {
-      return _.get(this.$store, 'state.isTimeToShowAdCover', false)
+      return true
     },
     latestArticle () {
       return _.get(this.$store, 'state.latestArticle.items', [])
