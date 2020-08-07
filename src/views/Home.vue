@@ -198,9 +198,11 @@ const PARTNER_EBC_ID = '5ea7fd55a66f9e0f00a04e9a'
 // const debugDFP = require('debug')('CLIENT:DFP')
 const debug = require('debug')('CLIENT:Home')
 
-const fetchCommonData = (store) => store.dispatch('FETCH_COMMONDATA', { endpoints: ['posts-vue', 'projects', 'topics'] })
+const fetchCommonData = (store) => store.dispatch('FETCH_COMMONDATA', { endpoints: ['posts-vue', 'projects'] })
 
 const fetchCommonDataSections = (store) => store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections'] })
+
+const fetchTopics = (store) => store.dispatch('FETCH_COMMONDATA', { endpoints: ['topics'] })
 
 const fetchEvent = (store, eventType = 'embedded') => store.dispatch('FETCH_EVENT', {
   params: {
@@ -286,6 +288,7 @@ export default {
       fetchCommonDataSections(store),
       fetchCommonData(store),
       fetchArticlesGroupedList(store),
+      fetchTopics(store),
       fetchPartners(store)
     ])
       .then((results) => {
