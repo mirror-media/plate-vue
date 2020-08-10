@@ -1,3 +1,6 @@
 2020/08/07 18:34
   - release version: master_hsuehyungtan_1417 
   - features: add ads on external pages
+2020/08/10
+  - release version: master_hsuehyungtan_1421
+  - features: release mirror-media nuxt (section / category / tag / author / culture post / video_section / video_category / video_single)
