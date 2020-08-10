@@ -25,7 +25,7 @@
           <a
             v-for="category in filterSectionCategories(section)"
             :key="`dropdown-${category.id}`"
-            :href="`/category/${category.name}`"
+            :href="getCategoryHref(section.name, category.name)"
             @click="sendGaClickEvent('header', `category ${category.name}`)"
             v-text="category.title"
           />
@@ -147,6 +147,12 @@ export default {
     filterSectionCategories (section) {
       const categories = section.categories || []
       return categories.filter(category => category.id && category.title)
+    },
+    getCategoryHref (sectionName, categoryName) {
+      if (sectionName === 'videohub') {
+        return `/video_category/${categoryName}`
+      }
+      return `/category/${categoryName}`
     },
     getColor (section) {
       return get(SECTION_MAP, [section.id, 'bgcolor'])
