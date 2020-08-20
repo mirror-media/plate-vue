@@ -174,7 +174,7 @@ import { currentYPosition, elmYPosition } from 'kc-scroll'
 import { currEnv, sendAdCoverGA, unLockJS, updateCookie } from 'src/util/comm'
 import { getRole } from 'src/util/mmABRoleAssign'
 import { adtracker } from 'src/util/adtracking'
-import { chunk, flatten, get, xor } from 'lodash'
+import { chunk, flatten, get, xorBy } from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 import Cookie from 'vue-cookie'
 import DfpCover from 'src/components/DfpCover.vue'
@@ -446,7 +446,7 @@ export default {
             ? this.latestArticlesList
             : latestWithoutChoicesAndGrouped
         } else {
-          const changeValue = xor(newValue, oldVale)
+          const changeValue = xorBy(newValue, oldVale, 'id')
           this.latestArticle = [...this.latestArticle, ...changeValue]
         }
 
