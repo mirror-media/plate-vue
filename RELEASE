@@ -4,3 +4,6 @@
 2020/08/10
   - release version: master_hsuehyungtan_1421
   - features: release mirror-media nuxt (section / category / tag / author / culture post / video_section / video_category / video_single)
+2020/08/24
+  - release version: master_kwhsiung_1424
+  - features: fix(home): fix duplicate latest posts in home page
