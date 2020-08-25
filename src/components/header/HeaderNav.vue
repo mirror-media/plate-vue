@@ -149,10 +149,9 @@ export default {
       return categories.filter(category => category.id && category.title)
     },
     getCategoryHref (sectionName, categoryName) {
-      // 暫時切回舊版影音頁
-      // if (sectionName === 'videohub') {
-      //   return `/video_category/${categoryName}`
-      // }
+      if (sectionName === 'videohub') {
+        return `/video_category/${categoryName}`
+      }
       return `/category/${categoryName}`
     },
     getColor (section) {
