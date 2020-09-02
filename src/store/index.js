@@ -602,7 +602,7 @@ export function createStore () {
         return _.map(state.searchResult.items, item => Object.assign({ id: _.get(item, 'id') }, _.get(item, 'source')))
       },
       searchResultTotalCount: state => {
-        return _.get(state.searchResult, 'hits.total', 0)
+        return _.get(state.searchResult, 'hits.total.value', 0)
       },
       topic: state => {
         return state.topic
