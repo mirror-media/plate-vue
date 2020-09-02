@@ -259,7 +259,8 @@ export default {
   },
   computed: {
     activeSections () {
-      return this.sections.filter(section => section.isFeatured && section.id && section.name)
+      return this.sections
+        .filter(section => section.isFeatured && section.id && section.name && section.name !== 'videohub')
     },
     isMobile () {
       return this.$store.state.viewport.width < 1200
@@ -276,7 +277,7 @@ export default {
     },
     sections () {
       const sections = get(this.$store, 'state.commonData.sections.items') || []
-      return sections.filter(section => section.isFeatured).sort((a, b) => a.sortOrder - b.sortOrder)
+      return sections.filter(section => section.isFeatured && section.name !== 'videohub').sort((a, b) => a.sortOrder - b.sortOrder)
     },
     topics () {
       const topics = get(this.$store, 'state.commonData.topics.items') || []
