@@ -98,7 +98,7 @@ export default {
       menuItem.category = []
       _.forEach(this.commonData.sections.items, (s) => {
         s.href = '/section/' + s.name
-        s.isFeatured && s.name !== 'videohub' && menuItem.section.push(s)
+        s.isFeatured && menuItem.section.push(s)
         _.forEach(s.categories, (c) => {
           c.href = '/category/' + c.name
           c.section = s.name
