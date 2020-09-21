@@ -12,4 +12,7 @@
   - features: hide videohub section in footer
 2020/09/17
   - release version: master_hsuehyungtan_1447
-  - features: add videohub section  
+  - features: add videohub section 
+2020/09/21
+  - release version: master_hsuehyungtan_1450
+  - features: remove recommend list
