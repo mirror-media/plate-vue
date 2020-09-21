@@ -117,9 +117,6 @@
       >
         <slot name="dfpad-AR2-MB" />
       </div>
-      <div class="article_main_related_bottom">
-        <slot name="relatedlistBottom" />
-      </div>
       <div class="split-line" />
       <div
         class="dfpad-set"
@@ -919,7 +916,7 @@ export default {
         max-width 950px
         display block
 
-        p, h2, .split-line, .embedded, .article_main_pop, .article_main_proj, .article_main_related_bottom, .article_fb_comment, ul, .youtube, .dfpad-set
+        p, h2, .split-line, .embedded, .article_main_pop, .article_main_proj, .article_fb_comment, ul, .youtube, .dfpad-set
           padding 0 145px
           text-align justify
 

@@ -128,13 +128,6 @@ function loadContacts (params = {}) {
   return _doFetch(url)
 }
 
-function loadData (params = {}, endpoint) {
-  const query = _buildQuery(params)
-  let url = `${_host}/api/${endpoint}`
-  url = `${url}?${query}`
-  return _doFetch(url)
-}
-
 function loadEditorChoice () {
   const url = `${_host}/api/combo?endpoint=choices`
   return _doFetch(url)
@@ -379,10 +372,6 @@ export function fetchOathVideoByPlaylist ({ id = '', params = {} }) {
 
 export function fetchPartners (params = {}) {
   return loadPartners(params)
-}
-
-export function fetchRecommendList (params = {}) {
-  return loadData(params, 'related_news')
 }
 
 export function fetchSearch (params = {}) {

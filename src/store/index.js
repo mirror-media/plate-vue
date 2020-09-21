@@ -10,7 +10,6 @@ import {
   fetchArticlesByUuid,
   fetchArticlesGroupedList,
   fetchArticlesPopList,
-  fetchRecommendList,
   fetchAudios,
   fetchCommonData,
   fetchContacts,
@@ -57,7 +56,6 @@ export function createStore () {
         TOPIC: {}
       },
       articlesPopList: {},
-      articlesRecommendList: {},
       articlesGroupedList: {},
       audios: {},
       authors: [],
@@ -154,10 +152,6 @@ export function createStore () {
 
       FETCH_ARTICLES_POP_LIST: ({ commit, state }, { params = {} }) => {
         return fetchArticlesPopList(params).then(articlesPopList => commit('SET_ARTICLES_POP_LIST', { articlesPopList }))
-      },
-
-      FETCH_ARTICLE_RECOMMEND_LIST: ({ commit, state }, { params = {} }) => {
-        return fetchRecommendList(params).then(articlesRecommendList => commit('SET_ARTICLE_RECOMMEND_LIST', { articlesRecommendList }))
       },
 
       FETCH_AUDIOS: ({ commit, state }, { params }) => {
@@ -413,10 +407,6 @@ export function createStore () {
 
       SET_ARTICLES_POP_LIST: (state, { articlesPopList }) => {
         Vue.set(state, 'articlesPopList', articlesPopList)
-      },
-
-      SET_ARTICLE_RECOMMEND_LIST: (state, { articlesRecommendList }) => {
-        Vue.set(state, 'articlesRecommendList', articlesRecommendList)
       },
 
       SET_AUDIOS: (state, { audios }) => {
