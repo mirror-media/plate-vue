@@ -108,16 +108,6 @@
               :is-app-page="true"
               :relateds="relateds"
             />
-            <RecommendList
-              v-if="recommendlist.length > 0 && !isAd"
-              slot="relatedlistBottom"
-              :is-app-page="true"
-              :section-id="sectionId"
-              :relateds="relateds"
-              :curr-article-id="currArticleId"
-              :recommends="recommendlist"
-              :excluding-article="routeUpateReferrerSlug"
-            />
             <template slot="recommendList">
               <div
                 id="dablewidget_GlYwenoy"
@@ -236,7 +226,6 @@ import DfpST from '../components/DfpST.vue'
 import LazyItemWrapper from 'src/components/common/LazyItemWrapper.vue'
 import PopList from '../components/article/PopList.vue'
 import RelatedListInContent from '../components/article/RelatedListInContent.vue'
-import RecommendList from '../components/article/RecommendList.vue'
 import WineWarning from '../components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
 import sanitizeHtml from 'sanitize-html'
@@ -268,14 +257,6 @@ const fetchPop = (store) => {
   return store.dispatch('FETCH_ARTICLES_POP_LIST', {})
 }
 
-const fetchRecommendList = (store, id) => {
-  return store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
-    params: {
-      id: id
-    }
-  })
-}
-
 const fetchSSRData = (store) => {
   return store.dispatch('FETCH_COMMONDATA', { endpoints: ['sections', 'topics'] })
 }
@@ -285,10 +266,7 @@ const fetchCommonData = (store) => {
 }
 
 const fetchData = (store) => {
-  return Promise.all([fetchSSRData(store), fetchArticles(store, store.state.route.params.slug).then(() => {
-    const id = _get(_find(_get(store, ['state', 'articles', 'items']), { slug: store.state.route.params.slug }), ['id'], '')
-    return fetchRecommendList(store, id)
-  })])
+  return Promise.all([fetchSSRData(store), fetchArticles(store, store.state.route.params.slug)])
 }
 
 const fetchImages = (store, { ids = [], maxResults = 10 }) => store.dispatch('FETCH_IMAGES_BY_ID', {
@@ -310,8 +288,7 @@ export default {
     DfpST,
     LazyItemWrapper,
     PopList,
-    RelatedListInContent,
-    RecommendList
+    RelatedListInContent
   },
   asyncData ({ store }) { // asyncData ({ store, route: { params: { id }}})
     return fetchData(store)
@@ -391,10 +368,7 @@ export default {
         const _targetArticle = _find(_get(vm.$store, ['state', 'articles', 'items']), { slug: to.params.slug })
         if (!_targetArticle) {
           Promise.all([
-            fetchArticles(vm.$store, to.params.slug).then(() => {
-              const id = _get(_find(_get(vm.$store, ['state', 'articles', 'items']), { slug: vm.$store.state.route.params.slug }), ['id'], '')
-              return fetchRecommendList(vm.$store, id)
-            }),
+            fetchArticles(vm.$store, to.params.slug),
             fetchPop(vm.$store)
           ])
         }
@@ -406,10 +380,6 @@ export default {
   beforeRouteUpdate (to, from, next) {
     fetchArticles(this.$store, to.params.slug).then(() => {
       next()
-    }).then(() => {
-      const id = _get(_find(_get(this.$store, ['state', 'articles', 'items']), { slug: this.$store.state.route.params.slug }), ['id'], '')
-      this.routeUpateReferrerSlug = _get(from, ['params', 'slug'], 'N/A')
-      return fetchRecommendList(this.$store, id)
     })
   },
   beforeRouteLeave (to, from, next) {
@@ -431,7 +401,6 @@ export default {
       isVponSDKLoaded: false,
       microAds,
       microAdLoded: {},
-      routeUpateReferrerSlug: 'N/A',
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
@@ -441,9 +410,6 @@ export default {
     }
   },
   computed: {
-    currArticleId () {
-      return _get(_find(_get(this.$store, 'state.articles.items'), { slug: this.$store.state.route.params.slug }), 'id', '')
-    },
     articleUrl () {
       return `${SITE_URL}/story/${this.currArticleSlug}/`
     },
@@ -589,9 +555,6 @@ export default {
     popularlist () {
       const { report = [] } = _get(this.$store, ['state', 'articlesPopList'])
       return report
-    },
-    recommendlist () {
-      return _get(this.$store, ['state', 'articlesRecommendList', 'relatedNews'], [])
     },
     relateds () {
       const items = _get(this.articleData, ['relateds'], []) || []

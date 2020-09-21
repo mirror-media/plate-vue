@@ -174,9 +174,6 @@
       <slot
         name="relatedListInContent"
       />
-      <div class="article_main_related_bottom">
-        <slot name="relatedlistBottom" />
-      </div>
       <div class="dfp-at--mobile">
         <slot name="dfpad-AR3-MB" />
       </div>

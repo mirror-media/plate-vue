@@ -255,15 +255,6 @@
                   <div id="_popIn_recommend" />
                 </PopInAd>
               </RelatedListInContent>
-              <RecommendList
-                v-if="!isAd"
-                slot="relatedlistBottom"
-                :section-id="sectionId"
-                :relateds="relateds"
-                :curr-article-id="currArticleId"
-                :recommends="recommendlist"
-                :excluding-article="routeUpateReferrerSlug"
-              />
               <!-- dable -->
               <template
                 v-if="!hiddenAdvertised"
@@ -452,7 +443,6 @@ import PopList from '../components/article/PopList.vue'
 import PopListVert from '../components/article/PopListVert.vue'
 import RelatedListInContent from '../components/article/RelatedListInContent.vue'
 import RelatedListOverContent from '../components/article/RelatedListOverContent.vue'
-import RecommendList from '../components/article/RecommendList.vue'
 import ShareTools from '../components/article/ShareTools.vue'
 import WineWarning from '../components/WineWarning.vue'
 import VueDfpProvider from 'plate-vue-dfp/DfpProvider.vue'
@@ -531,12 +521,6 @@ const fetchPartners = store => {
 }
 
 const fetchPop = store => store.dispatch('FETCH_ARTICLES_POP_LIST', {})
-
-const fetchRecommendList = (store, id) => store.dispatch('FETCH_ARTICLE_RECOMMEND_LIST', {
-  params: {
-    id: id
-  }
-})
 
 const fetchSSRData = store => {
   const timestamp = Date.now()
@@ -696,7 +680,6 @@ export default {
     PopListVert,
     RelatedListInContent,
     RelatedListOverContent,
-    RecommendList,
     ShareTools,
     READrEmbeddedPromotions,
     VueDfpProvider,
@@ -803,7 +786,6 @@ export default {
 
         debug('this.articleData', theComingArticleSlug)
         if (!theComingArticleSlug) { location.replace('/404') }
-        this.routeUpateReferrerSlug = _get(from, 'params.slug', 'N/A')
       })
       .then(() => next())
   },
@@ -826,7 +808,6 @@ export default {
       hasSentFirstEnterGA: false,
       isLowPriorityDataLoaded: false,
       microAds,
-      routeUpateReferrerSlug: 'N/A',
       showDfpCoverAdFlag: false,
       showDfpCoverAd2Flag: false,
       showDfpCoverInnityFlag: false,
@@ -850,9 +831,9 @@ export default {
     currArticleSlug () {
       return _get(this.$store, 'state.route.params.slug', '')
     },
-    currArticleId () {
-      return _get(_find(_get(this.$store, 'state.articles.items'), { slug: this.$store.state.route.params.slug }), 'id', '')
-    },
+    // currArticleId () {
+    //   return _get(_find(_get(this.$store, 'state.articles.items'), { slug: this.$store.state.route.params.slug }), 'id', '')
+    // },
     dfpOptions () {
       const currentInstance = this
       return Object.assign({}, DFP_OPTIONS, {
@@ -982,9 +963,6 @@ export default {
     projectlist () {
       return _get(this.$store, 'state.commonData.projects.items') || []
     },
-    recommendlist () {
-      return _get(this.$store, 'state.articlesRecommendList.relatedNews') || []
-    },
     relateds () {
       return (_get(this.articleData, 'relateds') || []).filter(item => item)
     },
@@ -1028,11 +1006,6 @@ export default {
           sections: this.sectionId
         }
       })
-    }
-  },
-  beforeMount () {
-    if (!this.isArticleWide) {
-      fetchRecommendList(this.$store, this.currArticleId)
     }
   },
   mounted () {
