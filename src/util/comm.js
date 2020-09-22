@@ -355,13 +355,16 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
 
     const dt = Date.now()
     const mmidCookie = Cookie.get('mmid')
+    const mmidCookieSession = Cookie.get('mmid-session')
     const clientId = mmidCookie || setMmCookie()
     const clientIdLog = { 'client-id': clientId }
     const runtimeLog = createCurrentRuntimeLog({ isNewVisitor: !mmidCookie })
+    const sessionLog = createSessionLog({ isSameSession: mmidCookieSession })
     log = {
       ...log,
       ...clientIdLog,
-      ...runtimeLog
+      ...runtimeLog,
+      ...sessionLog
     }
     resolve(log)
 
@@ -388,6 +391,19 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
         function storeRuntimeInfo ({ id = uuidv4(), time = moment(Date.now()).format('YYYY.MM.DD HH:mm:ss') } = {}) {
           window.mmThisRuntimeClientId = id
           window.mmThisRuntimeDatetimeStart = time
+        }
+      }
+    }
+    function createSessionLog ({ isSameSession = false } = {}) {
+      if (isSameSession) {
+        return {
+          'session-id': mmidCookieSession
+        }
+      } else {
+        const uuid = uuidv4()
+        Cookie.set('mmid-session', uuid, { expires: '30m' })
+        return {
+          'session-id': uuid
         }
       }
     }
