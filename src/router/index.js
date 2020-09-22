@@ -3,6 +3,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Meta from 'vue-meta'
 import VueLazyload from 'vue-lazyload'
+import { mmLog } from '../util/comm.js'
+import { logClient } from '../store/api'
 
 Vue.use(Router)
 Vue.use(Meta)
@@ -35,7 +37,7 @@ export function createRouter () {
     const gaId = location.hostname.match(/(www|m).mirrormedia.mg/) ? GA_ID : GA_TEST_ID
     window.ga && !window.gaData && window.ga('create', gaId, 'auto')
   }
-  return new Router({
+  const router = new Router({
     mode: 'history',
     fallback: false,
     scrollBehavior: () => ({ y: 0 }),
@@ -68,4 +70,21 @@ export function createRouter () {
       { path: '/', component: Home }
     ]
   })
+
+  router.beforeEach((to, from, next) => {
+    mmLog({
+      category: 'whole-site',
+      description: '',
+      eventType: 'pageview'
+    }).then(log => {
+      return logClient({
+        clientInfo: log
+      })
+    }).catch(err => {
+      console.log(err)
+    })
+    next()
+  })
+
+  return router
 }
