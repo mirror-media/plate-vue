@@ -107,6 +107,10 @@ export default {
     launchLogger () {
       this.globalTapevent = new Tap(this.doc)
       this.doc.addEventListener('tap', (event) => {
+        // prevent event triggered twice
+        // https://github.com/alexgibson/tap.js/issues/18
+        event.preventDefault()
+
         this.doLog(event)
       })
     },
