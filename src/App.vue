@@ -14,7 +14,6 @@ import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, S
 import { mmLog } from './util/comm.js'
 import { visibleTracking } from './util/visibleTracking'
 import loadScripts from './mixin/loadScripts.js'
-import Tap from 'tap.js'
 
 const debug = require('debug')('CLIENT:App')
 
@@ -105,12 +104,7 @@ export default {
       })
     },
     launchLogger () {
-      this.globalTapevent = new Tap(this.doc)
-      this.doc.addEventListener('tap', (event) => {
-        // prevent event triggered twice
-        // https://github.com/alexgibson/tap.js/issues/18
-        event.preventDefault()
-
+      this.doc.addEventListener('click', (event) => {
         this.doLog(event)
       })
     },
