@@ -313,7 +313,6 @@ function _isAlinkDescendant (child) {
 
 function _normalizeLog ({ eventType = 'click', category = '', target = {}, description = '', referrer, ...rest }) {
   return new Promise((resolve) => {
-    const cookieId = Cookie.get('mmid')
     const targ = target
 
     const clientOs = getClientOS()
@@ -325,7 +324,7 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
 
     const browser = Bowser.parse(window.navigator.userAgent)
 
-    const log = {
+    let log = {
       browser: {
         name: browser.browser.name,
         version: browser.browser.version
@@ -353,25 +352,44 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       },
       ...rest
     }
-    if (!cookieId) {
-      const dt = Date.now()
-      const thisId = setMmCookie()
-      log['client-id'] = thisId
-      log['current-runtime-id'] = thisId
-      log['current-runtime-start'] = moment(dt).format('YYYY.MM.DD HH:mm:ss')
-      window.mmThisRuntimeClientId = thisId
-      window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
-      resolve(log)
-    } else {
-      const dt = Date.now()
-      log['client-id'] = cookieId
-      if (!window.mmThisRuntimeClientId) {
-        window.mmThisRuntimeClientId = uuidv4()
-        window.mmThisRuntimeDatetimeStart = moment(dt).format('YYYY.MM.DD HH:mm:ss')
+
+    const dt = Date.now()
+    const mmidCookie = Cookie.get('mmid')
+    const clientId = mmidCookie || setMmCookie()
+    const clientIdLog = { 'client-id': clientId }
+    const runtimeLog = createCurrentRuntimeLog({ isNewVisitor: !mmidCookie })
+    log = {
+      ...log,
+      ...clientIdLog,
+      ...runtimeLog
+    }
+    resolve(log)
+
+    function createCurrentRuntimeLog ({ isNewVisitor = true }) {
+      const runtimeLog = createRuntimeInfo(isNewVisitor)
+      return runtimeLog
+
+      function createRuntimeInfo (isNewVisitor = true) {
+        if (isNewVisitor) {
+          return {
+            'current-runtime-id': clientId,
+            'current-runtime-start': moment(dt).format('YYYY.MM.DD HH:mm:ss')
+          }
+        } else {
+          if (!window.mmThisRuntimeClientId) {
+            storeRuntimeInfo()
+          }
+          return {
+            'current-runtime-id': window.mmThisRuntimeClientId,
+            'current-runtime-start': window.mmThisRuntimeDatetimeStart
+          }
+        }
+
+        function storeRuntimeInfo ({ id = uuidv4(), time = moment(Date.now()).format('YYYY.MM.DD HH:mm:ss') } = {}) {
+          window.mmThisRuntimeClientId = id
+          window.mmThisRuntimeDatetimeStart = time
+        }
       }
-      log['current-runtime-id'] = window.mmThisRuntimeClientId
-      log['current-runtime-start'] = window.mmThisRuntimeDatetimeStart
-      resolve(log)
     }
   })
 }
