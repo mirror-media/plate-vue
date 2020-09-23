@@ -239,7 +239,6 @@ router.use('/tracking', (req, res) => {
     const log = loggingClient.log(config.GCP_STACKDRIVER_LOG_NAME)
     const metadata = { resource: { type: 'global' } }
     query.ip = req.clientIp
-    console.log(query)
     const entry = log.entry(metadata, query)
     log.write(entry)
   } catch (error) {
