@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "json-loader": "^0.5.4",
-    "node-sass": "^3.13.0",
+    "node-sass": "^4.14.1",
     "sass-loader": "^4.0.2",
     "babel-core": "^6.18.2",
     "babel-eslint": "^7.1.0",
