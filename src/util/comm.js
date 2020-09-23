@@ -325,16 +325,25 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
     const browser = Bowser.parse(window.navigator.userAgent)
 
     let log = {
+      // keep nested and flatten properties for migration
       browser: {
         name: browser.browser.name,
         version: browser.browser.version
       },
+      'browser-name': browser.browser.name,
+      'browser-version': browser.browser.version,
+
       category: category,
       'client-id': '',
+
+      // keep nested and flatten properties for migration
       'client-os': {
         name: clientOs,
         version: browser.os.osversion
       },
+      'client-os-name': clientOs,
+      'client-os-version': browser.os.osversion,
+
       'curr-url': window.location.href,
       datetime: moment(Date.now()).format('YYYY.MM.DD HH:mm:ss'),
       description: description,
@@ -346,10 +355,14 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       'target-tag-class': targ.className,
       'target-tag-id': targ.id,
       'target-text': truncate(innerText, 100),
+
+      // keep nested and flatten properties for migration
       'target-window-size': {
         width: document.documentElement.clientWidth || document.body.clientWidth,
         height: document.documentElement.clientWidth || document.body.clientWidth
       },
+      'target-window-size-width': document.documentElement.clientWidth || document.body.clientWidth,
+      'target-window-size-height': document.documentElement.clientWidth || document.body.clientWidth,
       ...rest
     }
 
