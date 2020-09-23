@@ -359,10 +359,10 @@ function _normalizeLog ({ eventType = 'click', category = '', target = {}, descr
       // keep nested and flatten properties for migration
       'target-window-size': {
         width: document.documentElement.clientWidth || document.body.clientWidth,
-        height: document.documentElement.clientWidth || document.body.clientWidth
+        height: document.documentElement.clientHeight || document.body.clientHeight
       },
       'target-window-size-width': document.documentElement.clientWidth || document.body.clientWidth,
-      'target-window-size-height': document.documentElement.clientWidth || document.body.clientWidth,
+      'target-window-size-height': document.documentElement.clientHeight || document.body.clientHeight,
       ...rest
     }
 
