@@ -118,7 +118,9 @@ export default {
           'exit-time': now
         }).then(log => {
           require('debug')('user-behavior-log')(`Prepare to send exit user behavior log to server, data: ${JSON.stringify(log)}`)
-          const blob = new Blob([JSON.stringify(log)], { type: 'application/json; charset=UTF-8' })
+          const blob = new Blob([JSON.stringify({ clientInfo: log })], {
+            type: 'application/json; charset=UTF-8'
+          })
           navigator.sendBeacon('/api/tracking', blob)
         }).catch(err => {
           console.log(err)
