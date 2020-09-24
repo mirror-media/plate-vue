@@ -60,7 +60,7 @@ export function createRouter () {
       { path: '/headlinenews', component: Headline }, // 禾多推播用頁面
       { path: '/project-list/:style?', component: Project },
       // { path: '/homeb', component: HomeB },
-      { path: '/search/:keyword', component: Search },
+      { name: 'search', path: '/search/:keyword', component: Search },
       { path: '/section/videohub', component: Video, alias: [...oathCategories, '/video/:slug'] },
       { path: '/section/:title', component: List, alias: ['/category/:title', '/externals/:title'] },
       { path: '/tag/:tagId', component: List },
@@ -72,11 +72,15 @@ export function createRouter () {
   })
 
   router.beforeEach((to, from, next) => {
-    mmLog({
+    const payload = {
       category: 'whole-site',
       description: '',
       eventType: 'pageview'
-    }).then(log => {
+    }
+    if (to.name === 'search') {
+      payload.keyword = createSearchKeywordValue()
+    }
+    mmLog(payload).then(log => {
       return logClient({
         clientInfo: log
       })
@@ -84,6 +88,11 @@ export function createRouter () {
       console.log(err)
     })
     next()
+
+    function createSearchKeywordValue () {
+      const keyword = to.params.keyword
+      return keyword.split(',')
+    }
   })
 
   return router
