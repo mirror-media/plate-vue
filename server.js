@@ -94,7 +94,7 @@ app.use(favicon('./assets/mirrormedia/favicon-48x48.png'))
 app.use('/dist', serve('./dist', true), staticNotFound)
 app.use('/assets', serve('./assets', true), staticNotFound)
 app.use('/.well-known/apple-app-site-association',
-  express.static(resolve('./apple-app-site-association'), {
+  express.static(resolve('./.well-known/apple-app-site-association'), {
     setHeaders (res) {
       res.setHeader('Content-Type', 'application/json')
     }
