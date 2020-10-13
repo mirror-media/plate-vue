@@ -99,6 +99,12 @@ app.use('/.well-known/apple-app-site-association',
       res.setHeader('Content-Type', 'application/json')
     }
   }), staticNotFound)
+app.use('/.well-known/assetlinks.json',
+  express.static(resolve('./.well-known/assetlinks.json'), {
+    setHeaders (res) {
+      res.setHeader('Content-Type', 'application/json')
+    }
+  }), staticNotFound)
 app.use('/public', (req, res) => {
   res.redirect('/assets/mirrormedia' + req.url)
 })
