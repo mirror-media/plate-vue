@@ -93,6 +93,7 @@ app.use(compression({ threshold: 0 }))
 app.use(favicon('./assets/mirrormedia/favicon-48x48.png'))
 app.use('/dist', serve('./dist', true), staticNotFound)
 app.use('/assets', serve('./assets', true), staticNotFound)
+app.use('/app-ads.txt', serve('./app-ads.txt', true), staticNotFound)
 app.use('/.well-known/apple-app-site-association',
   express.static(resolve('./.well-known/apple-app-site-association'), {
     setHeaders (res) {
