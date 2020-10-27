@@ -203,6 +203,8 @@ function render (req, res, next) {
     // cookies.set('mmid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
   }
   const handleError = err => {
+    res.setHeader('Cache-Control', 'private, max-age=30')
+
     if (err.url) {
       res.redirect(err.url)
     } else if (err && Number(err.code) === 404) {
