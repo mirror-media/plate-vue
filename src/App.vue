@@ -14,7 +14,7 @@ import { FB_APP_ID, FB_PAGE_ID, SITE_DESCRIPTION, SITE_KEYWORDS, SITE_OGIMAGE, S
 import { mmLog } from './util/comm.js'
 import { visibleTracking } from './util/visibleTracking'
 import loadScripts from './mixin/loadScripts.js'
-import Tap from 'tap.js'
+import moment from 'moment'
 
 const debug = require('debug')('CLIENT:App')
 
@@ -105,9 +105,26 @@ export default {
       })
     },
     launchLogger () {
-      this.globalTapevent = new Tap(this.doc)
-      this.doc.addEventListener('tap', (event) => {
+      this.doc.addEventListener('click', (event) => {
         this.doLog(event)
+      })
+      window.addEventListener('beforeunload', (event) => {
+        const now = moment(Date.now()).format('YYYY.MM.DD HH:mm:ss')
+        mmLog({
+          category: 'whole-site',
+          description: '',
+          eventType: 'exit',
+          target: event.target,
+          'exit-time': now
+        }).then(log => {
+          require('debug')('user-behavior-log')(`Prepare to send exit user behavior log to server, data: ${JSON.stringify(log)}`)
+          const blob = new Blob([JSON.stringify({ clientInfo: log })], {
+            type: 'application/json; charset=UTF-8'
+          })
+          navigator.sendBeacon('/api/tracking', blob)
+        }).catch(err => {
+          console.log(err)
+        })
       })
     },
     setUpVisibleTracking () {

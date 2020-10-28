@@ -93,6 +93,19 @@ app.use(compression({ threshold: 0 }))
 app.use(favicon('./assets/mirrormedia/favicon-48x48.png'))
 app.use('/dist', serve('./dist', true), staticNotFound)
 app.use('/assets', serve('./assets', true), staticNotFound)
+app.use('/app-ads.txt', serve('./app-ads.txt', true), staticNotFound)
+app.use('/.well-known/apple-app-site-association',
+  express.static(resolve('./.well-known/apple-app-site-association'), {
+    setHeaders (res) {
+      res.setHeader('Content-Type', 'application/json')
+    }
+  }), staticNotFound)
+app.use('/.well-known/assetlinks.json',
+  express.static(resolve('./.well-known/assetlinks.json'), {
+    setHeaders (res) {
+      res.setHeader('Content-Type', 'application/json')
+    }
+  }), staticNotFound)
 app.use('/public', (req, res) => {
   res.redirect('/assets/mirrormedia' + req.url)
 })
@@ -190,6 +203,8 @@ function render (req, res, next) {
     // cookies.set('mmid', uuidv4(), { httpOnly: false, expires: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) })
   }
   const handleError = err => {
+    res.setHeader('Cache-Control', 'private, max-age=30')
+
     if (err.url) {
       res.redirect(err.url)
     } else if (err && Number(err.code) === 404) {

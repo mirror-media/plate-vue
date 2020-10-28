@@ -36,6 +36,7 @@ function _doFetch (url) {
 }
 
 function _logClient (params = {}) {
+  require('debug')('user-behavior-log')('Prepare to send user behavior log to server, data: ', params)
   const query = _buildQuery(params)
   let url = `${_host}/api/tracking`
   url = `${url}?${query}`

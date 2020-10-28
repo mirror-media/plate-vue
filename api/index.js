@@ -1,9 +1,10 @@
-const { get, map, toNumber, concat, compact } = require('lodash')
+const { get, map, toNumber, concat, compact, isEmpty } = require('lodash')
 const { fetchFromRedisForAPI, insertIntoRedis, redisFetching, redisFetchingRecommendNews, redisWriting } = require('./middle/ioredisHandler')
 const { handlerError } = require('./comm')
 const config = require('./config')
 const debug = require('debug')('PLATEVUE:api')
 const express = require('express')
+const bodyParser = require('body-parser')
 // const isProd = process.env.NODE_ENV === 'production'
 const router = express.Router()
 const superagent = require('./agent')
@@ -21,6 +22,8 @@ const UrlForRedisStoreOneMonth = [
   '/combo?endpoint=sections',
   '/combo?endpoint=projects'
 ]
+
+router.use(bodyParser.json())
 
 router.all('/', (req, res, next) => {
   next()
@@ -232,7 +235,7 @@ router.use('/search', (req, res) => {
 router.use('/tracking', (req, res) => {
   try {
     res.send({ msg: 'Received.' })
-    const query = req.query
+    const query = !isEmpty(req.body) ? req.body : req.query
     const log = loggingClient.log(config.GCP_STACKDRIVER_LOG_NAME)
     const metadata = { resource: { type: 'global' } }
     query.ip = req.clientIp
