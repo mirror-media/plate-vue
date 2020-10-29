@@ -16,3 +16,6 @@
 2020/09/21
   - release version: master_hsuehyungtan_1450
   - features: remove recommend list
+2020/10/29
+  - release version: 
+  - features: shorten cached time, add app-ads.txt, refactor user-behavoir log
