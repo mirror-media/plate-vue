@@ -60,6 +60,7 @@
       <%- include('styles/AppFooter.css') %>
       <%- include('styles/AppAds.css') %>
       <%- include('styles/AppMatchedContent.css') %>
+      <%- include('styles/AppAdsPopIn.css') %>
     </style>
   </head>
   <body>
@@ -76,7 +77,10 @@
     </article>
     <%- include('components/StoryRelateds', { storyRelateds, showAMPAds, AMPAds }) %>
     <% if (showAMPAds) { %>
-      <%- include('components/AppMatchedContent', { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT }) %>
+      <%- include('components/AppAdsPopIn') %>
+    <% } %>
+    <% if (showAMPAds) { %>
+        <%- include('components/AppMatchedContent', { MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT }) %>
     <% } %>
     <% if (showAMPAds) { %>
       <%- include('components/AppAds', { AMPAds, pos: 'AMPFT' }) %>
