@@ -19,3 +19,6 @@
 2020/10/29
   - release version: master_yeefun_1464
   - features: shorten cached time, add app-ads.txt, refactor user-behavoir log
+2020/11/16
+  - release version:
+  - features: add Popin Ads on AMP article page, debug App
