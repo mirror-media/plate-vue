@@ -14,6 +14,7 @@
         :class="[ { 'topic-view': !isTimeline }, topicType ]"
         :style="needWineWarning ? { paddingBottom: '10px' } : ''"
       >
+        <!--   專題樣式：Wide  -->
         <template v-if="pageStyle === 'wide'">
           <section>
             <header-full
@@ -42,6 +43,7 @@
           />
         </template>
 
+        <!--    各式型態    -->
         <template v-else-if="topicType === 'timeline'">
           <a
             href="/"
