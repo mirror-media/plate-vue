@@ -72,8 +72,8 @@
       <% } %>
       <%- include('components/StoryInfo', { storyInfo }) %>
       <%- include('components/StoryHeros', { storyHeroVideo, storyHeroImage }) %>
-      <%- include('components/StoryArticleBrief', { storyBriefs, storyBriefAnnotation }) %>
-      <%- include('components/StoryArticleContent', { storyContent, storyContentAnnotation, storyContentFirstTwoUnstyledParagraph, showAMPAds, AMPAds }) %>
+      <%- include('components/StoryArticleBrief', { storyBriefs, storyBriefAnnotation, isBrief: true }) %>
+      <%- include('components/StoryArticleContent', { storyContent, storyContentAnnotation, storyContentFirstTwoUnstyledParagraph, showAMPAds, AMPAds, isBrief: false }) %>
     </article>
     <%- include('components/StoryRelateds', { storyRelateds, showAMPAds, AMPAds }) %>
     <% if (showAMPAds) { %>
