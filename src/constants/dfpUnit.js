@@ -133,7 +133,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_oth_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_oth_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_oth_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_oth_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_oth_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   },
@@ -189,7 +189,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_news_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_news_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_news_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_news_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_news_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   },
@@ -245,7 +245,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_fin_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_fin_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_fin_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_fin_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_fin_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   },
@@ -301,7 +301,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_cul_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_cul_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_cul_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_cul_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_cul_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   },
@@ -357,7 +357,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_mafa_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_mafa_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_mafa_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_mafa_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_mafa_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   },
@@ -459,7 +459,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_int_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_int_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_int_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_int_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_int_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   },
@@ -516,7 +516,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_peo_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_peo_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_peo_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_peo_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_peo_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   },
@@ -572,7 +572,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_ent_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_ent_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_ent_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_ent_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_ent_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   },
@@ -633,7 +633,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_tra_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_tra_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_tra_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_tra_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_tra_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   },
@@ -711,7 +711,7 @@ export default {
       AMPFT: { aduid: 'mirror_AMP_wat_300x250_FT', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT1: { aduid: 'mirror_AMP_wat_300x250_AT1', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
       AMPAT2: { aduid: 'mirror_AMP_wat_300x250_AT2', dimensions: { width: 336, height: 280 }, multiSize: '300x250' },
-      AMPE1: { aduid: 'mirror_AMP_wat_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 7 },
+      AMPE1: { aduid: 'mirror_AMP_wat_300x250_E1', dimensions: { width: 336, height: 280 }, multiSize: '300x250', showAfterRelatedPost: 5 },
       AMPST: { aduid: 'mirror_AMP_ros_320x100_ST', dimensions: { width: 320, height: 100 } }
     }
   }

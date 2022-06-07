@@ -1,5 +1,5 @@
 <section class="story-article-section story-article-content">
-  <%- include('StoryArticleBody', { body: storyContent, annotation: storyContentAnnotation, storyContentFirstTwoUnstyledParagraph, AMPAds }) %>
+  <%- include('StoryArticleBody', { body: storyContent, annotation: storyContentAnnotation, isBrief, storyContentFirstTwoUnstyledParagraph, AMPAds }) %>
   <% if ( _.get(storyInfo, 'storyDateUpdated.dateFormatted') !== _.get(storyInfo, 'storyDatePublished.dateFormatted') ) { %>
   <p class="updated-time">更新時間｜<span><%- _.get(storyInfo, 'storyDateUpdated.dateFormatted', '') %></span></p>
   <% } %>
