@@ -82,14 +82,15 @@ const composeAnnotation = (annotationStr) => {
 const firstTwoUnstyledParagraph = (apiData) => {
   // const { content } = articleData
   const records = []
+  const len = apiData.length
   let count = 0
   let index = 0
-  let lastUnstyled = 0
-  while (count < 2 && index < apiData.length) {
-    if (apiData[index].type === 'unstyled' && (lastUnstyled + 4) < index) {
+  while (records.length < 2 && index < len) {
+    if (apiData[index].type === 'unstyled') {
       count++
-      lastUnstyled = index
-      records.push(index)
+      if ((len > 1 && count === 1) || (len > 5 && count === 5)) {
+        records.push(index)
+      }
     }
     index++
   }
