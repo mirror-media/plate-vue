@@ -86,7 +86,11 @@ const firstTwoUnstyledParagraph = (apiData) => {
   let count = 0
   let index = 0
   while (records.length < 2 && index < len) {
-    if (apiData[index].type === 'unstyled') {
+    const item = apiData[index]
+    if (
+      (item.type === 'unstyled' && item.content[0] !== '') ||
+      item.type === 'annotation'
+    ) {
       count++
       if ((len > 1 && count === 1) || (len > 5 && count === 5)) {
         records.push(index)
@@ -94,6 +98,7 @@ const firstTwoUnstyledParagraph = (apiData) => {
     }
     index++
   }
+
   return records
 }
 
