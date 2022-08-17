@@ -76,6 +76,7 @@
       <%- include('components/StoryArticleContent', { storyContent, storyContentAnnotation, storyContentFirstTwoUnstyledParagraph, showAMPAds, AMPAds, isBrief: false }) %>
     </article>
     <%- include('components/StoryRelateds', { storyRelateds, showAMPAds, AMPAds }) %>
+    <%- include('components/Taboola') %>
     <% if (showAMPAds) { %>
       <%- include('components/AppAdsPopIn') %>
     <% } %>
