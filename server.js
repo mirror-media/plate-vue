@@ -112,6 +112,10 @@ app.use('/public', (req, res) => {
 app.use('/manifest.json', serve('./manifest.json', true), staticNotFound)
 app.use('/service-worker.js', serve('./dist/service-worker.js'), staticNotFound)
 
+if (!isProd) {
+  app.use('/ads.txt', serve('./app-ads.txt', true), staticNotFound)
+}
+
 app.use(function (req, res, next) {
   let err = null
   try {
