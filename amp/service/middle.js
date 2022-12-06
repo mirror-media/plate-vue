@@ -5,10 +5,15 @@ const { handlerError } = require('../../api/comm')
 const superagent = require('superagent')
 const { redisFetching } = require('../../api/middle/ioredisHandler')
 const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph, getTweetIdFromEmbeddedCode } = require('./util')
-const { API_PROTOCOL, API_HOST, API_PORT, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../api/config')
+const { API_PROTOCOL, API_HOST_MEMBERSHIP_GATEWAY, API_PORT_MEMBERSHIP_GATEWAY, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../api/config')
 const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT, ALEXA_ATRK_ACCT, SITE_DOMAIN, SITE_TITLE } = require('../../src/constants')
 
-const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
+// The original apiHost would get full content of article, but if it's a premium type of article, we should not give full content to user.
+// To solved this problem, we replace apiHost, which is being using on mirror-media-nuxt.
+// The new apiHost will detect article type, if which is premium, then return only small part of content, if not, then return full content.
+
+const apiHost = API_PROTOCOL + '://' + API_HOST_MEMBERSHIP_GATEWAY + ':' + API_PORT_MEMBERSHIP_GATEWAY + '/api/v0'
+// const apiHost = API_PROTOCOL + '://' + API_HOST + ':' + API_PORT
 
 const errorDispatcher = (error, res) => {
   switch (error.status) {
@@ -56,7 +61,7 @@ const fetchFromRedis = (req, res, next) => {
 const fetchStory = async (req, res, next) => {
   if (res.redis) {
     const resData = JSON.parse(res.redis)
-    res.resData = resData
+    res.resData = resData.data
     next()
   } else {
     const fetchURLAPI = `${apiHost}${req.fetchURL}`
@@ -72,7 +77,7 @@ const fetchStory = async (req, res, next) => {
         )
 
       const data = JSON.parse(response.text)
-      const dataAmount = _.get(data, '_meta.total')
+      const dataAmount = _.get(data.data, '_meta.total')
       if (dataAmount && dataAmount > 0) {
         // /**
         //  * If req target is post, have the redis ttl be 7 days.
@@ -81,7 +86,7 @@ const fetchStory = async (req, res, next) => {
         // redisWriting(req.fetchURL, response.text, null, exp_post_query.test(req.fetchURL) && 60 * 60 * 24 * 7)
 
         console.log(`[AMP] Data exist from API: ${fetchURLAPI}`)
-        res.resData = data
+        res.resData = data.data
         next()
       } else {
         console.warn(`[AMP] Data not exist from API: ${fetchURLAPI}`)
