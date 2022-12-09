@@ -53,7 +53,7 @@
     "debug": "^4.1.1",
     "double-ended-queue": "^2.1.0-0",
     "ejs": "^3.0.1",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "forever": "^2.0.0",
     "humps": "^2.0.0",
     "ioredis": "^4.14.1",
