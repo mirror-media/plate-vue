@@ -56,6 +56,5 @@ gcskeyfile.json
 archives
 src/utils/jquery.dfp.min.js
 src/utils/swiper/
-yarn.lock
 .jshintignore
 .jshintrc
