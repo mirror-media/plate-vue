@@ -143,6 +143,9 @@ export const DFP_OPTIONS = {
 
 export const GA_ID = 'UA-83609754-1'
 export const GA_TEST_ID = 'UA-83609754-2'
+export const GA4_PROD_ID = 'G-341XFN0675'
+export const GA4_STAGING_ID = 'G-32D7P3MJ8B'
+export const GA4_DEV_ID = 'G-36HYH6NF6P'
 export const COMSCORE_C2_ID = '24318560'
 export const ALEXA_ATRK_ACCT = 'JEZvr1zDGU20kU'
 
