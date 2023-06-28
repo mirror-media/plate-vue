@@ -25,6 +25,39 @@
 </amp-analytics>
 <!-- End Google Analytics -->
 
+<!-- Start Google Analytics 4-->
+<!-- Because GA4 currently not supported for amp page, so we use this work-around method to send page-view of amp page -->
+<!-- ref: https://github.com/analytics-debugger/google-analytics-4-for-amp -->
+<amp-analytics
+type="googleanalytics"
+config="https://amp.analytics-debugger.com/ga4.json"
+data-credentials="include"
+>
+<script type="application/json">
+  {
+      "vars": {
+          "GA4_MEASUREMENT_ID": "<% 
+          var isProd = hostname.match(/(www|m).mirrormedia.mg/);
+          var isStaging = hostname.match(/(staging|www-staging).mirrormedia.mg/);
+          if (isProd) {
+            %><%=GA4_PROD_ID%><% 
+          } else if (isStaging) {
+            %><%=GA4_STAGING_ID%><% 
+          } else {
+            %><%=GA4_DEV_ID%><% 
+          } %>",
+          "GA4_ENDPOINT_HOSTNAME": "www.google-analytics.com",
+          "DEFAULT_PAGEVIEW_ENABLED": true,    
+          "GOOGLE_CONSENT_ENABLED": false,
+          "WEBVITALS_TRACKING": false,
+          "PERFORMANCE_TIMING_TRACKING": false,
+          "SEND_DOUBLECLICK_BEACON": false
+      }
+  }
+  </script>
+</amp-analytics>
+<!-- End Google Analytics 4-->
+
 <!-- Start Comscore -->
 <amp-analytics type="comscore">
   <script type="application/json">
