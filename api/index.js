@@ -9,11 +9,11 @@ const bodyParser = require('body-parser')
 const router = express.Router()
 const superagent = require('./agent')
 
-const { Logging } = require('@google-cloud/logging')
-const loggingClient = new Logging({
-  projectId: config.GCP_PROJECT_ID,
-  keyFilename: config.GCP_KEYFILE
-})
+// const { Logging } = require('@google-cloud/logging')
+// const loggingClient = new Logging({
+//   projectId: config.GCP_PROJECT_ID,
+//   keyFilename: config.GCP_KEYFILE
+// })
 
 const apiHost = config.API_PROTOCOL + '://' + config.API_HOST + ':' + config.API_PORT
 
@@ -236,11 +236,11 @@ router.use('/tracking', (req, res) => {
   try {
     res.send({ msg: 'Received.' })
     const query = !isEmpty(req.body) ? req.body : req.query
-    const log = loggingClient.log(config.GCP_STACKDRIVER_LOG_NAME)
-    const metadata = { resource: { type: 'global' } }
+    // const log = loggingClient.log(config.GCP_STACKDRIVER_LOG_NAME)
+    // const metadata = { resource: { type: 'global' } }
     query.ip = req.clientIp
-    const entry = log.entry(metadata, query)
-    log.write(entry)
+    // const entry = log.entry(metadata, query)
+    // log.write(entry)
   } catch (error) {
     console.error(`[ERROR] Client info logging error occurred: ${error}.`)
   }

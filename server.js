@@ -28,14 +28,14 @@ http.globalAgent.maxSockets = Infinity
 const debug = require('debug')('PLATEVUE:server')
 const template = fs.readFileSync(resolve('./src/index.template.html'), 'utf-8')
 
-if (isProd) {
-  require('@google-cloud/profiler').start({
-    serviceContext: {
-      service: 'plate-vue-profiler',
-      version: '1.0.0'
-    }
-  })
-}
+// if (isProd) {
+//   require('@google-cloud/profiler').start({
+//     serviceContext: {
+//       service: 'plate-vue-profiler',
+//       version: '1.0.0'
+//     }
+//   })
+// }
 
 function createRenderer (bundle, options) {
   // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
