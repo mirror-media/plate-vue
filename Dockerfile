@@ -6,7 +6,8 @@ ENV NODE_SOURCE /usr/src/
 
 WORKDIR $NODE_SOURCE
 
-RUN sed -i 's/stable\/updates/stable-security\/updates/' /etc/apt/sources.list
+RUN echo "deb http://security.debian.org/debian-security bullseye-security main contrib non-free" > /etc/apt/sources.list
+
 RUN apt-get update \
 	&& apt-get install -y node-gyp
 
