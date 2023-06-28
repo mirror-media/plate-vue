@@ -63,7 +63,7 @@
     </style>
   </head>
   <body>
-    <%- include('components/AppAnalytics', { GA_ID, COMSCORE_C2_ID, ALEXA_ATRK_ACCT, SITE_DOMAIN }) %>
+    <%- include('components/AppAnalytics', { GA_ID, hostname, GA4_DEV_ID, GA4_STAGING_ID, GA4_PROD_ID, COMSCORE_C2_ID, ALEXA_ATRK_ACCT, SITE_DOMAIN }) %>
     <%- include('components/AppHeader') %>
     <article class="story-article">
       <% if (showAMPAds) { %>

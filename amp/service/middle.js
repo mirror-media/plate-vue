@@ -6,7 +6,7 @@ const superagent = require('superagent')
 const { redisFetching } = require('../../api/middle/ioredisHandler')
 const { getDate, getSectionColorModifier, getCredit, getStoryHeroImageSrc, composeAnnotation, firstTwoUnstyledParagraph, getTweetIdFromEmbeddedCode } = require('./util')
 const { API_PROTOCOL, API_HOST_MEMBERSHIP_GATEWAY, API_PORT_MEMBERSHIP_GATEWAY, API_TIMEOUT, API_DEADLINE, SERVER_PROTOCOL, SERVER_HOST } = require('../../api/config')
-const { DFP_UNITS, DFP_ID, GA_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT, ALEXA_ATRK_ACCT, SITE_DOMAIN, SITE_TITLE } = require('../../src/constants')
+const { DFP_UNITS, DFP_ID, GA_ID, GA4_PROD_ID, GA4_STAGING_ID, GA4_DEV_ID, COMSCORE_C2_ID, MATCHED_CONTENT_AD_CLIENT, MATCHED_CONTENT_AD_SLOT, ALEXA_ATRK_ACCT, SITE_DOMAIN, SITE_TITLE } = require('../../src/constants')
 
 // The original apiHost would get full content of article, but if it's a premium type of article, we should not give full content to user.
 // To solved this problem, we replace apiHost, which is being using on mirror-media-nuxt.
@@ -176,6 +176,10 @@ const sendArticleData = (req, res, next) => {
         DFPUnits: _sectionDFPUnits
       },
       GA_ID,
+      GA4_PROD_ID,
+      GA4_STAGING_ID,
+      GA4_DEV_ID,
+      hostname: req.headers.host,
       COMSCORE_C2_ID,
       MATCHED_CONTENT_AD_CLIENT,
       MATCHED_CONTENT_AD_SLOT,
