@@ -41,7 +41,6 @@
   "dependencies": {
     "@babel/runtime": "^7.8.3",
     "@google-cloud/logging": "^7.0.0",
-    "@google-cloud/profiler": "^3.0.1",
     "@readr-ui/embedded-promotions": "^2.1.0",
     "axios": "^0.19.2",
     "big-integer": "^1.6.48",
