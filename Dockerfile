@@ -6,8 +6,10 @@ ENV NODE_SOURCE /usr/src/
 
 WORKDIR $NODE_SOURCE
 
-RUN apt-get update \
-	&& apt-get install -y node-gyp
+#RUN apt-get update \
+#	&& apt-get install -y node-gyp
+
+RUN apt-get install -y node-gyp
 
 ADD . $NODE_SOURCE
 
